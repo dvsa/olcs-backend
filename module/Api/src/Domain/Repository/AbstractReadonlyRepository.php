@@ -56,6 +56,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      * @var DbQueryServiceManager
      */
     private $dbQueryManager;
+    /** @var  QueryInterface */
+    protected $query;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -275,13 +277,17 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param QueryInterface $query
-     * @param int $hydrateMode
+     * Fetch List
+     *
+     * @param QueryInterface $query       Http Query
+     * @param int            $hydrateMode Hydrate mode
      *
      * @return \ArrayIterator|\Traversable
      */
     public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY)
     {
+        $this->query = $query;
+
         $qb = $this->createQueryBuilder();
 
         $this->buildDefaultListQuery($qb, $query);
@@ -294,8 +300,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Abstracted paginator logic so it can be re-used with alternative queries
      *
-     * @param QueryBuilder $qb
-     * @param int          $hydrateMode
+     * @param QueryBuilder $qb          Doctrine query builder
+     * @param int          $hydrateMode Hydrate mode
      *
      * @return \ArrayIterator|\Traversable
      */
@@ -304,8 +310,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
-        $paginator = $this->getPaginator($query);
-        return $paginator->getIterator($hydrateMode);
+        if ($this->query instanceof PagedQueryInterface) {
+            $paginator = $this->getPaginator($query);
+
+            return $paginator->getIterator($hydrateMode);
+        }
+
+        return new \ArrayIterator($query->getResult());
     }
 
     /**
@@ -355,10 +366,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     public function fetchPaginatedCount(QueryBuilder $qb)
     {
-        $query = $qb->getQuery();
-
-        $paginator = $this->getPaginator($query);
-        return $paginator->count();
+        return (int)$this->getPaginator($qb)->count();
     }
 
     /**
@@ -366,7 +374,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-
     }
 
     /**
@@ -376,7 +383,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
-
     }
 
     /**
@@ -386,7 +392,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected function applyFetchJoins(QueryBuilder $qb)
     {
-
     }
 
     public function lock($entity, $version)
