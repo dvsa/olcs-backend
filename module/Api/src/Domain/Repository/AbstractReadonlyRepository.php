@@ -57,6 +57,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     private $dbQueryManager;
 
+    /**
+     * AbstractReadonlyRepository constructor.
+     *
+     * @param EntityManagerInterface $em             Entity manager
+     * @param QueryBuilderInterface  $queryBuilder   Doctrine Query Builder
+     * @param DbQueryServiceManager  $dbQueryManager Olcs Query manager
+     */
     public function __construct(
         EntityManagerInterface $em,
         QueryBuilderInterface $queryBuilder,
@@ -106,13 +113,23 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Called from the factory to allow additional services to be injected
      *
-     * @param RepositoryServiceManager $serviceManager
+     * @param RepositoryServiceManager $serviceManager Service manager
+     *
+     * @return void
      */
     public function initService(RepositoryServiceManager $serviceManager)
     {
         // no-op
     }
 
+    /**
+     * _Call
+     *
+     * @param string $name Method name
+     * @param array  $args Method arguments
+     *
+     * @return array|mixed
+     */
     public function __call($name, $args)
     {
         // fetchByFoo => WHERE alias.foo = $args[0]
@@ -128,6 +145,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Get Olcs Db Query Manager
+     *
      * @return DbQueryServiceManager
      */
     protected function getDbQueryManager()
@@ -135,6 +154,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return $this->dbQueryManager;
     }
 
+    /**
+     * Fetch List By Column Name (X) value
+     *
+     * @param string $fetchBy Column name
+     * @param array  $args    [Id, Hydration mode]
+     *
+     * @return array
+     */
     protected function fetchByX($fetchBy, $args)
     {
         $qb = $this->createFetchByXxQuery($fetchBy, $args);
@@ -148,6 +175,15 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return $qb->getQuery()->getResult($hydrateMode);
     }
 
+    /**
+     * Fetch One By Column Name (X) value
+     *
+     * @param string $fetchBy Column name
+     * @param array  $args    [Id, Hydration mode]
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     */
     protected function fetchOneByX($fetchBy, $args)
     {
         $qb = $this->createFetchByXxQuery($fetchBy, $args);
@@ -167,6 +203,14 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
     }
 
+    /**
+     * Create Fetch By X-Column Query
+     *
+     * @param string $fetchBy Column name
+     * @param array  $args    [Id, Hydration mode]
+     *
+     * @return bool|QueryBuilder
+     */
     protected function createFetchByXxQuery($fetchBy, $args)
     {
         // If the property doesn't exist
@@ -206,18 +250,27 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Fetch the default record by its id
      *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-     * @param null $version
+     * @param Query|QryCmd $query       Http Query
+     * @param int          $hydrateMode Hydrate mode
+     * @param int          $version     Version
+     *
      * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
      */
     public function fetchUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         return $this->fetchById($query->getId(), $hydrateMode, $version);
     }
 
+    /**
+     * Fetch By Id
+     *
+     * @param int $id          Id
+     * @param int $hydrateMode Hydrate mode
+     * @param int $version     Version
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     */
     public function fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
         // If we are not locking and requesting an object, check the cache first
@@ -255,9 +308,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Fetch by ids
      *
-     * @param array $ids
-     * @param int $hydrateMode
-     * @return mixed
+     * @param array $ids         List of Ids
+     * @param int   $hydrateMode Hydrate mode
+     *
+     * @return array
      */
     public function fetchByIds(array $ids, $hydrateMode = Query::HYDRATE_OBJECT)
     {
@@ -275,8 +329,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param QueryInterface $query
-     * @param int $hydrateMode
+     * Fetch List
+     *
+     * @param QueryInterface $query       Http Query
+     * @param int            $hydrateMode Hydrate mode
      *
      * @return \ArrayIterator|\Traversable
      */
@@ -294,8 +350,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Abstracted paginator logic so it can be re-used with alternative queries
      *
-     * @param QueryBuilder $qb
-     * @param int          $hydrateMode
+     * @param QueryBuilder $qb          Doctrine query builder
+     * @param int          $hydrateMode Hydrate mode
      *
      * @return \ArrayIterator|\Traversable
      */
@@ -309,8 +365,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param QueryInterface $query
-     * @param int $hydrateMode
+     * Fetch Count of records
+     *
+     * @param QueryInterface $query Http query
+     *
      * @return int
      */
     public function fetchCount(QueryInterface $query)
@@ -330,7 +388,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Does the have any rows
      *
-     * @param QueryInterface $query
+     * @param QueryInterface $query Http Query
      *
      * @return bool
      */
@@ -352,6 +410,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     /**
      * Abstracted the count functionality so it can be re-used with alternative queries
+     *
+     * @param QueryBuilder $qb Doctrine query builder
+     *
+     * @return int
      */
     public function fetchPaginatedCount(QueryBuilder $qb)
     {
@@ -362,33 +424,53 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Apply Filters to list Query
+     *
+     * @param QueryBuilder   $qb    Doctrine query builder
+     * @param QueryInterface $query Http query
+     *
+     * @return void
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-
     }
 
     /**
      * Override to add additional data to the default fetchList() method
-     * @param QueryBuilder $qb
+     * Join tables to query by conditions
+     *
+     * @param QueryBuilder $qb Doctrine query builder
+     *
+     * @return void
      * @inheritdoc
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
-
     }
 
     /**
      * Override to add additional data to the default fetchById() method
-     * @param QueryBuilder $qb
+     *
+     * @param QueryBuilder $qb Doctrine query builder
+     *
+     * @return void
      * @inheritdoc
      */
     protected function applyFetchJoins(QueryBuilder $qb)
     {
-
     }
 
+    /**
+     * Lock
+     *
+     * @param Entity $entity  Entity
+     * @param int    $version Version
+     *
+     * @return void
+     * @throws Exception\RuntimeException
+     * @throws Exception\VersionConflictException
+     */
     public function lock($entity, $version)
     {
         if (!($entity instanceof $this->entity)) {
@@ -403,7 +485,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param string $id
+     * Get reference on RefData entity
+     *
+     * @param string $id Id
+     *
      * @return RefDataEntity|null
      */
     public function getRefdataReference($id)
@@ -412,7 +497,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param int $id
+     * Get reference on Category entity
+     *
+     * @param int $id Id
+     *
      * @return Category|null
      */
     public function getCategoryReference($id)
@@ -421,7 +509,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param $id
+     * Get reference on Category entity
+     *
+     * @param string $id Id
+     *
      * @return SubCategory|null
      */
     public function getSubCategoryReference($id)
@@ -442,6 +533,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return !empty($id) ? $this->getEntityManager()->getReference($entityClass, $id) : null;
     }
 
+    /**
+     * GenerateRefdataArrayCollection
+     *
+     * @param array $ids Id
+     *
+     * @return ArrayCollection
+     */
     public function generateRefdataArrayCollection($ids)
     {
         $refDataArray = [];
@@ -454,6 +552,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Returns Entity Manager
+     *
      * @return EntityManagerInterface
      */
     protected function getEntityManager()
@@ -462,6 +562,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Returns Olcs Query Builder
+     *
      * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function getQueryBuilder()
@@ -470,6 +572,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Create and returns Doctrine Query Builder
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     protected function createQueryBuilder()
@@ -477,16 +581,23 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return $this->getRepository()->createQueryBuilder($this->alias);
     }
 
+    /**
+     * Returns repository
+     *
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
     protected function getRepository()
     {
         return $this->getEntityManager()->getRepository($this->entity);
     }
 
     /**
-     * @NOTE This method can be overridden to extend the default resource bundle
+     * Build Default Query
+     * This method can be overridden to extend the default resource bundle
      *
-     * @param QueryBuilder $qb
-     * @param int $id
+     * @param QueryBuilder $qb Doctrine query builder
+     * @param int          $id Identifier
+     *
      * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
@@ -494,6 +605,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         return $this->getQueryBuilder()->modifyQuery($qb)->withRefdata()->byId($id);
     }
 
+    /**
+     * Create Doctrine List Query builder
+     *
+     * @param QueryInterface $query Http query
+     *
+     * @return QueryBuilder
+     */
     protected function createDefaultListQuery(QueryInterface $query)
     {
         $qb = $this->createQueryBuilder();
@@ -503,9 +621,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     * @param array $compositeFields
+     * Assign paginator and order statement to query
+     *
+     * @param QueryBuilder   $qb              Doctrine query builder
+     * @param QueryInterface $query           Http query
+     * @param array          $compositeFields Composite Fields
+     *
+     * @return void
      */
     protected function buildDefaultListQuery(QueryBuilder $qb, QueryInterface $query, $compositeFields = [])
     {
@@ -534,6 +656,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     /**
      * Wrap paginator instantiation, mainly for unit testing
+     *
+     * @param \Doctrine\ORM\Query $query Doctrine query
+     *
+     * @return Paginator
      */
     protected function getPaginator($query)
     {
