@@ -277,5 +277,7 @@ return [
     'continuation-review-business-details-partnership_name' => 'Partneriaeth',
     'continuation-review-business-details-organisation_name' => 'Enw’r sefydliad',
     'continuations.people-section.table.date-of-birth' => 'Ddyddiad geni',
+    'continuations.vehicles-section.table.vrm' => 'Nod gofrestru cerbyd',
+    'continuations.vehicles-section.table.weight' => 'Pwysau plât gros (cg)',
     // Potentially unused translations
 ];

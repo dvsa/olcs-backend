@@ -294,5 +294,7 @@ return [
     'continuation-review-business-details-organisation_name' => 'Organisation name',
     'continuations.people-section.table.name' => 'Name',
     'continuations.people-section.table.date-of-birth' => 'Date of birth',
+    'continuations.vehicles-section.table.vrm' => 'Vehicle registration mark',
+    'continuations.vehicles-section.table.weight' => 'Gross plated weight (kg)',
     // Potentially unused translations
 ];
