@@ -23,6 +23,7 @@ class RefDataTest extends RepositoryTestCase
         $mockDqb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
         $mockDqb->shouldReceive('setParameter')->with('category', 'cat')->once()->andReturnSelf();
         $mockDqb->shouldReceive('orderBy')->with('m.displayOrder')->once()->andReturnSelf();
+        $mockDqb->shouldReceive('addOrderBy')->with('m.description')->once()->andReturnSelf();
 
         $mockDqb->shouldReceive('getQuery')
             ->andReturn(
