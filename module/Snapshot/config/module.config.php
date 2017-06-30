@@ -73,6 +73,8 @@ return [
             'ContinuationReview\BusinessType' => ContinuationReview\BusinessTypeReviewService::class,
             'ContinuationReview\BusinessDetails' => ContinuationReview\BusinessDetailsReviewService::class,
             'ContinuationReview\People' => ContinuationReview\PeopleReviewService::class,
+            'ContinuationReview\Vehicles' => ContinuationReview\VehiclesReviewService::class,
+            'ContinuationReview\VehiclesPsv' => ContinuationReview\VehiclesReviewService::class,
         ],
     ],
     'view_manager' => [
