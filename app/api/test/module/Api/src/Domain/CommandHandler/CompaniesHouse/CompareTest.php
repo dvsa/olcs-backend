@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Companies House Compare Command Handler Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare as Cmd;
@@ -21,12 +16,12 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- *  Companies House Compare Command Handler Test
- *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare
  */
 class CompareTest extends CommandHandlerTestCase
 {
+    /** @var  CompaniesHouseApi | m\MockInterface */
     protected $mockApi;
 
     public function setUp()
@@ -35,6 +30,7 @@ class CompareTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             CompaniesHouseApi::class => $this->mockApi
         ];
+
         $this->sut = new Compare();
         $this->mockRepo('CompaniesHouseCompany', CompanyRepo::class);
 
@@ -882,5 +878,32 @@ class CompareTest extends CommandHandlerTestCase
                 )
             ),
         );
+    }
+
+    public function testHandleCommandServiceError()
+    {
+        $companyNr = 9999;
+
+        $this->mockApi
+            ->shouldReceive('getCompanyProfile')
+            ->once()
+            ->andThrowExceptions([new \Exception('unit_error_message')]);
+
+        $alertResult = new Result();
+        $alertResult->addMessage('Alert created');
+
+        $expectedAlertData = [
+            'companyNumber' => $companyNr,
+            'reasons' => [
+                'unit_error_message',
+            ],
+        ];
+
+        $this->expectedSideEffect(CreateAlertCmd::class, $expectedAlertData, $alertResult);
+
+        $command = Cmd::create(['companyNumber' => $companyNr]);
+        $actual = $this->sut->handleCommand($command);
+
+        static::assertEquals($alertResult, $actual);
     }
 }
