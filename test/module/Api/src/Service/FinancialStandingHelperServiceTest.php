@@ -7,10 +7,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Service;
 
-
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Mockery as m;
@@ -29,32 +27,37 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
      */
     protected $sut;
 
+    private $repoMap = [];
+
     public function setUp()
     {
-        $mockRatesRepo = m::mock();
+        $this->repoMap['FinancialStandingRate'] = m::mock();
+        $this->repoMap['Organisation'] = m::mock();
+        $this->repoMap['Application'] = m::mock();
 
-        $mockRatesRepo
+        $this->repoMap['FinancialStandingRate']
             ->shouldReceive('fetchRatesInEffect')
             ->andReturnUsing([$this, 'getStubRates']);
 
         // Create service with mocked dependencies
-        $this->sut = $this->createService($mockRatesRepo);
+        $this->sut = $this->createService();
 
         return parent::setUp();
     }
 
-    private function createService($mockRatesRepo)
+    private function createService()
     {
+        $mockRepoServiceManager = m::mock()
+            ->shouldReceive('get')->with('FinancialStandingRate')->once()
+                ->andReturn($this->repoMap['FinancialStandingRate'])
+            ->shouldReceive('get')->with('Organisation')->once()->andReturn($this->repoMap['Organisation'])
+            ->shouldReceive('get')->with('Application')->once()->andReturn($this->repoMap['Application'])
+            ->getMock();
+
         $sm = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('get')
             ->with('RepositoryServiceManager')
-            ->andReturn(
-                m::mock()
-                    ->shouldReceive('get')
-                    ->with('FinancialStandingRate')
-                    ->andReturn($mockRatesRepo)
-                    ->getMock()
-            )
+            ->andReturn($mockRepoServiceManager)
             ->getMock();
 
         $sut = new FinancialStandingHelperService();
@@ -195,5 +198,48 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->setLicenceType($licenceTypeChild);
 
         return $rate;
+    }
+
+    public function testGetFinanceCalculationForOrganisation()
+    {
+        $organisationId = 69;
+
+        $application1 = m::mock(Entity\Application\Application::class)->makePartial()->setId(1);
+        $application1->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_gv');
+        $application1->shouldReceive('getLicenceType->getId')->andReturn('ltyp_sn');
+        $application1->shouldReceive('getTotAuthVehicles')->andReturn(4);
+
+        $application2 = m::mock(Entity\Application\Application::class)->makePartial()->setId(2);
+        $application2->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_gv');
+        $application2->shouldReceive('getLicenceType->getId')->andReturn('ltyp_si');
+        $application2->shouldReceive('getTotAuthVehicles')->andReturn(5);
+
+        $application3 = m::mock(Entity\Application\Application::class)->makePartial()->setId(2)->setIsVariation(true);
+        $application3->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_gv');
+        $application3->shouldReceive('getLicenceType->getId')->andReturn('ltyp_si');
+        $application3->shouldReceive('getTotAuthVehicles')->andReturn(5);
+
+        $licence1 = m::mock(Entity\Licence\Licence::class)->makePartial()->setId(1);
+        $licence1->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_psv');
+        $licence1->shouldReceive('getLicenceType->getId')->andReturn('ltyp_sn');
+        $licence1->shouldReceive('getTotAuthVehicles')->andReturn(6);
+
+        $licence2 = m::mock(Entity\Licence\Licence::class)->makePartial()->setId(2);
+        $licence2->shouldReceive('getGoodsOrPsv->getId')->andReturn('lcat_psv');
+        $licence2->shouldReceive('getLicenceType->getId')->andReturn('ltyp_r');
+        $licence2->shouldReceive('getTotAuthVehicles')->andReturn(7);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchActiveForOrganisation')
+            ->with(69)
+            ->andReturn([$application1, $application2, $application3]);
+
+        $organisation = m::mock(Entity\Organisation\Organisation::class)->makePartial()->setId($organisationId);
+        $organisation->shouldReceive('getActiveLicences')->with()->once()->andReturn([$licence1, $licence2]);
+        $this->repoMap['Organisation']
+            ->shouldReceive('fetchById')->with($organisationId)->once()->andReturn($organisation);
+
+        $this->assertEquals(86500, $this->sut->getFinanceCalculationForOrganisation($organisationId));
+
     }
 }

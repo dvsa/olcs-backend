@@ -478,6 +478,7 @@ return [
     TransferQuery\ContinuationDetail\GetList::class => QueryHandler\ContinuationDetail\GetList::class,
     TransferQuery\ContinuationDetail\LicenceChecklist::class => QueryHandler\ContinuationDetail\LicenceChecklist::class,
     TransferQuery\ContinuationDetail\Review::class => QueryHandler\ContinuationDetail\Review::class,
+    TransferQuery\ContinuationDetail\Get::class => QueryHandler\ContinuationDetail\Get::class,
 
     // System
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,
