@@ -38,6 +38,19 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     use ProcessDateTrait;
 
     /**
+     * Average balance amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal",
+     *     name="average_balance_amount",
+     *     precision=10,
+     *     scale=2,
+     *     nullable=true)
+     */
+    protected $averageBalanceAmount;
+
+    /**
      * Checklist document
      *
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
@@ -82,6 +95,24 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $createdOn;
 
     /**
+     * Has other finances
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="has_other_finances", nullable=true)
+     */
+    protected $hasOtherFinances;
+
+    /**
+     * Has overdraft
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="has_overdraft", nullable=true)
+     */
+    protected $hasOverdraft;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -121,6 +152,37 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
+
+    /**
+     * Other finances amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal",
+     *     name="other_finances_amount",
+     *     precision=10,
+     *     scale=2,
+     *     nullable=true)
+     */
+    protected $otherFinancesAmount;
+
+    /**
+     * Other finances details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="other_finances_details", length=200, nullable=true)
+     */
+    protected $otherFinancesDetails;
+
+    /**
+     * Overdraft amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="overdraft_amount", precision=10, scale=2, nullable=true)
+     */
+    protected $overdraftAmount;
 
     /**
      * Received
@@ -177,6 +239,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Set the average balance amount
+     *
+     * @param float $averageBalanceAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setAverageBalanceAmount($averageBalanceAmount)
+    {
+        $this->averageBalanceAmount = $averageBalanceAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the average balance amount
+     *
+     * @return float
+     */
+    public function getAverageBalanceAmount()
+    {
+        return $this->averageBalanceAmount;
+    }
 
     /**
      * Set the checklist document
@@ -281,6 +367,54 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     }
 
     /**
+     * Set the has other finances
+     *
+     * @param string $hasOtherFinances new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setHasOtherFinances($hasOtherFinances)
+    {
+        $this->hasOtherFinances = $hasOtherFinances;
+
+        return $this;
+    }
+
+    /**
+     * Get the has other finances
+     *
+     * @return string
+     */
+    public function getHasOtherFinances()
+    {
+        return $this->hasOtherFinances;
+    }
+
+    /**
+     * Set the has overdraft
+     *
+     * @param string $hasOverdraft new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setHasOverdraft($hasOverdraft)
+    {
+        $this->hasOverdraft = $hasOverdraft;
+
+        return $this;
+    }
+
+    /**
+     * Get the has overdraft
+     *
+     * @return string
+     */
+    public function getHasOverdraft()
+    {
+        return $this->hasOverdraft;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -380,6 +514,78 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the other finances amount
+     *
+     * @param float $otherFinancesAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setOtherFinancesAmount($otherFinancesAmount)
+    {
+        $this->otherFinancesAmount = $otherFinancesAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the other finances amount
+     *
+     * @return float
+     */
+    public function getOtherFinancesAmount()
+    {
+        return $this->otherFinancesAmount;
+    }
+
+    /**
+     * Set the other finances details
+     *
+     * @param string $otherFinancesDetails new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setOtherFinancesDetails($otherFinancesDetails)
+    {
+        $this->otherFinancesDetails = $otherFinancesDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the other finances details
+     *
+     * @return string
+     */
+    public function getOtherFinancesDetails()
+    {
+        return $this->otherFinancesDetails;
+    }
+
+    /**
+     * Set the overdraft amount
+     *
+     * @param float $overdraftAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setOverdraftAmount($overdraftAmount)
+    {
+        $this->overdraftAmount = $overdraftAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the overdraft amount
+     *
+     * @return float
+     */
+    public function getOverdraftAmount()
+    {
+        return $this->overdraftAmount;
     }
 
     /**
