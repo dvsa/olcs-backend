@@ -21,7 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_data_retention_rule_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_data_retention_rule_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_data_retention_rule_action_type_ref_data_id", columns={"action_type"})
  *    }
  * )
  */
@@ -42,9 +43,10 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     /**
      * Action type
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="string", name="action_type", length=8, nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="action_type", referencedColumnName="id", nullable=false)
      */
     protected $actionType;
 
@@ -180,7 +182,7 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     /**
      * Set the action type
      *
-     * @param string $actionType new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $actionType entity being set as the value
      *
      * @return DataRetentionRule
      */
@@ -194,7 +196,7 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     /**
      * Get the action type
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getActionType()
     {

@@ -30,7 +30,7 @@ class DataRetention extends AbstractRepository
             ->andWhere($qb->expr()->eq($this->alias . '.toAction', 1))
             ->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', 1))
             ->andWhere($qb->expr()->isNull($this->alias . '.actionedDate'))
-            ->andWhere($qb->expr()->isNull($this->alias . '.actionAfterDate'));
+            ->andWhere($qb->expr()->isNull($this->alias . '.nextReviewDate'));
         $qb->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();
