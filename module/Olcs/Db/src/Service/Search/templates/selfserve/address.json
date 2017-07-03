@@ -15,13 +15,6 @@
                         }
                      },
                      {
-                        "terms": {
-                           "app_status": [
-                              "apsts_not_submitted"
-                           ]
-                        }
-                     },
-                     {
                         "exists": {
                            "field": "deleted_date"
                         }
