@@ -33,6 +33,7 @@ class SafetyAddressesTest extends MockeryTestCase
 
     public function testRenderWithSafetyAddresses()
     {
+        /** @var SafetyAddresses|m\Mock $bookmark */
         $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\SafetyAddresses')
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()

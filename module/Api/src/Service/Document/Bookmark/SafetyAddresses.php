@@ -65,12 +65,15 @@ class SafetyAddresses extends DynamicBookmark
                 if ($a['Address'] == $b['Address']) {
                     return 0;
                 } elseif ($a['Address'] < $b['Address']) {
-                    return -1;
-                } else {
                     return 1;
+                } else {
+                    return -1;
                 }
             }
         );
+
+        $rows = array_reverse($rows);
+
         return $rows;
     }
 }
