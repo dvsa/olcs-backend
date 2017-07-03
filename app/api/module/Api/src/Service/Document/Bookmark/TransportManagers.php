@@ -51,13 +51,16 @@ class TransportManagers extends DynamicBookmark
                 if ($a['BOOKMARK1'] == $b['BOOKMARK1']) {
                     return 0;
                 } elseif ($a['BOOKMARK1'] < $b['BOOKMARK1']) {
-                    return -1;
-                } else {
                     return 1;
+                } else {
+                    return -1;
                 }
             }
         );
+
+        $rows = array_reverse($rows);
         $rows = array_pad($rows, 5, ['BOOKMARK1' => '', 'BOOKMARK2' => '']);
+
         $allRows = array_merge($header, $rows);
 
         $snippet = $this->getSnippet('CHECKLIST_2CELL_TABLE');
