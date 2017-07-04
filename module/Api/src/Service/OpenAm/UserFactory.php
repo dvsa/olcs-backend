@@ -1,12 +1,10 @@
 <?php
 
-/**
- * User Factory
- */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Faker\Factory;
 
 /**
  * User Factory
@@ -23,7 +21,7 @@ class UserFactory implements FactoryInterface
     {
         return new User(
             $serviceLocator->get(ClientInterface::class),
-            (new \RandomLib\Factory())->getMediumStrengthGenerator()
+            Factory::create()
         );
     }
 }

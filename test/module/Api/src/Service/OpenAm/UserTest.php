@@ -6,10 +6,10 @@ use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Api\Service\OpenAm\User;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use RandomLib\Generator;
+use Faker\Generator;
 
 /**
- * @covers Dvsa\Olcs\Api\Service\OpenAm\User
+ * @covers \Dvsa\Olcs\Api\Service\OpenAm\User
  */
 class UserTest extends MockeryTestCase
 {
@@ -24,11 +24,14 @@ class UserTest extends MockeryTestCase
     public function setUp()
     {
         $this->mockRandom = m::mock(Generator::class)
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_UPPER)->andReturn('A')
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_LOWER)->andReturn('b')
-            ->shouldReceive('generateString')->with(1, Generator::CHAR_DIGITS)->andReturn('1')
-            ->shouldReceive('generateString')->with(9, Generator::EASY_TO_READ)->andReturn('password1')
+            ->shouldReceive('toUpper')->andReturn('A')
+            ->shouldReceive('toLower')->andReturn('a')
+            ->shouldReceive('randomNumber')->andReturn(1)
+            ->shouldReceive('regexify')->with('[A-Za-z0-9]+\[A-Za-z]{5,7}$')->andReturn('password1')
+            ->shouldReceive('format')->andReturn(self::anything())
             ->getMock();
+
+        $this->mockRandom->randomLetter = 'a';
 
         $this->mockClient = m::mock(Client::class);
 
@@ -40,7 +43,7 @@ class UserTest extends MockeryTestCase
         $loginId = 'login_id';
         $pid = hash('sha256', 'login_id');
         $emailAddress = 'email@test.com';
-        $password = 'Ab1password1';
+        $password = 'Aa1password1';
 
         $this->mockClient
             ->shouldReceive('registerUser')
@@ -181,7 +184,7 @@ class UserTest extends MockeryTestCase
 
     public function testResetPassword()
     {
-        $password = 'Ab1password1';
+        $password = 'Aa1password1';
 
         $pid = 'pid';
         $expected = [
