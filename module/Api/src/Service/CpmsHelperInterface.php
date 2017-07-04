@@ -87,7 +87,7 @@ interface CpmsHelperInterface
      * @param string    $receiptReference receipt reference
      * @param FeeEntity $fee              fee
      *
-     * @return int status code
+     * @return array ['code' => payment status code, 'message' => 'CPMS error message']
      */
     public function getPaymentStatus($receiptReference, $fee);
 
