@@ -8,6 +8,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use OlcsTest\Bootstrap;
 
 /**
  * Vehicles review service test
@@ -18,14 +19,27 @@ class VehiclesReviewServiceTest extends MockeryTestCase
 {
     /** @var VehiclesReviewService review service */
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
         $this->sut = new VehiclesReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut->setServiceLocator($this->sm);
     }
 
     public function testGetConfigFromData()
     {
+        $mockTranslator = m::mock();
+        $this->sm->setService('translator', $mockTranslator);
+
+        $mockTranslator->shouldReceive('translate')
+            ->andReturnUsing(
+                function ($string) {
+                    return $string . '-translated';
+                }
+            );
+
         $continuationDetail = new ContinuationDetail();
 
         $licenceVehicles = new ArrayCollection();
@@ -43,6 +57,9 @@ class VehiclesReviewServiceTest extends MockeryTestCase
                     ->getMock()
             )
             ->once()
+            ->shouldReceive('getremovalDate')
+            ->andReturn(null)
+            ->once()
             ->getMock();
 
         $licenceVehicle2 = m::mock()
@@ -58,10 +75,20 @@ class VehiclesReviewServiceTest extends MockeryTestCase
                     ->getMock()
             )
             ->once()
+            ->shouldReceive('getremovalDate')
+            ->andReturn(null)
+            ->once()
+            ->getMock();
+
+        $licenceVehicle3 = m::mock()
+            ->shouldReceive('getremovalDate')
+            ->andReturn('2010-01-01')
+            ->once()
             ->getMock();
 
         $licenceVehicles->add($licenceVehicle1);
         $licenceVehicles->add($licenceVehicle2);
+        $licenceVehicles->add($licenceVehicle3);
 
         $mockLicence = m::mock(Licence::class)
             ->shouldReceive('getLicenceVehicles')
@@ -87,11 +114,11 @@ class VehiclesReviewServiceTest extends MockeryTestCase
             ],
             [
                 ['value' => 'VRM123'],
-                ['value' => '2000']
+                ['value' => '2000' . 'continuations.vehicles.weight-kg-translated']
             ],
             [
                 ['value' => 'VRM456'],
-                ['value' => '1000']
+                ['value' => '1000' . 'continuations.vehicles.weight-kg-translated']
             ]
         ];
 
