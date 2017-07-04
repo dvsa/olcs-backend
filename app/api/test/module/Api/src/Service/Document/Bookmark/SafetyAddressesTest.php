@@ -49,7 +49,7 @@ class SafetyAddressesTest extends MockeryTestCase
                     [
                         'isExternal' => 'Y',
                         'contactDetails' => [
-                            'fao' => 'C Surname',
+                            'fao' => 'D Surname',
                             'address' => [
                                 'addressLine1' => 'al1',
                                 'addressLine2' => 'al2',
@@ -122,7 +122,7 @@ class SafetyAddressesTest extends MockeryTestCase
             'checkbox2' => ''
         ];
         $row4 = [
-            'Address' => 'C Surname, al1, al2, al3, al4, town, postcode',
+            'Address' => 'D Surname, al1, al2, al3, al4, town, postcode',
             'checkbox1' => '',
             'checkbox2' => 'X'
         ];
