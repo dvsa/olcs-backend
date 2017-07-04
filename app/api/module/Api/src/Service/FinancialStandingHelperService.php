@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service;
 
+use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -23,10 +25,71 @@ class FinancialStandingHelperService implements FactoryInterface
      */
     protected $ratesRepo;
 
+    /**
+     * @var Organisation
+     */
+    protected $organisationRepo;
+
+    /**
+     * @var Application
+     */
+    protected $applicationRepo;
+
+    /**
+     * Factory
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manaager
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->ratesRepo = $serviceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
+        $this->organisationRepo = $serviceLocator->get('RepositoryServiceManager')->get('Organisation');
+        $this->applicationRepo = $serviceLocator->get('RepositoryServiceManager')->get('Application');
         return $this;
+    }
+
+    /**
+     * Get the amount of required finance for an organisation
+     *
+     * @param int $organisationId Organisation ID
+     *
+     * @return int Amount in pounds
+     */
+    public function getFinanceCalculationForOrganisation($organisationId)
+    {
+        $auths = [];
+        /** @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation */
+        $organisation = $this->organisationRepo->fetchById($organisationId);
+
+        $applications = $this->applicationRepo->fetchActiveForOrganisation($organisation->getId());
+        if (!empty($applications)) {
+            foreach ($applications as $app) {
+                // filter new apps only
+                if ($app->isVariation()) {
+                    continue;
+                }
+                $auths[] = [
+                    'type' => $app->getLicenceType()->getId(),
+                    'count' => $app->getTotAuthVehicles(),
+                    'category' => $app->getGoodsOrPsv()->getId(),
+                ];
+            }
+        }
+
+        $licences = $organisation->getActiveLicences();
+        if (!empty($licences)) {
+            foreach ($licences as $licence) {
+                $auths[] = [
+                    'type' => $licence->getLicenceType()->getId(),
+                    'count' => $licence->getTotAuthVehicles(),
+                    'category' => $licence->getGoodsOrPsv()->getId(),
+                ];
+            }
+        }
+
+        return $this->getFinanceCalculation($auths);
     }
 
     /**
