@@ -25,6 +25,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
+
         $this->assertInstanceOf(GdsVerify::class, $sut);
     }
 
@@ -39,11 +40,13 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
+
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSsoUrl')->with()->once()->andReturn('sso.url');
         $metadataLoader = m::mock(\Dvsa\Olcs\GdsVerify\Data\Loader::class);
         $metadataLoader->shouldReceive('loadMatchingServiceAdapterMetadata')->with('http://meta.com')
             ->once()->andReturn($metadata);
+
         $sut->setMetadataLoader($metadataLoader);
 
         $request = $sut->getAuthenticationRequest();
@@ -64,6 +67,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
+
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSigningCertificate')->with()->once()->andReturn(
             'MIIDXTCCAkWgAwIBAgIJAOlKkJ8iwQH3MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
@@ -89,6 +93,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
         $metadataLoader = m::mock(\Dvsa\Olcs\GdsVerify\Data\Loader::class);
         $metadataLoader->shouldReceive('loadMatchingServiceAdapterMetadata')->with('http://meta.com')
             ->once()->andReturn($metadata);
+
         $sut->setMetadataLoader($metadataLoader);
 
         $samlResponse = file_get_contents(__DIR__ .'/saml-response.txt');
@@ -121,6 +126,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
+
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSigningCertificate')->with()->once()->andReturn(
             'MIIDXTCCAkWgAwIBAgIJAOlKkJ8iwQH3MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
@@ -166,6 +172,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
+
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSigningCertificate')->with()->once()->andReturn(
             'MIIDXTCCAkWgAwIBAgIJAOdbvV4W2wl2MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
@@ -188,9 +195,11 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
             xb1knbCw6oSTSglUlRChYh8rPmdnPuM82l9mYW2GROZX37u8OpfmRGZdEiFssZPD
             SA=='
         );
+
         $metadataLoader = m::mock(\Dvsa\Olcs\GdsVerify\Data\Loader::class);
         $metadataLoader->shouldReceive('loadMatchingServiceAdapterMetadata')->with('http://meta.com')
             ->once()->andReturn($metadata);
+
         $sut->setMetadataLoader($metadataLoader);
 
         $samlResponse = file_get_contents(__DIR__ .'/saml-response.txt');
@@ -211,6 +220,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         );
+
         $samlResponse = 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c2FtbDJwOlJlc3BvbnNlIHhtbG5zOnNhbWwycD0id
             XJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOnByb3RvY29sIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1
             hLWluc3RhbmNlIiBEZXN0aW5hdGlvbj0iaHR0cDovL29sY3Mtc2VsZnNlcnZlLm9sY3MuZ292LnVrL3ZlcmlmeS9wcm9jZXNzLXJlc3Bvb
@@ -224,7 +234,6 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
 
         $request = $sut->getAttributesFromResponse($samlResponse);
         $this->assertSame([], $request->getArrayCopy());
-
     }
 
     public function testGetSignatureKeyMissing()
@@ -294,7 +303,6 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($metadata, $metadata1);
         $this->assertSame($metadata, $metadata2);
-
     }
 
     public function testGetEntityIdentifierMissing()
@@ -303,7 +311,6 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Entity identifier is not specified');
         $sut->getEntityIdentifier();
     }
-
 
     private function getSut(array $config = [])
     {
