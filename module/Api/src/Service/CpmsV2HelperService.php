@@ -235,7 +235,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      * @param string $receiptReference receipt reference
      * @param Fee    $fee              fee
      *
-     * @return int status code|null
+     * @return array ['code' => payment status code, 'message' => 'CPMS error message']
      */
     public function getPaymentStatus($receiptReference, $fee)
     {
@@ -253,9 +253,14 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $response = $this->send($method, $endPoint, $scope, $params, $fee);
 
-        if (isset($response['payment_status']['code'])) {
-            return $response['payment_status']['code'];
-        }
+        $statusCode = isset($response['payment_status']['code']) ? $response['payment_status']['code'] : null;
+        $message = ((isset($response['message'])) ? $response['message'] : 'No error message from CPMS')
+            . ((isset($response['code'])) ? ', code: ' . $response['code'] :  ', no error code from CPMS');
+
+        return [
+            'code' => $statusCode,
+            'message' => $message
+        ];
     }
 
     /**

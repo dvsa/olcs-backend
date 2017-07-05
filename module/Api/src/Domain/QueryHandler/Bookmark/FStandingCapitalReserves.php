@@ -27,6 +27,13 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      */
     protected $helper;
 
+    /**
+     * Factory create
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return FStandingCapitalReserves
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         parent::createService($serviceLocator);
@@ -41,36 +48,6 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        $auths = [];
-
-        $organisation = $this->getRepo('Organisation')->fetchById($query->getOrganisation());
-
-        $applications = $this->getRepo('Application')->fetchActiveForOrganisation($organisation->getId());
-        if (!empty($applications)) {
-            foreach ($applications as $app) {
-                // filter new apps only
-                if ($app->isVariation()) {
-                    continue;
-                }
-                $auths[] = [
-                    'type' => $app->getLicenceType()->getId(),
-                    'count' => $app->getTotAuthVehicles(),
-                    'category' => $app->getGoodsOrPsv()->getId(),
-                ];
-            }
-        }
-
-        $licences = $organisation->getActiveLicences();
-        if (!empty($licences)) {
-            foreach ($licences as $licence) {
-                $auths[] = [
-                    'type' => $licence->getLicenceType()->getId(),
-                    'count' => $licence->getTotAuthVehicles(),
-                    'category' => $licence->getGoodsOrPsv()->getId(),
-                ];
-            }
-        }
-
-        return $this->helper->getFinanceCalculation($auths);
+        return $this->helper->getFinanceCalculationForOrganisation($query->getOrganisation());
     }
 }

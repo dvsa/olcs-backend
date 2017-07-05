@@ -1863,6 +1863,12 @@ return array(
                 'property' => 'continuationDetail'
             )
         ),
+        'has_overdraft' => array(
+            'type' => 'yesnonull'
+        ),
+        'has_other_finances' => array(
+            'type' => 'yesnonull'
+        ),
     ),
     'companies_house_officer' => array(
         'companies_house_company_id' => array(
