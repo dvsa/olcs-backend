@@ -144,7 +144,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getPaymentStatus')
             ->once()
             ->with($guid, 'fee1')
-            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+            ->andReturn(['code' => CpmsHelper::PAYMENT_SUCCESS]);
 
         $payment
             ->shouldReceive('setStatus')
@@ -244,7 +244,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getPaymentStatus')
             ->once()
             ->with($guid, 'fee1')
-            ->andReturn($cpmsStatus);
+            ->andReturn(['code' => $cpmsStatus]);
 
         $this->repoMap['Transaction']
             ->shouldReceive('save')
@@ -364,32 +364,32 @@ class ResolvePaymentTest extends CommandHandlerTestCase
     {
         return [
             [
-                CpmsHelper::PAYMENT_IN_PROGRESS,
+                ['code' => CpmsHelper::PAYMENT_IN_PROGRESS],
                 'Transaction 69 is pending, CPMS status is 800',
             ],
             [
-                CpmsHelper::PAYMENT_AWAITING_GATEWAY_URL,
+                ['code' => CpmsHelper::PAYMENT_AWAITING_GATEWAY_URL],
                 'Transaction 69 is pending, CPMS status is 824',
             ],
             [
-                CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED,
+                ['code' => CpmsHelper::PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED],
                 'Transaction 69 is pending, CPMS status is 825',
             ],
             [
-                CpmsHelper::PAYMENT_END_OF_FLOW_SIGNALLED,
+                ['code' => CpmsHelper::PAYMENT_END_OF_FLOW_SIGNALLED],
                 'Transaction 69 is pending, CPMS status is 826',
             ],
             [
-                CpmsHelper::PAYMENT_CARD_PAYMENT_CONFIRMED,
+                ['code' => CpmsHelper::PAYMENT_CARD_PAYMENT_CONFIRMED],
                 'Transaction 69 is pending, CPMS status is 827',
             ],
             [
-                CpmsHelper::PAYMENT_ACTIVELY_BEING_TAKEN,
+                ['code' => CpmsHelper::PAYMENT_ACTIVELY_BEING_TAKEN],
                 'Transaction 69 is pending, CPMS status is 830',
             ],
             [
-                'FooBar',
-                'Unexpected status received from CPMS, transaction 69 status FooBar'
+                ['code' => 'FooBar', 'message' => 'some message'],
+                'Unexpected status received from CPMS, transaction 69 status FooBar, message: some message'
             ],
         ];
     }
@@ -433,7 +433,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getPaymentStatus')
             ->once()
             ->with($guid, 'fee1')
-            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+            ->andReturn(['code' => CpmsHelper::PAYMENT_SUCCESS]);
 
         $payment
             ->shouldReceive('setStatus')

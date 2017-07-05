@@ -370,7 +370,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
             return $paginator->getIterator($hydrateMode);
         }
 
-        return new \ArrayIterator($query->getResult());
+        return new \ArrayIterator($query->getResult($hydrateMode));
     }
 
     /**
