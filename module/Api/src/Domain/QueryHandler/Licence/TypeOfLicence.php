@@ -19,8 +19,18 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class TypeOfLicence extends AbstractQueryHandler
 {
+    /**
+     * @var string
+     */
     protected $repoServiceName = 'Licence';
 
+    /**
+     * Query handler which creates a response
+     *
+     * @param QueryInterface $query Request query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var $licence LicenceEntity */
@@ -32,7 +42,7 @@ class TypeOfLicence extends AbstractQueryHandler
             [
                 'canBecomeSpecialRestricted' => $licence->canBecomeSpecialRestricted(),
                 'canUpdateLicenceType' => $this->isGranted(Permission::CAN_UPDATE_LICENCE_LICENCE_TYPE, $licence) &&
-                    !$licence->isSpecialRestricted(),
+                    !$licence->isSpecialRestricted() && $this->isGranted(Permission::INTERNAL_USER),
                 'doesChangeRequireVariation' => $this->isGranted(Permission::SELFSERVE_USER)
             ]
         );

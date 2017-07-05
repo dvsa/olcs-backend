@@ -21,6 +21,9 @@ class LicenceChecklist extends AbstractQueryHandler
         /** @var ContinuationDetailEntity $continuationDetail */
         $continuationDetail = $this->getRepo()->fetchUsingId($query);
 
+        $notRemoved = Criteria::create();
+        $notRemoved->andWhere($notRemoved->expr()->isNull('removalDate'));
+
         return $this->result(
             $continuationDetail,
             [
@@ -30,9 +33,18 @@ class LicenceChecklist extends AbstractQueryHandler
                     'goodsOrPsv',
                     'trafficArea',
                     'organisation' => [
-                        'type'
+                        'type',
+                        'organisationPersons' => [
+                            'person' => [
+                                'title'
+                            ]
+                        ]
                     ],
-                    'tradingNames'
+                    'tradingNames',
+                    'licenceVehicles' => [
+                        'vehicle',
+                        'criteria' => $notRemoved
+                    ]
                 ]
             ]
         );

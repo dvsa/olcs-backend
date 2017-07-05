@@ -9,7 +9,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Stop;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspension as CommunityLicSuspensionRepo;
@@ -17,14 +16,15 @@ use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReason as CommunityLic
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawal as CommunityLicWithdrawalRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawalReason as CommunityLicWithdrawalReasonRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\CommunityLic\Stop as Cmd;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension as CommunityLicSuspensionEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspensionReason as CommunityLicSuspensionReasonEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal as CommunityLicWithdrawalEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawalReason as CommunityLicWithdrawalReasonEntity;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Transfer\Command\CommunityLic\Stop as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Stop Test
@@ -105,7 +105,7 @@ class StopTest extends CommandHandlerTestCase
             ->andReturn(
                 m::mock()
                 ->shouldReceive('getId')
-                ->andReturn(CommunityLicEntity::STATUS_VOID)
+                ->andReturn(CommunityLicEntity::STATUS_ANNUL)
                 ->once()
                 ->getMock()
             )
@@ -227,7 +227,7 @@ class StopTest extends CommandHandlerTestCase
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getId')
-                    ->andReturn(CommunityLicEntity::STATUS_VOID)
+                    ->andReturn(CommunityLicEntity::STATUS_ANNUL)
                     ->once()
                     ->getMock()
             )

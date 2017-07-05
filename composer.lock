@@ -1246,7 +1246,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "ead380a53300eefc71fea1ee001985a5b301f9e4"
+                "reference": "c5b54b570fd57865818d18d6793a94b4dd6912c4"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1258,7 +1258,7 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2017-06-05 13:44:34"
+            "time": "2017-06-20 11:44:07"
         },
         {
             "name": "olcs/olcs-logging",
@@ -1266,7 +1266,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "d97a8cd99b690eba22707f1fb573481c0f3aaef1"
+                "reference": "b830d444b3526ef8bc93feeb4ce6212f7d1beef3"
             },
             "require": {
                 "php": ">=5.4",
@@ -1292,7 +1292,7 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-06-07 14:21:57"
+            "time": "2017-06-20 15:20:41"
         },
         {
             "name": "olcs/olcs-transfer",
@@ -1300,7 +1300,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "5dda508fd6856b7153213129fb0bec44ca03f04f"
+                "reference": "1c1b97961f602e2fd9bbb51687f46ca772a4f62e"
             },
             "require": {
                 "php": ">=5.4",
@@ -1318,7 +1318,7 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-06-15 09:52:36"
+            "time": "2017-07-03 10:02:14"
         },
         {
             "name": "olcs/olcs-utils",
@@ -1326,7 +1326,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "1e267202cdd05fd04089a11f68080690ea93c794"
+                "reference": "5cb1d41b7194ad9bfc57350f282908278b654467"
             },
             "require": {
                 "php": ">=5.4",
@@ -1344,7 +1344,7 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-06-07 14:21:30"
+            "time": "2017-06-20 11:43:59"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -1352,7 +1352,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "522d3a6b36c3d3c00110c27673b610317efb48ee"
+                "reference": "55d7d91974e5722a3f5c477a50160603a07270a2"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1373,7 +1373,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-06-14 09:23:05"
+            "time": "2017-06-20 11:44:02"
         },
         {
             "name": "paragonie/random_compat",
@@ -2121,17 +2121,17 @@
         },
         {
             "name": "zendframework/zendframework",
-            "version": "2.4.11",
+            "version": "2.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zendframework.git",
-                "reference": "781cb2414cbcd69928d2ccf3f639b238bcf112f5"
+                "reference": "7b9a03669eb498236df8a97e66095b3030b28542"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendframework-781cb2414cbcd69928d2ccf3f639b238bcf112f5-zip-f4eb1c.tar",
-                "reference": "781cb2414cbcd69928d2ccf3f639b238bcf112f5",
-                "shasum": "b26092701d3d3b70e7b902fe13a124b8dfc60ca5"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendframework-7b9a03669eb498236df8a97e66095b3030b28542-zip-a664dc.tar",
+                "reference": "7b9a03669eb498236df8a97e66095b3030b28542",
+                "shasum": "e532f4cc758175846e32e32cf56eabfc3640407a"
             },
             "require": {
                 "php": ">=5.3.23",
@@ -2234,7 +2234,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2016-12-20 14:12:38"
+            "time": "2017-06-19 19:11:59"
         },
         {
             "name": "zendframework/zendxml",
@@ -3016,17 +3016,17 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.35",
+            "version": "4.8.36",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "791b1a67c25af50e230f841ee7a9c6eba507dc87"
+                "reference": "46023de9a91eec7dfb06cc56cb4e260017298517"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpunit-791b1a67c25af50e230f841ee7a9c6eba507dc87-zip-2adda6.tar",
-                "reference": "791b1a67c25af50e230f841ee7a9c6eba507dc87",
-                "shasum": "ddecda921c33d9dd3903ea809224f62c6191afde"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpunit-46023de9a91eec7dfb06cc56cb4e260017298517-zip-b32699.tar",
+                "reference": "46023de9a91eec7dfb06cc56cb4e260017298517",
+                "shasum": "24053403569840703aaba3dc38436e35e8a1b57c"
             },
             "require": {
                 "ext-dom": "*",
@@ -3084,7 +3084,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-02-06 05:18:07"
+            "time": "2017-06-21 08:07:12"
         },
         {
             "name": "phpunit/phpunit-mock-objects",

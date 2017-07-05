@@ -1,11 +1,5 @@
 <?php
 
-/**
- * VoidAllCommunityLicences
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -24,10 +18,17 @@ final class VoidAllCommunityLicences extends AbstractCommandHandler implements T
 {
     protected $repoServiceName = 'CommunityLic';
 
+    /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Licence\VoidAllCommunityLicences $command Command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $licenceId = $command->getId();
-        $this->getRepo()->expireAllForLicence($licenceId, CommunityLic::STATUS_VOID);
+        $this->getRepo()->expireAllForLicence($licenceId, CommunityLic::STATUS_ANNUL);
         $this->result->addMessage('All community licences voided');
 
         $updateTotalCommunityLicences =  UpdateTotalCommunityLicencesCommand::create(['id' => $licenceId]);

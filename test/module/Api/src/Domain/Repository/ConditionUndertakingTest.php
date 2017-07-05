@@ -1,27 +1,24 @@
 <?php
 
-/**
- * ConditionUndertaking test
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as Repo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * ConditionUndertaking test
- *
  * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking
  */
 class ConditionUndertakingTest extends RepositoryTestCase
 {
+    /** @var Repository\ConditionUndertaking | m\MockInterface */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(Repo::class);
+        $this->setUpSut(Repository\ConditionUndertaking::class, true);
     }
 
     public function testFetchListForLicenceReadOnly()
@@ -224,5 +221,31 @@ class ConditionUndertakingTest extends RepositoryTestCase
         $qb->shouldReceive('getQuery->getResult')->once()->andReturn('results');
 
         $this->assertEquals('results', $this->sut->fetchSmallVehilceUndertakings($licenceId));
+    }
+
+    public function testDeleteFromVariations()
+    {
+        $ids = [9001, 9002, 9003];
+
+        $qb = $this->createMockQb('[[QUERY]]');
+        $this->mockCreateQueryBuilder($qb);
+
+        $mockEnt = m::mock(ConditionUndertakingEntity::class);
+        $mockEnt2 = clone $mockEnt;
+        $mockEnt3 = clone $mockEnt;
+
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn([$mockEnt, $mockEnt2, $mockEnt3]);
+        $this->sut
+            ->shouldReceive('delete')
+            ->with(m::any([$mockEnt, $mockEnt2, $mockEnt3]))
+            ->times(3);
+
+        static::assertEquals(3, $this->sut->deleteFromVariations($ids));
+
+        static::assertEquals(
+            '[[QUERY]]' .
+            ' AND m.licConditionVariation IN [[[9001,9002,9003]]]',
+            $this->query
+        );
     }
 }

@@ -323,6 +323,7 @@ return [
             'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
             'DigitalSignature' => RepositoryFactory::class,
             'DataRetentionRule' => RepositoryFactory::class,
+            'DataRetention' => RepositoryFactory::class,
             'DataService' => RepositoryFactory::class,
             'DocumentToDelete' => RepositoryFactory::class,
         ]
@@ -678,6 +679,8 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
             \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class =>

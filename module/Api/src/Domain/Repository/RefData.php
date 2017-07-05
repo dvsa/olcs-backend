@@ -16,14 +16,17 @@ class RefData extends AbstractRepository
     /**
      * Filter list
      *
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
+     * @param QueryBuilder   $qb    Doctrine Query builder
+     * @param QueryInterface $query Http Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         $qb->andWhere($qb->expr()->eq($this->alias .'.refDataCategoryId', ':category'))
             ->setParameter('category', $query->getRefDataCategory());
         $qb->orderBy($this->alias. '.displayOrder');
+        $qb->addOrderBy($this->alias . '.description');
 
         $q = $qb->getQuery();
         $q->setHint(
@@ -35,7 +38,11 @@ class RefData extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder $qb
+     * Apply List Joins
+     *
+     * @param QueryBuilder $qb Doctrine Query builder
+     *
+     * @return void
      */
     protected function applyListJoins(QueryBuilder $qb)
     {

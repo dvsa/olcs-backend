@@ -56,6 +56,7 @@ class Queue extends AbstractQueue
     const TYPE_CNS_EMAIL = 'que_typ_cns_email';
     const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
     const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
+    const TYPE_PROCESS_DATA_RETENTION = 'que_typ_process_data_retention';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -79,6 +80,7 @@ class Queue extends AbstractQueue
         self::TYPE_CNS_EMAIL,
         self::TYPE_CREATE_COM_LIC,
         self::TYPE_REMOVE_DELETED_DOCUMENTS,
+        self::TYPE_PROCESS_DATA_RETENTION,
     ];
 
     /**
