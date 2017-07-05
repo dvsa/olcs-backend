@@ -50,7 +50,8 @@ class VehiclesReviewService extends AbstractReviewService
             $row[] = ['value' => $vehicle->getVrm()];
             if ($isGoods) {
                 $row[] = [
-                    'value' => $vehicle->getPlatedWeight() . $this->translate('continuations.vehicles.weight-kg')
+                    // no need to translate, the same in Welsh
+                    'value' => $vehicle->getPlatedWeight() . 'kg'
                 ];
             }
             $config[] = $row;
