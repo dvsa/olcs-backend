@@ -204,7 +204,7 @@ class UploadTest extends CommandHandlerTestCase
         $vfs = vfsStream::setup('temp');
         $tmpFilePath = vfsStream::newFile('stream.zip')->withContent($gzBody)->at($vfs)->url();
 
-        $expectMimeType = 'x-mimeType';
+        $expectMimeType = 'application/zlib';
 
         $data = [
             'content' => [
