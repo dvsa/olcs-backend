@@ -5,18 +5,18 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use \Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 
 /**
  * Submit Application
@@ -28,38 +28,40 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     use AuthAwareTrait;
 
     protected $repoServiceName = 'Application';
+    protected $extraRepos = ['TransportManagerApplication'];
 
     /**
-     * @param \Dvsa\Olcs\Transfer\Command\Application\SubmitApplication $command
-     * @return Result
+     * Handle Command
+     *
+     * @param \Dvsa\Olcs\Transfer\Command\Application\SubmitApplication $command Command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /* @var $application ApplicationEntity */
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $this->validate($application);
 
-        $result->merge($this->snapshotApplication($application));
+        $this->result->merge($this->snapshotApplication($application));
 
-        $this->updateStatus($application, $result);
+        $this->updateStatus($application);
 
-        $result->merge($this->createTask($application));
+        $this->result->merge($this->createTask($application));
 
         if ($this->shouldPublishApplication($application)) {
-            $result->merge($this->createPublication($application));
-            $result->merge($this->createTexTask($application));
+            $this->result->merge($this->createPublication($application));
+            $this->result->merge($this->createTexTask($application));
         }
 
-        return $result;
+        return $this->result;
     }
 
     /**
      * Should the application be published
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application Application
      *
      * @return boolean
      */
@@ -68,6 +70,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         if ($this->isInternalUser()) {
             return false;
         }
+
         // Exclude for PSV variation applications
         if ($application->isVariation() && $application->isPsv()) {
             return false;
@@ -83,10 +86,12 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
     /**
      * Update the application and licence status (if applicable)
-     * @param ApplicationEntity $application
-     * @param Result $result
+     *
+     * @param ApplicationEntity $application Appication
+     *
+     * @return void
      */
-    private function updateStatus(ApplicationEntity $application, $result)
+    private function updateStatus(ApplicationEntity $application)
     {
         $now = new DateTime();
 
@@ -112,17 +117,24 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         $this->getRepo()->save($application);
 
-        $result
+        $this->result
             ->addId('application', $application->getId())
             ->addMessage('Application updated');
 
         if ($licence !== null) {
-             $result
+            $this->result
                 ->addId('licence', $licence->getId())
                 ->addMessage('Licence updated');
         }
     }
 
+    /**
+     * Snapshot Application
+     *
+     * @param ApplicationEntity $application Applicaiton Entity
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     private function snapshotApplication(ApplicationEntity $application)
     {
         $data = [
@@ -133,8 +145,11 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * @param ApplicationEntity $application
-     * @return Result
+     * Create task
+     *
+     * @param ApplicationEntity $application Application Entity
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     private function createTask(ApplicationEntity $application)
     {
@@ -180,8 +195,25 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             return $taskData;
         }
 
-        // If People is only change section
+        // If Transport manager section changed
         if ($this->isOnlyCompletedSection($application, ApplicationCompletion::SECTION_TRANSPORT_MANAGER)) {
+            /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication $repoTma */
+            $repoTma = $this->getRepo('TransportManagerApplication');
+
+            $stat = $repoTma->fetchStatByAppId($application->getId());
+
+            //  If was not added, but was removed at least ONE transport manager
+            $statByAction = $stat['action'];
+            if (
+                (int)$statByAction[Entity\Tm\TransportManagerApplication::ACTION_ADD] === 0
+                && $statByAction[Entity\Tm\TransportManagerApplication::ACTION_DELETE] > 0
+            ) {
+                $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_TM1_REMOVAL_VARIATION;
+                $taskData['description'] = 'TM1 (Removal only)';
+
+                return $taskData;
+            }
+
             $taskData['subCategory'] = CategoryEntity::TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL;
             $taskData['description'] = 'TM change variation';
         }
@@ -228,7 +260,10 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * @param ApplicationEntity $application
+     * check, if can be submited
+     *
+     * @param ApplicationEntity $application Application Entity
+     *
      * @return boolean
      * @throws Exception\ValidationException
      */
@@ -246,7 +281,10 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * @param ApplicationEntity $application
+     * Get Task Description
+     *
+     * @param ApplicationEntity $application Application Entity
+     *
      * @return string
      */
     protected function getTaskDescription(ApplicationEntity $application)
@@ -257,9 +295,9 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     /**
      * Create a publicaction
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application Application Entity
      *
-     * @return Result
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function createPublication(ApplicationEntity $application)
     {
@@ -276,9 +314,9 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     /**
      * Create a TEX task
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application Application Entity
      *
-     * @return Result
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function createTexTask(ApplicationEntity $application)
     {

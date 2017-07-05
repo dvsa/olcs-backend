@@ -676,7 +676,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      *
      * @param int $olbsKey new value being set
      *
-     * @return $this
+     * @return TransportManagerLicence
      */
     public function setOlbsKey($olbsKey)
     {
@@ -700,7 +700,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmType entity being set as the value
      *
-     * @return $this
+     * @return TransportManagerLicence
      */
     public function setTmType($tmType)
     {

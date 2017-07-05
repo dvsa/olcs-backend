@@ -7,7 +7,8 @@
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
-use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * SingleValueAbstract
@@ -23,11 +24,20 @@ abstract class SingleValueAbstract extends DynamicBookmark
     const SRCH_VAL_KEY = 'busRegId'; // example
     const DEFAULT_VALUE = null;
     const QUERY_CLASS = null;
+    const BUNDLE = [];
 
+    /**
+     * get query
+     *
+     * @param array $data query data
+     *
+     * @return QueryInterface
+     */
     public function getQuery(array $data)
     {
         $data = [
-            static::SRCH_FLD_KEY => isset($data[static::SRCH_VAL_KEY]) ? $data[static::SRCH_VAL_KEY] : null
+            static::SRCH_FLD_KEY => isset($data[static::SRCH_VAL_KEY]) ? $data[static::SRCH_VAL_KEY] : null,
+            'bundle' => static::BUNDLE
         ];
 
         $queryClass = static::QUERY_CLASS;
@@ -35,6 +45,11 @@ abstract class SingleValueAbstract extends DynamicBookmark
         return $queryClass::create($data);
     }
 
+    /**
+     * Render the bookmark
+     *
+     * @return null|string
+     */
     public function render()
     {
         $value = isset($this->data[static::FIELD]) ? $this->data[static::FIELD] : null;
@@ -44,7 +59,7 @@ abstract class SingleValueAbstract extends DynamicBookmark
         if (!is_null($value) && !is_null($formatter)) {
 
             /**
-             * @var \Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\Date $class
+             * @var FormatterInterface $class
              */
             $class = __NAMESPACE__ . '\Formatter\\' . $formatter;
 

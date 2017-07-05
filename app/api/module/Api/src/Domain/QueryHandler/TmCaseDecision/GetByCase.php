@@ -12,10 +12,23 @@ final class GetByCase extends AbstractQueryHandler
 {
     protected $repoServiceName = 'TmCaseDecision';
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return array|\Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
+        $tmCaseDecision = $this->getRepo()->fetchLatestUsingCase($query);
+
+        if ($tmCaseDecision === false) {
+            return [];
+        }
+
         return $this->result(
-            $this->getRepo()->fetchLatestUsingCase($query),
+            $tmCaseDecision,
             ['rehabMeasures', 'unfitnessReasons']
         );
     }

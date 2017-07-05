@@ -174,7 +174,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         return $this->exportPath
             . '/'
             . $prefix
-            . ((new DateTime())->format('Ymd'))
+            . ((new DateTime())->format('YmdHis'))
             . '.dat';
     }
 

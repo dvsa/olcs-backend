@@ -37,6 +37,7 @@ return [
     BookmarkQuery\OrganisationBundle::class => BookmarkQueryHandler\OrganisationBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
     BookmarkQuery\BusRegBundle::class => BookmarkQueryHandler\BusRegBundle::class,
+    BookmarkQuery\BusFeeTypeBundle::class => BookmarkQueryHandler\BusFeeTypeBundle::class,
     BookmarkQuery\PublicationLinkBundle::class => BookmarkQueryHandler\PublicationLinkBundle::class,
     BookmarkQuery\PublicationBundle::class => BookmarkQueryHandler\PublicationBundle::class,
     BookmarkQuery\PublicationLatestByTaAndTypeBundle::class
@@ -178,6 +179,8 @@ return [
     TransferQuery\Cases\Si\Si::class => QueryHandler\Cases\Si\Si::class,
     TransferQuery\Cases\Si\SiList::class => QueryHandler\Cases\Si\SiList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
+
+    TransferQuery\Cases\Report\OpenList::class => QueryHandler\Cases\Report\OpenList::class,
 
     TransferQuery\Venue\VenueList::class => QueryHandler\Venue\VenueList::class,
 

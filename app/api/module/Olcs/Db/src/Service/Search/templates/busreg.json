@@ -39,7 +39,7 @@
                      "match": {
                         "reg_no": {
                            "query": "%SEARCH_TERM%",
-                           "boost": 1.5
+                           "boost": 2
                         }
                      }
                   },

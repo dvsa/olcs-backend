@@ -41,4 +41,16 @@ class GetByCaseTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
         $this->assertEquals(['foo'], $result->serialize());
     }
+
+    public function testHandleQueryNoResult()
+    {
+        $query = Qry::create(['case' => 1]);
+
+        $this->repoMap['TmCaseDecision']->shouldReceive('fetchLatestUsingCase')
+            ->with($query)
+            ->andReturn(false);
+
+        $result = $this->sut->handleQuery($query);
+        $this->assertEquals([], $result);
+    }
 }

@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Mockery as m;
 
 /**
@@ -11,6 +12,8 @@ use Mockery as m;
  */
 class TransportManagerApplicationTest extends RepositoryTestCase
 {
+    const APP_ID = 9001;
+
     /** @var  Repository\TransportManagerApplication | m\MockInterface */
     protected $sut;
 
@@ -49,10 +52,10 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('expr->eq')->with('tma.application', ':applicationId')->once()->andReturn('EXPR');
         $mockQb->shouldReceive('andWhere')->with('EXPR')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('applicationId', 834)->once();
+        $mockQb->shouldReceive('setParameter')->with('applicationId', self::APP_ID)->once();
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('RESULT');
 
-        $this->assertSame('RESULT', $this->sut->fetchWithContactDetailsByApplication(834));
+        $this->assertSame('RESULT', $this->sut->fetchWithContactDetailsByApplication(self::APP_ID));
     }
 
     public function testFetchDetails()
@@ -69,7 +72,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('a.goodsOrPsv', 'gop')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.licence')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.status')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(self::APP_ID)->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('with')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
@@ -82,7 +85,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
-        $this->assertSame('RESULT', $this->sut->fetchDetails(834));
+        $this->assertSame('RESULT', $this->sut->fetchDetails(self::APP_ID));
     }
 
     public function testFetchDetailsEmpty()
@@ -99,7 +102,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('a.goodsOrPsv', 'gop')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.licence')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('a.status')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('byId')->with(834)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('byId')->with(self::APP_ID)->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('with')->with('tma.transportManager', 'tm')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('tm.homeCd', 'hcd')->once()->andReturnSelf();
@@ -114,7 +117,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
-        $this->sut->fetchDetails(834);
+        $this->sut->fetchDetails(self::APP_ID);
     }
 
     /**
@@ -286,5 +289,44 @@ class TransportManagerApplicationTest extends RepositoryTestCase
             ['user' => 73, 'filterByOrgUser' => true]
         );
         $this->sut->applyListFilters($mockDqb, $query);
+    }
+
+    public function testFetchStatByAppId()
+    {
+        $mockQb = $this->createMockQb('{QUERY}');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $mockQb->shouldReceive('getQuery->getOneOrNullResult')
+            ->once()
+            ->andReturn(
+                [
+                    TransportManagerApplication::ACTION_ADD => 3,
+                    TransportManagerApplication::ACTION_UPDATE => 5,
+                    TransportManagerApplication::ACTION_DELETE => 7,
+                ]
+            );
+
+        $expectQry = '{QUERY}'.
+            ' SELECT tma.id' .
+            ' GROUP BY tma.application' .
+            ' AND tma.application = [[' . self::APP_ID. ']]' .
+            ' SELECT SUM(CASE WHEN tma.action = \'A\' THEN 1 ELSE 0 END) AS A' .
+            ' SELECT SUM(CASE WHEN tma.action = \'U\' THEN 1 ELSE 0 END) AS U' .
+            ' SELECT SUM(CASE WHEN tma.action = \'D\' THEN 1 ELSE 0 END) AS D';
+
+        $actual = $this->sut->fetchStatByAppId(self::APP_ID);
+
+        static::assertEquals($expectQry, $this->query);
+        static::assertEquals(
+            [
+                'action' => [
+                    'A' => 3,
+                    'U' => 5,
+                    'D' => 7,
+                ]
+            ],
+            $actual
+        );
     }
 }

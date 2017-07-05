@@ -237,4 +237,49 @@ class TransportManagerApplication extends AbstractRepository
 
         return $qb->getQuery()->getSingleResult();
     }
+
+    /**
+     * Fetch statistic data by Application Id
+     *
+     * @param int $appId Application/Variation Id
+     *
+     * @return array
+     */
+    public function fetchStatByAppId($appId)
+    {
+        $dqb = $this->createQueryBuilder();
+
+        $dqb
+            ->select($this->alias . '.id')
+            ->groupBy($this->alias .'.application')
+            ->andWhere(
+                $dqb->expr()->eq($this->alias .'.application', ':applicationId')
+            )
+            ->setParameter('applicationId', $appId);
+
+        //  add fields to get count Added/Updated/Deleted
+        $actions = [
+            Entity\Tm\TransportManagerApplication::ACTION_ADD,
+            Entity\Tm\TransportManagerApplication::ACTION_UPDATE,
+            Entity\Tm\TransportManagerApplication::ACTION_DELETE,
+        ];
+        foreach ($actions as $action) {
+            $dqb->addSelect(
+                'SUM(' .
+                    'CASE' .
+                        ' WHEN ' . $this->alias . '.action = \'' . $action . '\''.
+                        ' THEN 1' .
+                        ' ELSE 0' .
+                    ' END' .
+                ') AS '. $action
+            );
+        }
+
+        $result = $dqb->getQuery()->getOneOrNullResult(Query::HYDRATE_ARRAY) ?: [];
+
+        return [
+            'action' => $result +
+                array_fill_keys($actions, 0),
+        ];
+    }
 }

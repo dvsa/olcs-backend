@@ -1,17 +1,10 @@
 <?php
 
-/**
- * ConditionUndertaking
- *
- * @author Shaun Lizzio <shaun@lizzio.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Entity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -25,8 +18,10 @@ class ConditionUndertaking extends AbstractRepository
      * Fetch the default record by it's id
      *
      * Overridden default query to return appropriate table joins
-     * @param QueryBuilder $qb
-     * @param int $id
+     *
+     * @param QueryBuilder $qb Doctrine Query Builder
+     * @param int          $id CU id
+     *
      * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
@@ -41,7 +36,7 @@ class ConditionUndertaking extends AbstractRepository
     /**
      * Fetch a list for a licence, filtered to include only not fulfilled and not draft
      *
-     * @param int $licenceId
+     * @param int $licenceId Licence Id
      *
      * @return array of Entity
      */
@@ -67,8 +62,11 @@ class ConditionUndertaking extends AbstractRepository
 
     /**
      * Apply List Filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     *
+     * @param QueryBuilder   $qb    Doctrine Query Builder
+     * @param QueryInterface $query Http Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -78,7 +76,10 @@ class ConditionUndertaking extends AbstractRepository
 
     /**
      * Add List Joins
-     * @param QueryBuilder $qb
+     *
+     * @param QueryBuilder $qb Doctrine Query Builder
+     *
+     * @return void
      */
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -93,7 +94,7 @@ class ConditionUndertaking extends AbstractRepository
     /**
      * Fetch a list of ConditionUndertaking for an Application
      *
-     * @param int $applicationId
+     * @param int $applicationId Application Id
      *
      * @return array
      */
@@ -120,8 +121,8 @@ class ConditionUndertaking extends AbstractRepository
     /**
      * Fetch a list of ConditionUndertaking for a Variation
      *
-     * @param int $applicationId
-     * @param int $licenceId
+     * @param int $applicationId Application Id
+     * @param int $licenceId     Licence Id
      *
      * @return array
      */
@@ -152,8 +153,8 @@ class ConditionUndertaking extends AbstractRepository
     /**
      * Fetch a list of ConditionUndertaking for a Licence
      *
-     * @param int $licenceId
-     * @param string $conditionType
+     * @param int    $licenceId     Licence Id
+     * @param string $conditionType Condition Type
      *
      * @return array
      */
@@ -185,7 +186,7 @@ class ConditionUndertaking extends AbstractRepository
     /**
      * Fetch a list of ConditionUndertaking for an s4.
      *
-     * @param int $s4Id
+     * @param int $s4Id S4 id
      *
      * @return array
      */
@@ -238,5 +239,31 @@ class ConditionUndertaking extends AbstractRepository
             ->setParameter('note', '%' . Entity::SMALL_VEHICLE_UNDERTAKINGS . '%');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Remove from Variation, after delete CUs from licence
+     *
+     * @param array $ids Condition Undertaking identifiers
+     *
+     * @return int
+     */
+    public function deleteFromVariations(array $ids)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+        $qb
+            ->andWhere(
+                $qb->expr()->in($this->alias . '.licConditionVariation', ':CU_IDS')
+            )
+            ->setParameter('CU_IDS', $ids);
+
+        $cuInVar = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        foreach ($cuInVar as $cu) {
+            $this->delete($cu);
+        }
+
+        return count($cuInVar);
     }
 }

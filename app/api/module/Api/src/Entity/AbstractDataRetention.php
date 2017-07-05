@@ -37,15 +37,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     use ProcessDateTrait;
 
     /**
-     * Action after date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="action_after_date", nullable=true)
-     */
-    protected $actionAfterDate;
-
-    /**
      * Action confirmation
      *
      * @var boolean
@@ -152,6 +143,15 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $lastModifiedOn;
 
     /**
+     * Next review date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="next_review_date", nullable=true)
+     */
+    protected $nextReviewDate;
+
+    /**
      * To action
      *
      * @var boolean
@@ -159,36 +159,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @ORM\Column(type="boolean", name="to_action", nullable=false)
      */
     protected $toAction;
-
-    /**
-     * Set the action after date
-     *
-     * @param \DateTime $actionAfterDate new value being set
-     *
-     * @return DataRetention
-     */
-    public function setActionAfterDate($actionAfterDate)
-    {
-        $this->actionAfterDate = $actionAfterDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the action after date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getActionAfterDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->actionAfterDate);
-        }
-
-        return $this->actionAfterDate;
-    }
 
     /**
      * Set the action confirmation
@@ -476,6 +446,36 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
         }
 
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the next review date
+     *
+     * @param \DateTime $nextReviewDate new value being set
+     *
+     * @return DataRetention
+     */
+    public function setNextReviewDate($nextReviewDate)
+    {
+        $this->nextReviewDate = $nextReviewDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the next review date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getNextReviewDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->nextReviewDate);
+        }
+
+        return $this->nextReviewDate;
     }
 
     /**

@@ -1,30 +1,38 @@
 <?php
 
-/**
- * Cases test
- */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Doctrine\ORM\EntityRepository;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Transfer\Query\Cases\ByLicence;
 use Dvsa\Olcs\Transfer\Query\Cases\ByTransportManager;
-use Doctrine\DBAL\LockMode;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Domain\Exception;
+use Mockery as m;
 
 /**
- * Cases test
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\Cases
  */
 class CasesTest extends RepositoryTestCase
 {
+    /** @var  Repository\Cases | m\MockInterface */
+    protected $sut;
+
+    /** @var  \Doctrine\ORM\QueryBuilder | m\MockInterface */
+    private $mockDqb;
+    /** @var  \Dvsa\Olcs\Transfer\Query\QueryInterface | m\MockInterface */
+    private $mockQi;
+
     public function setUp()
     {
-        $this->setUpSut(CasesRepo::class);
+        $this->setUpSut(Repository\Cases::class, true);
+
+        $this->mockDqb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $this->mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
     }
 
     /**
@@ -43,7 +51,7 @@ class CasesTest extends RepositoryTestCase
 
     public function testApplyListFiltersTm()
     {
-        $sut = m::mock(CasesRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $sut = m::mock(Repository\Cases::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $transportManager = 3;
 
@@ -63,7 +71,7 @@ class CasesTest extends RepositoryTestCase
 
     public function testApplyListFiltersLicence()
     {
-        $sut = m::mock(CasesRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $sut = m::mock(Repository\Cases::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $licence = 7;
 
@@ -81,10 +89,73 @@ class CasesTest extends RepositoryTestCase
         $sut->applyListFilters($mockQb, $mockQuery);
     }
 
+    public function testForReportOpenListQry()
+    {
+        /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface |m\MockInterface $mockQry */
+        $mockQry = m::mock(TransferQry\Cases\Report\OpenList::class)->makePartial();
+        $mockQry
+            ->shouldReceive('getCaseType')->twice()->andReturn('unit_CaseType')
+            ->shouldReceive('getApplicationStatus')->twice()->andReturn('unit_AppStatus')
+            ->shouldReceive('getLicenceStatus')->twice()->andReturn('unit_LicStatus')
+            ->shouldReceive('getTrafficArea')->once()->andReturn('unit_TA');
+
+        $qb = $this->createMockQb('{{QUERY}}');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('application', 'a')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('l.trafficArea', 'ta')->once()->andReturnSelf()
+            ->shouldReceive('with')->once() ->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn('EXPECT');
+
+        static::assertEquals('EXPECT', $this->sut->fetchList($mockQry));
+
+        $expected = '{{QUERY}}' .
+            ' SELECT CONCAT(ct.description, m.id) as HIDDEN caseType' .
+            ' AND m.caseType = [[unit_CaseType]]' .
+            ' AND m.closedDate IS NULL' .
+            ' AND a.status = [[unit_AppStatus]]' .
+            ' AND l.status = [[unit_LicStatus]]' .
+            ' AND ta.id = [[unit_TA]]';
+
+        static::assertEquals($expected, $this->query);
+    }
+
+    public function testForReportOpenListQryOtherTa()
+    {
+        /** @var \Dvsa\Olcs\Transfer\Query\QueryInterface |m\MockInterface $mockQry */
+        $mockQry = m::mock(TransferQry\Cases\Report\OpenList::class)->makePartial();
+        $mockQry->shouldReceive('getTrafficArea')->once()->andReturn('OTHER');
+
+        $qb = $this->createMockQb('{{QUERY}}');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn('EXPECT');
+
+        static::assertEquals('EXPECT', $this->sut->fetchList($mockQry));
+
+        $expected = '{{QUERY}}' .
+            ' SELECT CONCAT(ct.description, m.id) as HIDDEN caseType' .
+            ' AND m.closedDate IS NULL' .
+            ' AND ta.id IS NULL';
+
+        static::assertEquals($expected, $this->query);
+    }
+
     public function testFetchWithLicenceUsingId()
     {
-        $command = m::mock(QueryInterface::class);
-        $command->shouldReceive('getId')->andReturn(24);
+        $this->mockQi->shouldReceive('getId')->andReturn(24);
 
         $result = m::mock(CasesEntity::class);
         $results = [$result];
@@ -114,7 +185,7 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('lock')
             ->with($result, LockMode::OPTIMISTIC, 1);
 
-        $this->sut->fetchWithLicenceUsingId($command, Query::HYDRATE_OBJECT, 1);
+        $this->sut->fetchWithLicenceUsingId($this->mockQi, Query::HYDRATE_OBJECT, 1);
     }
 
     public function testFetchWithLicence()
@@ -211,19 +282,17 @@ class CasesTest extends RepositoryTestCase
 
     public function testBuildDefaultListQuery()
     {
-        $sut = m::mock(CasesRepo::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->sut->shouldReceive('getQueryBuilder')->with()->andReturn($this->mockDqb);
 
-        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
-        $mockQi = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
-
-        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
-
-        $mockQb->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
-        $mockQb->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
-        $mockQb->shouldReceive('with')->with('caseType', 'ct')->once()->andReturnSelf();
-        $mockQb->shouldReceive('addSelect')->with('CONCAT(ct.description, m.id) as HIDDEN caseType')->once()
+        $this->mockDqb
+            ->shouldReceive('modifyQuery')->with($this->mockDqb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('caseType', 'ct')->once()->andReturnSelf()
+            ->shouldReceive('addSelect')
+            ->with('CONCAT(ct.description, m.id) as HIDDEN caseType')
+            ->once()
             ->andReturnSelf();
 
-        $sut->buildDefaultListQuery($mockQb, $mockQi);
+        $this->sut->buildDefaultListQuery($this->mockDqb, $this->mockQi);
     }
 }

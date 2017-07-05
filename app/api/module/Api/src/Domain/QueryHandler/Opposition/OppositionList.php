@@ -14,26 +14,36 @@ final class OppositionList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Opposition';
 
+    /**
+     * Handle Query
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Opposition\OppositionList $query Query
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var OppositionRepo $repo */
         $repo = $this->getRepo();
-        return [
-            'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT),
-                [
-                    'case' => [
-                        'application'
+
+        $result = $this->resultList(
+            $repo->fetchList($query, Query::HYDRATE_OBJECT),
+            [
+                'case' => [
+                    'application',
+                ],
+                'grounds',
+                'opposer' => [
+                    'contactDetails' => [
+                        'person',
                     ],
-                    'grounds',
-                    'opposer' => [
-                        'contactDetails' => [
-                            'person'
-                        ]
-                    ]
-                ]
-            ),
-            'count' => $repo->fetchCount($query)
+                ],
+            ]
+        );
+
+        return [
+            'result' => $result,
+            'count' => count($result),
         ];
     }
 }
