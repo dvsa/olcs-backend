@@ -1,9 +1,9 @@
 <?php
-
 namespace Dvsa\OlcsTest\GdsVerify\Data;
 
 use Dvsa\Olcs\GdsVerify\Service\GdsVerify;
 use Mockery as m;
+use Zend\Log\Writer\Noop;
 
 /**
  * GdsVerifyTest test
@@ -314,7 +314,9 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
 
     private function getSut(array $config = [])
     {
+        $writer = new Noop();
         $logger = new \Zend\Log\Logger();
+        $logger->addWriter($writer);
         $serviceLocator = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->shouldReceive('get')->with('config')->once()->andReturn($config);
         $serviceLocator->shouldReceive('get')->with('logger')->once()->andReturn($logger);
