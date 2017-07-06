@@ -43,6 +43,9 @@ class VehiclesReviewServiceTest extends MockeryTestCase
                     ->getMock()
             )
             ->once()
+            ->shouldReceive('getremovalDate')
+            ->andReturn(null)
+            ->once()
             ->getMock();
 
         $licenceVehicle2 = m::mock()
@@ -58,10 +61,20 @@ class VehiclesReviewServiceTest extends MockeryTestCase
                     ->getMock()
             )
             ->once()
+            ->shouldReceive('getremovalDate')
+            ->andReturn(null)
+            ->once()
+            ->getMock();
+
+        $licenceVehicle3 = m::mock()
+            ->shouldReceive('getremovalDate')
+            ->andReturn('2010-01-01')
+            ->once()
             ->getMock();
 
         $licenceVehicles->add($licenceVehicle1);
         $licenceVehicles->add($licenceVehicle2);
+        $licenceVehicles->add($licenceVehicle3);
 
         $mockLicence = m::mock(Licence::class)
             ->shouldReceive('getLicenceVehicles')
@@ -87,11 +100,11 @@ class VehiclesReviewServiceTest extends MockeryTestCase
             ],
             [
                 ['value' => 'VRM123'],
-                ['value' => '2000']
+                ['value' => '2000kg']
             ],
             [
                 ['value' => 'VRM456'],
-                ['value' => '1000']
+                ['value' => '1000kg']
             ]
         ];
 
