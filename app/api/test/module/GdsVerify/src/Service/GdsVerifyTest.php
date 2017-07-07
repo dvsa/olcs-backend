@@ -97,7 +97,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
         $sut->setMetadataLoader($metadataLoader);
 
         $samlResponse = file_get_contents(__DIR__ .'/saml-response.txt');
-        $request = $sut->getAttributesFromResponse($samlResponse);
+        $request = @$sut->getAttributesFromResponse($samlResponse);
 
         $this->assertSame(
             [
@@ -205,7 +205,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
         $samlResponse = file_get_contents(__DIR__ .'/saml-response.txt');
 
         $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'SAML Assertion signature error');
-        $sut->getAttributesFromResponse($samlResponse);
+        @$sut->getAttributesFromResponse($samlResponse);
     }
 
     public function testGetAttributesFromResponseNotSuccessMessage()
