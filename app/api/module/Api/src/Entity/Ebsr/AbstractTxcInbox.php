@@ -173,7 +173,7 @@ abstract class AbstractTxcInbox implements BundleSerializableInterface, JsonSeri
      * @var \Dvsa\Olcs\Api\Entity\Doc\Document
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", fetch="LAZY")
-     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="zip_document_id", referencedColumnName="id", nullable=true)
      */
     protected $zipDocument;
 
