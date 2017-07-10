@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequestFailure;
+use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml;
+use Dvsa\Olcs\Api\Service\InputFilter\Input as InputFilter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -42,6 +44,8 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Olcs\XmlTools\Filter\MapXmlFile;
+use Zend\Filter\FilterPluginManager;
 
 /**
  * Process Si Compliance Episode
@@ -72,11 +76,20 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         'Document'
     ];
 
+    /** @var InputFilter */
     protected $xmlStructureInput;
 
+    /** @var InputFilter */
     protected $complianceEpisodeInput;
 
+    /** @var InputFilter */
     protected $seriousInfringementInput;
+
+    /** @var  FilterPluginManager */
+    protected $filterManager;
+
+    /** @var  ComplianceEpisodeXml */
+    protected $xmlMapping;
 
     /**
      * si category doctrine information
@@ -146,6 +159,8 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         $this->xmlStructureInput = $mainServiceLocator->get('ComplianceXmlStructure');
         $this->complianceEpisodeInput = $mainServiceLocator->get('ComplianceEpisodeInput');
         $this->seriousInfringementInput = $mainServiceLocator->get('SeriousInfringementInput');
+        $this->filterManager = $mainServiceLocator->get('FilterManager');
+        $this->xmlMapping = $mainServiceLocator->get('ComplianceEpisodeXmlMapping');
 
         return parent::createService($serviceLocator);
     }
@@ -180,8 +195,10 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             return $this->result;
         }
 
+        $parsedXmlData = $this->xmlMapping($xmlDomDocument);
+
         //extract the data we need from the dom document, on failure return a result object containing the errors
-        if (!$erruData = $this->validateInput('complianceEpisode', $xmlDomDocument, [])) {
+        if (!$erruData = $this->validateInput('complianceEpisode', $parsedXmlData, [])) {
             return $this->result;
         }
 
@@ -617,5 +634,20 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    /**
+     * map the xml data into a php array
+     *
+     * @param \DOMDocument $xmlDomDocument dom document
+     *
+     * @return array
+     */
+    private function xmlMapping(\DOMDocument $xmlDomDocument)
+    {
+        /** @var MapXmlFile $mapXmlFile */
+        $mapXmlFile = $this->filterManager->get(MapXmlFile::class);
+        $mapXmlFile->setMapping($this->xmlMapping->getMapping($xmlDomDocument));
+        return $mapXmlFile->filter($xmlDomDocument);
     }
 }
