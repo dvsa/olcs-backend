@@ -44,8 +44,6 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
-use Olcs\XmlTools\Filter\MapXmlFile;
-use Zend\Filter\FilterPluginManager;
 
 /**
  * Process Si Compliance Episode
@@ -84,9 +82,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
 
     /** @var InputFilter */
     protected $seriousInfringementInput;
-
-    /** @var  FilterPluginManager */
-    protected $filterManager;
 
     /** @var  ComplianceEpisodeXml */
     protected $xmlMapping;
@@ -159,7 +154,6 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         $this->xmlStructureInput = $mainServiceLocator->get('ComplianceXmlStructure');
         $this->complianceEpisodeInput = $mainServiceLocator->get('ComplianceEpisodeInput');
         $this->seriousInfringementInput = $mainServiceLocator->get('SeriousInfringementInput');
-        $this->filterManager = $mainServiceLocator->get('FilterManager');
         $this->xmlMapping = $mainServiceLocator->get('ComplianceEpisodeXmlMapping');
 
         return parent::createService($serviceLocator);
@@ -195,7 +189,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             return $this->result;
         }
 
-        $parsedXmlData = $this->xmlMapping($xmlDomDocument);
+        $parsedXmlData = $this->xmlMapping->mapData($xmlDomDocument);
 
         //extract the data we need from the dom document, on failure return a result object containing the errors
         if (!$erruData = $this->validateInput('complianceEpisode', $parsedXmlData, [])) {
@@ -634,20 +628,5 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
     public function getErrors()
     {
         return $this->errors;
-    }
-
-    /**
-     * map the xml data into a php array
-     *
-     * @param \DOMDocument $xmlDomDocument dom document
-     *
-     * @return array
-     */
-    private function xmlMapping(\DOMDocument $xmlDomDocument)
-    {
-        /** @var MapXmlFile $mapXmlFile */
-        $mapXmlFile = $this->filterManager->get(MapXmlFile::class);
-        $mapXmlFile->setMapping($this->xmlMapping->getMapping($xmlDomDocument));
-        return $mapXmlFile->filter($xmlDomDocument);
     }
 }
