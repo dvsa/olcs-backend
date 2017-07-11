@@ -34,7 +34,7 @@ class ComplianceEpisodeXml
     /**
      * map the xml data to an array
      *
-     * @param \DOMDocument $domDocument
+     * @param \DOMDocument $domDocument xml document
      *
      * @return array
      */
