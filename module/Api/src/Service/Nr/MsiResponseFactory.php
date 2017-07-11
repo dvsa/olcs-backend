@@ -12,6 +12,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class MsiResponseFactory implements FactoryInterface
 {
+    const XML_NS_MSG = 'No config specified for xml ns';
+
     /**
      * Create service
      *
@@ -20,7 +22,13 @@ class MsiResponseFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $xmlBuilder = new XmlNodeBuilder('MS2ERRU_Infringement_Res', 'https://webgate.ec.testa.eu/erru/1.0', []);
+        $config = $serviceLocator->get('Config');
+
+        if (!isset($config['nr']['compliance_episode']['xmlNs'])) {
+            throw new \RuntimeException(self::XML_NS_MSG);
+        }
+
+        $xmlBuilder = new XmlNodeBuilder('MS2ERRU_Infringement_Res', $config['nr']['compliance_episode']['xmlNs'], []);
 
         return new MsiResponse($xmlBuilder);
     }
