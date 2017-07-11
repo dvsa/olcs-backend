@@ -17,8 +17,9 @@ class MsiResponseFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return MsiResponse
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
