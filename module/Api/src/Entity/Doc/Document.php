@@ -135,6 +135,10 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
             return $this->getEbsrSubmission()->getRelatedOrganisation();
         }
 
+        if ($this->getContinuationDetail()) {
+            return $this->getContinuationDetail()->getRelatedOrganisation();
+        }
+
         return null;
     }
 
