@@ -29,6 +29,9 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
+    /**
+     * @group test123
+     */
     public function testHandleQuery()
     {
         $mockLicence = m::mock(LicenceEntity::class)
@@ -73,7 +76,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         $this->mockedSmServices['SectionAccessService']
             ->shouldReceive('getAccessibleSectionsForLicence')
             ->with($mockLicence)
-            ->andReturn(['foo_bar' => 'cake'])
+            ->andReturn(['foo_bar' => 'cake', 'conditions_undertakings' => 'cake'])
             ->once()
             ->getMock();
 
