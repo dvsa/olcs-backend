@@ -5,6 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Nr\Mapping;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory;
+use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml;
+use Olcs\XmlTools\Filter\MapXmlFile;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ComplianceEpisodeXmlFactoryTest
@@ -14,12 +17,38 @@ class ComplianceEpisodeXmlFactoryTest extends TestCase
 {
     public function testCreateService()
     {
-        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $config = [
+            'nr' => [
+                'compliance_episode' => [
+                    'xmlNs' => 'xml ns info'
+                ]
+            ]
+        ];
+
+        $mockMapXmlFile = m::mock(MapXmlFile::class);
+
+        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl->shouldReceive('get')->once()->with('FilterManager')->andReturnSelf();
+        $mockSl->shouldReceive('get')->once()->with(MapXmlFile::class)->andReturn($mockMapXmlFile);
+        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
 
         $sut = new ComplianceEpisodeXmlFactory();
 
         $service = $sut->createService($mockSl);
 
-        $this->assertInstanceOf('Olcs\XmlTools\Xml\Specification\SpecificationInterface', $service);
+        $this->assertInstanceOf(ComplianceEpisodeXml::class, $service);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Missing INR service config
+     */
+    public function testCreateServiceMissingConfig()
+    {
+        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+
+        $sut = new ComplianceEpisodeXmlFactory();
+        $sut->createService($mockSl);
     }
 }
