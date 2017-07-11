@@ -29,9 +29,6 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleQuery()
     {
         $mockLicence = m::mock(LicenceEntity::class)
