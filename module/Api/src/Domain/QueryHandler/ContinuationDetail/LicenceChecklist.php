@@ -101,7 +101,7 @@ class LicenceChecklist extends AbstractQueryHandler
         $filter = new UnderscoreToCamelCase();
         array_walk(
             $sections,
-            function(&$item) use ($filter) {
+            function (&$item) use ($filter) {
                 $item = lcfirst($filter->filter($item));
             }
         );
