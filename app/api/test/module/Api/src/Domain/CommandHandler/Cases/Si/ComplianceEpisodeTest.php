@@ -38,9 +38,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendErruErrors as SendErruErrorsCmd;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml as ComplianceEpisodeXmlMapping;
-use Olcs\XmlTools\Filter\MapXmlFile;
-use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
-use Zend\Filter\FilterPluginManager;
 
 /**
  * ComplianceEpisodeTest
@@ -69,7 +66,6 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             'SeriousInfringementInput' => m::mock(SeriousInfringementInputFactory::class),
             'FileUploader' => m::mock(ContentStoreFileUploader::class),
             'ComplianceEpisodeXmlMapping' => m::mock(ComplianceEpisodeXmlMapping::class),
-            'FilterManager' => m::mock(FilterPluginManager::class),
         ];
 
         parent::setUp();
@@ -883,21 +879,9 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
      */
     private function mapXmlFile($xmlData, $xmlDomDocument)
     {
-        $mapping = m::mock(SpecificationInterface::class);
-
         $this->mockedSmServices['ComplianceEpisodeXmlMapping']
-            ->shouldReceive('getMapping')
+            ->shouldReceive('mapData')
             ->with($xmlDomDocument)
-            ->andReturn($mapping);
-
-        $mapXmlFile = m::mock(MapXmlFile::class);
-        $mapXmlFile->shouldReceive('setMapping')->with($mapping)->andReturnSelf();
-        $mapXmlFile->shouldReceive('filter')->with($xmlDomDocument)->andReturn($xmlData);
-
-
-        $this->mockedSmServices['FilterManager']
-            ->shouldReceive('get')
-            ->with(MapXmlFile::class)
-            ->andReturn($mapXmlFile);
+            ->andReturn($xmlData);
     }
 }
