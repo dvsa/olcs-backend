@@ -22,6 +22,13 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
 {
     protected $repoServiceName = 'Document';
 
+    /**
+     * Handle ccommand
+     *
+     * @param CommandInterface $command DTO
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $document = $this->getRepo()->fetchUsingId($command);
@@ -33,6 +40,14 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
         return $this->result;
     }
 
+    /**
+     * Link a document to other entities
+     *
+     * @param Entity\Doc\Document $document Document
+     * @param Cmd                 $command  DTO
+     *
+     * @return void
+     */
     private function linkDocument(Entity\Doc\Document $document, Cmd $command)
     {
         $this->maybeLinkDocument($document, $command, Entity\Application\Application::class, 'Application');
@@ -45,8 +60,19 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
         $this->maybeLinkDocument($document, $command, Entity\TrafficArea\TrafficArea::class, 'TrafficArea');
         $this->maybeLinkDocument($document, $command, Entity\Tm\TransportManager::class, 'TransportManager');
         $this->maybeLinkDocument($document, $command, Entity\OperatingCentre\OperatingCentre::class, 'OperatingCentre');
+        $this->maybeLinkDocument($document, $command, Entity\Licence\ContinuationDetail::class, 'ContinuationDetail');
     }
 
+    /**
+     * Link document to entity, if the DTO object has an ID reference to that entity
+     *
+     * @param Entity\Doc\Document $document Document
+     * @param Cmd                 $command  DTO
+     * @param string              $entity   Class name of entity
+     * @param string              $suffix   Suffix of DTO method to get value for the entity
+     *
+     * @return void
+     */
     private function maybeLinkDocument(Entity\Doc\Document $document, Cmd $command, $entity, $suffix)
     {
         $getter = 'get' . $suffix;
