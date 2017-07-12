@@ -833,6 +833,8 @@ return [
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
     TransferCommand\ContinuationDetail\UpdateFinances::class => CommandHandler\ContinuationDetail\UpdateFinances::class,
+    TransferCommand\ContinuationDetail\UpdateInsufficientFinances::class =>
+        CommandHandler\ContinuationDetail\UpdateInsufficientFinances::class,
     TransferCommand\ContinuationDetail\Queue::class => CommandHandler\ContinuationDetail\Queue::class,
     TransferCommand\ContinuationDetail\PrepareContinuations::class =>
         CommandHandler\ContinuationDetail\PrepareContinuations::class,

@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -87,5 +88,23 @@ class Document extends AbstractRepository
         );
 
         return $entity->getDocuments()->matching($criteria);
+    }
+
+    /**
+     * Fetch a list of documents for a continuation detail ID
+     *
+     * @param int $continuationId Continuation ID
+     * @param int $hydrationMode  Hydrate mode Query::HYDRATE_* constant
+     *
+     * @return array
+     */
+    public function fetchListForContinuationDetail($continuationId, $hydrationMode = Query::HYDRATE_OBJECT)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.continuationDetail', ':continuationDetail'))
+            ->setParameter('continuationDetail', $continuationId)
+            ->orderBy($this->alias . '.id', 'DESC');
+
+        return $qb->getQuery()->getResult($hydrationMode);
     }
 }
