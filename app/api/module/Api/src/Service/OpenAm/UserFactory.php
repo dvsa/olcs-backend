@@ -14,8 +14,9 @@ class UserFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $serviceLocator ZF Service locator
+     *
+     * @return User
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
