@@ -9,4 +9,5 @@ return [
     QueryHandler\ContinuationDetail\Review::class => CanAccessContinuationDetailWithId::class,
     QueryHandler\ContinuationDetail\Get::class => CanAccessContinuationDetailWithId::class,
     CommandHandler\ContinuationDetail\UpdateFinances::class => CanAccessContinuationDetailWithId::class,
+    CommandHandler\ContinuationDetail\UpdateInsufficientFinances::class => CanAccessContinuationDetailWithId::class,
 ];
