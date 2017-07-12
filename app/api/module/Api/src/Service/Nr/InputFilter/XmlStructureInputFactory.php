@@ -16,6 +16,7 @@ class XmlStructureInputFactory implements FactoryInterface
 {
     const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
     const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
+    const XML_NS_MSG = 'No config specified for xml ns';
 
     /**
      * Create service
@@ -28,6 +29,10 @@ class XmlStructureInputFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
+
+        if (!isset($config['nr']['compliance_episode']['xmlNs'])) {
+            throw new \RuntimeException(self::XML_NS_MSG);
+        }
 
         if (!isset($config['nr']['max_schema_errors'])) {
             throw new \RuntimeException(self::MAX_SCHEMA_MSG);
@@ -46,7 +51,7 @@ class XmlStructureInputFactory implements FactoryInterface
 
         /** @var Xsd $xsdValidator */
         $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
-        $xsdValidator->setXsd('https://webgate.ec.testa.eu/erru/1.0');
+        $xsdValidator->setXsd($config['nr']['compliance_episode']['xmlNs']);
         $xsdValidator->setMaxErrors($config['nr']['max_schema_errors']);
         $xsdValidator->setXmlMessageExclude($config['xml_valid_message_exclude']);
         $validatorChain->attach($xsdValidator);

@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequestFailure;
+use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml;
+use Dvsa\Olcs\Api\Service\InputFilter\Input as InputFilter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -72,11 +74,17 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         'Document'
     ];
 
+    /** @var InputFilter */
     protected $xmlStructureInput;
 
+    /** @var InputFilter */
     protected $complianceEpisodeInput;
 
+    /** @var InputFilter */
     protected $seriousInfringementInput;
+
+    /** @var  ComplianceEpisodeXml */
+    protected $xmlMapping;
 
     /**
      * si category doctrine information
@@ -146,6 +154,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
         $this->xmlStructureInput = $mainServiceLocator->get('ComplianceXmlStructure');
         $this->complianceEpisodeInput = $mainServiceLocator->get('ComplianceEpisodeInput');
         $this->seriousInfringementInput = $mainServiceLocator->get('SeriousInfringementInput');
+        $this->xmlMapping = $mainServiceLocator->get('ComplianceEpisodeXmlMapping');
 
         return parent::createService($serviceLocator);
     }
@@ -180,8 +189,10 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             return $this->result;
         }
 
+        $parsedXmlData = $this->xmlMapping->mapData($xmlDomDocument);
+
         //extract the data we need from the dom document, on failure return a result object containing the errors
-        if (!$erruData = $this->validateInput('complianceEpisode', $xmlDomDocument, [])) {
+        if (!$erruData = $this->validateInput('complianceEpisode', $parsedXmlData, [])) {
             return $this->result;
         }
 
