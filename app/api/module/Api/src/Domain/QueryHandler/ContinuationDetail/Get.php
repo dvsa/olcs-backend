@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -14,7 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Get extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
-    protected $extraRepos = ['SystemParameter', 'Fee'];
+    protected $extraRepos = ['SystemParameter', 'Fee', 'Document'];
 
     /**
      * @var FinancialStandingHelperService
@@ -48,11 +49,15 @@ class Get extends AbstractQueryHandler
         $continuationDetail = $this->getRepo()->fetchUsingId($query);
         $licence = $continuationDetail->getLicence();
 
+        $documents = $this->getRepo('Document')
+            ->fetchListForContinuationDetail($continuationDetail->getId(), Query::HYDRATE_ARRAY);
+
         return $this->result(
             $continuationDetail,
             [
                 'licence' => [
-                    'organisation'
+                    'organisation',
+                    'trafficArea'
                 ]
             ],
             [
@@ -68,7 +73,8 @@ class Get extends AbstractQueryHandler
                         ],
                         'licence'
                     ]
-                )
+                ),
+                'documents' => $documents
             ]
         );
     }

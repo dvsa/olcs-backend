@@ -95,6 +95,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $createdOn;
 
     /**
+     * Financial evidence uploaded
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="financial_evidence_uploaded", nullable=true)
+     */
+    protected $financialEvidenceUploaded;
+
+    /**
      * Has other finances
      *
      * @var string
@@ -364,6 +373,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
         }
 
         return $this->createdOn;
+    }
+
+    /**
+     * Set the financial evidence uploaded
+     *
+     * @param boolean $financialEvidenceUploaded new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setFinancialEvidenceUploaded($financialEvidenceUploaded)
+    {
+        $this->financialEvidenceUploaded = $financialEvidenceUploaded;
+
+        return $this;
+    }
+
+    /**
+     * Get the financial evidence uploaded
+     *
+     * @return boolean
+     */
+    public function getFinancialEvidenceUploaded()
+    {
+        return $this->financialEvidenceUploaded;
     }
 
     /**
