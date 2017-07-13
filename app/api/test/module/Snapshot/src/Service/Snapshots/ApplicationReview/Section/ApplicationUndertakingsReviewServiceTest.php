@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
 {
+    /** @var ApplicationUndertakingsReviewService */
     protected $sut;
     protected $sm;
 
@@ -125,5 +126,33 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
                 ]
             ]
         ];
+    }
+
+    /**
+     * @dataProvider providerGetConfigFromData
+     *
+     * Use the same data set as "testGetConfigFromData" to test we get the same results
+     */
+    public function testGetMarkupForLicence($data, $expected)
+    {
+        $mockTranslator = m::mock();
+        $this->sm->setService('translator', $mockTranslator);
+
+        $mockTranslator->shouldReceive('translate')
+            ->andReturnUsing(
+                function ($string) {
+                    return $string . '-translated';
+                }
+            );
+
+        $mockLicence = m::mock(Licence::class);
+        $mockLicence->shouldReceive('getLicenceType->getId')->with()->once()->andReturn($data['licenceType']['id']);
+        $mockLicence->shouldReceive('getOrganisation->getType->getId')->with()->once()->andReturn(
+            $data['licence']['organisation']['type']['id']
+        );
+        $mockLicence->shouldReceive('isGoods')->with()->once()->andReturn($data['isGoods']);
+        $mockLicence->shouldReceive('getTrafficArea->getIsNi')->with()->once()->andReturn($data['niFlag'] === 'Y');
+
+        $this->assertEquals($expected['markup'], $this->sut->getMarkupForLicence($mockLicence, $data['isInternal']));
     }
 }

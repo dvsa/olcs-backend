@@ -831,6 +831,7 @@ return [
     TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
 
     // ContinuationDetail
+    TransferCommand\ContinuationDetail\Submit::class => CommandHandler\ContinuationDetail\Submit::class,
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
     TransferCommand\ContinuationDetail\UpdateFinances::class => CommandHandler\ContinuationDetail\UpdateFinances::class,
     TransferCommand\ContinuationDetail\UpdateInsufficientFinances::class =>
