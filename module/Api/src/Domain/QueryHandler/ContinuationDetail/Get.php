@@ -15,8 +15,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Get extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
-
-    protected $extraRepos = ['Document'];
+    protected $extraRepos = ['SystemParameter', 'Fee', 'Document'];
 
     /**
      * @var FinancialStandingHelperService
@@ -48,16 +47,32 @@ class Get extends AbstractQueryHandler
     {
         /** @var ContinuationDetailEntity $continuationDetail */
         $continuationDetail = $this->getRepo()->fetchUsingId($query);
+        $licence = $continuationDetail->getLicence();
 
         $documents = $this->getRepo('Document')
             ->fetchListForContinuationDetail($continuationDetail->getId(), Query::HYDRATE_ARRAY);
 
         return $this->result(
             $continuationDetail,
-            ['licence' => ['trafficArea']],
+            [
+                'licence' => [
+                    'organisation',
+                    'trafficArea'
+                ]
+            ],
             [
                 'financeRequired' => $this->financialStandingHelper->getFinanceCalculationForOrganisation(
-                    $continuationDetail->getLicence()->getOrganisation()->getId()
+                    $licence->getOrganisation()->getId()
+                ),
+                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
+                'fees' => $this->resultList(
+                    $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId()),
+                    [
+                        'feeType' => [
+                            'feeType'
+                        ],
+                        'licence'
+                    ]
                 ),
                 'documents' => $documents
             ]
