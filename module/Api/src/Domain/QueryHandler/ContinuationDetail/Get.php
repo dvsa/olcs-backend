@@ -14,6 +14,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class Get extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
+    protected $extraRepos = ['SystemParameter', 'Fee'];
 
     /**
      * @var FinancialStandingHelperService
@@ -45,13 +46,28 @@ class Get extends AbstractQueryHandler
     {
         /** @var ContinuationDetailEntity $continuationDetail */
         $continuationDetail = $this->getRepo()->fetchUsingId($query);
+        $licence = $continuationDetail->getLicence();
 
         return $this->result(
             $continuationDetail,
-            ['licence'],
+            [
+                'licence' => [
+                    'organisation'
+                ]
+            ],
             [
                 'financeRequired' => $this->financialStandingHelper->getFinanceCalculationForOrganisation(
-                    $continuationDetail->getLicence()->getOrganisation()->getId()
+                    $licence->getOrganisation()->getId()
+                ),
+                'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
+                'fees' => $this->resultList(
+                    $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId()),
+                    [
+                        'feeType' => [
+                            'feeType'
+                        ],
+                        'licence'
+                    ]
                 )
             ]
         );
