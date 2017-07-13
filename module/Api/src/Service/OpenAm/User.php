@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
-use RandomLib\Generator;
+use Faker\Generator;
 
 /**
  * User
@@ -13,6 +13,7 @@ class User implements UserInterface
      * @var Client
      */
     private $openAmClient;
+
     /**
      * @var Generator
      */
@@ -212,11 +213,13 @@ class User implements UserInterface
     public function generatePassword()
     {
         // make sure that generated password contains at least one upper-case, lower-case and digit
-        return
-            $this->randomGenerator->generateString(1, Generator::CHAR_UPPER).
-            $this->randomGenerator->generateString(1, Generator::CHAR_LOWER).
-            $this->randomGenerator->generateString(1, Generator::CHAR_DIGITS).
-            $this->randomGenerator->generateString(9, Generator::EASY_TO_READ);
+        $firstLetter = $this->randomGenerator->randomLetter;
+        $secondLetter = $this->randomGenerator->randomLetter;
+
+        return $this->randomGenerator->toUpper($firstLetter) .
+            $this->randomGenerator->toLower($secondLetter) .
+            $this->randomGenerator->randomNumber(1) .
+            $this->randomGenerator->regexify('[A-Za-z0-9]+\[A-Za-z]{5,7}$');
     }
 
     /**

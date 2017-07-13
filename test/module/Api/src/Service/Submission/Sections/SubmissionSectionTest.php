@@ -62,6 +62,10 @@ class SubmissionSectionTest extends MockeryTestCase
      */
     public function testGenerateSection($input = null, $expectedResult = null)
     {
+        if (version_compare(phpversion(), '7.1', '<')) {
+            $this->markTestSkipped('PHP Version incompatible');
+        }
+
         if (!empty($input)) {
             $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
             $mockViewRenderer = m::mock(PhpRenderer::class);

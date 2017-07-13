@@ -2,11 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ContinuationDetail;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail\Get as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Transfer\Query\ContinuationDetail\Get as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -20,6 +22,7 @@ class GetTest extends QueryHandlerTestCase
     {
         $this->sut = new QueryHandler();
         $this->mockRepo('ContinuationDetail', ContinuationDetailRepo::class);
+        $this->mockRepo('Document', DocumentRepo::class);
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock();
@@ -51,13 +54,20 @@ class GetTest extends QueryHandlerTestCase
             )
             ->once()
             ->shouldReceive('serialize')
-            ->with(['licence' => ['organisation']])
+            ->with(['licence' => ['organisation', 'trafficArea']])
             ->andReturn(['licence_entity'])
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn(123)
             ->once()
             ->getMock();
 
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchUsingId')->with($query)->once()->andReturn($continuationDetail);
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchListForContinuationDetail')->with(123, Query::HYDRATE_ARRAY)->once()
+            ->andReturn(['document1', 'document2']);
 
         $this->repoMap['SystemParameter']
             ->shouldReceive('getDisableSelfServeCardPayments')
@@ -80,8 +90,6 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $continuationDetail;
-
         $this->assertEquals(
             [
                 'licence_entity',
@@ -89,7 +97,8 @@ class GetTest extends QueryHandlerTestCase
                 'disableCardPayments' => false,
                 'fees' => [
                     ['fee_entity']
-                ]
+                ],
+                'documents' => ['document1', 'document2']
             ],
             $this->sut->handleQuery($query)->serialize()
         );

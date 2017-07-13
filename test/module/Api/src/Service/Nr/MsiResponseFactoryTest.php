@@ -21,12 +21,33 @@ class MsiResponseFactoryTest extends TestCase
 {
     public function testCreateService()
     {
+        $config = [
+            'nr' => [
+                'compliance_episode' => [
+                    'xmlNs' => 'xml ns'
+                ],
+            ],
+        ];
+
         $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
 
         $sut = new MsiResponseFactory();
         $service = $sut->createService($mockSl);
 
         $this->assertInstanceOf(MsiResponse::class, $service);
         $this->assertInstanceOf(XmlNodeBuilder::class, $service->getXmlBuilder());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage No config specified for xml ns
+     */
+    public function testCreateServiceMissingConfig()
+    {
+        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn([]);
+        $sut = new MsiResponseFactory();
+        $sut->createService($mockSl);
     }
 }
