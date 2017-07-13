@@ -24,7 +24,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_continuation_detail_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_continuation_detail_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_continuation_detail_checklist_document_id",
-     *     columns={"checklist_document_id"})
+     *     columns={"checklist_document_id"}),
+ *        @ORM\Index(name="fk_continuation_detail_signature_type_ref_data_id",
+     *     columns={"signature_type"}),
+ *        @ORM\Index(name="fk_continuation_detail_digital_signature_id_digital_signature_id",
+     *     columns={"digital_signature_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_continuation_detail_licence_id_continuation_id",
@@ -95,6 +99,16 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $createdOn;
 
     /**
+     * Digital signature
+     *
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
+     * @ORM\JoinColumn(name="digital_signature_id", referencedColumnName="id", nullable=true)
+     */
+    protected $digitalSignature;
+
+    /**
      * Financial evidence uploaded
      *
      * @var boolean
@@ -131,6 +145,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Is digital
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_digital", nullable=true)
+     */
+    protected $isDigital;
 
     /**
      * Last modified by
@@ -201,6 +224,16 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\Column(type="yesno", name="received", nullable=false, options={"default": 0})
      */
     protected $received = 0;
+
+    /**
+     * Signature type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="signature_type", referencedColumnName="id", nullable=true)
+     */
+    protected $signatureType;
 
     /**
      * Status
@@ -376,6 +409,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     }
 
     /**
+     * Set the digital signature
+     *
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature entity being set as the value
+     *
+     * @return ContinuationDetail
+     */
+    public function setDigitalSignature($digitalSignature)
+    {
+        $this->digitalSignature = $digitalSignature;
+
+        return $this;
+    }
+
+    /**
+     * Get the digital signature
+     *
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     */
+    public function getDigitalSignature()
+    {
+        return $this->digitalSignature;
+    }
+
+    /**
      * Set the financial evidence uploaded
      *
      * @param boolean $financialEvidenceUploaded new value being set
@@ -469,6 +526,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is digital
+     *
+     * @param boolean $isDigital new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setIsDigital($isDigital)
+    {
+        $this->isDigital = $isDigital;
+
+        return $this;
+    }
+
+    /**
+     * Get the is digital
+     *
+     * @return boolean
+     */
+    public function getIsDigital()
+    {
+        return $this->isDigital;
     }
 
     /**
@@ -643,6 +724,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getReceived()
     {
         return $this->received;
+    }
+
+    /**
+     * Set the signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
+     *
+     * @return ContinuationDetail
+     */
+    public function setSignatureType($signatureType)
+    {
+        $this->signatureType = $signatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSignatureType()
+    {
+        return $this->signatureType;
     }
 
     /**
