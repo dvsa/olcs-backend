@@ -108,9 +108,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const PSV_VEHICLE_SIZE_MEDIUM_LARGE = 'psvvs_medium_large';
     const PSV_VEHICLE_SIZE_BOTH = 'psvvs_both';
 
-    const SIG_PHYSICAL_SIGNATURE = 'sig_physical_signature';
-    const SIG_DIGITAL_SIGNATURE = 'sig_digital_signature';
-    const SIG_SIGNATURE_NOT_REQUIRED = 'sig_signature_not_required';
+    const SIG_PHYSICAL_SIGNATURE = RefData::SIG_PHYSICAL_SIGNATURE;
+    const SIG_DIGITAL_SIGNATURE = RefData::SIG_DIGITAL_SIGNATURE;
+    const SIG_SIGNATURE_NOT_REQUIRED = RefData::SIG_SIGNATURE_NOT_REQUIRED;
 
     const DATE_FORMAT = 'd M Y';
 
