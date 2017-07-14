@@ -159,7 +159,8 @@ final class Result
     {
         return [
             'id' => $this->ids,
-            'messages' => $this->messages
+            'messages' => $this->messages,
+            'flags' => $this->flags,
         ];
     }
 }
