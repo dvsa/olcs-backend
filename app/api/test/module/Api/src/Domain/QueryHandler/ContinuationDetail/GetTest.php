@@ -26,6 +26,7 @@ class GetTest extends QueryHandlerTestCase
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock();
+        $this->mockedSmServices['Review\ApplicationUndertakings'] = m::mock();
 
         parent::setUp();
     }
@@ -41,18 +42,19 @@ class GetTest extends QueryHandlerTestCase
                     ->shouldReceive('getOrganisation')
                     ->andReturn(
                         m::mock()
-                        ->shouldReceive('getId')
-                        ->andReturn(99)
-                        ->once()
+                            ->shouldReceive('getType')->with()->andReturn(
+                                m::mock()->shouldReceive('getId')->andReturn('ORG_TYPE_ID')->getMock()
+                            )->once()
+                        ->shouldReceive('getId')->with()->andReturn(99)->once()
                         ->getMock()
                     )
-                    ->once()
+                    ->twice()
                     ->shouldReceive('getId')
                     ->andReturn(1)
                     ->once()
                     ->getMock()
             )
-            ->once()
+            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea']])
             ->andReturn(['licence_entity'])
@@ -73,6 +75,10 @@ class GetTest extends QueryHandlerTestCase
             ->shouldReceive('getDisableSelfServeCardPayments')
             ->andReturn(false)
             ->once();
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableGdsVerifySignatures')
+            ->andReturn('DISABLE_SIGNATURES')
+            ->once();
 
         $mockFee = m::mock(BundleSerializableInterface::class)
             ->shouldReceive('serialize')
@@ -90,6 +96,10 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
+        $this->mockedSmServices['Review\ApplicationUndertakings']
+            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+            ->andReturn('DECLARATIONS');
+
         $this->assertEquals(
             [
                 'licence_entity',
@@ -98,7 +108,11 @@ class GetTest extends QueryHandlerTestCase
                 'fees' => [
                     ['fee_entity']
                 ],
-                'documents' => ['document1', 'document2']
+                'documents' => ['document1', 'document2'],
+                'organisationTypeId' => 'ORG_TYPE_ID',
+                'declarations' => 'DECLARATIONS',
+                'disableSignatures' => 'DISABLE_SIGNATURES',
+                'hasOutstandingContinuationFee' => true,
             ],
             $this->sut->handleQuery($query)->serialize()
         );
