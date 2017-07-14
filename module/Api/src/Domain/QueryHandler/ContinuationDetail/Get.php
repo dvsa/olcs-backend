@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -23,6 +24,11 @@ class Get extends AbstractQueryHandler
     private $financialStandingHelper;
 
     /**
+     * @var ApplicationUndertakingsReviewService
+     */
+    private $reviewService;
+
+    /**
      * Factory
      *
      * @param ServiceLocatorInterface $serviceLocator Service manager
@@ -32,6 +38,7 @@ class Get extends AbstractQueryHandler
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
+        $this->reviewService = $serviceLocator->getServiceLocator()->get('Review\ApplicationUndertakings');
 
         return parent::createService($serviceLocator);
     }
@@ -48,9 +55,9 @@ class Get extends AbstractQueryHandler
         /** @var ContinuationDetailEntity $continuationDetail */
         $continuationDetail = $this->getRepo()->fetchUsingId($query);
         $licence = $continuationDetail->getLicence();
-
         $documents = $this->getRepo('Document')
             ->fetchListForContinuationDetail($continuationDetail->getId(), Query::HYDRATE_ARRAY);
+        $continuationFees = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId());
 
         return $this->result(
             $continuationDetail,
@@ -66,7 +73,7 @@ class Get extends AbstractQueryHandler
                 ),
                 'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
                 'fees' => $this->resultList(
-                    $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId()),
+                    $continuationFees,
                     [
                         'feeType' => [
                             'feeType'
@@ -74,7 +81,11 @@ class Get extends AbstractQueryHandler
                         'licence'
                     ]
                 ),
-                'documents' => $documents
+                'documents' => $documents,
+                'organisationTypeId' => $licence->getOrganisation()->getType()->getId(),
+                'declarations' => $this->reviewService->getMarkupForLicence($licence),
+                'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
+                'hasOutstandingContinuationFee' => count($continuationFees) > 0,
             ]
         );
     }
