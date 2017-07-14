@@ -3,14 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify\ProcessSignatureResponse;
-use Dvsa\Olcs\Api\Domain\Repository\DiscSequened as DiscSequenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse as Cmd;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use \Dvsa\Olcs\GdsVerify\Service;
 
 /**
@@ -28,6 +25,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->sut = new ProcessSignatureResponse();
         $this->mockRepo('DigitalSignature', \Dvsa\Olcs\Api\Domain\Repository\DigitalSignature::class);
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
+        $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
 
         $this->refData = [];
 
@@ -95,6 +93,42 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with(7)->once()->andReturn($mockApplication);
         $this->repoMap['Application']->shouldReceive('save')->once();
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandContinuationDetail()
+    {
+        $command = Cmd::create(['samlResponse' => base64_encode('SAML'), 'continuationDetail' => 65]);
+
+        $attributes = m::mock(\Dvsa\Olcs\GdsVerify\Data\Attributes::class);
+        $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
+        $attributes->shouldReceive('getArrayCopy')->with()->once()->andReturn(['foo' => 'bar']);
+        $this->mockedSmServices[Service\GdsVerify::class]
+            ->shouldReceive('getAttributesFromResponse')->with(base64_encode('SAML'))->once()->andReturn($attributes);
+
+        $this->repoMap['DigitalSignature']->shouldReceive('save')->once()->andReturnUsing(
+            function ($digitalSignature) {
+                /** @var \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature */
+                $this->assertSame(['foo' => 'bar'], $digitalSignature->getAttributesArray());
+                $this->assertSame('SAML', $digitalSignature->getSamlResponse());
+            }
+        );
+
+        $mockContinuationDetail = m::mock(\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail::class);
+        $mockContinuationDetail->shouldReceive('setDigitalSignature')->once()->andReturnUsing(
+            function ($digitalSignature) {
+                $this->assertSame(['foo' => 'bar'], $digitalSignature->getAttributesArray());
+                $this->assertSame('SAML', $digitalSignature->getSamlResponse());
+            }
+        );
+        $mockContinuationDetail->shouldReceive('setSignatureType')
+            ->with($this->refData[RefData::SIG_DIGITAL_SIGNATURE])
+            ->once();
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(65)->once()
+            ->andReturn($mockContinuationDetail);
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
 
         $this->sut->handleCommand($command);
     }
