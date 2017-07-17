@@ -123,6 +123,7 @@ class AbstractCompanySubsidiaryTest extends CommandHandlerTestCase
                 'messages' => [
                     'Company Subsidiary updated',
                 ],
+                'flags' => ['hasChanged' => 1]
             ],
             $actual->toArray()
         );
