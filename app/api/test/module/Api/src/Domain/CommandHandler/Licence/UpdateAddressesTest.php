@@ -101,8 +101,8 @@ class UpdateAddressesTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [],
-            'messages' => [
-            ]
+            'messages' => [],
+            'flags' => ['isDirty' => 1, 'hasChanged' => 1]
         ];
 
         $this->assertEquals($expected, $result->toArray());

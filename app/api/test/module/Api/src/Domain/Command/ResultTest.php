@@ -43,7 +43,7 @@ class ResultTest extends PHPUnit_Framework_TestCase
         $this->sut->addId('application', 222, true);
 
         $this->assertEquals(333, $this->sut->getId('licence'));
-        $this->assertEquals([111, g222], $this->sut->getId('application'));
+        $this->assertEquals([111, 222], $this->sut->getId('application'));
 
         $this->assertEquals(['application' => [111, 222], 'licence' => 333], $this->sut->getIds());
     }
