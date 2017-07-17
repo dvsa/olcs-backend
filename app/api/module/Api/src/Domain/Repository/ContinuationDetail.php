@@ -132,7 +132,6 @@ class ContinuationDetail extends AbstractRepository
                     $qb->expr()->eq($this->alias . '.isDigital', 1)
                 )
             )
-
         )
         ->setParameter('status', Entity::STATUS_ACCEPTABLE)
         ->setParameter('notStatus', Entity::STATUS_COMPLETE);
