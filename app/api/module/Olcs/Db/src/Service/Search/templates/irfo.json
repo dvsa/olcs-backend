@@ -28,9 +28,12 @@
                         "org_id": "%SEARCH_TERM%"
                      }
                   },
-                  {
+                 {
                      "wildcard": {
-                        "org_name": "%SEARCH_TERM%"
+                        "org_name": {
+                        "value":"%SEARCH_TERM%",
+                        "boost":3
+                        }
                      }
                   },
                   {
