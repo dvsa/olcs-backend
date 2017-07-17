@@ -56,7 +56,7 @@ class ResultTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['foo', 'bar'], $this->sut->getMessages());
     }
 
-g    public function testToArray()
+    public function testToArray()
     {
         $this->sut->addId('foo', 111);
         $this->sut->addId('bar', 222);
