@@ -151,9 +151,9 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_digital", nullable=true)
+     * @ORM\Column(type="boolean", name="is_digital", nullable=false, options={"default": 0})
      */
-    protected $isDigital;
+    protected $isDigital = 0;
 
     /**
      * Last modified by
