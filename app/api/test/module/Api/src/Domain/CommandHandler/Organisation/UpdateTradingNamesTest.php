@@ -106,7 +106,8 @@ class UpdateTradingNamesTest extends CommandHandlerTestCase
                 '1 new trading name(s)',
                 '1 unchanged trading name(s)',
                 '1 trading name(s) removed'
-            ]
+            ],
+            'flags' => ['hasChanged' => 1]
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -151,7 +152,8 @@ class UpdateTradingNamesTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Trading names are unchanged'
-            ]
+            ],
+            'flags' => ['hasChanged' => false]
         ];
 
         $this->assertEquals($expected, $result->toArray());

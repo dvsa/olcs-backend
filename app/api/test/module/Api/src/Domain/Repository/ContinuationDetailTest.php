@@ -92,7 +92,8 @@ EOT;
         );
         static::assertEquals('RESULT', $this->sut->fetchOngoingForLicence(95));
 
-        $expectedQuery = 'BLAH AND m.licence = [[95]] AND m.status = [[con_det_sts_acceptable]]';
+        $expectedQuery = 'BLAH AND m.licence = [[95]] AND (m.status = [[con_det_sts_acceptable]] '
+            . 'OR (m.status != [[con_det_sts_complete]] AND m.isDigital = 1))';
 
         static::assertEquals($expectedQuery, $this->query);
     }

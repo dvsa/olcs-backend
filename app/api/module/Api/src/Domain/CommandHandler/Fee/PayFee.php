@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as ContinueLicenceCmd;
@@ -128,6 +129,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $licenceId = $fee->getLicence()->getId();
 
         // there is an ongoing continuation associated to a particular licence and the status is 'Checklist accepted'
+        // or the status is not Complete and it has been completed online
         try {
             $this->getRepo('ContinuationDetail')->fetchOngoingForLicence($licenceId);
         } catch (\Doctrine\ORM\UnexpectedResultException $e) {
@@ -151,11 +153,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $this->result->merge($this->handleSideEffect(ContinueLicenceCmd::create(['id' => $licenceId])));
-
-        // add success message
-        // @note not ideal to be using the FlashMessenger from a service, but in this circumstance it would be
-        // difficult to get the return status all the way to the controller
-        $this->result->addMessage('@todo Display message "licence.continued.message" to user');
+        $this->result->setFlag(ContinuationDetailEntity::RESULT_LICENCE_CONTINUED, true);
     }
 
     /**
