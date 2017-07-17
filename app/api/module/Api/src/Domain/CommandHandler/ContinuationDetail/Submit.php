@@ -35,7 +35,14 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             $command->getVersion()
         );
 
-        $continuationDetail->setSignatureType($this->getRepo()->getRefdataReference(RefData::SIG_PHYSICAL_SIGNATURE));
+        // If signatureType is null, then must be printing and signing declaration.
+        // If using Verify, signatureType would have already been set to SIG_DIGITAL_SIGNATURE
+        if ($continuationDetail->getSignatureType() === null) {
+            $continuationDetail->setSignatureType(
+                $this->getRepo()->getRefdataReference(RefData::SIG_PHYSICAL_SIGNATURE)
+            );
+        }
+        $continuationDetail->setIsDigital(true);
 
         $this->getRepo()->save($continuationDetail);
 
