@@ -135,6 +135,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         /** @var Entity\Licence\ContinuationDetail $continuationDetail */
         $continuationDetail = $this->getRepo('ContinuationDetail')->fetchById($continuationDetailId);
         $continuationDetail->setDigitalSignature($digitalSignature);
+        $continuationDetail->setIsDigital(true);
         $continuationDetail->setSignatureType(
             $this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE)
         );
