@@ -29,6 +29,11 @@
                      }
                   },
                   {
+                     "wildcard": {
+                        "org_name": "%SEARCH_TERM%"
+                     }
+                  },
+                  {
                      "match": {
                         "org_name": "%SEARCH_TERM%"
                      }
