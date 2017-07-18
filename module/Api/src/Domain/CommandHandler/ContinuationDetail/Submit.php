@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Submit as Command;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence;
 
 /**
  * Submit Continuation Detail
@@ -16,6 +17,8 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 final class Submit extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'ContinuationDetail';
+
+    protected $extraRepos = ['Fee'];
 
     /**
      * Handle command
@@ -46,10 +49,26 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
 
         $this->getRepo()->save($continuationDetail);
 
-        $result = new Result();
-        $result->addId('continuationDetail', $continuationDetail->getId());
-        $result->addMessage('ContinuationDetail submitted');
+        // If there are no continuation fees then continue the licence
+        $continuationFees = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId(
+            $continuationDetail->getLicence()->getId()
+        );
+        if (count($continuationFees) === 0) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    ContinueLicence::create(
+                        [
+                            'id' => $continuationDetail->getLicence()->getId(),
+                            'version' => $continuationDetail->getLicence()->getVersion(),
+                        ]
+                    )
+                )
+            );
+        }
 
-        return $result;
+        $this->result->addId('continuationDetail', $continuationDetail->getId());
+        $this->result->addMessage('ContinuationDetail submitted');
+
+        return $this->result;
     }
 }
