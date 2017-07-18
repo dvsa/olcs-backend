@@ -51,7 +51,7 @@ final class CreateSnapshot extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var ContinuationDetail $application */
+        /** @var ContinuationDetail $continuationDetail */
         $continuationDetail = $this->getRepo()->fetchUsingId($command);
 
         $markup = $this->reviewSnapshotService->generate($continuationDetail);
