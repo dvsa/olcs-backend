@@ -161,6 +161,68 @@ areaName1,val31,val32
         );
     }
 
+
+    public function testPsvOperatorListNoEmailThrowException()
+    {
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            'No email address specified in system parameters for the PSV Report'
+        );
+
+        $fileName = 'PsvOperatorList_' . date('Y-m-d_h-i-s') . '.csv';
+
+        $fileContent = '"Licence number",col1,col2
+areaName1,val11,"v""\'-/\,"
+areaName2,val21,val22
+areaName1,val31,val32
+';
+
+        $row1 = [
+            'Licence number' => 'areaName1',
+            'col1' => 'val11',
+            'col2' => 'v"\'-/\,',
+        ];
+
+        $row2 = [
+            'Licence number' => 'areaName2',
+            'col1' => 'val21',
+            'col2' => 'val22',
+        ];
+
+        $row3 = [
+            'Licence number' => 'areaName1',
+            'col1' => 'val31',
+            'col2' => 'val32',
+        ];
+
+        $this->mockStmt
+            ->shouldReceive('fetch')->once()->andReturn($row1)
+            ->shouldReceive('fetch')->once()->andReturn($row2)
+            ->shouldReceive('fetch')->once()->andReturn($row3)
+            ->shouldReceive('fetch')->andReturn(false);
+
+        $this->repoMap['DataGovUk']
+            ->shouldReceive('fetchPsvOperatorList')
+            ->once()
+            ->andReturn($this->mockStmt);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('fetchValue')
+            ->with(SystemParameter::PSV_REPORT_EMAIL_LIST)
+            ->once()
+            ->andReturnNull();
+
+        //  call & check
+        $cmd = Cmd::create(
+            [
+                'reportName' => DataGovUkExport::PSV_OPERATOR_LIST,
+                'path' => $this->tmpPath,
+            ]
+        );
+
+        $this->sut->handleCommand($cmd);
+    }
+
     public function testOperatorLicenceOk()
     {
         $cmd = Cmd::create(
