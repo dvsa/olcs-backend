@@ -3,11 +3,15 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Submit as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Submit as UpdateCommand;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Mockery as m;
 
 /**
  * SubmitTest
@@ -17,7 +21,8 @@ class SubmitTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
+        $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
+        $this->mockRepo('Fee', Repository\Fee::class);
 
         parent::setUp();
     }
@@ -42,11 +47,16 @@ class SubmitTest extends CommandHandlerTestCase
 
         $continuationDetail = new ContinuationDetailEntity();
         $continuationDetail->setId(154);
+        $continuationDetail->setLicence(
+            m::mock()->shouldReceive('getId')->with()->once()->andReturn(654)->getMock()
+        );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
             ->andReturn($continuationDetail);
-
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+
+        $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
+            ->with(654)->once()->andReturn(['FEE 1']);
 
         $result = $this->sut->handleCommand($command);
 
@@ -68,11 +78,16 @@ class SubmitTest extends CommandHandlerTestCase
         $continuationDetail = new ContinuationDetailEntity();
         $continuationDetail->setId(154);
         $continuationDetail->setSignatureType($this->refData[RefData::SIG_DIGITAL_SIGNATURE]);
+        $continuationDetail->setLicence(
+            m::mock()->shouldReceive('getId')->with()->once()->andReturn(654)->getMock()
+        );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
             ->andReturn($continuationDetail);
-
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+
+        $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
+            ->with(654)->once()->andReturn(['FEE 1']);
 
         $result = $this->sut->handleCommand($command);
 
@@ -80,6 +95,43 @@ class SubmitTest extends CommandHandlerTestCase
         $this->assertTrue($continuationDetail->getIsDigital());
 
         $this->assertEquals(['ContinuationDetail submitted'], $result->getMessages());
+        $this->assertEquals(['continuationDetail' => 154], $result->getIds());
+    }
+
+    public function testHandleCommandNoFees()
+    {
+        $data = [
+            'id' => 154,
+            'version' => 7,
+        ];
+        $command = UpdateCommand::create($data);
+
+        $continuationDetail = new ContinuationDetailEntity();
+        $continuationDetail->setId(154);
+        $continuationDetail->setSignatureType($this->refData[RefData::SIG_DIGITAL_SIGNATURE]);
+        $continuationDetail->setLicence(
+            m::mock()
+                ->shouldReceive('getId')->with()->twice()->andReturn(654)
+                ->shouldReceive('getVersion')->with()->once()->andReturn(99)
+                ->getMock()
+        );
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
+            ->andReturn($continuationDetail);
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+
+        $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
+            ->with(654)->once()->andReturn([]);
+
+        $this->expectedSideEffect(
+            ContinueLicence::class,
+            ['id' => 654, 'version' => 99],
+            (new Result())->addMessage('CONTINUE_LICENCE')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals(['CONTINUE_LICENCE', 'ContinuationDetail submitted'], $result->getMessages());
         $this->assertEquals(['continuationDetail' => 154], $result->getIds());
     }
 }
