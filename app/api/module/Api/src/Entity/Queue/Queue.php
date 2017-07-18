@@ -57,6 +57,7 @@ class Queue extends AbstractQueue
     const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
     const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
     const TYPE_PROCESS_DATA_RETENTION = 'que_typ_process_data_retention';
+    const TYPE_CREATE_CONTINUATION_SNAPSHOT = 'que_typ_cont_shapshot';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -81,6 +82,7 @@ class Queue extends AbstractQueue
         self::TYPE_CREATE_COM_LIC,
         self::TYPE_REMOVE_DELETED_DOCUMENTS,
         self::TYPE_PROCESS_DATA_RETENTION,
+        self::TYPE_CREATE_CONTINUATION_SNAPSHOT,
     ];
 
     /**
