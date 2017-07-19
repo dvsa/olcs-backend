@@ -60,6 +60,18 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
         );
         $this->getRepo('ContinuationDetail')->save($continuationDetail);
 
+        /** @var ContinuationDetail $continuationDetail */
+        if ($continuationDetail->getIsDigital()) {
+            $createQueueCmd = CreateQueueCmd::create(
+                [
+                    'entityId' => $continuationDetail->getId(),
+                    'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
+                    'status' => QueueEntity::STATUS_QUEUED
+                ]
+            );
+            $result->merge($this->handleSideEffect($createQueueCmd));
+        }
+
         $result->addMessage('Licence ' . $licence->getId() . ' continued');
 
         return $result;

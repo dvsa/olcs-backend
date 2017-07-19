@@ -841,6 +841,7 @@ return [
         CommandHandler\ContinuationDetail\PrepareContinuations::class,
     Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
     Command\ContinuationDetail\ProcessReminder::class => CommandHandler\ContinuationDetail\ProcessReminder::class,
+    Command\ContinuationDetail\CreateSnapshot::class => CommandHandler\ContinuationDetail\CreateSnapshot::class,
 
     // Continuation
     TransferCommand\Continuation\Create::class => CommandHandler\Continuation\Create::class,

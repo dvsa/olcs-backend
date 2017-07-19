@@ -3,6 +3,7 @@
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\ContinuationDetail\CanAccessContinuationDetailWithId;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 
 return [
     QueryHandler\ContinuationDetail\LicenceChecklist::class => CanAccessContinuationDetailWithId::class,
@@ -11,4 +12,5 @@ return [
     CommandHandler\ContinuationDetail\UpdateFinances::class => CanAccessContinuationDetailWithId::class,
     CommandHandler\ContinuationDetail\UpdateInsufficientFinances::class => CanAccessContinuationDetailWithId::class,
     CommandHandler\ContinuationDetail\Submit::class => CanAccessContinuationDetailWithId::class,
+    CommandHandler\ContinuationDetail\CreateSnapshot::class => IsSystemUser::class,
 ];
