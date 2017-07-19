@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
+use Dvsa\Olcs\Transfer\FieldType\Traits\User;
 
 /**
  * Create continuation detail snapshot
@@ -11,13 +12,5 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class CreateSnapshot extends AbstractIdOnlyCommand
 {
-    protected $user;
-
-    /**
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
+    use User;
 }
