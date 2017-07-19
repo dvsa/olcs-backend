@@ -280,5 +280,6 @@ return [
     'continuations.vehicles-section.table.vrm' => 'Nod gofrestru cerbyd',
     'continuations.vehicles-section.table.weight' => 'Pwysau plât gros (cg)',
     'continuation-review-addresses-correspondence-address' => 'Cyfeiriad Gohebu',
+    'continuation-review-addresses-establishment-address' => 'Cyfeiriad y Sefydliad',
     // Potentially unused translations
 ];
