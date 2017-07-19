@@ -51,6 +51,20 @@ class ApplicationCompletion extends AbstractApplicationCompletion
     }
 
     /**
+     * Whether the section has been updated (status 2), note that for new apps a
+     * status of 2 means something different i.e. completed
+     *
+     * @param string $section section
+     *
+     * @return bool
+     */
+    public function variationSectionUpdated($section)
+    {
+        $sectionStatus = $section . 'Status';
+        return $this->$sectionStatus === self::STATUS_VARIATION_UPDATED;
+    }
+
+    /**
      * Get Calculated Values
      *
      * @return array
