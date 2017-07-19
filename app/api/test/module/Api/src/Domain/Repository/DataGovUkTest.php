@@ -8,7 +8,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
 /**
- * @covers Dvsa\Olcs\Api\Domain\Repository\DataGovUk
+ * @covers \Dvsa\Olcs\Api\Domain\Repository\DataGovUk
  */
 class DataGovUkTest extends MockeryTestCase
 {
@@ -31,6 +31,20 @@ class DataGovUkTest extends MockeryTestCase
             ->getMock();
 
         $this->sut = new DataGovUk($this->mockConn);
+    }
+
+    public function testFetchPsvOperatorList()
+    {
+        $this->mockConn
+            ->shouldReceive('prepare')
+            ->once()
+            ->with('/data_gov_uk_psv_operator_list$/')
+            ->andReturn($this->mockStmt);
+
+        static::assertEquals(
+            $this->mockStmt,
+            $this->sut->fetchPsvOperatorList()
+        );
     }
 
     public function testFetchOperatorLicences()
