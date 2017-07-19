@@ -133,5 +133,6 @@ final class GrantConditionUndertaking extends AbstractCommandHandler implements
         $licenceCu->setCase($deltaCu->getCase());
         $licenceCu->setOperatingCentre($deltaCu->getOperatingCentre());
         $licenceCu->setNotes($deltaCu->getNotes());
+        $licenceCu->setConditionCategory($deltaCu->getConditionCategory());
     }
 }
