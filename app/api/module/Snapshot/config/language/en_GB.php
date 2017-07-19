@@ -296,5 +296,10 @@ return [
     'continuations.people-section.table.date-of-birth' => 'Date of birth',
     'continuations.vehicles-section.table.vrm' => 'Vehicle registration mark',
     'continuations.vehicles-section.table.weight' => 'Gross plated weight (kg)',
-// Potentially unused translations
+    'continuation-review-addresses-correspondence-address' => 'Correspondence address',
+    'continuation-review-addresses-establishment-address' => 'Establishment address',
+    'continuation-review-addresses-establishment-address-same' => 'Same as correspondence address',
+    'continuation-review-addresses-primary-number' => 'Primary number',
+    'continuation-review-addresses-secondary-number' => 'Secondary number',
+    // Potentially unused translations
 ];

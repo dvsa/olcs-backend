@@ -62,6 +62,15 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'licenceVehicles' => [
                             'vehicle' => 'expected'
                         ],
+                        'correspondenceCd' => [
+                            'address',
+                            'phoneContacts' => [
+                                'phoneContactType',
+                            ],
+                        ],
+                        'establishmentCd' => [
+                            'address',
+                        ],
                     ],
                     'sections' => [
                         'fooBar',
@@ -101,6 +110,15 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'tradingNames',
                 'licenceVehicles' => [
                     'vehicle' => 'expected'
+                ],
+                'correspondenceCd' => [
+                    'address',
+                    'phoneContacts' => [
+                        'phoneContactType',
+                    ],
+                ],
+                'establishmentCd' => [
+                    'address',
                 ],
             ],
             'sections' => [
