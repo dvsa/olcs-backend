@@ -43,6 +43,10 @@ final class ConditionsAndUndertakings extends AbstractSection
         if (!empty($applications)) {
             /** @var Application $application */
             foreach ($applications as $application) {
+                // Only show application conditions when the application is Under Consideration
+                if ($application->getStatus() != Application::APPLICATION_STATUS_UNDER_CONSIDERATION) {
+                    continue;
+                }
                 /** @var ConditionUndertaking $entity */
                 foreach ($application->getConditionUndertakings() as $entity) {
                     $tables[$this->determineTableName($entity)][] =
