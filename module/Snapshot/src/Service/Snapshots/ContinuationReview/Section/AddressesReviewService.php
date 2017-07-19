@@ -65,5 +65,4 @@ class AddressesReviewService extends AbstractReviewService
 
         return $config;
     }
-
 }
