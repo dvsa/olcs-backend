@@ -73,7 +73,16 @@ class LicenceChecklist extends AbstractQueryHandler
                     'licenceVehicles' => [
                         'vehicle',
                         'criteria' => $notRemoved
-                    ]
+                    ],
+                    'correspondenceCd' => [
+                        'address',
+                        'phoneContacts' => [
+                            'phoneContactType',
+                        ],
+                    ],
+                    'establishmentCd' => [
+                        'address',
+                    ],
                 ]
             ],
             [

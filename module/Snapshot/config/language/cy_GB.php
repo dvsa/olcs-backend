@@ -279,5 +279,6 @@ return [
     'continuations.people-section.table.date-of-birth' => 'Ddyddiad geni',
     'continuations.vehicles-section.table.vrm' => 'Nod gofrestru cerbyd',
     'continuations.vehicles-section.table.weight' => 'Pwysau plât gros (cg)',
+    'continuation-review-addresses-correspondence-address' => 'Cyfeiriad Gohebu',
     // Potentially unused translations
 ];
