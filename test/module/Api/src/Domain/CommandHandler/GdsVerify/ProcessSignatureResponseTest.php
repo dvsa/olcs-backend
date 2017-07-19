@@ -125,6 +125,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $mockContinuationDetail->shouldReceive('setSignatureType')
             ->with($this->refData[RefData::SIG_DIGITAL_SIGNATURE])
             ->once();
+        $mockContinuationDetail->shouldReceive('setIsDigital')->with(true)->once();
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockContinuationDetail);

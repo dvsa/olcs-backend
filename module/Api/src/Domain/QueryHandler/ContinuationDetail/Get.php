@@ -58,6 +58,14 @@ class Get extends AbstractQueryHandler
         $documents = $this->getRepo('Document')
             ->fetchListForContinuationDetail($continuationDetail->getId(), Query::HYDRATE_ARRAY);
         $continuationFees = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId($licence->getId());
+        $signatureDetails = [];
+        if ($continuationDetail->getDigitalSignature()) {
+            $signatureDetails = [
+                'name' => $continuationDetail->getDigitalSignature()->getSignatureName(),
+                'date' => $continuationDetail->getDigitalSignature()->getCreatedOn(),
+                'dob' => $continuationDetail->getDigitalSignature()->getDateOfBirth(),
+            ];
+        }
 
         return $this->result(
             $continuationDetail,
@@ -86,6 +94,7 @@ class Get extends AbstractQueryHandler
                 'declarations' => $this->reviewService->getMarkupForLicence($licence),
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
                 'hasOutstandingContinuationFee' => count($continuationFees) > 0,
+                'signature' => $signatureDetails,
             ]
         );
     }
