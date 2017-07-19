@@ -14,14 +14,26 @@ use PDO;
  */
 class DataGovUk
 {
-    /** @var Connection */
+    /**
+     * @var Connection
+     */
     private $conn;
 
+    /**
+     * DataGovUk constructor.
+     *
+     * @param Connection $conn Database connection
+     */
     public function __construct(Connection $conn)
     {
         $this->conn = $conn;
     }
 
+    /**
+     * Close database connection
+     *
+     * @return void
+     */
     public function __destruct()
     {
         if ($this->conn !== null) {
@@ -29,6 +41,29 @@ class DataGovUk
         }
     }
 
+    /**
+     * Fetch PSV Operator list
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    public function fetchPsvOperatorList()
+    {
+        $stmt = $this->conn->prepare(
+            'SELECT * FROM data_gov_uk_psv_operator_list'
+        );
+
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    /**
+     * Fetch operator licences in specified areas
+     *
+     * @param array $areaNames Area names
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
     public function fetchOperatorLicences(array $areaNames)
     {
         $inStmt = implode(', ', array_fill(0, count($areaNames), '?'));
@@ -47,16 +82,38 @@ class DataGovUk
         return $stmt;
     }
 
+    /**
+     * Fetch bus registered only
+     *
+     * @param array $areaCodes Area codes
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
     public function fetchBusRegisteredOnly(array $areaCodes)
     {
         return $this->fetchBusReg('data_gov_uk_bus_registered_only_view', $areaCodes);
     }
 
+    /**
+     * Fetch bus variations
+     *
+     * @param array $areaCodes area codes
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
     public function fetchBusVariation(array $areaCodes)
     {
         return $this->fetchBusReg('data_gov_uk_bus_variation_view', $areaCodes);
     }
 
+    /**
+     * Fetch bus registrations
+     *
+     * @param string $view      Database View
+     * @param array  $areaCodes area codes
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
     private function fetchBusReg($view, array $areaCodes)
     {
         $inStmt = implode(', ', array_fill(0, count($areaCodes), '?'));

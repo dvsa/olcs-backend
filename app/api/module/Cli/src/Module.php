@@ -40,7 +40,7 @@ class Module implements ConsoleUsageProviderInterface
             'system-parameter name value [--verbose|-v]' => 'Set a system parameter',
             'resolve-payments [--verbose|-v]' => 'Resolve pending CPMS payments',
             'create-vi-extract-files' => 'Create mobile compliance VI extract files',
-            'duplicate-vehicle-removal [--verbose|-v]' => 'Duplicate vehilce removal',
+            'duplicate-vehicle-removal [--verbose|-v]' => 'Duplicate vehicle removal',
                 // Describe parameters
             ['--oc|-oc', 'Export Operating Centres file'],
             ['--op|-op', 'Export Operators file'],
@@ -59,6 +59,7 @@ class Module implements ConsoleUsageProviderInterface
             ['    ' . DataGovUkExport::OPERATOR_LICENCE, '- export operator licences'],
             ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, '- export bus registered only'],
             ['    ' . DataGovUkExport::BUS_VARIATION, '- export bus variations'],
+            ['    ' . DataGovUkExport::PSV_OPERATOR_LIST, '- export psv operator list and send attachment in email'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>
