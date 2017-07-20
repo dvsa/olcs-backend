@@ -70,6 +70,15 @@ class AddressesReviewServiceTest extends MockeryTestCase
             ->shouldReceive('getEstablishmentCd')
             ->andReturn($mockEstablishmentCd)
             ->once()
+            ->shouldReceive('getLicenceType')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+                ->once()
+                ->getMock()
+            )
+            ->once()
             ->getMock();
 
         $continuationDetail->setLicence($mockLicence);
@@ -128,6 +137,15 @@ class AddressesReviewServiceTest extends MockeryTestCase
             ->shouldReceive('getEstablishmentCd')
             ->andReturn(null)
             ->once()
+            ->shouldReceive('getLicenceType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
             ->getMock();
 
         $continuationDetail->setLicence($mockLicence);
@@ -141,6 +159,61 @@ class AddressesReviewServiceTest extends MockeryTestCase
                 ['value' => 'continuation-review-addresses-establishment-address'],
                 ['value' => 'continuation-review-addresses-establishment-address-same', 'header' => true]
             ],
+        ];
+
+        $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
+    }
+
+    public function testGetConfigFromDataSpecialRestricted()
+    {
+        $continuationDetail = new ContinuationDetail();
+
+        /** @var Address $correspondenceAddress */
+        $correspondenceAddress = new Address();
+        $correspondenceAddress->setAddressLine1('Flat 1');
+        $correspondenceAddress->setAddressLine2('Foo house');
+        $correspondenceAddress->setPostcode('LS9 6NF');
+        $correspondenceAddress->setTown('Leeds');
+
+        $mockCorrespondenceCd = m::mock(ContactDetails::class)
+            ->shouldReceive('getAddress')
+            ->andReturn($correspondenceAddress)
+            ->once()
+            ->shouldReceive('getPhoneContactNumber')
+            ->andReturn(null)
+            ->with(RefData::PHONE_NUMBER_PRIMARY_TYPE)
+            ->once()
+            ->shouldReceive('getPhoneContactNumber')
+            ->with(RefData::PHONE_NUMBER_SECONDARY_TYPE)
+            ->andReturn(null)
+            ->once()
+            ->getMock();
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getCorrespondenceCd')
+            ->andReturn($mockCorrespondenceCd)
+            ->once()
+            ->shouldReceive('getEstablishmentCd')
+            ->andReturn(null)
+            ->once()
+            ->shouldReceive('getLicenceType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED)
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $continuationDetail->setLicence($mockLicence);
+
+        $expected =[
+            [
+                ['value' => 'continuation-review-addresses-correspondence-address'],
+                ['value' => 'Flat 1, Foo house, Leeds, LS9 6NF', 'header' => true]
+            ]
         ];
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
