@@ -59,10 +59,11 @@ final class ResolvePayment extends AbstractCommandHandler implements
         }
 
         $fees = $transaction->getFees();
-        $cpmsStatus = $this->getCpmsService()->getPaymentStatus(
+        $statusDetails = $this->getCpmsService()->getPaymentStatus(
             $transaction->getReference(),
             reset($fees)
         );
+        $cpmsStatus = $statusDetails['code'];
 
         $now = new DateTime();
 
@@ -100,9 +101,10 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 // output something to the console log and continue
                 $result->addMessage(
                     sprintf(
-                        'Unexpected status received from CPMS, transaction %d status %s',
+                        'Unexpected status received from CPMS, transaction %d status %s, message: %s',
                         $transaction->getId(),
-                        $cpmsStatus
+                        $cpmsStatus,
+                        $statusDetails['message']
                     )
                 );
                 return $result;

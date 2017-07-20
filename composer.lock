@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e1eebb4abc5e717e2eb4d724284bcc82",
-    "content-hash": "95ddd6dbc6a6cfd62bd3f8bde7ada8f5",
+    "hash": "15497c091856c959bb58ed58bec8f486",
+    "content-hash": "c62609489fd763c2a008faf15ad4ed96",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -946,6 +946,54 @@
             "time": "2017-06-03 02:28:16"
         },
         {
+            "name": "fzaninotto/faker",
+            "version": "v1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "44f9a286a04b80c76a4e5fb7aad8bb539b920123"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/fzaninotto-faker-44f9a286a04b80c76a4e5fb7aad8bb539b920123-zip-6ed28f.tar",
+                "reference": "44f9a286a04b80c76a4e5fb7aad8bb539b920123",
+                "shasum": "f0c04a73f419a16400b1ffebba4d5cc95263d14b"
+            },
+            "require": {
+                "php": "^5.3.3|^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": []
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2016-04-29 12:21:54"
+        },
+        {
             "name": "gedmo/doctrine-extensions",
             "version": "v2.3.12",
             "source": {
@@ -1125,107 +1173,6 @@
             "time": "2014-10-12 19:18:40"
         },
         {
-            "name": "ircmaxell/random-lib",
-            "version": "v1.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ircmaxell/RandomLib.git",
-                "reference": "e9e0204f40e49fa4419946c677eccd3fa25b8cf4"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ircmaxell-random-lib-e9e0204f40e49fa4419946c677eccd3fa25b8cf4-zip-23ece3.tar",
-                "reference": "e9e0204f40e49fa4419946c677eccd3fa25b8cf4",
-                "shasum": "5b2b4dcb119a0c69fc7c4b83a5f57d86b55f367b"
-            },
-            "require": {
-                "ircmaxell/security-lib": "^1.1",
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^1.11",
-                "mikey179/vfsstream": "^1.6",
-                "phpunit/phpunit": "^4.8|^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "RandomLib": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anthony Ferrara",
-                    "email": "ircmaxell@ircmaxell.com",
-                    "homepage": "http://blog.ircmaxell.com"
-                }
-            ],
-            "description": "A Library For Generating Secure Random Numbers",
-            "homepage": "https://github.com/ircmaxell/RandomLib",
-            "keywords": [
-                "cryptography",
-                "random",
-                "random-numbers",
-                "random-strings"
-            ],
-            "time": "2016-09-07 15:52:06"
-        },
-        {
-            "name": "ircmaxell/security-lib",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ircmaxell/SecurityLib.git",
-                "reference": "f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ircmaxell-security-lib-f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5-zip-cbf6a9.tar",
-                "reference": "f3db6de12c20c9bcd1aa3db4353a1bbe0e44e1b5",
-                "shasum": "6ce9b35cec4807f26ea9041009b40c86dcba92e4"
-            },
-            "require": {
-                "php": ">=5.3.2"
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "1.1.*"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "SecurityLib": "lib"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Anthony Ferrara",
-                    "email": "ircmaxell@ircmaxell.com",
-                    "homepage": "http://blog.ircmaxell.com"
-                }
-            ],
-            "description": "A Base Security Library",
-            "homepage": "https://github.com/ircmaxell/SecurityLib",
-            "time": "2015-03-20 14:31:23"
-        },
-        {
             "name": "olcs/autoload",
             "version": "dev-develop",
             "source": {
@@ -1246,7 +1193,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "c5b54b570fd57865818d18d6793a94b4dd6912c4"
+                "reference": "c012f5355563a2600d718bfbb4c8a83e385cb5d4"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1258,7 +1205,7 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2017-06-20 11:44:07"
+            "time": "2017-07-05 08:59:52"
         },
         {
             "name": "olcs/olcs-logging",
@@ -1266,7 +1213,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "b830d444b3526ef8bc93feeb4ce6212f7d1beef3"
+                "reference": "9c62a573878e539f866d4800f1ed461b8be53e32"
             },
             "require": {
                 "php": ">=5.4",
@@ -1292,7 +1239,7 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-06-20 15:20:41"
+            "time": "2017-07-05 08:59:49"
         },
         {
             "name": "olcs/olcs-transfer",
@@ -1300,7 +1247,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "1c1b97961f602e2fd9bbb51687f46ca772a4f62e"
+                "reference": "888335ddf91078b0ad408e5e92dfe3dca07a6765"
             },
             "require": {
                 "php": ">=5.4",
@@ -1318,7 +1265,7 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-07-03 10:02:14"
+            "time": "2017-07-14 16:00:09"
         },
         {
             "name": "olcs/olcs-utils",
@@ -1326,7 +1273,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "5cb1d41b7194ad9bfc57350f282908278b654467"
+                "reference": "753bf5fcbc3593574341f633e957f1ca84b3c211"
             },
             "require": {
                 "php": ">=5.4",
@@ -1344,7 +1291,7 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-06-20 11:43:59"
+            "time": "2017-07-05 08:59:45"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -1352,7 +1299,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "55d7d91974e5722a3f5c477a50160603a07270a2"
+                "reference": "93f084015c88862b2764e0071e83d0754021d58d"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1373,7 +1320,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-06-20 11:44:02"
+            "time": "2017-07-05 08:59:47"
         },
         {
             "name": "paragonie/random_compat",
@@ -1633,24 +1580,23 @@
         },
         {
             "name": "robrichards/xmlseclibs",
-            "version": "2.0.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "53bb1e9cae490a8f93af41bd9df6ea897161ca05"
+                "reference": "a29eb3100eb6c5a427d6a3f9e61aff37492405ae"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/robrichards-xmlseclibs-53bb1e9cae490a8f93af41bd9df6ea897161ca05-zip-79cfa9.tar",
-                "reference": "53bb1e9cae490a8f93af41bd9df6ea897161ca05",
-                "shasum": "dec94d9d92151ead32c36a020842d7709ff86c2c"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/robrichards-xmlseclibs-a29eb3100eb6c5a427d6a3f9e61aff37492405ae-zip-84e5e4.tar",
+                "reference": "a29eb3100eb6c5a427d6a3f9e61aff37492405ae",
+                "shasum": "387628bba133e52b8bb4be09749a3953a6433ccf"
             },
             "require": {
-                "php": ">= 5.3"
+                "php": ">= 5.6"
             },
             "suggest": {
-                "ext/mcrypt": "MCrypt extension",
-                "ext/openssl": "OpenSSL extension"
+                "ext-openssl": "OpenSSL extension"
             },
             "type": "library",
             "autoload": {
@@ -1670,7 +1616,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2016-09-08 13:15:00"
+            "time": "2017-05-25 15:25:34"
         },
         {
             "name": "ruflin/elastica",
@@ -1732,24 +1678,25 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v2.3.4",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "967edad97f38578f9b4561d6f624c974dd2c14a9"
+                "reference": "cea679a3113d1f8198ab7d0a734de740412d0d0d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-967edad97f38578f9b4561d6f624c974dd2c14a9-zip-60b522.tar",
-                "reference": "967edad97f38578f9b4561d6f624c974dd2c14a9",
-                "shasum": "5ef8c0f0a02e829cae15889a17438d50961ecb81"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-cea679a3113d1f8198ab7d0a734de740412d0d0d-zip-bf46a8.tar",
+                "reference": "cea679a3113d1f8198ab7d0a734de740412d0d0d",
+                "shasum": "9f079d832c576c3ef0ed7c138a72c57cf86bd054"
             },
             "require": {
                 "ext-dom": "*",
                 "ext-openssl": "*",
+                "ext-zlib": "*",
                 "php": ">=5.3.3",
                 "psr/log": "~1.0",
-                "robrichards/xmlseclibs": "^2.0"
+                "robrichards/xmlseclibs": "^2.0|^3.0"
             },
             "require-dev": {
                 "mockery/mockery": "~0.9",
@@ -1780,7 +1727,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2016-12-14 16:34:56"
+            "time": "2017-06-16 08:30:57"
         },
         {
             "name": "soflomo/purifier",
@@ -1837,17 +1784,17 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "70d2a29b2911cbdc91a7e268046c395278238b2e"
+                "reference": "a97e45d98c59510f085fa05225a1acb74dfe0546"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-70d2a29b2911cbdc91a7e268046c395278238b2e-zip-7658c7.tar",
-                "reference": "70d2a29b2911cbdc91a7e268046c395278238b2e",
-                "shasum": "9496a05ff2e0e0cf6ac0d4f67fbd55043605db3a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-a97e45d98c59510f085fa05225a1acb74dfe0546-zip-d299b9.tar",
+                "reference": "a97e45d98c59510f085fa05225a1acb74dfe0546",
+                "shasum": "87d312bf0505d75eb481c5e6e4476a2be0e2a12e"
             },
             "require": {
                 "php": ">=5.5.9",
@@ -1902,21 +1849,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-02 19:24:58"
+            "time": "2017-07-03 13:19:36"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "e9c50482841ef696e8fa1470d950a79c8921f45d"
+                "reference": "63b85a968486d95ff9542228dc2e4247f16f9743"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-e9c50482841ef696e8fa1470d950a79c8921f45d-zip-0a2323.tar",
-                "reference": "e9c50482841ef696e8fa1470d950a79c8921f45d",
-                "shasum": "9762483f9c64a3ec4ea0b160acd2683b774afe45"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-63b85a968486d95ff9542228dc2e4247f16f9743-zip-067691.tar",
+                "reference": "63b85a968486d95ff9542228dc2e4247f16f9743",
+                "shasum": "ec77c487ad8ec9d6c6e72aee29c5037e81c5981e"
             },
             "require": {
                 "php": ">=5.5.9",
@@ -1958,7 +1905,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-01 21:01:25"
+            "time": "2017-07-05 13:02:37"
         },
         {
             "name": "symfony/filesystem",
@@ -2121,17 +2068,17 @@
         },
         {
             "name": "zendframework/zendframework",
-            "version": "2.4.12",
+            "version": "2.4.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zendframework.git",
-                "reference": "7b9a03669eb498236df8a97e66095b3030b28542"
+                "reference": "06bf809653a51e843b7a84dc380ac1d8a0a6a1ea"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendframework-7b9a03669eb498236df8a97e66095b3030b28542-zip-a664dc.tar",
-                "reference": "7b9a03669eb498236df8a97e66095b3030b28542",
-                "shasum": "e532f4cc758175846e32e32cf56eabfc3640407a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendframework-06bf809653a51e843b7a84dc380ac1d8a0a6a1ea-zip-4d29b5.tar",
+                "reference": "06bf809653a51e843b7a84dc380ac1d8a0a6a1ea",
+                "shasum": "115fcbb953bf6c73ebbe21934ccbcb4a21eaa5b6"
             },
             "require": {
                 "php": ">=5.3.23",
@@ -2234,7 +2181,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2017-06-19 19:11:59"
+            "time": "2017-07-13 17:23:56"
         },
         {
             "name": "zendframework/zendxml",
@@ -2613,22 +2560,22 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.1.1",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e"
+                "reference": "46f7e8bb075036c92695b15a1ddb6971c751e585"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-reflection-docblock-8331b5efe816ae05461b7ca1e721c01b46bafb3e-zip-319752.tar",
-                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e",
-                "shasum": "4c0c34bbf5d29ac1b4695e46d9735f63e1238553"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-reflection-docblock-46f7e8bb075036c92695b15a1ddb6971c751e585-zip-684dcb.tar",
+                "reference": "46f7e8bb075036c92695b15a1ddb6971c751e585",
+                "shasum": "b6b458b8ea2a67e946581bbf1b7f5242951df52a"
             },
             "require": {
                 "php": ">=5.5",
                 "phpdocumentor/reflection-common": "^1.0@dev",
-                "phpdocumentor/type-resolver": "^0.2.0",
+                "phpdocumentor/type-resolver": "^0.4.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
@@ -2654,24 +2601,24 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30 07:12:33"
+            "time": "2017-07-15 11:38:20"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "0.2.1",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "e224fb2ea2fba6d3ad6fdaef91cd09a172155ccb"
+                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-type-resolver-e224fb2ea2fba6d3ad6fdaef91cd09a172155ccb-zip-e5468a.tar",
-                "reference": "e224fb2ea2fba6d3ad6fdaef91cd09a172155ccb",
-                "shasum": "e566fc377f58a3ea17fe529771e4d966365b6a01"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-type-resolver-9c977708995954784726e25d0cd1dddf4e65b0f7-zip-28400d.tar",
+                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7",
+                "shasum": "3f22deb8eed9ca0831d99526bf68002b62b3b14c"
             },
             "require": {
-                "php": ">=5.5",
+                "php": "^5.5 || ^7.0",
                 "phpdocumentor/reflection-common": "^1.0"
             },
             "require-dev": {
@@ -2701,7 +2648,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-11-25 06:54:22"
+            "time": "2017-07-14 14:27:02"
         },
         {
             "name": "phpspec/prophecy",
@@ -3516,17 +3463,17 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.2",
+            "version": "v3.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063"
+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-9752a30000a8ca9f4b34b5227d15d0101b96b063-zip-c43bf8.tar",
-                "reference": "9752a30000a8ca9f4b34b5227d15d0101b96b063",
-                "shasum": "d0eb0f26a576e89c653d86e494450b84b2449d4e"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-1f93a8d19b8241617f5074a123e282575b821df8-zip-6a7428.tar",
+                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
+                "shasum": "afe1003b4793949db01a34157aa99d3dd356b724"
             },
             "require": {
                 "php": ">=5.5.9"
@@ -3567,7 +3514,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-02 22:05:06"
+            "time": "2017-06-15 12:58:50"
         },
         {
             "name": "webmozart/assert",

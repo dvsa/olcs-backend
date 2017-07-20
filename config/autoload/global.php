@@ -58,5 +58,8 @@ return array(
     ),
     'nr' => array(
         'max_schema_errors' => 10, //maximum number of xml schema problems to return (prevents massive error messages)
+        'compliance_episode' => [
+            'xmlNs' => 'https://webgate.ec.testa.eu/erru/1.0',
+        ],
     )
 );

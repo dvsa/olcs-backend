@@ -21,16 +21,20 @@ class XmlStructureInputFactoryTest extends TestCase
     {
         $xmlExclude = ['strings'];
         $maxSchemaErrors = 10;
+        $xmlNs = 'https://webgate.ec.testa.eu/erru/1.0';
 
         $config = [
             'nr' => [
+                'compliance_episode' => [
+                    'xmlNs' => $xmlNs
+                ],
                 'max_schema_errors' => $maxSchemaErrors
             ],
             'xml_valid_message_exclude' => $xmlExclude
         ];
 
         $mockXsdValidator = m::mock('Zend\Validator\AbstractValidator');
-        $mockXsdValidator->shouldReceive('setXsd')->once()->with('https://webgate.ec.testa.eu/erru/1.0');
+        $mockXsdValidator->shouldReceive('setXsd')->once()->with($xmlNs);
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
         $mockXsdValidator->shouldReceive('setXmlMessageExclude')->once()->with($xmlExclude);
 
@@ -80,20 +84,37 @@ class XmlStructureInputFactoryTest extends TestCase
         return [
             [
                 [
-                    'nr' => [],
+                    'nr' => [
+                        'compliance_episode' => [
+                            'xmlNs' => 'xml ns info'
+                        ]
+                    ],
                     'xml_valid_message_exclude' => ['strings']
                 ],
                 \RuntimeException::class,
-                'No config specified for max_schema_errors'
+                XmlStructureInputFactory::MAX_SCHEMA_MSG
+            ],
+            [
+                [
+                    'nr' => [
+                        'compliance_episode' => [
+                            'xmlNs' => 'xml ns info'
+                        ],
+                        'max_schema_errors' => 10
+                    ]
+                ],
+                \RuntimeException::class,
+                XmlStructureInputFactory::XML_VALID_EXCLUDE_MSG
             ],
             [
                 [
                     'nr' => [
                         'max_schema_errors' => 10
-                    ]
+                    ],
+                    'xml_valid_message_exclude' => ['strings']
                 ],
                 \RuntimeException::class,
-                'No config specified for xml messages to exclude'
+                XmlStructureInputFactory::XML_NS_MSG
             ],
         ];
     }
