@@ -29,6 +29,31 @@ class ApplicationCompletionEntityTest extends EntityTester
         $this->assertSame($application, $ac->getApplication());
     }
 
+    /**
+     * @dataProvider dpVariationSectionUpdated
+     *
+     * test variation section updated (use the two sections likely to be tested in the real world as examples)
+     */
+    public function testVariationSectionUpdated($status, $expected)
+    {
+        $entity = $this->instantiate(Entity::class);
+
+        $entity->setTypeOfLicenceStatus($status);
+        $entity->setOperatingCentresStatus($status);
+
+        $this->assertEquals($expected, $entity->variationSectionUpdated('operatingCentres'));
+        $this->assertEquals($expected, $entity->variationSectionUpdated('typeOfLicence'));
+    }
+
+    public function dpVariationSectionUpdated()
+    {
+        return [
+            [Entity::STATUS_NOT_STARTED, false],
+            [Entity::STATUS_VARIATION_REQUIRES_ATTENTION, false],
+            [Entity::STATUS_VARIATION_UPDATED, true]
+        ];
+    }
+
     public function testGetCalculatedValues()
     {
         /** @var Application $mockApp */
