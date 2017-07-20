@@ -281,5 +281,8 @@ return [
     'continuations.vehicles-section.table.weight' => 'Pwysau plât gros (cg)',
     'continuation-review-addresses-correspondence-address' => 'Cyfeiriad Gohebu',
     'continuation-review-addresses-establishment-address' => 'Cyfeiriad y Sefydliad',
+    'continuations.oc-section.table.name' => 'Canolfan weithredu',
+    'continuations.oc-section.table.vehicles' => 'Cerbydau',
+    'continuations.oc-section.table.trailers' => 'Ôl-gerbydau',
     // Potentially unused translations
 ];

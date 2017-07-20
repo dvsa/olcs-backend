@@ -301,5 +301,9 @@ return [
     'continuation-review-addresses-establishment-address-same' => 'Same as correspondence address',
     'continuation-review-addresses-primary-number' => 'Primary number',
     'continuation-review-addresses-secondary-number' => 'Secondary number',
+    'continuations.oc-section.table.name' => 'Operating centre',
+    'continuations.oc-section.table.vehicles' => 'Vehicles',
+    'continuations.oc-section.table.trailers' => 'Trailers',
+
     // Potentially unused translations
 ];
