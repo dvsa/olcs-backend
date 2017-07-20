@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Vehicles Continuation Review Service
@@ -24,7 +25,12 @@ class VehiclesReviewService extends AbstractReviewService
      */
     public function getConfigFromData(ContinuationDetail $continuationDetail)
     {
-        $licenceVehicles = $continuationDetail->getLicence()->getLicenceVehicles();
+        $notRemovedCriteria = Criteria::create();
+        $notRemovedCriteria->andWhere(
+            $notRemovedCriteria->expr()->isNull('removalDate')
+        );
+
+        $licenceVehicles = $continuationDetail->getLicence()->getLicenceVehicles()->matching($notRemovedCriteria);
         $isGoods =
             $continuationDetail->getLicence()->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
 
@@ -43,7 +49,10 @@ class VehiclesReviewService extends AbstractReviewService
             $row = [];
             $row[] = ['value' => $vehicle->getVrm()];
             if ($isGoods) {
-                $row[] = ['value' => $vehicle->getPlatedWeight()];
+                $row[] = [
+                    // no need to translate, the same in Welsh
+                    'value' => $vehicle->getPlatedWeight() . 'kg'
+                ];
             }
             $config[] = $row;
 

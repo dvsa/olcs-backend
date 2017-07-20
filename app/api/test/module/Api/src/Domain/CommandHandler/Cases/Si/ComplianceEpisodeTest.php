@@ -37,6 +37,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cases\Si\ComplianceEpisode as ComplianceEpisode
 use Dvsa\Olcs\Api\Domain\Command\Email\SendErruErrors as SendErruErrorsCmd;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
+use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml as ComplianceEpisodeXmlMapping;
 
 /**
  * ComplianceEpisodeTest
@@ -63,7 +64,8 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             'ComplianceXmlStructure' => m::mock(XmlStructureInputFactory::class),
             'ComplianceEpisodeInput' => m::mock(ComplianceEpisodeInputFactory::class),
             'SeriousInfringementInput' => m::mock(SeriousInfringementInputFactory::class),
-            'FileUploader' => m::mock(ContentStoreFileUploader::class)
+            'FileUploader' => m::mock(ContentStoreFileUploader::class),
+            'ComplianceEpisodeXmlMapping' => m::mock(ComplianceEpisodeXmlMapping::class),
         ];
 
         parent::setUp();
@@ -173,6 +175,8 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ]
         ];
 
+        $xmlData = ['array of pre-filtered xml data'];
+
         $erruData = [
             'workflowId' => $workflowId,
             'memberStateCode' => $memberStateCode,
@@ -186,7 +190,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validInitialInput($xmlString, $xmlData, $erruData, new \DOMDocument());
         $this->validSiInput($si, $filteredSi);
 
         $licenceEntity = m::mock(LicenceEntity::class);
@@ -342,6 +346,8 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->with($siPenaltyRequestedType)
             ->andThrow(NotFoundException::class);
 
+        $xmlData = ['array of pre-filtered xml data'];
+
         $erruData = [
             'licenceNumber' => $licenceNumber,
             'workflowId' => $workflowId,
@@ -355,7 +361,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validInitialInput($xmlString, $xmlData, $erruData, new \DOMDocument());
 
         $this->repoMap['ErruRequest']
             ->shouldReceive('existsByWorkflowId')
@@ -407,13 +413,15 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
         $memberStateCode = 'PL';
 
+        $xmlData = ['array of pre-filtered xml data'];
+
         $erruData = [
             'licenceNumber' => $licenceNumber,
             'workflowId' => $workflowId,
             'memberStateCode' => $memberStateCode,
         ];
 
-        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validInitialInput($xmlString, $xmlData, $erruData, new \DOMDocument());
 
         $licenceError = 'licence not found error';
 
@@ -462,13 +470,15 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
         $memberStateCode = 'PL';
 
+        $xmlData = ['array of pre-filtered xml data'];
+
         $erruData = [
             'licenceNumber' => $licenceNumber,
             'workflowId' => $workflowId,
             'memberStateCode' => $memberStateCode,
         ];
 
-        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validInitialInput($xmlString, $xmlData, $erruData, new \DOMDocument());
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchByLicNoWithoutAdditionalData')
@@ -516,13 +526,15 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $licenceNumber = 'OB1234567';
         $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
 
+        $xmlData = ['array of pre-filtered xml data'];
+
         $erruData = [
             'licenceNumber' => $licenceNumber,
             'workflowId' => $workflowId,
             'memberStateCode' => $memberStateCode,
         ];
 
-        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validInitialInput($xmlString, $xmlData, $erruData, new \DOMDocument());
 
         $this->repoMap['ErruRequest']
             ->shouldReceive('existsByWorkflowId')
@@ -571,6 +583,8 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $workflowId = '0ffefb6b-6344-4a60-9a53-4381c32f98d9';
         $si = ['si'];
 
+        $xmlData = ['array of pre-filtered xml data'];
+
         $erruData = [
             'licenceNumber' => $licenceNumber,
             'workflowId' => $workflowId,
@@ -584,7 +598,7 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->validInitialInput($xmlString, $erruData, new \DOMDocument());
+        $this->validInitialInput($xmlString, $xmlData, $erruData, new \DOMDocument());
 
         $this->repoMap['ErruRequest']
             ->shouldReceive('existsByWorkflowId')
@@ -685,10 +699,14 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
         $this->fetchDocumentAndXml($command, $xmlString, $documentId);
         $this->validXml($xmlString, $xmlDomDocument);
 
+        $xmlData = ['array of pre-filtered xml data'];
+
+        $this->mapXmlFile($xmlData, $xmlDomDocument);
+
         $this->mockedSmServices['ComplianceEpisodeInput']
             ->shouldReceive('setValue')
             ->once()
-            ->with($xmlDomDocument)
+            ->with($xmlData)
             ->andReturnSelf();
 
         $this->mockedSmServices['ComplianceEpisodeInput']
@@ -772,10 +790,11 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
      * @param $erruData
      * @param $xmlDomDocument
      */
-    private function validInitialInput($xmlString, $erruData, $xmlDomDocument)
+    private function validInitialInput($xmlString, $xmlData, $erruData, $xmlDomDocument)
     {
         $this->validXml($xmlString, $xmlDomDocument);
-        $this->validComplianceEpisodeInput($erruData, $xmlDomDocument);
+        $this->mapXmlFile($xmlData, $xmlDomDocument);
+        $this->validComplianceEpisodeInput($erruData, $xmlData);
     }
 
     /**
@@ -808,14 +827,14 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
      * Creates assertions for a valid compliance episode input
      *
      * @param $erruData
-     * @param $xmlDomDocument
+     * @param $xmlData
      */
-    private function validComplianceEpisodeInput($erruData, $xmlDomDocument)
+    private function validComplianceEpisodeInput($erruData, $xmlData)
     {
         $this->mockedSmServices['ComplianceEpisodeInput']
             ->shouldReceive('setValue')
             ->once()
-            ->with($xmlDomDocument)
+            ->with($xmlData)
             ->andReturnSelf();
 
         $this->mockedSmServices['ComplianceEpisodeInput']
@@ -852,5 +871,17 @@ class ComplianceEpisodeTest extends CommandHandlerTestCase
             ->shouldReceive('getValue')
             ->once()
             ->andReturn($filteredSi);
+    }
+
+    /**
+     * @param $xmlData
+     * @param $xmlDomDocument
+     */
+    private function mapXmlFile($xmlData, $xmlDomDocument)
+    {
+        $this->mockedSmServices['ComplianceEpisodeXmlMapping']
+            ->shouldReceive('mapData')
+            ->with($xmlDomDocument)
+            ->andReturn($xmlData);
     }
 }

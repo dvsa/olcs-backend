@@ -24,7 +24,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_continuation_detail_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_continuation_detail_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_continuation_detail_checklist_document_id",
-     *     columns={"checklist_document_id"})
+     *     columns={"checklist_document_id"}),
+ *        @ORM\Index(name="fk_continuation_detail_signature_type_ref_data_id",
+     *     columns={"signature_type"}),
+ *        @ORM\Index(name="fk_continuation_detail_digital_signature_id_digital_signature_id",
+     *     columns={"digital_signature_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_continuation_detail_licence_id_continuation_id",
@@ -36,6 +40,19 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Average balance amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal",
+     *     name="average_balance_amount",
+     *     precision=10,
+     *     scale=2,
+     *     nullable=true)
+     */
+    protected $averageBalanceAmount;
 
     /**
      * Checklist document
@@ -82,6 +99,43 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $createdOn;
 
     /**
+     * Digital signature
+     *
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
+     * @ORM\JoinColumn(name="digital_signature_id", referencedColumnName="id", nullable=true)
+     */
+    protected $digitalSignature;
+
+    /**
+     * Financial evidence uploaded
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="financial_evidence_uploaded", nullable=true)
+     */
+    protected $financialEvidenceUploaded;
+
+    /**
+     * Has other finances
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="has_other_finances", nullable=true)
+     */
+    protected $hasOtherFinances;
+
+    /**
+     * Has overdraft
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="has_overdraft", nullable=true)
+     */
+    protected $hasOverdraft;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -91,6 +145,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Is digital
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_digital", nullable=true)
+     */
+    protected $isDigital;
 
     /**
      * Last modified by
@@ -123,6 +186,37 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $licence;
 
     /**
+     * Other finances amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal",
+     *     name="other_finances_amount",
+     *     precision=10,
+     *     scale=2,
+     *     nullable=true)
+     */
+    protected $otherFinancesAmount;
+
+    /**
+     * Other finances details
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="other_finances_details", length=200, nullable=true)
+     */
+    protected $otherFinancesDetails;
+
+    /**
+     * Overdraft amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="overdraft_amount", precision=10, scale=2, nullable=true)
+     */
+    protected $overdraftAmount;
+
+    /**
      * Received
      *
      * @var string
@@ -130,6 +224,16 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\Column(type="yesno", name="received", nullable=false, options={"default": 0})
      */
     protected $received = 0;
+
+    /**
+     * Signature type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="signature_type", referencedColumnName="id", nullable=true)
+     */
+    protected $signatureType;
 
     /**
      * Status
@@ -177,6 +281,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Set the average balance amount
+     *
+     * @param float $averageBalanceAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setAverageBalanceAmount($averageBalanceAmount)
+    {
+        $this->averageBalanceAmount = $averageBalanceAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the average balance amount
+     *
+     * @return float
+     */
+    public function getAverageBalanceAmount()
+    {
+        return $this->averageBalanceAmount;
+    }
 
     /**
      * Set the checklist document
@@ -281,6 +409,102 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     }
 
     /**
+     * Set the digital signature
+     *
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature entity being set as the value
+     *
+     * @return ContinuationDetail
+     */
+    public function setDigitalSignature($digitalSignature)
+    {
+        $this->digitalSignature = $digitalSignature;
+
+        return $this;
+    }
+
+    /**
+     * Get the digital signature
+     *
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     */
+    public function getDigitalSignature()
+    {
+        return $this->digitalSignature;
+    }
+
+    /**
+     * Set the financial evidence uploaded
+     *
+     * @param boolean $financialEvidenceUploaded new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setFinancialEvidenceUploaded($financialEvidenceUploaded)
+    {
+        $this->financialEvidenceUploaded = $financialEvidenceUploaded;
+
+        return $this;
+    }
+
+    /**
+     * Get the financial evidence uploaded
+     *
+     * @return boolean
+     */
+    public function getFinancialEvidenceUploaded()
+    {
+        return $this->financialEvidenceUploaded;
+    }
+
+    /**
+     * Set the has other finances
+     *
+     * @param string $hasOtherFinances new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setHasOtherFinances($hasOtherFinances)
+    {
+        $this->hasOtherFinances = $hasOtherFinances;
+
+        return $this;
+    }
+
+    /**
+     * Get the has other finances
+     *
+     * @return string
+     */
+    public function getHasOtherFinances()
+    {
+        return $this->hasOtherFinances;
+    }
+
+    /**
+     * Set the has overdraft
+     *
+     * @param string $hasOverdraft new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setHasOverdraft($hasOverdraft)
+    {
+        $this->hasOverdraft = $hasOverdraft;
+
+        return $this;
+    }
+
+    /**
+     * Get the has overdraft
+     *
+     * @return string
+     */
+    public function getHasOverdraft()
+    {
+        return $this->hasOverdraft;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -302,6 +526,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is digital
+     *
+     * @param boolean $isDigital new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setIsDigital($isDigital)
+    {
+        $this->isDigital = $isDigital;
+
+        return $this;
+    }
+
+    /**
+     * Get the is digital
+     *
+     * @return boolean
+     */
+    public function getIsDigital()
+    {
+        return $this->isDigital;
     }
 
     /**
@@ -383,6 +631,78 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     }
 
     /**
+     * Set the other finances amount
+     *
+     * @param float $otherFinancesAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setOtherFinancesAmount($otherFinancesAmount)
+    {
+        $this->otherFinancesAmount = $otherFinancesAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the other finances amount
+     *
+     * @return float
+     */
+    public function getOtherFinancesAmount()
+    {
+        return $this->otherFinancesAmount;
+    }
+
+    /**
+     * Set the other finances details
+     *
+     * @param string $otherFinancesDetails new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setOtherFinancesDetails($otherFinancesDetails)
+    {
+        $this->otherFinancesDetails = $otherFinancesDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the other finances details
+     *
+     * @return string
+     */
+    public function getOtherFinancesDetails()
+    {
+        return $this->otherFinancesDetails;
+    }
+
+    /**
+     * Set the overdraft amount
+     *
+     * @param float $overdraftAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setOverdraftAmount($overdraftAmount)
+    {
+        $this->overdraftAmount = $overdraftAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the overdraft amount
+     *
+     * @return float
+     */
+    public function getOverdraftAmount()
+    {
+        return $this->overdraftAmount;
+    }
+
+    /**
      * Set the received
      *
      * @param string $received new value being set
@@ -404,6 +724,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getReceived()
     {
         return $this->received;
+    }
+
+    /**
+     * Set the signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
+     *
+     * @return ContinuationDetail
+     */
+    public function setSignatureType($signatureType)
+    {
+        $this->signatureType = $signatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSignatureType()
+    {
+        return $this->signatureType;
     }
 
     /**

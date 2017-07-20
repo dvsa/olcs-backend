@@ -37,6 +37,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $opposition;
 
+    protected $continuationDetail;
+
     protected $category;
 
     protected $subCategory;
@@ -155,6 +157,14 @@ class CreateDocumentSpecific extends AbstractCommand
      * @return mixed
      */
     public function getOpposition()
+    {
+        return $this->opposition;
+    }
+
+    /**
+     * @return int
+     */
+    public function getContinuationDetail()
     {
         return $this->opposition;
     }

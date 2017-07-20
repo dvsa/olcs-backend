@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
@@ -64,6 +65,10 @@ trait NamingServiceAwareTrait
 
         if (!empty($data['irfoOrganisation'])) {
             return $this->getRepo()->getReference(Organisation::class, $data['irfoOrganisation']);
+        }
+
+        if (!empty($data['continuationDetail'])) {
+            return $this->getRepo()->getReference(ContinuationDetail::class, $data['continuationDetail']);
         }
 
         return null;

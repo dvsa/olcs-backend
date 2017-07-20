@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\CommunityLic;
 
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal as Entity;
 use Mockery as m;
@@ -22,10 +23,18 @@ class CommunityLicWithdrawalEntityTest extends EntityTester
 
     public function testUpdateCommunityLicWithdrawal()
     {
-        $communityLic = 1;
+        /** @var CommunityLic $communityLic */
+        $communityLic = new CommunityLic();
+        $communityLic->setId(1);
+
+        /** @var Entity|m\Mock $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->updateCommunityLicWithdrawal($communityLic);
+
+        $dateTimeObject = new \DateTime('29 June 2017');
+        $sut->setStartDate($dateTimeObject);
+
         $this->assertEquals($communityLic, $sut->getCommunityLic());
-        $this->assertEquals(new \DateTime(), $sut->getStartDate());
+        $this->assertEquals($dateTimeObject, $sut->getStartDate());
     }
 }
