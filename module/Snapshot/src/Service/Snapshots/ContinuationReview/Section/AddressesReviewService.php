@@ -28,6 +28,14 @@ class AddressesReviewService extends AbstractReviewService
         $correspondenceCd = $licence->getCorrespondenceCd();
         $establishmentCd = $licence->getEstablishmentCd();
 
+        $showEstablimentAddress = in_array(
+            $licence->getLicenceType()->getId(),
+            [
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                Licence::LICENCE_TYPE_STANDARD_NATIONAL
+            ]
+        );
+
         $columns = [
             'addressFields' => ['addressLine1', 'addressLine2', 'addressLine3', 'addressLine4', 'town', 'postcode']
         ];
@@ -37,17 +45,20 @@ class AddressesReviewService extends AbstractReviewService
                 ['value' => Address::format($correspondenceCd->getAddress(), $columns), 'header' => true]
             ]
         ];
-        if ($establishmentCd !== null) {
-            $config[] = [
-                ['value' => 'continuation-review-addresses-establishment-address'],
-                ['value' => Address::format($establishmentCd->getAddress(), $columns), 'header' => true]
-            ];
-        } else {
-            $config[] = [
-                ['value' => 'continuation-review-addresses-establishment-address'],
-                ['value' => 'continuation-review-addresses-establishment-address-same', 'header' => true]
-            ];
+        if ($showEstablimentAddress) {
+            if ($establishmentCd !== null) {
+                $config[] = [
+                    ['value' => 'continuation-review-addresses-establishment-address'],
+                    ['value' => Address::format($establishmentCd->getAddress(), $columns), 'header' => true]
+                ];
+            } else {
+                $config[] = [
+                    ['value' => 'continuation-review-addresses-establishment-address'],
+                    ['value' => 'continuation-review-addresses-establishment-address-same', 'header' => true]
+                ];
+            }
         }
+
         $primaryNumber =  $correspondenceCd->getPhoneContactNumber(RefData::PHONE_NUMBER_PRIMARY_TYPE);
         if ($primaryNumber !== null) {
             $config[] = [
