@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\GdsVerify;
 
 /**
  * ProcessResponse
@@ -45,7 +46,11 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
      */
     public function handleCommand(CommandInterface $command)
     {
-        $attributes = $this->getGdsVerifyService()->getAttributesFromResponse($command->getSamlResponse());
+        try {
+            $attributes = $this->getGdsVerifyService()->getAttributesFromResponse($command->getSamlResponse());
+        } catch (GdsVerify\Exception $e) {
+            throw new \Dvsa\Olcs\Api\Domain\Exception\RuntimeException($e->getMessage(), 0, $e);
+        }
 
         if (!$attributes->isValidSignature()) {
             // Not sure this is the right response code, for signature not valid? But it will work
