@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 
 /**
  * Queue
@@ -33,10 +34,13 @@ class Queue extends AbstractRepository
         $db = $this->getEntityManager()->getConnection();
 
         $query = <<<SQL
-INSERT INTO `queue` (`status`, `type`, `options`)
+INSERT INTO `queue` (`status`, `type`, `options`, `created_by`, `last_modified_by`, `created_on`)
 SELECT DISTINCT 'que_sts_queued',
                 ?,
-                CONCAT('{"companyNumber":"', UPPER(o.company_or_llp_no), '"}')
+                CONCAT('{"companyNumber":"', UPPER(o.company_or_llp_no), '"}'),
+                ?,
+                ?,
+                NOW()
 FROM organisation o
 INNER JOIN licence l ON o.id=l.organisation_id
 WHERE l.status IN ('lsts_consideration',
@@ -48,7 +52,7 @@ WHERE l.status IN ('lsts_consideration',
 ORDER BY o.company_or_llp_no;
 SQL;
         $stmt = $db->prepare($query);
-        $params = array($type);
+        $params = array($type, PidIdentityProvider::SYSTEM_USER, PidIdentityProvider::SYSTEM_USER);
 
         $stmt->execute($params);
         return $stmt->rowCount();
