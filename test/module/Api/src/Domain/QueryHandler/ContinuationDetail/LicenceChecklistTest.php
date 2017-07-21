@@ -75,6 +75,15 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                             'operatingCentre' => [
                                 'address'
                             ]
+                        ],
+                        'tmLicences' => [
+                            'transportManager' => [
+                                'homeCd' => [
+                                    'person' => [
+                                        'title'
+                                    ]
+                                ]
+                            ]
                         ]
                     ],
                     'sections' => [
@@ -128,6 +137,15 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'operatingCentres' => [
                     'operatingCentre' => [
                         'address'
+                    ]
+                ],
+                'tmLicences' => [
+                    'transportManager' => [
+                        'homeCd' => [
+                            'person' => [
+                                'title'
+                            ]
+                        ]
                     ]
                 ]
             ],

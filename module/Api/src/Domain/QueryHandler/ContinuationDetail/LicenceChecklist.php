@@ -87,6 +87,15 @@ class LicenceChecklist extends AbstractQueryHandler
                         'operatingCentre' => [
                             'address'
                         ]
+                    ],
+                    'tmLicences' => [
+                        'transportManager' => [
+                            'homeCd' => [
+                                'person' => [
+                                    'title'
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ],
