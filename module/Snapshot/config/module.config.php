@@ -76,6 +76,7 @@ return [
             'ContinuationReview\People' => ContinuationReview\PeopleReviewService::class,
             'ContinuationReview\Vehicles' => ContinuationReview\VehiclesReviewService::class,
             'ContinuationReview\VehiclesPsv' => ContinuationReview\VehiclesReviewService::class,
+            'ContinuationReview\OperatingCentres' => ContinuationReview\OperatingCentresReviewService::class,
         ],
     ],
     'view_manager' => [
