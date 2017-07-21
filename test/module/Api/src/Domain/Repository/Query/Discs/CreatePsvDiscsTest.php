@@ -102,6 +102,11 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         $this->assertEquals('result', $this->sut->executeInsert(1102, 4, false));
     }
 
+    public function testExecuteZeroDiscs()
+    {
+        $this->assertEquals(0, $this->sut->executeInsert(1102, 0, false));
+    }
+
     public function testExecuteInsertException()
     {
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
