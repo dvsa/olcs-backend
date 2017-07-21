@@ -304,6 +304,8 @@ return [
     'continuations.oc-section.table.name' => 'Operating centre',
     'continuations.oc-section.table.vehicles' => 'Vehicles',
     'continuations.oc-section.table.trailers' => 'Trailers',
+    'continuations.tm-section.table.name' => 'Name',
+    'continuations.tm-section.table.dob' => 'Date of birth',
 
     // Potentially unused translations
 ];

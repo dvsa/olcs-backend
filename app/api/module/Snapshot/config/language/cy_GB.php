@@ -284,5 +284,7 @@ return [
     'continuations.oc-section.table.name' => 'Canolfan weithredu',
     'continuations.oc-section.table.vehicles' => 'Cerbydau',
     'continuations.oc-section.table.trailers' => 'Ôl-gerbydau',
+    'continuations.tm-section.table.name' => 'Enw',
+    'continuations.tm-section.table.dob' => 'Dyddiad geni',
     // Potentially unused translations
 ];
