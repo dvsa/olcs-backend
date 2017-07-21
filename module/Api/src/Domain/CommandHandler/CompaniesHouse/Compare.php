@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
@@ -40,10 +41,13 @@ final class Compare extends AbstractCommandHandler
             );
             return $this->result;
         } catch (\Exception $e) {
-            $this->result->merge(
-                $this->createAlert([$e->getMessage()], $companyNumber)
+            $exception = new NotReadyException(
+                'Error getting data from Companies House API : '. $e->getMessage(),
+                0,
+                $e
             );
-            return $this->result;
+            $exception->setRetryAfter(60);
+            throw $exception;
         }
 
         $data = $this->normaliseProfileData($apiResult);
