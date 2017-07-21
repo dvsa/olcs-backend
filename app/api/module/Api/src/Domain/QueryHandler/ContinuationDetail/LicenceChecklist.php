@@ -83,6 +83,11 @@ class LicenceChecklist extends AbstractQueryHandler
                     'establishmentCd' => [
                         'address',
                     ],
+                    'operatingCentres' => [
+                        'operatingCentre' => [
+                            'address'
+                        ]
+                    ]
                 ]
             ],
             [

@@ -71,6 +71,11 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'establishmentCd' => [
                             'address',
                         ],
+                        'operatingCentres' => [
+                            'operatingCentre' => [
+                                'address'
+                            ]
+                        ]
                     ],
                     'sections' => [
                         'fooBar',
@@ -120,6 +125,11 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'establishmentCd' => [
                     'address',
                 ],
+                'operatingCentres' => [
+                    'operatingCentre' => [
+                        'address'
+                    ]
+                ]
             ],
             'sections' => [
                 'fooBar',
