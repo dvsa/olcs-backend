@@ -660,8 +660,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function copyInformationFromApplication(Application $application)
     {
-        $this->setLicenceType($application->getLicenceType());
         $this->setGoodsOrPsv($application->getGoodsOrPsv());
+
+        if ($application->isVariation()) {
+            $appCompletion = $application->getApplicationCompletion();
+
+            if ($appCompletion->variationSectionUpdated('typeOfLicence')) {
+                $this->setLicenceType($application->getLicenceType());
+            }
+
+            if ($appCompletion->variationSectionUpdated('operatingCentres')) {
+                $this->setTotAuthTrailers($application->getTotAuthTrailers());
+                $this->setTotAuthVehicles($application->getTotAuthVehicles());
+            }
+
+            return;
+        }
+
+        //application isn't a variation, we don't need to do conditional checks
+        $this->setLicenceType($application->getLicenceType());
         $this->setTotAuthTrailers($application->getTotAuthTrailers());
         $this->setTotAuthVehicles($application->getTotAuthVehicles());
     }
