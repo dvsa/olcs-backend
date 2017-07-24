@@ -14,6 +14,7 @@ use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;
 use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 
 /**
+ * @todo this isn't great code, have improved somewhat, but should all be done by the entity
  * Create Update Abstract
  */
 abstract class CreateUpdateAbstract extends AbstractCommandHandler implements TransactionedInterface
@@ -28,7 +29,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
      *
      * @return void
      */
-    protected function setData($entity, CommandInterface $command)
+    protected function setData(Entities\Cases\Hearing $entity, CommandInterface $command)
     {
         /** @var Repository $repo For traceability */
         $repo = $this->getRepo();
@@ -46,33 +47,20 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler implements Tr
             $entity->setVenue(null);
         }
 
-        // Amazingly these foreign keys are optional.
+        $case = $this->getRepo()->getReference(Entities\Cases\Cases::class, $command->getCase());
+        $entity->setCase($case);
 
-        if ($command->getCase() !== null) {
-            $case = $this->getRepo()->getReference(Entities\Cases\Cases::class, $command->getCase());
-            $entity->setCase($case);
-        }
-
-        // Fields - again, optional...?
-
-        if ($command->getAgreedByTcDate() !== null) {
-            $entity->setAgreedByTcDate(new \DateTime($command->getAgreedByTcDate()));
-        }
-
-        if ($command->getHearingDate() !== null) {
-            $entity->setHearingDate(new \DateTime($command->getHearingDate()));
-        }
+        $entity->setAgreedByTcDate($entity->processDate($command->getAgreedByTcDate()));
+        $entity->setHearingDate($entity->processDate($command->getHearingDate(), \DateTime::ISO8601, false));
 
         //deals with witnesses field being null or empty string
         $witnesses = is_numeric($command->getWitnessCount()) ? $command->getWitnessCount() : 0;
         $entity->setWitnessCount($witnesses);
 
-        if ($command->getOutcome() !== null) {
-            $entity->setOutcome($repo->getRefdataReference($command->getOutcome()));
-        }
+        $cmdOutcome = $command->getOutcome();
+        $outcome = $cmdOutcome === null ? null : $repo->getRefdataReference($cmdOutcome);
+        $entity->setOutcome($outcome);
 
-        if ($command->getPresidingStaffName() !== null) {
-            $entity->setPresidingStaffName($command->getPresidingStaffName());
-        }
+        $entity->setPresidingStaffName($command->getPresidingStaffName());
     }
 }
