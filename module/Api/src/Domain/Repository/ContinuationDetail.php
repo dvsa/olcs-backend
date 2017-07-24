@@ -87,8 +87,7 @@ class ContinuationDetail extends AbstractRepository
         // AND continuation status is Printed, Acceptable or Unacceptable
         // OR where the status is Complete but the checklist has not yet been received;
         $qb->andWhere(
-            "{$this->alias}.status IN (:continuationDetailStatuses) OR "
-            . "({$this->alias}.status = '". Entity::STATUS_COMPLETE ."' AND {$this->alias}.received = 'N')"
+            "{$this->alias}.status IN (:continuationDetailStatuses)"
         )->setParameter(
             'continuationDetailStatuses',
             [
