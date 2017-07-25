@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -1168,5 +1169,107 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getOperatorType()
     {
         return $this->isGoods() ? 'Goods' : 'PSV';
+    }
+
+    /**
+     * Is the licence expired, ie past the expiry/continuation date
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        $expiryDate = $this->getExpiryDate(true);
+        if (!$expiryDate instanceof \DateTime) {
+            return false;
+        }
+
+        return $expiryDate < (new DateTime());
+    }
+
+    /**
+     * Is this licence about to expire
+     * Must be withing two months of licence expiry date and have an active continuation
+     *
+     * @return bool
+     */
+    public function isExpiring()
+    {
+        $expiryDate = $this->getExpiryDate(true);
+        // if no expiry date then false
+        if (!$expiryDate instanceof \DateTime) {
+            return false;
+        }
+
+        // if expired, then cannot be expiring
+        if ($this->isExpired()) {
+            return false;
+        }
+
+        // find the attached continuation detail entity where the licence expiry month/year matched the continaution
+        $currentContinuationDetail = null;
+        $continuationDetails = $this->getActiveContinuationDetails();
+        /** @var ContinuationDetail $continuationDetail */
+        foreach ($continuationDetails as $continuationDetail) {
+            if ($continuationDetail->getContinuation()->getMonth() == $expiryDate->format('n')
+                && $continuationDetail->getContinuation()->getYear() == $expiryDate->format('Y')
+            ) {
+                $currentContinuationDetail = $continuationDetail;
+                break;
+            }
+        }
+
+        // if an applicable continuation detail not found
+        if ($currentContinuationDetail === null) {
+            return false;
+        }
+
+        // check the licence expiry date is withing two months of now
+        $now = (new DateTime())->add(new \DateInterval('P2M'));
+
+        return $now >= $expiryDate;
+    }
+
+    /**
+     * Get active continuation details
+     *
+     * @return ArrayCollection
+     */
+    public function getActiveContinuationDetails()
+    {
+        $criteria = Criteria::create()
+            ->where(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        ContinuationDetail::STATUS_ACCEPTABLE,
+                        ContinuationDetail::STATUS_UNACCEPTABLE,
+                        ContinuationDetail::STATUS_PRINTED,
+                    ]
+                )
+            );
+
+        return $this->getContinuationDetails()->matching($criteria);
+    }
+
+    /**
+     * Serialize
+     *
+     * @param array $bundle Bundle
+     *
+     * @return array
+     */
+    public function serialize(array $bundle = [])
+    {
+        $result = parent::serialize($bundle);
+        // if 'isExpiring' is in bundle, then add to serialized output
+        if (in_array('isExpiring', $bundle)) {
+            $result['isExpiring'] = $this->isExpiring();
+        }
+        // if 'isExpired' is in bundle, then add to serialized output
+        if (in_array('isExpired', $bundle)) {
+            $result['isExpired'] = $this->isExpired();
+        }
+
+        return $result;
     }
 }
