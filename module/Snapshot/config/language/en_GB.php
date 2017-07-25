@@ -306,6 +306,9 @@ return [
     'continuations.oc-section.table.trailers' => 'Trailers',
     'continuations.tm-section.table.name' => 'Name',
     'continuations.tm-section.table.dob' => 'Date of birth',
-
+    'continuations.safety-section.table.inspector' => 'Inspector',
+    'continuations.safety-section.table.address' => 'Workshop address',
+    'continuations.safety-section.table.external-contractor' => 'External contractor',
+    'continuations.safety-section.table.owner-or-employee' => 'Owner or employee',
     // Potentially unused translations
 ];
