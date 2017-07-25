@@ -72,8 +72,7 @@ class S3File implements TransportInterface
         $file = $this->fileTransport->getLastFile();
 
         $filter = new Alnum(true);
-        $s3SafeSubject = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
-        $s3FileName = (new DateTime())->format(\DateTime::W3C) .'_'. $s3SafeSubject;
+        $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
 
         $this->executeCommand(
             sprintf('s3cmd put %s s3://%s/%s 2>&1', $file, $this->getOptions()->getS3Path(), $s3FileName),
