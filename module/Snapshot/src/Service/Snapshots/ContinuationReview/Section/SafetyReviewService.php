@@ -47,11 +47,9 @@ class SafetyReviewService extends AbstractReviewService
                 [
                     'value' => $contactDetails->getFao()
                         . ' ('
-                        . (
-                        ($workshop->getIsExternal() === 'Y')
+                        . (($workshop->getIsExternal() === 'Y')
                             ? $this->translate('continuations.safety-section.table.external-contractor')
-                            : $this->translate('continuations.safety-section.table.owner-or-employee')
-                        )
+                            : $this->translate('continuations.safety-section.table.owner-or-employee'))
                         . ')',
                 ],
                 ['value' => implode(', ', [$address->getAddressLine1(), $address->getTown()])]
