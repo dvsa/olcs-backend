@@ -29,6 +29,13 @@ class Licence extends AbstractQueryHandler
      */
     private $sectionAccessService;
 
+    /**
+     * Factory
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -38,6 +45,13 @@ class Licence extends AbstractQueryHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         $licence = $this->getRepo()->fetchUsingId($query);
@@ -53,6 +67,8 @@ class Licence extends AbstractQueryHandler
         return $this->result(
             $licence,
             [
+                'isExpired',
+                'isExpiring',
                 'cases' => [
                     'appeal' => [
                         'outcome',
@@ -94,7 +110,7 @@ class Licence extends AbstractQueryHandler
     /**
      * Get a Continuation Detail for the marker
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence Licence
      *
      * @return \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail|null
      */
