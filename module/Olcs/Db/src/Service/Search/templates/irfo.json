@@ -28,6 +28,14 @@
                         "org_id": "%SEARCH_TERM%"
                      }
                   },
+                 {
+                     "wildcard": {
+                        "org_name_wildcard": {
+                        "value":"%SEARCH_TERM%",
+                        "boost":3
+                        }
+                     }
+                  },
                   {
                      "match": {
                         "org_name": "%SEARCH_TERM%"
