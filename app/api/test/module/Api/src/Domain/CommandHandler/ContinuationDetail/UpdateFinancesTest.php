@@ -90,4 +90,70 @@ class UpdateFinancesTest extends CommandHandlerTestCase
         $this->assertEquals(['ContinuationDetail finances updated'], $result->getMessages());
         $this->assertEquals(['continuationDetail' => 154], $result->getIds());
     }
+
+    public function testHandleCommandFactoringYes()
+    {
+        $data = [
+            'id' => 3,
+            'version' => 7,
+            'averageBalanceAmount' => '123.45',
+            'hasOverdraft' => 'N',
+            'overdraftAmount' => '234.56',
+            'hasFactoring' => 'Y',
+            'factoringAmount' => '345.67',
+        ];
+        $command = UpdateCommand::create($data);
+
+        $continuationDetail = new ContinuationDetailEntity();
+        $continuationDetail->setId(154);
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(3, Query::HYDRATE_OBJECT, 7)->once()
+            ->andReturn($continuationDetail);
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($data['averageBalanceAmount'], $continuationDetail->getAverageBalanceAmount());
+        $this->assertSame($data['hasOverdraft'], $continuationDetail->getHasOverdraft());
+        $this->assertSame(null, $continuationDetail->getOverdraftAmount());
+        $this->assertSame($data['hasFactoring'], $continuationDetail->getHasFactoring());
+        $this->assertSame($data['factoringAmount'], $continuationDetail->getFactoringAmount());
+
+        $this->assertEquals(['ContinuationDetail finances updated'], $result->getMessages());
+        $this->assertEquals(['continuationDetail' => 154], $result->getIds());
+    }
+
+    public function testHandleCommandFactoringNo()
+    {
+        $data = [
+            'id' => 3,
+            'version' => 7,
+            'averageBalanceAmount' => '123.45',
+            'hasOverdraft' => 'N',
+            'overdraftAmount' => '234.56',
+            'hasFactoring' => 'N',
+            'factoringAmount' => '345.67',
+        ];
+        $command = UpdateCommand::create($data);
+
+        $continuationDetail = new ContinuationDetailEntity();
+        $continuationDetail->setId(154);
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(3, Query::HYDRATE_OBJECT, 7)->once()
+            ->andReturn($continuationDetail);
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($data['averageBalanceAmount'], $continuationDetail->getAverageBalanceAmount());
+        $this->assertSame($data['hasOverdraft'], $continuationDetail->getHasOverdraft());
+        $this->assertSame(null, $continuationDetail->getOverdraftAmount());
+        $this->assertSame($data['hasFactoring'], $continuationDetail->getHasFactoring());
+        $this->assertSame(null, $continuationDetail->getFactoringAmount());
+
+        $this->assertEquals(['ContinuationDetail finances updated'], $result->getMessages());
+        $this->assertEquals(['continuationDetail' => 154], $result->getIds());
+    }
 }
