@@ -25,9 +25,6 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
         $this->sut = new TransportManagersReviewService();
     }
 
-    /**
-     * @group test123
-     */
     public function testGetConfigFromData()
     {
         $continuationDetail = new ContinuationDetail();
