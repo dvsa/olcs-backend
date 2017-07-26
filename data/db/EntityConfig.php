@@ -1869,6 +1869,12 @@ return array(
         'has_other_finances' => array(
             'type' => 'yesnonull'
         ),
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'continuationDetail'
+            )
+        ),
     ),
     'companies_house_officer' => array(
         'companies_house_company_id' => array(
