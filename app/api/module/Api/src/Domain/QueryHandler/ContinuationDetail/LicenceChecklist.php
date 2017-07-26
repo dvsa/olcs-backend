@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Zend\Filter\Word\UnderscoreToCamelCase;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 
 /**
  * Licence Checklist for continuation
@@ -109,7 +110,8 @@ class LicenceChecklist extends AbstractQueryHandler
                 ]
             ],
             [
-                'sections' => $sections
+                'sections' => $sections,
+                'ocChanges' => $licence->getOcPendingChanges()
             ]
         );
     }
