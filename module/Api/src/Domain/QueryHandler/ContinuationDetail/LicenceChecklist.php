@@ -96,7 +96,16 @@ class LicenceChecklist extends AbstractQueryHandler
                                 ]
                             ]
                         ]
-                    ]
+                    ],
+                    'workshops' => [
+                        'contactDetails' => [
+                            'person' => [
+                                'title'
+                            ],
+                            'address'
+                        ]
+                    ],
+                    'tachographIns'
                 ]
             ],
             [

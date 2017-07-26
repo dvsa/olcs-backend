@@ -286,5 +286,6 @@ return [
     'continuations.oc-section.table.trailers' => 'Ôl-gerbydau',
     'continuations.tm-section.table.name' => 'Enw',
     'continuations.tm-section.table.dob' => 'Dyddiad geni',
+    'continuations.safety-section.table.address' => 'Cyfeiriad y gweithdy',
     // Potentially unused translations
 ];
