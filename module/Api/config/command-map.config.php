@@ -741,6 +741,7 @@ return [
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
+    Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
