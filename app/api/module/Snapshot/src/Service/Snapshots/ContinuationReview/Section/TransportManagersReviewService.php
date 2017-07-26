@@ -39,9 +39,15 @@ class TransportManagersReviewService extends AbstractReviewService
             $person = $tmLicence->getTransportManager()->getHomeCd()->getPerson();
             $row = [
                 [
-                    'value' => implode(
-                        ' ',
-                        [$person->getTitle()->getDescription(), $person->getForename(), $person->getFamilyName()]
+                    'value' => trim(
+                        implode(
+                            ' ',
+                            [
+                                $person->getTitle() !== null ? $person->getTitle()->getDescription() : '',
+                                $person->getForename(),
+                                $person->getFamilyName()
+                            ]
+                        )
                     )
                 ],
                 ['value' => $person->getBirthDate(true)->format('d/m/Y')]
