@@ -25,6 +25,9 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
         $this->sut = new TransportManagersReviewService();
     }
 
+    /**
+     * @group test123
+     */
     public function testGetConfigFromData()
     {
         $continuationDetail = new ContinuationDetail();
@@ -48,13 +51,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
                                     ->andReturn('bar')
                                     ->once()
                                     ->shouldReceive('getTitle')
-                                    ->andReturn(
-                                        m::mock()
-                                            ->shouldReceive('getDescription')
-                                            ->andReturn('Mr')
-                                            ->once()
-                                            ->getMock()
-                                    )
+                                    ->andReturn(null)
                                     ->once()
                                     ->shouldReceive('getBirthDate')
                                     ->with(true)
@@ -95,7 +92,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
                                             ->once()
                                             ->getMock()
                                     )
-                                    ->once()
+                                    ->twice()
                                     ->shouldReceive('getBirthDate')
                                     ->with(true)
                                     ->andReturn(new \DateTime('1980-01-01'))
@@ -132,7 +129,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
                 ['value' => '01/01/1980'],
             ],
             [
-                ['value' => 'Mr foo bar'],
+                ['value' => 'foo bar'],
                 ['value' => '01/01/1970'],
             ]
         ];
