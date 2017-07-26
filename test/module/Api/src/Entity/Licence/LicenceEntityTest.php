@@ -1469,4 +1469,96 @@ class LicenceEntityTest extends EntityTester
         $this->assertArrayNotHasKey('isExpired', $serialized);
         $this->assertArrayHasKey('isExpiring', $serialized);
     }
+
+    public function testGetNotSubmittedOrUnderConsiderationVariations()
+    {
+        $app1 = m::mock()
+            ->shouldReceive('getstatus')
+            ->andReturn(Application::APPLICATION_STATUS_NOT_SUBMITTED)
+            ->once()
+            ->shouldReceive('getisVariation')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $app2 = m::mock()
+            ->shouldReceive('getstatus')
+            ->andReturn(Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->shouldReceive('getisVariation')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $app3 = m::mock()
+            ->shouldReceive('getisVariation')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
+        $applications = new ArrayCollection();
+        $applications->add($app1);
+        $applications->add($app2);
+        $applications->add($app3);
+
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getApplications')
+            ->andReturn($applications)
+            ->once()
+            ->getMock();
+
+        $expected = new ArrayCollection();
+        $expected->add($app1);
+        $expected->add($app2);
+
+        $result = $licence->getNotSubmittedOrUnderConsiderationVariations();
+
+        $this->assertEquals($result, $expected);
+    }
+
+    public function testGetOcPendingChangesNoChanges()
+    {
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn(new ArrayCollection())
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(0, $licence->getOcPendingChanges());
+    }
+
+    public function testGetOcPendingChanges()
+    {
+        $operatingCentres = new ArrayCollection();
+        $operatingCentres->add(['oc1']);
+
+        $variation = m::mock()
+            ->shouldReceive('getOperatingCentres')
+            ->andReturn($operatingCentres)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(2)
+            ->once()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(2)
+            ->once()
+            ->getMock();
+
+        $variations = new ArrayCollection();
+        $variations->add($variation);
+
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn($variations)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(1)
+            ->once()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(1)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(3, $licence->getOcPendingChanges());
+    }
 }
