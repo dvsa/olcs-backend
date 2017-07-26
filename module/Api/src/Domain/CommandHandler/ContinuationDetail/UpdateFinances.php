@@ -33,21 +33,36 @@ final class UpdateFinances extends AbstractCommandHandler implements Transaction
             \Doctrine\ORM\Query::HYDRATE_OBJECT,
             $command->getVersion()
         );
-
-        $continuationDetail->setAverageBalanceAmount($command->getAverageBalanceAmount());
-        $continuationDetail->setHasOverdraft($command->getHasOverdraft());
-        if ($command->getHasOverdraft() === 'Y') {
-            $continuationDetail->setOverdraftAmount($command->getOverdraftAmount());
-        } else {
-            $continuationDetail->setOverdraftAmount(null);
+        if ($command->getAverageBalanceAmount() !== null) {
+            $continuationDetail->setAverageBalanceAmount($command->getAverageBalanceAmount());
         }
-        $continuationDetail->setHasOtherFinances($command->getHasOtherFinances());
-        if ($command->getHasOtherFinances() === 'Y') {
-            $continuationDetail->setOtherFinancesAmount($command->getOtherFinancesAmount());
-            $continuationDetail->setOtherFinancesDetails($command->getOtherFinancesDetails());
-        } else {
-            $continuationDetail->setOtherFinancesAmount(null);
-            $continuationDetail->setOtherFinancesDetails(null);
+        if ($command->getHasOverdraft() !== null) {
+            $continuationDetail->setHasOverdraft($command->getHasOverdraft());
+        }
+        if ($command->getHasOverdraft() !== null) {
+            if ($command->getHasOverdraft() === 'Y') {
+                $continuationDetail->setOverdraftAmount($command->getOverdraftAmount());
+            } else {
+                $continuationDetail->setOverdraftAmount(null);
+            }
+        }
+        if ($command->getHasFactoring() !== null) {
+            $continuationDetail->setHasFactoring($command->getHasFactoring());
+            if ($command->getHasFactoring() === 'Y') {
+                $continuationDetail->setFactoringAmount($command->getFactoringAmount());
+            } else {
+                $continuationDetail->setFactoringAmount(null);
+            }
+        }
+        if ($command->getHasOtherFinances() !== null) {
+            $continuationDetail->setHasOtherFinances($command->getHasOtherFinances());
+            if ($command->getHasOtherFinances() === 'Y') {
+                $continuationDetail->setOtherFinancesAmount($command->getOtherFinancesAmount());
+                $continuationDetail->setOtherFinancesDetails($command->getOtherFinancesDetails());
+            } else {
+                $continuationDetail->setOtherFinancesAmount(null);
+                $continuationDetail->setOtherFinancesDetails(null);
+            }
         }
 
         $this->getRepo()->save($continuationDetail);
