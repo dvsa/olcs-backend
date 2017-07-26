@@ -84,7 +84,16 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                                     ]
                                 ]
                             ]
-                        ]
+                        ],
+                        'workshops' => [
+                            'contactDetails' => [
+                                'person' => [
+                                    'title'
+                                ],
+                                'address'
+                            ]
+                        ],
+                        'tachographIns'
                     ],
                     'sections' => [
                         'fooBar',
@@ -147,7 +156,16 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                             ]
                         ]
                     ]
-                ]
+                ],
+                'workshops' => [
+                    'contactDetails' => [
+                        'person' => [
+                            'title'
+                        ],
+                        'address'
+                    ]
+                ],
+                'tachographIns'
             ],
             'sections' => [
                 'fooBar',
