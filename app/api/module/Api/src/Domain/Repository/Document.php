@@ -107,4 +107,20 @@ class Document extends AbstractRepository
 
         return $qb->getQuery()->getResult($hydrationMode);
     }
+
+    /**
+     * Get Documents linked to a Statement
+     *
+     * @param int $statementId Statement ID
+     *
+     * @return array of Document entities
+     */
+    public function fetchListForStatement($statementId, $hydrationMode = Query::HYDRATE_OBJECT)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.statement', ':statementId'))
+            ->setParameter('statementId', $statementId);
+
+        return $qb->getQuery()->getResult($hydrationMode);
+    }
 }
