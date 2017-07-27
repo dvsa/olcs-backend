@@ -110,7 +110,8 @@ class LicenceChecklist extends AbstractQueryHandler
             ],
             [
                 'sections' => $sections,
-                'ocChanges' => $licence->getOcPendingChanges()
+                'ocChanges' => $licence->getOcPendingChanges(),
+                'tmChanges' => $licence->getTmPendingChanges(),
             ]
         );
     }

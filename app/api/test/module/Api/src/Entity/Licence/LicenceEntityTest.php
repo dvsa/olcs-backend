@@ -1561,4 +1561,38 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals(3, $licence->getOcPendingChanges());
     }
+
+    public function testGetTmPendingChangesNoChanges()
+    {
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn(new ArrayCollection())
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(0, $licence->getTmPendingChanges());
+    }
+
+    public function testGetTmPendingChanges()
+    {
+        $transportManagers = new ArrayCollection();
+        $transportManagers->add(['tm1']);
+
+        $variation = m::mock()
+            ->shouldReceive('getTransportManagers')
+            ->andReturn($transportManagers)
+            ->once()
+            ->getMock();
+
+        $variations = new ArrayCollection();
+        $variations->add($variation);
+
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn($variations)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(1, $licence->getTmPendingChanges());
+    }
 }

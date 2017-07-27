@@ -1322,4 +1322,26 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         return $totalChanges;
     }
+
+    /**
+     * Get O/C pending changes
+     *
+     * @return int
+     */
+    public function getTmPendingChanges()
+    {
+        $variations = $this->getNotSubmittedOrUnderConsiderationVariations();
+        if ($variations->count() === 0) {
+            return 0;
+        }
+
+        $totalChanges = 0;
+
+        /** @var Application $variation */
+        foreach ($variations as $variation) {
+            $totalChanges += $variation->getTransportManagers()->count();
+        }
+
+        return $totalChanges;
+    }
 }
