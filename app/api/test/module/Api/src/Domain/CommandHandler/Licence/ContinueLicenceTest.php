@@ -13,6 +13,10 @@ use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * ContinueLicenceTest
@@ -385,7 +389,10 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->assertSame(['1502 goods discs created', 'Licence 717 continued'], $result->getMessages());
     }
 
-    public function testHandleCommandWithSnapshot()
+    /**
+     * @dataProvider signatureProvider
+     */
+    public function testHandleCommandWithSnapshotAndSignature($signature, $description, $actionDate)
     {
         $data = ['id' => 717, 'version' => 654];
 
@@ -401,6 +408,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $continuationDetail->setTotPsvDiscs(7);
         $continuationDetail->setIsDigital(true);
         $continuationDetail->setId(999);
+        $continuationDetail->setSignatureType(new RefData($signature));
+        $continuationDetail->setLicence($licence);
 
         $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
             ->once()->andReturn($licence);
@@ -439,6 +448,18 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            CreateTaskCmd::class,
+            [
+                'category' => Category::CATEGORY_LICENSING,
+                'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                'description' => $description,
+                'actionDate' => $actionDate->format('Y-m-d'),
+                'licence' => 717
+            ],
+            new Result()
+        );
+
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
             function (ContinuationDetail $saveCd) {
                 $this->assertSame($this->refData['con_det_sts_complete'], $saveCd->getStatus());
@@ -448,5 +469,21 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
+    }
+
+    public function signatureProvider()
+    {
+        return [
+            [
+                RefData::SIG_DIGITAL_SIGNATURE,
+                Task::TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE,
+                new \DateTime('now'),
+            ],
+            [
+                RefData::SIG_PHYSICAL_SIGNATURE,
+                Task::TASK_DESCRIPTION_CHECK_WET_SIGNATURE,
+                new \DateTime('+14 days'),
+            ]
+        ];
     }
 }

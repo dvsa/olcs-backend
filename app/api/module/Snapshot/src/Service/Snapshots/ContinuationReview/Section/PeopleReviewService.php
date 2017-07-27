@@ -33,6 +33,7 @@ class PeopleReviewService extends AbstractReviewService
         foreach ($organisationPersons as $op) {
             $person = $op->getPerson();
             $title = $person->getTitle();
+            $birthDate = $person->getBirthDate(true);
             $config[] = [
                 [
                     'value' => implode(
@@ -44,9 +45,7 @@ class PeopleReviewService extends AbstractReviewService
                         ]
                     )
                 ],
-                [
-                    'value' => $person->getBirthDate(true)->format('d/m/Y')
-                ]
+                ['value' => $birthDate !== null ? $birthDate->format('d/m/Y') : '']
             ];
         }
         usort(

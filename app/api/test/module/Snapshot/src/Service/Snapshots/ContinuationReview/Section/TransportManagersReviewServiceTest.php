@@ -92,7 +92,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
                                     ->twice()
                                     ->shouldReceive('getBirthDate')
                                     ->with(true)
-                                    ->andReturn(new \DateTime('1980-01-01'))
+                                    ->andReturn(null)
                                     ->once()
                                     ->getMock()
                             )
@@ -123,7 +123,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
             ],
             [
                 ['value' => 'Mr cake baz'],
-                ['value' => '01/01/1980'],
+                ['value' => ''],
             ],
             [
                 ['value' => 'foo bar'],
