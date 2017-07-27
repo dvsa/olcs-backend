@@ -203,4 +203,20 @@ class DocumentTest extends RepositoryTestCase
 
         static::assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchListForStatement()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('RESULT')
+                ->getMock()
+        );
+        static::assertEquals('RESULT', $this->sut->fetchListForStatement(123));
+
+        $expectedQuery = 'BLAH AND m.statement = [[123]]';
+
+        static::assertEquals($expectedQuery, $this->query);
+    }
 }
