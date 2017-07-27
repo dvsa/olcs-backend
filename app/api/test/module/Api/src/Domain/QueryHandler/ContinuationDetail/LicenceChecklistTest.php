@@ -29,6 +29,9 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
+    /**
+     * @group test123
+     */
     public function testHandleQuery()
     {
         $mockLicence = m::mock(LicenceEntity::class)
@@ -37,6 +40,9 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ->once()
             ->shouldReceive('getOcPendingChanges')
             ->andReturn(1)
+            ->once()
+            ->shouldReceive('getTmPendingChanges')
+            ->andReturn(2)
             ->once()
             ->getMock();
 
@@ -102,6 +108,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'fooBar',
                     ],
                     'ocChanges' => 1,
+                    'tmChanges' => 2,
                 ]
             )
             ->getMock();
@@ -175,6 +182,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'fooBar',
             ],
             'ocChanges' => 1,
+            'tmChanges' => 2,
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }
