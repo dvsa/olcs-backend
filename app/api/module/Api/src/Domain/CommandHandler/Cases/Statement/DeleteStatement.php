@@ -22,9 +22,13 @@ final class DeleteStatement extends AbstractCommandHandler implements Transactio
 {
     protected $repoServiceName = 'Statement';
 
+    protected $extraRepos = ['Document'];
+
     /**
      * Delete Statement
+     *
      * @param CommandInterface $command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -37,6 +41,12 @@ final class DeleteStatement extends AbstractCommandHandler implements Transactio
         );
 
         $this->getRepo()->delete($statement);
+
+        // Delete any documents linked to this statement
+        $documents = $this->getRepo('Document')->fetchListForStatement($statement->getId());
+        foreach ($documents as $document) {
+            $this->getRepo('Document')->delete($document);
+        }
 
         $result->addMessage('Statement deleted');
 
