@@ -32,7 +32,7 @@
                      "wildcard": {
                         "org_name_wildcard": {
                         "value":"%SEARCH_TERM%",
-                        "boost":3
+                        "boost":4
                         }
                      }
                   },
