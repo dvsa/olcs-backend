@@ -1272,4 +1272,54 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         return $result;
     }
+
+    /**
+     * Get variations with not submitted or under consideration status for this licence
+     *
+     * @return ArrayCollection
+     */
+    public function getNotSubmittedOrUnderConsiderationVariations()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('isVariation', true))
+            ->andWhere(
+                Criteria::expr()->in(
+                    'status',
+                    [
+                        Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    ]
+                )
+            );
+
+        return $this->getApplications()->matching($criteria);
+    }
+
+    /**
+     * Get O/C pending changes
+     *
+     * @return int
+     */
+    public function getOcPendingChanges()
+    {
+        $variations = $this->getNotSubmittedOrUnderConsiderationVariations();
+        if ($variations->count() === 0) {
+            return 0;
+        }
+
+        $totalChanges = 0;
+
+        /** @var Application $variation */
+        foreach ($variations as $variation) {
+            $totalChanges += $variation->getOperatingCentres()->count();
+            if ($variation->getTotAuthTrailers() !== $this->getTotAuthTrailers()) {
+                $totalChanges++;
+            }
+            if ($variation->getTotAuthVehicles() !== $this->getTotAuthVehicles()) {
+                $totalChanges++;
+            }
+        }
+
+        return $totalChanges;
+    }
 }

@@ -35,6 +35,9 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ->shouldReceive('getConditionUndertakings')
             ->andReturn([])
             ->once()
+            ->shouldReceive('getOcPendingChanges')
+            ->andReturn(1)
+            ->once()
             ->getMock();
 
         /** @var ContinuationDetailEntity $continuationDetail */
@@ -98,6 +101,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                     'sections' => [
                         'fooBar',
                     ],
+                    'ocChanges' => 1,
                 ]
             )
             ->getMock();
@@ -170,6 +174,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             'sections' => [
                 'fooBar',
             ],
+            'ocChanges' => 1,
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }
