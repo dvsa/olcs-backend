@@ -78,7 +78,7 @@ class PeopleReviewServiceTest extends MockeryTestCase
                     ->once()
                     ->shouldReceive('getBirthDate')
                     ->with(true)
-                    ->andReturn(new \DateTime('1980-01-02'))
+                    ->andReturn(null)
                     ->once()
                     ->getMock()
             )
@@ -109,7 +109,7 @@ class PeopleReviewServiceTest extends MockeryTestCase
             ],
             [
                 ['value' => 'Doctor Baz Cake'],
-                ['value' => '02/01/1980']
+                ['value' => '']
             ],
             [
                 ['value' => 'Mr Foo Bar'],
