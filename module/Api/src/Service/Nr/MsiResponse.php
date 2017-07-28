@@ -173,6 +173,10 @@ class MsiResponse
      */
     private function getHeader(ErruRequestEntity $erruRequest)
     {
+        //if member state was GB, we need to make this UK
+        $memberStateCode = $erruRequest->getMemberStateCode()->getId();
+        $filteredMemberStateCode = ($memberStateCode === 'GB' ? 'UK' : $memberStateCode);
+
         return [
             'name' => 'Header',
             'attributes' => [
@@ -188,7 +192,7 @@ class MsiResponse
                         0 => [
                             'name' => 'MemberState',
                             'attributes' => [
-                                'code' => $erruRequest->getMemberStateCode()->getId()
+                                'code' => $filteredMemberStateCode
                             ]
                         ]
                     ]
