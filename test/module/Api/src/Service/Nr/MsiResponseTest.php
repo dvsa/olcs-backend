@@ -38,15 +38,16 @@ class MsiResponseTest extends MockeryTestCase
      *
      * @param $licence
      * @param $authority
+     * @param $memberStateCode
+     * @param $filteredMemberStateCode
      *
      * @dataProvider createDataProvider
      */
-    public function testCreate($licence, $authority)
+    public function testCreate($licence, $authority, $memberStateCode, $filteredMemberStateCode)
     {
         $siPenaltyTypeId1 = 101;
         $siPenaltyTypeId2 = 102;
         $reasonNotImposed = 'reason not imposed';
-        $memberStateCode = 'PL';
         $notificationNumber = 214124;
         $erruOriginatingAuthority = 'originating authority';
         $erruTransportUndertaking = 'transport undertaking';
@@ -114,7 +115,7 @@ class MsiResponseTest extends MockeryTestCase
                         0 => [
                             'name' => 'MemberState',
                             'attributes' => [
-                                'code' => $memberStateCode
+                                'code' => $filteredMemberStateCode
                             ]
                         ]
                     ]
@@ -178,8 +179,12 @@ class MsiResponseTest extends MockeryTestCase
     public function createDataProvider()
     {
         return [
-            [null, MsiResponse::AUTHORITY_TRU],
-            ['licence', MsiResponse::AUTHORITY_TC]
+            [null, MsiResponse::AUTHORITY_TRU, 'GB', 'UK'],
+            ['licence', MsiResponse::AUTHORITY_TC, 'GB', 'UK'],
+            [null, MsiResponse::AUTHORITY_TRU, 'PL', 'PL'],
+            ['licence', MsiResponse::AUTHORITY_TC, 'PL', 'PL'],
+            [null, MsiResponse::AUTHORITY_TRU, 'ES', 'ES'],
+            ['licence', MsiResponse::AUTHORITY_TC, 'ES', 'ES']
         ];
     }
 }
