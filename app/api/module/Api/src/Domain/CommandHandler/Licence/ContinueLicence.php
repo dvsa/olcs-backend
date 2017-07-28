@@ -9,10 +9,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * ContinueLicence
@@ -70,6 +74,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
                 ]
             );
             $result->merge($this->handleSideEffect($createQueueCmd));
+            $result->merge($this->createTaskForSignature($continuationDetail));
         }
 
         $result->addMessage('Licence ' . $licence->getId() . ' continued');
@@ -189,5 +194,36 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
                 )
             );
         }
+    }
+
+    /**
+     * Create task for signature
+     *
+     * @param ContinuationDetail $continuationDetail continuation details
+     *
+     * @return Result
+     */
+    protected function createTaskForSignature(ContinuationDetail $continuationDetail)
+    {
+        $sigType = $continuationDetail->getSignatureType();
+        if ($sigType !== null && $sigType->getId() === RefData::SIG_DIGITAL_SIGNATURE) {
+            $description = Task::TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE;
+            $actionDate = new DateTime();
+        } else {
+            $description = Task::TASK_DESCRIPTION_CHECK_WET_SIGNATURE;
+            $actionDate = new DateTime('+14 days');
+        }
+
+        $createTaskCmd = CreateTaskCmd::create(
+            [
+                'category' => Category::CATEGORY_LICENSING,
+                'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                'description' => $description,
+                'actionDate' => $actionDate->format('Y-m-d'),
+                'licence' => $continuationDetail->getLicence()->getId()
+            ]
+        );
+
+        return $this->handleSideEffect($createTaskCmd);
     }
 }
