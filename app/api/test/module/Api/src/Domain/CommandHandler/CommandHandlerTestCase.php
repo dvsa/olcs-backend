@@ -14,6 +14,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -69,6 +71,10 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     protected $pidIdentityProvider;
     /** @var  m\MockInterface | TransactionManagerInterface */
     protected $mockTransationMngr;
+    /** @var  m\MockInterface | ContentStoreFileUploader */
+    protected $fileUploaderService;
+    /** @var  m\MockInterface | NamingService */
+    protected $documentNamingService;
 
     public function setUp()
     {
@@ -84,12 +90,16 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
         $this->pidIdentityProvider = m::mock(PidIdentityProvider::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
+        $this->fileUploaderService = m::mock(ContentStoreFileUploader::class);
+        $this->documentNamingService = m::mock(NamingService::class);
 
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('get')->with('FileUploader')->andReturn($this->fileUploaderService);
+        $sm->shouldReceive('get')->with('DocumentNamingService')->andReturn($this->documentNamingService);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
