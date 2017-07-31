@@ -2,12 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 
 /**
  * Send  PSV OperatorList report
@@ -15,6 +15,9 @@ use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 final class SendPsvOperatorListReport extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Domain\EmailAwareInterface
 {
     use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+
+    const EMAIL_TEMPLATE = 'report-psv-operator-list';
+    const EMAIL_SUBJECT = 'email.notification.subject';
 
     protected $repoServiceName = 'SystemParameter';
 
@@ -24,7 +27,7 @@ final class SendPsvOperatorListReport extends AbstractCommandHandler implements 
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var SystemParameter $systemParametersRepo */
+        /** @var SystemParameterRepo $systemParametersRepo */
         $systemParametersRepo = $this->getRepo();
         $email = $systemParametersRepo->fetchValue(SystemParameter::PSV_REPORT_EMAIL_LIST);
 
@@ -32,10 +35,10 @@ final class SendPsvOperatorListReport extends AbstractCommandHandler implements 
             throw new \InvalidArgumentException('No email address specified in system parameters for the PSV Report');
         }
 
-        $message = new Message($email, 'email.notification.subject');
+        $message = new Message($email, self::EMAIL_SUBJECT);
         $message->setDocs([$command->getId()]);
 
-        $this->sendEmailTemplate($message,'report-psv-operator-list');
+        $this->sendEmailTemplate($message,self::EMAIL_TEMPLATE);
 
         $result = new Result();
         $result->addId('document', $command->getId());

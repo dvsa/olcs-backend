@@ -278,11 +278,10 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
          */
         $docRepo = $this->getRepo();
         $fetchedDocs = $docRepo->fetchByIds($docs);
-
         $downloadedDocs = [];
 
         foreach ($fetchedDocs as $doc) {
-            $file = $this->getUploader()->download('/templates/GB/A&D_Scotland.rtf');
+            $file = $this->getUploader()->download($doc->getIdentifier());
 
             $downloadedDocs[] = [
                 'fileName' => basename($doc->getFilename()),
