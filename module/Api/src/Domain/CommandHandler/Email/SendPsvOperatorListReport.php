@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
@@ -17,7 +19,7 @@ final class SendPsvOperatorListReport extends AbstractCommandHandler implements 
     protected $repoServiceName = 'SystemParameter';
 
     /**
-     * @param CommandInterface $command
+     * @param \Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport $command
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -30,20 +32,10 @@ final class SendPsvOperatorListReport extends AbstractCommandHandler implements 
             throw new \InvalidArgumentException('No email address specified in system parameters for the PSV Report');
         }
 
-        $message = new \Dvsa\Olcs\Email\Data\Message(
-            $email,
-            'email.notification.subject'
-        );
+        $message = new Message($email, 'email.notification.subject');
+        $message->setDocs([$command->getId()]);
 
-        $emailParameters = $command->getArrayCopy();
-
-        $this->sendEmailTemplate(
-            $message,
-            'report-psv-operator-list',
-            [
-                'filename' => $emailParameters['document_store_id']
-            ]
-        );
+        $this->sendEmailTemplate($message,'report-psv-operator-list');
 
         $result = new Result();
         $result->addId('document', $command->getId());

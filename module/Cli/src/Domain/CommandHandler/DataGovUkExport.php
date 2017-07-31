@@ -109,24 +109,6 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
     }
 
     /**
-     * Get email address to send the PSV report for processPsvOperatorList
-     *
-     * @return string|\InvalidArgumentException
-     */
-    private function getPsvReportEmailAddress()
-    {
-        /** @var Repository\SystemParameter $systemParametersRepo */
-        $systemParametersRepo = $this->getRepo('SystemParameter');
-        $email = $systemParametersRepo->fetchValue(SystemParameter::PSV_REPORT_EMAIL_LIST);
-
-        if (is_null($email)) {
-            throw new \InvalidArgumentException('No email address specified in system parameters for the PSV Report');
-        }
-
-        return $email;
-    }
-
-    /**
      * Process PSV Operator list and email
      *
      * @param \Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport $command Command
@@ -141,6 +123,8 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $file = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
         $category = $this->getRepo('document')->getCategoryReference(Category::CATEGORY_REPORT);
         $subcategory = $this->getRepo('document')->getSubCategoryReference(SubCategory::REPORT_SUB_CATEGORY_PSV);
+
+        var_dump($category, $subcategory);
 
         $filename = $this->getNamingService()->generateName(
             'PsvOperatorList',
@@ -158,9 +142,12 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $documentData['subCategory'] = $subcategory;
 
         $documentCommand = CreateDocumentCmd::create($documentData);
-        $emailQueue = $this->emailQueue(SendPsvOperatorListReport::class, $documentData, $documentCommand->getId());
 
-        $this->result->merge($this->handleSideEffects([$documentCommand, $emailQueue]));
+        $document = $this->handleSideEffect($documentCommand);
+        $this->result->merge($document);
+
+        $emailQueue = $this->emailQueue(SendPsvOperatorListReport::class, ['id' => $document->getId('document')], $document->getId('document'));
+        $this->result->merge($this->handleSideEffect($emailQueue));
 
         return $this->result;
     }
@@ -297,7 +284,7 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         }
 
         $file = new File();
-        $file->setContent(file_get_contents($filePath));
+        $file->setContent($fh);
         $file->setIdentifier($fileName . '_' . date('Y-m-d_h-i-s') . '.csv');
 
         fclose($fh);
