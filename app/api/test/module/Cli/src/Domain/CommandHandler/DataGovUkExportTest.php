@@ -3,48 +3,66 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Doctrine\DBAL\Driver\PDOStatement;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocument;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
 use Dvsa\Olcs\Email\Service\Email;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
  */
 class DataGovUkExportTest extends CommandHandlerTestCase
 {
-    /** @var DataGovUkExport */
+    /**
+     * @var DataGovUkExport
+     */
     protected $sut;
 
-    /** @var  string */
+    /**
+     * @var  string
+     */
     private $tmpPath;
 
-    /** @var  m\MockInterface */
+    /**
+     * @var  m\MockInterface
+     */
     private $mockStmt;
 
-    /** @var  m\MockInterface */
+    /**
+     * @var  m\MockInterface|Email
+     */
     private $mockEmailService;
 
-    /** @var  m\MockInterface */
+    /**
+     * @var  m\MockInterface|ContentStoreFileUploader
+     */
     private $mockFileUploaderService;
+
+    /**
+     * @var m\MockInterface|NamingService
+     */
+    private $documentNamingService;
 
     public function setUp()
     {
-        $this->sut = new DataGovUkExport;
-
         //  mock repos
         $this->mockRepo('DataGovUk', Repository\DataGovUk::class);
         $this->mockRepo('TrafficArea', Repository\TrafficArea::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
-        $this->mockRepo('document', Repository\Document::class);
+        $this->mockRepo('Category', Repository\Category::class);
+        $this->mockRepo('SubCategory', Repository\SubCategory::class);
 
         $this->mockStmt = m::mock(PDOStatement::class);
 
@@ -55,9 +73,32 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             ],
         ];
 
-        $this->mockEmailService = m::mock(Email::class);
-        $this->mockedSmServices['EmailService'] = $this->mockEmailService;
-        $this->mockedSmServices['FileUploader']=  $this->mockFileUploaderService;
+        /** @var Email $mockEmailService */
+        $mockEmailService = m::mock(Email::class);
+
+        /** @var ContentStoreFileUploader $mockFileUploader */
+        $mockFileUploader = m::mock(ContentStoreFileUploader::class);
+
+        /** @var NamingService $mockDocumentNaming */
+        $mockDocumentNaming = m::mock(NamingService::class);
+
+        $this->mockedSmServices['EmailService'] = $mockEmailService;
+        $this->mockedSmServices['FileUploader'] = $mockFileUploader;
+        $this->mockedSmServices['DocumentNamingService'] = $mockDocumentNaming;
+
+        $category = (new Category())->setId(Category::CATEGORY_REPORT)->setDescription('Report');
+        $subCategory = (new SubCategory())->setId(SubCategory::REPORT_SUB_CATEGORY_PSV)->setSubCategoryName('PSV');
+
+        $this->categoryReferences = [
+            Category::CATEGORY_REPORT => m::mock($category)
+        ];
+
+        $this->subCategoryReferences = [
+            SubCategory::REPORT_SUB_CATEGORY_PSV => m::mock($subCategory)
+        ];
+
+        $this->sut = new DataGovUkExport;
+        $this->sut->setUploader($this->mockedSmServices['FileUploader']);
 
         parent::setUp();
 
@@ -82,6 +123,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
 
     public function testPsvOperatorListOk()
     {
+        $fileDirectory = 'testing/directory';
         $fileName = 'PsvOperatorList_' . date('Y-m-d_h-i-s') . '.csv';
 
         $fileContent = '"Licence number",col1,col2
@@ -125,25 +167,22 @@ areaName1,val31,val32
             ->once()
             ->andReturn('system-test@test.com');
 
-        $category = (new Category())->setId(12)->setDescription('Report');
-        $this->repoMap['document']
-            ->shouldReceive('getCategoryReference')
-            ->with(Category::CATEGORY_REPORT)
-            ->andReturn($category);
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
+            ->with('PsvOperatorList', 'csv', $this->categoryReferences[Category::CATEGORY_REPORT], $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV])
+            ->andReturn($fileDirectory . '/' . $fileName);
 
-        $subCategory = (new Category())->setId(12)->setDescription('Sub Report');
-        $this->repoMap['document']
-            ->shouldReceive('getSubCategoryReference')
-            ->with(SubCategory::REPORT_SUB_CATEGORY_PSV)
-            ->andReturn($subCategory);
+        // We just need to add these bits
+        $documentData['identifier'] = $fileDirectory . '/' . $fileName;
+        $documentData['description'] = $fileName;
+        $documentData['filename'] = $fileName;
+        $documentData['size'] = 0;
+        $documentData['category'] = 'Report';
+        $documentData['subCategory'] = 'PSV';
 
-        //var_dump($category, $subCategory);
+        $this->expectedSideEffect(CreateDocument::class, $documentData, (new Result())->addMessage('CreateDocument'));
 
-        $this->documentNamingService->shouldReceive('generateName')
-            ->with('PsvOperatorList', 'csv', $category, $subCategory)
-            ->andReturn($fileName);
-
-        $this->mockEmailService
+        $this->mockedSmServices['EmailService']
             ->shouldReceive('send')
             ->with(
                 'notifications@vehicle-operator-licensing.service.gov.uk',

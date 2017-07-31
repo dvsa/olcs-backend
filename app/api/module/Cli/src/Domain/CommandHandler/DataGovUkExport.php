@@ -50,7 +50,7 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
     /**
      * @var array
      */
-    protected $extraRepos = ['TrafficArea', 'SystemParameter', 'document'];
+    protected $extraRepos = ['TrafficArea', 'SystemParameter', 'Category', 'SubCategory'];
 
     /**
      * @var string
@@ -121,10 +121,8 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $stmt = $this->dataGovUkRepo->fetchPsvOperatorList();
 
         $file = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
-        $category = $this->getRepo('document')->getCategoryReference(Category::CATEGORY_REPORT);
-        $subcategory = $this->getRepo('document')->getSubCategoryReference(SubCategory::REPORT_SUB_CATEGORY_PSV);
-
-        var_dump($category, $subcategory);
+        $category = $this->getRepo('Category')->getCategoryReference(Category::CATEGORY_REPORT);
+        $subcategory = $this->getRepo('SubCategory')->getSubCategoryReference(SubCategory::REPORT_SUB_CATEGORY_PSV);
 
         $filename = $this->getNamingService()->generateName(
             'PsvOperatorList',
