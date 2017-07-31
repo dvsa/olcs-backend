@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
+use phpseclib\Crypt\AES;
 use PHPUnit_Framework_TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
@@ -38,7 +39,7 @@ class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
 
     public function testSetGetEncrypter()
     {
-        $blockCipher = m::mock('\Zend\Crypt\BlockCipher');
+        $blockCipher = m::mock(AES::class);
         $this->sut->setEncrypter($blockCipher);
         $this->assertSame($blockCipher, $this->sut->getEncrypter());
     }
@@ -46,18 +47,18 @@ class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
     public function testConvertToPhpValue()
     {
         $platform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
-        $blockCipher = m::mock('\Zend\Crypt\BlockCipher');
+        $blockCipher = m::mock(AES::class);
         $blockCipher->shouldReceive('decrypt')->with('ENCRYPTED')->once()->andReturn('DECRYPTED');
         $this->sut->setEncrypter($blockCipher);
-        $this->assertSame('DECRYPTED', $this->sut->convertToPHPValue('ENCRYPTED', $platform));
+        $this->assertSame('DECRYPTED', $this->sut->convertToPHPValue(base64_encode('ENCRYPTED'), $platform));
     }
 
     public function testConvertToDatabaseValue()
     {
         $platform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
-        $blockCipher = m::mock('\Zend\Crypt\BlockCipher');
+        $blockCipher = m::mock(AES::class);
         $blockCipher->shouldReceive('encrypt')->with('DECRYPTED')->once()->andReturn('ENCRYPTED');
         $this->sut->setEncrypter($blockCipher);
-        $this->assertSame('ENCRYPTED', $this->sut->convertToDatabaseValue('DECRYPTED', $platform));
+        $this->assertSame(base64_encode('ENCRYPTED'), $this->sut->convertToDatabaseValue('DECRYPTED', $platform));
     }
 }
