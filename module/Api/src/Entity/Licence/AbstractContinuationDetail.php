@@ -109,6 +109,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $digitalSignature;
 
     /**
+     * Factoring amount
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="factoring_amount", precision=10, scale=2, nullable=true)
+     */
+    protected $factoringAmount;
+
+    /**
      * Financial evidence uploaded
      *
      * @var boolean
@@ -116,6 +125,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      * @ORM\Column(type="boolean", name="financial_evidence_uploaded", nullable=true)
      */
     protected $financialEvidenceUploaded;
+
+    /**
+     * Has factoring
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="has_factoring", nullable=true)
+     */
+    protected $hasFactoring;
 
     /**
      * Has other finances
@@ -151,9 +169,9 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_digital", nullable=true)
+     * @ORM\Column(type="boolean", name="is_digital", nullable=false, options={"default": 0})
      */
-    protected $isDigital;
+    protected $isDigital = 0;
 
     /**
      * Last modified by
@@ -180,7 +198,11 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="continuationDetails"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -433,6 +455,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     }
 
     /**
+     * Set the factoring amount
+     *
+     * @param float $factoringAmount new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setFactoringAmount($factoringAmount)
+    {
+        $this->factoringAmount = $factoringAmount;
+
+        return $this;
+    }
+
+    /**
+     * Get the factoring amount
+     *
+     * @return float
+     */
+    public function getFactoringAmount()
+    {
+        return $this->factoringAmount;
+    }
+
+    /**
      * Set the financial evidence uploaded
      *
      * @param boolean $financialEvidenceUploaded new value being set
@@ -454,6 +500,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getFinancialEvidenceUploaded()
     {
         return $this->financialEvidenceUploaded;
+    }
+
+    /**
+     * Set the has factoring
+     *
+     * @param string $hasFactoring new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setHasFactoring($hasFactoring)
+    {
+        $this->hasFactoring = $hasFactoring;
+
+        return $this;
+    }
+
+    /**
+     * Get the has factoring
+     *
+     * @return string
+     */
+    public function getHasFactoring()
+    {
+        return $this->hasFactoring;
     }
 
     /**

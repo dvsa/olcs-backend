@@ -72,9 +72,13 @@ return [
             'ContinuationReview\TypeOfLicence' => ContinuationReview\TypeOfLicenceReviewService::class,
             'ContinuationReview\BusinessType' => ContinuationReview\BusinessTypeReviewService::class,
             'ContinuationReview\BusinessDetails' => ContinuationReview\BusinessDetailsReviewService::class,
+            'ContinuationReview\Addresses' => ContinuationReview\AddressesReviewService::class,
             'ContinuationReview\People' => ContinuationReview\PeopleReviewService::class,
             'ContinuationReview\Vehicles' => ContinuationReview\VehiclesReviewService::class,
             'ContinuationReview\VehiclesPsv' => ContinuationReview\VehiclesReviewService::class,
+            'ContinuationReview\OperatingCentres' => ContinuationReview\OperatingCentresReviewService::class,
+            'ContinuationReview\TransportManagers' => ContinuationReview\TransportManagersReviewService::class,
+            'ContinuationReview\Safety' => ContinuationReview\SafetyReviewService::class,
         ],
     ],
     'view_manager' => [

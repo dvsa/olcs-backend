@@ -11,7 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
-use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
+use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as UpdateImpoundingCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
 
@@ -25,7 +25,8 @@ class UpdateImpounding extends AbstractImpounding implements TransactionedInterf
     /**
      * Handle command
      *
-     * @param CommandInterface $command
+     * @param CommandInterface|UpdateImpoundingCmd $command command
+     *
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -33,9 +34,37 @@ class UpdateImpounding extends AbstractImpounding implements TransactionedInterf
     {
         $result = new Result();
 
-        $impounding = $this->createImpoundingObject($command);
+        /** @var ImpoundingEntity $impounding */
+        $repo = $this->getRepo();
+        $impounding = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $this->getRepo()->save($impounding);
+        $impoundingType = $repo->getRefdataReference($command->getImpoundingType());
+
+        $venue = $command->getVenue();
+
+        if (!empty($venue) && $venue !== ImpoundingEntity::VENUE_OTHER) {
+            $venue = $repo->getReference(VenueEntity::class, $command->getVenue());
+        }
+
+        $impoundingLegislationTypes = $this->generateImpoundingLegislationTypes(
+            $command->getImpoundingLegislationTypes()
+        );
+
+        $impounding->update(
+            $impoundingType,
+            $impoundingLegislationTypes,
+            $venue,
+            $command->getVenueOther(),
+            $command->getApplicationReceiptDate(),
+            $command->getVrm(),
+            $command->getHearingDate(),
+            $this->refDataOrNull($command->getPresidingTc()),
+            $this->refDataOrNull($command->getOutcome()),
+            $command->getOutcomeSentDate(),
+            $command->getNotes()
+        );
+
+        $repo->save($impounding);
 
         $result->addMessage('Impounding updated');
 
@@ -45,61 +74,5 @@ class UpdateImpounding extends AbstractImpounding implements TransactionedInterf
         }
 
         return $result;
-    }
-
-    /**
-     * @param Cmd $command
-     * @return mixed
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
-     */
-    private function createImpoundingObject(Cmd $command)
-    {
-        /** @var ImpoundingEntity $impounding */
-        $impounding = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
-
-        $impounding->setImpoundingType($this->getRepo()->getRefdataReference($command->getImpoundingType()));
-
-        $venue = $command->getVenue();
-        if (!empty($venue) && $venue !== ImpoundingEntity::VENUE_OTHER) {
-            $venue = $this->getRepo()->getReference(VenueEntity::class, $command->getVenue());
-        }
-        $impounding->setVenueProperties(
-            $venue,
-            $command->getVenueOther()
-        );
-
-        $impoundingLegislationTypes = $this->generateImpoundingLegislationTypes(
-            $command->getImpoundingLegislationTypes()
-        );
-
-        $impounding->setImpoundingLegislationTypes($impoundingLegislationTypes);
-
-        if ($command->getApplicationReceiptDate() !== null) {
-            $impounding->setApplicationReceiptDate(new \DateTime($command->getApplicationReceiptDate()));
-        }
-
-        $impounding->setVrm($command->getVrm());
-
-        if ($command->getHearingDate() !== null) {
-            $impounding->setHearingDate(new \DateTime($command->getHearingDate()));
-        }
-
-        if ($command->getPresidingTc() !== null) {
-            $impounding->setPresidingTc($this->getRepo()->getRefdataReference($command->getPresidingTc()));
-        }
-
-        if ($command->getOutcome() !== null) {
-            $impounding->setOutcome($this->getRepo()->getRefdataReference($command->getOutcome()));
-        }
-
-        if ($command->getOutcomeSentDate() !== null) {
-            $impounding->setOutcomeSentDate(new \DateTime($command->getOutcomeSentDate()));
-        }
-
-        if ($command->getNotes() !== null) {
-            $impounding->setNotes($command->getNotes());
-        }
-
-        return $impounding;
     }
 }

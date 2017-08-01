@@ -58,6 +58,11 @@ class UpdateTest extends CommandHandlerTestCase
         $id = 150;
         $version = 2;
 
+        $agreedByTcDate = "2015-02-01 14:15";
+        $agreedByTcDateTime = new \DateTime($agreedByTcDate);
+        $hearingDate = "2015-02-01 14:15";
+        $hearingDateTime = new \DateTime($hearingDate);
+
         $data = [
             "id" => $id,
             "version" => $version,
@@ -65,8 +70,8 @@ class UpdateTest extends CommandHandlerTestCase
             "nonPiType" => "non_pi_type_off_proc",
             "venue" => "2",
             "presidingStaffName" => "Ed",
-            "agreedByTcDate" => "2015-01-01 12:15",
-            "hearingDate" => "2015-02-01 14:15",
+            "agreedByTcDate" => $agreedByTcDate,
+            "hearingDate" => $hearingDate,
             "witnessCount" => $inputWitnesses,
             "outcome" => "non_pio_nfa"
         ];
@@ -98,10 +103,18 @@ class UpdateTest extends CommandHandlerTestCase
                     ->with(null)
                     ->shouldreceive('setPresidingStaffName')
                     ->with('Ed')
+                    ->shouldReceive('processDate')
+                    ->with($agreedByTcDate)
+                    ->once()
+                    ->andReturn($agreedByTcDateTime)
                     ->shouldreceive('setAgreedByTcDate')
-                    ->with(m::type(\DateTime::class))
+                    ->with($agreedByTcDateTime)
+                    ->shouldReceive('processDate')
+                    ->with($hearingDate, \DateTime::ISO8601, false)
+                    ->once()
+                    ->andReturn($hearingDateTime)
                     ->shouldreceive('setHearingDate')
-                    ->with(m::type(\DateTime::class))
+                    ->with($hearingDateTime)
                     ->shouldreceive('setWitnessCount')
                     ->with($outputWitnesses)
                     ->shouldReceive('setOutcome')

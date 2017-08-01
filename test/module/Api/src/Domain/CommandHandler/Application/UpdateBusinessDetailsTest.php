@@ -85,7 +85,8 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'messages' => [
                 'Business Details updated',
                 'Section updated'
-            ]
+            ],
+            'flags' => ['hasChanged' => 1]
         ];
 
         static::assertEquals($expected, $actual->toArray());

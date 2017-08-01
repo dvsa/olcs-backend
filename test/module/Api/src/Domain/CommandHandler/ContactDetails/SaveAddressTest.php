@@ -83,7 +83,9 @@ class SaveAddressTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Address unchanged'
-            ]
+            ],
+            'flags' => ['hasChanged' => null]
+
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -135,9 +137,9 @@ class SaveAddressTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Address updated'
-            ]
+            ],
+            'flags' => ['hasChanged' => 1]
         ];
-
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -202,7 +204,8 @@ class SaveAddressTest extends CommandHandlerTestCase
             'messages' => [
                 'Address created',
                 'Contact Details created'
-            ]
+            ],
+            'flags' => ['hasChanged' => 1]
         ];
 
         $this->assertTrue($result->getFlag('hasChanged'));

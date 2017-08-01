@@ -71,6 +71,13 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected $result;
 
+    /**
+     * create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return $this|TransactioningCommandHandler
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->result = new Result();
@@ -106,7 +113,9 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * message so here we inspect the 'previous exception' chain and log out
      * what the actual errors were, before rethrowing the original execption.
      *
-     * @param \Exception $e
+     * @param \Exception $e exception
+     *
+     * @return void
      * @throws \Exception rethrows original Exception
      */
     private function logServiceExceptions(\Exception $e)
@@ -122,10 +131,14 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * Warnings suppressed as by design this is just a series of 'if' conditions
+     *
+     * @param ServiceLocatorInterface $mainServiceLocator service locator
+     *
+     * @return void
+     *
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
-     * Warnings suppressed as by design this is just a series of 'if' conditions
      */
     private function applyInterfaces($mainServiceLocator)
     {
@@ -197,7 +210,12 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * get repository
+     *
+     * @param string|null $name name of repository
+     *
      * @return RepositoryInterface
+     * @throws RuntimeException
      */
     protected function getRepo($name = null)
     {
@@ -218,6 +236,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * get command handler
+     *
      * @return \Dvsa\Olcs\Api\Domain\CommandHandlerManager
      */
     protected function getCommandHandler()
@@ -238,7 +258,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Wrapper to call another command
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command command
+     *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function handleSideEffect(CommandInterface $command)
@@ -249,7 +270,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Wrapper to call an array of other commands
      *
-     * @param array CommandInterface $commands
+     * @param array $commands array of commands
+     *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function handleSideEffects(array $commands)
@@ -283,7 +305,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Wrapper to call an array of other commands as a system user
      *
-     * @param array CommandInterface $commands commands
+     * @param array $commands commands
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
@@ -300,8 +322,9 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Proxy to another command, using all data from the original command
      *
-     * @param $originalCommand
-     * @param $proxyCommandClassName
+     * @param CommandInterface $originalCommand       original command
+     * @param string           $proxyCommandClassName proxy class name
+     *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     protected function proxyCommand($originalCommand, $proxyCommandClassName)
@@ -332,8 +355,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Returns collection of entityClass objects.
      *
-     * @param string $entityClass
-     * @param array $referenceIds
+     * @param string $entityClass  class name
+     * @param array  $referenceIds reference ids
      *
      * @return ArrayCollection
      */
@@ -353,10 +376,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Generates a variable from a given command, or if not present in the command, returns a default value.
      *
-     * @param $command
-     * @param $variableName
-     * @param null $defaultValue
-     * @return null
+     * @param CommandInterface $command      command
+     * @param string           $variableName variable name
+     * @param mixed            $defaultValue default value
+     *
+     * @return mixed
      */
     protected function extractCommandVariable($command, $variableName, $defaultValue = null)
     {
@@ -368,5 +392,22 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         return $commandVariable;
+    }
+
+    /**
+     * Returns a ref data reference for the provided key, or null if the key is null or doesn't exist
+     *
+     * @param string|null $refDataKey ref data key
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
+     */
+    protected function refDataOrNull($refDataKey)
+    {
+        if ($refDataKey === null) {
+            return null;
+        }
+
+        $repo = $this->getRepo();
+        return $repo->getRefdataReference($refDataKey);
     }
 }

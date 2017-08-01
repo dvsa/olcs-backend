@@ -194,10 +194,10 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
                     'Address updated',
                     'Trading names updated',
                 ],
+                'flags' => ['hasChanged' => 1, 'tradingNamesChanged' => 1]
             ],
             $actual->toArray()
         );
-        static::assertTrue($actual->getFlag('hasChanged'));
     }
 
     public function testHandlerDetailsNotChanged()
@@ -243,6 +243,7 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
                 'messages' => [
                     'Trading names are not changed',
                 ],
+                'flags' => ['hasChanged' => false]
             ],
             $actual->toArray()
         );

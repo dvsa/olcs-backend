@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
+use phpseclib\Crypt;
 
 /**
  * Class EncryptedStringType
@@ -13,7 +14,7 @@ class EncryptedStringType extends StringType
     const TYPE = 'encrypted_string';
 
     /**
-     * @var \Zend\Crypt\BlockCipher
+     * @var Crypt\Base
      */
     private $encrypter;
 
@@ -37,7 +38,7 @@ class EncryptedStringType extends StringType
      */
     public function convertToPhpValue($value, AbstractPlatform $platform)
     {
-        return $this->getEncrypter()->decrypt($value);
+        return $this->getEncrypter()->decrypt(base64_decode($value));
     }
 
     /**
@@ -50,17 +51,17 @@ class EncryptedStringType extends StringType
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
-        return $this->getEncrypter()->encrypt($value);
+        return base64_encode($this->getEncrypter()->encrypt($value));
     }
 
     /**
      * Set the Encrypter to use
      *
-     * @param \Zend\Crypt\BlockCipher $ciper Cipher to use for encryption
+     * @param Crypt\Base $ciper Cipher to use for encryption
      *
      * @return void
      */
-    public function setEncrypter(\Zend\Crypt\BlockCipher $ciper)
+    public function setEncrypter(Crypt\Base $ciper)
     {
         $this->encrypter = $ciper;
     }
@@ -68,7 +69,7 @@ class EncryptedStringType extends StringType
     /**
      * Get the Encrypter
      *
-     * @return \Zend\Crypt\BlockCipher
+     * @return Crypt\Base
      */
     public function getEncrypter()
     {

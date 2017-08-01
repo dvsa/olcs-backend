@@ -43,6 +43,9 @@ class RefData extends AbstractRefData
     const SIG_DIGITAL_SIGNATURE = 'sig_digital_signature';
     const SIG_SIGNATURE_NOT_REQUIRED = 'sig_signature_not_required';
 
+    const PHONE_NUMBER_PRIMARY_TYPE = 'phone_t_primary';
+    const PHONE_NUMBER_SECONDARY_TYPE = 'phone_t_secondary';
+
     /**
      * RefData constructor.
      *
