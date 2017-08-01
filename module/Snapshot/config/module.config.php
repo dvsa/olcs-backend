@@ -79,6 +79,7 @@ return [
             'ContinuationReview\OperatingCentres' => ContinuationReview\OperatingCentresReviewService::class,
             'ContinuationReview\TransportManagers' => ContinuationReview\TransportManagersReviewService::class,
             'ContinuationReview\Safety' => ContinuationReview\SafetyReviewService::class,
+            'ContinuationReview\Declaration' => ContinuationReview\DeclarationReviewService::class,
         ],
     ],
     'view_manager' => [
