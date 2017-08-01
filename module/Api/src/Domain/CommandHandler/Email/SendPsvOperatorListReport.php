@@ -4,25 +4,33 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport as Command;
 
 /**
  * Send  PSV OperatorList report
  */
-final class SendPsvOperatorListReport extends AbstractCommandHandler implements \Dvsa\Olcs\Api\Domain\EmailAwareInterface
+final class SendPsvOperatorListReport extends AbstractCommandHandler implements EmailAwareInterface
 {
     use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 
     const EMAIL_TEMPLATE = 'report-psv-operator-list';
     const EMAIL_SUBJECT = 'email.notification.subject';
 
+    /**
+     * @var string
+     */
     protected $repoServiceName = 'SystemParameter';
 
     /**
-     * @param \Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport $command
+     * Handle Send PSV Operator List Report
+     *
+     * @param Command $command Command for sending PSV Report
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -38,11 +46,11 @@ final class SendPsvOperatorListReport extends AbstractCommandHandler implements 
         $message = new Message($email, self::EMAIL_SUBJECT);
         $message->setDocs([$command->getId()]);
 
-        $this->sendEmailTemplate($message,self::EMAIL_TEMPLATE);
+        $this->sendEmailTemplate($message, self::EMAIL_TEMPLATE);
 
-        $result = new Result();
-        $result->addId('document', $command->getId());
-        $result->addMessage('PSV Operator list sent to: ' . $email);
-        return $result;
+        $this->result->addId('document', $command->getId());
+        $this->result->addMessage('PSV Operator list sent to: ' . $email);
+
+        return $this->result;
     }
 }

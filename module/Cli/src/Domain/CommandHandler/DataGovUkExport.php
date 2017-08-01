@@ -2,33 +2,33 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\Statement;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface as NamingServiceInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
-use Dvsa\Olcs\Api\Service\Exception;
-use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
+use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Email\Service\Email as EmailService;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Doctrine\DBAL\Driver\Statement;
+use Dvsa\Olcs\Api\Service\Exception;
 
 /**
  * Export data to csv files for data.gov.uk
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-final class DataGovUkExport extends AbstractCommandHandler implements UploaderAwareInterface, NamingServiceAwareInterface
+final class DataGovUkExport extends AbstractCommandHandler implements UploaderAwareInterface, NamingServiceInterface
 {
     use UploaderAwareTrait, NamingServiceAwareTrait, QueueAwareTrait;
 
@@ -50,7 +50,12 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
     /**
      * @var array
      */
-    protected $extraRepos = ['TrafficArea', 'SystemParameter', 'Category', 'SubCategory'];
+    protected $extraRepos = [
+        'TrafficArea',
+        'SystemParameter',
+        'Category',
+        'SubCategory'
+    ];
 
     /**
      * @var string
@@ -113,7 +118,7 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
      *
      * @param \Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport $command Command
      *
-     * @return
+     * @return Result
      */
     private function processPsvOperatorList(CommandInterface $command)
     {
@@ -144,8 +149,14 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $document = $this->handleSideEffect($documentCommand);
         $this->result->merge($document);
 
-        $emailQueue = $this->emailQueue(SendPsvOperatorListReport::class, ['id' => $document->getId('document')], $document->getId('document'));
-        $this->result->merge($this->handleSideEffect($emailQueue));
+        $emailQueue = $this->emailQueue(
+            SendPsvOperatorListReport::class,
+            ['id' => $document->getId('document')],
+            $document->getId('document')
+        );
+
+        $email = $this->handleSideEffect($emailQueue);
+        $this->result->merge($email);
 
         return $this->result;
     }
