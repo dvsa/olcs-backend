@@ -2,23 +2,22 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\PDOStatement;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocument;
+use Mockery as m;
+use org\bovigo\vfs\vfsStream;
+use Dvsa\Olcs\Email\Service\Email;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Doctrine\DBAL\Driver\PDOStatement;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
-use Dvsa\Olcs\Email\Service\Email;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Mockery as m;
-use org\bovigo\vfs\vfsStream;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
@@ -39,21 +38,6 @@ class DataGovUkExportTest extends CommandHandlerTestCase
      * @var  m\MockInterface
      */
     private $mockStmt;
-
-    /**
-     * @var  m\MockInterface|Email
-     */
-    private $mockEmailService;
-
-    /**
-     * @var  m\MockInterface|ContentStoreFileUploader
-     */
-    private $mockFileUploaderService;
-
-    /**
-     * @var m\MockInterface|NamingService
-     */
-    private $documentNamingService;
 
     public function setUp()
     {
@@ -126,12 +110,6 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $fileDirectory = 'testing/directory';
         $fileName = 'PsvOperatorList_' . date('Y-m-d_h-i-s') . '.csv';
 
-        $fileContent = '"Licence number",col1,col2
-areaName1,val11,"v""\'-/\,"
-areaName2,val21,val22
-areaName1,val31,val32
-';
-
         $row1 = [
             'Licence number' => 'areaName1',
             'col1' => 'val11',
@@ -161,15 +139,14 @@ areaName1,val31,val32
             ->once()
             ->andReturn($this->mockStmt);
 
-        $this->repoMap['SystemParameter']
-            ->shouldReceive('fetchValue')
-            ->with(SystemParameter::PSV_REPORT_EMAIL_LIST)
-            ->once()
-            ->andReturn('system-test@test.com');
-
         $this->mockedSmServices['DocumentNamingService']
             ->shouldReceive('generateName')
-            ->with('PsvOperatorList', 'csv', $this->categoryReferences[Category::CATEGORY_REPORT], $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV])
+            ->with(
+                'PsvOperatorList',
+                'csv',
+                $this->categoryReferences[Category::CATEGORY_REPORT],
+                $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV]
+            )
             ->andReturn($fileDirectory . '/' . $fileName);
 
         // We just need to add these bits
@@ -177,31 +154,21 @@ areaName1,val31,val32
         $documentData['description'] = $fileName;
         $documentData['filename'] = $fileName;
         $documentData['size'] = 0;
-        $documentData['category'] = 'Report';
-        $documentData['subCategory'] = 'PSV';
+        $documentData['category'] = $this->categoryReferences[Category::CATEGORY_REPORT];
+        $documentData['subCategory'] = $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV];
 
-        $this->expectedSideEffect(CreateDocument::class, $documentData, (new Result())->addMessage('CreateDocument'));
+        $this->expectedSideEffect(
+            CreateDocumentCmd::class,
+            $documentData,
+            (new Result())->addMessage('CreateDocument')->addId('document', 1)
+        );
 
-        $this->mockedSmServices['EmailService']
-            ->shouldReceive('send')
-            ->with(
-                'notifications@vehicle-operator-licensing.service.gov.uk',
-                'OLCS Notification',
-                'system-test@test.com',
-                'PSV Operator Licence Report',
-                'Attached is the latest CSV export of all PSV Operators.',
-                'Attached is the latest CSV export of all PSV Operators.',
-                [],
-                [],
-                [
-                    [
-                        'content' => $fileContent,
-                        'fileName' => $fileName,
-                    ]
-                ]
-            )
-            ->once()
-            ->andReturn(true);
+        $this->expectedEmailQueueSideEffect(
+            SendPsvOperatorListReport::class,
+            ['id' => 1],
+            1,
+            new Result()
+        );
 
         //  call & check
         $cmd = Cmd::create(
@@ -218,7 +185,7 @@ areaName1,val31,val32
         $expectMsg =
             'Fetching data from DB for PSV Operators' .
             'create csv file: ' . $expectFile .
-            'Sending report to: system-test@test.com';
+            'CreateDocument';
 
         static::assertEquals(
             $expectMsg,

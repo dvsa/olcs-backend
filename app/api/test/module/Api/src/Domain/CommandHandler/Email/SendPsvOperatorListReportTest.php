@@ -15,12 +15,7 @@ use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 
 /**
- * Send Ebsr Errors Test
- *
- * Ebsr Error emails follow a different code path if there is no bus reg created. This class tests this behaviour.
- *
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- * @group ebsrEmails
+ * Send Psv Operator List Report Test
  */
 class SendPsvOperatorListReportTest extends CommandHandlerTestCase
 {
