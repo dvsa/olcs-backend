@@ -127,7 +127,7 @@ class SafetyReviewServiceTest extends MockeryTestCase
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
     }
 
-g    public function testGetSummaryFromData()
+    public function testGetSummaryFromData()
     {
         $continuationDetail = new ContinuationDetail();
 
