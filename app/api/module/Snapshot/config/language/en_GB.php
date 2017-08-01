@@ -323,5 +323,13 @@ return [
     'continuations.safety-section.table.tach_na' => 'Not applicable',
     'continuations.oc-section.table.authorisation' => 'Authorisation',
     'continuations.safety-details.label' => 'Safety inspection details',
+    'continuations.declaration.signature-type.label' => 'How would you like to sign your declaration',
+    'continuations.declaration.signature-type.unknown' => 'Unknown',
+    'continuations.declaration.signature-type.digital' => 'Sign online using GOV.UK Verify',
+    'continuations.declaration.signature-type.print' => 'Print, sign and return',
+    'continuations.declaration.signed-by' => 'Signed by',
+    'continuations.declaration.date-of-birth' => 'Date of birth',
+    'continuations.declaration.signature-date' => 'Signature date',
+    'continuations.declaration.signature-details' => 'Signature details',
     // Potentially unused translations
 ];

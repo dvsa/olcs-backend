@@ -25,4 +25,17 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     {
         return $this->getServiceLocator()->get('translator')->translate($string, 'snapshot');
     }
+
+    /**
+     * Format a date
+     *
+     * @param string $date   Date to format
+     * @param string $format Date format eg "d M Y"
+     *
+     * @return string Formatted date
+     */
+    public function formatDate($date, $format = 'd M Y')
+    {
+        return date($format, strtotime($date));
+    }
 }
