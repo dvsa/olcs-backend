@@ -109,7 +109,7 @@ class SafetyReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuations.safety-section.table.inspector', 'header' => true],
                 ['value' => 'continuations.safety-section.table.address', 'header' => true],
@@ -125,5 +125,97 @@ class SafetyReviewServiceTest extends MockeryTestCase
         ];
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
+    }
+
+    public function testGetSummaryFromData()
+    {
+        $continuationDetail = new ContinuationDetail();
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getSafetyInsVehicles')
+            ->andReturn(2)
+            ->times(3)
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->once()
+            ->shouldReceive('getSafetyInsTrailers')
+            ->andReturn(3)
+            ->times(3)
+            ->shouldReceive('getSafetyInsVaries')
+            ->andReturn('Y')
+            ->times(2)
+            ->shouldReceive('getTachographIns')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(Licence::TACH_EXT)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
+            ->shouldReceive('getTachographInsName')
+            ->andReturn('foo')
+            ->twice()
+            ->getMock();
+
+        $continuationDetail->setLicence($mockLicence);
+
+        $expected = [
+            [
+                [
+                    'value' => 'continuations.safety-section.table.max-time-vehicles_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => '2 ' . 'continuations.safety-section.table.weeks_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.max-time-trailers_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => '3 ' . 'continuations.safety-section.table.weeks_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.varies_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => 'Yes_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.tachographs_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => 'continuations.safety-section.table.' . Licence::TACH_EXT . '_translated',
+                ]
+            ],
+            [
+                [
+                    'value' => 'continuations.safety-section.table.tachographInsName_translated',
+                    'header' => true
+                ],
+                [
+                    'value' => 'foo',
+                ]
+            ],
+        ];
+
+        $this->assertEquals($expected, $this->sut->getSummaryFromData($continuationDetail));
+    }
+
+    public function testGetSummaryHeader()
+    {
+        $this->assertEquals(
+            'continuations.safety-details.label',
+            $this->sut->getSummaryHeader(new ContinuationDetail())
+        );
     }
 }
