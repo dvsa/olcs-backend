@@ -42,4 +42,5 @@ return [
     QueryHandler\Bookmark\UserBundle::class                         => NoValidationRequired::class,
     QueryHandler\Bookmark\VehicleBundle::class                      => NoValidationRequired::class,
     QueryHandler\Bookmark\VenueBundle::class                        => NoValidationRequired::class,
+    QueryHandler\Bookmark\HearingBundle::class                      => NoValidationRequired::class,
 ];
