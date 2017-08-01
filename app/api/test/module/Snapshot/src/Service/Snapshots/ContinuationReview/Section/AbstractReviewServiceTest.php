@@ -34,4 +34,20 @@ class AbstractReviewServiceTest extends MockeryTestCase
 
         $this->assertEquals('foo_translated', $this->sut->translate('foo'));
     }
+
+    /**
+     * @dataProvider testFormatDateDataProvider
+     */
+    public function testFormatDate($expected, $date)
+    {
+        $this->assertEquals($expected, $this->sut->formatDate($date));
+    }
+
+    public function testFormatDateDataProvider()
+    {
+        return [
+            ['15 Aug 2005', '2005-08-15T15:52:01+00:00'],
+            ['01 Aug 2017', '2017-08-01T15:52:00+05:00'],
+        ];
+    }
 }
