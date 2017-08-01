@@ -58,6 +58,7 @@ return [
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
     BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
     BookmarkQuery\VenueBundle::class => BookmarkQueryHandler\VenueBundle::class,
+    BookmarkQuery\HearingBundle::class => BookmarkQueryHandler\HearingBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
