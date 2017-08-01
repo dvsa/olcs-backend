@@ -73,11 +73,45 @@ class LicenceChecklist extends AbstractQueryHandler
                     'licenceVehicles' => [
                         'vehicle',
                         'criteria' => $notRemoved
-                    ]
+                    ],
+                    'correspondenceCd' => [
+                        'address',
+                        'phoneContacts' => [
+                            'phoneContactType',
+                        ],
+                    ],
+                    'establishmentCd' => [
+                        'address',
+                    ],
+                    'operatingCentres' => [
+                        'operatingCentre' => [
+                            'address'
+                        ]
+                    ],
+                    'tmLicences' => [
+                        'transportManager' => [
+                            'homeCd' => [
+                                'person' => [
+                                    'title'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'workshops' => [
+                        'contactDetails' => [
+                            'person' => [
+                                'title'
+                            ],
+                            'address'
+                        ]
+                    ],
+                    'tachographIns'
                 ]
             ],
             [
-                'sections' => $sections
+                'sections' => $sections,
+                'ocChanges' => $licence->getOcPendingChanges(),
+                'tmChanges' => $licence->getTmPendingChanges(),
             ]
         );
     }

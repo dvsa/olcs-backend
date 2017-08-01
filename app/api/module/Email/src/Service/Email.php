@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Email\Service;
 
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
+use Dvsa\Olcs\Email\Transport\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail as ZendMail;
@@ -69,7 +70,7 @@ class Email implements FactoryInterface
             throw new ZendMailRuntimeException('No mail config found');
         }
 
-        $transport = ZendMail\Transport\Factory::create($config['mail']);
+        $transport = Factory::create($config['mail']);
         $this->setMailTransport($transport);
 
         return $this;

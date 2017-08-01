@@ -42,6 +42,8 @@ class ContinuationDetail extends AbstractContinuationDetail implements
     const METHOD_EMAIL = 'email';
     const METHOD_POST  = 'post';
 
+    const RESULT_LICENCE_CONTINUED = 'licence_continued';
+
     /**
      * Get Orgainsation owner
      *

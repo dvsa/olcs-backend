@@ -87,8 +87,7 @@ class ContinuationDetail extends AbstractRepository
         // AND continuation status is Printed, Acceptable or Unacceptable
         // OR where the status is Complete but the checklist has not yet been received;
         $qb->andWhere(
-            "{$this->alias}.status IN (:continuationDetailStatuses) OR "
-            . "({$this->alias}.status = '". Entity::STATUS_COMPLETE ."' AND {$this->alias}.received = 'N')"
+            "{$this->alias}.status IN (:continuationDetailStatuses)"
         )->setParameter(
             'continuationDetailStatuses',
             [
@@ -122,9 +121,19 @@ class ContinuationDetail extends AbstractRepository
         // where licence is
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
             ->setParameter('licence', $licenceId);
-        // and status is Acceptable
-        $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
-            ->setParameter('status', Entity::STATUS_ACCEPTABLE);
+        $qb->andWhere(
+            $qb->expr()->orX(
+                // and status is Acceptable
+                $qb->expr()->eq($this->alias . '.status', ':status'),
+                // or status is not Complete and isDigital flag = 1
+                $qb->expr()->andX(
+                    $qb->expr()->neq($this->alias . '.status', ':notStatus'),
+                    $qb->expr()->eq($this->alias . '.isDigital', 1)
+                )
+            )
+        )
+        ->setParameter('status', Entity::STATUS_ACCEPTABLE)
+        ->setParameter('notStatus', Entity::STATUS_COMPLETE);
 
         return $qb->getQuery()->getSingleResult();
     }

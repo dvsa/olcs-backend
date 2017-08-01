@@ -43,7 +43,9 @@ class Dashboard extends AbstractQueryHandler
                         [
                             'licenceType',
                             'status',
-                            'trafficArea'
+                            'trafficArea',
+                            'isExpired',
+                            'isExpiring',
                         ]
                     ),
                     'applications' => $this->resultList(

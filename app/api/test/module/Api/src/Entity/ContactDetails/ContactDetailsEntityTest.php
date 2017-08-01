@@ -596,4 +596,30 @@ class ContactDetailsEntityTest extends EntityTester
             ],
         ];
     }
+
+    public function testGetPhoneContactNumber()
+    {
+        $sut = new ContactDetails(m::mock(RefData::class));
+
+        $mockPhoneCollection = new \Doctrine\Common\Collections\ArrayCollection();
+        $mockPhoneCollection->offsetSet(
+            self::DEF_PHONE_ID,
+            (new PhoneContact(new RefData(self::DEF_PHONE_TYPE)))
+                ->setId(self::DEF_PHONE_ID)
+                ->setPhoneNumber(self::DEF_PHONE_NR)
+        );
+        $sut->setPhoneContacts($mockPhoneCollection);
+
+        $this->assertEquals(self::DEF_PHONE_NR, $sut->getPhoneContactNumber(self::DEF_PHONE_TYPE));
+    }
+
+    public function testGetPhoneContactNumberEmpty()
+    {
+        $sut = new ContactDetails(m::mock(RefData::class));
+
+        $mockPhoneCollection = new \Doctrine\Common\Collections\ArrayCollection();
+        $sut->setPhoneContacts($mockPhoneCollection);
+
+        $this->assertNull($sut->getPhoneContactNumber('foo'));
+    }
 }

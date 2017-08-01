@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
+use Doctrine\DBAL\DBALException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -123,6 +124,27 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
         );
 
         $this->setExpectedException(\Doctrine\ORM\ORMException::class, 'ORM Exception');
+
+        $this->sut->processMessage($item);
+    }
+
+    public function testProcessMessageFailureDbalException()
+    {
+        $user = new UserEntity('pid', 'type');
+        $user->setId(1);
+        $item = new QueueEntity();
+        $item->setId(99);
+        $item->setEntityId(69);
+        $item->setCreatedBy($user);
+
+        $this->expectCommandException(
+            \Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process::class,
+            ['id' => 69, 'user' => 1],
+            DBALException::class,
+            'DBAL Exception'
+        );
+
+        $this->setExpectedException(DBALException::class, 'DBAL Exception');
 
         $this->sut->processMessage($item);
     }

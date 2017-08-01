@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Submit as Command;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence;
 
 /**
  * Submit Continuation Detail
@@ -16,6 +17,8 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 final class Submit extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'ContinuationDetail';
+
+    protected $extraRepos = ['Fee'];
 
     /**
      * Handle command
@@ -35,14 +38,51 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             $command->getVersion()
         );
 
-        $continuationDetail->setSignatureType($this->getRepo()->getRefdataReference(RefData::SIG_PHYSICAL_SIGNATURE));
+        // If signatureType is null, then must be printing and signing declaration.
+        // If using Verify, signatureType would have already been set to SIG_DIGITAL_SIGNATURE
+        if ($continuationDetail->getSignatureType() === null) {
+            $continuationDetail->setSignatureType(
+                $this->getRepo()->getRefdataReference(RefData::SIG_PHYSICAL_SIGNATURE)
+            );
+        }
+        $continuationDetail->setIsDigital(true);
+
+        // If there are no continuation fees then continue the licence
+        $continuationFees = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId(
+            $continuationDetail->getLicence()->getId()
+        );
+        if (count($continuationFees) === 0) {
+
+            // set default values if they haven't already been set
+            if ($continuationDetail->getTotAuthVehicles() === null) {
+                $continuationDetail->setTotAuthVehicles($continuationDetail->getLicence()->getTotAuthVehicles());
+            }
+            if ($continuationDetail->getTotCommunityLicences() === null) {
+                $continuationDetail->setTotCommunityLicences(
+                    $continuationDetail->getLicence()->getTotCommunityLicences()
+                );
+            }
+            if ($continuationDetail->getTotPsvDiscs() === null) {
+                $continuationDetail->setTotPsvDiscs($continuationDetail->getLicence()->getPsvDiscsNotCeased()->count());
+            }
+
+            $this->result->merge(
+                $this->handleSideEffect(
+                    ContinueLicence::create(
+                        [
+                            'id' => $continuationDetail->getLicence()->getId(),
+                            'version' => $continuationDetail->getLicence()->getVersion(),
+                        ]
+                    )
+                )
+            );
+        }
 
         $this->getRepo()->save($continuationDetail);
 
-        $result = new Result();
-        $result->addId('continuationDetail', $continuationDetail->getId());
-        $result->addMessage('ContinuationDetail submitted');
+        $this->result->addId('continuationDetail', $continuationDetail->getId());
+        $this->result->addMessage('ContinuationDetail submitted');
 
-        return $result;
+        return $this->result;
     }
 }

@@ -99,6 +99,9 @@ class UpdateWorkshopTest extends CommandHandlerTestCase
             'messages' => [
                 'Address updated',
                 'Workshop updated'
+            ],
+            'flags' => [
+                'hasChanged' => false
             ]
         ];
 

@@ -564,6 +564,18 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $conditionUndertakings;
 
     /**
+     * Continuation detail
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail",
+     *     mappedBy="licence"
+     * )
+     */
+    protected $continuationDetails;
+
+    /**
      * Document
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -721,6 +733,7 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
         $this->communityLics = new ArrayCollection();
         $this->companySubsidiaries = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
+        $this->continuationDetails = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->gracePeriods = new ArrayCollection();
@@ -2345,6 +2358,69 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     {
         if ($this->conditionUndertakings->contains($conditionUndertakings)) {
             $this->conditionUndertakings->removeElement($conditionUndertakings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the continuation detail
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails collection being set as the value
+     *
+     * @return Licence
+     */
+    public function setContinuationDetails($continuationDetails)
+    {
+        $this->continuationDetails = $continuationDetails;
+
+        return $this;
+    }
+
+    /**
+     * Get the continuation details
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getContinuationDetails()
+    {
+        return $this->continuationDetails;
+    }
+
+    /**
+     * Add a continuation details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails collection being added
+     *
+     * @return Licence
+     */
+    public function addContinuationDetails($continuationDetails)
+    {
+        if ($continuationDetails instanceof ArrayCollection) {
+            $this->continuationDetails = new ArrayCollection(
+                array_merge(
+                    $this->continuationDetails->toArray(),
+                    $continuationDetails->toArray()
+                )
+            );
+        } elseif (!$this->continuationDetails->contains($continuationDetails)) {
+            $this->continuationDetails->add($continuationDetails);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a continuation details
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails collection being removed
+     *
+     * @return Licence
+     */
+    public function removeContinuationDetails($continuationDetails)
+    {
+        if ($this->continuationDetails->contains($continuationDetails)) {
+            $this->continuationDetails->removeElement($continuationDetails);
         }
 
         return $this;

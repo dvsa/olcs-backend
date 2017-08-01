@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompanyRepo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
@@ -889,21 +890,12 @@ class CompareTest extends CommandHandlerTestCase
             ->once()
             ->andThrowExceptions([new \Exception('unit_error_message')]);
 
-        $alertResult = new Result();
-        $alertResult->addMessage('Alert created');
-
-        $expectedAlertData = [
-            'companyNumber' => $companyNr,
-            'reasons' => [
-                'unit_error_message',
-            ],
-        ];
-
-        $this->expectedSideEffect(CreateAlertCmd::class, $expectedAlertData, $alertResult);
+        $this->setExpectedException(
+            NotReadyException::class,
+            'Error getting data from Companies House API : unit_error_message'
+        );
 
         $command = Cmd::create(['companyNumber' => $companyNr]);
-        $actual = $this->sut->handleCommand($command);
-
-        static::assertEquals($alertResult, $actual);
+        $this->sut->handleCommand($command);
     }
 }

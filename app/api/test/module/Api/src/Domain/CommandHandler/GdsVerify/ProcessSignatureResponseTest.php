@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify\ProcessSignatureResponse;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse as Cmd;
 use \Dvsa\Olcs\GdsVerify\Service;
+use Dvsa\Olcs\GdsVerify;
 
 /**
  * ProcessSignatureResponseTest
@@ -53,6 +54,17 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->with('SAML')->once()->andReturn($attributes);
 
         $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandInvalidAssertion()
+    {
+        $this->mockedSmServices[Service\GdsVerify::class]->shouldReceive('getAttributesFromResponse')
+            ->with('SAML')->once()->andThrow(GdsVerify\Exception::class, 'EXCEPTION_MESSAGE');
+
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
+        $command = Cmd::create(['samlResponse' => 'SAML']);
         $this->sut->handleCommand($command);
     }
 
@@ -125,6 +137,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $mockContinuationDetail->shouldReceive('setSignatureType')
             ->with($this->refData[RefData::SIG_DIGITAL_SIGNATURE])
             ->once();
+        $mockContinuationDetail->shouldReceive('setIsDigital')->with(true)->once();
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockContinuationDetail);

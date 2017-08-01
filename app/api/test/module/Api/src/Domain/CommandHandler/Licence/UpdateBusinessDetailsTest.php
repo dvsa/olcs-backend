@@ -86,6 +86,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
                 'Business Details updated',
                 'Task Created',
             ],
+            'flags' => ['tradingNamesChanged' => 1]
         ];
 
         static::assertEquals($expected, $actual->toArray());
@@ -121,6 +122,7 @@ class UpdateBusinessDetailsTest extends CommandHandlerTestCase
             'messages' => [
                 'Business Details updated',
             ],
+            'flags' => ['tradingNamesChanged' => $hasChanged]
         ];
 
         static::assertEquals($expected, $actual->toArray());

@@ -269,7 +269,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
                 'Phone contact primary created',
                 'Phone contact secondary created',
                 'Transport consultant updated',
-            ]
+            ],
+            'flags' => ['hasChanged' => true, 'isDirty' => true]
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -388,7 +389,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             'messages' => [
                 'Phone contact primary updated',
                 'Phone contact secondary updated',
-            ]
+            ],
+            'flags' => ['hasChanged' => 1, 'isDirty' => 1]
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -514,7 +516,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             'messages' => [
                 'Phone contact primary deleted',
                 'Phone contact secondary deleted',
-            ]
+            ],
+            'flags' => ['isDirty' => 1, 'hasChanged' => 1]
         ];
 
         $this->assertEquals($expected, $result->toArray());
@@ -637,7 +640,8 @@ class SaveAddressesTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Transport consultant deleted'
-            ]
+            ],
+            'flags' => ['isDirty' => 1, 'hasChanged' => 1]
         ];
 
         $this->assertEquals($expected, $result->toArray());

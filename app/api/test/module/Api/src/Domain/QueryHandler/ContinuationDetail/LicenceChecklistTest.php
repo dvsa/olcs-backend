@@ -29,11 +29,20 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
+    /**
+     * @group test123
+     */
     public function testHandleQuery()
     {
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getConditionUndertakings')
             ->andReturn([])
+            ->once()
+            ->shouldReceive('getOcPendingChanges')
+            ->andReturn(1)
+            ->once()
+            ->shouldReceive('getTmPendingChanges')
+            ->andReturn(2)
             ->once()
             ->getMock();
 
@@ -62,10 +71,44 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                         'licenceVehicles' => [
                             'vehicle' => 'expected'
                         ],
+                        'correspondenceCd' => [
+                            'address',
+                            'phoneContacts' => [
+                                'phoneContactType',
+                            ],
+                        ],
+                        'establishmentCd' => [
+                            'address',
+                        ],
+                        'operatingCentres' => [
+                            'operatingCentre' => [
+                                'address'
+                            ]
+                        ],
+                        'tmLicences' => [
+                            'transportManager' => [
+                                'homeCd' => [
+                                    'person' => [
+                                        'title'
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'workshops' => [
+                            'contactDetails' => [
+                                'person' => [
+                                    'title'
+                                ],
+                                'address'
+                            ]
+                        ],
+                        'tachographIns'
                     ],
                     'sections' => [
                         'fooBar',
                     ],
+                    'ocChanges' => 1,
+                    'tmChanges' => 2,
                 ]
             )
             ->getMock();
@@ -102,10 +145,44 @@ class LicenceChecklistTest extends QueryHandlerTestCase
                 'licenceVehicles' => [
                     'vehicle' => 'expected'
                 ],
+                'correspondenceCd' => [
+                    'address',
+                    'phoneContacts' => [
+                        'phoneContactType',
+                    ],
+                ],
+                'establishmentCd' => [
+                    'address',
+                ],
+                'operatingCentres' => [
+                    'operatingCentre' => [
+                        'address'
+                    ]
+                ],
+                'tmLicences' => [
+                    'transportManager' => [
+                        'homeCd' => [
+                            'person' => [
+                                'title'
+                            ]
+                        ]
+                    ]
+                ],
+                'workshops' => [
+                    'contactDetails' => [
+                        'person' => [
+                            'title'
+                        ],
+                        'address'
+                    ]
+                ],
+                'tachographIns'
             ],
             'sections' => [
                 'fooBar',
             ],
+            'ocChanges' => 1,
+            'tmChanges' => 2,
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }
