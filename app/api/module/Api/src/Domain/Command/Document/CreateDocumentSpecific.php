@@ -129,7 +129,7 @@ class CreateDocumentSpecific extends AbstractIdOnlyCommand
 
     /**
      * Get submission
-     * 
+     *
      * @return mixed
      */
     public function getSubmission()

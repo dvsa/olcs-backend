@@ -105,7 +105,7 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         } elseif ($this->reportName === self::BUS_VARIATION) {
             $this->processBusVariation();
         } elseif ($this->reportName === self::PSV_OPERATOR_LIST) {
-            $this->processPsvOperatorList($command);
+            $this->processPsvOperatorList();
         } else {
             throw new \Exception(self::ERR_INVALID_REPORT);
         }
@@ -116,11 +116,9 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
     /**
      * Process PSV Operator list and email
      *
-     * @param \Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport $command Command
-     *
      * @return Result
      */
-    private function processPsvOperatorList(CommandInterface $command)
+    private function processPsvOperatorList()
     {
         $this->result->addMessage('Fetching data from DB for PSV Operators');
         $stmt = $this->dataGovUkRepo->fetchPsvOperatorList();
@@ -136,9 +134,18 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
             $subcategory
         );
 
-        // We just need to add these bits
-        $documentData['identifier'] = $filename;
-        $documentData['description'] = $file->getIdentifier();
+        // Upload file
+        $fileResult = $this->getUploader()->upload(
+            $file->getIdentifier(),
+            $file
+        );
+
+        $this->result->addMessage('File uploaded, identifier: ' . $fileResult->getIdentifier());
+        $this->result->addId('identifier', $fileResult->getIdentifier());
+
+        // Create file into database
+        $documentData['identifier'] = $fileResult->getIdentifier();
+        $documentData['description'] = $filename;
         $documentData['filename'] = $file->getIdentifier();
         $documentData['size'] = $file->getSize();
         $documentData['category'] = $category;
@@ -147,8 +154,10 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $documentCommand = CreateDocumentCmd::create($documentData);
 
         $document = $this->handleSideEffect($documentCommand);
+
         $this->result->merge($document);
 
+        // Send email
         $emailQueue = $this->emailQueue(
             SendPsvOperatorListReport::class,
             ['id' => $document->getId('document')],
@@ -292,11 +301,15 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
             fputcsv($fh, $row);
         }
 
-        $file = new File();
-        $file->setContent($fh);
-        $file->setIdentifier($fileName . '_' . date('Y-m-d_h-i-s') . '.csv');
-
         fclose($fh);
+
+        $fileName = $fileName . '_' . date('Y-m-d_h-i-s') . '.csv';
+
+        $file = new File();
+        $file->setContent(file_get_contents($filePath));
+        $file->setIdentifier($fileName);
+        $file->setMimeType('text/csv');
+        $file->setResource($filePath);
 
         return $file;
     }
