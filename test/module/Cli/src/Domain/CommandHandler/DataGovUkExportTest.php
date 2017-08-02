@@ -2,42 +2,61 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\PDOStatement;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
-use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Doctrine\DBAL\Driver\PDOStatement;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Email\Service\Email;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Mockery as m;
 use org\bovigo\vfs\vfsStream;
+use Mockery as m;
+use org\bovigo\vfs\vfsStreamDirectory;
+use org\bovigo\vfs\vfsStreamFile;
+use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
  */
 class DataGovUkExportTest extends CommandHandlerTestCase
 {
-    /** @var DataGovUkExport */
+    /**
+     * @var DataGovUkExport
+     */
     protected $sut;
 
-    /** @var  string */
+    /**
+     * @var  string
+     */
     private $tmpPath;
 
-    /** @var  m\MockInterface */
-    private $mockStmt;
+    /**
+     * @var vfsStream
+     */
+    private $vfsStream;
 
-    /** @var  m\MockInterface */
-    private $mockEmailService;
+    /**
+     * @var  m\MockInterface
+     */
+    private $mockStmt;
 
     public function setUp()
     {
-        $this->sut = new DataGovUkExport;
-
         //  mock repos
         $this->mockRepo('DataGovUk', Repository\DataGovUk::class);
         $this->mockRepo('TrafficArea', Repository\TrafficArea::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+        $this->mockRepo('Category', Repository\Category::class);
+        $this->mockRepo('SubCategory', Repository\SubCategory::class);
 
         $this->mockStmt = m::mock(PDOStatement::class);
 
@@ -48,12 +67,37 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             ],
         ];
 
-        $this->mockEmailService = m::mock(Email::class);
-        $this->mockedSmServices['EmailService'] = $this->mockEmailService;
+        /** @var Email $mockEmailService */
+        $mockEmailService = m::mock(Email::class);
+
+        /** @var ContentStoreFileUploader $mockFileUploader */
+        $mockFileUploader = m::mock(ContentStoreFileUploader::class);
+
+        /** @var NamingService $mockDocumentNaming */
+        $mockDocumentNaming = m::mock(NamingService::class);
+
+        $this->mockedSmServices['EmailService'] = $mockEmailService;
+        $this->mockedSmServices['FileUploader'] = $mockFileUploader;
+        $this->mockedSmServices['DocumentNamingService'] = $mockDocumentNaming;
+
+        $category = (new Category())->setId(Category::CATEGORY_REPORT)->setDescription('Report');
+        $subCategory = (new SubCategory())->setId(SubCategory::REPORT_SUB_CATEGORY_PSV)->setSubCategoryName('PSV');
+
+        $this->categoryReferences = [
+            Category::CATEGORY_REPORT => m::mock($category)
+        ];
+
+        $this->subCategoryReferences = [
+            SubCategory::REPORT_SUB_CATEGORY_PSV => m::mock($subCategory)
+        ];
+
+        $this->sut = new DataGovUkExport;
+        $this->sut->setUploader($mockFileUploader);
 
         parent::setUp();
 
-        $this->tmpPath = vfsStream::setup('root')->url() . '/unit';
+        $this->vfsStream = vfsStream::setup('root');
+        $this->tmpPath = $this->vfsStream->url() . '/unit';
     }
 
     public function testInvalidReportException()
@@ -76,11 +120,12 @@ class DataGovUkExportTest extends CommandHandlerTestCase
     {
         $fileName = 'PsvOperatorList_' . date('Y-m-d_h-i-s') . '.csv';
 
-        $fileContent = '"Licence number",col1,col2
-areaName1,val11,"v""\'-/\,"
-areaName2,val21,val22
-areaName1,val31,val32
-';
+        $vfsFile = new vfsStreamFile($fileName, 0777);
+        $tmpFolder = new vfsStreamDirectory('unit');
+        $tmpFolder->addChild($vfsFile);
+
+        $directory = new vfsStreamDirectory('root');
+        $directory->addChild($tmpFolder);
 
         $row1 = [
             'Licence number' => 'areaName1',
@@ -111,32 +156,63 @@ areaName1,val31,val32
             ->once()
             ->andReturn($this->mockStmt);
 
-        $this->repoMap['SystemParameter']
-            ->shouldReceive('fetchValue')
-            ->with(SystemParameter::PSV_REPORT_EMAIL_LIST)
-            ->once()
-            ->andReturn('system-test@test.com');
-
-        $this->mockEmailService
-            ->shouldReceive('send')
+        $this->mockedSmServices['DocumentNamingService']
+            ->shouldReceive('generateName')
             ->with(
-                'notifications@vehicle-operator-licensing.service.gov.uk',
-                'OLCS Notification',
-                'system-test@test.com',
-                'PSV Operator Licence Report',
-                'Attached is the latest CSV export of all PSV Operators.',
-                'Attached is the latest CSV export of all PSV Operators.',
-                [],
-                [],
-                [
-                    [
-                        'content' => $fileContent,
-                        'fileName' => $fileName,
-                    ]
-                ]
+                'PsvOperatorList',
+                'csv',
+                $this->categoryReferences[Category::CATEGORY_REPORT],
+                $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV]
             )
-            ->once()
-            ->andReturn(true);
+            ->andReturn($this->tmpPath . '/' . $fileName);
+
+        /** @var File|m\mock $contentStoreFile */
+        $contentStoreFile = m::mock(File::class);
+        $contentStoreFile->shouldReceive('getContent')
+            ->andReturn(
+                '"Licence number",col1,col2' . PHP_EOL .
+                'areaName1,val11,"v""\'-/\\,"' . PHP_EOL .
+                'areaName2,val21,val22' . PHP_EOL .
+                'areaName1,val31,val32' . PHP_EOL .
+                ''
+            );
+        $contentStoreFile->shouldReceive('getResource')
+            ->andReturn($this->tmpPath . '/'. $fileName);
+        $contentStoreFile->shouldReceive('getMimeType')
+            ->andReturn('text/csv');
+        $contentStoreFile->shouldReceive('getSize')
+            ->andReturn(98);
+        $contentStoreFile->shouldReceive('getIdentifier')
+            ->andReturn($fileName);
+
+        // Upload file
+        $this->mockedSmServices['FileUploader']
+            ->shouldAllowMockingMethod('upload');
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('upload')->andReturn($contentStoreFile);
+
+        // Create document in database
+        $documentData['identifier'] = $fileName;
+        $documentData['description'] = $this->tmpPath . '/' . $fileName;
+        $documentData['filename'] = $fileName;
+        $documentData['size'] = 98;
+        $documentData['category'] = $this->categoryReferences[Category::CATEGORY_REPORT];
+        $documentData['subCategory'] = $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV];
+
+        $this->expectedSideEffect(
+            CreateDocumentCmd::class,
+            $documentData,
+            (new Result())->addMessage('CreateDocument')->addId('document', 1)
+        );
+
+        // Send email
+        $this->expectedEmailQueueSideEffect(
+            SendPsvOperatorListReport::class,
+            ['id' => 1],
+            1,
+            new Result()
+        );
 
         //  call & check
         $cmd = Cmd::create(
@@ -153,74 +229,13 @@ areaName1,val31,val32
         $expectMsg =
             'Fetching data from DB for PSV Operators' .
             'create csv file: ' . $expectFile .
-            'Sending report to: system-test@test.com';
+            'File uploaded, identifier: ' . $fileName .
+            'CreateDocument';
 
         static::assertEquals(
             $expectMsg,
             implode('', $actual->toArray()['messages'])
         );
-    }
-
-
-    public function testPsvOperatorListNoEmailThrowException()
-    {
-        $this->setExpectedException(
-            \InvalidArgumentException::class,
-            'No email address specified in system parameters for the PSV Report'
-        );
-
-        $fileName = 'PsvOperatorList_' . date('Y-m-d_h-i-s') . '.csv';
-
-        $fileContent = '"Licence number",col1,col2
-areaName1,val11,"v""\'-/\,"
-areaName2,val21,val22
-areaName1,val31,val32
-';
-
-        $row1 = [
-            'Licence number' => 'areaName1',
-            'col1' => 'val11',
-            'col2' => 'v"\'-/\,',
-        ];
-
-        $row2 = [
-            'Licence number' => 'areaName2',
-            'col1' => 'val21',
-            'col2' => 'val22',
-        ];
-
-        $row3 = [
-            'Licence number' => 'areaName1',
-            'col1' => 'val31',
-            'col2' => 'val32',
-        ];
-
-        $this->mockStmt
-            ->shouldReceive('fetch')->once()->andReturn($row1)
-            ->shouldReceive('fetch')->once()->andReturn($row2)
-            ->shouldReceive('fetch')->once()->andReturn($row3)
-            ->shouldReceive('fetch')->andReturn(false);
-
-        $this->repoMap['DataGovUk']
-            ->shouldReceive('fetchPsvOperatorList')
-            ->once()
-            ->andReturn($this->mockStmt);
-
-        $this->repoMap['SystemParameter']
-            ->shouldReceive('fetchValue')
-            ->with(SystemParameter::PSV_REPORT_EMAIL_LIST)
-            ->once()
-            ->andReturnNull();
-
-        //  call & check
-        $cmd = Cmd::create(
-            [
-                'reportName' => DataGovUkExport::PSV_OPERATOR_LIST,
-                'path' => $this->tmpPath,
-            ]
-        );
-
-        $this->sut->handleCommand($cmd);
     }
 
     public function testOperatorLicenceOk()

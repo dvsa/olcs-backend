@@ -2,24 +2,36 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\Statement;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface as NamingServiceInterface;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Service\Exception;
-use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
+use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Email\Service\Email as EmailService;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Doctrine\DBAL\Driver\Statement;
+use Dvsa\Olcs\Api\Service\Exception;
 
 /**
  * Export data to csv files for data.gov.uk
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-final class DataGovUkExport extends AbstractCommandHandler
+final class DataGovUkExport extends AbstractCommandHandler implements UploaderAwareInterface, NamingServiceInterface
 {
+    use UploaderAwareTrait, NamingServiceAwareTrait, QueueAwareTrait;
+
     const ERR_INVALID_REPORT = 'Invalid report name';
     const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
 
@@ -38,7 +50,12 @@ final class DataGovUkExport extends AbstractCommandHandler
     /**
      * @var array
      */
-    protected $extraRepos = ['TrafficArea', 'SystemParameter'];
+    protected $extraRepos = [
+        'TrafficArea',
+        'SystemParameter',
+        'Category',
+        'SubCategory'
+    ];
 
     /**
      * @var string
@@ -97,55 +114,62 @@ final class DataGovUkExport extends AbstractCommandHandler
     }
 
     /**
-     * Get email address to send the PSV report for processPsvOperatorList
-     *
-     * @return string|\InvalidArgumentException
-     */
-    private function getPsvReportEmailAddress()
-    {
-        /** @var Repository\SystemParameter $systemParametersRepo */
-        $systemParametersRepo = $this->getRepo('SystemParameter');
-        $email = $systemParametersRepo->fetchValue(SystemParameter::PSV_REPORT_EMAIL_LIST);
-
-        if (is_null($email)) {
-            throw new \InvalidArgumentException('No email address specified in system parameters for the PSV Report');
-        }
-
-        return $email;
-    }
-
-    /**
      * Process PSV Operator list and email
      *
-     * @return void
+     * @return Result
      */
     private function processPsvOperatorList()
     {
         $this->result->addMessage('Fetching data from DB for PSV Operators');
         $stmt = $this->dataGovUkRepo->fetchPsvOperatorList();
 
-        $filePath = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
+        $file = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
+        $category = $this->getRepo('Category')->getCategoryReference(Category::CATEGORY_REPORT);
+        $subcategory = $this->getRepo('SubCategory')->getSubCategoryReference(SubCategory::REPORT_SUB_CATEGORY_PSV);
 
-        $email = $this->getPsvReportEmailAddress();
-
-        $this->result->addMessage('Sending report to: ' . $email);
-
-        $this->emailService->send(
-            'notifications@vehicle-operator-licensing.service.gov.uk',
-            'OLCS Notification',
-            $email,
-            'PSV Operator Licence Report',
-            'Attached is the latest CSV export of all PSV Operators.',
-            'Attached is the latest CSV export of all PSV Operators.',
-            [],
-            [],
-            [
-                [
-                    'content' => file_get_contents($filePath),
-                    'fileName' => basename($filePath),
-                ]
-            ]
+        $filename = $this->getNamingService()->generateName(
+            'PsvOperatorList',
+            'csv',
+            $category,
+            $subcategory
         );
+
+        // Upload file
+        $fileResult = $this->getUploader()->upload(
+            $file->getIdentifier(),
+            $file
+        );
+
+        $this->result->addMessage('File uploaded, identifier: ' . $fileResult->getIdentifier());
+        $this->result->addId('identifier', $fileResult->getIdentifier());
+
+        // Create file into database
+        $documentData = [
+            'identifier' => $fileResult->getIdentifier(),
+            'description' => $filename,
+            'filename' => $file->getIdentifier(),
+            'size' => $file->getSize(),
+            'category' => $category,
+            'subCategory' => $subcategory
+        ];
+
+        $document = $this->handleSideEffect(
+            CreateDocumentCmd::create($documentData)
+        );
+
+        $this->result->merge($document);
+
+        // Send email
+        $emailQueue = $this->emailQueue(
+            SendPsvOperatorListReport::class,
+            ['id' => $document->getId('document')],
+            $document->getId('document')
+        );
+
+        $email = $this->handleSideEffect($emailQueue);
+        $this->result->merge($email);
+
+        return $this->result;
     }
 
     /**
@@ -257,7 +281,7 @@ final class DataGovUkExport extends AbstractCommandHandler
      * @param Statement $stmt     Database query response
      * @param string    $fileName Name of file
      *
-     * @return string
+     * @return File
      */
     private function makeCsvForPsvOperatorList(Statement $stmt, $fileName)
     {
@@ -281,7 +305,15 @@ final class DataGovUkExport extends AbstractCommandHandler
 
         fclose($fh);
 
-        return $filePath;
+        $fileName = $fileName . '_' . date('Y-m-d_h-i-s') . '.csv';
+
+        $file = new File();
+        $file->setContent(file_get_contents($filePath));
+        $file->setIdentifier($fileName);
+        $file->setMimeType('text/csv');
+        $file->setResource($filePath);
+
+        return $file;
     }
 
     /**
