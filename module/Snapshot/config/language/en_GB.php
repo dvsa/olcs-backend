@@ -331,5 +331,17 @@ return [
     'continuations.declaration.date-of-birth' => 'Date of birth',
     'continuations.declaration.signature-date' => 'Signature date',
     'continuations.declaration.signature-details' => 'Signature details',
+    'continuations.finance.financial-amount-required' => 'Financial amount required',
+    'continuations.finance.average-balance-amount' => 'Average balance over the last 3 months',
+    'continuations.finance.overdraft-facility' => 'Overdraft facility',
+    'continuations.finance.factoring-amount' => 'Factoring or discount facility',
+    'continuations.finance.other-available-finances' => 'Other available finances',
+    'continuations.finance.where-do-these-finances-come-from' => 'Where do these finances come from',
+    'continuations.finance.finances-are-sufficient' => 'Finances are sufficient',
+    'continuations.finance.send-in-post' => 'Operator to send original evidence to the Central Licensing Office',
+    'continuations.finance.financial-evidence' => 'Financial evidence',
+    'Yes' => 'Yes',
+    'No' => 'No',
+    'None' => 'None',
     // Potentially unused translations
 ];
