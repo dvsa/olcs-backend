@@ -20,6 +20,7 @@ return [
     CommandHandler\Document\PrintLetter::class => CanAccessDocumentWithId::class,
     CommandHandler\Document\UpdateDocumentLinks::class => IsInternalUser::class,
     CommandHandler\Document\RemoveDeletedDocuments::class => IsSystemUser::class,
+    CommandHandler\Email\SendPsvOperatorListReport::class => CanAccessDocumentWithId::class,
 
     //  queries
     QueryHandler\Document\Download::class => CanAccessDocumentWithId::class,

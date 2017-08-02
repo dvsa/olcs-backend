@@ -27,6 +27,7 @@ class Category extends AbstractCategory
     const CATEGORY_IRFO = 8;
     const CATEGORY_APPLICATION = 9;
     const CATEGORY_SUBMISSION = 10;
+    const CATEGORY_REPORT = 12;
 
     // @NOTE create constants for all sub categories as required. Only a subset
     // will ever be needed programatically so this list should be manageable
