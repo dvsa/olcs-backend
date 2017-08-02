@@ -2,14 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Domain\Command\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
+use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
  * Create Document
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateDocumentSpecific extends AbstractIdOnlyCommand
+class CreateDocumentSpecific extends AbstractCommand
 {
     protected $filename;
 

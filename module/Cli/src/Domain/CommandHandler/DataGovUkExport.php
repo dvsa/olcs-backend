@@ -144,16 +144,18 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $this->result->addId('identifier', $fileResult->getIdentifier());
 
         // Create file into database
-        $documentData['identifier'] = $fileResult->getIdentifier();
-        $documentData['description'] = $filename;
-        $documentData['filename'] = $file->getIdentifier();
-        $documentData['size'] = $file->getSize();
-        $documentData['category'] = $category;
-        $documentData['subCategory'] = $subcategory;
+        $documentData = [
+            'identifier' => $fileResult->getIdentifier(),
+            'description' => $filename,
+            'filename' => $file->getIdentifier(),
+            'size' => $file->getSize(),
+            'category' => $category,
+            'subCategory' => $subcategory
+        ];
 
-        $documentCommand = CreateDocumentCmd::create($documentData);
-
-        $document = $this->handleSideEffect($documentCommand);
+        $document = $this->handleSideEffect(
+            CreateDocumentCmd::create($documentData)
+        );
 
         $this->result->merge($document);
 
