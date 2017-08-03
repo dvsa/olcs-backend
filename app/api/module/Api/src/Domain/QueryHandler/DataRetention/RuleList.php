@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
@@ -13,15 +14,25 @@ class RuleList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'DataRetentionRule';
 
+    /**
+     * Return list of data retention rules that are enabled and action is 'Review'
+     *
+     * @param QueryInterface $query Query for data retention rule list
+     *
+     * @return array
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
+
+        $enabledRulesInReview = $repo->fetchEnabledRules();
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+                $enabledRulesInReview
             ),
-            'count' => $repo->fetchCount($query)
+            'count' => count($enabledRulesInReview)
         ];
     }
 }
