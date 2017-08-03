@@ -45,6 +45,29 @@ class DeclarationReviewServiceTest extends MockeryTestCase
         $this->sut->setServiceLocator($serviceManager);
     }
 
+    public function testGetConfigFromDataNullSignature()
+    {
+        $this->continuationDetail->setSignatureType(null);
+
+        $this->assertEquals(
+            [
+                'mainItems' => [
+                    ['markup' => 'DECLARATIONS'],
+                    [
+                        'header' => 'continuations.declaration.signature-details',
+                        'items' => [
+                            [
+                                'label' => 'continuations.declaration.signature-type.label',
+                                'value' => 'continuations.declaration.signature-type.unknown_translated',
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            $this->sut->getConfigFromData($this->continuationDetail)
+        );
+    }
+
     public function testGetConfigFromDataNoSignature()
     {
         $this->continuationDetail->setSignatureType(new RefData(RefData::SIG_SIGNATURE_NOT_REQUIRED));
