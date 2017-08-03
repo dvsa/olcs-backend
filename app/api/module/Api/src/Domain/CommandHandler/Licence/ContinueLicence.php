@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ContinueLicence
@@ -28,6 +30,33 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
     protected $repoServiceName = 'Licence';
     protected $extraRepos = ['ContinuationDetail', 'GoodsDisc'];
 
+    /**
+     * @var FinancialStandingHelperService
+     */
+    private $financialStandingHelper;
+
+    /**
+     * Factory
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
+
+        return parent::createService($serviceLocator);
+    }
+
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command DTO
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $licence Licence */
@@ -75,6 +104,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             );
             $result->merge($this->handleSideEffect($createQueueCmd));
             $result->merge($this->createTaskForSignature($continuationDetail));
+            $this->createTaskForInsufficientFinances($continuationDetail, $result);
         }
 
         $result->addMessage('Licence ' . $licence->getId() . ' continued');
@@ -225,5 +255,39 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
         );
 
         return $this->handleSideEffect($createTaskCmd);
+    }
+
+    /**
+     * Create task if finances are insufficient
+     *
+     * @param ContinuationDetail $continuationDetail Continuation details
+     * @param Result             $result             Current results object, if task is created then this is modified
+     *
+     * @return void
+     */
+    protected function createTaskForInsufficientFinances(ContinuationDetail $continuationDetail, Result $result)
+    {
+        $amountRequired = (float)$this->financialStandingHelper->getFinanceCalculationForOrganisation(
+            $continuationDetail->getLicence()->getOrganisation()->getId()
+        );
+
+        $amountDeclared = (float)$continuationDetail->getAverageBalanceAmount()
+            + (float)$continuationDetail->getOverdraftAmount()
+            + (float)$continuationDetail->getFactoringAmount()
+            + (float)$continuationDetail->getOtherFinancesAmount();
+
+        if ($amountDeclared < $amountRequired) {
+            $createTaskCmd = CreateTaskCmd::create(
+                [
+                    'category' => Category::CATEGORY_LICENSING,
+                    'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                    'description' => 'Insufficient finances at continuation',
+                    'actionDate' => (new DateTime())->format('Y-m-d'),
+                    'licence' => $continuationDetail->getLicence()->getId()
+                ]
+            );
+
+            $result->merge($this->handleSideEffect($createTaskCmd));
+        }
     }
 }
