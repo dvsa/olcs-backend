@@ -47,6 +47,8 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         }
         $continuationDetail->setIsDigital(true);
 
+        $this->getRepo()->save($continuationDetail);
+
         // If there are no continuation fees then continue the licence
         $continuationFees = $this->getRepo('Fee')->fetchOutstandingContinuationFeesByLicenceId(
             $continuationDetail->getLicence()->getId()
@@ -66,6 +68,8 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
                 $continuationDetail->setTotPsvDiscs($continuationDetail->getLicence()->getPsvDiscsNotCeased()->count());
             }
 
+            $this->getRepo()->save($continuationDetail);
+
             $this->result->merge(
                 $this->handleSideEffect(
                     ContinueLicence::create(
@@ -77,8 +81,6 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
                 )
             );
         }
-
-        $this->getRepo()->save($continuationDetail);
 
         $this->result->addId('continuationDetail', $continuationDetail->getId());
         $this->result->addMessage('ContinuationDetail submitted');
