@@ -72,7 +72,9 @@ class Get extends AbstractQueryHandler
             [
                 'licence' => [
                     'organisation',
-                    'trafficArea'
+                    'trafficArea',
+                    'licenceType',
+                    'goodsOrPsv',
                 ]
             ],
             [
