@@ -80,6 +80,7 @@ return [
             'ContinuationReview\TransportManagers' => ContinuationReview\TransportManagersReviewService::class,
             'ContinuationReview\Safety' => ContinuationReview\SafetyReviewService::class,
             'ContinuationReview\Declaration' => ContinuationReview\DeclarationReviewService::class,
+            'ContinuationReview\Finance' => ContinuationReview\FinanceReviewService::class,
         ],
     ],
     'view_manager' => [
