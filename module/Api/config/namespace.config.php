@@ -173,4 +173,5 @@ return [
     'OrganisationReadAudit' => 'Organisation',
     'BusRegReadAudit' => 'Bus',
     'TransportManagerReadAudit' => 'Tm',
+    'DataRetention' => 'DataRetention',
 ];
