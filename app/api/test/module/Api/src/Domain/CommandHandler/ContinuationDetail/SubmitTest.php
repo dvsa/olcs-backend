@@ -122,7 +122,7 @@ class SubmitTest extends CommandHandlerTestCase
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
             ->andReturn($continuationDetail);
-        $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->twice();
 
         $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
             ->with(654)->once()->andReturn([]);
@@ -166,7 +166,7 @@ class SubmitTest extends CommandHandlerTestCase
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
             ->andReturn($continuationDetail);
-        $this->repoMap['ContinuationDetail']->shouldReceive('save')->once();
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->twice();
 
         $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
             ->with(654)->once()->andReturn([]);
