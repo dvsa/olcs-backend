@@ -21,7 +21,8 @@ class DataRetentionRuleTest extends RepositoryTestCase
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('expr->eq')->with('m.isEnabled', 1)->once()->andReturn('expr1');
-        $qb->shouldReceive('andWhere')->with('expr1')->once()->andReturnSelf();
+        $qb->shouldReceive('expr->isNull')->with('m.deletedDate')->once()->andReturn('expr1');
+        $qb->shouldReceive('andWhere')->with('expr1')->twice()->andReturnSelf();
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULT']);
 
         $this->mockCreateQueryBuilder($qb);

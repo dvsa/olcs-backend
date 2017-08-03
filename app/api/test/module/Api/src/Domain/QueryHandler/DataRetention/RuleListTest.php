@@ -26,18 +26,14 @@ class RuleListTest extends QueryHandlerTestCase
     {
         $query = Query::create(['id' => 1]);
 
-        $mockSystemParameter= m::mock();
-        $mockSystemParameter->shouldReceive('serialize')->once()->andReturn('foo');
+        $mockRuleList = m::mock();
+        $mockRuleList->shouldReceive('serialize')->once()->andReturn('foo');
 
         $this->repoMap['DataRetentionRule']
-            ->shouldReceive('fetchList')
-            ->with($query, DoctrineQuery::HYDRATE_OBJECT)
+            ->shouldReceive('fetchEnabledRules')
+            ->with()
             ->once()
-            ->andReturn([$mockSystemParameter])
-            ->shouldReceive('fetchCount')
-            ->with($query)
-            ->once()
-            ->andReturn(1)
+            ->andReturn([$mockRuleList])
             ->getMock();
 
         $this->assertSame(
