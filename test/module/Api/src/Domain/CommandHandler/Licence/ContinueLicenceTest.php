@@ -17,6 +17,8 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Mockery as m;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ContinueLicenceTest
@@ -32,6 +34,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', LicenceEntity::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
         $this->mockRepo('GoodsDisc', \Dvsa\Olcs\Api\Domain\Repository\GoodsDisc::class);
+
+        $this->mockedSmServices['FinancialStandingHelperService'] = m::mock();
 
         parent::setUp();
     }
@@ -466,6 +470,9 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             }
         );
 
+        $this->mockedSmServices['FinancialStandingHelperService']->shouldReceive('getFinanceCalculationForOrganisation')
+            ->andReturn(0);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Licence 717 continued'], $result->getMessages());
@@ -485,5 +492,67 @@ class ContinueLicenceTest extends CommandHandlerTestCase
                 new \DateTime('+14 days'),
             ]
         ];
+    }
+
+    public function testHandleCommandInsufficientFinancesTask()
+    {
+        $data = ['id' => 717, 'version' => 654];
+
+        $command = Command::create($data);
+
+        $licence = $this->getPsvLicence(717, LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED);
+
+        $continuationDetail = new ContinuationDetail();
+        $continuationDetail->setIsDigital(true);
+        $continuationDetail->setId(999);
+        $continuationDetail->setSignatureType(new RefData(RefData::SIG_DIGITAL_SIGNATURE));
+        $continuationDetail->setLicence($licence);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->with(717, Query::HYDRATE_OBJECT, 654)
+            ->once()->andReturn($licence);
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(717)->once()
+            ->andReturn([$continuationDetail]);
+
+        $this->repoMap['Licence']->shouldReceive('save')->with($licence)->once();
+
+        $this->expectedSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class, ['id' => 717], new Result());
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Queue\Create::class,
+            [
+                'entityId' => 999,
+                'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
+                'status' => QueueEntity::STATUS_QUEUED
+            ],
+            new Result()
+        );
+
+        $this->mockedSmServices['FinancialStandingHelperService']->shouldReceive('getFinanceCalculationForOrganisation')
+            ->andReturn(10);
+
+        $this->expectedSideEffect(
+            CreateTaskCmd::class,
+            [],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            CreateTaskCmd::class,
+            [
+                'category' => Category::CATEGORY_LICENSING,
+                'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                'description' => 'Insufficient finances at continuation',
+                'actionDate' => (new DateTime())->format('Y-m-d'),
+                'licence' => 717
+            ],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Licence 717 continued'], $result->getMessages());
     }
 }
