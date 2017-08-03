@@ -73,7 +73,7 @@ class DeclarationReviewService extends AbstractReviewService
         ];
 
         $signatureType = 'continuations.declaration.signature-type.unknown';
-        if (isset($signatureTypeOptions[$continuationDetail->getSignatureType()->getId()])) {
+        if (isset($signatureTypeOptions[(string)$continuationDetail->getSignatureType()])) {
             $signatureType = $signatureTypeOptions[$continuationDetail->getSignatureType()->getId()];
         }
 
