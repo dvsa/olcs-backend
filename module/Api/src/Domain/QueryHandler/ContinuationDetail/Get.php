@@ -8,6 +8,9 @@ use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -67,6 +70,10 @@ class Get extends AbstractQueryHandler
             ];
         }
 
+        $financeRequired = $this->financialStandingHelper->getFinanceCalculationForOrganisation(
+            $licence->getOrganisation()->getId()
+        );
+
         return $this->result(
             $continuationDetail,
             [
@@ -76,9 +83,7 @@ class Get extends AbstractQueryHandler
                 ]
             ],
             [
-                'financeRequired' => $this->financialStandingHelper->getFinanceCalculationForOrganisation(
-                    $licence->getOrganisation()->getId()
-                ),
+                'financeRequired' => $financeRequired,
                 'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
                 'fees' => $this->resultList(
                     $continuationFees,
@@ -95,7 +100,42 @@ class Get extends AbstractQueryHandler
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
                 'hasOutstandingContinuationFee' => count($continuationFees) > 0,
                 'signature' => $signatureDetails,
+                'reference' => $this->getPaymentReference($licence->getId()),
+                'isFinancialEvidenceRequired' =>
+                    $financeRequired > (
+                        $continuationDetail->getAverageBalanceAmount()
+                        + $continuationDetail->getFactoringAmount()
+                        + $continuationDetail->getOverdraftAmount()
+                        + $continuationDetail->getOtherFinancesAmount()
+                    ),
             ]
         );
+    }
+
+    /**
+     * Return reference number of latest payment
+     *
+     * @param int $licenceId Licence id
+     *
+     * @return null|string
+     */
+    private function getPaymentReference($licenceId)
+    {
+        /** @var FeeRepo $repo */
+        $repo = $this->getRepo('Fee');
+
+        /** @var FeeEntity $latestFee */
+        $latestFee = $repo->fetchLatestPaidContinuationFee($licenceId);
+        if ($latestFee) {
+            $today = (new DateTime('now'))->setTime(0, 0, 0);
+            $feeDate = $latestFee->getLatestTransaction()->getCompletedDate(true)->setTime(0, 0, 0);
+            $plus30Days = $feeDate->add(new \DateInterval('P30D'));
+            if ($plus30Days < $today) {
+                return null;
+            }
+            return $latestFee->getLatestPaymentRef();
+        }
+
+        return null;
     }
 }
