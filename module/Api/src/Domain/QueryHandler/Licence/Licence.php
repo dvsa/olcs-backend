@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity;
 
 /**
  * Licence
@@ -22,7 +23,7 @@ class Licence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContinuationDetail', 'Note'];
+    protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -54,6 +55,7 @@ class Licence extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
         $this->auditRead($licence);
@@ -63,6 +65,10 @@ class Licence extends AbstractQueryHandler
             $this->result($continuationDetail, ['continuation', 'licence'])->serialize() :
             null;
         $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
+
+        $showExpiryWarning = $licence->isExpiring()
+            && !$this->getRepo('SystemParameter')->getDisabledDigitalContinuations()
+            && (string)$continuationDetail->getStatus() === Entity\Licence\ContinuationDetail::STATUS_PRINTED;
 
         return $this->result(
             $licence,
@@ -103,6 +109,7 @@ class Licence extends AbstractQueryHandler
                 'continuationMarker' => $continuationDetailResponse,
                 'latestNote' => $latestNote,
                 'canHaveInspectionRequest' => !$licence->isSpecialRestricted(),
+                'showExpiryWarning' => $showExpiryWarning,
             ]
         );
     }
