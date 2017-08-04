@@ -251,7 +251,7 @@ class FinanceReviewServiceTest extends MockeryTestCase
         $this->assertSame(
             [
                 'label' => 'continuations.finance.financial-evidence',
-                'value' => 'continuations.finance.send-in-post',
+                'value' => 'continuations.finance.send-in-post_translated',
                 'noEscape' => true,
             ],
             $result['mainItems'][0]['items'][6]
