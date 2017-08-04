@@ -72,7 +72,7 @@ class FinanceReviewService extends AbstractReviewService
             if ($continuationDetail->getFinancialEvidenceUploaded() === true) {
                 $value = implode("<br>", $this->getUploadedFiles($continuationDetail));
             } elseif ($continuationDetail->getFinancialEvidenceUploaded() === false) {
-                $value = 'continuations.finance.send-in-post';
+                $value = $this->translate('continuations.finance.send-in-post');
             } else {
                 $value = $this->translate('None');
             }
