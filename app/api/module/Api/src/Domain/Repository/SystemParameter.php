@@ -47,4 +47,14 @@ class SystemParameter extends AbstractRepository
     {
         return (bool) $this->fetchValue(Entity::DISABLE_GDS_VERIFY_SIGNATURES);
     }
+
+    /**
+     * Get Disable Digital Continuations
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisabledDigitalContinuations()
+    {
+        return (bool) $this->fetchValue(Entity::DISABLE_DIGITAL_CONTINUATIONS);
+    }
 }
