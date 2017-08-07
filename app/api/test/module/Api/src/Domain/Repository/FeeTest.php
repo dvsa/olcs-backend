@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Doctrine\ORM\Query;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\Fee
@@ -965,5 +966,56 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
 
         $this->assertSame('result', $this->sut->fetchFeesByIds($ids));
+    }
+
+    public function testFetchLatestPaidContinuationFee()
+    {
+        $licenceId = 1;
+
+        /** @var QueryBuilder $qb */
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->with('f')
+            ->once()
+            ->andReturn($mockQb);
+
+        $mockQb
+            ->shouldReceive('innerJoin')->once()->with('f.feeTransactions', 'ft')->andReturnSelf()
+            ->shouldReceive('innerJoin')->once()->with('f.feeType', 'ftp')->andReturnSelf()
+            ->shouldReceive('innerJoin')->once()->with('ft.transaction', 't')->andReturnSelf()
+            ->shouldReceive('addOrderBy')->once()->with('t.completedDate', 'DESC')->andReturnSelf()
+            ->shouldReceive('addOrderBy')->once()->with('t.id', 'DESC')->andReturnSelf()
+            ->shouldReceive('expr')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('eq')
+                    ->with('f.licence', ':licence')
+                    ->andReturn('cond1')
+                    ->once()
+                    ->shouldReceive('eq')
+                    ->with('f.feeStatus', ':feeStatus')
+                    ->andReturn('cond2')
+                    ->once()
+                    ->shouldReceive('eq')
+                    ->with('ftp.feeType', ':feeType')
+                    ->andReturn('cond3')
+                    ->once()
+                    ->getMock()
+            )
+            ->times(3)
+            ->shouldReceive('andWhere')->with('cond1')->once()->andReturnSelf()
+            ->shouldReceive('andWhere')->with('cond2')->once()->andReturnSelf()
+            ->shouldReceive('andWhere')->with('cond3')->once()->andReturnSelf()
+            ->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf()
+            ->shouldReceive('setMaxResults')->with(1)->once()->andReturnSelf()
+            ->shouldReceive('setParameter')->with('feeType', RefDataEntity::FEE_TYPE_CONT)->once()->andReturnSelf()
+            ->shouldReceive('setParameter')->with('feeStatus', FeeEntity::STATUS_PAID)->once()->andReturnSelf()
+            ->getMock();
+
+        $mockQb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn(['foo']);
+
+        $this->assertSame('foo', $this->sut->fetchLatestPaidContinuationFee($licenceId));
     }
 }
