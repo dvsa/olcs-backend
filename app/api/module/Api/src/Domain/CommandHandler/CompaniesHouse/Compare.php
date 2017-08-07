@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\I18n\Validator\Alnum;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -31,6 +32,9 @@ final class Compare extends AbstractCommandHandler
         $companyNumber = $command->getCompanyNumber();
 
         try {
+            if (!$this->validateCompanyNumber($companyNumber)) {
+                throw new ChNotFoundException('Company number has invalid characters');
+            }
             $apiResult = $this->api->getCompanyProfile($companyNumber, true);
         } catch (ChNotFoundException $e) {
             $this->result->merge(
@@ -261,5 +265,20 @@ final class Compare extends AbstractCommandHandler
             },
             $data['officers']
         );
+    }
+
+    /**
+     * Validate the company number
+     * This is a simple check that the company number is only made up of alphanumerical characters
+     *
+     * @param string $companyNumber Company number
+     *
+     * @return bool
+     *
+     */
+    private function validateCompanyNumber($companyNumber)
+    {
+        $validator = new Alnum();
+        return $validator->isValid($companyNumber);
     }
 }

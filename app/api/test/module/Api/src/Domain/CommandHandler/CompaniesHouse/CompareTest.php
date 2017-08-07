@@ -108,6 +108,64 @@ class CompareTest extends CommandHandlerTestCase
     }
 
     /**
+     * @dataProvider testHandleCommandValidiateCompanyNumberDataProvider
+     */
+    public function testHandleCommandValidiateCompanyNumber($expectValid, $companyNumber)
+    {
+        $expectedAlertData = [
+            'companyNumber' => $companyNumber,
+            'reasons' => [
+                AlertEntity::REASON_INVALID_COMPANY_NUMBER,
+            ],
+        ];
+
+        $alertResult = new Result();
+        $alertResult
+            ->addId('companiesHouseAlert', 101)
+            ->addMessage('Alert created');
+
+        if ($expectValid) {
+            // Company number is valid, throw this exception to stop execution as we only want to test
+            // the company number validation
+            $this->mockApi
+                ->shouldReceive('getCompanyProfile')->with($companyNumber, true)->once()
+                ->andThrow(new \Exception('Company number validation passsed'));
+            $this->setExpectedException(NotReadyException::class, 'Company number validation passsed');
+        } else {
+            $this->expectedSideEffect(
+                CreateAlertCmd::class,
+                [
+                    'companyNumber' => $companyNumber,
+                    'reasons' => [
+                        AlertEntity::REASON_INVALID_COMPANY_NUMBER,
+                    ]
+                ],
+                new Result()
+            );
+        }
+
+        // invoke
+        $command = Cmd::create(['companyNumber' => $companyNumber]);
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandValidiateCompanyNumberDataProvider()
+    {
+        return [
+            [true, '6'],
+            [true, '6563254723654732645'],
+            [true, 'A'],
+            [true, 'a'],
+            [true, 'AbCdEfGhIjKlMnOpQr'],
+            [true, 'SCO12345'],
+            [false, 'SCO 12345'],
+            [false, '.SCO 12345'],
+            [false, '.SCO12345'],
+            [false, '. 526353'],
+        ];
+    }
+
+    /**
      * Test handleCommand method when company was not previously stored
      *
      * @dataProvider firstTimeProvider
