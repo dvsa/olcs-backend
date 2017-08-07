@@ -181,7 +181,7 @@ class GetTest extends QueryHandlerTestCase
             )
             ->times(2)
             ->shouldReceive('serialize')
-            ->with(['licence' => ['organisation', 'trafficArea']])
+            ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
             ->once()
             ->shouldReceive('getId')
