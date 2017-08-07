@@ -17,11 +17,11 @@ class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
     public function testGetQueryLicence()
     {
         $bookmark = new Sut();
-        $query = $bookmark->getQuery(['licence' => 123]);
+        $query = $bookmark->getQuery(['licence' => 123, 'case' => 99]);
 
         $this->assertInstanceOf(LicenceBundle::class, $query);
         $this->assertSame(123, $query->getId());
-        $this->assertSame([], $query->getBundle());
+        $this->assertSame(['licenceType'], $query->getBundle());
     }
 
     public function testGetQueryApplication()
@@ -31,7 +31,26 @@ class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(ApplicationBundle::class, $query);
         $this->assertSame(456, $query->getId());
-        $this->assertSame([], $query->getBundle());
+        $this->assertSame(['licenceType'], $query->getBundle());
+    }
+
+    public function testGetQueryCase()
+    {
+        $bookmark = new Sut();
+        $query = $bookmark->getQuery(['case' => 456]);
+
+        $this->assertInstanceOf(ApplicationBundle::class, $query);
+        $this->assertSame(null, $query->getId());
+        $this->assertSame(456, $query->getCase());
+        $this->assertSame(['licenceType'], $query->getBundle());
+    }
+
+    public function testGetQueryNull()
+    {
+        $bookmark = new Sut();
+        $query = $bookmark->getQuery([]);
+
+        $this->assertSame(null, $query);
     }
 
     /**
