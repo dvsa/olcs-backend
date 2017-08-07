@@ -55,65 +55,56 @@ class FinanceReviewServiceTest extends MockeryTestCase
     public function testGetConfigFrom()
     {
         $result = $this->sut->getConfigFromData($this->continuationDetail);
-        $this->assertArrayHasKey('mainItems', $result);
-        $this->assertCount(1, $result['mainItems']);
-        $this->assertArrayHasKey('items', $result['mainItems'][0]);
-        $this->assertCount(7, $result['mainItems'][0]['items']);
+        $this->assertCount(7, $result);
 
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-amount-required',
-                'value' => '&pound;100.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-amount-required', 'header' => true],
+                ['value' => '&pound;100.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][0]
+            $result[0]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.average-balance-amount',
-                'value' => 'None_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.average-balance-amount', 'header' => true],
+                ['value' => 'None_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][1]
+            $result[1]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.overdraft-facility',
-                'value' => 'None_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.overdraft-facility', 'header' => true],
+                ['value' => 'None_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][2]
+            $result[2]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.factoring-amount',
-                'value' => 'None_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.factoring-amount', 'header' => true],
+                ['value' => 'None_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][3]
+            $result[3]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.other-available-finances',
-                'value' => 'None_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.other-available-finances', 'header' => true],
+                ['value' => 'None_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][4]
+            $result[4]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.finances-are-sufficient',
-                'value' => 'No_translated',
+                ['value' => 'continuations.finance.finances-are-sufficient', 'header' => true],
+                ['value' => 'No_translated', 'noEscape' => false],
             ],
-            $result['mainItems'][0]['items'][5]
+            $result[5]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-evidence',
-                'value' => 'None_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-evidence', 'header' => true],
+                ['value' => 'None_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][6]
+            $result[6]
         );
     }
 
@@ -124,46 +115,42 @@ class FinanceReviewServiceTest extends MockeryTestCase
         $this->continuationDetail->setFactoringAmount(47);
 
         $result = $this->sut->getConfigFromData($this->continuationDetail);
-        $this->assertCount(5, $result['mainItems'][0]['items']);
+        $this->assertCount(5, $result);
 
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-amount-required',
-                'value' => '&pound;100.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-amount-required', 'header' => true],
+                ['value' => '&pound;100.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][0]
+            $result[0]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.average-balance-amount',
-                'value' => '&pound;45.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.average-balance-amount', 'header' => true],
+                ['value' => '&pound;45.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][1]
+            $result[1]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.overdraft-facility',
-                'value' => '&pound;46.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.overdraft-facility', 'header' => true],
+                ['value' => '&pound;46.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][2]
+            $result[2]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.factoring-amount',
-                'value' => '&pound;47.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.factoring-amount', 'header' => true],
+                ['value' => '&pound;47.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][3]
+            $result[3]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.finances-are-sufficient',
-                'value' => 'Yes_translated',
+                ['value' => 'continuations.finance.finances-are-sufficient', 'header' => true],
+                ['value' => 'Yes_translated', 'noEscape' => false],
             ],
-            $result['mainItems'][0]['items'][4]
+            $result[4]
         );
     }
 
@@ -176,69 +163,63 @@ class FinanceReviewServiceTest extends MockeryTestCase
         $this->continuationDetail->setOtherFinancesDetails('FOO BAR');
 
         $result = $this->sut->getConfigFromData($this->continuationDetail);
-        $this->assertCount(8, $result['mainItems'][0]['items']);
+        $this->assertCount(8, $result);
 
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-amount-required',
-                'value' => '&pound;100.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-amount-required', 'header' => true],
+                ['value' => '&pound;100.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][0]
+            $result[0]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.average-balance-amount',
-                'value' => '&pound;4.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.average-balance-amount', 'header' => true],
+                ['value' => '&pound;4.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][1]
+            $result[1]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.overdraft-facility',
-                'value' => '&pound;5.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.overdraft-facility', 'header' => true],
+                ['value' => '&pound;5.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][2]
+            $result[2]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.factoring-amount',
-                'value' => '&pound;6.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.factoring-amount', 'header' => true],
+                ['value' => '&pound;6.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][3]
+            $result[3]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.other-available-finances',
-                'value' => '&pound;7.00',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.other-available-finances', 'header' => true],
+                ['value' => '&pound;7.00', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][4]
+            $result[4]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.where-do-these-finances-come-from',
-                'value' => 'FOO BAR',
+                ['value' => 'continuations.finance.where-do-these-finances-come-from', 'header' => true],
+                ['value' => 'FOO BAR', 'noEscape' => false],
             ],
-            $result['mainItems'][0]['items'][5]
+            $result[5]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.finances-are-sufficient',
-                'value' => 'No_translated',
+                ['value' => 'continuations.finance.finances-are-sufficient', 'header' => true],
+                ['value' => 'No_translated', 'noEscape' => false],
             ],
-            $result['mainItems'][0]['items'][6]
+            $result[6]
         );
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-evidence',
-                'value' => 'None_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-evidence', 'header' => true],
+                ['value' => 'None_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][7]
+            $result[7]
         );
     }
 
@@ -246,15 +227,14 @@ class FinanceReviewServiceTest extends MockeryTestCase
     {
         $this->continuationDetail->setFinancialEvidenceUploaded(false);
         $result = $this->sut->getConfigFromData($this->continuationDetail);
-        $this->assertCount(7, $result['mainItems'][0]['items']);
+        $this->assertCount(7, $result);
 
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-evidence',
-                'value' => 'continuations.finance.send-in-post_translated',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-evidence', 'header' => true],
+                ['value' => 'continuations.finance.send-in-post_translated', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][6]
+            $result[6]
         );
     }
 
@@ -277,15 +257,14 @@ class FinanceReviewServiceTest extends MockeryTestCase
 
         $this->continuationDetail->setFinancialEvidenceUploaded(true);
         $result = $this->sut->getConfigFromData($this->continuationDetail);
-        $this->assertCount(7, $result['mainItems'][0]['items']);
+        $this->assertCount(7, $result);
 
         $this->assertSame(
             [
-                'label' => 'continuations.finance.financial-evidence',
-                'value' => 'document1<br>document2',
-                'noEscape' => true,
+                ['value' => 'continuations.finance.financial-evidence', 'header' => true],
+                ['value' => 'document1<br>document2', 'noEscape' => true],
             ],
-            $result['mainItems'][0]['items'][6]
+            $result[6]
         );
     }
 }
