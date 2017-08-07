@@ -21,7 +21,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     /**
      * @var int Max retry attempts before fails
      */
-    protected $maxAttempts;
+    protected $maxAttempts = 100;
 
     /**
      * @var int Retry internal in seconds
