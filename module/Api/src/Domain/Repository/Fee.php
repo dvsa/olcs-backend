@@ -673,6 +673,35 @@ class Fee extends AbstractRepository
     }
 
     /**
+     * Fetch latest paid continuation fee
+     *
+     * @param $licenceId licence id
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Fee\Fee|null
+     */
+    public function fetchLatestPaidContinuationFee($licenceId)
+    {
+        $qb = $this->createQueryBuilder()
+            ->innerJoin($this->alias . '.feeTransactions', 'ft')
+            ->innerJoin($this->alias . '.feeType', 'ftp')
+            ->innerJoin('ft.transaction', 't')
+            ->addOrderBy('t.completedDate', 'DESC')
+            ->addOrderBy('t.id', 'DESC');
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
+            ->andWhere($qb->expr()->eq($this->alias . '.feeStatus', ':feeStatus'))
+            ->andWhere($qb->expr()->eq('ftp.feeType', ':feeType'))
+            ->setParameter('licence', $licenceId)
+            ->setMaxResults(1)
+            ->setParameter('feeType', RefDataEntity::FEE_TYPE_CONT)
+            ->setParameter('feeStatus', Entity::STATUS_PAID);
+
+        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        return count($results) ? current($results) : null;
+    }
+
+    /**
      * Fetch latest fee by type and application id
      *
      * @param string $feeType       Fee type
