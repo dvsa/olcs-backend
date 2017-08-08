@@ -105,6 +105,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             $result->merge($this->handleSideEffect($createQueueCmd));
             $result->merge($this->createTaskForSignature($continuationDetail));
             $this->createTaskForInsufficientFinances($continuationDetail, $result);
+            $this->createTaskForOtherFinances($continuationDetail, $result);
         }
 
         $result->addMessage('Licence ' . $licence->getId() . ' continued');
@@ -267,16 +268,7 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
      */
     protected function createTaskForInsufficientFinances(ContinuationDetail $continuationDetail, Result $result)
     {
-        $amountRequired = (float)$this->financialStandingHelper->getFinanceCalculationForOrganisation(
-            $continuationDetail->getLicence()->getOrganisation()->getId()
-        );
-
-        $amountDeclared = (float)$continuationDetail->getAverageBalanceAmount()
-            + (float)$continuationDetail->getOverdraftAmount()
-            + (float)$continuationDetail->getFactoringAmount()
-            + (float)$continuationDetail->getOtherFinancesAmount();
-
-        if ($amountDeclared < $amountRequired) {
+        if ($continuationDetail->getAmountDeclared() < $this->getAmountRequired($continuationDetail)) {
             $createTaskCmd = CreateTaskCmd::create(
                 [
                     'category' => Category::CATEGORY_LICENSING,
@@ -289,5 +281,49 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
 
             $result->merge($this->handleSideEffect($createTaskCmd));
         }
+    }
+
+    /**
+     * Create task if continuation has other finances
+     *
+     * @param ContinuationDetail $continuationDetail Continuation details
+     * @param Result             $result             Current results object, if task is created then this is modified
+     *
+     * @return void
+     */
+    protected function createTaskForOtherFinances(ContinuationDetail $continuationDetail, Result $result)
+    {
+        // if does not have other finainces then return
+        if ((float)$continuationDetail->getOtherFinancesAmount() == 0) {
+            return;
+        }
+
+        if ($continuationDetail->getAmountDeclared() >= $this->getAmountRequired($continuationDetail)) {
+            $createTaskCmd = CreateTaskCmd::create(
+                [
+                    'category' => Category::CATEGORY_LICENSING,
+                    'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                    'description' => 'Other finances entered at continuation',
+                    'actionDate' => (new DateTime())->format('Y-m-d'),
+                    'licence' => $continuationDetail->getLicence()->getId()
+                ]
+            );
+
+            $result->merge($this->handleSideEffect($createTaskCmd));
+        }
+    }
+
+    /**
+     * Get the amount of finance required for a continuation
+     *
+     * @param ContinuationDetail $continuationDetail Continuation detail
+     *
+     * @return float
+     */
+    private function getAmountRequired(ContinuationDetail $continuationDetail)
+    {
+        return (float)$this->financialStandingHelper->getFinanceCalculationForOrganisation(
+            $continuationDetail->getLicence()->getOrganisation()->getId()
+        );
     }
 }
