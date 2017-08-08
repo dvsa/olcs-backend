@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Get Continuation Detail
@@ -110,6 +111,9 @@ class Get extends AbstractQueryHandler
                         + $continuationDetail->getOverdraftAmount()
                         + $continuationDetail->getOtherFinancesAmount()
                     ),
+                'isPhysicalSignature' =>
+                    $continuationDetail->getSignatureType() !== null
+                    && $continuationDetail->getSignatureType()->getId() === RefData::SIG_PHYSICAL_SIGNATURE,
             ]
         );
     }
