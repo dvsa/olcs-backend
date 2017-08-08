@@ -9,14 +9,34 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Applicationtype as Sut;
  */
 class ApplicationtypeTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetQuery()
+    public function testGetQueryApplication()
     {
         $bookmark = new Sut();
         $query = $bookmark->getQuery(['application' => 123]);
 
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
         $this->assertSame(123, $query->getId());
-        $this->assertSame([], $query->getBundle());
+        $this->assertSame(null, $query->getCase());
+        $this->assertSame(['licenceType'], $query->getBundle());
+    }
+
+    public function testGetQueryCase()
+    {
+        $bookmark = new Sut();
+        $query = $bookmark->getQuery(['case' => 12399]);
+
+        $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
+        $this->assertSame(null, $query->getId());
+        $this->assertSame(12399, $query->getCase());
+        $this->assertSame(['licenceType'], $query->getBundle());
+    }
+
+    public function testGetQueryNull()
+    {
+        $bookmark = new Sut();
+        $query = $bookmark->getQuery([]);
+
+        $this->assertSame(null, $query);
     }
 
     public function testRender()

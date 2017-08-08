@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Query\Bookmark;
 
-use Dvsa\Olcs\Transfer\FieldType\Traits\Identity;
+use Dvsa\Olcs\Transfer\FieldType\Traits;
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;
 
 /**
@@ -12,12 +12,15 @@ use Dvsa\Olcs\Transfer\Query\AbstractQuery;
  */
 class ApplicationBundle extends AbstractQuery
 {
-    use Identity;
+    use Traits\IdentityOptional;
+    use Traits\CasesOptional;
 
     protected $bundle = [];
 
     /**
-     * @return mixed
+     * Get the bundle
+     *
+     * @return array
      */
     public function getBundle()
     {
