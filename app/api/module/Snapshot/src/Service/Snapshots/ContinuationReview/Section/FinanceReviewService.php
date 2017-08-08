@@ -72,7 +72,7 @@ class FinanceReviewService extends AbstractReviewService
             if ($continuationDetail->getFinancialEvidenceUploaded() === true) {
                 $value = implode("<br>", $this->getUploadedFiles($continuationDetail));
             } elseif ($continuationDetail->getFinancialEvidenceUploaded() === false) {
-                $value = 'continuations.finance.send-in-post';
+                $value = $this->translate('continuations.finance.send-in-post');
             } else {
                 $value = $this->translate('None');
             }
@@ -82,15 +82,8 @@ class FinanceReviewService extends AbstractReviewService
                 'value' => $value,
                 'noEscape' => true,
             ];
-
         }
-        return [
-            'mainItems' => [
-                [
-                    'items' => $items
-                ],
-            ]
-        ];
+        return $this->convertArrayFormat($items);
     }
 
     /**
@@ -146,5 +139,27 @@ class FinanceReviewService extends AbstractReviewService
         }
 
         return $files;
+    }
+
+    /**
+     * Convert the array format from the applicaion review version to the continuation review version
+     *
+     * @param array $items Array to convert
+     *
+     * @return array Converted items
+     */
+    private function convertArrayFormat($items)
+    {
+        $convertedItems = [];
+        foreach ($items as $item) {
+            $convertedItems[] = [
+                ['value' => $item['label'], 'header' => true],
+                [
+                    'value' => $item['value'],
+                    'noEscape' => isset($item['noEscape']) ? $item['noEscape'] : false,
+                ]
+            ];
+        }
+        return $convertedItems;
     }
 }
