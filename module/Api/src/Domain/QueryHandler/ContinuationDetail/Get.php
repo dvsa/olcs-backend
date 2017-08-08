@@ -41,7 +41,7 @@ class Get extends AbstractQueryHandler
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-        $this->reviewService = $serviceLocator->getServiceLocator()->get('Review\ApplicationUndertakings');
+        $this->reviewService = $serviceLocator->getServiceLocator()->get('ContinuationReview\Declaration');
 
         return parent::createService($serviceLocator);
     }
@@ -98,7 +98,7 @@ class Get extends AbstractQueryHandler
                 ),
                 'documents' => $documents,
                 'organisationTypeId' => $licence->getOrganisation()->getType()->getId(),
-                'declarations' => $this->reviewService->getMarkupForLicence($licence),
+                'declarations' => $this->reviewService->getDeclarationMarkup($continuationDetail),
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
                 'hasOutstandingContinuationFee' => count($continuationFees) > 0,
                 'signature' => $signatureDetails,

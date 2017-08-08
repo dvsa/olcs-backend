@@ -27,7 +27,7 @@ class GetTest extends QueryHandlerTestCase
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock();
-        $this->mockedSmServices['Review\ApplicationUndertakings'] = m::mock();
+        $this->mockedSmServices['ContinuationReview\Declaration'] = m::mock();
 
         parent::setUp();
     }
@@ -37,7 +37,9 @@ class GetTest extends QueryHandlerTestCase
         $query = Qry::create(['id'=> 123]);
 
         $continuationDetail = m::mock(BundleSerializableInterface::class);
-        $continuationDetail->shouldReceive('getLicence')
+        $continuationDetail
+            ->shouldReceive('getLicence')
+            ->times(1)
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getOrganisation')
@@ -55,7 +57,6 @@ class GetTest extends QueryHandlerTestCase
                     ->twice()
                     ->getMock()
             )
-            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
@@ -131,8 +132,8 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $this->mockedSmServices['Review\ApplicationUndertakings']
-            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+        $this->mockedSmServices['ContinuationReview\Declaration']
+            ->shouldReceive('getDeclarationMarkup')->with($continuationDetail)->once()
             ->andReturn('DECLARATIONS');
 
         $this->assertEquals(
@@ -162,6 +163,7 @@ class GetTest extends QueryHandlerTestCase
 
         $continuationDetail = m::mock(BundleSerializableInterface::class);
         $continuationDetail->shouldReceive('getLicence')
+            ->times(1)
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getOrganisation')
@@ -179,7 +181,6 @@ class GetTest extends QueryHandlerTestCase
                     ->twice()
                     ->getMock()
             )
-            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
@@ -257,8 +258,8 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $this->mockedSmServices['Review\ApplicationUndertakings']
-            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+        $this->mockedSmServices['ContinuationReview\Declaration']
+            ->shouldReceive('getDeclarationMarkup')->with($continuationDetail)->once()
             ->andReturn('DECLARATIONS');
 
         $this->assertEquals(
@@ -292,6 +293,7 @@ class GetTest extends QueryHandlerTestCase
 
         $continuationDetail = m::mock(BundleSerializableInterface::class);
         $continuationDetail->shouldReceive('getLicence')
+            ->times(1)
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getOrganisation')
@@ -309,7 +311,6 @@ class GetTest extends QueryHandlerTestCase
                     ->twice()
                     ->getMock()
             )
-            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
@@ -374,8 +375,8 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $this->mockedSmServices['Review\ApplicationUndertakings']
-            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+        $this->mockedSmServices['ContinuationReview\Declaration']
+            ->shouldReceive('getDeclarationMarkup')->with($continuationDetail)->once()
             ->andReturn('DECLARATIONS');
 
         $this->assertEquals(
