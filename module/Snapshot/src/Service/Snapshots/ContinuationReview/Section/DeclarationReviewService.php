@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 
 /**
  * Declaration Continuation Review Service
@@ -41,13 +40,10 @@ class DeclarationReviewService extends AbstractReviewService
             ];
         }
 
-        /** @var ApplicationUndertakingsReviewService $applicationReviewService */
-        $applicationReviewService = $this->getServiceLocator()->get('Review\ApplicationUndertakings');
-
         return [
             'mainItems' => [
                 [
-                    'markup' => $applicationReviewService->getMarkupForLicence($continuationDetail->getLicence())
+                    'markup' => $this->getDeclarationMarkup($continuationDetail)
                 ],
                 [
                     'header' => 'continuations.declaration.signature-details',
@@ -78,5 +74,45 @@ class DeclarationReviewService extends AbstractReviewService
         }
 
         return $signatureType;
+    }
+
+    /**
+     * Get the markup for the declaration content
+     *
+     * @param ContinuationDetail $continuationDetail Continuation detail
+     *
+     * @return string
+     */
+    public function getDeclarationMarkup(ContinuationDetail $continuationDetail)
+    {
+        $licence = $continuationDetail->getLicence();
+        if ($licence->isGoods()) {
+            // Goods
+            if ($licence->isNi()) {
+                $markupKey = 'markup-continuation-declaration-goods-ni';
+                $markupStandard = 'markup-continuation-declaration-goods-ni-standard';
+            } else {
+                $markupKey = 'markup-continuation-declaration-goods-gb';
+                $markupStandard = 'markup-continuation-declaration-goods-gb-standard';
+            }
+        } else {
+            // PSV
+            if ($licence->isSpecialRestricted()) {
+                $markupKey = 'markup-continuation-declaration-psv-sr';
+            } else {
+                $markupKey = 'markup-continuation-declaration-psv';
+                $markupStandard = 'markup-continuation-declaration-psv-standard';
+            }
+        }
+
+        if ($licence->isStandardNational() || $licence->isStandardInternational() ) {
+            // add extra bullets if licence is a stanard
+            $additional = [$this->translate($markupStandard)];
+        } else {
+            $additional = [''];
+        }
+        $markup = $this->translateReplace($markupKey, $additional);
+
+        return $markup;
     }
 }
