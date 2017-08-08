@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Doctrine\ORM\QueryBuilder;
@@ -29,6 +30,40 @@ class SystemParameterTest extends RepositoryTestCase
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
             ->andReturn(null);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('byId')
+            ->once()
+            ->with('system.foo');
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(SystemParameterEntity::class)
+            ->andReturn($repo);
+
+        $result = $this->sut->fetchValue('system.foo');
+
+        $this->assertNull($result);
+    }
+
+    public function testFetchValueNotFoundException()
+    {
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->andThrow(NotFoundException::class);
 
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
@@ -92,10 +127,39 @@ class SystemParameterTest extends RepositoryTestCase
         $this->assertSame('VALUE', $this->sut->fetchValue('system.foo'));
     }
 
-    public function testGetDisableSelfServeCardPayments()
+    /**
+     * @dataProvider boolDataProvider
+     */
+    public function testGetDisableSelfServeCardPayments($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DISABLED_SELFSERVE_CARD_PAYMENTS, $value);
+        $this->assertSame($expected, $this->sut->getDisableSelfServeCardPayments());
+    }
+
+    /**
+     * @dataProvider boolDataProvider
+     */
+    public function testGetDisabledDigitalContinuations($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DISABLE_DIGITAL_CONTINUATIONS, $value);
+        $this->assertSame($expected, $this->sut->getDisabledDigitalContinuations());
+    }
+
+    public function boolDataProvider()
+    {
+        return [
+            [true, true],
+            [false, false],
+            [false, 0],
+            [true, 1],
+            [false, null],
+        ];
+    }
+
+    private function setupFetchValue($name, $value)
     {
         $spe = new SystemParameterEntity();
-        $spe->setParamValue(1);
+        $spe->setParamValue($value);
         $results = [$spe];
 
         /** @var QueryBuilder $qb */
@@ -113,7 +177,7 @@ class SystemParameterTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('byId')
             ->once()
-            ->with(SystemParameterEntity::DISABLED_SELFSERVE_CARD_PAYMENTS);
+            ->with($name);
 
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
@@ -124,7 +188,5 @@ class SystemParameterTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository')
             ->with(SystemParameterEntity::class)
             ->andReturn($repo);
-
-        $this->assertSame(true, $this->sut->getDisableSelfServeCardPayments());
     }
 }

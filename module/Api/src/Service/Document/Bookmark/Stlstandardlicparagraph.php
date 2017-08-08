@@ -22,10 +22,20 @@ class Stlstandardlicparagraph extends DynamicBookmark
      */
     public function getQuery(array $data)
     {
+        $bundle = ['licenceType'];
         if (isset($data['application'])) {
-            return ApplicationBundle::create(['id' => $data['application']]);
+            return ApplicationBundle::create(['id' => $data['application'], 'bundle' => $bundle]);
         }
-        return LicenceBundle::create(['id' => $data['licence']]);
+        // Licence must be before case
+        if (isset($data['licence'])) {
+            return LicenceBundle::create(['id' => $data['licence'], 'bundle' => $bundle]);
+        }
+        // If others failed and case is present then we must be on an application
+        if (isset($data['case'])) {
+            return ApplicationBundle::create(['case' => $data['case'], 'bundle' => $bundle]);
+        }
+
+        return null;
     }
 
     /**
