@@ -19,6 +19,8 @@ class LicenceChecklist extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
 
+    protected $extraRepos = ['ConditionUndertaking'];
+
     const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
 
     /**
@@ -52,6 +54,9 @@ class LicenceChecklist extends AbstractQueryHandler
 
         $sections = $this->sectionAccessService->getAccessibleSectionsForLicence($licence);
         $sections = $this->alterSections(array_keys($sections), $licence);
+
+        $conditionsUndertakings = $this->getRepo('ConditionUndertaking')
+            ->fetchListForLicenceReadOnly($licence->getId());
 
         return $this->result(
             $continuationDetail,
@@ -112,6 +117,7 @@ class LicenceChecklist extends AbstractQueryHandler
                 'sections' => $sections,
                 'ocChanges' => $licence->getOcPendingChanges(),
                 'tmChanges' => $licence->getTmPendingChanges(),
+                'hasConditionsUndertakings' => count($conditionsUndertakings) > 0
             ]
         );
     }
