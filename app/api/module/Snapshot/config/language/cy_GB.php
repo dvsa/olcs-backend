@@ -291,5 +291,8 @@ return [
     'continuations.safety-section.table.week' => 'wythnos',
     'continuations.safety-section.table.weeks' => 'Wythnosau',
     'continuations.safety-section.table.tach_na' => 'Ddim yn gymwys',
+    'continuations.conditions-undertakings.licence' => 'Ffi drwydded',
+    'continuations.conditions-undertakings.undertakings' => 'Ymgymeriadau',
+    'continuations.conditions-undertakings.conditions' => 'Amodau',
     // Potentially unused translations
 ];

@@ -469,6 +469,87 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Get grouped conditions and undertakings
+     *
+     * @return array
+     */
+    public function getGroupedConditionsUndertakings()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isDraft', 'N')
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('isFulfilled', 'N')
+        );
+
+        $conditionsUndertakings = $this->getConditionUndertakings()->matching($criteria);
+        $licenceConditionsUndertakings = [];
+        $ocConditionsUndertakings = [];
+        $map = [
+            ConditionUndertaking::TYPE_CONDITION => 'conditions',
+            ConditionUndertaking::TYPE_UNDERTAKING => 'undertakings',
+        ];
+
+        /** @var ConditionUndertaking $cu */
+        foreach ($conditionsUndertakings as &$cu) {
+            $conditionType = $map[$cu->getConditionType()->getId()];
+            if ($cu->getAttachedTo()->getId() === ConditionUndertaking::ATTACHED_TO_LICENCE) {
+                $licenceConditionsUndertakings[$conditionType][] = $cu;
+            } else {
+                $ocConditionsUndertakings[
+                    $cu->getOperatingCentre()->getId() . $cu->getOperatingCentre()->getAddress()->getPostcode()
+                ][$conditionType][] = $cu;
+            }
+        }
+
+        if (
+            isset($licenceConditionsUndertakings['conditions'])
+            && count($licenceConditionsUndertakings['conditions']) > 0
+        ) {
+            $this->sortConditionsUndertakings($licenceConditionsUndertakings['conditions']);
+        }
+        if (
+            isset($licenceConditionsUndertakings['undertakings'])
+            && count($licenceConditionsUndertakings['undertakings']) > 0
+        ) {
+            $this->sortConditionsUndertakings($licenceConditionsUndertakings['undertakings']);
+        }
+        foreach ($ocConditionsUndertakings as &$oc) {
+            if (isset($oc['conditions']) && count($oc['conditions']) > 0) {
+                $this->sortConditionsUndertakings($oc['conditions']);
+            }
+            if (isset($oc['undertakings']) && count($oc['undertakings']) > 0) {
+                $this->sortConditionsUndertakings($oc['undertakings']);
+            }
+        }
+
+        return [
+            'licence' => $licenceConditionsUndertakings,
+            'operatingCentres' => $ocConditionsUndertakings,
+        ];
+    }
+
+    /**
+     * Sort conditions and undertakings
+     *
+     * @param array $conditionsUndertakings conditions and undertakings
+     *
+     * @return void
+     */
+    private function sortConditionsUndertakings(&$conditionsUndertakings)
+    {
+        usort(
+            $conditionsUndertakings, function ($a, $b) {
+                if ($a->getCreatedOn(true) === $b->getCreatedOn(true)) {
+                    return 0;
+                }
+                return ($a->getCreatedOn(true) > $b->getCreatedOn(true)) ? +1 : -1;
+            }
+        );
+    }
+
+    /**
      * Returns whether the licence is a goods licence
      *
      * @return boolean|null
