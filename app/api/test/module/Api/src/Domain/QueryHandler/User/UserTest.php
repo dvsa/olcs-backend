@@ -100,6 +100,65 @@ class UserTest extends QueryHandlerTestCase
         );
     }
 
+    public function testHandleQueryWithNoLastLoginTime()
+    {
+        $query = Query::create(['QUERY']);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true);
+
+        $this->mockedSmServices[UserInterface::class]
+            ->shouldReceive('fetchUser')
+            ->once()
+            ->with('pid')
+            ->andReturn(
+                [
+                    'meta' => [
+                        'locked' => '20170110090018.001Z',
+                    ]
+                ]
+            );
+
+        $userId = 100;
+        $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
+        $mockUser->shouldReceive('getId')->andReturn($userId);
+        $mockUser->shouldReceive('getPid')->andReturn('pid');
+        $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
+        $mockUser->shouldReceive('getUserType')->once()->andReturn('internal');
+
+        $this->repoMap['User']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockUser);
+
+        $eventHistoryType = m::mock(EventHistoryTypeEntity::class);
+
+        $this->repoMap['EventHistoryType']
+            ->shouldReceive('fetchOneByEventCode')
+            ->with(EventHistoryTypeEntity::EVENT_CODE_PASSWORD_RESET)
+            ->andReturn($eventHistoryType);
+
+        $eventHistory = m::mock(EventHistoryEntity::class);
+        $eventHistory->shouldReceive('serialize')->andReturn('PASSWORD RESET EVENT');
+
+        $this->repoMap['EventHistory']
+            ->shouldReceive('fetchByAccount')
+            ->with($userId, $eventHistoryType, 'id', 'desc', 1)
+            ->andReturn([$eventHistory]);
+
+        $result = $this->sut->handleQuery($query)->serialize();
+
+        $this->assertSame(
+            [
+                'foo' => 'bar',
+                'userType' => 'internal',
+                'lastLoggedInOn' => null,
+                'lockedOn' => '2017-01-10T09:00:18+00:00',
+                'latestPasswordResetEvent' => 'PASSWORD RESET EVENT'
+            ],
+            $result
+        );
+    }
+
     public function testHandleQueryWithoutPasswordResetEvent()
     {
         $query = Query::create(['QUERY']);
