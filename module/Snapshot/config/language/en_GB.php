@@ -343,5 +343,8 @@ return [
     'Yes' => 'Yes',
     'No' => 'No',
     'None' => 'None',
+    'continuations.conditions-undertakings.licence' => 'Licence',
+    'continuations.conditions-undertakings.conditions' => 'Conditions',
+    'continuations.conditions-undertakings.undertakings' => 'Undertakings',
     // Potentially unused translations
 ];

@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 class Get extends AbstractQueryHandler
 {
     protected $repoServiceName = 'ContinuationDetail';
-    protected $extraRepos = ['SystemParameter', 'Fee', 'Document', 'ConditionUndertaking'];
+    protected $extraRepos = ['SystemParameter', 'Fee', 'Document'];
 
     /**
      * @var FinancialStandingHelperService
@@ -75,10 +75,6 @@ class Get extends AbstractQueryHandler
             $licence->getOrganisation()->getId()
         );
 
-        $conditionsUndertakings = $this->groupConditionsUndertakings(
-              $this->getRepo('ConditionUndertaking')->fetchListForLicenceReadOnly($licence->getId())
-        );
-
         return $this->result(
             $continuationDetail,
             [
@@ -115,7 +111,7 @@ class Get extends AbstractQueryHandler
                         + $continuationDetail->getOverdraftAmount()
                         + $continuationDetail->getOtherFinancesAmount()
                     ),
-                'conditionsUndertakings' => $conditionsUndertakings,
+                'conditionsUndertakings' => $licence->getGroupedConditionsUndertakings(),
             ]
         );
     }
@@ -145,37 +141,5 @@ class Get extends AbstractQueryHandler
         }
 
         return null;
-    }
-
-    /**
-     * Group conditions and undertakings
-     *
-     * @param array $conditionsUndertakings conditions and undertakings
-     *
-     * @return array
-     */
-    private function groupConditionsUndertakings($conditionsUndertakings)
-    {
-        $licenceConditionsUndertakings = [];
-        $ocConditionsUndertakings = [];
-        $map = [
-            ConditionUndertaking::TYPE_CONDITION => 'conditions',
-            ConditionUndertaking::TYPE_UNDERTAKING => 'undertakings',
-        ];
-
-        /** @var ConditionUndertaking $cu */
-        foreach ($conditionsUndertakings as $cu) {
-            $condtitionType = $map[$cu->getConditionType()->getId()];
-            if ($cu->getAttachedTo()->getId() === ConditionUndertaking::ATTACHED_TO_LICENCE) {
-                $licenceConditionsUndertakings[$condtitionType][] = $cu;
-            } else {
-                $ocConditionsUndertakings[$cu->getOperatingCentre()->getId()][$condtitionType][] = $cu;
-            }
-        }
-        // @todo sort by date
-        return [
-            'licence' => $licenceConditionsUndertakings,
-            'operatingCentres' => $ocConditionsUndertakings,
-        ];
     }
 }
