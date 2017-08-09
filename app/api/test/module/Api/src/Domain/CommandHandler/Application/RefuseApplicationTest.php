@@ -362,4 +362,68 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
     }
+
+    public function testHandleCommandVariation()
+    {
+        $command = Command::create(['id' => 532]);
+
+        $this->setupIsInternalUser(false);
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $licence = m::mock(Licence::class)
+            ->shouldReceive('getId')
+            ->andReturn(123);
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(1);
+        $application->setLicence($licence);
+        $application->setIsVariation(true);
+
+        $application->shouldReceive('getCurrentInterimStatus')
+            ->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->once()
+            ->shouldReceive('isGoods')
+            ->andReturn(true)
+            ->getMock();
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
+        $application->shouldReceive('isPublishable')->with()->once()->andReturnNull(false);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(532)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(Application::class));
+
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with($application)
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
+            new Result()
+        );
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE], $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
+    }
 }
