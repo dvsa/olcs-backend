@@ -145,11 +145,20 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
         if ($personEntity === null) {
             $personEntity = new PersonEntity();
         }
+
+        // title
+        $title = null;
+        if (isset($person['title'])) {
+            $title = $this->getRepo('Person')->getRefdataReference($person['title']);
+        }
+
+        // Birth date
         $birthDate = isset($person['birthDate']) ? $person['birthDate'] : null;
+
         $personEntity->updatePerson(
             $person['forename'],
             $person['familyName'],
-            $this->getRepo('Person')->getRefdataReference($person['title']),
+            $title,
             $birthDate
         );
         $this->getRepo('Person')->save($personEntity);
