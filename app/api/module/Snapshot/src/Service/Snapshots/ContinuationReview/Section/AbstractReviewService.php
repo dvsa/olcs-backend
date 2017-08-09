@@ -27,6 +27,19 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     }
 
     /**
+     * Translate and replace parameters
+     *
+     * @param string $translationKey Message key to translate
+     * @param array  $arguments      Items to be replaced in
+     *
+     * @return string
+     */
+    protected function translateReplace($translationKey, array $arguments)
+    {
+        return vsprintf($this->translate($translationKey), $arguments);
+    }
+
+    /**
      * Format a date
      *
      * @param string $date   Date to format

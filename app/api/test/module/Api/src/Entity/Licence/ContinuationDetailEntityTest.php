@@ -26,4 +26,37 @@ class ContinuationDetailEntityTest extends EntityTester
 
         $this->assertEquals('ORG', $continuationDetail->getRelatedOrganisation());
     }
+
+    public function testGetAmountDeclaredDataProvider()
+    {
+        return [
+            [0.00, null, null, null, null],
+            [0.00, 0, 0, 0, 0],
+            [10.00, 1, 2, 3, 4],
+            [10.10, 1.01, 2.02, 3.03, 4.04],
+            [1.01, 1.01, null, null, null],
+            [1.01, null, 1.01, null, null],
+            [1.01, null, null, 1.01, null],
+            [1.01, null, null, null, 1.01],
+        ];
+    }
+
+    /**
+     * @dataProvider testGetAmountDeclaredDataProvider
+     */
+    public function testGetAmountDeclared(
+        $expected,
+        $averageBalanceAmount,
+        $overdraftAmount,
+        $factoringAmount,
+        $otherFinancesAmount
+    ) {
+        $continuationDetail = new Entity();
+        $continuationDetail->setAverageBalanceAmount($averageBalanceAmount);
+        $continuationDetail->setOverdraftAmount($overdraftAmount);
+        $continuationDetail->setFactoringAmount($factoringAmount);
+        $continuationDetail->setOtherFinancesAmount($otherFinancesAmount);
+
+        $this->assertSame($expected, $continuationDetail->getAmountDeclared());
+    }
 }

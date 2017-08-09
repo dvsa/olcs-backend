@@ -63,4 +63,17 @@ class ContinuationDetail extends AbstractContinuationDetail implements
     {
         return $this->getId();
     }
+
+    /**
+     * Get the total amount declared for this continuation
+     *
+     * @return float
+     */
+    public function getAmountDeclared()
+    {
+        return (float)$this->getAverageBalanceAmount()
+            + (float)$this->getOverdraftAmount()
+            + (float)$this->getFactoringAmount()
+            + (float)$this->getOtherFinancesAmount();
+    }
 }

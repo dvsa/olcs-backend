@@ -17,9 +17,11 @@ foreach ($data as $line) {
             $openTag = '<td>';
             $closeTag = '</td>';
         }
-        echo $openTag
-            . $this->escapeHtml($this->translate($cell['value'], 'snapshot'))
-            . $closeTag;
+        $value = $this->translate($cell['value'], 'snapshot');
+        if (!isset($cell['noEscape']) || $cell['noEscape'] === false) {
+            $value = $this->escapeHtml($value);
+        }
+        echo $openTag . $value . $closeTag;
     }
     echo '</tr>';
 }

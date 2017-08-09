@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\ContinuationDetail\Get as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Continuation Get test
@@ -27,7 +28,7 @@ class GetTest extends QueryHandlerTestCase
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock();
-        $this->mockedSmServices['Review\ApplicationUndertakings'] = m::mock();
+        $this->mockedSmServices['ContinuationReview\Declaration'] = m::mock();
 
         parent::setUp();
     }
@@ -37,7 +38,9 @@ class GetTest extends QueryHandlerTestCase
         $query = Qry::create(['id'=> 123]);
 
         $continuationDetail = m::mock(BundleSerializableInterface::class);
-        $continuationDetail->shouldReceive('getLicence')
+        $continuationDetail
+            ->shouldReceive('getLicence')
+            ->times(1)
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getOrganisation')
@@ -58,7 +61,6 @@ class GetTest extends QueryHandlerTestCase
                     ->once()
                     ->getMock()
             )
-            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
@@ -78,6 +80,15 @@ class GetTest extends QueryHandlerTestCase
             ->shouldReceive('getOtherFinancesAmount')
             ->andReturn(0)
             ->once()
+            ->shouldReceive('getSignatureType')
+            ->andReturn(
+                m::mock()
+                ->shouldReceive('getId')
+                ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE)
+                ->once()
+                ->getMock()
+            )
+            ->twice()
             ->getMock();
 
         $continuationDetail->shouldReceive('getDigitalSignature')->with()->once()->andReturn(null);
@@ -134,8 +145,8 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $this->mockedSmServices['Review\ApplicationUndertakings']
-            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+        $this->mockedSmServices['ContinuationReview\Declaration']
+            ->shouldReceive('getDeclarationMarkup')->with($continuationDetail)->once()
             ->andReturn('DECLARATIONS');
 
         $this->assertEquals(
@@ -154,7 +165,8 @@ class GetTest extends QueryHandlerTestCase
                 'signature' => [],
                 'reference' => 'OLCS-12345',
                 'isFinancialEvidenceRequired' => true,
-                'conditionsUndertakings' => ['foo']
+                'conditionsUndertakings' => ['foo'],
+                'isPhysicalSignature' => true,
             ],
             $this->sut->handleQuery($query)->serialize()
         );
@@ -166,6 +178,7 @@ class GetTest extends QueryHandlerTestCase
 
         $continuationDetail = m::mock(BundleSerializableInterface::class);
         $continuationDetail->shouldReceive('getLicence')
+            ->times(1)
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getOrganisation')
@@ -186,7 +199,6 @@ class GetTest extends QueryHandlerTestCase
                     ->once()
                     ->getMock()
             )
-            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
@@ -206,6 +218,15 @@ class GetTest extends QueryHandlerTestCase
             ->shouldReceive('getOtherFinancesAmount')
             ->andReturn(10000)
             ->once()
+            ->shouldReceive('getSignatureType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE)
+                    ->once()
+                    ->getMock()
+            )
+            ->twice()
             ->getMock();
 
         $continuationDetail->shouldReceive('getDigitalSignature')->with()->times(4)->andReturn(
@@ -264,8 +285,8 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $this->mockedSmServices['Review\ApplicationUndertakings']
-            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+        $this->mockedSmServices['ContinuationReview\Declaration']
+            ->shouldReceive('getDeclarationMarkup')->with($continuationDetail)->once()
             ->andReturn('DECLARATIONS');
 
         $this->assertEquals(
@@ -289,6 +310,7 @@ class GetTest extends QueryHandlerTestCase
                 'reference' => null,
                 'isFinancialEvidenceRequired' => false,
                 'conditionsUndertakings' => ['foo'],
+                'isPhysicalSignature' => true,
             ],
             $this->sut->handleQuery($query)->serialize()
         );
@@ -300,6 +322,7 @@ class GetTest extends QueryHandlerTestCase
 
         $continuationDetail = m::mock(BundleSerializableInterface::class);
         $continuationDetail->shouldReceive('getLicence')
+            ->times(1)
             ->andReturn(
                 m::mock()
                     ->shouldReceive('getOrganisation')
@@ -320,7 +343,6 @@ class GetTest extends QueryHandlerTestCase
                     ->once()
                     ->getMock()
             )
-            ->times(2)
             ->shouldReceive('serialize')
             ->with(['licence' => ['organisation', 'trafficArea', 'licenceType', 'goodsOrPsv']])
             ->andReturn(['licence_entity'])
@@ -340,6 +362,15 @@ class GetTest extends QueryHandlerTestCase
             ->shouldReceive('getOtherFinancesAmount')
             ->andReturn(10000)
             ->once()
+            ->shouldReceive('getSignatureType')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE)
+                    ->once()
+                    ->getMock()
+            )
+            ->twice()
             ->getMock();
 
         $continuationDetail->shouldReceive('getDigitalSignature')->with()->times(4)->andReturn(
@@ -385,8 +416,8 @@ class GetTest extends QueryHandlerTestCase
         $this->mockedSmServices['FinancialStandingHelperService']
             ->shouldReceive('getFinanceCalculationForOrganisation')->with(99)->once()->andReturn('123.99');
 
-        $this->mockedSmServices['Review\ApplicationUndertakings']
-            ->shouldReceive('getMarkupForLicence')->with($continuationDetail->getLicence())->once()
+        $this->mockedSmServices['ContinuationReview\Declaration']
+            ->shouldReceive('getDeclarationMarkup')->with($continuationDetail)->once()
             ->andReturn('DECLARATIONS');
 
         $this->assertEquals(
@@ -409,6 +440,7 @@ class GetTest extends QueryHandlerTestCase
                 ],
                 'reference' => null,
                 'isFinancialEvidenceRequired' => false,
+                'isPhysicalSignature' => true,
                 'conditionsUndertakings' => ['foo'],
             ],
             $this->sut->handleQuery($query)->serialize()
