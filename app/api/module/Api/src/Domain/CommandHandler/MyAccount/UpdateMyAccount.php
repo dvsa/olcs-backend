@@ -35,6 +35,13 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['ContactDetails', 'PhoneContact', 'Person', 'Address'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command Command parameters
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $data = $command->getArrayCopy();
@@ -134,7 +141,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
     /**
      * Save person
      *
-     * @param array $person                  person
+     * @param array          $person         person
      * @param ContactDetails $contactDetails contact details
      *
      * @return PersonEntity
