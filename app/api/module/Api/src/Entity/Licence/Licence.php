@@ -553,11 +553,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         usort(
             $conditionsUndertakings, function ($a, $b) {
-            if ($a['createdOn'] === $b['createdOn']) {
-                return 0;
+                if ($a['createdOn'] === $b['createdOn']) {
+                    return 0;
+                }
+                return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
             }
-            return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
-        }
         );
     }
 
