@@ -17,6 +17,7 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function open($savePath, $name)
     {
+        return true;
     }
 
     /**
@@ -25,6 +26,7 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function close()
     {
+        return true;
     }
 
     /**
@@ -34,6 +36,7 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function read($id)
     {
+        return true;
     }
 
     /**
@@ -44,6 +47,7 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function write($id, $data)
     {
+        return true;
     }
 
     /**
@@ -54,6 +58,7 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function destroy($id)
     {
+        return true;
     }
 
     /**
@@ -64,5 +69,6 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function gc($maxlifetime)
     {
+        return true;
     }
 }
