@@ -20,6 +20,13 @@
     
     <p><?php echo $freetext; ?></p>
     
-    <?php } if (isset($markup)) { echo $markup; } ?>
-    
+    <?php }
+    if (isset($markup)) {
+        echo $markup;
+    }
+    if (isset($partial)) {
+        echo $this->render('partials/' . $partial, $variables);
+    }
+    ?>
+
 </div>

@@ -56,6 +56,9 @@ class GetTest extends QueryHandlerTestCase
                     ->shouldReceive('getId')
                     ->andReturn(1)
                     ->twice()
+                    ->shouldReceive('getGroupedConditionsUndertakings')
+                    ->andReturn(['foo'])
+                    ->once()
                     ->getMock()
             )
             ->shouldReceive('serialize')
@@ -162,6 +165,7 @@ class GetTest extends QueryHandlerTestCase
                 'signature' => [],
                 'reference' => 'OLCS-12345',
                 'isFinancialEvidenceRequired' => true,
+                'conditionsUndertakings' => ['foo'],
                 'isPhysicalSignature' => true,
             ],
             $this->sut->handleQuery($query)->serialize()
@@ -190,6 +194,9 @@ class GetTest extends QueryHandlerTestCase
                     ->shouldReceive('getId')
                     ->andReturn(1)
                     ->twice()
+                    ->shouldReceive('getGroupedConditionsUndertakings')
+                    ->andReturn(['foo'])
+                    ->once()
                     ->getMock()
             )
             ->shouldReceive('serialize')
@@ -302,6 +309,7 @@ class GetTest extends QueryHandlerTestCase
                 ],
                 'reference' => null,
                 'isFinancialEvidenceRequired' => false,
+                'conditionsUndertakings' => ['foo'],
                 'isPhysicalSignature' => true,
             ],
             $this->sut->handleQuery($query)->serialize()
@@ -330,6 +338,9 @@ class GetTest extends QueryHandlerTestCase
                     ->shouldReceive('getId')
                     ->andReturn(1)
                     ->twice()
+                    ->shouldReceive('getGroupedConditionsUndertakings')
+                    ->andReturn(['foo'])
+                    ->once()
                     ->getMock()
             )
             ->shouldReceive('serialize')
@@ -430,6 +441,7 @@ class GetTest extends QueryHandlerTestCase
                 'reference' => null,
                 'isFinancialEvidenceRequired' => false,
                 'isPhysicalSignature' => true,
+                'conditionsUndertakings' => ['foo'],
             ],
             $this->sut->handleQuery($query)->serialize()
         );

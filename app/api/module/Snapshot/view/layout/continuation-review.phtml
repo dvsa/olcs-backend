@@ -28,7 +28,7 @@
                                 echo $this->render('partials/read-only/main', $mainItem);
                             }
                         } else {
-                            echo $this->partial('partials/review-continuation-section', ['data' =>$section['config'] ]) ;
+                            echo $this->partial('partials/review-continuation-section', ['data' => $section['config']]);
                         }
                         if (isset($section['summary'])) {
                             echo $this->partial(
