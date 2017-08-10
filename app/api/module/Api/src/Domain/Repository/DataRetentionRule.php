@@ -24,6 +24,7 @@ class DataRetentionRule extends AbstractRepository
             ->modifyQuery($qb);
 
         $qb->andWhere($qb->expr()->eq($this->alias .'.isEnabled', 1));
+        $qb->andWhere($qb->expr()->isNull($this->alias .'.deletedDate'));
 
         return $qb->getQuery()->getResult();
     }
