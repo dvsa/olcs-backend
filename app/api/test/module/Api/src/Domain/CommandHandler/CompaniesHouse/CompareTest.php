@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Companies House Compare Command Handler Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare as Cmd;
@@ -12,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompanyRepo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
@@ -21,12 +17,12 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- *  Companies House Compare Command Handler Test
- *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare
  */
 class CompareTest extends CommandHandlerTestCase
 {
+    /** @var  CompaniesHouseApi | m\MockInterface */
     protected $mockApi;
 
     public function setUp()
@@ -35,6 +31,7 @@ class CompareTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             CompaniesHouseApi::class => $this->mockApi
         ];
+
         $this->sut = new Compare();
         $this->mockRepo('CompaniesHouseCompany', CompanyRepo::class);
 
@@ -108,6 +105,64 @@ class CompareTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(['Alert created'], $result->getMessages());
         $this->assertEquals(['companiesHouseAlert' => 101], $result->getIds());
+    }
+
+    /**
+     * @dataProvider testHandleCommandValidiateCompanyNumberDataProvider
+     */
+    public function testHandleCommandValidiateCompanyNumber($expectValid, $companyNumber)
+    {
+        $expectedAlertData = [
+            'companyNumber' => $companyNumber,
+            'reasons' => [
+                AlertEntity::REASON_INVALID_COMPANY_NUMBER,
+            ],
+        ];
+
+        $alertResult = new Result();
+        $alertResult
+            ->addId('companiesHouseAlert', 101)
+            ->addMessage('Alert created');
+
+        if ($expectValid) {
+            // Company number is valid, throw this exception to stop execution as we only want to test
+            // the company number validation
+            $this->mockApi
+                ->shouldReceive('getCompanyProfile')->with($companyNumber, true)->once()
+                ->andThrow(new \Exception('Company number validation passsed'));
+            $this->setExpectedException(NotReadyException::class, 'Company number validation passsed');
+        } else {
+            $this->expectedSideEffect(
+                CreateAlertCmd::class,
+                [
+                    'companyNumber' => $companyNumber,
+                    'reasons' => [
+                        AlertEntity::REASON_INVALID_COMPANY_NUMBER,
+                    ]
+                ],
+                new Result()
+            );
+        }
+
+        // invoke
+        $command = Cmd::create(['companyNumber' => $companyNumber]);
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandValidiateCompanyNumberDataProvider()
+    {
+        return [
+            [true, '6'],
+            [true, '6563254723654732645'],
+            [true, 'A'],
+            [true, 'a'],
+            [true, 'AbCdEfGhIjKlMnOpQr'],
+            [true, 'SCO12345'],
+            [false, 'SCO 12345'],
+            [false, '.SCO 12345'],
+            [false, '.SCO12345'],
+            [false, '. 526353'],
+        ];
     }
 
     /**
@@ -882,5 +937,23 @@ class CompareTest extends CommandHandlerTestCase
                 )
             ),
         );
+    }
+
+    public function testHandleCommandServiceError()
+    {
+        $companyNr = 9999;
+
+        $this->mockApi
+            ->shouldReceive('getCompanyProfile')
+            ->once()
+            ->andThrowExceptions([new \Exception('unit_error_message')]);
+
+        $this->setExpectedException(
+            NotReadyException::class,
+            'Error getting data from Companies House API : unit_error_message'
+        );
+
+        $command = Cmd::create(['companyNumber' => $companyNr]);
+        $this->sut->handleCommand($command);
     }
 }

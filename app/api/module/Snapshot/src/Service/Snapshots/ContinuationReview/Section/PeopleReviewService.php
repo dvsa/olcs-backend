@@ -32,20 +32,20 @@ class PeopleReviewService extends AbstractReviewService
         /** @var OrganisationPerson $op */
         foreach ($organisationPersons as $op) {
             $person = $op->getPerson();
+            $title = $person->getTitle();
+            $birthDate = $person->getBirthDate(true);
             $config[] = [
                 [
                     'value' => implode(
                         ' ',
                         [
-                            $person->getTitle()->getDescription(),
+                            $title !== null ? $title->getDescription() : '',
                             $person->getForename(),
                             $person->getFamilyName(),
                         ]
                     )
                 ],
-                [
-                    'value' => $person->getBirthDate(true)->format('d/m/Y')
-                ]
+                ['value' => $birthDate !== null ? $birthDate->format('d/m/Y') : '']
             ];
         }
         usort(

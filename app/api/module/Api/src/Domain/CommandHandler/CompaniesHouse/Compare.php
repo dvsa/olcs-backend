@@ -1,21 +1,16 @@
 <?php
 
-/**
- * Companies House Compare
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert as CreateAlertCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
-use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlertReason as ReasonEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\I18n\Validator\Alnum;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -28,24 +23,35 @@ final class Compare extends AbstractCommandHandler
      * Given a company number, looks up data via Companies House API and
      * checks for differences with last-stored data
      *
-     * @param CommandInterface $command
+     * @param \Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare $command Command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
         $companyNumber = $command->getCompanyNumber();
-        $result = new Result();
 
         try {
+            if (!$this->validateCompanyNumber($companyNumber)) {
+                throw new ChNotFoundException('Company number has invalid characters');
+            }
             $apiResult = $this->api->getCompanyProfile($companyNumber, true);
         } catch (ChNotFoundException $e) {
-            $result->merge(
+            $this->result->merge(
                 $this->createAlert(
                     [AlertEntity::REASON_INVALID_COMPANY_NUMBER],
                     $companyNumber
                 )
             );
-            return $result;
+            return $this->result;
+        } catch (\Exception $e) {
+            $exception = new NotReadyException(
+                'Error getting data from Companies House API : '. $e->getMessage(),
+                0,
+                $e
+            );
+            $exception->setRetryAfter(60);
+            throw $exception;
         }
 
         $data = $this->normaliseProfileData($apiResult);
@@ -57,34 +63,35 @@ final class Compare extends AbstractCommandHandler
             // Company not previously stored, save new data and return
             $company = new CompanyEntity($data);
             $this->getRepo()->save($company);
-            $result
+
+            return $this->result
                 ->addId('companiesHouseCompany', $company->getId())
                 ->addMessage('Saved new company');
-            return $result;
         }
 
         $reasons = $this->compare($stored->toArray(), $data);
 
         if (empty($reasons)) {
             // return early if no changes detected
-            $result->addMessage('No changes');
-            return $result;
+            return $this->result->addMessage('No changes');
         }
 
-        $result->merge($this->createAlert($reasons, $companyNumber));
+        $this->result->merge($this->createAlert($reasons, $companyNumber));
 
         $company = new CompanyEntity($data);
         $this->getRepo()->save($company);
-        $result
+
+        return $this->result
             ->addId('companiesHouseCompany', $company->getId())
             ->addMessage('Saved company');
-
-        return $result;
     }
 
     /**
+     * Compare
+     *
      * @param array $old stored company data
      * @param array $new new company data
+     *
      * @return array - list of reason codes, empty if no changes
      */
     protected function compare($old, $new)
@@ -111,8 +118,11 @@ final class Compare extends AbstractCommandHandler
     }
 
     /**
-     * @param array $reasons
-     * @param string $companyNumber
+     * Create Alert
+     *
+     * @param array  $reasons       Reasons
+     * @param string $companyNumber Company Nr
+     *
      * @return Result
      */
     protected function createAlert($reasons, $companyNumber)
@@ -129,8 +139,11 @@ final class Compare extends AbstractCommandHandler
     // comparison functions....
 
     /**
+     * Status Has Changed
+     *
      * @param array $old stored company data
      * @param array $new new company data
+     *
      * @return boolean
      */
     protected function statusHasChanged($old, $new)
@@ -139,8 +152,11 @@ final class Compare extends AbstractCommandHandler
     }
 
     /**
+     * Name Has Changed
+     *
      * @param array $old stored company data
      * @param array $new new company data
+     *
      * @return boolean
      */
     protected function nameHasChanged($old, $new)
@@ -149,8 +165,11 @@ final class Compare extends AbstractCommandHandler
     }
 
     /**
+     * Address Has Changed
+     *
      * @param array $old stored company data
      * @param array $new new company data
+     *
      * @return boolean
      */
     protected function addressHasChanged($old, $new)
@@ -189,6 +208,11 @@ final class Compare extends AbstractCommandHandler
 
     /**
      * Array comparison of officer data
+     *
+     * @param array $old stored company data
+     * @param array $new new company data
+     *
+     * @return bool
      */
     protected function peopleHaveChanged($old, $new)
     {
@@ -208,6 +232,13 @@ final class Compare extends AbstractCommandHandler
         return false;
     }
 
+    /**
+     * Get Normalised People
+     *
+     * @param array $data Officers data
+     *
+     * @return array
+     */
     protected function getNormalisedPeople($data)
     {
         return array_map(
@@ -234,5 +265,20 @@ final class Compare extends AbstractCommandHandler
             },
             $data['officers']
         );
+    }
+
+    /**
+     * Validate the company number
+     * This is a simple check that the company number is only made up of alphanumerical characters
+     *
+     * @param string $companyNumber Company number
+     *
+     * @return bool
+     *
+     */
+    private function validateCompanyNumber($companyNumber)
+    {
+        $validator = new Alnum();
+        return $validator->isValid($companyNumber);
     }
 }

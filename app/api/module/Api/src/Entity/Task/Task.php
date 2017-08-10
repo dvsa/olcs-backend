@@ -63,6 +63,8 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_FINANCIAL_EVIDENCE_UPLOADED = 'Financial evidence uploaded';
     const TASK_DESCRIPTION_OC_EVIDENCE_UPLOADED = 'Operating centre advert(s) uploaded';
     const TASK_DESCRIPTION_DUPLICATED = 'Duplicate payment on %s fee: %s';
+    const TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE = 'Check digital signature for licence continuation';
+    const TASK_DESCRIPTION_CHECK_WET_SIGNATURE = 'Check wet signature for licence continuation';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 

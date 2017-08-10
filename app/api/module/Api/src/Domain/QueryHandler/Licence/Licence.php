@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Entity;
 
 /**
  * Licence
@@ -22,13 +23,20 @@ class Licence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContinuationDetail', 'Note'];
+    protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
      */
     private $sectionAccessService;
 
+    /**
+     * Factory
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -38,8 +46,16 @@ class Licence extends AbstractQueryHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
         $this->auditRead($licence);
@@ -50,9 +66,15 @@ class Licence extends AbstractQueryHandler
             null;
         $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
 
+        $showExpiryWarning = $licence->isExpiring()
+            && !$this->getRepo('SystemParameter')->getDisabledDigitalContinuations()
+            && (string)$continuationDetail->getStatus() === Entity\Licence\ContinuationDetail::STATUS_PRINTED;
+
         return $this->result(
             $licence,
             [
+                'isExpired',
+                'isExpiring',
                 'cases' => [
                     'appeal' => [
                         'outcome',
@@ -87,6 +109,7 @@ class Licence extends AbstractQueryHandler
                 'continuationMarker' => $continuationDetailResponse,
                 'latestNote' => $latestNote,
                 'canHaveInspectionRequest' => !$licence->isSpecialRestricted(),
+                'showExpiryWarning' => $showExpiryWarning,
             ]
         );
     }
@@ -94,7 +117,7 @@ class Licence extends AbstractQueryHandler
     /**
      * Get a Continuation Detail for the marker
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence Licence
      *
      * @return \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail|null
      */

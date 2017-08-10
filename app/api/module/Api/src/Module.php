@@ -2,7 +2,10 @@
 
 namespace Dvsa\Olcs\Api;
 
+use Dvsa\Olcs\Api\Domain\Util\BlockCipher\PhpSecLib;
 use Olcs\Logging\Log\Logger;
+use phpseclib\Crypt;
+use Zend\Crypt\Symmetric\Mcrypt;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\Mvc\MvcEvent;
@@ -108,14 +111,17 @@ class Module implements BootstrapListenerInterface
      */
     protected function initDoctrineEncrypterType(array $config)
     {
-        if (extension_loaded('mcrypt')) {
-            if (!empty($config['olcs-doctrine']['encryption_key'])) {
-                /** @var \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType $encrypterType */
-                $encrypterType = \Doctrine\DBAL\Types\Type::getType('encrypted_string');
-                $blockCipher = \Zend\Crypt\BlockCipher::factory('mcrypt', array('algo' => 'aes'));
-                $blockCipher->setKey($config['olcs-doctrine']['encryption_key']);
-                $encrypterType->setEncrypter($blockCipher);
-            }
+        if (!empty($config['olcs-doctrine']['encryption_key'])) {
+            /** @var \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType $encrypterType */
+            $encrypterType = \Doctrine\DBAL\Types\Type::getType('encrypted_string');
+
+            // NB OLCS-17482 caused a backwards INCOMPATIBLE change to the way the encryption works
+            $cipher = new Crypt\AES();
+            // Force AES 256
+            $cipher->setKeyLength(256);
+            $cipher->setKey($config['olcs-doctrine']['encryption_key']);
+
+            $encrypterType->setEncrypter($cipher);
         }
     }
 }

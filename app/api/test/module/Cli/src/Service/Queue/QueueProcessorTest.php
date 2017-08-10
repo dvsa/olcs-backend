@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
+use Doctrine\DBAL\DBALException;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -158,6 +159,41 @@ class QueueProcessorTest extends MockeryTestCase
             ->andThrow(new \Doctrine\ORM\ORMException($exceptionMessage));
 
         $this->setExpectedException(\Doctrine\ORM\ORMException::class);
+
+        $this->sut->processNextItem($includeTypes, $excludeTypes);
+    }
+
+    public function testProcessMessageHandlesDbalException()
+    {
+        $includeTypes = ['foo'];
+        $excludeTypes = ['bar'];
+
+        $type = new RefData($includeTypes[0]);
+        $item = new QueueEntity($type);
+
+        // Mocks
+        $mockQueryHandlerManager = m::mock();
+        $mockMsm = m::mock(MessageConsumerManager::class)->makePartial();
+        $this->sm->setService('QueryHandlerManager', $mockQueryHandlerManager);
+        $this->sm->setService('MessageConsumerManager', $mockMsm);
+        $mockConsumer = m::mock(MessageConsumerInterface::class);
+        $mockMsm->setService('foo', $mockConsumer);
+
+        // Expectations
+        $this->expectQuery(
+            $mockQueryHandlerManager,
+            NextQueueItemQry::class,
+            ['includeTypes' => $includeTypes, 'excludeTypes' => $excludeTypes],
+            $item
+        );
+
+        $exceptionMessage = 'something went wrong';
+        $mockConsumer->shouldReceive('processMessage')
+            ->once()
+            ->with($item)
+            ->andThrow(new DBALException($exceptionMessage));
+
+        $this->setExpectedException(DBALException::class);
 
         $this->sut->processNextItem($includeTypes, $excludeTypes);
     }

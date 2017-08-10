@@ -323,8 +323,10 @@ return [
             'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
             'DigitalSignature' => RepositoryFactory::class,
             'DataRetentionRule' => RepositoryFactory::class,
+            'DataRetention' => RepositoryFactory::class,
             'DataService' => RepositoryFactory::class,
             'DocumentToDelete' => RepositoryFactory::class,
+            'Hearing' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

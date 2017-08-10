@@ -1,15 +1,13 @@
 <?php
 
-/**
- * Cases
- */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as Entity;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -17,17 +15,21 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class Cases extends AbstractRepository
 {
-    protected $entity = Entity::class;
+    protected $entity = Entity\Cases\Cases::class;
+
+    private static $aliasLic = 'l';
+    private static $aliasApp = 'a';
+    private static $aliasTa = 'ta';
 
     /**
-     * Fetch the default record by it's id plus licence information
+     * Fetch With Licence Using Id
      *
-     * @param Query|QryCmd $query
-     * @param int $hydrateMode
-     * @param null $version
+     * @param QryCmd $query       Http Query
+     * @param int    $hydrateMode Hydrate mode
+     * @param null   $version     Version
+     *
      * @return mixed
      * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
      */
     public function fetchWithLicenceUsingId(QryCmd $query, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
     {
@@ -56,11 +58,16 @@ class Cases extends AbstractRepository
 
     /**
      * Applies filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     *
+     * @param QueryBuilder   $qb    Doctrine Query Builder
+     * @param QueryInterface $query Http Query
+     *
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
+        $expr = $qb->expr();
+
         if (method_exists($query, 'getTransportManager')) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':byTransportManager'))
                 ->setParameter('byTransportManager', $query->getTransportManager());
@@ -70,8 +77,70 @@ class Cases extends AbstractRepository
             $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
                 ->setParameter('byLicence', $query->getLicence());
         }
+
+        if (method_exists($query, 'getCaseType') && !empty($query->getCaseType())) {
+            $qb->andWhere($expr->eq($this->alias . '.caseType', ':CASE_TYPE'))
+                ->setParameter('CASE_TYPE', $query->getCaseType());
+        }
+
+        if ($query instanceof TransferQry\Cases\Report\OpenList) {
+            $qb->andWhere(
+                $expr->isNull($this->alias . '.closedDate')
+            );
+
+            if (!empty($query->getApplicationStatus())) {
+                $qb->andWhere($expr->eq(self::$aliasApp . '.status', ':APP_STATUS'))
+                    ->setParameter('APP_STATUS', $query->getApplicationStatus());
+            }
+
+            if (!empty($query->getLicenceStatus())) {
+                $qb->andWhere($expr->eq(self::$aliasLic . '.status', ':LIC_STATUS'))
+                    ->setParameter('LIC_STATUS', $query->getLicenceStatus());
+            }
+
+            // filter by traffic area
+            $trafficArea = $query->getTrafficArea();
+
+            if ($trafficArea === 'OTHER') {
+                $qb->andWhere(
+                    $expr->isNull(self::$aliasTa . '.id')
+                );
+            } elseif (!empty($trafficArea)) {
+                $qb->andWhere(
+                    $expr->eq(self::$aliasTa . '.id', ':TRAFFIC_AREA')
+                )
+                ->setParameter('TRAFFIC_AREA', $trafficArea);
+            }
+        }
     }
 
+    /**
+     * Add joins to list query
+     *
+     * @param QueryBuilder $qb Doctrine Query Builder
+     *
+     * @return void
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        if ($this->query instanceof TransferQry\Cases\Report\OpenList) {
+            $this->getQueryBuilder()
+                ->with('licence', self::$aliasLic)
+                ->with('application', self::$aliasApp)
+                ->with(self::$aliasLic . '.trafficArea', self::$aliasTa);
+        }
+
+        parent::applyListJoins($qb);
+    }
+
+    /**
+     * Fetch Extended
+     *
+     * @param int $caseId Case Id
+     *
+     * @return Entity\Cases\Cases
+     * @throws Exception\NotFoundException
+     */
     public function fetchExtended($caseId)
     {
         $qb = $this->createQueryBuilder();
@@ -92,9 +161,11 @@ class Cases extends AbstractRepository
     /**
      * Define composite columns as HIDDEN to enable ordering by case type
      *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     * @param array $compositeFields
+     * @param QueryBuilder   $qb              Doctrine Query Builder
+     * @param QueryInterface $query           Http Query
+     * @param array          $compositeFields Composite fields
+     *
+     * @return void
      */
     public function buildDefaultListQuery(
         \Doctrine\ORM\QueryBuilder $qb,

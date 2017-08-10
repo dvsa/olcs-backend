@@ -8,6 +8,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -185,5 +186,37 @@ class DocumentTest extends RepositoryTestCase
 
         $this->assertEquals(1, $collection->count());
         $this->assertEquals($doc2, $collection->first());
+    }
+
+    public function testFetchListForContinuationDetail()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('RESULT')
+                ->getMock()
+        );
+        static::assertEquals('RESULT', $this->sut->fetchListForContinuationDetail(95));
+
+        $expectedQuery = 'BLAH AND m.continuationDetail = [[95]] ORDER BY m.id DESC';
+
+        static::assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForStatement()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('getResult')->with(Query::HYDRATE_OBJECT)->once()->andReturn('RESULT')
+                ->getMock()
+        );
+        static::assertEquals('RESULT', $this->sut->fetchListForStatement(123));
+
+        $expectedQuery = 'BLAH AND m.statement = [[123]]';
+
+        static::assertEquals($expectedQuery, $this->query);
     }
 }

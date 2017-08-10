@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
+use Doctrine\DBAL\DBALException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
 use Dvsa\Olcs\Api\Domain\Exception\NotReadyException;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
@@ -20,7 +21,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     /**
      * @var int Max retry attempts before fails
      */
-    protected $maxAttempts;
+    protected $maxAttempts = 100;
 
     /**
      * @var int Retry internal in seconds
@@ -85,6 +86,9 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
             return $this->handleZendServiceException($item, $e);
         } catch (\Doctrine\ORM\ORMException $e) {
             // rethrow ORMException such as Entity Manager Closed.
+            throw $e;
+        } catch (DBALException $e) {
+            // rethrow any exception from DBAL
             throw $e;
         } catch (\Exception $e) {
             return $this->failed($item, $e->getMessage());

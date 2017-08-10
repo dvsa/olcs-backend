@@ -6,13 +6,19 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * ContinueLicence
@@ -24,6 +30,33 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
     protected $repoServiceName = 'Licence';
     protected $extraRepos = ['ContinuationDetail', 'GoodsDisc'];
 
+    /**
+     * @var FinancialStandingHelperService
+     */
+    private $financialStandingHelper;
+
+    /**
+     * Factory
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
+
+        return parent::createService($serviceLocator);
+    }
+
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command DTO
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $licence Licence */
@@ -59,6 +92,21 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
             $this->getRepo()->getRefdataReference(ContinuationDetail::STATUS_COMPLETE)
         );
         $this->getRepo('ContinuationDetail')->save($continuationDetail);
+
+        /** @var ContinuationDetail $continuationDetail */
+        if ($continuationDetail->getIsDigital()) {
+            $createQueueCmd = CreateQueueCmd::create(
+                [
+                    'entityId' => $continuationDetail->getId(),
+                    'type' => QueueEntity::TYPE_CREATE_CONTINUATION_SNAPSHOT,
+                    'status' => QueueEntity::STATUS_QUEUED
+                ]
+            );
+            $result->merge($this->handleSideEffect($createQueueCmd));
+            $result->merge($this->createTaskForSignature($continuationDetail));
+            $this->createTaskForInsufficientFinances($continuationDetail, $result);
+            $this->createTaskForOtherFinances($continuationDetail, $result);
+        }
 
         $result->addMessage('Licence ' . $licence->getId() . ' continued');
 
@@ -177,5 +225,105 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
                 )
             );
         }
+    }
+
+    /**
+     * Create task for signature
+     *
+     * @param ContinuationDetail $continuationDetail continuation details
+     *
+     * @return Result
+     */
+    protected function createTaskForSignature(ContinuationDetail $continuationDetail)
+    {
+        $sigType = $continuationDetail->getSignatureType();
+        if ($sigType !== null && $sigType->getId() === RefData::SIG_DIGITAL_SIGNATURE) {
+            $description = Task::TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE;
+            $actionDate = new DateTime();
+        } else {
+            $description = Task::TASK_DESCRIPTION_CHECK_WET_SIGNATURE;
+            $actionDate = new DateTime('+14 days');
+        }
+
+        $createTaskCmd = CreateTaskCmd::create(
+            [
+                'category' => Category::CATEGORY_LICENSING,
+                'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                'description' => $description,
+                'actionDate' => $actionDate->format('Y-m-d'),
+                'licence' => $continuationDetail->getLicence()->getId()
+            ]
+        );
+
+        return $this->handleSideEffect($createTaskCmd);
+    }
+
+    /**
+     * Create task if finances are insufficient
+     *
+     * @param ContinuationDetail $continuationDetail Continuation details
+     * @param Result             $result             Current results object, if task is created then this is modified
+     *
+     * @return void
+     */
+    protected function createTaskForInsufficientFinances(ContinuationDetail $continuationDetail, Result $result)
+    {
+        if ($continuationDetail->getAmountDeclared() < $this->getAmountRequired($continuationDetail)) {
+            $createTaskCmd = CreateTaskCmd::create(
+                [
+                    'category' => Category::CATEGORY_LICENSING,
+                    'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                    'description' => 'Insufficient finances at continuation',
+                    'actionDate' => (new DateTime())->format('Y-m-d'),
+                    'licence' => $continuationDetail->getLicence()->getId()
+                ]
+            );
+
+            $result->merge($this->handleSideEffect($createTaskCmd));
+        }
+    }
+
+    /**
+     * Create task if continuation has other finances
+     *
+     * @param ContinuationDetail $continuationDetail Continuation details
+     * @param Result             $result             Current results object, if task is created then this is modified
+     *
+     * @return void
+     */
+    protected function createTaskForOtherFinances(ContinuationDetail $continuationDetail, Result $result)
+    {
+        // if does not have other finainces then return
+        if ((float)$continuationDetail->getOtherFinancesAmount() == 0) {
+            return;
+        }
+
+        if ($continuationDetail->getAmountDeclared() >= $this->getAmountRequired($continuationDetail)) {
+            $createTaskCmd = CreateTaskCmd::create(
+                [
+                    'category' => Category::CATEGORY_LICENSING,
+                    'subCategory' => Category::TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS,
+                    'description' => 'Other finances entered at continuation',
+                    'actionDate' => (new DateTime())->format('Y-m-d'),
+                    'licence' => $continuationDetail->getLicence()->getId()
+                ]
+            );
+
+            $result->merge($this->handleSideEffect($createTaskCmd));
+        }
+    }
+
+    /**
+     * Get the amount of finance required for a continuation
+     *
+     * @param ContinuationDetail $continuationDetail Continuation detail
+     *
+     * @return float
+     */
+    private function getAmountRequired(ContinuationDetail $continuationDetail)
+    {
+        return (float)$this->financialStandingHelper->getFinanceCalculationForOrganisation(
+            $continuationDetail->getLicence()->getOrganisation()->getId()
+        );
     }
 }

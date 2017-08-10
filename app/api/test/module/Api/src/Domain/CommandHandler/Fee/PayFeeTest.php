@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Pay Fee Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
@@ -18,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -377,7 +372,8 @@ class PayFeeTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [],
-            'messages' => ['XXX', '@todo Display message "licence.continued.message" to user']
+            'messages' => ['XXX'],
+            'flags' => [ContinuationDetailEntity::RESULT_LICENCE_CONTINUED => true]
         ];
 
         $this->assertEquals($expected, $result->toArray());

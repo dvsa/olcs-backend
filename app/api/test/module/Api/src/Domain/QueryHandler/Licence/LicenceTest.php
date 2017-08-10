@@ -2,12 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Licence\Licence as Qry;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
@@ -22,9 +24,10 @@ class LicenceTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new Licence();
-        $this->mockRepo('Licence', LicenceRepo::class);
-        $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
-        $this->mockRepo('Note', \Dvsa\Olcs\Api\Domain\Repository\Note::class);
+        $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
+        $this->mockRepo('Note', Repository\Note::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
         /** @var UserEntity $currentUser */
         $currentUser = m::mock(UserEntity::class)->makePartial();
@@ -97,6 +100,7 @@ class LicenceTest extends QueryHandlerTestCase
             'continuationMarker' => ['CD'],
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => true,
+            'showExpiryWarning' => false,
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -154,8 +158,67 @@ class LicenceTest extends QueryHandlerTestCase
             'continuationMarker' => null,
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => false,
+            'showExpiryWarning' => false,
         ];
 
         $this->assertEquals($expected, $result->serialize());
+    }
+
+    /**
+     * @dataProvider testHandleQueryShowExpiryWarningDataProvider
+     */
+    public function testHandleQueryShowExpiryWarning($expected, $isExpiring, $isDisabled, $continuationDetailStatusId)
+    {
+        $query = Qry::create(['id' => 111]);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId(111);
+
+        $continuationDetail = new ContinuationDetail();
+        $continuationDetail->setStatus(new RefData($continuationDetailStatusId));
+
+        $licence->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('getNiFlag')
+            ->andReturn('N')
+            ->once()
+            ->getMock()
+            ->shouldReceive('getOrganisation')->andReturn(
+                m::mock(Organisation::class)->shouldReceive('isMlh')->once()
+                    ->andReturn(true)
+                    ->getMock()
+            )
+            ->shouldReceive('isSpecialRestricted')->andReturn(true)->once()
+            ->shouldReceive('isExpiring')->with()->once()->andReturn($isExpiring);
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(111)
+            ->andReturn([$continuationDetail]);
+        $this->repoMap['Note']->shouldReceive('fetchForOverview')->with(111)->once()->andReturn('latest note');
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->andReturn($licence);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisabledDigitalContinuations')->with()
+            ->andReturn($isDisabled);
+
+        $sections = ['bar', 'cake'];
+        $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
+            ->once()
+            ->with($licence)
+            ->andReturn($sections);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = ['showExpiryWarning' => $expected];
+
+        $this->assertArraySubset($expected, $result->serialize());
+    }
+
+    public function testHandleQueryShowExpiryWarningDataProvider()
+    {
+        return [
+            'Should show' => [true, true, false, ContinuationDetail::STATUS_PRINTED],
+            'Licence is expiring' => [false, false, false, ContinuationDetail::STATUS_PRINTED],
+            'System Paramtere disabled' => [false, true, true, ContinuationDetail::STATUS_PRINTED],
+            'Wrong Continuation detail status' => [false, true, false, ContinuationDetail::STATUS_PRINTING],
+        ];
     }
 }

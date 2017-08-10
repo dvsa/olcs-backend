@@ -14,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\CopyAnnul
+ * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Annul
  */
 class AnnulTest extends CommandHandlerTestCase
 {

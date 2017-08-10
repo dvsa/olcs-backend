@@ -58,6 +58,7 @@ return [
     BookmarkQuery\TotalContFee::class => BookmarkQueryHandler\TotalContFee::class,
     BookmarkQuery\VehicleBundle::class => BookmarkQueryHandler\VehicleBundle::class,
     BookmarkQuery\VenueBundle::class => BookmarkQueryHandler\VenueBundle::class,
+    BookmarkQuery\HearingBundle::class => BookmarkQueryHandler\HearingBundle::class,
 
     // Application
     TransferQuery\Application\Application::class => QueryHandler\Application\Application::class,
@@ -179,6 +180,8 @@ return [
     TransferQuery\Cases\Si\Si::class => QueryHandler\Cases\Si\Si::class,
     TransferQuery\Cases\Si\SiList::class => QueryHandler\Cases\Si\SiList::class,
     TransferQuery\Cases\PresidingTc\GetList::class => QueryHandler\Cases\PresidingTc\GetList::class,
+
+    TransferQuery\Cases\Report\OpenList::class => QueryHandler\Cases\Report\OpenList::class,
 
     TransferQuery\Venue\VenueList::class => QueryHandler\Venue\VenueList::class,
 
@@ -476,6 +479,7 @@ return [
     TransferQuery\ContinuationDetail\GetList::class => QueryHandler\ContinuationDetail\GetList::class,
     TransferQuery\ContinuationDetail\LicenceChecklist::class => QueryHandler\ContinuationDetail\LicenceChecklist::class,
     TransferQuery\ContinuationDetail\Review::class => QueryHandler\ContinuationDetail\Review::class,
+    TransferQuery\ContinuationDetail\Get::class => QueryHandler\ContinuationDetail\Get::class,
 
     // System
     TransferQuery\System\FinancialStandingRate::class => QueryHandler\System\FinancialStandingRate::class,

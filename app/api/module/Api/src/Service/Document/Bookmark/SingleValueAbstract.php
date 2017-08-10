@@ -18,13 +18,13 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 abstract class SingleValueAbstract extends DynamicBookmark
 {
     const CLASS_NAMESPACE = __NAMESPACE__; // do not change/override this.
-    const FORMATTER = null; // defaults to null
-    const FIELD = null; // example
-    const SRCH_FLD_KEY = 'id'; // example
-    const SRCH_VAL_KEY = 'busRegId'; // example
-    const DEFAULT_VALUE = null;
-    const QUERY_CLASS = null;
-    const BUNDLE = [];
+    const FORMATTER = null;                // The formater (or null) used when rendering the bookmark
+    const FIELD = null;                    // The array key from retrieved data to render, eg "hearingDate"
+    const SRCH_FLD_KEY = 'id';             // The parameter name of the Query DTO
+    const SRCH_VAL_KEY = 'busRegId';       // The key to search for in query data, that will be assigned to SRCH_FLD_KEY
+    const DEFAULT_VALUE = null;            // Default value to render
+    const QUERY_CLASS = null;              // Query DTO class name
+    const BUNDLE = [];                     // The bundle, passed to the Query DTO
 
     /**
      * get query

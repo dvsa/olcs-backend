@@ -82,9 +82,11 @@ class UpdateWorkshopTest extends CommandHandlerTestCase
             'messages' => [
                 'Updated workshop',
                 'Section updated'
+            ],
+            'flags' => [
+                'hasChanged' => 1
             ]
         ];
-
         $this->assertEquals($expected, $result->toArray());
     }
 }

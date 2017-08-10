@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Module;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
+use phpseclib\Crypt\Base;
 use Zend\EventManager\Event;
 use Zend\Mvc\Application;
 use Zend\Mvc\ResponseSender\SendResponseEvent;
@@ -154,11 +155,11 @@ class ModuleTest extends MockeryTestCase
         }
         $this->sut->initDoctrineEncrypterType(['olcs-doctrine' => ['encryption_key' => 'key']]);
 
-        /** @var \Zend\Crypt\BlockCipher $ciper */
+        /** @var Base $ciper */
         $ciper = \Doctrine\DBAL\Types\Type::getType('encrypted_string')->getEncrypter();
 
-        $this->assertInstanceOf(\Zend\Crypt\BlockCipher::class, $ciper);
-        $this->assertSame('key', $ciper->getKey());
+        $this->assertInstanceOf(Base::class, $ciper);
+        $this->assertSame('key', $ciper->key);
     }
 
     /**

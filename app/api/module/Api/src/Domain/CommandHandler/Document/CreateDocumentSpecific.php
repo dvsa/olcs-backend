@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Document
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,6 +17,9 @@ use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLin
  */
 final class CreateDocumentSpecific extends AbstractCommandHandler
 {
+    /**
+     * @var string
+     */
     protected $repoServiceName = 'Document';
 
     /**

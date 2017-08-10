@@ -21,11 +21,15 @@ use Doctrine\Common\Collections\Criteria;
 
 /**
  * Cases Entity Unit Tests
- *
  * Initially auto-generated but won't be overridden
+ *
+ * @covers \Dvsa\Olcs\Api\Entity\Cases\Cases
  */
 class CasesEntityTest extends EntityTester
 {
+    /** @var  \Dvsa\Olcs\Api\Entity\Cases\Cases */
+    protected $entity;
+
     public function setUp()
     {
         /** @var \Dvsa\Olcs\Api\Entity\Cases\Cases entity */
@@ -445,16 +449,22 @@ class CasesEntityTest extends EntityTester
      */
     public function testGetCalculatedBundleValues()
     {
+        /** @var Entity | m\MockInterface $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut
+            ->shouldReceive('canClose')->once()->andReturn('unit_CanClose')
+            ->shouldReceive('canSendMsiResponse')->once()->andReturn('unit_CanSendMsi');
+
         $expected = [
             'isClosed' => false,
             'canReopen' => false,
-            'canClose' => false,
-            'canSendMsiResponse' => false,
+            'canClose' => 'unit_CanClose',
+            'canSendMsiResponse' => 'unit_CanSendMsi',
             'canAddSi' => false,
             'isErru' => false,
         ];
 
-        $this->assertEquals($expected, $this->entity->getCalculatedBundleValues());
+        $this->assertEquals($expected, $sut->getCalculatedBundleValues());
     }
 
     public function testGetContextValue()

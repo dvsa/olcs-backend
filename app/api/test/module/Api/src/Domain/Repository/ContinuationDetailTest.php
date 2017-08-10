@@ -62,7 +62,6 @@ BLAH AND m.licence = [[95]]
         OR (c.year > [[$pastYear]] AND c.year < [[$year]])
         OR (c.month >= [[$month]] AND c.year = [[$pastYear]])
     AND m.status IN ([[["con_det_sts_printed","con_det_sts_acceptable","con_det_sts_unacceptable"]]])
-        OR (m.status = 'con_det_sts_complete' AND m.received = 'N')
 EOT;
         // Expected query has be formatted to make it readable, need to make it non formatted for assertion
         // remove new lines
@@ -92,7 +91,8 @@ EOT;
         );
         static::assertEquals('RESULT', $this->sut->fetchOngoingForLicence(95));
 
-        $expectedQuery = 'BLAH AND m.licence = [[95]] AND m.status = [[con_det_sts_acceptable]]';
+        $expectedQuery = 'BLAH AND m.licence = [[95]] AND (m.status = [[con_det_sts_acceptable]] '
+            . 'OR (m.status != [[con_det_sts_complete]] AND m.isDigital = 1))';
 
         static::assertEquals($expectedQuery, $this->query);
     }

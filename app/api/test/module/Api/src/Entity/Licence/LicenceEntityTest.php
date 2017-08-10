@@ -7,10 +7,13 @@ use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Continuation;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
@@ -692,7 +695,7 @@ class LicenceEntityTest extends EntityTester
         $this->assertFalse($licence->canHaveCommunityLicences());
     }
 
-    public function testCopyInformationFromApplication()
+    public function testCopyInformationFromNewApplication()
     {
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
@@ -700,6 +703,7 @@ class LicenceEntityTest extends EntityTester
         $licenceType = m::mock(RefData::class)->makePartial();
         $licenceType->setId(Entity::LICENCE_TYPE_STANDARD_NATIONAL);
         $application->setLicenceType($licenceType);
+        $application->shouldReceive('isVariation')->once()->withNoArgs()->andReturn(false);
 
         $goodsOrPsv = m::mock(RefData::class)->makePartial();
         $goodsOrPsv->setId(Entity::LICENCE_CATEGORY_GOODS_VEHICLE);
@@ -707,7 +711,6 @@ class LicenceEntityTest extends EntityTester
 
         $application->setTotAuthTrailers(9);
         $application->setTotAuthVehicles(12);
-        $application->setNiFlag('Y');
 
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
@@ -718,6 +721,71 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
         $this->assertEquals(9, $licence->getTotAuthTrailers());
         $this->assertEquals(12, $licence->getTotAuthVehicles());
+    }
+
+    public function testCopyInformationFromVariationApplication()
+    {
+        $appCompletion = m::mock(ApplicationCompletion::class);
+        $appCompletion->shouldReceive('variationSectionUpdated')->with('typeOfLicence')->once()->andReturn(true);
+        $appCompletion->shouldReceive('variationSectionUpdated')->with('operatingCentres')->once()->andReturn(true);
+
+        $licenceType = m::mock(RefData::class);
+        $goodsOrPsv = m::mock(RefData::class);
+        $totAuthTrailers = 9;
+        $totAuthVehicles = 12;
+
+        $application = m::mock(Application::class);
+        $application->shouldReceive('isVariation')->once()->withNoArgs()->andReturn(true);
+        $application->shouldReceive('getApplicationCompletion')->once()->withNoArgs()->andReturn($appCompletion);
+        $application->shouldReceive('getLicenceType')->once()->withNoArgs()->andReturn($licenceType);
+        $application->shouldReceive('getGoodsOrPsv')->once()->withNoArgs()->andReturn($goodsOrPsv);
+        $application->shouldReceive('getTotAuthTrailers')->once()->withNoArgs()->andReturn($totAuthTrailers);
+        $application->shouldReceive('getTotAuthVehicles')->once()->withNoArgs()->andReturn($totAuthVehicles);
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        $licence->copyInformationFromApplication($application);
+
+        $this->assertSame($licenceType, $licence->getLicenceType());
+        $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
+        $this->assertEquals($totAuthTrailers, $licence->getTotAuthTrailers());
+        $this->assertEquals($totAuthVehicles, $licence->getTotAuthVehicles());
+    }
+
+    public function testCopyInformationFromUnchangedVariationApplication()
+    {
+        $appCompletion = m::mock(ApplicationCompletion::class);
+        $appCompletion->shouldReceive('variationSectionUpdated')->with('typeOfLicence')->once()->andReturn(false);
+        $appCompletion->shouldReceive('variationSectionUpdated')->with('operatingCentres')->once()->andReturn(false);
+
+        $goodsOrPsv = m::mock(RefData::class);
+
+        $application = m::mock(Application::class);
+        $application->shouldReceive('isVariation')->once()->withNoArgs()->andReturn(true);
+        $application->shouldReceive('getApplicationCompletion')->once()->withNoArgs()->andReturn($appCompletion);
+        $application->shouldReceive('getGoodsOrPsv')->once()->withNoArgs()->andReturn($goodsOrPsv);
+        $application->shouldReceive('getLicenceType')->never();
+        $application->shouldReceive('getTotAuthTrailers')->never();
+        $application->shouldReceive('getTotAuthVehicles')->never();
+
+        $originalLicenceType = m::mock(RefData::class);
+        $originalTotAuthTrailers = 6;
+        $originalTotAuthVehicles = 10;
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceType($originalLicenceType);
+        $licence->setTotAuthTrailers($originalTotAuthTrailers);
+        $licence->setTotAuthVehicles($originalTotAuthVehicles);
+
+        $licence->copyInformationFromApplication($application);
+
+        //only goodsOrPsv should have changed
+        $this->assertSame($originalLicenceType, $licence->getLicenceType());
+        $this->assertSame($goodsOrPsv, $licence->getGoodsOrPsv());
+        $this->assertEquals($originalTotAuthTrailers, $licence->getTotAuthTrailers());
+        $this->assertEquals($originalTotAuthVehicles, $licence->getTotAuthVehicles());
     }
 
     public function testGetPsvDiscsNotCeased()
@@ -1244,5 +1312,287 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals('Goods', $mockLicence1->getOperatorType());
         $this->assertEquals('PSV', $mockLicence2->getOperatorType());
+    }
+
+    /**
+     * @dataProvider testIsExpiredDataProvider
+     *
+     * @param bool     $expected   Is Expiring
+     * @param DateTime $expiryDate Licence expiry date
+     */
+    public function testIsExpired($expected, $expiryDate)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setExpiryDate($expiryDate);
+        $this->assertSame($expected, $licence->isExpired());
+
+    }
+
+    public function testIsExpiredDataProvider()
+    {
+        return [
+            'Null expiry date' => [false, null],
+            [true, (new DateTime())->sub(new \DateInterval('P2Y4M'))],
+            [true, (new DateTime())->sub(new \DateInterval('P1Y'))],
+            [true, (new DateTime())->sub(new \DateInterval('P1M'))],
+            [true, (new DateTime())->sub(new \DateInterval('P1D'))],
+            'Expiry is now' => [false, (new DateTime())],
+            [false, (new DateTime())->add(new \DateInterval('P3M'))],
+            [false, (new DateTime())->add(new \DateInterval('P1Y'))],
+        ];
+    }
+
+    /**
+     * @dataProvider testIsExpiringDataProvider
+     *
+     * @param bool     $expected   Is Expiring
+     * @param DateTime $expiryDate Licence expiry date
+     */
+    public function testIsExpiringNoContinuation($expected, $expiryDate)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setExpiryDate($expiryDate);
+        $expected = false;
+        $this->assertSame($expected, $licence->isExpiring());
+    }
+
+    /**
+     * @dataProvider testIsExpiringDataProvider
+     *
+     * @param bool     $expected   Is Expiring
+     * @param DateTime $expiryDate Licence expiry date
+     */
+    public function testIsExpiringCurrentContinuation($expected, $expiryDate)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setExpiryDate($expiryDate);
+
+        $continuation = new Continuation();
+        $continuation->setMonth($expiryDate->format('n'));
+        $continuation->setYear($expiryDate->format('Y'));
+        $continuationDetail1 = new ContinuationDetail();
+        $continuationDetail1->setContinuation($continuation);
+        $continuationDetail1->setStatus(new RefData(ContinuationDetail::STATUS_PRINTED));
+
+        $continuation = new Continuation();
+        $continuation->setMonth($expiryDate->format('n'));
+        $continuation->setYear(2010);
+        $continuationDetail2 = new ContinuationDetail();
+        $continuationDetail2->setContinuation($continuation);
+        $continuationDetail2->setStatus(new RefData(ContinuationDetail::STATUS_PRINTED));
+        $licence->setContinuationDetails(new ArrayCollection([$continuationDetail2, $continuationDetail1]));
+
+        $this->assertSame($expected, $licence->isExpiring());
+    }
+
+    public function testIsExpiringDataProvider()
+    {
+        return [
+            '-2 years 4 monsth' => [false, (new DateTime())->sub(new \DateInterval('P2Y4M'))],
+            '-1 year' => [false, (new DateTime())->sub(new \DateInterval('P1Y'))],
+            '-1 month' => [false, (new DateTime())->sub(new \DateInterval('P1M'))],
+            '-1 day' => [false, (new DateTime())->sub(new \DateInterval('P1D'))],
+            'Expiry is now' => [true, (new DateTime())],
+            '+1 day' => [true, (new DateTime())->add(new \DateInterval('P1D'))],
+            '+1 month' => [true, (new DateTime())->add(new \DateInterval('P1M'))],
+            '+2 months' => [true, (new DateTime())->add(new \DateInterval('P2M'))],
+            '+75 days' => [false, (new DateTime())->add(new \DateInterval('P75D'))],
+            '+3 months' => [false, (new DateTime())->add(new \DateInterval('P3M'))],
+            '+1 year' => [false, (new DateTime())->add(new \DateInterval('P1Y'))],
+        ];
+    }
+
+    public function testGetActiveContinuationDetails()
+    {
+        $continuationDetail1 = new ContinuationDetail();
+        $continuationDetail1->setStatus(new RefData(ContinuationDetail::STATUS_PRINTED));
+        $continuationDetail2 = new ContinuationDetail();
+        $continuationDetail2->setStatus(new RefData(ContinuationDetail::STATUS_ERROR));
+        $continuationDetail3 = new ContinuationDetail();
+        $continuationDetail3->setStatus(new RefData(ContinuationDetail::STATUS_UNACCEPTABLE));
+        $continuationDetail4 = new ContinuationDetail();
+        $continuationDetail4->setStatus(new RefData(ContinuationDetail::STATUS_PRINTING));
+        $continuationDetail5 = new ContinuationDetail();
+        $continuationDetail5->setStatus(new RefData(ContinuationDetail::STATUS_ACCEPTABLE));
+
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setContinuationDetails(
+            new ArrayCollection(
+                [
+                    $continuationDetail1,
+                    $continuationDetail2,
+                    $continuationDetail3,
+                    $continuationDetail4,
+                    $continuationDetail5,
+                ]
+            )
+        );
+
+        $activeContinuatioNDetails = $licence->getActiveContinuationDetails();
+
+        $this->assertCount(3, $activeContinuatioNDetails);
+        $this->assertSame($continuationDetail1, $activeContinuatioNDetails[0]);
+        $this->assertSame($continuationDetail3, $activeContinuatioNDetails[2]);
+        $this->assertSame($continuationDetail5, $activeContinuatioNDetails[4]);
+    }
+
+    public function testSerialize()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $serialized = $licence->serialize();
+
+        $this->assertArrayNotHasKey('isExpired', $serialized);
+        $this->assertArrayNotHasKey('isExpiring', $serialized);
+    }
+
+    public function testSerializeWithExpired()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $serialized = $licence->serialize(['isExpired']);
+
+        $this->assertArrayHasKey('isExpired', $serialized);
+        $this->assertArrayNotHasKey('isExpiring', $serialized);
+    }
+
+    public function testSerializeWithExpiring()
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $serialized = $licence->serialize(['isExpiring']);
+
+        $this->assertArrayNotHasKey('isExpired', $serialized);
+        $this->assertArrayHasKey('isExpiring', $serialized);
+    }
+
+    public function testGetNotSubmittedOrUnderConsiderationVariations()
+    {
+        $app1 = m::mock()
+            ->shouldReceive('getstatus')
+            ->andReturn(Application::APPLICATION_STATUS_NOT_SUBMITTED)
+            ->once()
+            ->shouldReceive('getisVariation')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $app2 = m::mock()
+            ->shouldReceive('getstatus')
+            ->andReturn(Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->shouldReceive('getisVariation')
+            ->andReturn(true)
+            ->once()
+            ->getMock();
+
+        $app3 = m::mock()
+            ->shouldReceive('getisVariation')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
+        $applications = new ArrayCollection();
+        $applications->add($app1);
+        $applications->add($app2);
+        $applications->add($app3);
+
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getApplications')
+            ->andReturn($applications)
+            ->once()
+            ->getMock();
+
+        $expected = new ArrayCollection();
+        $expected->add($app1);
+        $expected->add($app2);
+
+        $result = $licence->getNotSubmittedOrUnderConsiderationVariations();
+
+        $this->assertEquals($result, $expected);
+    }
+
+    public function testGetOcPendingChangesNoChanges()
+    {
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn(new ArrayCollection())
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(0, $licence->getOcPendingChanges());
+    }
+
+    public function testGetOcPendingChanges()
+    {
+        $operatingCentres = new ArrayCollection();
+        $operatingCentres->add(['oc1']);
+
+        $variation = m::mock()
+            ->shouldReceive('getOperatingCentres')
+            ->andReturn($operatingCentres)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(2)
+            ->once()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(2)
+            ->once()
+            ->getMock();
+
+        $variations = new ArrayCollection();
+        $variations->add($variation);
+
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn($variations)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(1)
+            ->once()
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(1)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(3, $licence->getOcPendingChanges());
+    }
+
+    public function testGetTmPendingChangesNoChanges()
+    {
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn(new ArrayCollection())
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(0, $licence->getTmPendingChanges());
+    }
+
+    public function testGetTmPendingChanges()
+    {
+        $transportManagers = new ArrayCollection();
+        $transportManagers->add(['tm1']);
+
+        $variation = m::mock()
+            ->shouldReceive('getTransportManagers')
+            ->andReturn($transportManagers)
+            ->once()
+            ->getMock();
+
+        $variations = new ArrayCollection();
+        $variations->add($variation);
+
+        $licence = m::mock(Entity::class)->makePartial()
+            ->shouldReceive('getNotSubmittedOrUnderConsiderationVariations')
+            ->andReturn($variations)
+            ->once()
+            ->getMock();
+
+        $this->assertEquals(1, $licence->getTmPendingChanges());
     }
 }
