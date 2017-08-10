@@ -1611,89 +1611,95 @@ class LicenceEntityTest extends EntityTester
 
         $licenceCondition1 = new ConditionUndertaking($conditionType, 'N', 'N');
         $licenceCondition1->setNotes('lic cond 1');
-        $licenceCondition1->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-04'));
+        $licenceCondition1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'));
         $licenceCondition1->setAttachedTo($attachedToLicence);
 
         $licenceCondition2 = new ConditionUndertaking($conditionType, 'N', 'N');
         $licenceCondition2->setNotes('lic cond 2');
-        $licenceCondition2->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-03'));
+        $licenceCondition2->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00'));
         $licenceCondition2->setAttachedTo($attachedToLicence);
 
         $licenceCondition3 = new ConditionUndertaking($conditionType, 'N', 'Y');
         $licenceCondition3->setNotes('lic cond 3');
-        $licenceCondition3->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-02'));
+        $licenceCondition3->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-02 00:00:00'));
         $licenceCondition3->setAttachedTo($attachedToLicence);
 
         $licenceCondition4 = new ConditionUndertaking($conditionType, 'Y', 'N');
         $licenceCondition4->setNotes('lic cond 4');
-        $licenceCondition4->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-01'));
+        $licenceCondition4->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-01 00:00:00'));
         $licenceCondition4->setAttachedTo($attachedToLicence);
 
         $licenceUndertaking1 = new ConditionUndertaking($undertakingType, 'N', 'N');
         $licenceUndertaking1->setNotes('lic und 1');
-        $licenceUndertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2016-01-04'));
+        $licenceUndertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'));
         $licenceUndertaking1->setAttachedTo($attachedToLicence);
 
         $licenceUndertaking2 = new ConditionUndertaking($undertakingType, 'N', 'N');
         $licenceUndertaking2->setNotes('lic und 2');
-        $licenceUndertaking2->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2015-01-03'));
+        $licenceUndertaking2->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2015-01-03 00:00:00'));
         $licenceUndertaking2->setAttachedTo($attachedToLicence);
 
         $address1 = new Address();
+        $address1->setAddressLine1('line1');
+        $address1->setTown('town');
+        $address1->setPostcode('pc');
         $oc1 = new OperatingCentre();
         $oc1->setId(1);
         $oc1->setAddress($address1);
 
         $oc1Condition1 =  new ConditionUndertaking($conditionType, 'N', 'N');
         $oc1Condition1->setNotes('oc 1 cond 1');
-        $oc1Condition1->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-04'));
+        $oc1Condition1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'));
         $oc1Condition1->setAttachedTo($attachedToOc);
         $oc1Condition1->setOperatingCentre($oc1);
 
         $oc1Condition2 =  new ConditionUndertaking($conditionType, 'N', 'N');
         $oc1Condition2->setNotes('oc 1 cond 2');
-        $oc1Condition2->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2016-01-04'));
+        $oc1Condition2->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'));
         $oc1Condition2->setAttachedTo($attachedToOc);
         $oc1Condition2->setOperatingCentre($oc1);
 
         $oc1Undertaking1 =  new ConditionUndertaking($undertakingType, 'N', 'N');
         $oc1Undertaking1->setNotes('oc 1 und 1');
-        $oc1Undertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-04'));
+        $oc1Undertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'));
         $oc1Undertaking1->setAttachedTo($attachedToOc);
         $oc1Undertaking1->setOperatingCentre($oc1);
 
         $oc1Undertaking2 =  new ConditionUndertaking($undertakingType, 'N', 'N');
         $oc1Undertaking2->setNotes('oc 1 und 2');
-        $oc1Undertaking2->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2016-01-04'));
+        $oc1Undertaking2->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'));
         $oc1Undertaking2->setAttachedTo($attachedToOc);
         $oc1Undertaking2->setOperatingCentre($oc1);
 
         $address2 = new Address();
+        $address2->setAddressLine1('line12');
+        $address2->setTown('town1');
+        $address2->setPostcode('pc1');
         $oc2 = new OperatingCentre();
         $oc2->setId(2);
         $oc2->setAddress($address2);
 
         $oc2Condition1 =  new ConditionUndertaking($conditionType, 'N', 'N');
         $oc2Condition1->setNotes('oc 2 cond 1');
-        $oc2Condition1->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-04'));
+        $oc2Condition1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'));
         $oc2Condition1->setAttachedTo($attachedToOc);
         $oc2Condition1->setOperatingCentre($oc2);
 
         $oc2Condition2 =  new ConditionUndertaking($conditionType, 'N', 'N');
         $oc2Condition2->setNotes('oc 2 cond 2');
-        $oc2Condition2->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2016-01-04'));
+        $oc2Condition2->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'));
         $oc2Condition2->setAttachedTo($attachedToOc);
         $oc2Condition2->setOperatingCentre($oc2);
 
         $oc2Undertaking1 =  new ConditionUndertaking($undertakingType, 'N', 'N');
         $oc2Undertaking1->setNotes('oc 2 und 1');
-        $oc2Undertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2017-01-04'));
+        $oc2Undertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'));
         $oc2Undertaking1->setAttachedTo($attachedToOc);
         $oc2Undertaking1->setOperatingCentre($oc2);
 
         $oc2Undertaking2 =  new ConditionUndertaking($undertakingType, 'N', 'N');
         $oc2Undertaking2->setNotes('oc 2 und 2');
-        $oc2Undertaking2->setCreatedOn(\DateTime::createFromFormat('Y-m-d', '2016-01-04'));
+        $oc2Undertaking2->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'));
         $oc2Undertaking2->setAttachedTo($attachedToOc);
         $oc2Undertaking2->setOperatingCentre($oc2);
 
@@ -1719,33 +1725,133 @@ class LicenceEntityTest extends EntityTester
         $expected = [
             'licence' => [
                 'conditions' => [
-                    $licenceCondition2,
-                    $licenceCondition1,
+                    [
+                        'notes' => 'lic cond 2',
+                        'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00')
+                    ],
+                    [
+                        'notes' => 'lic cond 1',
+                        'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00')
+                    ],
                 ],
                 'undertakings' => [
-                    $licenceUndertaking2,
-                    $licenceUndertaking1,
+                    [
+                        'notes' => 'lic und 2',
+                        'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2015-01-03 00:00:00')
+                    ],
+                    [
+                        'notes' => 'lic und 1',
+                        'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00')
+                    ],
                 ]
             ],
             'operatingCentres' => [
                 '1' => [
                     'conditions' => [
-                        $oc1Condition2,
-                        $oc1Condition1,
+                        [
+                            'notes' => 'oc 1 cond 2',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line1',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town',
+                                'postcode' => 'pc'
+                            ]
+                        ],
+                        [
+                            'notes' => 'oc 1 cond 1',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line1',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town',
+                                'postcode' => 'pc'
+                            ]
+                        ],
                     ],
                     'undertakings' => [
-                        $oc1Undertaking2,
-                        $oc1Undertaking1,
+                        [
+                            'notes' => 'oc 1 und 2',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line1',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town',
+                                'postcode' => 'pc'
+                            ]
+                        ],
+                        [
+                            'notes' => 'oc 1 und 1',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line1',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town',
+                                'postcode' => 'pc'
+                            ]
+                        ],
                     ]
                 ],
                 '2' => [
                     'conditions' => [
-                        $oc2Condition2,
-                        $oc2Condition1,
+                        [
+                            'notes' => 'oc 2 cond 2',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line12',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town1',
+                                'postcode' => 'pc1'
+                            ]
+                        ],
+                        [
+                            'notes' => 'oc 2 cond 1',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line12',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town1',
+                                'postcode' => 'pc1'
+                            ]
+                        ],
                     ],
                     'undertakings' => [
-                        $oc2Undertaking2,
-                        $oc2Undertaking1,
+                        [
+                            'notes' => 'oc 2 und 2',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line12',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town1',
+                                'postcode' => 'pc1'
+                            ]
+                        ],
+                        [
+                            'notes' => 'oc 2 und 1',
+                            'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-04 00:00:00'),
+                            'address' => [
+                                'addressLine1' => 'line12',
+                                'addressLine2' => null,
+                                'addressLine3' => null,
+                                'addressLine4' => null,
+                                'town' => 'town1',
+                                'postcode' => 'pc1'
+                            ]
+                        ],
                     ]
                 ]
             ]
