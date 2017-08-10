@@ -361,4 +361,63 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
         $this->assertSame(['Snapshot created', 'Application 1 withdrawn.'], $result->getMessages());
     }
+
+    public function testHandleCommandVariation()
+    {
+        $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
+
+        $this->setupIsInternalUser(false);
+
+        $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
+        $trafficArea->setId('TA');
+
+        $licence = m::mock(Licence::class)->shouldReceive('getId')->with()->andReturn(123);
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->setId(1);
+        $application->setLicence($licence);
+        $application->setIsVariation(true);
+
+        $application
+            ->shouldReceive('getCurrentInterimStatus')->with()->once()->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->shouldReceive('isGoods')->andReturn(true)
+            ->shouldReceive('isPublishable')->with()->once()->andReturn(false);
+
+        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(532)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(Application::class));
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with($application)
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
+            new Result()
+        );
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $data = ['id' => 532, 'event' => CreateSnapshot::ON_WITHDRAW];
+        $this->expectedSideEffect(CreateSnapshot::class, $data, $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new \Dvsa\Olcs\Api\Domain\Command\Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Snapshot created', 'Application 1 withdrawn.'], $result->getMessages());
+    }
 }

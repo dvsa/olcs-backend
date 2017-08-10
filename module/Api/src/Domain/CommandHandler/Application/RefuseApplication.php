@@ -82,17 +82,19 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
         $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp($application);
 
-        $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
-        if (!empty($communityLicences)) {
-            $this->result->merge(
-                $this->handleSideEffect(
-                    ReturnAllCommunityLicences::create(
-                        [
-                            'id' => $application->getLicence()->getId(),
-                        ]
+        if ($application->isNew()) {
+            $communityLicences = $application->getLicence()->getCommunityLics()->toArray();
+            if (!empty($communityLicences)) {
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        ReturnAllCommunityLicences::create(
+                            [
+                                'id' => $application->getLicence()->getId(),
+                            ]
+                        )
                     )
-                )
-            );
+                );
+            }
         }
 
         if (
