@@ -81,6 +81,8 @@ return [
             'ContinuationReview\Safety' => ContinuationReview\SafetyReviewService::class,
             'ContinuationReview\Declaration' => ContinuationReview\DeclarationReviewService::class,
             'ContinuationReview\Finance' => ContinuationReview\FinanceReviewService::class,
+            'ContinuationReview\ConditionsUndertakings' =>
+                ContinuationReview\ConditionsUndertakingsReviewService::class,
         ],
     ],
     'view_manager' => [

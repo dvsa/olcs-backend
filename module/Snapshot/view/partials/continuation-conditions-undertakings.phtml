@@ -1,0 +1,79 @@
+<?php if (count($conditionsUndertakings['licence']) > 0) : ?>
+
+    <h2 class="heading-large"><?php echo $this->translate('continuations.conditions-undertakings.licence', 'snapshot'); ?></h2>
+
+    <?php if (count($conditionsUndertakings['licence']['conditions'])) : ?>
+
+        <h3><?php echo $this->translate('continuations.conditions-undertakings.conditions', 'snapshot'); ?></h3>
+
+        <p>
+            <?php foreach($conditionsUndertakings['licence']['conditions'] as $cu) : ?>
+                <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
+            <?php endforeach; ?>
+        </p>
+
+    <?php endif; ?>
+
+    <?php if (count($conditionsUndertakings['licence']['undertakings'])) : ?>
+
+        <h3><?php echo $this->translate('continuations.conditions-undertakings.undertakings', 'snapshot'); ?></h3>
+
+        <p>
+            <?php foreach($conditionsUndertakings['licence']['undertakings'] as $cu) : ?>
+                <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
+            <?php endforeach; ?>
+        </p>
+
+    <?php endif; ?>
+
+    <hr class="seperator"/>
+
+<?php endif; ?>
+
+
+<?php if (count($conditionsUndertakings['operatingCentres'])): ?>
+
+    <h2 class="heading-large"><?php echo $this->translate('Operating centres(s)', 'snapshot'); ?></h2>
+
+    <?php foreach($conditionsUndertakings['operatingCentres'] as $oc) : ?>
+
+        <?php $index = (isset($oc['conditions']) ? 'conditions' : 'undertakings'); ?>
+        <br />
+        <h3>
+            <?php
+                $address = $oc[$index][0]->getOperatingCentre()->getAddress();
+                echo $this->escapeHtml(
+                    implode(' ', [$address->getAddressLine1(), $address->getTown(), $address->getPostcode()])
+                );
+            ?>
+        </h3>
+
+        <?php if (count($oc['conditions']) > 0) : ?>
+            <br />
+            <p>
+                <h4><?php echo $this->translate('continuations.conditions-undertakings.conditions', 'snapshot'); ?></h4>
+                <p>
+                    <?php foreach($oc['conditions'] as $cu) : ?>
+                        <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
+                    <?php endforeach; ?>
+                </p>
+            </p>
+
+        <?php endif; ?>
+
+        <?php if (count($oc['undertakings']) > 0) : ?>
+            <br />
+            <p>
+                <h4><?php echo $this->translate('continuations.conditions-undertakings.undertakings', 'snapshot'); ?></h4>
+                <p>
+                    <?php foreach($oc['undertakings'] as $cu) : ?>
+                        <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
+                    <?php endforeach; ?>
+                </p>
+            </p>
+
+        <?php endif; ?>
+
+    <?php endforeach; ?>
+
+<?php endif; ?>
