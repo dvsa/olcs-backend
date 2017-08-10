@@ -268,6 +268,10 @@ final class ContinueLicence extends AbstractCommandHandler implements Transactio
      */
     protected function createTaskForInsufficientFinances(ContinuationDetail $continuationDetail, Result $result)
     {
+        if ($continuationDetail->getLicence()->isSpecialRestricted()) {
+            return;
+        }
+
         if ($continuationDetail->getAmountDeclared() < $this->getAmountRequired($continuationDetail)) {
             $createTaskCmd = CreateTaskCmd::create(
                 [
