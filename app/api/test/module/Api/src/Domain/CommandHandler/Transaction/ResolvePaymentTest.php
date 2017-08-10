@@ -152,7 +152,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getPaymentStatus')
             ->once()
             ->with($guid, 'fee1')
-            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+            ->andReturn(['code' => CpmsHelper::PAYMENT_SUCCESS]);
 
         $payment
             ->shouldReceive('setStatus')
@@ -534,7 +534,7 @@ class ResolvePaymentTest extends CommandHandlerTestCase
             ->shouldReceive('getPaymentStatus')
             ->once()
             ->with($guid, 'fee1')
-            ->andReturn(CpmsHelper::PAYMENT_SUCCESS);
+            ->andReturn(['code' => CpmsHelper::PAYMENT_SUCCESS]);
 
         $payment
             ->shouldReceive('setStatus')
