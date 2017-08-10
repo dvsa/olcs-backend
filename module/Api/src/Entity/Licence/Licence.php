@@ -495,11 +495,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         foreach ($conditionsUndertakings as &$cu) {
             $conditionType = $map[$cu->getConditionType()->getId()];
             if ($cu->getAttachedTo()->getId() === ConditionUndertaking::ATTACHED_TO_LICENCE) {
-                $licenceConditionsUndertakings[$conditionType][] = $cu;
+                $licenceConditionsUndertakings[$conditionType][] = [
+                    'notes' => $cu->getNotes(),
+                    'createdOn' => $cu->getCreatedOn(true)
+                ];
             } else {
                 $ocConditionsUndertakings[
                     $cu->getOperatingCentre()->getId() . $cu->getOperatingCentre()->getAddress()->getPostcode()
-                ][$conditionType][] = $cu;
+                ][$conditionType][] = [
+                    'notes' => $cu->getNotes(),
+                    'address' => [
+                        'addressLine1' => $cu->getOperatingCentre()->getAddress()->getAddressLine1(),
+                        'addressLine2' => $cu->getOperatingCentre()->getAddress()->getAddressLine2(),
+                        'addressLine3' => $cu->getOperatingCentre()->getAddress()->getAddressLine3(),
+                        'addressLine4' => $cu->getOperatingCentre()->getAddress()->getAddressLine4(),
+                        'town' => $cu->getOperatingCentre()->getAddress()->getTown(),
+                        'postcode' => $cu->getOperatingCentre()->getAddress()->getPostcode(),
+                    ],
+                    'createdOn' => $cu->getCreatedOn(true)
+                ];
             }
         }
 
@@ -541,10 +555,10 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         usort(
             $conditionsUndertakings, function ($a, $b) {
-                if ($a->getCreatedOn(true) === $b->getCreatedOn(true)) {
+                if ($a['createdOn'] === $b['createdOn']) {
                     return 0;
                 }
-                return ($a->getCreatedOn(true) > $b->getCreatedOn(true)) ? +1 : -1;
+                return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
             }
         );
     }
