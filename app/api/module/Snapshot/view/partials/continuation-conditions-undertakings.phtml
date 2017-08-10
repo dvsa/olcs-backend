@@ -8,7 +8,7 @@
 
         <p>
             <?php foreach($conditionsUndertakings['licence']['conditions'] as $cu) : ?>
-                <p><?php echo $cu->getNotes(); ?></p>
+                <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
             <?php endforeach; ?>
         </p>
 
@@ -20,7 +20,7 @@
 
         <p>
             <?php foreach($conditionsUndertakings['licence']['undertakings'] as $cu) : ?>
-                <p><?php echo $cu->getNotes(); ?></p>
+                <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
             <?php endforeach; ?>
         </p>
 
@@ -42,7 +42,9 @@
         <h3>
             <?php
                 $address = $oc[$index][0]->getOperatingCentre()->getAddress();
-                echo implode(' ', [$address->getAddressLine1(), $address->getTown(), $address->getPostcode()]);
+                echo $this->escapeHtml(
+                    implode(' ', [$address->getAddressLine1(), $address->getTown(), $address->getPostcode()])
+                );
             ?>
         </h3>
 
@@ -52,7 +54,7 @@
                 <h4><?php echo $this->translate('continuations.conditions-undertakings.conditions', 'snapshot'); ?></h4>
                 <p>
                     <?php foreach($oc['conditions'] as $cu) : ?>
-                        <p><?php echo $cu->getNotes(); ?></p>
+                        <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
                     <?php endforeach; ?>
                 </p>
             </p>
@@ -65,7 +67,7 @@
                 <h4><?php echo $this->translate('continuations.conditions-undertakings.undertakings', 'snapshot'); ?></h4>
                 <p>
                     <?php foreach($oc['undertakings'] as $cu) : ?>
-                        <p><?php echo $cu->getNotes(); ?></p>
+                        <p><?php echo $this->escapeHtml($cu->getNotes()); ?></p>
                     <?php endforeach; ?>
                 </p>
             </p>
