@@ -17,6 +17,11 @@ use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare as Cmd;
 class Compare extends AbstractConsumer
 {
     /**
+     * @var int Max retry attempts before fails
+     */
+    protected $maxAttempts = 10;
+
+    /**
      * @var string the command to handle processing
      */
     protected $commandName = Cmd::class;

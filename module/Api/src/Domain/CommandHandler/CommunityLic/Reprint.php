@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
 
 /**
  * Reprint community licences
@@ -72,6 +73,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
             ]
         );
         $result->merge($this->handleSideEffect($generateBatchCmd));
+        $result->merge($this->handleSideEffect(UpdateTotalCommunityLicencesCommand::create(['id' => $licenceId])));
 
         return $result;
     }

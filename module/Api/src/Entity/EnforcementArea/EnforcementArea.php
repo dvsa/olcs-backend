@@ -17,5 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EnforcementArea extends AbstractEnforcementArea
 {
-    const NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE = 'NI01';
+    const NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE = 'EA-N';
 }

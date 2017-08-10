@@ -2,48 +2,90 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Driver\Statement;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface as NamingServiceInterface;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Service\Exception;
-use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
+use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Doctrine\DBAL\Driver\Statement;
+use Dvsa\Olcs\Api\Service\Exception;
 
 /**
  * Export data to csv files for data.gov.uk
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-final class DataGovUkExport extends AbstractCommandHandler
+final class DataGovUkExport extends AbstractCommandHandler implements UploaderAwareInterface, NamingServiceInterface
 {
+    use UploaderAwareTrait, NamingServiceAwareTrait, QueueAwareTrait;
+
     const ERR_INVALID_REPORT = 'Invalid report name';
     const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
 
     const OPERATOR_LICENCE = 'operator-licence';
     const BUS_REGISTERED_ONLY = 'bus-registered-only';
     const BUS_VARIATION = 'bus-variation';
+    const PSV_OPERATOR_LIST = 'psv-operator-list';
 
     const FILE_DATETIME_FORMAT = 'Ymd_His';
 
+    /**
+     * @var string
+     */
     protected $repoServiceName = 'DataGovUk';
-    protected $extraRepos = ['TrafficArea'];
 
-    /** @var  string */
+    /**
+     * @var array
+     */
+    protected $extraRepos = [
+        'TrafficArea',
+        'SystemParameter',
+        'Category',
+        'SubCategory'
+    ];
+
+    /**
+     * @var string
+     */
     private $reportName;
-    /** @var  string */
+
+    /**
+     * @var string
+     */
     private $path;
 
-    /** @var Repository\DataGovUk */
+    /**
+     * @var Repository\DataGovUk
+     */
     private $dataGovUkRepo;
-    /** @var  array */
+
+    /**
+     * @var array
+     */
     private $csvPool = [];
+
+    /**
+     * @var EmailService
+     */
+    private $emailService;
 
     /**
      * Handle command
      *
-     * @param \Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport $command
+     * @param \Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport $command Command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -62,6 +104,8 @@ final class DataGovUkExport extends AbstractCommandHandler
             $this->processBusRegOnly();
         } elseif ($this->reportName === self::BUS_VARIATION) {
             $this->processBusVariation();
+        } elseif ($this->reportName === self::PSV_OPERATOR_LIST) {
+            $this->processPsvOperatorList();
         } else {
             throw new \Exception(self::ERR_INVALID_REPORT);
         }
@@ -69,6 +113,70 @@ final class DataGovUkExport extends AbstractCommandHandler
         return $this->result;
     }
 
+    /**
+     * Process PSV Operator list and email
+     *
+     * @return Result
+     */
+    private function processPsvOperatorList()
+    {
+        $this->result->addMessage('Fetching data from DB for PSV Operators');
+        $stmt = $this->dataGovUkRepo->fetchPsvOperatorList();
+
+        $file = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
+        $category = $this->getRepo('Category')->getCategoryReference(Category::CATEGORY_REPORT);
+        $subcategory = $this->getRepo('SubCategory')->getSubCategoryReference(SubCategory::REPORT_SUB_CATEGORY_PSV);
+
+        $filename = $this->getNamingService()->generateName(
+            'PsvOperatorList',
+            'csv',
+            $category,
+            $subcategory
+        );
+
+        // Upload file
+        $fileResult = $this->getUploader()->upload(
+            $file->getIdentifier(),
+            $file
+        );
+
+        $this->result->addMessage('File uploaded, identifier: ' . $fileResult->getIdentifier());
+        $this->result->addId('identifier', $fileResult->getIdentifier());
+
+        // Create file into database
+        $documentData = [
+            'identifier' => $fileResult->getIdentifier(),
+            'description' => $filename,
+            'filename' => $file->getIdentifier(),
+            'size' => $file->getSize(),
+            'category' => $category,
+            'subCategory' => $subcategory
+        ];
+
+        $document = $this->handleSideEffect(
+            CreateDocumentCmd::create($documentData)
+        );
+
+        $this->result->merge($document);
+
+        // Send email
+        $emailQueue = $this->emailQueue(
+            SendPsvOperatorListReport::class,
+            ['id' => $document->getId('document')],
+            $document->getId('document')
+        );
+
+        $email = $this->handleSideEffect($emailQueue);
+        $this->result->merge($email);
+
+        return $this->result;
+    }
+
+    /**
+     * Process operator licences
+     *
+     * @return void
+     */
     private function processOperatorLicences()
     {
         $areas = array_map(
@@ -84,6 +192,11 @@ final class DataGovUkExport extends AbstractCommandHandler
         $this->makeCsvsFromStatement($stmt, 'GeographicRegion', 'OLBSLicenceReport');
     }
 
+    /**
+     * Process Bus Reg Only
+     *
+     * @return void
+     */
     private function processBusRegOnly()
     {
         $areas = array_map(
@@ -99,6 +212,11 @@ final class DataGovUkExport extends AbstractCommandHandler
         $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_RegisteredOnly');
     }
 
+    /**
+     * Process Bus Variation
+     *
+     * @return void
+     */
     private function processBusVariation()
     {
         $areas = array_map(
@@ -117,9 +235,11 @@ final class DataGovUkExport extends AbstractCommandHandler
     /**
      * Fill csv files with data. Csv created by value of Key Field and File name.
      *
-     * @param Statement $stmt db records set
-     * @param string    $keyFld name of Key field in data set
+     * @param Statement $stmt     db records set
+     * @param string    $keyFld   name of Key field in data set
      * @param string    $fileName main part of file name
+     *
+     * @return void
      */
     private function makeCsvsFromStatement(Statement $stmt, $keyFld, $fileName)
     {
@@ -156,6 +276,47 @@ final class DataGovUkExport extends AbstractCommandHandler
     }
 
     /**
+     * Make CSV file for the list of PSV Operators
+     *
+     * @param Statement $stmt     Database query response
+     * @param string    $fileName Name of file
+     *
+     * @return File
+     */
+    private function makeCsvForPsvOperatorList(Statement $stmt, $fileName)
+    {
+        $filePath = $this->path . '/' . $fileName . '_' . date('Y-m-d_h-i-s') . '.csv';
+        $this->result->addMessage('create csv file: ' . $filePath);
+
+        $fh = ExportToCsv::createFile($filePath);
+
+        $titleAdded = false;
+
+        //  add rows
+        while (($row = $stmt->fetch()) !== false) {
+            if (!$titleAdded) {
+                //  add title & first row
+                fputcsv($fh, array_keys($row));
+                $titleAdded = true;
+            }
+
+            fputcsv($fh, $row);
+        }
+
+        fclose($fh);
+
+        $fileName = $fileName . '_' . date('Y-m-d_h-i-s') . '.csv';
+
+        $file = new File();
+        $file->setContent(file_get_contents($filePath));
+        $file->setIdentifier($fileName);
+        $file->setMimeType('text/csv');
+        $file->setResource($filePath);
+
+        return $file;
+    }
+
+    /**
      * Define list of traffic areas for which should be created report(s)
      *
      * @return TrafficAreaEntity[]
@@ -183,7 +344,9 @@ final class DataGovUkExport extends AbstractCommandHandler
     /**
      * Create service
      *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm
+     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Service Manager
+     *
+     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
      */
     public function createService(ServiceLocatorInterface $sm)
     {
@@ -196,6 +359,8 @@ final class DataGovUkExport extends AbstractCommandHandler
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
+
+        $this->emailService = $sl->get('EmailService');
 
         return parent::createService($sm);
     }

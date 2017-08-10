@@ -43,7 +43,7 @@ class ResultTest extends PHPUnit_Framework_TestCase
         $this->sut->addId('application', 222, true);
 
         $this->assertEquals(333, $this->sut->getId('licence'));
-        $this->assertEquals([111,222], $this->sut->getId('application'));
+        $this->assertEquals([111, 222], $this->sut->getId('application'));
 
         $this->assertEquals(['application' => [111, 222], 'licence' => 333], $this->sut->getIds());
     }
@@ -64,10 +64,12 @@ class ResultTest extends PHPUnit_Framework_TestCase
         $this->sut->addId('baz', 444, true);
         $this->sut->addMessage('foo was successful');
         $this->sut->addMessage('bar failed');
+        $this->sut->setFlag('foo', 'bar');
 
         $expected = [
             'id' => ['foo' => 111, 'bar' => 222, 'baz' => [333, 444]],
-            'messages' => ['foo was successful', 'bar failed']
+            'messages' => ['foo was successful', 'bar failed'],
+            'flags' => ['foo' => 'bar']
         ];
 
         $this->assertEquals($expected, $this->sut->toArray());
@@ -79,16 +81,19 @@ class ResultTest extends PHPUnit_Framework_TestCase
         $this->sut->addId('bar', 222);
         $this->sut->addMessage('foo was successful');
         $this->sut->addMessage('bar failed');
+        $this->sut->setFlag('foo', 'bar');
 
         $result = new Result();
         $result->addId('foo', 333);
         $result->addMessage('foo was updated');
+        $result->setFlag('cake', 'buz');
 
         $this->sut->merge($result);
 
         $expected = [
             'id' => ['foo' => 333, 'bar' => 222],
-            'messages' => ['foo was successful', 'bar failed', 'foo was updated']
+            'messages' => ['foo was successful', 'bar failed', 'foo was updated'],
+            'flags' => ['foo' => 'bar', 'cake' => 'buz']
         ];
 
         $this->assertEquals($expected, $this->sut->toArray());

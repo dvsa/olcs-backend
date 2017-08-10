@@ -72,8 +72,9 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
             'messages' => [
                 'Company Subsidiary updated',
                 'Section updated',
-            ]
-        ];
+            ],
+            'flags' => ['hasChanged' => 1]
+         ];
         static::assertEquals($expected, $actual->toArray());
     }
 }

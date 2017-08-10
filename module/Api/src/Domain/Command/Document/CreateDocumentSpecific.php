@@ -37,6 +37,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $opposition;
 
+    protected $continuationDetail;
+
     protected $category;
 
     protected $subCategory;
@@ -56,6 +58,8 @@ class CreateDocumentSpecific extends AbstractCommand
     protected $user;
 
     /**
+     * Get filename
+     *
      * @return mixed
      */
     public function getFilename()
@@ -64,6 +68,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get identifier
+     *
      * @return mixed
      */
     public function getIdentifier()
@@ -72,6 +78,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get size
+     *
      * @return mixed
      */
     public function getSize()
@@ -80,6 +88,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get application
+     *
      * @return mixed
      */
     public function getApplication()
@@ -88,6 +98,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get bus reg
+     *
      * @return mixed
      */
     public function getBusReg()
@@ -96,6 +108,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get case
+     *
      * @return mixed
      */
     public function getCase()
@@ -104,6 +118,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get IRFO Organisation
+     *
      * @return mixed
      */
     public function getIrfoOrganisation()
@@ -112,6 +128,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get submission
+     *
      * @return mixed
      */
     public function getSubmission()
@@ -120,6 +138,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get traffic area
+     *
      * @return mixed
      */
     public function getTrafficArea()
@@ -128,6 +148,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get transport manager
+     *
      * @return mixed
      */
     public function getTransportManager()
@@ -136,6 +158,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get Licence
+     *
      * @return mixed
      */
     public function getLicence()
@@ -144,6 +168,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get Operating Centre
+     *
      * @return mixed
      */
     public function getOperatingCentre()
@@ -152,6 +178,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get Opposition
+     *
      * @return mixed
      */
     public function getOpposition()
@@ -160,6 +188,18 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get continuation detail
+     *
+     * @return int
+     */
+    public function getContinuationDetail()
+    {
+        return $this->opposition;
+    }
+
+    /**
+     * Get category
+     *
      * @return mixed
      */
     public function getCategory()
@@ -168,6 +208,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get sub category
+     *
      * @return mixed
      */
     public function getSubCategory()
@@ -176,6 +218,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get description
+     *
      * @return mixed
      */
     public function getDescription()
@@ -184,6 +228,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get is external
+     *
      * @return mixed
      */
     public function getIsExternal()
@@ -192,6 +238,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get is scan
+     *
      * @return mixed
      */
     public function getIsScan()
@@ -200,6 +248,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get is EBSR Pack
+     *
      * @return bool
      */
     public function getIsEbsrPack()
@@ -208,6 +258,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get issued date
+     *
      * @return mixed
      */
     public function getIssuedDate()
@@ -216,6 +268,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get meta data
+     *
      * @return mixed
      */
     public function getMetadata()
@@ -224,6 +278,8 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
+     * Get user
+     *
      * @return mixed
      */
     public function getUser()

@@ -305,14 +305,6 @@ return [
 
     // Nysiis configuration
     'nysiis' => [
-        'soap' => [
-            'wsdl' => __DIR__ . '/../../module/Api/data/nysiis/wsdl/nysiisUAT.svc.wsdl',
-            'options' => [
-                'soap_version' => SOAP_1_1,
-                'encoding' => 'UTF-8',
-                'local_cert' =>'/path/to/inrcert.pem'
-            ]
-        ],
         'rest' => [
             'uri' => 'http://localhost:8080/nysiis-1.0/nysiis/convert',
             'options' => [

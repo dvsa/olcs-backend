@@ -741,6 +741,7 @@ return [
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
+    Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
@@ -831,17 +832,24 @@ return [
     TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
 
     // ContinuationDetail
+    TransferCommand\ContinuationDetail\Submit::class => CommandHandler\ContinuationDetail\Submit::class,
     TransferCommand\ContinuationDetail\Update::class => CommandHandler\ContinuationDetail\Update::class,
+    TransferCommand\ContinuationDetail\UpdateFinances::class => CommandHandler\ContinuationDetail\UpdateFinances::class,
+    TransferCommand\ContinuationDetail\UpdateInsufficientFinances::class =>
+        CommandHandler\ContinuationDetail\UpdateInsufficientFinances::class,
     TransferCommand\ContinuationDetail\Queue::class => CommandHandler\ContinuationDetail\Queue::class,
     TransferCommand\ContinuationDetail\PrepareContinuations::class =>
         CommandHandler\ContinuationDetail\PrepareContinuations::class,
     Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
     Command\ContinuationDetail\ProcessReminder::class => CommandHandler\ContinuationDetail\ProcessReminder::class,
+    Command\ContinuationDetail\CreateSnapshot::class => CommandHandler\ContinuationDetail\CreateSnapshot::class,
 
     // Continuation
     TransferCommand\Continuation\Create::class => CommandHandler\Continuation\Create::class,
 
     // Transport Manager Licence
+    TransferCommand\TransportManagerLicence\Delete::class
+    => CommandHandler\TransportManagerLicence\Delete::class,
     TransferCommand\TransportManagerLicence\UpdateForResponsibilities::class =>
         CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class,
     TransferCommand\TransportManagerLicence\DeleteForResponsibilities::class =>
@@ -976,5 +984,5 @@ return [
 
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
-    Command\DataRetention\RunDelete::class => CommandHandler\DataRetention\RunDelete::class,
+    Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
 ];

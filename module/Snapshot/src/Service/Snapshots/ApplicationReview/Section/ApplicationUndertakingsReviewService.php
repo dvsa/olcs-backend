@@ -51,6 +51,27 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         ];
     }
 
+    /**
+     * Generate markup from a licence
+     *
+     * @param Licence $licence    Licence
+     * @param bool    $isInternal For Internal or Selfserve
+     *
+     * @return string HTML
+     */
+    public function getMarkupForLicence(Licence $licence, $isInternal = false)
+    {
+        $data = [
+            'licenceType' => ['id' => $licence->getLicenceType()->getId()],
+            'licence' => ['organisation' => ['type' => ['id' => $licence->getOrganisation()->getType()->getId()]]],
+            'isGoods' => $licence->isGoods(),
+            'isInternal' => $isInternal,
+            'niFlag' => $licence->getTrafficArea()->getIsNi() ? 'Y' : 'N',
+        ];
+
+        return $this->getMarkup($data);
+    }
+
     public function getMarkup($data)
     {
         if ($this->isPsv($data)) {

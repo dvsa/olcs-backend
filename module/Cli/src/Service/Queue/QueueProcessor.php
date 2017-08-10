@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
+use Doctrine\DBAL\DBALException;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
@@ -58,6 +59,9 @@ class QueueProcessor implements ServiceLocatorAwareInterface
             return $consumer->processMessage($item);
         } catch (\Doctrine\ORM\ORMException $e) {
             // rethrow ORMException which can cause Entity Manager to close
+            throw $e;
+        } catch (DBALException $e) {
+            // rethrow DBALException which can cause Entity Manager to close
             throw $e;
         } catch (\Exception $e) {
             return $consumer->failed($item, $e->getMessage());

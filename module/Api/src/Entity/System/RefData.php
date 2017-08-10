@@ -39,6 +39,18 @@ class RefData extends AbstractRefData
 
     const TASK_ACTION_DATE_TODAY = 'tdt_today';
 
+    const SIG_PHYSICAL_SIGNATURE = 'sig_physical_signature';
+    const SIG_DIGITAL_SIGNATURE = 'sig_digital_signature';
+    const SIG_SIGNATURE_NOT_REQUIRED = 'sig_signature_not_required';
+
+    const PHONE_NUMBER_PRIMARY_TYPE = 'phone_t_primary';
+    const PHONE_NUMBER_SECONDARY_TYPE = 'phone_t_secondary';
+
+    /**
+     * RefData constructor.
+     *
+     * @param string $id Refdata ID
+     */
     public function __construct($id = null)
     {
         if (!is_null($id)) {

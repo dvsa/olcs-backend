@@ -391,4 +391,22 @@ class ContactDetails extends AbstractContactDetails
         }
         $this->setEmailAddress($emailAddress);
     }
+
+    /**
+     * Get phone contact number
+     *
+     * @param string $type type
+     *
+     * @return null
+     */
+    public function getPhoneContactNumber($type)
+    {
+        $phoneContacts = $this->getPhoneContacts();
+        foreach ($phoneContacts as $pc) {
+            if ($pc->getPhoneContactType()->getId() === $type) {
+                return $pc->getPhoneNumber();
+            }
+        }
+        return null;
+    }
 }

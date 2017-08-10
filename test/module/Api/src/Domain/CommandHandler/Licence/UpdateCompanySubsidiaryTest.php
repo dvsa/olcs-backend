@@ -97,6 +97,7 @@ class UpdateCompanySubsidiaryTest extends CommandHandlerTestCase
                     'Unit Company Subsidiary Updated',
                     'Task created',
                 ],
+                'flags' => ['hasChanged' => 1]
             ];
             static::assertEquals($expected, $actual->toArray());
         }

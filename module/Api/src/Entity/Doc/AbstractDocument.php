@@ -34,7 +34,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_irfo_organisation_id", columns={"irfo_organisation_id"}),
  *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
- *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"})
+ *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
+ *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
+     *     columns={"continuation_detail_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -97,6 +99,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
     protected $category;
+
+    /**
+     * Continuation detail
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail", fetch="LAZY")
+     * @ORM\JoinColumn(name="continuation_detail_id", referencedColumnName="id", nullable=true)
+     */
+    protected $continuationDetail;
 
     /**
      * Created by
@@ -546,6 +558,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Set the continuation detail
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail $continuationDetail entity being set as the value
+     *
+     * @return Document
+     */
+    public function setContinuationDetail($continuationDetail)
+    {
+        $this->continuationDetail = $continuationDetail;
+
+        return $this;
+    }
+
+    /**
+     * Get the continuation detail
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail
+     */
+    public function getContinuationDetail()
+    {
+        return $this->continuationDetail;
     }
 
     /**

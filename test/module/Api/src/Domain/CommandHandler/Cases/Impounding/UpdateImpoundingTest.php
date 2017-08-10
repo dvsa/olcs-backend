@@ -16,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Venue;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Update Impounding Test
@@ -35,7 +36,10 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'impt_hearing'
+            'impt_hearing',
+            'imlgis_type_goods_ni1',
+            'imlgis_type_goods_ni2',
+            'impo_returned'
         ];
 
         $this->references = [
@@ -52,33 +56,52 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $impoundingType = 'impt_hearing';
+        $venue = 8;
+        $vrm = 'AB14 CDE';
+        $venueOther = 'venue other';
+        $applicationReceiptDate = '2014-06-09';
+        $hearingDate = '2014-06-10T15:45:00+0100';
+        $notes = 'notes';
+        $outcomeSentDate = '2015-06-01';
+
         $command = Cmd::Create(
             [
                 'id' => 99,
                 'version' => 1,
-                'applicationReceiptDate' => '2014-06-09',
-                'closeDate' => '2015-05-28T10:53:34+0100',
-                'UpdatedOn' => '2015-05-28T10:53:34+0100',
-                'hearingDate' => '2014-06-10T15:45:00+0100',
-                'lastModifiedOn' => '2015-05-28T10:53:34+0100',
-                'notes' => 'Some notes - db default',
-                'outcomeSentDate' => '2014-06-11',
-                'venueOther' => null,
-                'venue' => 8,
-                'vrm' => 'vrm1',
+                'applicationReceiptDate' => $applicationReceiptDate,
+                'hearingDate' => $hearingDate,
+                'notes' => $notes,
+                'outcomeSentDate' => $outcomeSentDate,
+                'venueOther' => $venueOther,
+                'venue' => $venue,
+                'vrm' => $vrm,
                 'impoundingLegislationTypes' => [
                     'imlgis_type_goods_ni1',
                     'imlgis_type_goods_ni2'
                 ],
-                'impoundingType' => 'impt_hearing',
+                'impoundingType' => $impoundingType,
                 'outcome' => 'impo_returned',
-                'presidingTc' => 1
+                'presidingTc' => null
             ]
         );
 
         /** @var ImpoundingEntity $impounding */
-        $impounding = m::mock(ImpoundingEntity::class)->makePartial();
-        $impounding->setId($command->getId());
+        $impounding = m::mock(ImpoundingEntity::class);
+        $impounding->shouldReceive('getId')->andReturn(99);
+        $impounding->shouldReceive('update')->with(
+            $this->refData['impt_hearing'],
+            m::type(ArrayCollection::class),
+            $this->references[Venue::class][$venue],
+            $venueOther,
+            $applicationReceiptDate,
+            $vrm,
+            $hearingDate,
+            null,
+            $this->refData['impo_returned'],
+            $outcomeSentDate,
+            $notes
+        );
 
         /** @var ImpoundingEntity $imp */
         $imp = null;
@@ -92,7 +115,6 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (ImpoundingEntity $impounding) use (&$imp) {
                     $imp = $impounding;
-                    $impounding->setId(99);
                 }
             )
             ->once();
@@ -103,7 +125,5 @@ class UpdateImpoundingTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Impounding updated', $result->getMessages());
-
-        $this->assertEquals('vrm1', $imp->getVrm());
     }
 }

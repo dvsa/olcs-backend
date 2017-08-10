@@ -157,6 +157,12 @@ class ClientTest extends MockeryTestCase
                 'errClass' => Exception::class,
                 'errMsg' => Client::ERR_INVALID_JSON,
             ],
+            [
+                'statusCode' => Response::STATUS_CODE_404,
+                'content' => '{"errors":[{"type":"ch:service","error":"company-profile-not-found"}]}',
+                'errClass' => Exception\NotFoundException::class,
+                'errMsg' => Client::ERR_COMPANY_PROFILE_NOT_FOUND,
+            ],
         ];
     }
 }

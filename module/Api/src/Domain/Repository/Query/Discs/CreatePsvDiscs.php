@@ -24,7 +24,7 @@ class CreatePsvDiscs extends AbstractRawQuery
      *
      * @param int  $licenceId The licence
      * @param int  $howMany   How many discs to create
-     * @param bool $isCopy
+     * @param bool $isCopy    Is this a copy
      *
      * @return int Number of rows inserted
      *
@@ -32,6 +32,10 @@ class CreatePsvDiscs extends AbstractRawQuery
      */
     public function executeInsert($licenceId, $howMany, $isCopy)
     {
+        if ($howMany === 0) {
+            return 0;
+        }
+
         $query = $this->buildQueryFromTemplate($this->getQueryTemplate(), false);
         for ($i = 0; $i < $howMany; $i++) {
             if ($i !== 0) {

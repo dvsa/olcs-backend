@@ -91,6 +91,7 @@ class GrantConditionUndertakingTest extends CommandHandlerTestCase
         $cu1->setAction('A');
         $cu1->setIsFulfilled('Y');
         $cu1->setConditionType($this->refData[ConditionUndertaking::TYPE_CONDITION]);
+        $cu1->setConditionCategory('CONDITION_CAT');
 
         $cuRecords = new ArrayCollection();
         $cuRecords->add($cu1);
@@ -110,8 +111,14 @@ class GrantConditionUndertakingTest extends CommandHandlerTestCase
         $this->repoMap['ConditionUndertaking']->shouldReceive('save')
             ->once()
             ->andReturnUsing(
-                function (ConditionUndertaking $cu) use ($user) {
+                function (ConditionUndertaking $cu) use ($user, $cu1) {
                     $this->assertSame($user, $cu->getApprovalUser());
+                    $this->assertSame($cu1->getAddedVia(), $cu->getAddedVia());
+                    $this->assertSame($cu1->getAttachedTo(), $cu->getAttachedTo());
+                    $this->assertSame($cu1->getCase(), $cu->getCase());
+                    $this->assertSame($cu1->getOperatingCentre(), $cu->getOperatingCentre());
+                    $this->assertSame($cu1->getNotes(), $cu->getNotes());
+                    $this->assertSame($cu1->getConditionCategory(), $cu->getConditionCategory());
                     $this->assertNull($cu->getS4());
                 }
             );

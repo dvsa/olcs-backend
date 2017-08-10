@@ -183,13 +183,38 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                         'code' => 'EXPECT',
                     ],
                 ],
-                'expect' => 'EXPECT',
+                'expect' => ['code' => 'EXPECT', 'message' => 'No error message from CPMS, no error code from CPMS'],
             ],
             [
                 'response' => [],
-                'expect' => null,
+                'expect' => ['code' => null, 'message' => 'No error message from CPMS, no error code from CPMS'],
             ],
         ];
+    }
+
+    public function testGetPaymentStatusWithMessageFromCpms()
+    {
+        $ref = 'unit_Ref';
+        $response = [
+            'code' => 701,
+            'message' => 'Payment not found'
+        ];
+
+        /** @var CpmsV2HelperService | m\MockInterface $sut */
+        $sut = m::mock(CpmsV2HelperService::class . '[send]')
+            ->shouldAllowMockingProtectedMethods()
+            ->shouldReceive('send')
+            ->with('get', '/api/payment/'.$ref, ApiService::SCOPE_QUERY_TXN, m::type('array'), 'fee')
+            ->once()
+            ->andReturn($response)
+            ->getMock();
+
+        $expected = [
+            'code' => null,
+            'message' => 'Payment not found, code: 701'
+        ];
+
+        static::assertEquals($expected, $sut->getPaymentStatus($ref, 'fee'));
     }
 
     /**

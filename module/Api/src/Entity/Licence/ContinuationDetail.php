@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * ContinuationDetail Entity
@@ -26,7 +27,9 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  *    }
  * )
  */
-class ContinuationDetail extends AbstractContinuationDetail implements OrganisationProviderInterface
+class ContinuationDetail extends AbstractContinuationDetail implements
+    OrganisationProviderInterface,
+    ContextProviderInterface
 {
     const STATUS_PREPARED     = 'con_det_sts_prepared';
     const STATUS_PRINTING     = 'con_det_sts_printing';
@@ -39,6 +42,8 @@ class ContinuationDetail extends AbstractContinuationDetail implements Organisat
     const METHOD_EMAIL = 'email';
     const METHOD_POST  = 'post';
 
+    const RESULT_LICENCE_CONTINUED = 'licence_continued';
+
     /**
      * Get Orgainsation owner
      *
@@ -47,5 +52,28 @@ class ContinuationDetail extends AbstractContinuationDetail implements Organisat
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * Get context for document naming
+     *
+     * @return int
+     */
+    public function getContextValue()
+    {
+        return $this->getId();
+    }
+
+    /**
+     * Get the total amount declared for this continuation
+     *
+     * @return float
+     */
+    public function getAmountDeclared()
+    {
+        return (float)$this->getAverageBalanceAmount()
+            + (float)$this->getOverdraftAmount()
+            + (float)$this->getFactoringAmount()
+            + (float)$this->getOtherFinancesAmount();
     }
 }
