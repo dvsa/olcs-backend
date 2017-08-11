@@ -94,69 +94,100 @@ class FeeEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @param ArrayCollection $feeTransactions
-     * @param boolean         $expected
-     *
-     * @dataProvider outstandingPaymentWithWaivesProvider
-     */
-    public function testHadOutstandingPaymentExcludeWaive($feeTransactions, $expected)
+    public function testHadOutstandingPaymentExcludeWaiveNoPayments()
     {
-        $this->sut->setFeeTransactions($feeTransactions);
+        $pendingPaymentsTimeout = 3600;
 
-        $this->assertEquals($expected, $this->sut->hasOutstandingPaymentExcludeWaive());
+        $this->sut->setFeeTransactions([]);
+
+        $this->assertFalse($this->sut->hasOutstandingPaymentExcludeWaive($pendingPaymentsTimeout));
     }
 
-    public function outstandingPaymentWithWaivesProvider()
+    public function testHadOutstandingPaymentExcludeWaiveOutstandingNoWaives()
     {
-        return [
-            'no fee payments' => [
-                [],
-                false,
-            ],
-            'outstanding no waives' => [
-                [
-                    m::mock()
-                        ->shouldReceive('getTransaction')
-                        ->andReturn(
-                            m::mock()
-                                ->shouldReceive('isOutstanding')
-                                ->andReturn(true)
-                                ->shouldReceive('getType')
-                                ->andReturn(
-                                    m::mock()
-                                        ->shouldReceive('getId')
-                                        ->andReturn(Transaction::TYPE_PAYMENT)
-                                        ->getMock()
-                                )
-                                ->getMock()
-                        )
-                        ->getMock()
-                ],
-                true,
-            ],
-            'outstanding with waives' => [
-                [
-                    m::mock()
-                        ->shouldReceive('getTransaction')
-                        ->andReturn(
-                            m::mock()
-                                ->shouldReceive('isOutstanding')
-                                ->andReturn(true)
-                                ->shouldReceive('getType')
-                                ->andReturn(
-                                    m::mock()
-                                        ->shouldReceive('getId')
-                                        ->andReturn(Transaction::TYPE_WAIVE)
-                                        ->getMock()
-                                )
-                                ->getMock()
-                        )
-                        ->getMock()
-                ],
-                false,
-            ]
-        ];
+        $pendingPaymentsTimeout = 3600;
+
+        $feeTransaction = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('isOutstanding')
+                    ->andReturn(true)
+                    ->shouldReceive('getType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(Transaction::TYPE_PAYMENT)
+                            ->getMock()
+                    )
+                    ->shouldReceive('getCreatedOn')
+                    ->andReturn(new DateTime('now'))
+                    ->once()
+                    ->getMock()
+            )
+            ->getMock();
+
+        $this->sut->setFeeTransactions([$feeTransaction]);
+
+        $this->assertTrue($this->sut->hasOutstandingPaymentExcludeWaive($pendingPaymentsTimeout));
+    }
+
+    public function testHadOutstandingPaymentExcludeWaiveOutstandingWithWaives()
+    {
+        $pendingPaymentsTimeout = 3600;
+
+        $feeTransaction = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('isOutstanding')
+                    ->andReturn(true)
+                    ->shouldReceive('getType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(Transaction::TYPE_WAIVE)
+                            ->getMock()
+                    )
+                    ->shouldReceive('getCreatedOn')
+                    ->andReturn(new DateTime('now'))
+                    ->once()
+                    ->getMock()
+            )
+            ->getMock();
+
+        $this->sut->setFeeTransactions([$feeTransaction]);
+
+        $this->assertFalse($this->sut->hasOutstandingPaymentExcludeWaive($pendingPaymentsTimeout));
+    }
+
+    public function testHadOutstandingPaymentExcludeWaiveOutstandingTimeoutReached()
+    {
+        $pendingPaymentsTimeout = 3600;
+
+        $feeTransaction = m::mock()
+            ->shouldReceive('getTransaction')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('isOutstanding')
+                    ->andReturn(true)
+                    ->shouldReceive('getType')
+                    ->andReturn(
+                        m::mock()
+                            ->shouldReceive('getId')
+                            ->andReturn(Transaction::TYPE_PAYMENT)
+                            ->getMock()
+                    )
+                    ->shouldReceive('getCreatedOn')
+                    ->andReturn(new DateTime('2017-01-01'))
+                    ->once()
+                    ->getMock()
+            )
+            ->getMock();
+
+        $this->sut->setFeeTransactions([$feeTransaction]);
+
+        $this->assertFalse($this->sut->hasOutstandingPaymentExcludeWaive($pendingPaymentsTimeout));
     }
 
     /**

@@ -81,12 +81,24 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
 
     /**
      * Loop through a fee's payment records and check if any are outstanding that are not waives
+     *
+     * @param int $paymentPaymentsTimeout pending payments timeout
+     *
+     * @return void
      */
-    public function hasOutstandingPaymentExcludeWaive()
+    public function hasOutstandingPaymentExcludeWaive($pendingPaymentsTimeout)
     {
         foreach ($this->getFeeTransactions() as $fp) {
+            /** @var Transaction $transaction */
             $transaction = $fp->getTransaction();
-            if ($transaction->isOutstanding() && $transaction->getType()->getId() !== Transaction::TYPE_WAIVE) {
+            $transactionDate = $this->asDateTime($transaction->getCreatedOn());
+            $interval = new \DateInterval('PT' . $pendingPaymentsTimeout . 'S');
+            $maxPendingDate = $transactionDate->add($interval);
+            if (
+                $transaction->isOutstanding()
+                && $transaction->getType()->getId() !== Transaction::TYPE_WAIVE
+                && $maxPendingDate > (new DateTime('now'))
+            ) {
                 return true;
             }
         }

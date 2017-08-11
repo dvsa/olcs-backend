@@ -30,6 +30,8 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
+use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 
 /**
  * Pay Outstanding Fees
@@ -39,13 +41,16 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 final class PayOutstandingFees extends AbstractCommandHandler implements
     TransactionedInterface,
     AuthAwareInterface,
-    CpmsAwareInterface
+    CpmsAwareInterface,
+    ConfigAwareInterface
 {
-    use AuthAwareTrait, CpmsAwareTrait;
+    use AuthAwareTrait, CpmsAwareTrait, ConfigAwareTrait;
 
     const ERR_WAIT = 'ERR_WAIT';
 
     const ERR_NO_FEES = 'ERR_NO_FEES';
+
+    const DEFAULT_PENDING_PAYMENTS_TIMEOUT = 3600;
 
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
@@ -68,6 +73,11 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+        $config = $this->getConfig();
+        $pendingPaymentsTimeout = isset($config['cpms']['pending_payments_timeout'])
+            ? $config['cpms']['pending_payments_timeout']
+            : self::DEFAULT_PENDING_PAYMENTS_TIMEOUT;
+
         // if payment method in CARD_ONLINE (ie it came from external) and disable card payments is set
         if ($command->getPaymentMethod()===FeeEntity::METHOD_CARD_ONLINE &&
             $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments()
@@ -101,7 +111,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             return $this->result;
         }
 
-        if ($this->feesHasOutstandingTransactions($feesToPay)) {
+        if ($this->feesHasOutstandingTransactions($feesToPay, $pendingPaymentsTimeout)) {
             $this->result->addMessage(
                 [
                     self::ERR_WAIT =>
@@ -135,14 +145,16 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     /**
      * If any of fees has outstanding transaction
      *
-     * @param array $fees fees
+     * @param array $fees                   fees
+     * @param int   $pendingPaymentsTimeout pending payments timeout
      *
      * @return bool
      */
-    protected function feesHasOutstandingTransactions($fees)
+    protected function feesHasOutstandingTransactions($fees, $pendingPaymentsTimeout)
     {
+        /** @var FeeEntity $fee */
         foreach ($fees as $fee) {
-            if ($fee->hasOutstandingPaymentExcludeWaive()) {
+            if ($fee->hasOutstandingPaymentExcludeWaive($pendingPaymentsTimeout)) {
                 return true;
             }
         }
