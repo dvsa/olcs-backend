@@ -47,6 +47,18 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         }
         $continuationDetail->setIsDigital(true);
 
+        // set default values if they haven't already been set
+        if ($continuationDetail->getTotAuthVehicles() === null) {
+            $continuationDetail->setTotAuthVehicles($continuationDetail->getLicence()->getTotAuthVehicles());
+        }
+        if ($continuationDetail->getTotCommunityLicences() === null) {
+            $continuationDetail->setTotCommunityLicences(
+                $continuationDetail->getLicence()->getTotCommunityLicences()
+            );
+        }
+        if ($continuationDetail->getTotPsvDiscs() === null) {
+            $continuationDetail->setTotPsvDiscs($continuationDetail->getLicence()->getPsvDiscsNotCeased()->count());
+        }
         $this->getRepo()->save($continuationDetail);
 
         // If there are no continuation fees then continue the licence
@@ -54,22 +66,6 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             $continuationDetail->getLicence()->getId()
         );
         if (count($continuationFees) === 0) {
-
-            // set default values if they haven't already been set
-            if ($continuationDetail->getTotAuthVehicles() === null) {
-                $continuationDetail->setTotAuthVehicles($continuationDetail->getLicence()->getTotAuthVehicles());
-            }
-            if ($continuationDetail->getTotCommunityLicences() === null) {
-                $continuationDetail->setTotCommunityLicences(
-                    $continuationDetail->getLicence()->getTotCommunityLicences()
-                );
-            }
-            if ($continuationDetail->getTotPsvDiscs() === null) {
-                $continuationDetail->setTotPsvDiscs($continuationDetail->getLicence()->getPsvDiscsNotCeased()->count());
-            }
-
-            $this->getRepo()->save($continuationDetail);
-
             $this->result->merge(
                 $this->handleSideEffect(
                     ContinueLicence::create(
