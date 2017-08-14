@@ -59,7 +59,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $command = Cmd::create(['id' => 111]);
+        $command = Cmd::create(['id' => 111, 'financialEvidence' => true]);
 
         $documentCollection = new ArrayCollection(
             [
@@ -127,7 +127,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandFinancialEvidenceTaskExists()
     {
-        $command = Cmd::create(['id' => 111]);
+        $command = Cmd::create(['id' => 111, 'financialEvidence' => true]);
 
         $documentCollection = new ArrayCollection(
             [
@@ -173,7 +173,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoFinancialEvidenceDocs()
     {
-        $command = Cmd::create(['id' => 111]);
+        $command = Cmd::create(['id' => 111, 'financialEvidence' => true]);
 
         $documentCollection = new ArrayCollection([]);
 
@@ -214,7 +214,8 @@ class UploadEvidenceTest extends CommandHandlerTestCase
                         'adPlacedIn' => 'foo',
                         'adPlacedDate' => '2017-01-02'
                     ]
-                ]
+                ],
+                'financialEvidence' => true
             ]
         );
         $mockOperatingCentre = m::mock()
@@ -323,7 +324,8 @@ class UploadEvidenceTest extends CommandHandlerTestCase
                         'adPlacedIn' => 'foo',
                         'adPlacedDate' => '2017-01-02'
                     ]
-                ]
+                ],
+                'financialEvidence' => true
             ]
         );
         $mockOperatingCentre = m::mock()
@@ -412,7 +414,8 @@ class UploadEvidenceTest extends CommandHandlerTestCase
                         'adPlacedIn' => 'foo',
                         'adPlacedDate' => '2017-01-02'
                     ]
-                ]
+                ],
+                'financialEvidence' => true
             ]
         );
         $documentCollection = new ArrayCollection([]);
