@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Queue;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as Qry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue\NextItem;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
@@ -45,7 +46,11 @@ class NextItemTest extends QueryHandlerTestCase
         $this->assertSame($item, $this->sut->handleQuery($query));
     }
 
-    public function testHandleQueryNoItem()
+    /**
+     * @dataProvider exceptionProvider
+     * @param $exception
+     */
+    public function testHandleQueryNoItem($exception)
     {
         $query = Qry::create(['includeTypes' => ['foo'], 'excludeTypes' => ['bar']]);
 
@@ -53,8 +58,19 @@ class NextItemTest extends QueryHandlerTestCase
             ->shouldReceive('getNextItem')
             ->with(['foo'], ['bar'])
             ->once()
-            ->andThrow(new NotFoundException());
+            ->andThrow($exception);
 
         $this->assertNull($this->sut->handleQuery($query));
+    }
+
+    /**
+     * @return array
+     */
+    public function exceptionProvider()
+    {
+        return [
+            [m::mock(NotFoundException::class)],
+            [m::mock(OptimisticLockException::class)]
+        ];
     }
 }
