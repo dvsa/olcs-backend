@@ -2,10 +2,9 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
@@ -22,7 +21,6 @@ use org\bovigo\vfs\vfsStream;
 use Mockery as m;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
-use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
@@ -80,19 +78,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->mockedSmServices['FileUploader'] = $mockFileUploader;
         $this->mockedSmServices['DocumentNamingService'] = $mockDocumentNaming;
 
-        $category = (new Category())->setId(Category::CATEGORY_REPORT)->setDescription('Report');
-        $subCategory = (new SubCategory())->setId(SubCategory::REPORT_SUB_CATEGORY_PSV)->setSubCategoryName('PSV');
-
-        $this->categoryReferences = [
-            Category::CATEGORY_REPORT => m::mock($category)
-        ];
-
-        $this->subCategoryReferences = [
-            SubCategory::REPORT_SUB_CATEGORY_PSV => m::mock($subCategory)
-        ];
-
         $this->sut = new DataGovUkExport;
-        $this->sut->setUploader($mockFileUploader);
 
         parent::setUp();
 
@@ -118,7 +104,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
 
     public function testPsvOperatorListOk()
     {
-        $fileName = 'PsvOperatorList_' . date('Y-m-d_h-i-s') . '.csv';
+        $fileName = 'psv-operator-list.csv';
 
         $vfsFile = new vfsStreamFile($fileName, 0777);
         $tmpFolder = new vfsStreamDirectory('unit');
@@ -193,15 +179,14 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             ->shouldReceive('upload')->andReturn($contentStoreFile);
 
         // Create document in database
-        $documentData['identifier'] = $fileName;
-        $documentData['description'] = $this->tmpPath . '/' . $fileName;
+        $documentData['description'] = 'PSV Operator list';
         $documentData['filename'] = $fileName;
-        $documentData['size'] = 98;
-        $documentData['category'] = $this->categoryReferences[Category::CATEGORY_REPORT];
-        $documentData['subCategory'] = $this->subCategoryReferences[SubCategory::REPORT_SUB_CATEGORY_PSV];
+        $documentData['user'] = \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER;
+        $documentData['category'] = Category::CATEGORY_REPORT;
+        $documentData['subCategory'] = SubCategory::REPORT_SUB_CATEGORY_PSV;
 
         $this->expectedSideEffect(
-            CreateDocumentCmd::class,
+            UploadCmd::class,
             $documentData,
             (new Result())->addMessage('CreateDocument')->addId('document', 1)
         );
@@ -228,9 +213,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
 
         $expectMsg =
             'Fetching data from DB for PSV Operators' .
-            'create csv file: ' . $expectFile .
-            'File uploaded, identifier: ' . $fileName .
-            'CreateDocument';
+            'create csv file content';
 
         static::assertEquals(
             $expectMsg,

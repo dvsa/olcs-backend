@@ -2,19 +2,15 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface as NamingServiceInterface;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocument as CreateDocumentCmd;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
+use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
-use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -28,9 +24,9 @@ use Dvsa\Olcs\Api\Service\Exception;
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-final class DataGovUkExport extends AbstractCommandHandler implements UploaderAwareInterface, NamingServiceInterface
+final class DataGovUkExport extends AbstractCommandHandler
 {
-    use UploaderAwareTrait, NamingServiceAwareTrait, QueueAwareTrait;
+    use QueueAwareTrait;
 
     const ERR_INVALID_REPORT = 'Invalid report name';
     const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
@@ -124,40 +120,10 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $stmt = $this->dataGovUkRepo->fetchPsvOperatorList();
 
         $file = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
-        $category = $this->getRepo('Category')->getCategoryReference(Category::CATEGORY_REPORT);
-        $subcategory = $this->getRepo('SubCategory')->getSubCategoryReference(SubCategory::REPORT_SUB_CATEGORY_PSV);
-
-        $filename = $this->getNamingService()->generateName(
-            'PsvOperatorList',
-            'csv',
-            $category,
-            $subcategory
-        );
-
-        // Upload file
-        $fileResult = $this->getUploader()->upload(
-            $file->getIdentifier(),
-            $file
-        );
-
-        $this->result->addMessage('File uploaded, identifier: ' . $fileResult->getIdentifier());
-        $this->result->addId('identifier', $fileResult->getIdentifier());
-
-        // Create file into database
-        $documentData = [
-            'identifier' => $fileResult->getIdentifier(),
-            'description' => $filename,
-            'filename' => $file->getIdentifier(),
-            'size' => $file->getSize(),
-            'category' => $category,
-            'subCategory' => $subcategory
-        ];
 
         $document = $this->handleSideEffect(
-            CreateDocumentCmd::create($documentData)
+            $this->generatePsvOperatorListDocumentCmd($file)
         );
-
-        $this->result->merge($document);
 
         // Send email
         $emailQueue = $this->emailQueue(
@@ -170,6 +136,27 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         $this->result->merge($email);
 
         return $this->result;
+    }
+
+    /**
+     * Creates a command to upload the PSV Operator list CSV file
+     *
+     * @param string $document document content
+     *
+     * @return UploadCmd
+     */
+    private function generatePsvOperatorListDocumentCmd($document)
+    {
+        $data = [
+            'content' => base64_encode($document),
+            'category' => Category::CATEGORY_REPORT,
+            'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PSV,
+            'filename' => 'psv-operator-list.csv',
+            'description' => 'PSV Operator list',
+            'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+        ];
+
+        return UploadCmd::create($data);
     }
 
     /**
@@ -285,10 +272,9 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
      */
     private function makeCsvForPsvOperatorList(Statement $stmt, $fileName)
     {
-        $filePath = $this->path . '/' . $fileName . '_' . date('Y-m-d_h-i-s') . '.csv';
-        $this->result->addMessage('create csv file: ' . $filePath);
+        $this->result->addMessage('create csv file content');
 
-        $fh = ExportToCsv::createFile($filePath);
+        $buffer = fopen('php://temp', 'r+');
 
         $titleAdded = false;
 
@@ -296,24 +282,18 @@ final class DataGovUkExport extends AbstractCommandHandler implements UploaderAw
         while (($row = $stmt->fetch()) !== false) {
             if (!$titleAdded) {
                 //  add title & first row
-                fputcsv($fh, array_keys($row));
+                fputcsv($buffer, array_keys($row));
                 $titleAdded = true;
             }
 
-            fputcsv($fh, $row);
+            fputcsv($buffer, $row);
         }
 
-        fclose($fh);
+        $fileContents = fgets($buffer);
 
-        $fileName = $fileName . '_' . date('Y-m-d_h-i-s') . '.csv';
+        fclose($buffer);
 
-        $file = new File();
-        $file->setContent(file_get_contents($filePath));
-        $file->setIdentifier($fileName);
-        $file->setMimeType('text/csv');
-        $file->setResource($filePath);
-
-        return $file;
+        return $fileContents;
     }
 
     /**
