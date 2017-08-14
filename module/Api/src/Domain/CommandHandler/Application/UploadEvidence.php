@@ -36,16 +36,18 @@ final class UploadEvidence extends AbstractCommandHandler implements Transaction
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
-        $financialEvidenceDocuments = $application->getApplicationDocuments(
-            $this->getRepo()->getCategoryReference(Category::CATEGORY_APPLICATION),
-            $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
-        );
+        if ($command->getFinancialEvidence()) {
+            $financialEvidenceDocuments = $application->getApplicationDocuments(
+                $this->getRepo()->getCategoryReference(Category::CATEGORY_APPLICATION),
+                $this->getRepo()->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
+            );
 
-        if (!$financialEvidenceDocuments->isEmpty()) {
-            $application->setFinancialEvidenceUploaded(Application::FINANCIAL_EVIDENCE_UPLOADED);
-            $this->getRepo()->save($application);
-            $this->createTaskForFinancialEvidence($application);
-            $this->result->addMessage('Financial evidence uploaded');
+            if (!$financialEvidenceDocuments->isEmpty()) {
+                $application->setFinancialEvidenceUploaded(Application::FINANCIAL_EVIDENCE_UPLOADED);
+                $this->getRepo()->save($application);
+                $this->createTaskForFinancialEvidence($application);
+                $this->result->addMessage('Financial evidence uploaded');
+            }
         }
 
         foreach ($command->getOperatingCentres() as $commandOc) {
