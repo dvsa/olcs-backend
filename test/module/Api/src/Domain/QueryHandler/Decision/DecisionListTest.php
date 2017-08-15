@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Category;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Decision;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Decision\DecisionList as QueryHandler;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;

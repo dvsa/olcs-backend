@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\DataRetentionRule as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * DataRetentionRule
@@ -14,9 +15,12 @@ class DataRetentionRule extends AbstractRepository
     /**
      * Fetch as list of enabled data retention rules
      *
+     * @param QueryInterface $query    Query from API
+     * @param bool           $isReview Only retrieve rules in Review status
+     *
      * @return array
      */
-    public function fetchEnabledRules()
+    public function fetchEnabledRules(QueryInterface $query = null, $isReview = false)
     {
         $qb = $this->createQueryBuilder();
 
@@ -25,6 +29,15 @@ class DataRetentionRule extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq($this->alias .'.isEnabled', 1));
         $qb->andWhere($qb->expr()->isNull($this->alias .'.deletedDate'));
+
+        if ($isReview) {
+            $qb->andWhere($qb->expr()->eq($this->alias .'.actionType', ':actionType'));
+            $qb->setParameter('actionType', 'Review');
+        }
+
+        if (!is_null($query)) {
+            $this->buildDefaultListQuery($qb, $query);
+        }
 
         return $qb->getQuery()->getResult();
     }
