@@ -47,6 +47,9 @@ class SubmitTest extends CommandHandlerTestCase
         $command = UpdateCommand::create($data);
 
         $continuationDetail = new ContinuationDetailEntity();
+        $continuationDetail->setTotAuthVehicles(1);
+        $continuationDetail->setTotCommunityLicences(1);
+        $continuationDetail->setTotPsvDiscs(1);
         $continuationDetail->setId(154);
         $continuationDetail->setLicence(
             m::mock()->shouldReceive('getId')->with()->once()->andReturn(654)->getMock()
@@ -77,6 +80,9 @@ class SubmitTest extends CommandHandlerTestCase
         $command = UpdateCommand::create($data);
 
         $continuationDetail = new ContinuationDetailEntity();
+        $continuationDetail->setTotAuthVehicles(1);
+        $continuationDetail->setTotCommunityLicences(1);
+        $continuationDetail->setTotPsvDiscs(1);
         $continuationDetail->setId(154);
         $continuationDetail->setSignatureType($this->refData[RefData::SIG_DIGITAL_SIGNATURE]);
         $continuationDetail->setLicence(
@@ -122,7 +128,7 @@ class SubmitTest extends CommandHandlerTestCase
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
             ->andReturn($continuationDetail);
-        $this->repoMap['ContinuationDetail']->shouldReceive('save')->twice();
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
 
         $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
             ->with(654)->once()->andReturn([]);
@@ -166,7 +172,7 @@ class SubmitTest extends CommandHandlerTestCase
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchById')->with(154, Query::HYDRATE_OBJECT, 7)->once()
             ->andReturn($continuationDetail);
-        $this->repoMap['ContinuationDetail']->shouldReceive('save')->twice();
+        $this->repoMap['ContinuationDetail']->shouldReceive('save')->with($continuationDetail)->once();
 
         $this->repoMap['Fee']->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')
             ->with(654)->once()->andReturn([]);
