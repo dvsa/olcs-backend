@@ -124,4 +124,41 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
     }
+
+    public function testGetSummaryFromData()
+    {
+        $continuationDetail = new ContinuationDetail();
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getTotAuthVehicles')
+            ->andReturn(1)
+            ->once()
+            ->shouldReceive('getTotAuthTrailers')
+            ->andReturn(2)
+            ->once()
+            ->getMock();
+
+        $continuationDetail->setLicence($mockLicence);
+
+        $expected = [
+            [
+                ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
+                ['value' => 1]
+            ],
+            [
+                ['value' => 'continuations.oc-section.table.trailers', 'header' => true],
+                ['value' => 2]
+            ]
+        ];
+
+        $this->assertEquals($expected, $this->sut->getSummaryFromData($continuationDetail));
+    }
+
+    public function testGetSummaryHeader()
+    {
+        $this->assertEquals(
+            'continuations.oc-section.table.authorisation',
+            $this->sut->getSummaryHeader(new ContinuationDetail())
+        );
+    }
 }

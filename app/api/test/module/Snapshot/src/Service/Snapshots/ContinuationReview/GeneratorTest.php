@@ -9,6 +9,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\View\Model\ViewModel;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\OperatingCentresReviewService;
 
 /**
  * Generator Test
@@ -32,6 +33,7 @@ class GeneratorTest extends MockeryTestCase
             'Utils\NiTextTranslation' => m::mock(),
             'SectionAccessService' => m::mock(),
             'ContinuationReview\TypeOfLicence' => m::mock(),
+            'ContinuationReview\OperatingCentres' => m::mock(OperatingCentresReviewService::class)->makePartial(),
             'ViewRenderer' => m::mock()
         ];
 
@@ -54,6 +56,7 @@ class GeneratorTest extends MockeryTestCase
     {
         $sections = [
             'type_of_licence' => 'foo' ,
+            'operating_centres' => 'foo' ,
             Generator::PEOPLE_SECTION => 'foo',
             Generator::TRAILERS_SECTION => 'foo',
             Generator::TAXI_PHV_SECTION => 'foo',
@@ -124,6 +127,20 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->andReturn('type-of-licence');
 
+        $this->services['ContinuationReview\OperatingCentres']
+            ->shouldReceive('getConfigFromData')
+            ->with($continuationDetail)
+            ->andReturn('operating-centres')
+            ->once()
+            ->shouldReceive('getSummaryFromData')
+            ->with($continuationDetail)
+            ->andReturn('operating-centres-summary')
+            ->once()
+            ->shouldReceive('getSummaryHeader')
+            ->with($continuationDetail)
+            ->andReturn('operating-centres-summary-header')
+            ->once();
+
         $this->services['ViewRenderer']->shouldReceive('render')
             ->once()
             ->with(m::type(ViewModel::class))
@@ -148,6 +165,12 @@ class GeneratorTest extends MockeryTestCase
                 [
                     'header' => 'continuation-review-type_of_licence',
                     'config' => 'type-of-licence'
+                ],
+                [
+                    'header' => 'continuation-review-operating_centres',
+                    'config' => 'operating-centres',
+                    'summary' => 'operating-centres-summary',
+                    'summaryHeader' => 'operating-centres-summary-header',
                 ],
                 [
                     'header' => 'continuation-review-people-org_typ_rc',

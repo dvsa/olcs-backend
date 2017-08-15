@@ -244,6 +244,7 @@ WHERE l.status IN ('lsts_consideration',
                    'lsts_curtailed',
                    'lsts_granted')
   AND o.company_or_llp_no IS NOT NULL
+  AND o.type IN ('org_t_rc', 'org_t_llp')
 ORDER BY o.company_or_llp_no;
 SQL;
         $this->em->shouldReceive('getConnection')->with()->once()->andReturn($mockConnection);

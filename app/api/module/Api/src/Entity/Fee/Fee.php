@@ -309,9 +309,11 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
+     * Get latest transaction
+     *
      * @return Transaction
      */
-    protected function getLatestTransaction()
+    public function getLatestTransaction()
     {
         $ft = $this->getLatestFeeTransaction();
         if ($ft) {

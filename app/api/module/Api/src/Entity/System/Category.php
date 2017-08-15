@@ -27,6 +27,7 @@ class Category extends AbstractCategory
     const CATEGORY_IRFO = 8;
     const CATEGORY_APPLICATION = 9;
     const CATEGORY_SUBMISSION = 10;
+    const CATEGORY_REPORT = 12;
 
     // @NOTE create constants for all sub categories as required. Only a subset
     // will ever be needed programatically so this list should be manageable
@@ -52,6 +53,7 @@ class Category extends AbstractCategory
     const TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL = 7;
     const TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL = 28;
     const TASK_SUB_CATEGORY_APPLICATION_TM1_REMOVAL_VARIATION = 191;
+    const TASK_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS = 74;
 
     const SCAN_SUB_CATEGORY_CHANGE_OF_ENTITY = 85;
 
