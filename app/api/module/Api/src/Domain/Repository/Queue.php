@@ -103,6 +103,7 @@ SQL;
      *
      * @return Entity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function getNextItem(array $includeTypes = [], array $excludeTypes = [])
     {
