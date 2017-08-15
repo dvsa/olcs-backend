@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Reprint as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
 use Mockery as m;
 
 /**
@@ -102,6 +103,8 @@ class ReprintTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
+        $this->expectedSideEffect(UpdateTotalCommunityLicencesCommand::class, ['id' => $licenceId], new Result());
 
         $mockLicence = m::mock()
             ->shouldReceive('getSerialNoPrefixFromTrafficArea')

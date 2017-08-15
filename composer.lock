@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "096e312186ca529c58a3b715ebfd3ed3",
+    "hash": "1fda011a427eebef2f1b53a57b655f64",
+    "content-hash": "5eae5bf6b2b3fe4bc038e83de0beec70",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -48,7 +49,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2017-04-04T11:38:05+00:00"
+            "time": "2017-04-04 11:38:05"
         },
         {
             "name": "cpms/client",
@@ -84,7 +85,7 @@
                 "proprietary"
             ],
             "description": "CPMS Common Client Module",
-            "time": "2015-11-13T11:06:01+00:00"
+            "time": "2015-11-13 11:06:01"
         },
         {
             "name": "doctrine/annotations",
@@ -152,7 +153,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-02-24T16:22:25+00:00"
+            "time": "2017-02-24 16:22:25"
         },
         {
             "name": "doctrine/cache",
@@ -222,7 +223,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2017-07-22T12:49:21+00:00"
+            "time": "2017-07-22 12:49:21"
         },
         {
             "name": "doctrine/collections",
@@ -289,7 +290,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2017-01-03T10:49:41+00:00"
+            "time": "2017-01-03 10:49:41"
         },
         {
             "name": "doctrine/common",
@@ -362,7 +363,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2017-07-22T08:35:12+00:00"
+            "time": "2017-07-22 08:35:12"
         },
         {
             "name": "doctrine/dbal",
@@ -433,7 +434,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2017-07-22T20:44:48+00:00"
+            "time": "2017-07-22 20:44:48"
         },
         {
             "name": "doctrine/doctrine-module",
@@ -511,7 +512,7 @@
                 "module",
                 "zf2"
             ],
-            "time": "2016-03-21T23:55:21+00:00"
+            "time": "2016-03-21 23:55:21"
         },
         {
             "name": "doctrine/doctrine-orm-module",
@@ -589,7 +590,7 @@
                 "orm",
                 "zf2"
             ],
-            "time": "2015-10-05T23:06:08+00:00"
+            "time": "2015-10-05 23:06:08"
         },
         {
             "name": "doctrine/inflector",
@@ -656,7 +657,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06T14:35:42+00:00"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "doctrine/instantiator",
@@ -710,7 +711,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "doctrine/lexer",
@@ -764,7 +765,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09T13:34:57+00:00"
+            "time": "2014-09-09 13:34:57"
         },
         {
             "name": "doctrine/orm",
@@ -840,7 +841,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-12-18T15:42:34+00:00"
+            "time": "2016-12-18 15:42:34"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -895,7 +896,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2017-07-19T18:44:30+00:00"
+            "time": "2017-07-19 18:44:30"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -942,7 +943,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-06-03T02:28:16+00:00"
+            "time": "2017-06-03 02:28:16"
         },
         {
             "name": "fzaninotto/faker",
@@ -990,7 +991,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-04-29T12:21:54+00:00"
+            "time": "2016-04-29 12:21:54"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1068,7 +1069,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2015-02-24T21:41:37+00:00"
+            "time": "2015-02-24 21:41:37"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -1119,7 +1120,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-20T03:37:09+00:00"
+            "time": "2015-05-20 03:37:09"
         },
         {
             "name": "guzzlehttp/streams",
@@ -1169,11 +1170,11 @@
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-10-12T19:18:40+00:00"
+            "time": "2014-10-12 19:18:40"
         },
         {
             "name": "olcs/autoload",
-            "version": "dev-release/4.19",
+            "version": "dev-release/4.20",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
@@ -1188,11 +1189,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.19",
+            "version": "dev-release/4.20",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "44536dae4845383c01aafe351814441a13d87420"
+                "reference": "e3237a4ce42750d4967c610fadf9686a929d51ed"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1204,15 +1205,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2017-07-27 13:53:36"
+            "time": "2017-08-10 11:01:05"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.19",
+            "version": "dev-release/4.20",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "3cf8474ecb9ce1797538119f7bea2bd1a994a782"
+                "reference": "cf44001c19ac7bf0f5fe56a52d490bfca556953b"
             },
             "require": {
                 "php": ">=5.4",
@@ -1238,15 +1239,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-07-27 13:53:30"
+            "time": "2017-08-10 11:00:58"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.19",
+            "version": "dev-release/4.20",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "072b077db20036fe8f5ee475a14c8f82a2254aee"
+                "reference": "4ba08a66666e8f000c3b1d8e860d02ccab0e5d0c"
             },
             "require": {
                 "php": ">=5.4",
@@ -1264,15 +1265,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-07-27 13:57:13"
+            "time": "2017-08-10 11:03:18"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.19",
+            "version": "dev-release/4.20",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "b2366efcd516bb28885ceddedc9a5372b8ac5fee"
+                "reference": "5047622bdbf2af0559e4ecad1157fd6b80ba3032"
             },
             "require": {
                 "php": ">=5.4",
@@ -1280,7 +1281,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-release/4.19",
+                "olcs/olcs-logging": "dev-release/4.20",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1290,15 +1291,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-07-27 13:56:06"
+            "time": "2017-08-10 11:03:59"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.19",
+            "version": "dev-release/4.20",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "7c5f816e8e3545b5747032618d8d354e04d2f53f"
+                "reference": "e815778d04cc40aa66043b18cc5ca354071cfc65"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1319,7 +1320,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-07-27 13:52:50"
+            "time": "2017-08-10 11:00:21"
         },
         {
             "name": "paragonie/random_compat",
@@ -1367,7 +1368,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13T16:27:32+00:00"
+            "time": "2017-03-13 16:27:32"
         },
         {
             "name": "phprtflite/phprtflite",
@@ -1400,7 +1401,7 @@
                 }
             ],
             "description": "PHPRtfLite is an API enabling developers to create rtf documents with php.",
-            "time": "2014-07-04T19:43:18+00:00"
+            "time": "2014-07-04 19:43:18"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -1492,7 +1493,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2017-06-05T06:31:10+00:00"
+            "time": "2017-06-05 06:31:10"
         },
         {
             "name": "psr/log",
@@ -1539,21 +1540,21 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.6.1",
+            "version": "3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "4ae32dd9ab8860a4bbd750ad269cba7f06f7934e"
+                "reference": "0ef23d1b10cf1bc576e9d865a7e9c47982c5715e"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ramsey-uuid-4ae32dd9ab8860a4bbd750ad269cba7f06f7934e-zip-046777.tar",
-                "reference": "4ae32dd9ab8860a4bbd750ad269cba7f06f7934e",
-                "shasum": "61445de5628bbd101904a5cf49839b2bd4d6350b"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ramsey-uuid-0ef23d1b10cf1bc576e9d865a7e9c47982c5715e-zip-e05ae6.tar",
+                "reference": "0ef23d1b10cf1bc576e9d865a7e9c47982c5715e",
+                "shasum": "470fdb2cac918270b467ade2ec2cf18538962927"
             },
             "require": {
                 "paragonie/random_compat": "^1.0|^2.0",
@@ -1621,7 +1622,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-03-26T20:37:53+00:00"
+            "time": "2017-08-04 13:39:04"
         },
         {
             "name": "react/promise",
@@ -1667,7 +1668,7 @@
                 "promise",
                 "promises"
             ],
-            "time": "2017-03-25T12:08:31+00:00"
+            "time": "2017-03-25 12:08:31"
         },
         {
             "name": "robrichards/xmlseclibs",
@@ -1707,7 +1708,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2017-05-25T15:25:34+00:00"
+            "time": "2017-05-25 15:25:34"
         },
         {
             "name": "ruflin/elastica",
@@ -1765,21 +1766,21 @@
                 "client",
                 "search"
             ],
-            "time": "2017-07-26T12:21:58+00:00"
+            "time": "2017-07-26 12:21:58"
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "cea679a3113d1f8198ab7d0a734de740412d0d0d"
+                "reference": "846cbadff2eafbf45780ec4f0955d53afa6ead69"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-cea679a3113d1f8198ab7d0a734de740412d0d0d-zip-bf46a8.tar",
-                "reference": "cea679a3113d1f8198ab7d0a734de740412d0d0d",
-                "shasum": "9f079d832c576c3ef0ed7c138a72c57cf86bd054"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-846cbadff2eafbf45780ec4f0955d53afa6ead69-zip-069105.tar",
+                "reference": "846cbadff2eafbf45780ec4f0955d53afa6ead69",
+                "shasum": "1584be9f1979c43ee1b1317f3fc542e1dca14aa1"
             },
             "require": {
                 "ext-dom": "*",
@@ -1818,7 +1819,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2017-06-16T08:30:57+00:00"
+            "time": "2017-07-13 07:42:11"
         },
         {
             "name": "soflomo/purifier",
@@ -1871,21 +1872,21 @@
                 "purify",
                 "zf2"
             ],
-            "time": "2013-04-23T10:33:41+00:00"
+            "time": "2013-04-23 10:33:41"
         },
         {
             "name": "symfony/console",
-            "version": "v3.3.5",
+            "version": "v3.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "a97e45d98c59510f085fa05225a1acb74dfe0546"
+                "reference": "b0878233cb5c4391347e5495089c7af11b8e6201"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-a97e45d98c59510f085fa05225a1acb74dfe0546-zip-d299b9.tar",
-                "reference": "a97e45d98c59510f085fa05225a1acb74dfe0546",
-                "shasum": "87d312bf0505d75eb481c5e6e4476a2be0e2a12e"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-b0878233cb5c4391347e5495089c7af11b8e6201-zip-583df6.tar",
+                "reference": "b0878233cb5c4391347e5495089c7af11b8e6201",
+                "shasum": "5837982efaaeca42511f03b98ac68a7e6157d154"
             },
             "require": {
                 "php": ">=5.5.9",
@@ -1940,21 +1941,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-03T13:19:36+00:00"
+            "time": "2017-07-29 21:27:59"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.3.5",
+            "version": "v3.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "63b85a968486d95ff9542228dc2e4247f16f9743"
+                "reference": "7c13ae8ce1e2adbbd574fc39de7be498e1284e13"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-63b85a968486d95ff9542228dc2e4247f16f9743-zip-067691.tar",
-                "reference": "63b85a968486d95ff9542228dc2e4247f16f9743",
-                "shasum": "ec77c487ad8ec9d6c6e72aee29c5037e81c5981e"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-7c13ae8ce1e2adbbd574fc39de7be498e1284e13-zip-4499eb.tar",
+                "reference": "7c13ae8ce1e2adbbd574fc39de7be498e1284e13",
+                "shasum": "ad6ef3c83a7086d18454e45f31d6973d7597336d"
             },
             "require": {
                 "php": ">=5.5.9",
@@ -1996,7 +1997,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-05T13:02:37+00:00"
+            "time": "2017-07-28 15:27:31"
         },
         {
             "name": "symfony/filesystem",
@@ -2046,7 +2047,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-08T05:59:48+00:00"
+            "time": "2015-07-08 05:59:48"
         },
         {
             "name": "symfony/finder",
@@ -2096,7 +2097,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-09T16:02:48+00:00"
+            "time": "2015-07-09 16:02:48"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2155,7 +2156,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-09T14:24:12+00:00"
+            "time": "2017-06-09 14:24:12"
         },
         {
             "name": "zendframework/zendframework",
@@ -2272,7 +2273,7 @@
                 "framework",
                 "zf2"
             ],
-            "time": "2017-07-13T17:23:56+00:00"
+            "time": "2017-07-13 17:23:56"
         },
         {
             "name": "zendframework/zendxml",
@@ -2317,7 +2318,7 @@
                 "xml",
                 "zf2"
             ],
-            "time": "2016-02-04T21:02:08+00:00"
+            "time": "2016-02-04 21:02:08"
         },
         {
             "name": "zf-commons/zfc-rbac",
@@ -2393,7 +2394,7 @@
                 "rbac",
                 "zf2"
             ],
-            "time": "2015-01-26T11:29:23+00:00"
+            "time": "2015-01-26 11:29:23"
         },
         {
             "name": "zfr/rbac",
@@ -2443,7 +2444,7 @@
                 "zf2",
                 "zf3"
             ],
-            "time": "2014-02-06T14:18:34+00:00"
+            "time": "2014-02-06 14:18:34"
         }
     ],
     "packages-dev": [
@@ -2490,7 +2491,7 @@
             "keywords": [
                 "test"
             ],
-            "time": "2015-05-11T14:41:42+00:00"
+            "time": "2015-05-11 14:41:42"
         },
         {
             "name": "mikey179/vfsStream",
@@ -2528,7 +2529,7 @@
                 "BSD"
             ],
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2014-09-14T10:18:53+00:00"
+            "time": "2014-09-14 10:18:53"
         },
         {
             "name": "mockery/mockery",
@@ -2569,7 +2570,7 @@
             ],
             "authors": [
                 {
-                    "name": "Padraic Brady",
+                    "name": "Pádraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
@@ -2593,7 +2594,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-02-28T12:52:32+00:00"
+            "time": "2017-02-28 12:52:32"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2647,26 +2648,26 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2015-12-27 11:43:31"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.2.0",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "46f7e8bb075036c92695b15a1ddb6971c751e585"
+                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-reflection-docblock-46f7e8bb075036c92695b15a1ddb6971c751e585-zip-684dcb.tar",
-                "reference": "46f7e8bb075036c92695b15a1ddb6971c751e585",
-                "shasum": "b6b458b8ea2a67e946581bbf1b7f5242951df52a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-reflection-docblock-4aada1f93c72c35e22fb1383b47fee43b8f1d157-zip-e3ca8e.tar",
+                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157",
+                "shasum": "3d603bd87e22fe7924d510663e60a70a80b9621c"
             },
             "require": {
                 "php": ">=5.5",
                 "phpdocumentor/reflection-common": "^1.0@dev",
-                "phpdocumentor/type-resolver": "^0.4.0",
+                "phpdocumentor/type-resolver": "^0.3.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
@@ -2692,21 +2693,21 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-07-15T11:38:20+00:00"
+            "time": "2017-08-08 06:39:58"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "0.4.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7"
+                "reference": "fb3933512008d8162b3cdf9e18dba9309b7c3773"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-type-resolver-9c977708995954784726e25d0cd1dddf4e65b0f7-zip-28400d.tar",
-                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7",
-                "shasum": "3f22deb8eed9ca0831d99526bf68002b62b3b14c"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpdocumentor-type-resolver-fb3933512008d8162b3cdf9e18dba9309b7c3773-zip-8901fb.tar",
+                "reference": "fb3933512008d8162b3cdf9e18dba9309b7c3773",
+                "shasum": "1231213be837f6e62b06fdb61d7af1df85494f1c"
             },
             "require": {
                 "php": "^5.5 || ^7.0",
@@ -2739,7 +2740,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14T14:27:02+00:00"
+            "time": "2017-06-03 08:32:36"
         },
         {
             "name": "phpspec/prophecy",
@@ -2802,7 +2803,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02T20:05:34+00:00"
+            "time": "2017-03-02 20:05:34"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2864,7 +2865,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06T15:47:00+00:00"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -2911,7 +2912,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03T07:40:28+00:00"
+            "time": "2016-10-03 07:40:28"
         },
         {
             "name": "phpunit/php-text-template",
@@ -2952,7 +2953,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -3001,7 +3002,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26T11:10:40+00:00"
+            "time": "2017-02-26 11:10:40"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -3050,7 +3051,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27T10:12:30+00:00"
+            "time": "2017-02-27 10:12:30"
         },
         {
             "name": "phpunit/phpunit",
@@ -3122,7 +3123,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-06-21T08:07:12+00:00"
+            "time": "2017-06-21 08:07:12"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -3178,7 +3179,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02T06:51:40+00:00"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -3242,7 +3243,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29T09:50:25+00:00"
+            "time": "2017-01-29 09:50:25"
         },
         {
             "name": "sebastian/diff",
@@ -3294,7 +3295,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-05-22T07:24:03+00:00"
+            "time": "2017-05-22 07:24:03"
         },
         {
             "name": "sebastian/environment",
@@ -3344,7 +3345,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18T05:49:44+00:00"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
@@ -3411,7 +3412,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17T09:04:28+00:00"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -3462,7 +3463,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -3515,7 +3516,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-10-03T07:41:43+00:00"
+            "time": "2016-10-03 07:41:43"
         },
         {
             "name": "sebastian/version",
@@ -3550,21 +3551,21 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21T13:59:46+00:00"
+            "time": "2015-06-21 13:59:46"
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.5",
+            "version": "v3.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "1f93a8d19b8241617f5074a123e282575b821df8"
+                "reference": "ddc23324e6cfe066f3dd34a37ff494fa80b617ed"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-1f93a8d19b8241617f5074a123e282575b821df8-zip-6a7428.tar",
-                "reference": "1f93a8d19b8241617f5074a123e282575b821df8",
-                "shasum": "afe1003b4793949db01a34157aa99d3dd356b724"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-ddc23324e6cfe066f3dd34a37ff494fa80b617ed-zip-f023d3.tar",
+                "reference": "ddc23324e6cfe066f3dd34a37ff494fa80b617ed",
+                "shasum": "9c75dc4c94c0ad44945fe3f9baea36fa9549bfad"
             },
             "require": {
                 "php": ">=5.5.9"
@@ -3605,7 +3606,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-15T12:58:50+00:00"
+            "time": "2017-07-23 12:43:26"
         },
         {
             "name": "webmozart/assert",
@@ -3655,7 +3656,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:58+00:00"
+            "time": "2016-11-23 20:04:58"
         }
     ],
     "aliases": [],

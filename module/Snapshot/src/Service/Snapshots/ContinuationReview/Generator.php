@@ -64,18 +64,32 @@ class Generator extends AbstractGenerator
         foreach ($sections as $section) {
             $serviceName = 'ContinuationReview\\' . ucfirst($filter->filter($section));
             $config = null;
+            $summary = null;
+            $summaryHeader = null;
 
             // @NOTE this check is in place while we implement each section
             // eventually we should be able to remove the if
             if ($this->getServiceLocator()->has($serviceName)) {
                 $service = $this->getServiceLocator()->get($serviceName);
                 $config = $service->getConfigFromData($continuationDetail);
+                if (method_exists($service, 'getSummaryFromData')) {
+                    $summary = $service->getSummaryFromData($continuationDetail);
+                }
+                if (method_exists($service, 'getSummaryHeader')) {
+                    $summaryHeader = $service->getSummaryHeader($continuationDetail);
+                }
             }
 
             $sectionConfig[] = [
                 'header' => $this->getSectionHeader($section, $continuationDetail),
                 'config' => $config
             ];
+            if ($summary !== null) {
+                $sectionConfig[count($sectionConfig) - 1]['summary'] = $summary;
+            }
+            if ($summaryHeader !== null) {
+                $sectionConfig[count($sectionConfig) - 1]['summaryHeader'] = $summaryHeader;
+            }
         }
 
         return [

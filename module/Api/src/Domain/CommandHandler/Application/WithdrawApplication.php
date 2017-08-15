@@ -82,17 +82,19 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $this->getRepo('LicenceVehicle')->clearSpecifiedDateAndInterimApp($application);
 
-        if ($application->getLicence()->getCommunityLics()->count() > 0) {
+        if ($application->isNew()) {
+            if ($application->getLicence()->getCommunityLics()->count() > 0) {
 
-            $this->result->merge(
-                $this->handleSideEffect(
-                    ReturnAllCommunityLicences::create(
-                        [
-                            'id' => $application->getLicence()->getId(),
-                        ]
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        ReturnAllCommunityLicences::create(
+                            [
+                                'id' => $application->getLicence()->getId(),
+                            ]
+                        )
                     )
-                )
-            );
+                );
+            }
         }
 
         if (

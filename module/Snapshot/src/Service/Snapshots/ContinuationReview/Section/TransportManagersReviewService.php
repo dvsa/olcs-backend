@@ -37,6 +37,7 @@ class TransportManagersReviewService extends AbstractReviewService
         foreach ($tmLicences as $tmLicence) {
             /** @var Person $person */
             $person = $tmLicence->getTransportManager()->getHomeCd()->getPerson();
+            $birthDate = $person->getBirthDate(true);
             $row = [
                 [
                     'value' => trim(
@@ -50,7 +51,7 @@ class TransportManagersReviewService extends AbstractReviewService
                         )
                     )
                 ],
-                ['value' => $person->getBirthDate(true)->format('d/m/Y')]
+                ['value' => $birthDate !== null ? $birthDate->format('d/m/Y') : '']
             ];
             $config[] = $row;
 

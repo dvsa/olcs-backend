@@ -326,6 +326,7 @@ return [
             'DataRetention' => RepositoryFactory::class,
             'DataService' => RepositoryFactory::class,
             'DocumentToDelete' => RepositoryFactory::class,
+            'Hearing' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

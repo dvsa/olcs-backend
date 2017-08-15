@@ -28,7 +28,7 @@ class OperatingCentresReviewService extends AbstractReviewService
         $isGoods =
             $continuationDetail->getLicence()->getGoodsOrPsv()->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
 
-        $header =[
+        $header = [
             [
                 ['value' => 'continuations.oc-section.table.name', 'header' => true],
                 ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
@@ -62,5 +62,40 @@ class OperatingCentresReviewService extends AbstractReviewService
         );
 
         return array_merge($header, $config);
+    }
+
+    /**
+     * Get summary from data
+     *
+     * @param ContinuationDetail $continuationDetail continuation detail
+     *
+     * @return array
+     */
+    public function getSummaryFromData(ContinuationDetail $continuationDetail)
+    {
+        $licence = $continuationDetail->getLicence();
+
+        $summary = [
+            [
+                ['value' => 'continuations.oc-section.table.vehicles', 'header' => true],
+                ['value' => $licence->getTotAuthVehicles()]
+            ],
+            [
+                ['value' => 'continuations.oc-section.table.trailers', 'header' => true],
+                ['value' => $licence->getTotAuthTrailers()]
+            ]
+        ];
+
+        return $summary;
+    }
+
+    /**
+     * Get summary header
+     *
+     * @return string
+     */
+    public function getSummaryHeader()
+    {
+        return 'continuations.oc-section.table.authorisation';
     }
 }

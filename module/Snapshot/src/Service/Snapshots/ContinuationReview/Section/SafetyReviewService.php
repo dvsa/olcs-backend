@@ -66,4 +66,130 @@ class SafetyReviewService extends AbstractReviewService
 
         return array_merge($header, $config);
     }
+
+    /**
+     * Get summary from data
+     *
+     * @param ContinuationDetail $continuationDetail continuation detail
+     *
+     * @return array
+     */
+    public function getSummaryFromData(ContinuationDetail $continuationDetail)
+    {
+        /** @var Licence $licence */
+        $licence = $continuationDetail->getLicence();
+
+        $safetyInsVehicles = null;
+        if (!empty($licence->getSafetyInsVehicles())) {
+            $safetyInsVehicles = $licence->getSafetyInsVehicles()
+                . ' '
+                . (
+                ((int) $licence->getSafetyInsVehicles() === 1)
+                    ? $this->translate('continuations.safety-section.table.week')
+                    : $this->translate('continuations.safety-section.table.weeks')
+                );
+        }
+
+        $summary = [
+            [
+                [
+                    'value' => $this->translate('continuations.safety-section.table.max-time-vehicles'),
+                    'header' => true
+                ],
+                [
+                    'value' => $safetyInsVehicles !== null
+                        ? $safetyInsVehicles
+                        : $this->translate('continuations.safety-section.table.not-known'),
+                ]
+            ]
+        ];
+
+        if ($licence->isGoods()) {
+            $safetyInsTrailers = null;
+            if (!empty($licence->getSafetyInsTrailers())) {
+                $safetyInsTrailers = $licence->getSafetyInsTrailers()
+                    . ' '
+                    . (
+                    ((int) $licence->getSafetyInsTrailers() === 1)
+                        ? $this->translate('continuations.safety-section.table.week')
+                        : $this->translate('continuations.safety-section.table.weeks')
+                    );
+            }
+
+            $summary[] = [
+                [
+                    'value' => $this->translate('continuations.safety-section.table.max-time-trailers'),
+                    'header' => true
+                ],
+                [
+                    'value' => $safetyInsTrailers !== null
+                        ? $safetyInsTrailers
+                        : $this->translate('continuations.safety-section.table.not-known'),
+                ]
+            ];
+        }
+
+        $safetyInsVaries = null;
+        if ($licence->getSafetyInsVaries() !== null) {
+            $safetyInsVaries = ($licence->getSafetyInsVaries() === 'Y')
+                ? $this->translate('Yes')
+                : $this->translate('No');
+        }
+
+        $summary[] = [
+            [
+                'value' => $this->translate('continuations.safety-section.table.varies'),
+                'header' => true
+            ],
+            [
+                'value' => $safetyInsVaries !== null
+                    ? $safetyInsVaries
+                    : $this->translate('continuations.safety-section.table.not-known'),
+            ]
+        ];
+
+        $tachographIns = null;
+        if ($licence->getTachographIns() !== null) {
+            $tachographIns = $licence->getTachographIns()->getId();
+        }
+
+        $summary[] = [
+            [
+                'value' => $this->translate('continuations.safety-section.table.tachographs'),
+                'header' => true
+            ],
+            [
+                'value' => $tachographIns !== null
+                    ? $this->translate('continuations.safety-section.table.' . $tachographIns)
+                    : $this->translate('continuations.safety-section.table.not-known'),
+            ]
+        ];
+
+        if ($tachographIns === Licence::TACH_EXT) {
+            $summary[] = [
+                [
+                    'value' => $this->translate('continuations.safety-section.table.tachographInsName'),
+                    'header' => true
+                ],
+                [
+                    'value' => !empty($licence->getTachographInsName())
+                        ? $licence->getTachographInsName()
+                        : $this->translate('continuations.safety-section.table.not-known'),
+                ]
+            ];
+        }
+
+        return $summary;
+
+    }
+
+    /**
+     * Get summary header
+     *
+     * @return string
+     */
+    public function getSummaryHeader()
+    {
+        return 'continuations.safety-details.label';
+    }
 }

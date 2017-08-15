@@ -469,6 +469,99 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Get grouped conditions and undertakings
+     *
+     * @return array
+     */
+    public function getGroupedConditionsUndertakings()
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(
+            $criteria->expr()->eq('isDraft', 'N')
+        );
+        $criteria->andWhere(
+            $criteria->expr()->eq('isFulfilled', 'N')
+        );
+
+        $conditionsUndertakings = $this->getConditionUndertakings()->matching($criteria);
+        $licenceConditionsUndertakings = [];
+        $ocConditionsUndertakings = [];
+        $map = [
+            ConditionUndertaking::TYPE_CONDITION => 'conditions',
+            ConditionUndertaking::TYPE_UNDERTAKING => 'undertakings',
+        ];
+
+        /** @var ConditionUndertaking $cu */
+        foreach ($conditionsUndertakings as &$cu) {
+            $conditionType = $map[$cu->getConditionType()->getId()];
+            if ($cu->getAttachedTo()->getId() === ConditionUndertaking::ATTACHED_TO_LICENCE) {
+                $licenceConditionsUndertakings[$conditionType][] = [
+                    'notes' => $cu->getNotes(),
+                    'createdOn' => $cu->getCreatedOn(true)
+                ];
+            } else {
+                $ocConditionsUndertakings[$cu->getOperatingCentre()->getId()][$conditionType][] = [
+                    'notes' => $cu->getNotes(),
+                    'address' => [
+                        'addressLine1' => $cu->getOperatingCentre()->getAddress()->getAddressLine1(),
+                        'addressLine2' => $cu->getOperatingCentre()->getAddress()->getAddressLine2(),
+                        'addressLine3' => $cu->getOperatingCentre()->getAddress()->getAddressLine3(),
+                        'addressLine4' => $cu->getOperatingCentre()->getAddress()->getAddressLine4(),
+                        'town' => $cu->getOperatingCentre()->getAddress()->getTown(),
+                        'postcode' => $cu->getOperatingCentre()->getAddress()->getPostcode(),
+                    ],
+                    'createdOn' => $cu->getCreatedOn(true)
+                ];
+            }
+        }
+
+        if (
+            isset($licenceConditionsUndertakings['conditions'])
+            && count($licenceConditionsUndertakings['conditions']) > 0
+        ) {
+            $this->sortConditionsUndertakings($licenceConditionsUndertakings['conditions']);
+        }
+        if (
+            isset($licenceConditionsUndertakings['undertakings'])
+            && count($licenceConditionsUndertakings['undertakings']) > 0
+        ) {
+            $this->sortConditionsUndertakings($licenceConditionsUndertakings['undertakings']);
+        }
+        foreach ($ocConditionsUndertakings as &$oc) {
+            if (isset($oc['conditions']) && count($oc['conditions']) > 0) {
+                $this->sortConditionsUndertakings($oc['conditions']);
+            }
+            if (isset($oc['undertakings']) && count($oc['undertakings']) > 0) {
+                $this->sortConditionsUndertakings($oc['undertakings']);
+            }
+        }
+
+        return [
+            'licence' => $licenceConditionsUndertakings,
+            'operatingCentres' => $ocConditionsUndertakings,
+        ];
+    }
+
+    /**
+     * Sort conditions and undertakings
+     *
+     * @param array $conditionsUndertakings conditions and undertakings
+     *
+     * @return void
+     */
+    private function sortConditionsUndertakings(&$conditionsUndertakings)
+    {
+        usort(
+            $conditionsUndertakings, function ($a, $b) {
+                if ($a['createdOn'] === $b['createdOn']) {
+                    return 0;
+                }
+                return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
+            }
+        );
+    }
+
+    /**
      * Returns whether the licence is a goods licence
      *
      * @return boolean|null

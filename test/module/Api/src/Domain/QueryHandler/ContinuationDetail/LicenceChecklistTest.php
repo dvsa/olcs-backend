@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ContinuationDetail;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ContinuationDetail\LicenceChecklist;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Transfer\Query\ContinuationDetail\LicenceChecklist as LicenceChecklistQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -22,6 +23,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         $this->sut = new LicenceChecklist();
 
         $this->mockRepo('ContinuationDetail', ContinuationDetailRepo::class);
+        $this->mockRepo('ConditionUndertaking', ConditionUndertakingRepo::class);
         $this->mockedSmServices = [
             'SectionAccessService' => m::mock(SectionAccessService::class),
         ];
@@ -29,9 +31,6 @@ class LicenceChecklistTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @group test123
-     */
     public function testHandleQuery()
     {
         $mockLicence = m::mock(LicenceEntity::class)
@@ -43,6 +42,9 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ->once()
             ->shouldReceive('getTmPendingChanges')
             ->andReturn(2)
+            ->once()
+            ->shouldReceive('getId')
+            ->andReturn(1)
             ->once()
             ->getMock();
 
@@ -127,6 +129,13 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($mockContinuationDetail);
 
+        $this->repoMap['ConditionUndertaking']
+            ->shouldReceive('fetchListForLicenceReadOnly')
+            ->with(1)
+            ->andReturn(['foo'])
+            ->once()
+            ->getMock();
+
         $expected = [
             'licence' => [
                 'licenceType' => 'expected',
@@ -183,6 +192,7 @@ class LicenceChecklistTest extends QueryHandlerTestCase
             ],
             'ocChanges' => 1,
             'tmChanges' => 2,
+            'hasConditionsUndertakings' => 1,
         ];
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
     }
