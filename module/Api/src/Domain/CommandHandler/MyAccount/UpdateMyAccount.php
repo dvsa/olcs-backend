@@ -35,6 +35,13 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['ContactDetails', 'PhoneContact', 'Person', 'Address'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command Command parameters
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $data = $command->getArrayCopy();
@@ -134,7 +141,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
     /**
      * Save person
      *
-     * @param array $person                  person
+     * @param array          $person         person
      * @param ContactDetails $contactDetails contact details
      *
      * @return PersonEntity
@@ -145,11 +152,20 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
         if ($personEntity === null) {
             $personEntity = new PersonEntity();
         }
+
+        // title
+        $title = null;
+        if (isset($person['title'])) {
+            $title = $this->getRepo('Person')->getRefdataReference($person['title']);
+        }
+
+        // Birth date
         $birthDate = isset($person['birthDate']) ? $person['birthDate'] : null;
+
         $personEntity->updatePerson(
             $person['forename'],
             $person['familyName'],
-            $this->getRepo('Person')->getRefdataReference($person['title']),
+            $title,
             $birthDate
         );
         $this->getRepo('Person')->save($personEntity);
