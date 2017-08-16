@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Application Overview
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
@@ -12,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationTracking as ApplicationTrackingEntity;
 use Dvsa\Olcs\Transfer\Query\Licence\Overview as LicenceOverviewQry;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Application Overview
@@ -28,6 +24,14 @@ class Overview extends AbstractQueryHandler
     {
         /* @var $application \Dvsa\Olcs\Api\Entity\Application\Application */
         $application = $this->getRepo()->fetchUsingId($query);
+
+        if ($query->getValidateAppCompletion() && $application->isVariation()) {
+            $this->getCommandHandler()->handleCommand(
+                UpdateApplicationCompletionCmd::create(
+                    ['id' => $application->getId(), 'section' => 'operatingCentres']
+                )
+            );
+        }
 
         $licenceQuery = LicenceOverviewQry::create(['id' => $application->getLicence()->getId()]);
         $licence = $this->getQueryHandler()->handleQuery($licenceQuery, false);
