@@ -74,7 +74,10 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
             ],
             [
                 'userType' => $user->getUserType(),
-                'lastLoggedInOn' => $authDetails['lastLoginTime'] ? : null,
+                'lastLoggedInOn'
+                    => !empty($authDetails['lastLoginTime'])
+                        ? $authDetails['lastLoginTime']
+                        : null,
                 'lockedOn'
                     => !empty($authDetails['meta']['locked'])
                         ? \DateTime::createFromFormat('YmdHis.uT', $authDetails['meta']['locked'])
