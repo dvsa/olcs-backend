@@ -14,16 +14,20 @@ use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
+use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
 
 /**
  * Update Variation Completion
  *
  * @NOTE If there are future changes to these rules, it might be worth slightly changing how this works, as it is
- * getting a little messy
+ * getting messy
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class UpdateVariationCompletion extends AbstractCommandHandler implements
+class UpdateVariationCompletion extends AbstractCommandHandler implements
     TransactionedInterface,
     AuthAwareInterface
 {
@@ -110,6 +114,26 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
      * @var array
      */
     private $data = [];
+
+    /**
+     * @var UpdateOperatingCentreHelper
+     */
+    private $updateHelper;
+
+    /**
+     * @var VariationOperatingCentreHelper
+     */
+    private $variationHelper;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
+        $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -666,6 +690,70 @@ final class UpdateVariationCompletion extends AbstractCommandHandler implements
         if ($this->hasActuallyUpdatedOperatingCentres() && $this->isTotAuthLessThanComLic()) {
             $this->markSectionRequired('community_licences');
         }
+
+        if (count($this->validateAuthority())) {
+            $this->markSectionRequired('operating_centres');
+        }
+    }
+
+    /**
+     * Validate authority
+     *
+     * @return array
+     */
+    protected function validateAuthority()
+    {
+        $data = [
+            'totAuthVehicles' => $this->application->getTotAuthVehicles(),
+            'totAuthTrailers' => $this->application->getTotAuthTrailers(),
+        ];
+        $command = UpdateOperatingCentresCmd::create($data);
+        if ($this->application->isPsv()) {
+            $this->updateHelper->validatePsv($this->application, $command);
+        } else {
+            $this->updateHelper->validateTotalAuthTrailers($command, $this->getAuthorityTotals());
+        }
+
+        $this->updateHelper->validateTotalAuthVehicles(
+            $this->application, $command, $this->getAuthorityTotals()
+        );
+
+        return $this->updateHelper->getMessages();
+    }
+
+    /**
+     * Get authority totals
+     *
+     * @return array
+     */
+    protected function getAuthorityTotals()
+    {
+        $aocs = $this->variationHelper->getListDataForApplication($this->application);
+
+        $totals = [
+            'noOfOperatingCentres' => 0,
+            'minVehicleAuth' => 0,
+            'maxVehicleAuth' => 0,
+            'minTrailerAuth' => 0,
+            'maxTrailerAuth' => 0,
+        ];
+
+        foreach ($aocs as $aoc) {
+
+            if (in_array($aoc['action'], ['D', 'C'])) {
+                continue;
+            }
+
+            $totals['noOfOperatingCentres']++;
+
+            $totals['minVehicleAuth'] = max([$totals['minVehicleAuth'], $aoc['noOfVehiclesRequired']]);
+            $totals['minTrailerAuth'] = max([$totals['minTrailerAuth'], $aoc['noOfTrailersRequired']]);
+
+            $totals['maxVehicleAuth'] += (int)$aoc['noOfVehiclesRequired'];
+            $totals['maxTrailerAuth'] += (int)$aoc['noOfTrailersRequired'];
+        }
+
+        return $totals;
     }
 
     /**

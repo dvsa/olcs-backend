@@ -12,6 +12,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\OlcsTest\Api\Entity\User as UserEntity;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Application Test
@@ -23,6 +24,7 @@ class ApplicationTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new Application();
+
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('Note', NoteRepo::class);
         $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
@@ -48,7 +50,7 @@ class ApplicationTest extends QueryHandlerTestCase
     {
         $applicationId = 111;
 
-        $query = Qry::create(['id' => $applicationId]);
+        $query = Qry::create(['id' => $applicationId, 'validateAppCompletion' => true]);
 
         /** @var ApplicationEntity $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
@@ -56,6 +58,12 @@ class ApplicationTest extends QueryHandlerTestCase
             ->setId($applicationId)
             ->shouldReceive('getPublicationLinks')->with()->once()
                 ->andReturn(new \Doctrine\Common\Collections\ArrayCollection())
+            ->shouldReceive('getVariationCompletion')
+            ->andReturn(null)
+            ->once()
+            ->shouldReceive('isPublishable')
+            ->andReturn(true)
+            ->once()
             ->shouldReceive('getLicence')
             ->andReturn(
                 m::mock()
@@ -79,6 +87,7 @@ class ApplicationTest extends QueryHandlerTestCase
             ->once()
             ->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $application->setStatus((new \Dvsa\Olcs\Api\Entity\System\RefData())->setId('apsts_not_submitted'));
+        $application->setIsVariation(true);
 
         $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
             ->andReturn(false);
@@ -106,6 +115,12 @@ class ApplicationTest extends QueryHandlerTestCase
             ->with($applicationId)
             ->once()
             ->andReturn(166.70);
+
+        $this->commandHandler
+            ->shouldReceive('handleCommand')
+            ->with(UpdateApplicationCompletionCmd::class)
+            ->once()
+            ->getMock();
 
         $result = $this->sut->handleQuery($query);
 
