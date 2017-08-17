@@ -86,6 +86,19 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->tmpPath = $this->vfsStream->url() . '/unit';
     }
 
+    protected function initReferences()
+    {
+        $this->categoryReferences = [
+            Category::CATEGORY_REPORT => m::mock(Category::class),
+        ];
+
+        $this->subCategoryReferences = [
+            SubCategory::REPORT_SUB_CATEGORY_PSV  => m::mock(SubCategory::class),
+        ];
+
+        parent::initReferences();
+    }
+
     public function testInvalidReportException()
     {
         $cmd = Cmd::create(
