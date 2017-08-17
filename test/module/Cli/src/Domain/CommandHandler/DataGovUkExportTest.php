@@ -115,9 +115,6 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->sut->handleCommand($cmd);
     }
 
-    /**
-     * @group test123
-     */
     public function testPsvOperatorListOk()
     {
         $fileName = 'psv-operator-list.csv';
