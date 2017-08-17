@@ -63,6 +63,8 @@ class TransportManagersReviewService extends AbstractReviewService
             }
         );
 
-        return array_merge($header, $config);
+        return (count($config) === 0)
+            ? ['emptyTableMessage' => $this->translate('There are no transport managers recorded on your licence')]
+            : array_merge($header, $config);
     }
 }
