@@ -796,11 +796,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         $vehicles = $this->getActiveLicenceVehicles();
 
-        return $this->getTotAuthVehicles() - $vehicles->count();
+        return $this->getTotAuthVehicles() - $vehicles->count() - $this->getActiveVehicles()->count();
     }
 
     /**
-     * Get list of active Licence Vehicles
+     * Get list of active Licence Vehicles on the Licence
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -809,6 +809,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $criteria = Criteria::create();
         $criteria->andWhere(
             $criteria->expr()->isNull('removalDate')
+        );
+        $criteria->andWhere(
+            $criteria->expr()->isNull('application')
         );
 
         return $this->getLicence()->getLicenceVehicles()->matching($criteria);
@@ -990,7 +993,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Get active vehicle list
+     * Get active vehicle list on the application
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -1314,7 +1317,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Get count of active vehicles
+     * Get count of active vehicles on the Licence
      *
      * @return int
      */
