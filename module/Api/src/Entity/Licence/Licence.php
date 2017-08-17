@@ -324,17 +324,19 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function getRemainingSpaces()
     {
-        return $this->getTotAuthVehicles() - $this->getActiveVehiclesCount();
+        return $this->getTotAuthVehicles() - $this->getActiveVehiclesCount(true);
     }
 
     /**
      * Get number of active vehicles
      *
+     * @param bool $excludeIntermVehicles when true exlcude interim vehicles
+     *
      * @return int
      */
-    public function getActiveVehiclesCount()
+    public function getActiveVehiclesCount($excludeIntermVehicles = false)
     {
-        return $this->getActiveVehicles()->count();
+        return $this->getActiveVehicles(true, $excludeIntermVehicles)->count();
     }
 
     /**
@@ -360,17 +362,21 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Returns list of active vehicles
      *
-     * @param bool $checkSpecified when true, only return vehicles with a specified date
+     * @param bool $checkSpecified        when true, only return vehicles with a specified date
+     * @param bool $excludeIntermVehicles when true, exlcude interim vehicles
      *
      * @return ArrayCollection
      */
-    public function getActiveVehicles($checkSpecified = true)
+    public function getActiveVehicles($checkSpecified = true, $excludeIntermVehicles = false)
     {
         $criteria = Criteria::create();
         $criteria->andWhere($criteria->expr()->isNull('removalDate'));
 
         if ($checkSpecified) {
             $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
+        }
+        if ($excludeIntermVehicles) {
+            $criteria->andWhere($criteria->expr()->eq('interimApplication', null));
         }
 
         return $this->getLicenceVehicles()->matching($criteria);
