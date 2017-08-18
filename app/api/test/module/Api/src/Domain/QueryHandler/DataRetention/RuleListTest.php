@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\SystemParameter;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DataRetention;
 
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule as DataRetentionRuleRepo;
 use Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention\RuleList as QueryHandler;
@@ -31,7 +31,9 @@ class RuleListTest extends QueryHandlerTestCase
 
         $this->repoMap['DataRetentionRule']
             ->shouldReceive('fetchEnabledRules')
-            ->with()
+            ->with(
+                $query, true
+            )
             ->once()
             ->andReturn([$mockRuleList])
             ->getMock();
