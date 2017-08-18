@@ -57,4 +57,14 @@ class SystemParameter extends AbstractRepository
     {
         return (bool) $this->fetchValue(Entity::DISABLE_DIGITAL_CONTINUATIONS);
     }
+
+    /**
+     * Get Disable Data Retention Records
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisableDataRetentionRecords()
+    {
+        return (bool) $this->fetchValue(Entity::DISABLE_DATA_RETENTION_RECORDS);
+    }
 }

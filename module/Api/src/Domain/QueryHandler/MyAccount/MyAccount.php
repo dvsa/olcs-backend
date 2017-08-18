@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -11,6 +12,16 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class MyAccount extends AbstractQueryHandler
 {
+    protected $extraRepos = ['SystemParameter'];
+
+    /**
+     * Handle my account query
+     *
+     * @param QueryInterface $query Query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     * @throws NotFoundException
+     */
     public function handleQuery(QueryInterface $query)
     {
         $user = $this->getCurrentUser();
@@ -39,6 +50,8 @@ class MyAccount extends AbstractQueryHandler
             [
                 'hasActivePsvLicence' => $user->hasActivePsvLicence(),
                 'numberOfVehicles' => $user->getNumberOfVehicles(),
+                'disableDataRetentionRecords' => $this->getRepo('SystemParameter')
+                    ->getDisableDataRetentionRecords(),
             ]
         );
     }

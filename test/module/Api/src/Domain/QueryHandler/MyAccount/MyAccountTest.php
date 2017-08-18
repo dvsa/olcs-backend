@@ -6,12 +6,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\MyAccount;
 
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount\MyAccount;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount as Qry;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount as Qry;
+use Dvsa\Olcs\Api\Domain\QueryHandler\MyAccount\MyAccount;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
 /**
  * MyAccount Test
@@ -25,6 +26,8 @@ class MyAccountTest extends QueryHandlerTestCase
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
+
+        $this->mockRepo('SystemParameter', SystemParameter::class);
 
         parent::setUp();
     }
@@ -43,11 +46,19 @@ class MyAccountTest extends QueryHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
+        $mockSystemParameter = $this->repoMap['SystemParameter'];
+        $mockSystemParameter->shouldReceive('getDisableDataRetentionRecords')->andReturn(true);
+
         $query = Qry::create([]);
 
         $result = $this->sut->handleQuery($query);
         $this->assertEquals(
-            ['foo', 'hasActivePsvLicence' => false, 'numberOfVehicles' => 2],
+            [
+                'foo',
+                'hasActivePsvLicence' => false,
+                'numberOfVehicles' => 2,
+                'disableDataRetentionRecords' => true,
+            ],
             $result->serialize()
         );
     }

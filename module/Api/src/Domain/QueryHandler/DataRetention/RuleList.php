@@ -17,16 +17,21 @@ class RuleList extends AbstractQueryHandler
     /**
      * Return list of data retention rules that are enabled and action is 'Review'
      *
-     * @param QueryInterface $query Query for data retention rule list
+     * @param \Dvsa\Olcs\Transfer\Query\DataRetention\RuleList $query Query for data retention rule list
      *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
     {
+        $filter = $query->getArrayCopy();
+
         /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
 
-        $enabledRulesInReview = $repo->fetchEnabledRules();
+        // If isReview is set to 'Y' then true otherwise false
+        $isReview = isset($filter['isReview']) && $filter['isReview'] === 'Y';
+
+        $enabledRulesInReview = $repo->fetchEnabledRules($query, $isReview);
 
         return [
             'result' => $this->resultList(
