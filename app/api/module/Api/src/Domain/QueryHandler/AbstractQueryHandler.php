@@ -199,4 +199,14 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         $this->commandHandler->handleCommand($dto);
     }
+
+    /**
+     * Get command handler
+     *
+     * @return \Dvsa\Olcs\Api\Domain\CommandHandlerManager
+     */
+    protected function getCommandHandler()
+    {
+        return $this->commandHandler;
+    }
 }

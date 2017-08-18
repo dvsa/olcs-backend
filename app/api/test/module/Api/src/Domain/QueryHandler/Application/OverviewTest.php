@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Overview Test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -18,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\Application\Overview as Qry;
 use Dvsa\Olcs\Transfer\Query\Licence\Overview as LicenceOverviewQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Overview Test
@@ -28,7 +24,6 @@ class OverviewTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        // $this->sut = new Overview();
         $this->sut = m::mock(Overview::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -45,7 +40,7 @@ class OverviewTest extends QueryHandlerTestCase
         $applicationId = 111;
         $licenceId = 7;
 
-        $query = Qry::create(['id' => $applicationId]);
+        $query = Qry::create(['id' => $applicationId, 'validateAppCompletion' => true]);
 
         $mockApplication = m::mock(ApplicationEntity::class)->makePartial();
         $mockApplication
@@ -70,6 +65,11 @@ class OverviewTest extends QueryHandlerTestCase
                         ->getMock()
                 ]
             );
+
+        $mockApplication
+            ->shouldReceive('isVariation')
+            ->andReturn(true)
+            ->once();
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -96,6 +96,17 @@ class OverviewTest extends QueryHandlerTestCase
             ->with($applicationId)
             ->once()
             ->andReturn(['oppo1', 'oppo2', 'oppo3']);
+
+        $this->commandHandler
+            ->shouldReceive('handleCommand')
+            ->with(UpdateApplicationCompletionCmd::class)
+            ->once()
+            ->getMock();
+
+        $this->sut->shouldReceive('getCommandHandler')
+            ->andReturn($this->commandHandler)
+            ->once()
+            ->getMock();
 
         $result = $this->sut->handleQuery($query);
 
