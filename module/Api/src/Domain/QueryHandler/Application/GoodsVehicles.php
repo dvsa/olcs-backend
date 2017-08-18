@@ -64,7 +64,7 @@ class GoodsVehicles extends AbstractQueryHandler
                     'count' => $lvRepo->fetchPaginatedCount($lvQuery)
                 ],
                 'spacesRemaining' => $application->getRemainingSpaces(),
-                'activeVehicleCount' => $application->getActiveVehiclesCount(),
+                'activeVehicleCount' => $application->getActiveLicenceVehiclesCount(),
                 'allVehicleCount' => $lvRepo->fetchAllVehiclesCount($licenceId),
             ]
         );
