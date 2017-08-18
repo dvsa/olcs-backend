@@ -368,7 +368,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $criteria = Criteria::create();
         $criteria->andWhere($criteria->expr()->isNull('removalDate'));
-        $criteria->andWhere($criteria->expr()->eq('application', null));
+        $criteria->andWhere($criteria->expr()->eq('interimApplication', null));
 
         if ($checkSpecified) {
             $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));

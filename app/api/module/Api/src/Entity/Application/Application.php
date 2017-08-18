@@ -806,19 +806,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function getActiveLicenceVehicles()
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->isNull('removalDate')
-        );
-        $criteria->andWhere(
-            $criteria->expr()->isNull('application')
-        );
-
-        return $this->getLicence()->getLicenceVehicles()->matching($criteria);
+        return $this->getLicence()->getActiveVehicles();
     }
 
     /**
-     * Get count of active Licence Vehicles on the Licence, not including ones attached to any applications
+     * Get count of active Licence Vehicles on the Licence, not including 46ones attached to any applications
      *
      * @return int
      */
