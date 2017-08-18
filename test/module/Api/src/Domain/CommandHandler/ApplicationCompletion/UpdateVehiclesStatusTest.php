@@ -54,7 +54,7 @@ class UpdateVehiclesStatusTest extends AbstractUpdateStatusTestCase
 
         $this->application->setHasEnteredReg('Y');
 
-        $this->licence->shouldReceive('getActiveVehicles')->with(false)->once()->andReturn(
+        $this->application->shouldReceive('getActiveVehicles')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection()
         );
 
@@ -68,7 +68,7 @@ class UpdateVehiclesStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setHasEnteredReg('Y');
         $this->application->setTotAuthVehicles(0);
 
-        $this->licence->shouldReceive('getActiveVehicles')->with(false)->once()->andReturn(
+        $this->application->shouldReceive('getActiveVehicles')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection(['foo'])
         );
 
@@ -82,7 +82,7 @@ class UpdateVehiclesStatusTest extends AbstractUpdateStatusTestCase
         $this->application->setHasEnteredReg('Y');
         $this->application->setTotAuthVehicles(10);
 
-        $this->licence->shouldReceive('getActiveVehicles')->with(false)->once()->andReturn(
+        $this->application->shouldReceive('getActiveVehicles')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection(['foo'])
         );
 

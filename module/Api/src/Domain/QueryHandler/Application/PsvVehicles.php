@@ -44,7 +44,7 @@ class PsvVehicles extends AbstractQueryHandler
         $flags = [
             'canTransfer'        => false,
             'hasBreakdown'       => (int) $application->getTotAuthVehicles() > 0,
-            'activeVehicleCount' => $application->getActiveVehiclesCount(),
+            'activeVehicleCount' => $application->getActiveLicenceVehiclesCount(),
             'allVehicleCount'    => $lvRepo->fetchAllVehiclesCount($licenceId),
             'licenceVehicles'    => [
                 'results' => $this->resultList(
