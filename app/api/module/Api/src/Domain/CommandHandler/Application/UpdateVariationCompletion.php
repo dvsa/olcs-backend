@@ -128,9 +128,8 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
-        $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
+        $this->updateHelper = $mainServiceLocator->get('UpdateOperatingCentreHelper');
+        $this->variationHelper = $mainServiceLocator->get('VariationOperatingCentreHelper');
 
         return parent::createService($serviceLocator);
     }
