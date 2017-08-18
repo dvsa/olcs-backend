@@ -33,6 +33,12 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
             'createdBy' => [
                 'column' => 'created_by'
             ],
+            'lastModifiedOn' => [
+                'column' => 'last_modified_on'
+            ],
+            'lastModifiedBy' => [
+                'column' => 'last_modified_by'
+            ],
         ],
     ];
 
@@ -91,12 +97,14 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         $this->connection->shouldReceive('quote')->with(1102)->times(4)->andReturn("'1102'");
         $this->connection->shouldReceive('quote')->with(0)->times(4)->andReturn("'0'");
 
+        $sql =
+            'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by, last_modified_on, last_modified_by) '.
+            'VALUES (\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1), '.
+            '(\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1)';
+
         $this->connection->shouldReceive('executeUpdate')
-            ->with(
-                'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by) '.
-                'VALUES (\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1), '.
-                '(\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1)'
-            )->once()
+            ->with($sql)
+            ->once()
             ->andReturn('result');
 
         $this->assertEquals('result', $this->sut->executeInsert(1102, 4, false));
@@ -114,12 +122,14 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         $this->connection->shouldReceive('quote')->with(1102)->times(4)->andReturn("'1102'");
         $this->connection->shouldReceive('quote')->with(0)->times(4)->andReturn("'0'");
 
+        $sql =
+            'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by, last_modified_on, last_modified_by) '.
+            'VALUES (\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1), '.
+            '(\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1)';
+
         $this->connection->shouldReceive('executeUpdate')
-            ->with(
-                'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by) '.
-                'VALUES (\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1), '.
-                '(\'1102\', \'0\', NOW(), 1), (\'1102\', \'0\', NOW(), 1)'
-            )->once()
+            ->with($sql)
+            ->once()
             ->andThrow(new \Exception());
 
         $this->assertEquals('result', $this->sut->executeInsert(1102, 4, false));
