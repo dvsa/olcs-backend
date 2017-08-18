@@ -1,18 +1,12 @@
 <?php
 
-/**
- * Application
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
 /**
  * Application
@@ -21,6 +15,8 @@ use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
  */
 class Application extends AbstractQueryHandler
 {
+    const OPERATING_CENTRES_SECTION = 'operatingCentres';
+
     protected $repoServiceName = 'Application';
     protected $extraRepos = ['Note', 'SystemParameter'];
 
@@ -50,6 +46,14 @@ class Application extends AbstractQueryHandler
         $application = $this->getRepo()->fetchUsingId($query);
 
         $this->auditRead($application);
+
+        if ($query->getValidateAppCompletion() && $application->isVariation()) {
+            $this->getCommandHandler()->handleCommand(
+                UpdateApplicationCompletionCmd::create(
+                    ['id' => $application->getId(), 'section' => self::OPERATING_CENTRES_SECTION]
+                )
+            );
+        }
 
         $latestNote = $this->getRepo('Note')->fetchForOverview($application->getLicence()->getId());
         return $this->result(

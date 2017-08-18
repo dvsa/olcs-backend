@@ -14,6 +14,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion as ApplicationCompletionEntity;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as UpdateOperatingCentresCmd;
+use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
+use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 
 /**
  * Update Variation Completion Test
@@ -22,10 +25,21 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class UpdateVariationCompletionTest extends CommandHandlerTestCase
 {
+    /** @var  UpdateOperatingCentreHelper */
+    protected $updateHelper;
+
+    /** @var  VariationOperatingCentreHelper */
+    protected $vocHelper;
+
     public function setUp()
     {
+        $this->updateHelper = m::mock();
+        $this->vocHelper = m::mock();
+
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            'UpdateOperatingCentreHelper' => $this->updateHelper,
+            'VariationOperatingCentreHelper' => $this->vocHelper,
         ];
 
         $this->sut = new UpdateVariationCompletion();
@@ -75,6 +89,47 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
         $application->setLicence($licence);
         $application->setApplicationCompletion($ac);
+
+        $totals = [
+            'noOfOperatingCentres' => 0,
+            'minVehicleAuth' => 0,
+            'maxVehicleAuth' => 0,
+            'minTrailerAuth' => 0,
+            'maxTrailerAuth' => 0,
+        ];
+
+        if ($section === 'operatingCentres') {
+            if ($application->isPsv()) {
+                $this->updateHelper
+                    ->shouldReceive('validatePsv')
+                    ->with($application, m::type(UpdateOperatingCentresCmd::class))
+                    ->getMock();
+
+                $this->vocHelper
+                    ->shouldReceive('getListDataForApplication')
+                    ->with($application)
+                    ->once()
+                    ->andReturn([]);
+            } else {
+                $this->updateHelper
+                    ->shouldReceive('validateTotalAuthTrailers')
+                    ->with(m::type(UpdateOperatingCentresCmd::class), $totals)
+                    ->getMock();
+
+                $this->vocHelper
+                    ->shouldReceive('getListDataForApplication')
+                    ->with($application)
+                    ->twice()
+                    ->andReturn([]);
+            }
+            $this->updateHelper
+                ->shouldReceive('validateTotalAuthVehicles')
+                ->with($application, m::type(UpdateOperatingCentresCmd::class), $totals)
+                ->once()
+                ->shouldReceive('getMessages')
+                ->andReturn(['foo'])
+                ->once();
+        }
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->once()
@@ -644,12 +699,12 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->getApplicationState1(),
                 $this->getLicenceState1(),
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED,
                     'Vehicles' => UpdateVariationCompletion::STATUS_UNCHANGED
                 ],
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Vehicles' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
@@ -661,12 +716,12 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->getApplicationState2(),
                 $this->getLicenceState1(),
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED,
                     'FinancialEvidence' => UpdateVariationCompletion::STATUS_UNCHANGED
                 ],
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'FinancialEvidence' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION
                 ],
@@ -678,13 +733,13 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->getApplicationState4(),
                 $this->getLicenceState3(),
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED,
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_UNCHANGED,
                     'Discs' =>  UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Discs' =>  UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
@@ -697,12 +752,12 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                 $this->getApplicationState4(),
                 $this->getLicenceState4(),
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED,
                     'VehiclesDeclarations' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UPDATED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Vehicles' => UpdateVariationCompletion::STATUS_UNCHANGED,
                 ],
@@ -718,7 +773,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
                 [
-                    'OperatingCentres' => UpdateVariationCompletion::STATUS_UNCHANGED,
+                    'OperatingCentres' => UpdateVariationCompletion::STATUS_REQUIRES_ATTENTION,
                     'Undertakings' => UpdateVariationCompletion::STATUS_UPDATED
                 ],
                 'Y',
