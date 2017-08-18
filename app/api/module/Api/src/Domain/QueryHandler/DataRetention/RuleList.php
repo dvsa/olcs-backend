@@ -28,10 +28,8 @@ class RuleList extends AbstractQueryHandler
         /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
 
-        $isReview = false;
-        if (isset($filter['isReview']) && $filter['isReview'] === 'Y') {
-            $isReview = true;
-        }
+        // If isReview is set to 'Y' then true otherwise false
+        $isReview = isset($filter['isReview']) && $filter['isReview'] === 'Y';
 
         $enabledRulesInReview = $repo->fetchEnabledRules($query, $isReview);
 
