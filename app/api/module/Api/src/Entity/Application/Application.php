@@ -794,13 +794,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function getRemainingSpaces()
     {
-        $vehicles = $this->getActiveLicenceVehicles();
-
-        return $this->getTotAuthVehicles() - $vehicles->count() - $this->getActiveVehicles()->count();
+        return $this->getTotAuthVehicles()
+            - $this->getActiveLicenceVehicles()->count()
+            - $this->getActiveVehicles()->count();
     }
 
     /**
-     * Get list of active Licence Vehicles on the Licence
+     * Get list of active Licence Vehicles on the Licence, not including ones attached to any applications
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -815,6 +815,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         );
 
         return $this->getLicence()->getLicenceVehicles()->matching($criteria);
+    }
+
+    /**
+     * Get count of active Licence Vehicles on the Licence, not including ones attached to any applications
+     *
+     * @return int
+     */
+    public function getActiveLicenceVehiclesCount()
+    {
+        return $this->getActiveLicenceVehicles()->count();
     }
 
     /**
@@ -1314,16 +1324,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return $latestPublication;
-    }
-
-    /**
-     * Get count of active vehicles on the Licence
-     *
-     * @return int
-     */
-    public function getActiveVehiclesCount()
-    {
-        return $this->getActiveLicenceVehicles()->count();
     }
 
     /**
