@@ -17,7 +17,9 @@ class CreatePsvDiscs extends AbstractRawQuery
         'pd' => PsvDisc::class
     ];
 
-    protected $queryTemplate = 'INSERT INTO {pd} ({pd.licence}, {pd.isCopy}, {pd.createdOn}, {pd.createdBy}) VALUES ';
+    protected $queryTemplate = 'INSERT INTO {pd} ({pd.licence}, {pd.isCopy}, 
+                                {pd.createdOn}, {pd.createdBy}, 
+                                {pd.lastModifiedOn}, {pd.lastModifiedBy}) VALUES ';
 
     /**
      * Create PSV disc rows
@@ -42,7 +44,7 @@ class CreatePsvDiscs extends AbstractRawQuery
                 $query .= ', ';
             }
             $query .= sprintf(
-                '(%s, %s, NOW(), %s)',
+                '(%1$s, %2$s, NOW(), %3$s, NOW(), %3$s)',
                 $this->connection->quote($licenceId),
                 $this->connection->quote($isCopy ? 1 : 0),
                 $this->getCurrentUser()->getId()
