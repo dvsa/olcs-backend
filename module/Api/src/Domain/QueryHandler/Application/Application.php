@@ -15,6 +15,8 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  */
 class Application extends AbstractQueryHandler
 {
+    const OPERATING_CENTRES_SECTION = 'operatingCentres';
+
     protected $repoServiceName = 'Application';
     protected $extraRepos = ['Note', 'SystemParameter'];
 
@@ -48,7 +50,7 @@ class Application extends AbstractQueryHandler
         if ($query->getValidateAppCompletion() && $application->isVariation()) {
             $this->getCommandHandler()->handleCommand(
                 UpdateApplicationCompletionCmd::create(
-                    ['id' => $application->getId(), 'section' => 'operatingCentres']
+                    ['id' => $application->getId(), 'section' => self::OPERATING_CENTRES_SECTION]
                 )
             );
         }
