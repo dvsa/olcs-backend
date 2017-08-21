@@ -1,9 +1,9 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity;
+namespace Dvsa\OlcsTest\Api\Entity\DataRetention;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\DataRetention as Entity;
+use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as Entity;
 
 /**
  * DataRetention Entity Unit Tests

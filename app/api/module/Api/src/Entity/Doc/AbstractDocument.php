@@ -153,7 +153,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="filename", length=255, nullable=true)
+     * @ORM\Column(type="string", name="filename", length=1000, nullable=true)
      */
     protected $filename;
 
@@ -173,7 +173,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="document_store_id", length=255, nullable=false)
+     * @ORM\Column(type="string", name="document_store_id", length=1000, nullable=false)
      */
     protected $identifier;
 

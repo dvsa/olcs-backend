@@ -32,15 +32,6 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     use ProcessDateTrait;
 
     /**
-     * Action procedure
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="action_procedure", length=64, nullable=false)
-     */
-    protected $actionProcedure;
-
-    /**
      * Action type
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -154,30 +145,6 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
      * @ORM\Column(type="boolean", name="retention_period", nullable=false)
      */
     protected $retentionPeriod;
-
-    /**
-     * Set the action procedure
-     *
-     * @param string $actionProcedure new value being set
-     *
-     * @return DataRetentionRule
-     */
-    public function setActionProcedure($actionProcedure)
-    {
-        $this->actionProcedure = $actionProcedure;
-
-        return $this;
-    }
-
-    /**
-     * Get the action procedure
-     *
-     * @return string
-     */
-    public function getActionProcedure()
-    {
-        return $this->actionProcedure;
-    }
 
     /**
      * Set the action type
