@@ -2431,7 +2431,7 @@ class ApplicationEntityTest extends EntityTester
         $application->shouldReceive('getActiveLicenceVehicles->count')
             ->andReturn(10);
 
-        $this->assertEquals(10, $application->getActiveVehiclesCount());
+        $this->assertEquals(10, $application->getActiveLicenceVehiclesCount());
     }
 
     public function canHaveCommunityLicencesProvider()
