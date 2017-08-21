@@ -28,7 +28,7 @@ final class UpdateVehiclesStatus extends AbstractUpdateStatus
             return true;
         }
 
-        $vehicles = $application->getLicence()->getActiveVehicles(false);
+        $vehicles = $application->getActiveVehicles();
 
         if (count($vehicles) === 0) {
             return false;

@@ -794,24 +794,29 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function getRemainingSpaces()
     {
-        $vehicles = $this->getActiveLicenceVehicles();
-
-        return $this->getTotAuthVehicles() - $vehicles->count();
+        return $this->getTotAuthVehicles()
+            - $this->getActiveLicenceVehicles()->count()
+            - $this->getActiveVehicles()->count();
     }
 
     /**
-     * Get list of active Licence Vehicles
+     * Get list of active Licence Vehicles on the Licence, not including ones attached to any applications
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getActiveLicenceVehicles()
     {
-        $criteria = Criteria::create();
-        $criteria->andWhere(
-            $criteria->expr()->isNull('removalDate')
-        );
+        return $this->getLicence()->getActiveVehicles();
+    }
 
-        return $this->getLicence()->getLicenceVehicles()->matching($criteria);
+    /**
+     * Get count of active Licence Vehicles on the Licence, not including 46ones attached to any applications
+     *
+     * @return int
+     */
+    public function getActiveLicenceVehiclesCount()
+    {
+        return $this->getActiveLicenceVehicles()->count();
     }
 
     /**
@@ -990,7 +995,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     }
 
     /**
-     * Get active vehicle list
+     * Get active vehicle list on the application
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
@@ -1311,16 +1316,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return $latestPublication;
-    }
-
-    /**
-     * Get count of active vehicles
-     *
-     * @return int
-     */
-    public function getActiveVehiclesCount()
-    {
-        return $this->getActiveLicenceVehicles()->count();
     }
 
     /**
