@@ -64,7 +64,7 @@ abstract class AbstractSiCategoryType implements BundleSerializableInterface, Js
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="description", length=255, nullable=true)
+     * @ORM\Column(type="string", name="description", length=500, nullable=true)
      */
     protected $description;
 
