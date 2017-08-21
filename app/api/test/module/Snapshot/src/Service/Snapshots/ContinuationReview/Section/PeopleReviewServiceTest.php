@@ -7,6 +7,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section\PeopleReview
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use OlcsTest\Bootstrap;
 
 /**
  * People review service test
@@ -18,9 +19,24 @@ class PeopleReviewServiceTest extends MockeryTestCase
     /** @var PeopleReviewService review service */
     protected $sut;
 
+    protected $mockTranslator;
+
     public function setUp()
     {
         $this->sut = new PeopleReviewService();
+
+        $this->mockTranslator = m::mock(Translate::class)
+            ->shouldReceive('translate')
+            ->andReturnUsing(
+                function ($arg) {
+                    return $arg . '_translated';
+                }
+            )
+            ->getMock();
+
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut->setServiceLocator($this->sm);
+        $this->sm->setService('translator', $this->mockTranslator);
     }
 
     public function testGetConfigFromData()
@@ -118,5 +134,40 @@ class PeopleReviewServiceTest extends MockeryTestCase
         ];
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($continuationDetail));
+    }
+
+    public function testGetConfigFromDataNoPersons()
+    {
+        $continuationDetail = new ContinuationDetail();
+
+        $organisationPersons = new ArrayCollection();
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getOrganisation')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getOrganisationPersons')
+                    ->andReturn($organisationPersons)
+                    ->once()
+                    ->shouldReceive('getType')
+                    ->andReturn(
+                        m::mock()
+                        ->shouldReceive('getId')
+                        ->andReturn('org_t_rc')
+                        ->once()
+                        ->getMock()
+                    )
+                    ->once()
+                    ->getMock()
+            )
+            ->once()
+            ->getMock();
+
+        $continuationDetail->setLicence($mockLicence);
+
+        $this->assertEquals(
+            ['emptyTableMessage' => 'continuations.people-empty-table-message.org_t_rc_translated'],
+            $this->sut->getConfigFromData($continuationDetail)
+        );
     }
 }

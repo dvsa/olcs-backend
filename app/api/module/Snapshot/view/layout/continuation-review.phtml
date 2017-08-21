@@ -27,6 +27,9 @@
                             foreach ($section['config']['mainItems'] as $mainItem) {
                                 echo $this->render('partials/read-only/main', $mainItem);
                             }
+                        } elseif (isset($section['config']['emptyTableMessage'])) { ?>
+                            <p><?php echo $section['config']['emptyTableMessage']; ?></p>
+                <?php
                         } else {
                             echo $this->partial('partials/review-continuation-section', ['data' => $section['config']]);
                         }

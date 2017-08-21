@@ -346,5 +346,11 @@ return [
     'continuations.conditions-undertakings.licence' => 'Licence',
     'continuations.conditions-undertakings.conditions' => 'Conditions',
     'continuations.conditions-undertakings.undertakings' => 'Undertakings',
+    'continuations.people-empty-table-message.org_t_ir' => 'There are no people recorded on your licence',
+    'continuations.people-empty-table-message.org_t_llp' => 'There are no partners recorded on your licence',
+    'continuations.people-empty-table-message.org_t_p' => 'There are no partners recorded on your licence',
+    'continuations.people-empty-table-message.org_t_pa' => 'There are no responsible people recorded on your licence',
+    'continuations.people-empty-table-message.org_t_rc' => 'There are no directors recorded on your licence',
+    'continuations.people-empty-table-message.org_t_st' => 'There is no owner recorded on your licence',
     // Potentially unused translations
 ];

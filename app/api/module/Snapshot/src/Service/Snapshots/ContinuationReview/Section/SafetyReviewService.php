@@ -63,8 +63,9 @@ class SafetyReviewService extends AbstractReviewService
                 return strcmp($a[0]['value'], $b[0]['value']);
             }
         );
-
-        return array_merge($header, $config);
+        return (count($config) === 0)
+            ? ['emptyTableMessage' => $this->translate('There are no safety inspectors recorded on your licence')]
+            : array_merge($header, $config);
     }
 
     /**
