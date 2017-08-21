@@ -36,24 +36,26 @@ final class DeleteEntities extends AbstractCommandHandler implements Transaction
     {
         /** @var DataRetention $repo */
         $repo = $this->getRepo();
-        $entitiesToDelete = $repo->fetchEntitiesToDelete(self::NUMBER_TO_PROCESS);
 
-        /** @var \Dvsa\Olcs\Api\Entity\DataRetention $dataRetention */
-        foreach ($entitiesToDelete as $dataRetention) {
-            $success = $this->getRepo('DataRetentionRule')->runActionProc(
-                $dataRetention->getDataRetentionRule()->getActionProcedure(),
-                $dataRetention->getEntityPk(),
-                $this->getCurrentUser()->getId()
-            );
-            $this->result->addMessage(
-                sprintf(
-                    '%s data_retention.id = %d, %s',
-                    $success ? 'SUCCESS' : 'ERROR',
-                    $dataRetention->getId(),
-                    $dataRetention->getDataRetentionRule()->getActionProcedure()
-                )
-            );
-        }
+        // @TODO update this to reflect new database changes: OLCS-17668
+        //        $entitiesToDelete = $repo->fetchEntitiesToDelete(self::NUMBER_TO_PROCESS);
+        //
+        //        /** @var \Dvsa\Olcs\Api\Entity\DataRetention $dataRetention */
+        //        foreach ($entitiesToDelete as $dataRetention) {
+        //            $success = $this->getRepo('DataRetentionRule')->runActionProc(
+        //                $dataRetention->getDataRetentionRule()->getActionProcedure(),
+        //                $dataRetention->getEntityPk(),
+        //                $this->getCurrentUser()->getId()
+        //            );
+        //            $this->result->addMessage(
+        //                sprintf(
+        //                    '%s data_retention.id = %d, %s',
+        //                    $success ? 'SUCCESS' : 'ERROR',
+        //                    $dataRetention->getId(),
+        //                    $dataRetention->getDataRetentionRule()->getActionProcedure()
+        //                )
+        //            );
+        //        }
 
         // Create queue job to remove deleted documents, if not already exists
         if (!$this->getRepo('Queue')->isItemTypeQueued(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)) {
