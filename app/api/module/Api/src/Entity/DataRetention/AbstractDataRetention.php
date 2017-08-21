@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\DataRetention;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -24,7 +24,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_delete_confirmation", columns={"action_confirmation"}),
  *        @ORM\Index(name="ix_deleted_date", columns={"deleted_date"}),
  *        @ORM\Index(name="ix_data_retention_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_data_retention_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_data_retention_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_organisation_id", columns={"organisation_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_entity_name_entity_pk", columns={"entity_name","entity_pk"})
@@ -143,6 +144,15 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $lastModifiedOn;
 
     /**
+     * Lic no
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="lic_no", length=18, nullable=true)
+     */
+    protected $licNo;
+
+    /**
      * Next review date
      *
      * @var \DateTime
@@ -150,6 +160,25 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @ORM\Column(type="datetime", name="next_review_date", nullable=true)
      */
     protected $nextReviewDate;
+
+    /**
+     * Organisation
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
+     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $organisation;
+
+    /**
+     * Organisation name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="organisation_name", length=160, nullable=true)
+     */
+    protected $organisationName;
 
     /**
      * To action
@@ -449,6 +478,30 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     }
 
     /**
+     * Set the lic no
+     *
+     * @param string $licNo new value being set
+     *
+     * @return DataRetention
+     */
+    public function setLicNo($licNo)
+    {
+        $this->licNo = $licNo;
+
+        return $this;
+    }
+
+    /**
+     * Get the lic no
+     *
+     * @return string
+     */
+    public function getLicNo()
+    {
+        return $this->licNo;
+    }
+
+    /**
      * Set the next review date
      *
      * @param \DateTime $nextReviewDate new value being set
@@ -476,6 +529,54 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
         }
 
         return $this->nextReviewDate;
+    }
+
+    /**
+     * Set the organisation
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     *
+     * @return DataRetention
+     */
+    public function setOrganisation($organisation)
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     */
+    public function getOrganisation()
+    {
+        return $this->organisation;
+    }
+
+    /**
+     * Set the organisation name
+     *
+     * @param string $organisationName new value being set
+     *
+     * @return DataRetention
+     */
+    public function setOrganisationName($organisationName)
+    {
+        $this->organisationName = $organisationName;
+
+        return $this;
+    }
+
+    /**
+     * Get the organisation name
+     *
+     * @return string
+     */
+    public function getOrganisationName()
+    {
+        return $this->organisationName;
     }
 
     /**

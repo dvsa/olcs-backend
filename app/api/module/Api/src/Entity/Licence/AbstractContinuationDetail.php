@@ -48,7 +48,7 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @ORM\Column(type="decimal",
      *     name="average_balance_amount",
-     *     precision=10,
+     *     precision=12,
      *     scale=2,
      *     nullable=true)
      */
@@ -113,7 +113,7 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @var float
      *
-     * @ORM\Column(type="decimal", name="factoring_amount", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", name="factoring_amount", precision=12, scale=2, nullable=true)
      */
     protected $factoringAmount;
 
@@ -214,7 +214,7 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @ORM\Column(type="decimal",
      *     name="other_finances_amount",
-     *     precision=10,
+     *     precision=12,
      *     scale=2,
      *     nullable=true)
      */
@@ -234,7 +234,7 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @var float
      *
-     * @ORM\Column(type="decimal", name="overdraft_amount", precision=10, scale=2, nullable=true)
+     * @ORM\Column(type="decimal", name="overdraft_amount", precision=12, scale=2, nullable=true)
      */
     protected $overdraftAmount;
 
