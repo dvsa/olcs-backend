@@ -31,7 +31,7 @@ final class Populate extends AbstractCommandHandler implements TransactionedInte
         /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
 
-        /** @var \Dvsa\Olcs\Api\Entity\DataRetention\DataRetentionRule $dataRetentionRule */
+        /** @var \Dvsa\Olcs\Api\Entity\DataRetentionRule $dataRetentionRule */
         foreach ($repo->fetchEnabledRules() as $dataRetentionRule) {
             $this->result->addMessage(
                 sprintf(
