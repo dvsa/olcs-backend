@@ -22,7 +22,8 @@ class PeopleReviewService extends AbstractReviewService
      */
     public function getConfigFromData(ContinuationDetail $continuationDetail)
     {
-        $organisationPersons = $continuationDetail->getLicence()->getOrganisation()->getOrganisationPersons();
+        $organisation = $continuationDetail->getLicence()->getOrganisation();
+        $organisationPersons = $organisation->getOrganisationPersons();
 
         $header[] = [
             ['value' => 'continuations.people-section.table.name', 'header' => true],
@@ -55,6 +56,13 @@ class PeopleReviewService extends AbstractReviewService
             }
         );
 
-        return array_merge($header, $config);
+        return (count($config) === 0)
+            ? [
+                'emptyTableMessage' =>
+                    $this->translate(
+                        'continuations.people-empty-table-message.' . $organisation->getType()->getId()
+                    )
+            ]
+            : array_merge($header, $config);
     }
 }

@@ -64,6 +64,8 @@ class VehiclesReviewService extends AbstractReviewService
             }
         );
 
-        return array_merge($header, $config);
+        return (count($config) === 0)
+            ? ['emptyTableMessage' => $this->translate('There are no vehicles recorded on your licence')]
+            : array_merge($header, $config);
     }
 }
