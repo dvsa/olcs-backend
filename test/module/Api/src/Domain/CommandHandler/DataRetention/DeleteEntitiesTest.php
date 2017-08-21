@@ -39,6 +39,8 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
 
     public function testHandleCommandIterateEntities()
     {
+        $this->markTestSkipped('OLCS-17668 columns removed in data retention table.  This command is also deprecated');
+
         $command = Cmd::create([]);
 
         $dataRetentionRule = (new DataRetentionRule())
@@ -77,6 +79,8 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
 
     public function testHandleCommandCreateRemoveDocsJob()
     {
+        $this->markTestSkipped('OLCS-17668 columns removed in data retention table.  This command is also deprecated');
+
         $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(10)->once()
             ->andReturn([]);
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
@@ -95,6 +99,8 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
 
     public function testHandleCommandCreateAnotherProcessJob()
     {
+        $this->markTestSkipped('OLCS-17668 columns removed in data retention table.  This command is also deprecated');
+
         $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(10)->once()
             ->andReturn([]);
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
