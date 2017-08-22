@@ -27,8 +27,11 @@ class DeclarationReviewServiceTest extends MockeryTestCase
     {
         $serviceManager = Bootstrap::getServiceManager();
 
+        /** @var var Organisation $organisation */
+        $organisation = new Organisation();
+        $organisation->setType(new RefData(Organisation::ORG_TYPE_REGISTERED_COMPANY));
         /** @var Licence $mockLicence */
-        $mockLicence = new Licence(new Organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
+        $mockLicence = new Licence($organisation, new RefData(Licence::LICENCE_STATUS_VALID));
         $mockLicence->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
         $mockLicence->setLicenceType(new RefData(Licence::LICENCE_TYPE_RESTRICTED));
 
@@ -236,6 +239,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
     public function testGetConfigFromDataPhysicalSignature()
     {
         $this->continuationDetail->setSignatureType(new RefData(RefData::SIG_PHYSICAL_SIGNATURE));
+        $this->continuationDetail->getLicence()->setTrafficArea((new TrafficArea())->setIsNi(false));
 
         $this->assertEquals(
             [
@@ -249,6 +253,10 @@ class DeclarationReviewServiceTest extends MockeryTestCase
                                 'value' => 'continuations.declaration.signature-type.print_translated(%s)',
                             ]
                         ]
+                    ],
+                    [
+                        'markup' =>
+                            'markup-continuation_signature_translated(undertakings_directors_signature_translated(%s))',
                     ]
                 ]
             ],
