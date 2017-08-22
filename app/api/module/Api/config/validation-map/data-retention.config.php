@@ -9,6 +9,7 @@ return [
     CommandHandler\DataRetention\Populate::class => IsSystemUser::class,
     CommandHandler\DataRetention\DeleteEntities::class => IsSystemUser::class,
 
+    QueryHandler\DataRetention\GetRule::class => IsInternalUser::class,
     QueryHandler\DataRetention\RuleList::class => IsInternalUser::class,
     QueryHandler\DataRetention\Records::class => IsInternalUser::class,
 ];
