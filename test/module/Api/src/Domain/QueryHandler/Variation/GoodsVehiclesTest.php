@@ -75,7 +75,7 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
         $application->setStatus($status);
         $application->setLicence($licence);
         $application->shouldReceive('getRemainingSpaces')->andReturn(3);
-        $application->shouldReceive('getActiveVehiclesCount')->andReturn(2);
+        $application->shouldReceive('getActiveLicenceVehiclesCount')->andReturn(2);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($query)

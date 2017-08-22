@@ -360,7 +360,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Returns list of active vehicles
      *
-     * @param bool $checkSpecified when true, only return vehicles with a specified date
+     * @param bool $checkSpecified When true, only return vehicles with a specified date
      *
      * @return ArrayCollection
      */
@@ -368,6 +368,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $criteria = Criteria::create();
         $criteria->andWhere($criteria->expr()->isNull('removalDate'));
+        $criteria->andWhere($criteria->expr()->eq('interimApplication', null));
 
         if ($checkSpecified) {
             $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
