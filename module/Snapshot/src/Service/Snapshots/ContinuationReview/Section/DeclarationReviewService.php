@@ -4,12 +4,17 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Declaration Continuation Review Service
  */
 class DeclarationReviewService extends AbstractReviewService
 {
+    const SIGNATURE = 'markup-continuation_signature';
+    const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
+    const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
+
     /**
      * Format the readonly config from the given data
      *
@@ -39,17 +44,26 @@ class DeclarationReviewService extends AbstractReviewService
                 'value' => $this->formatDate($continuationDetail->getDigitalSignature()->getCreatedOn())
             ];
         }
+        $mainItems = [
+            [
+                'markup' => $this->getDeclarationMarkup($continuationDetail)
+            ],
+            [
+                'header' => 'continuations.declaration.signature-details',
+                'items' => $items
+            ]
+        ];
+        if (
+            $continuationDetail->getSignatureType() !== null
+            && $continuationDetail->getSignatureType()->getId() === RefData::SIG_PHYSICAL_SIGNATURE
+        ) {
+            $mainItems[] = [
+                'markup' => $this->getSignature($continuationDetail)
+            ];
+        }
 
         return [
-            'mainItems' => [
-                [
-                    'markup' => $this->getDeclarationMarkup($continuationDetail)
-                ],
-                [
-                    'header' => 'continuations.declaration.signature-details',
-                    'items' => $items
-                ],
-            ]
+            'mainItems' => $mainItems
         ];
 
     }
@@ -114,5 +128,36 @@ class DeclarationReviewService extends AbstractReviewService
         $markup = $this->translateReplace($markupKey, $additional);
 
         return $markup;
+    }
+
+    /**
+     * Get signature
+     *
+     * @param ContinuationDetail $continuationDetail continuation detail
+     *
+     * @return string
+     */
+    protected function getSignature($continuationDetail)
+    {
+        $titles = [
+            Organisation::ORG_TYPE_REGISTERED_COMPANY => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_LLP => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_PARTNERSHIP => 'undertakings_partners_signature',
+            Organisation::ORG_TYPE_SOLE_TRADER => 'undertakings_owners_signature',
+            Organisation::ORG_TYPE_OTHER => 'undertakings_responsiblepersons_signature',
+            Organisation::ORG_TYPE_IRFO => 'undertakings_responsiblepersons_signature'
+        ];
+        $addresses = [
+            true => self::SIGNATURE_ADDRESS_NI,
+            false => self::SIGNATURE_ADDRESS_GB
+        ];
+        $title = $titles[$continuationDetail->getLicence()->getOrganisation()->getType()->getId()];
+        $address = $this->translate($addresses[$continuationDetail->getLicence()->getTrafficArea()->getIsNi()]);
+
+        $additionalParts = [
+            $this->translate($title),
+            $address
+        ];
+        return $this->translateReplace(self::SIGNATURE, $additionalParts);
     }
 }
