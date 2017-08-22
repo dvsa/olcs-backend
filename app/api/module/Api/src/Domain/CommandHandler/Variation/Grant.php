@@ -219,6 +219,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $criteria->andWhere(
                 $criteria->expr()->eq('removalDate', null)
             );
+            $criteria->andWhere(
+                $criteria->expr()->eq('interimApplication', null)
+            );
             $sameVehicles = $existingLicenceVehicles->matching($criteria);
             if (count($sameVehicles) > 0) {
                 $newLicenceVehicle->setRemovalDate(new DateTime());

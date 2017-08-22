@@ -58,7 +58,7 @@ class PsvVehiclesTest extends QueryHandlerTestCase
             ->shouldReceive('getTotAuthVehicles')
             ->andReturn(0)
             ->once()
-            ->shouldReceive('getActiveVehiclesCount')
+            ->shouldReceive('getActiveLicenceVehiclesCount')
             ->andReturn(1)
             ->once()
             ->getMock();
