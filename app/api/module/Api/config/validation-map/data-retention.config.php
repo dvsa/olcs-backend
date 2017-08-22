@@ -10,4 +10,5 @@ return [
     CommandHandler\DataRetention\DeleteEntities::class => IsSystemUser::class,
 
     QueryHandler\DataRetention\RuleList::class => IsInternalUser::class,
+    QueryHandler\DataRetention\Records::class => IsInternalUser::class,
 ];

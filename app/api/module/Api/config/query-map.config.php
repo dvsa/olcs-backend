@@ -515,6 +515,7 @@ return [
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,
+    TransferQuery\DataRetention\Records::class => QueryHandler\DataRetention\Records::class,
 
     // Sla Target Dates
     TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
