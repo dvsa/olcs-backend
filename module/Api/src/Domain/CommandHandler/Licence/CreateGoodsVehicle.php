@@ -48,7 +48,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         $dtoData = $command->getArrayCopy();
         $dtoData['licence'] = $command->getId();
         if ($command->getSpecifiedDate() === null) {
-            $dtoData['specifiedDate'] = date('Y-m-d');
+            $dtoData['specifiedDate'] = date('Y-m-d H:i:s');
         }
         $dtoData['identifyDuplicates'] = true;
 
