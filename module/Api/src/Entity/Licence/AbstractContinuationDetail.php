@@ -99,6 +99,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $createdOn;
 
     /**
+     * Digital notification sent
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="digital_notification_sent", nullable=true)
+     */
+    protected $digitalNotificationSent;
+
+    /**
      * Digital signature
      *
      * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
@@ -428,6 +437,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
         }
 
         return $this->createdOn;
+    }
+
+    /**
+     * Set the digital notification sent
+     *
+     * @param boolean $digitalNotificationSent new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setDigitalNotificationSent($digitalNotificationSent)
+    {
+        $this->digitalNotificationSent = $digitalNotificationSent;
+
+        return $this;
+    }
+
+    /**
+     * Get the digital notification sent
+     *
+     * @return boolean
+     */
+    public function getDigitalNotificationSent()
+    {
+        return $this->digitalNotificationSent;
     }
 
     /**

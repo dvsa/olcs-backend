@@ -28,4 +28,5 @@ return array(
     'email.user-temporary-password.subject' => 'Your temporary password',
     'email.duplicate-vehicles-removal.subject' => 'List of removed duplicated vehicles',
     'email.notification.subject' => 'OLCS Notification',
+    'email.digital-continuation.subject' => 'The licence %s is due to expire on %s',
 );
