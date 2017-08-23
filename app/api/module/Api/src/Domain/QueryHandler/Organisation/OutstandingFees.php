@@ -28,7 +28,8 @@ class OutstandingFees extends AbstractQueryHandler
 
         $fees = $this->getRepo('Fee')->fetchOutstandingFeesByOrganisationId(
             $organisation->getId(),
-            $query->getHideExpired()
+            $query->getHideExpired(),
+            true
         );
 
         return $this->result(
