@@ -62,8 +62,11 @@ class Fee extends AbstractRepository
      *
      * @return array
      */
-    public function fetchOutstandingFeesByOrganisationId($organisationId, $hideForCeasedLicences = false)
-    {
+    public function fetchOutstandingFeesByOrganisationId(
+        $organisationId,
+        $hideForCeasedLicences = false,
+        $hideContinuationsFees = false
+    ) {
         $doctrineQb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()
@@ -80,6 +83,9 @@ class Fee extends AbstractRepository
         if ($hideForCeasedLicences) {
             $this->hideForCeasedLicences($doctrineQb);
         }
+        if ($hideContinuationsFees) {
+            $this->hideContinuationFees($doctrineQb);
+        }
 
         return $doctrineQb->getQuery()->getResult();
     }
@@ -92,8 +98,11 @@ class Fee extends AbstractRepository
      *
      * @return int
      */
-    public function getOutstandingFeeCountByOrganisationId($organisationId, $hideForCeasedLicences = false)
-    {
+    public function getOutstandingFeeCountByOrganisationId(
+        $organisationId,
+        $hideForCeasedLicences = false,
+        $hideContinuationsFees = false
+    ) {
         $doctrineQb = $this->createQueryBuilder();
 
         $doctrineQb->select('COUNT(f)');
@@ -106,8 +115,19 @@ class Fee extends AbstractRepository
         if ($hideForCeasedLicences) {
             $this->hideForCeasedLicences($doctrineQb);
         }
+        if ($hideContinuationsFees) {
+            $this->hideContinuationFees($doctrineQb);
+        }
 
         return $doctrineQb->getQuery()->getSingleScalarResult();
+    }
+
+    protected function hideContinuationFees($doctrineQb)
+    {
+        $doctrineQb
+            ->innerJoin($this->alias.'.feeType', 'ftype')
+            ->andWhere($doctrineQb->expr()->neq('ftype.feeType', ':feeType'))
+            ->setParameter('feeType', RefDataEntity::FEE_TYPE_CONT);
     }
 
     /**

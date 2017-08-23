@@ -48,7 +48,7 @@ class CorrespondencesTest extends QueryHandlerTestCase
         $feeCnt = 123;
         $this->repoMap['Fee']
             ->shouldReceive('getOutstandingFeeCountByOrganisationId')
-            ->with(self::ORG_ID, true)
+            ->with(self::ORG_ID, true, true)
             ->andReturn($feeCnt);
 
         $result = $this->sut->handleQuery($query);
