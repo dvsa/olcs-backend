@@ -14,7 +14,11 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Email\Data\Message;
+use Dvsa\Olcs\Email\Domain\Command\SendEmail;
+use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 
 /**
@@ -27,10 +31,13 @@ class ProcessTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
-        $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
-        $this->mockRepo('Fee', \Dvsa\Olcs\Api\Domain\Repository\Fee::class);
-        $this->mockRepo('FeeType', \Dvsa\Olcs\Api\Domain\Repository\FeeType::class);
+        $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
+        $this->mockRepo('Document', Repository\Document::class);
+        $this->mockRepo('Fee', Repository\Fee::class);
+        $this->mockRepo('FeeType', Repository\FeeType::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+
+        $this->mockedSmServices[TemplateRenderer::class] = m::mock(TemplateRenderer::class);
 
         parent::setUp();
     }
@@ -130,6 +137,7 @@ class ProcessTest extends CommandHandlerTestCase
             ->setTrafficArea($this->mapReference(TrafficArea::class, 'B'))
             ->setLicNo($licNo);
 
+        $this->repoMap['SystemParameter']->shouldReceive('getDisabledDigitalContinuations')->andReturn(true);
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchUsingId')
             ->with($command)
@@ -235,8 +243,8 @@ class ProcessTest extends CommandHandlerTestCase
         $this->assertEquals(
             [
                 'Document dispatched',
+                'Fee created',
                 'ContinuationDetail updated',
-                'Fee created'
             ],
             $result->getMessages()
         );
@@ -284,6 +292,7 @@ class ProcessTest extends CommandHandlerTestCase
             ->setTrafficArea($this->mapReference(TrafficArea::class, 'N'))
             ->setLicNo($licNo);
 
+        $this->repoMap['SystemParameter']->shouldReceive('getDisabledDigitalContinuations')->andReturn(true);
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchUsingId')
             ->with($command)
@@ -389,8 +398,8 @@ class ProcessTest extends CommandHandlerTestCase
         $this->assertEquals(
             [
                 'Document dispatched',
+                'Fee created',
                 'ContinuationDetail updated',
-                'Fee created'
             ],
             $result->getMessages()
         );
@@ -402,5 +411,224 @@ class ProcessTest extends CommandHandlerTestCase
             ],
             $result->getIds()
         );
+    }
+
+    private function assertFeeCreated($feeId = 102, $feeTypeId = 999, $licenceId = 7)
+    {
+        $now = new DateTime();
+        $this->repoMap['FeeType']
+            ->shouldReceive('fetchLatest')
+            ->once()
+            ->with(
+                $this->mapRefData(FeeType::FEE_TYPE_CONT),
+                $this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE),
+                $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL),
+                m::on(
+                    // compare date objects
+                    function ($arg) use ($now) {
+                        return $arg == $now;
+                    }
+                ),
+                $this->mapReference(TrafficArea::class, 'B')
+            )
+            ->andReturn($this->mapReference(FeeType::class, $feeTypeId));
+
+        $feeResult = new Result();
+        $feeResult
+            ->addId('fee', $feeId)
+            ->addMessage('Fee created');
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee::class,
+            [
+                'feeType' => $feeTypeId,
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'amount' => '123.45',
+                'invoicedDate' => $now->format('Y-m-d'),
+                'licence' => $licenceId,
+                'description' => 'Test continuation fee for licence OB1234567',
+                'application' => null,
+                'busReg' => null,
+                'task' => null,
+                'irfoGvPermit' => null,
+            ],
+            $feeResult
+        );
+    }
+
+    private function assertDocumentCreated($licenceId = 7, $organisationId = 1, $userId = 1)
+    {
+        $docResult = new Result();
+        $docResult->addId('document', 101);
+        $docResult->addMessage('Document dispatched');
+
+        $dtoData = [
+            'template' => 1252,
+            'query' => [
+                'licence' => $licenceId,
+                'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                'niFlag' => 'N',
+                'organisation' => $organisationId,
+                'user' => $userId
+            ],
+            'description' => 'Continuation checklist',
+            'licence' => $licenceId,
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+            'isExternal'  => false,
+            'isScan' => false,
+            'application' => null,
+            'busReg' => null,
+            'case' => null,
+            'irfoOrganisation' => null,
+            'submission' => null,
+            'trafficArea' => null,
+            'transportManager' => null,
+            'operatingCentre' => null,
+            'opposition' => null,
+            'issuedDate' => null,
+            'dispatch' => true
+        ];
+
+        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
+    }
+
+    private function setupContinuationDetail($id)
+    {
+        $licenceId = 7;
+        $licNo = 'OB1234567';
+        $organisationId = 1;
+
+        $continuationDetail = new ContinuationDetail();
+        $continuationDetail
+            ->setId($id)
+            ->setStatus($this->mapRefData(ContinuationDetail::STATUS_PRINTING))
+            ->setLicence($this->mapReference(Licence::class, $licenceId));
+
+        $continuationDetail->getLicence()
+            ->setExpiryDate('2017-08-23')
+            ->setGoodsOrPsv($this->mapRefData(Licence::LICENCE_CATEGORY_GOODS_VEHICLE))
+            ->setLicenceType($this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL))
+            ->setOrganisation($this->mapReference(Organisation::class, $organisationId))
+            ->setTrafficArea($this->mapReference(TrafficArea::class, 'B'))
+            ->setLicNo($licNo);
+
+        return $continuationDetail;
+    }
+
+    private function assertNonDigital()
+    {
+        $id = 69;
+        $documentId = 101;
+        $feeId = 102;
+        $userId = 1;
+
+        $data = [
+            'id' => $id,
+            'user' => $userId
+        ];
+
+        $command = Command::create($data);
+
+        $continuationDetail = $this->setupContinuationDetail($id);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisabledDigitalContinuations')->andReturn(false);
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($continuationDetail);
+
+        $this->assertDocumentCreated();
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchById')->with($documentId)->once();
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('save')->with($continuationDetail)->once();
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')->once()->andReturn([]);
+
+        $this->assertFeeCreated();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals(
+            [
+                'Document dispatched',
+                'Fee created',
+                'ContinuationDetail updated',
+            ],
+            $result->getMessages()
+        );
+        $this->assertEquals(
+            [
+                'continuationDetail' => $id,
+                'document' => $documentId,
+                'fee' => $feeId,
+            ],
+            $result->getIds()
+        );
+    }
+
+    public function testHandleCommandDigitalEmailDisbaled()
+    {
+        $this->references[Organisation::class][1]
+            ->shouldReceive('getAllowEmail')->with()->once()->andReturn('N');
+        $this->assertNonDigital();
+    }
+
+    public function testHandleCommandDigitalNoAdminEmailAddresses()
+    {
+        $this->references[Organisation::class][1]
+            ->shouldReceive('getAllowEmail')->with()->once()->andReturn('Y')
+            ->shouldReceive('getAdminEmailAddresses')->with()->once()->andReturn([]);
+        $this->assertNonDigital();
+    }
+
+    public function testHandleCommandDigital()
+    {
+        $id = 69;
+        $userId = 1;
+
+        $data = [
+            'id' => $id,
+            'user' => $userId
+        ];
+
+        $command = Command::create($data);
+
+        $continuationDetail = $this->setupContinuationDetail($id);
+
+        $this->references[Organisation::class][1]
+            ->shouldReceive('getAllowEmail')->with()->once()->andReturn('Y')
+            ->shouldReceive('getAdminEmailAddresses')->with()->twice()->andReturn(['a@a.com']);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisabledDigitalContinuations')->andReturn(false);
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($continuationDetail);
+
+        $this->repoMap['ContinuationDetail']
+            ->shouldReceive('save')->with($continuationDetail)->once();
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchOutstandingContinuationFeesByLicenceId')->once()->andReturn([]);
+
+        $this->assertFeeCreated();
+
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
+            m::type(Message::class),
+            'digital-continuation',
+            [
+                'licNo' => 'OB1234567',
+                'continuationDate' => '23 August 2017',
+                'isGoods' => true,
+                'isPsv' => false,
+                'isSpecialRestricted' => false,
+                'feeAmount' => 123.45,
+                'continueLicenceUrl' => sprintf('http://selfserve/continuation/%d', $id),
+            ],
+            'default'
+        );
+        $this->expectedSideEffect(SendEmail::class, [], new Result());
+
+        $this->sut->handleCommand($command);
     }
 }
