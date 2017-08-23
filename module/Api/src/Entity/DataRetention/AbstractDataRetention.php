@@ -162,14 +162,13 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $nextReviewDate;
 
     /**
-     * Organisation
+     * Organisation id
      *
-     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="integer", name="organisation_id", nullable=true)
      */
-    protected $organisation;
+    protected $organisationId;
 
     /**
      * Organisation name
@@ -532,27 +531,27 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     }
 
     /**
-     * Set the organisation
+     * Set the organisation id
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     * @param int $organisationId new value being set
      *
      * @return DataRetention
      */
-    public function setOrganisation($organisation)
+    public function setOrganisationId($organisationId)
     {
-        $this->organisation = $organisation;
+        $this->organisationId = $organisationId;
 
         return $this;
     }
 
     /**
-     * Get the organisation
+     * Get the organisation id
      *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     * @return int
      */
-    public function getOrganisation()
+    public function getOrganisationId()
     {
-        return $this->organisation;
+        return $this->organisationId;
     }
 
     /**

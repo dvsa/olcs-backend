@@ -30,9 +30,9 @@ class Records extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $records
+                $records['results']
             ),
-            'count' => count($records)
+            'count' => $records['count']
         ];
     }
 }
