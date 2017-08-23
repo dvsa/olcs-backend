@@ -122,6 +122,13 @@ class Fee extends AbstractRepository
         return $doctrineQb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * Hide continuation fees
+     *
+     * @param QueryBuilder $doctrineQb query builder
+     *
+     * @return void
+     */
     protected function hideContinuationFees($doctrineQb)
     {
         $doctrineQb
