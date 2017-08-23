@@ -60,6 +60,9 @@ class DataRetention extends AbstractRepository
             $this->buildDefaultListQuery($qb, $query);
         }
 
-        return $qb->getQuery()->getResult();
+        return [
+            'results' => $qb->getQuery()->getResult(),
+            'count' => $this->getPaginator($qb)->count()
+        ];
     }
 }
