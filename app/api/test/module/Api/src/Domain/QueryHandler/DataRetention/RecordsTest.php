@@ -35,7 +35,7 @@ class RecordsTest extends QueryHandlerTestCase
                 $query
             )
             ->once()
-            ->andReturn([$mockRuleList])
+            ->andReturn(['results' => [$mockRuleList], 'count' => 1])
             ->getMock();
 
         $this->assertSame(

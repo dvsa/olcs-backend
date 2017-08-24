@@ -33,7 +33,12 @@ class PopulateTest extends CommandHandlerTestCase
 
         $command = Cmd::create([]);
         $this->repoMap['DataRetentionRule']
-            ->shouldReceive('fetchEnabledRules')->with()->once()->andReturn($dataRetentionRules)
+            ->shouldReceive('fetchEnabledRules')
+            ->with()
+            ->once()
+            ->andReturn(
+                ['results' => $dataRetentionRules]
+            )
             ->shouldReceive('runProc')->with('proc2', 222)->once()
             ->shouldReceive('runProc')->with('proc9', 222)->once();
 

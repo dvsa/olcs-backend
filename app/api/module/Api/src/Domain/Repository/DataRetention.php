@@ -52,11 +52,11 @@ class DataRetention extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb);
         $this->getQueryBuilder()->with('dataRetentionRule', 'drr');
 
-        $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1))
-            ->andWhere($qb->expr()->eq('drr.actionType', ':actionType'))
-            ->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()))
-            ->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
+        $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()));
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
 
+        $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
         $qb->setParameter('actionType', 'Review');
 
         if (!is_null($query)) {
