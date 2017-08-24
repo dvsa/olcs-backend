@@ -153,6 +153,15 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $licNo;
 
     /**
+     * Licence id
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="licence_id", nullable=true)
+     */
+    protected $licenceId;
+
+    /**
      * Next review date
      *
      * @var \DateTime
@@ -498,6 +507,30 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getLicNo()
     {
         return $this->licNo;
+    }
+
+    /**
+     * Set the licence id
+     *
+     * @param int $licenceId new value being set
+     *
+     * @return DataRetention
+     */
+    public function setLicenceId($licenceId)
+    {
+        $this->licenceId = $licenceId;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence id
+     *
+     * @return int
+     */
+    public function getLicenceId()
+    {
+        return $this->licenceId;
     }
 
     /**
