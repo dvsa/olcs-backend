@@ -35,7 +35,12 @@ class RuleListTest extends QueryHandlerTestCase
                 $query, true
             )
             ->once()
-            ->andReturn([$mockRuleList])
+            ->andReturn(
+                [
+                    'results' => [$mockRuleList],
+                    'count' => 1,
+                ]
+            )
             ->getMock();
 
         $this->assertSame(

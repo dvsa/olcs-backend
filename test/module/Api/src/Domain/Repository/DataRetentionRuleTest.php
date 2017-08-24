@@ -12,9 +12,12 @@ use Mockery as m;
  */
 class DataRetentionRuleTest extends RepositoryTestCase
 {
+    /** @var DataRetentionRule */
+    protected $sut;
+
     public function setUp()
     {
-        $this->setUpSut(DataRetentionRule::class);
+        $this->setUpSut(DataRetentionRule::class, true);
     }
 
     public function testFetchEnabledRules()
@@ -28,11 +31,32 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('modifyQuery')
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->andReturnSelf()
+            ->shouldReceive('order')
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
+            ->andReturnSelf();
+
+        $paginator = m::mock();
+        $paginator->shouldReceive('count')->withNoArgs()->andReturn(1);
+        $paginator->shouldReceive('getIterator')->andReturn('result');
+
+        $this->sut->shouldReceive('getPaginator')->andReturn($paginator);
 
         $result = $this->sut->fetchEnabledRules();
 
-        $this->assertSame(['RESULT'], $result);
+        $this->assertSame(
+            [
+                'results' => ['RESULT'],
+                'count' => 1
+            ],
+            $result
+        );
     }
 
     public function testFetchEnabledRulesWithQueryBuilderAndIsReview()
@@ -54,6 +78,8 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->andReturnSelf()
+            ->shouldReceive('modifyQuery')
+            ->andReturnSelf()
             ->shouldReceive('withRefdata')
             ->andReturnSelf()
             ->shouldReceive('order')
@@ -61,9 +87,21 @@ class DataRetentionRuleTest extends RepositoryTestCase
             ->shouldReceive('paginate')
             ->andReturnSelf();
 
+        $paginator = m::mock();
+        $paginator->shouldReceive('count')->withNoArgs()->andReturn(1);
+        $paginator->shouldReceive('getIterator')->andReturn('result');
+
+        $this->sut->shouldReceive('getPaginator')->andReturn($paginator);
+
         $result = $this->sut->fetchEnabledRules($query, true);
 
-        $this->assertSame(['RESULT'], $result);
+        $this->assertSame(
+            [
+                'results' => ['RESULT'],
+                'count' => 1
+            ],
+            $result
+        );
     }
 
     public function testRunProc()
