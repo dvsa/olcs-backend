@@ -43,12 +43,14 @@ class DataRetentionTest extends RepositoryTestCase
             ['dataRetentionRuleId' => 13, 'sort' => 'id', 'order' => 'DESC']
         );
 
-        /** @var QueryBuilder $qb */
+        /** @var QueryBuilder|m\mock $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('andWhere')->times(3)->andReturnSelf();
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', 'Review')->once()->andReturn('expr1');
         $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', 13)->once()->andReturn('expr1');
         $qb->shouldReceive('expr->isNull')->with('m.deletedDate')->once()->andReturn('expr1');
+        $qb->shouldReceive('setParameter')->with(':actionType', 'Review')->once()->andReturn('expr1');
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULT']);
 
         $this->mockCreateQueryBuilder($qb);
