@@ -23,6 +23,18 @@ use Zend\View\Model\ConsoleModel;
 class BatchController extends AbstractConsoleController
 {
     /**
+     * Find continuations that have not been process and generate reminders
+     *
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function digitalContinuationRemindersAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand([Command\ContinuationDetail\DigitalSendReminders::create([])])
+        );
+    }
+
+    /**
      * Run data retention rules
      *
      * @return \Zend\View\Model\ConsoleModel

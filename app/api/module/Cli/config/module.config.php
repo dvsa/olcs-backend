@@ -201,6 +201,15 @@ return [
                         ],
                     ],
                 ],
+                'digital-continuation-reminders' => [
+                    'options' => [
+                        'route' => 'digital-continuation-reminders [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'digitalContinuationReminders',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -275,6 +284,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ProcessDataRetention::class,
             Queue::TYPE_CREATE_CONTINUATION_SNAPSHOT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class,
+            Queue::TYPE_CONT_DIGITAL_REMINDER
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
