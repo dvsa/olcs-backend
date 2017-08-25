@@ -13,4 +13,5 @@ return [
     CommandHandler\ContinuationDetail\UpdateInsufficientFinances::class => CanAccessContinuationDetailWithId::class,
     CommandHandler\ContinuationDetail\Submit::class => CanAccessContinuationDetailWithId::class,
     CommandHandler\ContinuationDetail\CreateSnapshot::class => IsSystemUser::class,
+    CommandHandler\ContinuationDetail\DigitalSendReminders::class => IsSystemUser::class,
 ];

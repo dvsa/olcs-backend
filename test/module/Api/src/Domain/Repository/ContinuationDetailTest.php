@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as Repo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -382,5 +383,35 @@ EOT;
         $this->dbQueryService->shouldReceive('get')->with('Continuations\CreateContinuationDetails')->andReturn($query);
 
         $this->sut->createContinuationDetails([1], false, 'status', 2);
+    }
+
+    public function testFetchListForDigitalReminders()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->once()->andReturnSelf()
+            ->shouldReceive('with')->with('continuation', 'c')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn('RESULT');
+
+        static::assertEquals('RESULT', $this->sut->fetchListForDigitalReminders(54));
+
+        $fromDate = (new DateTime())->format('Y-m-d');
+        $toDate = (new DateTime())->add(new \DateInterval('P54D'))->format('Y-m-d');
+        $expectedQuery = 'BLAH AND l.status IN ["lsts_valid","lsts_curtailed","lsts_suspended"] '.
+            'AND l.expiryDate >= [['. $fromDate .']] '.
+            'AND l.expiryDate <= [['. $toDate .']] '.
+            'AND m.status NOT IN ["con_det_sts_complete"] '.
+            'AND c.month = MONTH(l.expiryDate) '.
+            'AND c.year = YEAR(l.expiryDate) '.
+            'AND m.digitalNotificationSent = 1 '.
+            'AND m.digitalReminderSent = 0';
+
+        static::assertEquals($expectedQuery, $this->query);
     }
 }

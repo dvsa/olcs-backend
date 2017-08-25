@@ -108,6 +108,15 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     protected $digitalNotificationSent;
 
     /**
+     * Digital reminder sent
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="digital_reminder_sent", nullable=true)
+     */
+    protected $digitalReminderSent;
+
+    /**
      * Digital signature
      *
      * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
@@ -461,6 +470,30 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
     public function getDigitalNotificationSent()
     {
         return $this->digitalNotificationSent;
+    }
+
+    /**
+     * Set the digital reminder sent
+     *
+     * @param boolean $digitalReminderSent new value being set
+     *
+     * @return ContinuationDetail
+     */
+    public function setDigitalReminderSent($digitalReminderSent)
+    {
+        $this->digitalReminderSent = $digitalReminderSent;
+
+        return $this;
+    }
+
+    /**
+     * Get the digital reminder sent
+     *
+     * @return boolean
+     */
+    public function getDigitalReminderSent()
+    {
+        return $this->digitalReminderSent;
     }
 
     /**
