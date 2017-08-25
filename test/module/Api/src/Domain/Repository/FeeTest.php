@@ -132,8 +132,12 @@ class FeeTest extends RepositoryTestCase
         ];
 
         $mockQb->shouldReceive('expr->notIn')->with('l.status', ':ceasedStatuses')->once()->andReturn('condition1');
+        $mockQb->shouldReceive('expr->neq')->with('ftype.feeType', ':feeType')->once()->andReturn('condition2');
         $mockQb->shouldReceive('andWhere')->with('condition1')->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('ceasedStatuses', $ceasedStatuses)->andReturnSelf();
+        $mockQb->shouldReceive('innerJoin')->with('f.feeType', 'ftype')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('condition2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeType', RefDataEntity::FEE_TYPE_CONT)->once()->andReturnSelf();
 
         $this->em
             ->shouldReceive('getRepository->createQueryBuilder')
@@ -155,7 +159,7 @@ class FeeTest extends RepositoryTestCase
 
         $this->assertSame(
             'result',
-            $this->sut->fetchOutstandingFeesByOrganisationId($organisationId, true)
+            $this->sut->fetchOutstandingFeesByOrganisationId($organisationId, true, true)
         );
     }
 
@@ -178,13 +182,18 @@ class FeeTest extends RepositoryTestCase
             ->with('COUNT(f)')
             ->andReturnSelf();
 
+        $mockQb->shouldReceive('expr->neq')->with('ftype.feeType', ':feeType')->once()->andReturn('condition2');
+        $mockQb->shouldReceive('innerJoin')->with('f.feeType', 'ftype')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('condition2')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeType', RefDataEntity::FEE_TYPE_CONT)->once()->andReturnSelf();
+
         $this->mockWhereOutstandingFee($mockQb);
 
         $this->mockWhereCurrentLicenceOrApplicationFee($mockQb, $organisationId);
 
         $mockQb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn(22);
 
-        $this->assertEquals(22, $this->sut->getOutstandingFeeCountByOrganisationId($organisationId));
+        $this->assertEquals(22, $this->sut->getOutstandingFeeCountByOrganisationId($organisationId, false, true));
     }
 
     public function testGetOutstandingFeeCountByOrganisationIdHideExpired()

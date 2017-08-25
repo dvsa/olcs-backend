@@ -108,7 +108,7 @@ class DashboardTest extends QueryHandlerTestCase
 
         $this->repoMap['Fee']
             ->shouldReceive('getOutstandingFeeCountByOrganisationId')
-            ->with($organisationId, true)
+            ->with($organisationId, true, true)
             ->andReturn(123);
 
         $result = $this->sut->handleQuery($query);

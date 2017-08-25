@@ -854,4 +854,24 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->assertSame(0, $result->getErrorLevel());
     }
+
+    public function testDigitalContinuationRemindersAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\ContinuationDetail\DigitalSendReminders::class))
+            ->once()
+            ->andReturnUsing(
+                function ($command) {
+                    /** @var Command\ContinuationDetail\DigitalSendReminders $command */
+                    $this->assertSame([], $command->getArrayCopy());
+                    return new Command\Result();
+                }
+            );
+
+        $result = $this->sut->digitalContinuationRemindersAction();
+        $this->assertSame(0, $result->getErrorLevel());
+    }
 }

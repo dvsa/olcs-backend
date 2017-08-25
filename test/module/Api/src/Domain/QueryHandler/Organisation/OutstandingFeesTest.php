@@ -61,7 +61,7 @@ class OutstandingFeesTest extends QueryHandlerTestCase
         $this->repoMap['Fee']
             ->shouldReceive('fetchOutstandingFeesByOrganisationId')
             ->once()
-            ->with($organisationId, false)
+            ->with($organisationId, false, true)
             ->andReturn($fees);
 
         $this->repoMap['Correspondence']
