@@ -2,133 +2,195 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\GenerateChecklistDocument as GenerateChecklistDocumentCommand;
 
 /**
  * Process ContinuationDetail
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- * @author Mat Evans <mat.evans@valtech.co.uk>
- * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class Process extends AbstractCommandHandler implements TransactionedInterface
+final class Process extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
+    use EmailAwareTrait;
+
     protected $repoServiceName = 'ContinuationDetail';
 
-    protected $extraRepos = ['Document', 'FeeType', 'Fee'];
+    protected $extraRepos = ['Document', 'FeeType', 'Fee', 'SystemParameter'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command Command DTO
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         $continuationDetail = $this->getRepo()->fetchUsingId($command);
 
         if ($continuationDetail->getStatus()->getId() !== ContinuationDetailEntity::STATUS_PRINTING) {
-            $result
+            $this->result
                 ->addId('continuationDetail', $continuationDetail->getId())
                 ->addMessage('Continuation detail no longer pending');
-            return $result;
+            return $this->result;
         }
 
+        if ($this->useDigitalContinuation($continuationDetail)) {
+            $this->processDigital($continuationDetail);
+        } else {
+            $this->processNonDigital($continuationDetail, $command->getUser());
+        }
+
+        $this->result
+            ->addId('continuationDetail', $continuationDetail->getId())
+            ->addMessage('ContinuationDetail updated');
+
+        return $this->result;
+    }
+
+    /**
+     * Decide whether to use the Digital continuation process
+     *
+     * @param ContinuationDetailEntity $continuationDetail Continuation detail
+     *
+     * @return bool
+     */
+    private function useDigitalContinuation(ContinuationDetailEntity $continuationDetail)
+    {
+        /** @var SystemParameter $systemParameterRepo */
+        $systemParameterRepo = $this->getRepo('SystemParameter');
+        // if Digital continuations are disabled, return false
+        if ($systemParameterRepo->getDisabledDigitalContinuations()) {
+            return false;
+        }
+
+        // if sending preference is not Email, return false
+        if ($continuationDetail->getLicence()->getOrganisation()->getAllowEmail() !== 'Y') {
+            return false;
+        }
+
+        // if there are no admin email addresses, return false
+        if (empty($continuationDetail->getLicence()->getOrganisation()->getAdminEmailAddresses())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Process a non digital continuation (the paper based method)
+     *
+     * @param ContinuationDetailEntity $continuationDetail Continuation detail
+     * @param int                      $userId             User who initiated the process
+     *
+     * @return void
+     */
+    private function processNonDigital(ContinuationDetailEntity $continuationDetail, $userId)
+    {
         // 1. Generate the checklist document
-        $result->merge($this->generateDocument($continuationDetail, $command->getUser()));
+        $this->result->merge(
+            $this->handleSideEffect(
+                GenerateChecklistDocumentCommand::create(
+                    [
+                        'id' => $continuationDetail->getId(),
+                        'user' => $userId
+                    ]
+                )
+            )
+        );
 
         // 2. Update continuation detail record with the checklist document
         // reference and 'printed' status
-        $document = $this->getRepo('Document')->fetchById($result->getId('document'));
+        $document = $this->getRepo('Document')->fetchById($this->result->getId('document'));
         $status = $this->getRepo()->getRefdataReference(ContinuationDetailEntity::STATUS_PRINTED);
         $continuationDetail
             ->setChecklistDocument($document)
             ->setStatus($status);
         $this->getRepo()->save($continuationDetail);
-        $result
-            ->addId('continuationDetail', $continuationDetail->getId())
-            ->addMessage('ContinuationDetail updated');
 
         // 3. Create the continuation fee, if applicable
-        $result->merge($this->createFee($continuationDetail));
-
-        return $result;
+        $this->createFee($continuationDetail);
     }
 
     /**
-     * @param ContinuationDetailEntity $continuationDetail
-     * @param int $user
-     * @return Result
+     * Process a digital continuation (email based method)
+     *
+     * @param ContinuationDetailEntity $continuationDetail Continuation detail
+     *
+     * @return void
      */
-    protected function generateDocument(ContinuationDetailEntity $continuationDetail, $user)
+    private function processDigital(ContinuationDetailEntity $continuationDetail)
     {
-        $template = $this->getTemplate($continuationDetail);
+        // 1. Create the continuation fee, if applicable
+        $feeAmount = $this->createFee($continuationDetail);
 
-        $licence = $continuationDetail->getLicence();
+        // 2. Generate and send an email
+        $this->sendDigitalContinuationEmail($continuationDetail, $feeAmount);
+        $continuationDetail->setDigitalNotificationSent(true);
 
-        $dtoData = [
-            'template' => $template,
-            'query' => [
-                'licence' => $licence->getId(),
-                'goodsOrPsv' => $licence->getGoodsOrPsv()->getId(),
-                'licenceType' => $licence->getLicenceType()->getId(),
-                'niFlag' => $licence->getNiFlag(),
-                'organisation' => $licence->getOrganisation()->getId(),
-                'user' => $user
-            ],
-            'description' => 'Continuation checklist',
-            'licence' => $continuationDetail->getLicence()->getId(),
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isExternal'  => false,
-            'isScan' => false,
-            'dispatch' => true
-        ];
+        // 3. Update continuation detail record with 'printed' status
+        $status = $this->getRepo()->getRefdataReference(ContinuationDetailEntity::STATUS_PRINTED);
+        $continuationDetail->setStatus($status);
 
-        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
+        $this->getRepo()->save($continuationDetail);
     }
 
     /**
-     * Get the template ID for the checklist document
+     * Send an email to operator admins, with link to the digital continuation
      *
-     * @param ContinuationDetailEntity $continuationDetail
+     * @param ContinuationDetailEntity $continuationDetail Continuation detail
+     * @param float|int                $feeAmount          The amount of the continuation fee
      *
-     * @return int
+     * @return void
      */
-    protected function getTemplate($continuationDetail)
+    private function sendDigitalContinuationEmail(ContinuationDetailEntity $continuationDetail, $feeAmount)
     {
-        /* @var $licence LicenceEntity */
-        $licence = $continuationDetail->getLicence();
+        $emailAddresses = $continuationDetail->getLicence()->getOrganisation()->getAdminEmailAddresses();
 
-        if ($licence->isGoods()) {
-            $template = ($licence->getNiFlag() === 'N') ?
-                Document::GV_CONTINUATION_CHECKLIST :
-                Document::GV_CONTINUATION_CHECKLIST_NI;
-        } else {
-            $template = ($licence->getLicenceType()->getId() === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) ?
-                Document::PSV_CONTINUATION_CHECKLIST_SR :
-                Document::PSV_CONTINUATION_CHECKLIST;
+        foreach ($emailAddresses as $emailAddress) {
+            $expiryDate = $continuationDetail->getLicence()->getExpiryDate(true)->format('j F Y');
+
+            $message = new \Dvsa\Olcs\Email\Data\Message($emailAddress, 'email.digital-continuation.subject');
+            $message->setSubjectVariables([$continuationDetail->getLicence()->getLicNo(), $expiryDate]);
+            $message->setTranslateToWelsh($continuationDetail->getLicence()->getTranslateToWelsh());
+
+            $this->sendEmailTemplate(
+                $message,
+                'digital-continuation',
+                [
+                    'licNo' => $continuationDetail->getLicence()->getLicNo(),
+                    'continuationDate' => $expiryDate,
+                    'isGoods' => $continuationDetail->getLicence()->isGoods(),
+                    'isPsv' => $continuationDetail->getLicence()->isPsv(),
+                    'isSpecialRestricted' => $continuationDetail->getLicence()->isSpecialRestricted(),
+                    'feeAmount' => $feeAmount,
+                    'continueLicenceUrl' => sprintf('http://selfserve/continuation/%d', $continuationDetail->getId()),
+                ]
+            );
         }
-
-        return $template;
     }
 
     /**
-     * @param ContinuationDetailEntity $continuationDetail
-     * @return Result
+     * Create the fee for the continuation, if there isn't one already
+     *
+     * @param ContinuationDetailEntity $continuationDetail Continuation Detail
+     *
+     * @return int|float The amount on the fee
      */
     protected function createFee(ContinuationDetailEntity $continuationDetail)
     {
-        $result = new Result();
-
         $licence = $continuationDetail->getLicence();
+        $amount = 0;
 
         if ($this->shouldCreateFee($licence)) {
 
@@ -153,16 +215,19 @@ final class Process extends AbstractCommandHandler implements TransactionedInter
             ];
 
             $result = $this->handleSideEffect(CreateFee::create($data));
+
+            $this->result->merge($result);
         }
 
-        return $result;
+        return $amount;
     }
 
     /**
      * We want to create a fee if the licence type is goods, or psv special restricted
      * and there is no existing CONT fee
      *
-     * @param LicenceEntity $licence
+     * @param LicenceEntity $licence Licence
+     *
      * @return boolean
      */
     protected function shouldCreateFee(LicenceEntity $licence)

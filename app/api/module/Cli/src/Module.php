@@ -80,6 +80,7 @@ class Module implements ConsoleUsageProviderInterface
                 '<populate|delete>',
                 'action to perform, ie \'populate\' the data to be deleted or \'delete\' previously populated data'
             ],
+            'digital-continuation-reminders [--verbose|-v]' => 'Generate/Send checklists for digital continuations',
         ];
     }
 

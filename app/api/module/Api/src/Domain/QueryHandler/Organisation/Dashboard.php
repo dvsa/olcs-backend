@@ -136,6 +136,6 @@ class Dashboard extends AbstractQueryHandler
         /** @var Repository\Fee $repo */
         $repo = $this->getRepo('Fee');
 
-        return $repo->getOutstandingFeeCountByOrganisationId($organisationId, true);
+        return $repo->getOutstandingFeeCountByOrganisationId($organisationId, true, true);
     }
 }

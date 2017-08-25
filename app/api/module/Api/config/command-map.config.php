@@ -843,6 +843,12 @@ return [
     Command\ContinuationDetail\Process::class => CommandHandler\ContinuationDetail\Process::class,
     Command\ContinuationDetail\ProcessReminder::class => CommandHandler\ContinuationDetail\ProcessReminder::class,
     Command\ContinuationDetail\CreateSnapshot::class => CommandHandler\ContinuationDetail\CreateSnapshot::class,
+    Command\ContinuationDetail\DigitalSendReminders::class =>
+        CommandHandler\ContinuationDetail\DigitalSendReminders::class,
+    Command\ContinuationDetail\GenerateCheckListReminder::class =>
+        CommandHandler\ContinuationDetail\GenerateChecklistReminder::class,
+    Command\ContinuationDetail\GenerateChecklistDocument::class =>
+        CommandHandler\ContinuationDetail\GenerateChecklistDocument::class,
 
     // Continuation
     TransferCommand\Continuation\Create::class => CommandHandler\Continuation\Create::class,
