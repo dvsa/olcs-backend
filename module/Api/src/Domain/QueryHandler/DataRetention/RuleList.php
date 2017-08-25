@@ -35,9 +35,9 @@ class RuleList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $enabledRulesInReview
+                $enabledRulesInReview['results']
             ),
-            'count' => count($enabledRulesInReview)
+            'count' => $enabledRulesInReview['count']
         ];
     }
 }

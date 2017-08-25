@@ -153,6 +153,15 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $licNo;
 
     /**
+     * Licence id
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="licence_id", nullable=true)
+     */
+    protected $licenceId;
+
+    /**
      * Next review date
      *
      * @var \DateTime
@@ -162,14 +171,13 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $nextReviewDate;
 
     /**
-     * Organisation
+     * Organisation id
      *
-     * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Organisation\Organisation", fetch="LAZY")
-     * @ORM\JoinColumn(name="organisation_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="integer", name="organisation_id", nullable=true)
      */
-    protected $organisation;
+    protected $organisationId;
 
     /**
      * Organisation name
@@ -502,6 +510,30 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     }
 
     /**
+     * Set the licence id
+     *
+     * @param int $licenceId new value being set
+     *
+     * @return DataRetention
+     */
+    public function setLicenceId($licenceId)
+    {
+        $this->licenceId = $licenceId;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence id
+     *
+     * @return int
+     */
+    public function getLicenceId()
+    {
+        return $this->licenceId;
+    }
+
+    /**
      * Set the next review date
      *
      * @param \DateTime $nextReviewDate new value being set
@@ -532,27 +564,27 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     }
 
     /**
-     * Set the organisation
+     * Set the organisation id
      *
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation entity being set as the value
+     * @param int $organisationId new value being set
      *
      * @return DataRetention
      */
-    public function setOrganisation($organisation)
+    public function setOrganisationId($organisationId)
     {
-        $this->organisation = $organisation;
+        $this->organisationId = $organisationId;
 
         return $this;
     }
 
     /**
-     * Get the organisation
+     * Get the organisation id
      *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     * @return int
      */
-    public function getOrganisation()
+    public function getOrganisationId()
     {
-        return $this->organisation;
+        return $this->organisationId;
     }
 
     /**
