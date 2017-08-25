@@ -12,6 +12,8 @@ class SystemParameter extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    const DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT = 21;
+
     /**
      * Fetch a system parameter value, return null if not found
      *
@@ -66,5 +68,19 @@ class SystemParameter extends AbstractRepository
     public function getDisableDataRetentionRecords()
     {
         return (bool) $this->fetchValue(Entity::DISABLE_DATA_RETENTION_RECORDS);
+    }
+
+    /**
+     * Get the Digital continuation reminder period (days), if value if not numeric will return a default
+     *
+     * @return int Period, number of days
+     */
+    public function getDigitalContinuationReminderPeriod()
+    {
+        $period = $this->fetchValue(Entity::DIGITAL_CONTINUATION_REMINDER_PERIOD);
+        if (!is_numeric($period)) {
+            $period = self::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT;
+        }
+        return (int)$period;
     }
 }

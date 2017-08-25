@@ -161,10 +161,43 @@ class SystemParameterTest extends RepositoryTestCase
             [false, false],
             [false, 0],
             [true, 1],
+            [false, '0'],
+            [true, '1'],
             [false, null],
+            [false, ''],
+            [true, 'X'],
         ];
     }
 
+    /**
+     * @dataProvider dataProviderTestGetDigitalContinuationReminderPeriod
+     */
+    public function testGetDigitalContinuationReminderPeriod($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DIGITAL_CONTINUATION_REMINDER_PERIOD, $value);
+        $this->assertSame($expected, $this->sut->getDigitalContinuationReminderPeriod());
+    }
+
+    public function dataProviderTestGetDigitalContinuationReminderPeriod()
+    {
+        return [
+            [20, 20],
+            [1, '1'],
+            [99, '99'],
+            [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, 'X'],
+            [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, ''],
+            [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, null],
+        ];
+    }
+
+    /**
+     * Setup a system parameter to return a value
+     *
+     * @param string $name  System parameter name (SystemParameter:: constant)
+     * @param string $value Value for the system parameter
+     *
+     * @return void
+     */
     private function setupFetchValue($name, $value)
     {
         $spe = new SystemParameterEntity();

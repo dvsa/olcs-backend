@@ -24,7 +24,7 @@ class ContinuationDetail extends AbstractRepository
     /**
      * Fetch ContinuationDetail (used for markers) for a licence
      *
-     * @param int $licenceId
+     * @param int $licenceId Licence ID
      *
      * @return array of ContinuationDetail
      */
@@ -139,7 +139,7 @@ class ContinuationDetail extends AbstractRepository
     }
 
     /**
-     * @return array
+     * @return array of ContinuationDetail
      */
     public function fetchChecklistReminders($month, $year, array $ids = [])
     {
@@ -302,10 +302,10 @@ class ContinuationDetail extends AbstractRepository
     /**
      * Fetch licence ids where continuation details exists for given continuation
      *
-     * @param int $continuationId
-     * @param array $licenceIds
+     * @param int   $continuationId Continuation ID
+     * @param array $licenceIds     Licence IDs
      *
-     * @return array
+     * @return array Licence IDs
      */
     public function fetchLicenceIdsForContinuationAndLicences($continuationId, $licenceIds)
     {
@@ -337,16 +337,70 @@ class ContinuationDetail extends AbstractRepository
     /**
      * Create continuation details
      *
-     * @param array $licenceIds
-     * @param bool $received
-     * @param string $status
-     * @param int $continuationId
+     * @param array  $licenceIds     Licence IDs to create Continuation Details for
+     * @param bool   $received       Received fag for created Continuation Details
+     * @param string $status         Status for created Continuation Details
+     * @param int    $continuationId Continuation ID
      *
-     * @return int
+     * @return int Number on Continuation Details created
      */
     public function createContinuationDetails($licenceIds, $received, $status, $continuationId)
     {
         return $this->getDbQueryManager()->get('Continuations\CreateContinuationDetails')
             ->executeInsert($licenceIds, $received, $status, $continuationId);
+    }
+
+    /**
+     * Fetch a list of digital continuation details, which have not yet be completed and should be sent a
+     * postal copy of the form
+     *
+     * @param int $numOfDays The number of days before the licence expires
+     *
+     * @return array of ContinuationDetail
+     */
+    public function fetchListForDigitalReminders($numOfDays)
+    {
+        /* @var \Doctrine\Orm\QueryBuilder $qb */
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('continuation', 'c')
+            ->with('licence', 'l');
+
+        // Licence status = Valid, curtailed or suspended; AND
+        $qb->andWhere(
+            $qb->expr()->in(
+                'l.status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED
+                ]
+            )
+        );
+
+        // Continuation date is x days or less away but is not in the past; AND
+        $interval = new \DateInterval('P'.$numOfDays .'D');
+        $qb->andWhere($qb->expr()->gte('l.expiryDate', ':NOW'))
+            ->setParameter('NOW', (new DateTime())->format('Y-m-d'));
+        $qb->andWhere($qb->expr()->lte('l.expiryDate', ':maxExpiryDate'))
+            ->setParameter('maxExpiryDate', (new DateTime())->add($interval)->format('Y-m-d'));
+
+        // Continuation status is not 'Complete'; AND
+        // The month and year of the associated continuation_detail and continuation records should match the month
+        // and year of licence.continuation_date
+        $qb->andWhere($qb->expr()->notIn($this->alias .'.status', [Entity::STATUS_COMPLETE]));
+        $qb->andWhere($qb->expr()->eq('c.month', 'MONTH(l.expiryDate)'));
+        $qb->andWhere($qb->expr()->eq('c.year', 'YEAR(l.expiryDate)'));
+
+        // An email has been sent
+        $qb->andWhere($qb->expr()->eq($this->alias .'.digitalNotificationSent', '1'));
+
+        // A reminder has not already been sent
+        $qb->andWhere($qb->expr()->eq($this->alias .'.digitalReminderSent', '0'));
+
+        return $qb->getQuery()->getResult();
     }
 }
