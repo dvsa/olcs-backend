@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
+use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\GenerateChecklistDocument;
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process as Command;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -144,40 +145,7 @@ class ProcessTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($continuationDetail);
 
-        $docResult = new Result();
-        $docResult->addId('document', 101);
-        $docResult->addMessage('Document dispatched');
-
-        $dtoData = [
-            'template' => 1303,
-            'query' => [
-                'licence' => $licenceId,
-                'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
-                'licenceType' => Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
-                'niFlag' => 'N',
-                'organisation' => $organisationId,
-                'user' => $userId
-            ],
-            'description' => 'Continuation checklist',
-            'licence' => $licenceId,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isExternal'  => false,
-            'isScan' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'issuedDate' => null,
-            'dispatch' => true
-        ];
-
-        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
+        $this->assertDocumentCreated($id, $userId);
 
         $document = m::mock();
         $this->repoMap['Document']
@@ -299,40 +267,7 @@ class ProcessTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($continuationDetail);
 
-        $docResult = new Result();
-        $docResult->addId('document', 101);
-        $docResult->addMessage('Document dispatched');
-
-        $dtoData = [
-            'template' => 1501,
-            'query' => [
-                'licence' => $licenceId,
-                'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                'niFlag' => 'Y',
-                'organisation' => $organisationId,
-                'user' => $userId
-            ],
-            'description' => 'Continuation checklist',
-            'licence' => $licenceId,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isExternal'  => false,
-            'isScan' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'issuedDate' => null,
-            'dispatch' => true
-        ];
-
-        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
+        $this->assertDocumentCreated($id, $userId);
 
         $document = m::mock();
         $this->repoMap['Document']
@@ -455,42 +390,20 @@ class ProcessTest extends CommandHandlerTestCase
         );
     }
 
-    private function assertDocumentCreated($licenceId = 7, $organisationId = 1, $userId = 1)
+    private function assertDocumentCreated($continuationDetailId = 1, $userId = 1, $enforcePrint = false)
     {
+        $dtoData = [
+            'id' => $continuationDetailId,
+            'user' => $userId,
+            'enforcePrint' => $enforcePrint,
+
+        ];
+
         $docResult = new Result();
         $docResult->addId('document', 101);
         $docResult->addMessage('Document dispatched');
 
-        $dtoData = [
-            'template' => 1252,
-            'query' => [
-                'licence' => $licenceId,
-                'goodsOrPsv' => Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
-                'licenceType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                'niFlag' => 'N',
-                'organisation' => $organisationId,
-                'user' => $userId
-            ],
-            'description' => 'Continuation checklist',
-            'licence' => $licenceId,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
-            'isExternal'  => false,
-            'isScan' => false,
-            'application' => null,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'issuedDate' => null,
-            'dispatch' => true
-        ];
-
-        $this->expectedSideEffect(GenerateAndStore::class, $dtoData, $docResult);
+        $this->expectedSideEffect(GenerateChecklistDocument::class, $dtoData, $docResult);
     }
 
     private function setupContinuationDetail($id)
@@ -537,7 +450,7 @@ class ProcessTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']
             ->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($continuationDetail);
 
-        $this->assertDocumentCreated();
+        $this->assertDocumentCreated($id, $userId);
 
         $this->repoMap['Document']
             ->shouldReceive('fetchById')->with($documentId)->once();
