@@ -62,6 +62,15 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     protected $createdOn;
 
     /**
+     * Custom procedure
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="custom_procedure", length=64, nullable=true)
+     */
+    protected $customProcedure;
+
+    /**
      * Deleted date
      *
      * @var \DateTime
@@ -89,6 +98,15 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Is custom rule
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_custom_rule", nullable=false, options={"default": 0})
+     */
+    protected $isCustomRule = 0;
 
     /**
      * Is enabled
@@ -225,6 +243,30 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     }
 
     /**
+     * Set the custom procedure
+     *
+     * @param string $customProcedure new value being set
+     *
+     * @return DataRetentionRule
+     */
+    public function setCustomProcedure($customProcedure)
+    {
+        $this->customProcedure = $customProcedure;
+
+        return $this;
+    }
+
+    /**
+     * Get the custom procedure
+     *
+     * @return string
+     */
+    public function getCustomProcedure()
+    {
+        return $this->customProcedure;
+    }
+
+    /**
      * Set the deleted date
      *
      * @param \DateTime $deletedDate new value being set
@@ -300,6 +342,30 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the is custom rule
+     *
+     * @param boolean $isCustomRule new value being set
+     *
+     * @return DataRetentionRule
+     */
+    public function setIsCustomRule($isCustomRule)
+    {
+        $this->isCustomRule = $isCustomRule;
+
+        return $this;
+    }
+
+    /**
+     * Get the is custom rule
+     *
+     * @return boolean
+     */
+    public function getIsCustomRule()
+    {
+        return $this->isCustomRule;
     }
 
     /**

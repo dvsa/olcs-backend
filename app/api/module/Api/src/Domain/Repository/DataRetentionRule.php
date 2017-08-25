@@ -24,8 +24,7 @@ class DataRetentionRule extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->getQueryBuilder()
-            ->modifyQuery($qb);
+        $this->getQueryBuilder()->modifyQuery($qb);
 
         $qb->andWhere($qb->expr()->eq($this->alias .'.isEnabled', 1));
         $qb->andWhere($qb->expr()->isNull($this->alias .'.deletedDate'));
@@ -39,7 +38,10 @@ class DataRetentionRule extends AbstractRepository
             $this->buildDefaultListQuery($qb, $query);
         }
 
-        return $qb->getQuery()->getResult();
+        return [
+            'results' => $qb->getQuery()->getResult(),
+            'count' => $this->getPaginator($qb)->count()
+        ];
     }
 
     /**

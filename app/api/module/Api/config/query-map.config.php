@@ -514,7 +514,9 @@ return [
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
 
     // Admin :: Data Retention
+    TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,
+    TransferQuery\DataRetention\Records::class => QueryHandler\DataRetention\Records::class,
 
     // Sla Target Dates
     TransferQuery\System\SlaTargetDate::class => QueryHandler\System\SlaTargetDate::class,
