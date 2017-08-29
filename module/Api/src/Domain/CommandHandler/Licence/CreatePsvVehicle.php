@@ -55,7 +55,9 @@ final class CreatePsvVehicle extends AbstractCommandHandler implements Transacti
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
             $licenceVehicle->setReceivedDate(new DateTime($command->getReceivedDate()));
-            $licenceVehicle->setSpecifiedDate(new DateTime($command->getSpecifiedDate()));
+            $licenceVehicle->setSpecifiedDate(
+                $licenceVehicle->processDate($command->getSpecifiedDate(), \DateTime::ISO8601, false)
+            );
         } else {
             $licenceVehicle->setSpecifiedDate(new DateTime());
         }

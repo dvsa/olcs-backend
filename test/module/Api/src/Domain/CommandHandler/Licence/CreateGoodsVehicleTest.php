@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Create Goods Vehicle Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -17,6 +12,7 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Goods Vehicle Test
@@ -88,7 +84,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => 111,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => date('Y-m-d'),
+            'specifiedDate' => (new DateTime('now'))->format(\DateTime::ISO8601),
             'receivedDate' => null,
             'confirm' => 1
         ];

@@ -79,7 +79,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                 'vrm' => 'AA11AAA',
                 'makeModel' => 'Foo',
                 'receivedDate' => '2015-01-01',
-                'specifiedDate' => '2015-01-01'
+                'specifiedDate' => '2015-01-01T12:00:00+01:00'
             ]
         );
 
@@ -131,7 +131,9 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                 function (Entity\Licence\LicenceVehicle $licenceVehicle) use ($licence, &$savedVehicle) {
                     $licenceVehicle->setId(321);
                     $this->assertEquals('2015-01-01', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
-                    $this->assertEquals('2015-01-01', $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+                    $this->assertEquals(
+                        '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+                    );
                     $this->assertSame($savedVehicle, $licenceVehicle->getVehicle());
                     $this->assertSame($licence, $licenceVehicle->getLicence());
                 }
