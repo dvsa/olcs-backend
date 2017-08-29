@@ -71,13 +71,13 @@ final class ConditionsAndUndertakings extends AbstractSection
         usort(
             $tables['undertakings'],
             function ($a, $b) {
-                return strtotime($b['createdOn']) - strtotime($a['createdOn']);
+                return ((int) $a['id'] > (int) $b['id']) ? +1 : -1;
             }
         );
         usort(
             $tables['conditions'],
             function ($a, $b) {
-                return strtotime($b['createdOn']) - strtotime($a['createdOn']);
+                return ((int) $a['id'] > (int) $b['id']) ? +1 : -1;
             }
         );
 

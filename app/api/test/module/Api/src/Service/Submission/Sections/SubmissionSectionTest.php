@@ -62,10 +62,6 @@ class SubmissionSectionTest extends MockeryTestCase
      */
     public function testGenerateSection($input = null, $expectedResult = null)
     {
-        if (version_compare(phpversion(), '7.1', '<')) {
-            $this->markTestSkipped('PHP Version incompatible');
-        }
-
         if (!empty($input)) {
             $mockQueryHandler = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class);
             $mockViewRenderer = m::mock(PhpRenderer::class);
@@ -335,7 +331,10 @@ class SubmissionSectionTest extends MockeryTestCase
             $this->generateConditionsUndertakings(
                 $licence,
                 ConditionUndertaking::TYPE_CONDITION,
-                58
+                58,
+                null,
+                null,
+                new \DateTime('2014-01-01')
             )
         );
 
@@ -449,7 +448,7 @@ class SubmissionSectionTest extends MockeryTestCase
         $cu
             ->setId($id)
             ->setVersion((100 + $id))
-            ->setCreatedOn($createdOn ?: new \DateTime('2011-01-23'))
+            ->setCreatedOn($createdOn ? $createdOn : new \DateTime('2011-01-23'))
             ->setAddedVia(
                 $this->generateRefDataEntity($addedVia ?: $addedViaByParent)
             )
@@ -557,6 +556,8 @@ class SubmissionSectionTest extends MockeryTestCase
         $application->setId($id);
         $application->setVersion(($id*2));
         $application->setReceivedDate(new \DateTime('2014-05-05'));
+        $application->setGoodsOrPsv($this->generateRefDataEntity('goods'));
+        $application->setLicenceType($this->generateRefDataEntity('lic_type'));
 
         $application->setConditionUndertakings(
             $this->generateConditionsUndertakings(

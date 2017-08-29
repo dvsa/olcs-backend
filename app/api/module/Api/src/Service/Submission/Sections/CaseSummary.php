@@ -43,6 +43,18 @@ final class CaseSummary extends AbstractSection
         $data['serviceStandardDate'] = !empty($application) ?
             $this->formatDate($application->getTargetCompletionDate()) : '';
 
+        if (!empty($application)) {
+            $data['licenceType'] = !empty($application->getLicenceType())
+                ? $application->getLicenceType()->getDescription()
+                : '';
+
+            $data['licenceStartDate'] = !empty($data['licenceStartDate']) ? $data['licenceStartDate'] : 'N/A';
+
+            $data['goodsOrPsv'] = !empty($application->getGoodsOrPsv())
+                ? $application->getGoodsOrPsv()->getDescription()
+                : '';
+        }
+
         return ['data' => ['overview' => $data]];
     }
 
@@ -75,7 +87,7 @@ final class CaseSummary extends AbstractSection
             $licenceData['goodsOrPsv'] =
                 !empty($licence->getGoodsOrPsv()) ? $licence->getGoodsOrPsv()->getDescription() : '';
             $licenceData['licenceStatus'] =
-                !empty($licence->getGoodsOrPsv()) ? $licence->getStatus()->getDescription() : '';
+                !empty($licence->getStatus()) ? $licence->getStatus()->getDescription() : '';
             $licenceData['totAuthorisedVehicles'] = $licence->getTotAuthVehicles();
             $licenceData['totAuthorisedTrailers'] = $licence->getTotAuthTrailers();
             $licenceData['vehiclesInPossession'] = $licence->getTotAuthTrailers();
