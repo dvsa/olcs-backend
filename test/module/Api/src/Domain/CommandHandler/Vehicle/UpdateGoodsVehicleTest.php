@@ -111,7 +111,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
     {
         $data = [
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'version' => 1,
             'seedDate' => null
@@ -147,7 +147,9 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertEquals('2015-01-01', $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
         $this->assertNull($licenceVehicle->getWarningLetterSeedDate());
@@ -157,7 +159,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
     {
         $data = [
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'version' => 1,
             'seedDate' => '2015-01-01',
@@ -194,7 +196,9 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
 
-        $this->assertEquals('2015-01-01', $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
         $this->assertEquals('2015-01-01', $licenceVehicle->getWarningLetterSeedDate()->format('Y-m-d'));
