@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * Create Goods Vehicle
@@ -48,7 +49,7 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements Transac
         $dtoData = $command->getArrayCopy();
         $dtoData['licence'] = $command->getId();
         if ($command->getSpecifiedDate() === null) {
-            $dtoData['specifiedDate'] = date('Y-m-d');
+            $dtoData['specifiedDate'] = (new DateTime('now'))->format(\DateTime::ISO8601);
         }
         $dtoData['identifyDuplicates'] = true;
 

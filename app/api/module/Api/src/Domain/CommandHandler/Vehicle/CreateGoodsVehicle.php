@@ -113,7 +113,9 @@ final class CreateGoodsVehicle extends AbstractCommandHandler implements AuthAwa
         }
 
         if ($command->getSpecifiedDate() !== null) {
-            $licenceVehicle->setSpecifiedDate(new \DateTime($command->getSpecifiedDate()));
+            $licenceVehicle->setSpecifiedDate(
+                $licenceVehicle->processDate($command->getSpecifiedDate(), \DateTime::ISO8601, false)
+            );
         }
         if ($command->getReceivedDate() !== null) {
             $licenceVehicle->setReceivedDate(new \DateTime($command->getReceivedDate()));
