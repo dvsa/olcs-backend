@@ -546,7 +546,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Sort conditions and undertakings
      *
-     * @param array $conditionsUndertakings conditions and undertakings
+     * @param array &$conditionsUndertakings conditions and undertakings
      *
      * @return void
      */
@@ -1277,7 +1277,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             return false;
         }
 
-        return $expiryDate < (new DateTime());
+        return $expiryDate < (new DateTime())->setTime(0, 0, 0);
     }
 
     /**
