@@ -1337,13 +1337,13 @@ class LicenceEntityTest extends EntityTester
     {
         return [
             'Null expiry date' => [false, null],
-            [true, (new DateTime())->sub(new \DateInterval('P2Y4M'))],
-            [true, (new DateTime())->sub(new \DateInterval('P1Y'))],
-            [true, (new DateTime())->sub(new \DateInterval('P1M'))],
-            [true, (new DateTime())->sub(new \DateInterval('P1D'))],
-            'Expiry is now' => [false, (new DateTime())],
-            [false, (new DateTime())->add(new \DateInterval('P3M'))],
-            [false, (new DateTime())->add(new \DateInterval('P1Y'))],
+            [true, (new DateTime())->setTime(0, 0, 0)->sub(new \DateInterval('P2Y4M'))],
+            [true, (new DateTime())->setTime(0, 0, 0)->sub(new \DateInterval('P1Y'))],
+            [true, (new DateTime())->setTime(0, 0, 0)->sub(new \DateInterval('P1M'))],
+            [true, (new DateTime())->setTime(0, 0, 0)->sub(new \DateInterval('P1D'))],
+            'Expiry is today' => [false, (new DateTime())->setTime(0, 0, 0)],
+            [false, (new DateTime())->setTime(0, 0, 0)->add(new \DateInterval('P3M'))],
+            [false, (new DateTime())->setTime(0, 0, 0)->add(new \DateInterval('P1Y'))],
         ];
     }
 
