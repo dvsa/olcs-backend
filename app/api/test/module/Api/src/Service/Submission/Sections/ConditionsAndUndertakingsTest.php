@@ -31,6 +31,17 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
             )
         );
 
+        $case->getLicence()->addConditionUndertakings(
+            $this->generateConditionsUndertakings(
+                $case->getLicence(),
+                ConditionUndertaking::TYPE_UNDERTAKING,
+                35,
+                ConditionUndertaking::ADDED_VIA_APPLICATION,
+                ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE,
+                new \DateTime('2016-12-21')
+            )
+        );
+
         $expectedResult = [
             'data' => [
                 'tables' => [
@@ -44,13 +55,13 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                             'isFulfilled' => 'Y',
                             'isDraft' => 'N',
                             'attachedTo' => 'cat_lic-desc',
+                            'notes' => null,
                             'OcAddress' => [],
-                            'notes' => null
                         ],
                         1 => [
                             'id' => 58,
                             'version' => 158,
-                            'createdOn' => '23/01/2011',
+                            'createdOn' => '01/01/2014',
                             'parentId' => 'OB12345',
                             'addedVia' => 'cav_lic-desc',
                             'isFulfilled' => 'Y',
@@ -91,6 +102,18 @@ class ConditionsAndUndertakingsTest extends SubmissionSectionTest
                                 'postcode' => 'pc11PC',
                                 'countryCode' => null
                             ],
+                            'notes' => null
+                        ],
+                        1 => [
+                            'id' => 35,
+                            'version' => 135,
+                            'createdOn' => '21/12/2016',
+                            'parentId' => '',
+                            'addedVia' => 'cav_app-desc',
+                            'isFulfilled' => 'Y',
+                            'isDraft' => 'N',
+                            'attachedTo' => 'cat_oc-desc',
+                            'OcAddress' => [],
                             'notes' => null
                         ]
                     ]
