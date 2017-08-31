@@ -20,6 +20,11 @@ return [
             'translator' => 'MvcTranslator',
         ],
     ],
+    'view_helpers' => [
+        'invokables' => [
+            'emailStyle' => \Dvsa\Olcs\Email\View\Helper\EmailStyle::class,
+        ]
+    ],
     'view_manager' => [
         'template_path_stack' => [
             'layout' => __DIR__ . '/../view/layout',
