@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Doctrine\ORM\QueryBuilder;
@@ -198,6 +199,37 @@ class SystemParameterTest extends RepositoryTestCase
             [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, null],
         ];
     }
+
+    /**
+     * @dataProvider dataProviderTestGetSystemDataRetentionUser
+     */
+    public function testGetSystemDataRetentionUser($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::SYSTEM_DATA_RETENTION_USER, $value);
+
+        if ($expected === 'EXCEPTION') {
+            $this->setExpectedException(
+                RuntimeException::class,
+                'System parameter "SYSTEM_DATA_RETENTION_USER" is not set'
+            );
+            $this->sut->getSystemDataRetentionUser();
+        } else {
+            $this->assertSame($expected, $this->sut->getSystemDataRetentionUser());
+        }
+    }
+
+    public function dataProviderTestGetSystemDataRetentionUser()
+    {
+        return [
+            [20, 20],
+            [1, '1'],
+            [99, '99'],
+            ['EXCEPTION', 'X'],
+            ['EXCEPTION', null],
+            ['EXCEPTION', 0],
+        ];
+    }
+
 
     /**
      * Setup a system parameter to return a value

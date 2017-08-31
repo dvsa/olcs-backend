@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as Entity;
 
@@ -92,5 +93,22 @@ class SystemParameter extends AbstractRepository
     public function getDisableDataRetentionDocumentDelete()
     {
         return (bool) $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE);
+    }
+
+    /**
+     * Get the user ID of the data retention system user
+     *
+     * @return int
+     * @throws InvalidArgumentException
+     */
+    public function getSystemDataRetentionUser()
+    {
+        $value = (int) $this->fetchValue(Entity::SYSTEM_DATA_RETENTION_USER);
+        if ($value === 0) {
+            throw new RuntimeException(
+                'System parameter "'. Entity::SYSTEM_DATA_RETENTION_USER .'" is not set'
+            );
+        }
+        return $value;
     }
 }
