@@ -280,8 +280,6 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\CreateForLicence::class,
             Queue::TYPE_REMOVE_DELETED_DOCUMENTS
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\RemoveDeleteDocuments::class,
-            Queue::TYPE_PROCESS_DATA_RETENTION
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ProcessDataRetention::class,
             Queue::TYPE_CREATE_CONTINUATION_SNAPSHOT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class,
             Queue::TYPE_CONT_DIGITAL_REMINDER
