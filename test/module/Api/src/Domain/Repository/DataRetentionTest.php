@@ -20,26 +20,6 @@ class DataRetentionTest extends RepositoryTestCase
         $this->setUpSut(DataRetention::class, true);
     }
 
-    public function testFetchEntitiesToDelete()
-    {
-        /** @var QueryBuilder $qb */
-        $qb = $this->createMockQb('[QUERY]');
-        $this->mockCreateQueryBuilder($qb);
-        $this->queryBuilder
-            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('with')->with('dataRetentionRule', 'drr')->once()->andReturnSelf();
-
-        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['FOO']);
-
-        $result = $this->sut->fetchEntitiesToDelete(12);
-
-        $this->assertSame(['FOO'], $result);
-
-        $expectedQuery = '[QUERY] AND drr.isEnabled = 1 AND m.toAction = 1 AND m.actionConfirmation = 1 AND '.
-            'm.actionedDate IS NULL AND m.nextReviewDate IS NULL LIMIT 12';
-        $this->assertEquals($expectedQuery, $this->query);
-    }
-
     public function testFetchAllWithEnabledRules()
     {
         $query = Records::create(
@@ -86,5 +66,17 @@ class DataRetentionTest extends RepositoryTestCase
             ],
             $result
         );
+    }
+
+    public function testRunCleanupProc()
+    {
+        $mockStatement = m::mock();
+        $mockStatement->shouldReceive('execute')->once()->with()->andReturn(true);
+        $this->em->shouldReceive('getConnection->prepare')->with('CALL sp_dr_cleanup(99, 123, 0)')->once()
+            ->andReturn($mockStatement);
+
+        $result = $this->sut->runCleanupProc(123, 99);
+
+        $this->assertTrue($result);
     }
 }
