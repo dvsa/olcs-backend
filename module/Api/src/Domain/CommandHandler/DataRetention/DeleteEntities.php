@@ -44,8 +44,6 @@ final class DeleteEntities extends AbstractCommandHandler implements Transaction
             $this->handleSideEffect($command);
         }
 
-        // @todo remove referenerce to Queue::TYPE_PROCESS_DATA_RETENTION
-
         return $this->result;
     }
 }
