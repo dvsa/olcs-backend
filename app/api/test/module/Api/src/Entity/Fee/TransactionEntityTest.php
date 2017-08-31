@@ -506,21 +506,13 @@ class TransactionEntityTest extends EntityTester
 
     public function testGetProcessedByFullNameNoPerson()
     {
-        $contactDetails = (new Entities\ContactDetails\ContactDetails(new RefData(null)))
-            ->setPerson(null);
-
-        $user = (new Entities\User\User(999, null))
-            ->setContactDetails($contactDetails);
+        $contactDetails = (new Entities\ContactDetails\ContactDetails(new RefData(null)))->setPerson(null);
+        $user = (new Entities\User\User(999, null))->setContactDetails($contactDetails);
         $user->setLoginId('foo');
 
         $this->sut->setProcessedByUser($user);
 
-        static::assertEquals('foo', $this->sut->getProcessedByFullName());
-
-        //  check on null
-        $this->sut->setProcessedByUser(null);
-
-        static::assertNull($this->sut->getProcessedByFullName());
+        $this->assertEquals('foo', $this->sut->getProcessedByFullName());
     }
 
     public function testGetFees()

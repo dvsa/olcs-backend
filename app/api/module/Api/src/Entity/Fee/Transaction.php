@@ -391,7 +391,7 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         ) {
             return $this->getProcessedByUser()->getContactDetails()->getPerson()->getFullName();
         } elseif ($processedByUser !== null) {
-            return $this->getProcessedByUser()->getLoginId();
+            return $processedByUser->getLoginId();
         }
 
         return null;
