@@ -154,6 +154,15 @@ class SystemParameterTest extends RepositoryTestCase
         $this->assertSame($expected, $this->sut->getDisableDataRetentionRecords());
     }
 
+    /**
+     * @dataProvider boolDataProvider
+     */
+    public function testGetDisableDataRetentionDocumentDelete($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE, $value);
+        $this->assertSame($expected, $this->sut->getDisableDataRetentionDocumentDelete());
+    }
+
     public function boolDataProvider()
     {
         return [

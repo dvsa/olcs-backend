@@ -83,4 +83,14 @@ class SystemParameter extends AbstractRepository
         }
         return (int)$period;
     }
+
+    /**
+     * Get Disable Data Retention Document Delete
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisableDataRetentionDocumentDelete()
+    {
+        return (bool) $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE);
+    }
 }
