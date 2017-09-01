@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
@@ -62,5 +63,35 @@ class DataRetention extends AbstractRepository
         );
 
         return $statement->execute();
+    }
+
+    /**
+     * Fetch a list of processed data retention rows for a data retention rule, and date range
+     *
+     * @param int       $dataRetentionRuleId Data retention rule ID
+     * @param \DateTime $startDate           Start date
+     * @param \DateTime $endDate             End date
+     *
+     * @return array
+     */
+    public function fetchAllProcessedForRule($dataRetentionRuleId, \DateTime $startDate, \DateTime $endDate)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', ':dataRetentionRuleId'));
+        $qb->andWhere($qb->expr()->gte($this->alias . '.deletedDate', ':startDate'));
+        $qb->andWhere($qb->expr()->lte($this->alias . '.deletedDate', ':endDate'));
+
+        $qb->setParameter('dataRetentionRuleId', $dataRetentionRuleId);
+        $qb->setParameter('startDate', $startDate);
+        $qb->setParameter('endDate', $endDate);
+
+        $this->disableSoftDeleteable([DataRetentionEntity::class]);
+
+        $result = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
+        $this->enableSoftDeleteable();
+
+        return $result;
     }
 }
