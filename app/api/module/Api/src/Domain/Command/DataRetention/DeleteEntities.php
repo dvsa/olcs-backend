@@ -9,4 +9,15 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class DeleteEntities extends AbstractCommand
 {
+    protected $limit;
+
+    /**
+     * Get limit, number of rows to process
+     *
+     * @return int
+     */
+    public function getLimit()
+    {
+        return (int)$this->limit;
+    }
 }
