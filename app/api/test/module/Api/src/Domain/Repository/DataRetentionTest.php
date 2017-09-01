@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
@@ -78,5 +79,33 @@ class DataRetentionTest extends RepositoryTestCase
         $result = $this->sut->runCleanupProc(123, 99);
 
         $this->assertTrue($result);
+    }
+
+    public function testFetchAllProcessedForRule()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('getResult')
+                ->with(Query::HYDRATE_ARRAY)->once()
+                ->andReturn('RESULT')
+                ->getMock()
+        );
+
+        $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->once()->andReturn([]);
+        $this->em->shouldReceive('getFilters->enable')->with('soft-deleteable')->once()->andReturn([]);
+
+        $this->assertEquals(
+            'RESULT',
+            $this->sut->fetchAllProcessedForRule(12, new \DateTime('2012-02-20'), new \DateTime('2017-12-10'))
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.dataRetentionRule = [[12]] '
+            . 'AND m.deletedDate >= [[2012-02-20T00:00:00+00:00]] '
+            . 'AND m.deletedDate <= [[2017-12-10T00:00:00+00:00]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }
