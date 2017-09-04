@@ -26,6 +26,8 @@ return [
     CommandHandler\LicenceStatusRule\ProcessToValid::class => IsSystemUser::class,
     CommandHandler\CompaniesHouse\EnqueueOrganisations::class => IsSystemUser::class,
     QueryHandler\Licence\ContinuationNotSoughtList::class => IsSystemUser::class,
+    CommandHandler\Licence\CreateSurrenderPsvLicenceTasks::class => IsSystemUser::class,
+    QueryHandler\Licence\PsvLicenceSurrenderList::class => IsSystemUser::class,
     CommandHandler\Licence\ProcessContinuationNotSought::class => IsSystemUser::class,
     CommandHandler\Email\SendContinuationNotSought::class => IsSystemUser::class,
     CommandHandler\Correspondence\ProcessInboxDocuments::class => IsSystemUser::class,
