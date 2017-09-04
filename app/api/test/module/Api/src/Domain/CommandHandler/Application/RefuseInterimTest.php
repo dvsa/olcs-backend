@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Grant Interim Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -41,7 +36,7 @@ class RefuseInterimTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+g    public function testHandleCommand()
     {
         $command = Cmd::create(['id' => 111]);
 
@@ -61,44 +56,12 @@ class RefuseInterimTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with($application);
 
-        $expectedQuery = [
-            'licence' => 222,
-            'application' => 111
-        ];
-
-        $expectedData = [
-            'template' => 'NEW_APP_INT_REFUSED',
-            'query' => $expectedQuery,
-            'description' => 'GV Refused Interim Licence',
-            'application' => 111,
-            'licence' => 222,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isExternal' => false,
-            'isScan' => false,
-            'busReg' => null,
-            'case' => null,
-            'irfoOrganisation' => null,
-            'submission' => null,
-            'trafficArea' => null,
-            'transportManager' => null,
-            'operatingCentre' => null,
-            'opposition' => null,
-            'issuedDate' => null,
-            'dispatch' => true
-        ];
-
-        $result1 = new Result();
-        $result1->addMessage('GenerateAndStore');
-        $this->expectedSideEffect(GenerateAndStore::class, $expectedData, $result1);
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
                 'Interim updated',
-                'GenerateAndStore'
             ]
         ];
 
