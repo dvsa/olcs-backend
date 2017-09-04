@@ -118,6 +118,7 @@ return [
     TransferQuery\Licence\PsvVehiclesExport::class => QueryHandler\Licence\PsvVehiclesExport::class,
     TransferQuery\Licence\Exists::class => QueryHandler\Licence\Exists::class,
     Query\Licence\ContinuationNotSoughtList::class => QueryHandler\Licence\ContinuationNotSoughtList::class,
+    Query\Licence\PsvLicenceSurrenderList::class => QueryHandler\Licence\PsvLicenceSurrenderList::class,
 
     // LicenceStatusRule
     TransferQuery\LicenceStatusRule\LicenceStatusRule::class => QueryHandler\LicenceStatusRule\LicenceStatusRule::class,
