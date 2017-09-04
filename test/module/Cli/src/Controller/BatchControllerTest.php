@@ -350,6 +350,129 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->continuationNotSoughtAction();
     }
 
+    public function testCreatePsvLicenceSurrenderTasksActionDryRun()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => true,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $licenceIds = [1, 2];
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(Query\Licence\PsvLicenceSurrenderList::class))
+            ->andReturnUsing(
+                function (Query\Licence\PsvLicenceSurrenderList $qry) use ($licenceIds, $now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $licenceIds,
+                        'count' => 2,
+                    ];
+                }
+            );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Licence\CreateSurrenderPsvLicenceTasks::class))
+            ->never();
+
+        $this->mockConsole->shouldReceive('writeLine')->times(2);
+
+        $this->sut->createPsvLicenceSurrenderTasksAction();
+    }
+
+    public function testCreatePsvLicenceSurrenderTasksActionNoLicences()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $licenceIds = [];
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(Query\Licence\PsvLicenceSurrenderList::class))
+            ->andReturnUsing(
+                function (Query\Licence\PsvLicenceSurrenderList $qry) use ($licenceIds, $now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $licenceIds,
+                        'count' => 0,
+                    ];
+                }
+            );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Licence\CreateSurrenderPsvLicenceTasks::class))
+            ->never();
+
+        $this->mockConsole->shouldReceive('writeLine')->times(2);
+
+        $this->sut->createPsvLicenceSurrenderTasksAction();
+    }
+
+    public function testCreatePsvLicenceSurrenderTasksAction()
+    {
+        $this->mockParamsPlugin(
+            [
+                'dryrun' => false,
+                'verbose' => true,
+            ]
+        );
+
+        $now = new DateTime();
+
+        $licenceIds = [1, 2];
+
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(Query\Licence\PsvLicenceSurrenderList::class))
+            ->andReturnUsing(
+                function (Query\Licence\PsvLicenceSurrenderList $qry) use ($licenceIds, $now) {
+                    $this->assertEquals(
+                        $now->format('Y-m-d'),
+                        $qry->getDate()->format('Y-m-d')
+                    );
+                    return [
+                        'result' => $licenceIds,
+                        'count' => 0,
+                    ];
+                }
+            );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Licence\CreateSurrenderPsvLicenceTasks::class))
+            ->once()
+            ->andReturnUsing(
+                function (Command\Licence\CreateSurrenderPsvLicenceTasks $cmd) use ($licenceIds) {
+                    $this->assertSame($licenceIds, $cmd->getIds());
+                    return (new Command\Result());
+                }
+            );
+
+        $this->mockConsole->shouldReceive('writeLine')->times(3);
+
+        $this->sut->createPsvLicenceSurrenderTasksAction();
+    }
+
     public function testSetSystemParameter()
     {
         $this->mockConsole->shouldReceive('writeLine');
