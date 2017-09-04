@@ -36,7 +36,7 @@ class RefuseInterimTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-g    public function testHandleCommand()
+    public function testHandleCommand()
     {
         $command = Cmd::create(['id' => 111]);
 
