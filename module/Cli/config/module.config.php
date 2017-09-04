@@ -210,6 +210,15 @@ return [
                         ],
                     ],
                 ],
+                'create-psv-licence-surrender-tasks' => [
+                    'options' => [
+                        'route' => 'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'createPsvLicenceSurrenderTasks',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],

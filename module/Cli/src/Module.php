@@ -85,6 +85,8 @@ class Module implements ConsoleUsageProviderInterface
                 'Number of data retention records to process (NB only applicable when deleting)'
             ],
             'digital-continuation-reminders [--verbose|-v]' => 'Generate/Send checklists for digital continuations',
+            'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]' =>
+                'Create tasks to surrender PSV licences that have expired'
         ];
     }
 

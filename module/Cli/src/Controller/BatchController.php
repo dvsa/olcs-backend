@@ -221,6 +221,38 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Create PSV licence surrender tasks
+     *
+     * @return ConsoleModel
+     */
+    public function createPsvLicenceSurrenderTasksAction()
+    {
+        $dryRun = $this->isDryRun();
+        $date = new DateTime();
+
+        $dto = Query\Licence\PsvLicenceSurrenderList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} PSV Licence(s) found to create surrender tasks");
+        $licenceIds = $result['result'];
+
+        if (count($licenceIds) !== 0 && !$dryRun) {
+            return $this->handleExitStatus(
+                $this->handleCommand(
+                    [
+                        Command\Licence\CreateSurrenderPsvLicenceTasks::create(
+                            [
+                                'ids' => $licenceIds,
+                            ]
+                        ),
+                    ]
+                )
+            );
+        }
+
+        return $this->handleExitStatus(0);
+    }
+
+    /**
      * Process inbox documents action
      *
      * @return ConsoleModel

@@ -979,6 +979,8 @@ return [
     // Command - CommunityLc
     Command\Licence\EnqueueContinuationNotSought::class =>
         CommandHandler\Licence\EnqueueContinuationNotSought::class,
+    Command\Licence\CreateSurrenderPsvLicenceTasks::class =>
+        CommandHandler\Licence\CreateSurrenderPsvLicenceTasks::class,
 
     // Command - ConditionUndertaking
     Command\ConditionUndertaking\CreateSmallVehicleCondition::class =>

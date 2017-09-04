@@ -199,4 +199,38 @@ class Task extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch opened tasks for licences
+     *
+     * @param array  $licenceIds    licence ids
+     * @param int    $categoryId    category id
+     * @param int    $subCategoryId sub category id
+     * @param string $description   description
+     *
+     * @return array
+     */
+    public function fetchOpenedTasksForLicences($licenceIds, $categoryId, $subCategoryId, $description)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata()
+            ->with('licence', 'l');
+
+        $qb
+            ->andWhere($qb->expr()->in($this->alias . '.licence', ':licenceIds'))
+            ->setParameter('licenceIds', $licenceIds)
+            ->andWhere($qb->expr()->eq($this->alias . '.description', ':description'))
+            ->setParameter('description', $description)
+            ->andWhere($qb->expr()->eq($this->alias . '.isClosed', ':isClosed'))
+            ->setParameter('isClosed', 0)
+            ->andWhere($qb->expr()->eq($this->alias . '.category', ':categoryId'))
+            ->setParameter('categoryId', $categoryId)
+            ->andWhere($qb->expr()->eq($this->alias . '.subCategory', ':subCategoryId'))
+            ->setParameter('subCategoryId', $subCategoryId);
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
 }
