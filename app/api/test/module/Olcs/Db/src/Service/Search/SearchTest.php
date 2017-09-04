@@ -363,4 +363,40 @@ class SearchTest extends MockeryTestCase
             ],
         ];
     }
+
+    public function testSearchUnderMaxResults()
+    {
+        $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
+
+        $this->mockAuthSrv
+            ->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false)
+            ->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
+
+        $searchResponse = m::mock(\Elastica\Response::class);
+        $searchResponse->shouldReceive('getData')->andReturn(
+            ['hits' => ['total' => SearchService::MAX_NUMBER_OF_RESULTS - 1]]
+        );
+        $this->mockClient->shouldReceive('request')->once()->andReturn($searchResponse);
+
+        $result = $this->sut->search('FOO', ['licence']);
+        $this->assertSame(SearchService::MAX_NUMBER_OF_RESULTS - 1, $result['Count']);
+    }
+
+    public function testSearchOverMaxResults()
+    {
+        $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
+
+        $this->mockAuthSrv
+            ->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false)
+            ->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
+
+        $searchResponse = m::mock(\Elastica\Response::class);
+        $searchResponse->shouldReceive('getData')->andReturn(
+            ['hits' => ['total' => SearchService::MAX_NUMBER_OF_RESULTS + 1]]
+        );
+        $this->mockClient->shouldReceive('request')->once()->andReturn($searchResponse);
+
+        $result = $this->sut->search('FOO', ['licence']);
+        $this->assertSame(SearchService::MAX_NUMBER_OF_RESULTS, $result['Count']);
+    }
 }
