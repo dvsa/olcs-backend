@@ -45,7 +45,7 @@ final class PrintLicence extends AbstractCommandHandler implements Transactioned
             'category'    => Category::CATEGORY_LICENSING,
             'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal'  => false,
-            'dispatch' => true,
+            'dispatch' => $command->getDispatch(),
         ];
 
         return $this->handleSideEffect(GenerateAndStore::create($dtoData));
