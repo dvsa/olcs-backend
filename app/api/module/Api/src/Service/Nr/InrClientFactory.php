@@ -16,8 +16,9 @@ class InrClientFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return InrClient
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
@@ -27,7 +28,9 @@ class InrClientFactory implements FactoryInterface
             throw new \RuntimeException('Missing INR service config');
         }
 
-        $httpClient = new RestClient($config['nr']['inr_service']['uri'], $config['nr']['inr_service']['options']);
+        $httpClient = new RestClient($config['nr']['inr_service']['uri']);
+        $httpClient->setAdapter($config['nr']['inr_service']['adapter']);
+        $httpClient->getAdapter()->setOptions($config['nr']['inr_service']['options']);
 
         $wrapper = new ClientAdapterLoggingWrapper();
         $wrapper->wrapAdapter($httpClient);
