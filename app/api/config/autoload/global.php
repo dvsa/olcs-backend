@@ -52,7 +52,8 @@ return array(
                     'cast'          => 'Oro\ORM\Query\AST\Functions\Cast',
                     'concat_ws'     => 'Oro\ORM\Query\AST\Functions\String\ConcatWs',
                     'replace'       => 'Oro\ORM\Query\AST\Functions\String\Replace',
-                    'date_format'   => 'Oro\ORM\Query\AST\Functions\String\DateFormat'
+                    'date_format'   => 'Oro\ORM\Query\AST\Functions\String\DateFormat',
+                    'ifnull'        => 'DoctrineExtensions\Query\Mysql\IfNull',
                 ]
             ),
         )
