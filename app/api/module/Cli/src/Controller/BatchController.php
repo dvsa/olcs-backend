@@ -47,8 +47,7 @@ class BatchController extends AbstractConsoleController
         }
 
         if ($this->params('delete')) {
-            $limit = $this->params('limit', 10);
-            $this->writeVerboseMessages(['Data retention delete limit = '. $limit]);
+            $limit = $this->params('limit');
             $dto = Command\DataRetention\DeleteEntities::create(['limit' => $limit]);
             return $this->handleExitStatus($this->handleCommand([$dto]));
         }

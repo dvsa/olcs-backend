@@ -156,12 +156,21 @@ class SystemParameterTest extends RepositoryTestCase
     }
 
     /**
-     * @dataProvider boolDataProvider
+     * @dataProvider boolDataProviderDeletes
      */
     public function testGetDisableDataRetentionDocumentDelete($expected, $value)
     {
         $this->setupFetchValue(SystemParameterEntity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE, $value);
         $this->assertSame($expected, $this->sut->getDisableDataRetentionDocumentDelete());
+    }
+
+    /**
+     * @dataProvider boolDataProviderDeletes
+     */
+    public function testGetDisableDataRetentionDelete($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DISABLE_DATA_RETENTION_DELETE, $value);
+        $this->assertSame($expected, $this->sut->getDisableDataRetentionDelete());
     }
 
     public function boolDataProvider()
@@ -174,6 +183,21 @@ class SystemParameterTest extends RepositoryTestCase
             [false, '0'],
             [true, '1'],
             [false, null],
+            [false, ''],
+            [true, 'X'],
+        ];
+    }
+
+    public function boolDataProviderDeletes()
+    {
+        return [
+            [true, true],
+            [false, false],
+            [false, 0],
+            [true, 1],
+            [false, '0'],
+            [true, '1'],
+            [true, null],
             [false, ''],
             [true, 'X'],
         ];
@@ -230,6 +254,27 @@ class SystemParameterTest extends RepositoryTestCase
         ];
     }
 
+    /**
+     * @dataProvider dataProviderTestGetDataRetentionDeleteLimit
+     */
+    public function testGetDataRetentionDeleteLimit($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DR_DELETE_LIMIT, $value);
+
+        $this->assertSame($expected, $this->sut->getDataRetentionDeleteLimit());
+    }
+
+    public function dataProviderTestGetDataRetentionDeleteLimit()
+    {
+        return [
+            [20, 20],
+            [1, '1'],
+            [99, '99'],
+            [0, 'X'],
+            [0, null],
+            [0, 0],
+        ];
+    }
 
     /**
      * Setup a system parameter to return a value
