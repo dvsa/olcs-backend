@@ -6,7 +6,9 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -25,11 +27,23 @@ final class DeleteEntities extends AbstractCommandHandler implements Transaction
      * @param CommandInterface $command DTO
      *
      * @return Result
+     * @throws BadRequestException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var SystemParameter $systemParameterRepo */
+        $systemParameterRepo = $this->getRepo('SystemParameter');
+        if ($systemParameterRepo->getDisableDataRetentionDelete()) {
+            throw new BadRequestException('Disabled by System Parameter');
+        }
+
+        // Get limit from arguments
         $limit = (int)$command->getLimit();
-        $systemUserId = $this->getRepo('SystemParameter')->getSystemDataRetentionUser();
+        // If not set in arguments then get from system paramter
+        if ($limit === 0) {
+            $limit = $systemParameterRepo->getDataRetentionDeleteLimit();
+        }
+        $systemUserId = $systemParameterRepo->getSystemDataRetentionUser();
 
         /** @var DataRetention $repo */
         $repo = $this->getRepo();
