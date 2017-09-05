@@ -239,14 +239,18 @@ return [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
             'uri' => 'http://testServiceAddress',
+            'adapter'   => Zend\Http\Client\Adapter\Curl::class,
             'options' => [
-                'timeout' => 30,
-                'adapter'   => 'Zend\Http\Client\Adapter\Curl',
+                'sslcert' => 'client_cert.pem',
+                'sslverifypeer' => 1, //debug only, must be set to 1 in production
                 'curloptions' => [
-                    CURLOPT_SSL_VERIFYPEER => 1, //debug only, must be set to 1 in production
+                    CURLOPT_TIMEOUT => 30,
                     CURLOPT_SSL_VERIFYHOST => 2, //debug only, must be set to 2 in production
-                    CURLOPT_CAINFO => 'inrcert.pem'
+                    CURLOPT_CAINFO => 'atoscert.pem',
+                    CURLOPT_SSLKEY => 'client_key.pem',
+                    CURLOPT_SSLKEYTYPE => 'PEM'
                 ]
+
             ]
         ],
         'repute_url' => [

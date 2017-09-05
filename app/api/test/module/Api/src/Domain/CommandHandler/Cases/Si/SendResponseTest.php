@@ -76,6 +76,11 @@ class SendResponseTest extends CommandHandlerTestCase
             ->with($xml)
             ->andReturn(202);
 
+        $this->mockedSmServices[InrClientInterface::class]
+            ->shouldReceive('close')
+            ->once()
+            ->withNoArgs();
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -128,6 +133,11 @@ class SendResponseTest extends CommandHandlerTestCase
             ->once()
             ->with($xml)
             ->andReturn(400);
+
+        $this->mockedSmServices[InrClientInterface::class]
+            ->shouldReceive('close')
+            ->once()
+            ->withNoArgs();
 
         $this->sut->handleCommand($command);
     }
