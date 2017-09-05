@@ -2,17 +2,38 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle as Qry;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\CaseBundle as Qry;
 
 /**
  * Application Vehicle Limit
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ApplicationVehicleLimit extends SingleValueAbstract
+class ApplicationVehicleLimit extends DynamicBookmark
 {
-    const SRCH_VAL_KEY = 'application';
-    const FIELD = 'totAuthVehicles';
-    const DEFAULT_VALUE = 0;
-    const QUERY_CLASS = Qry::class;
+    /**
+     * Get query
+     *
+     * @param array $data data
+     *
+     * @return Qry
+     */
+    public function getQuery(array $data)
+    {
+        $bundle = ['application'];
+        return Qry::create(['id' => $data['case'], 'bundle' => $bundle]);
+    }
+
+    /**
+     * Render
+     *
+     * @return int
+     */
+    public function render()
+    {
+        return isset($this->data['application']['totAuthVehicles'])
+            ? $this->data['application']['totAuthVehicles']
+            : 0;
+    }
 }
