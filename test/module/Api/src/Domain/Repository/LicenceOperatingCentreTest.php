@@ -101,7 +101,10 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
         $qb->shouldReceive('addSelect')->with('ocac')->once();
         $qb->shouldReceive('addSelect')->with('occ')->once();
         $qb->shouldReceive('addSelect')
-            ->with('concat(oca.addressLine1,oca.addressLine2,oca.addressLine3,oca.addressLine4,oca.town) as adr')
+            ->with(
+                "concat(ifnull(oca.addressLine1,''),ifnull(oca.addressLine2,''),ifnull(oca.addressLine3,''),"
+                . "ifnull(oca.addressLine4,''),ifnull(oca.town,'')) as adr"
+            )
             ->once();
         $sut->shouldReceive('buildDefaultListQuery')
             ->with($qb, $query, ['adr'])
