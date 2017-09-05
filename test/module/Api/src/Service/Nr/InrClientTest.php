@@ -8,7 +8,6 @@ use Mockery as m;
 use Zend\Http\Client as RestClient;
 use Zend\Http\Request;
 use Zend\Http\Response;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class InrClientTest
@@ -41,5 +40,21 @@ class InrClientTest extends MockeryTestCase
         $sut = new InrClient($mockClient);
 
         $this->assertEquals($statusCode, $sut->makeRequest($requestBody));
+    }
+
+    public function testClose()
+    {
+        $mockRestClient = m::mock(RestClient::class);
+        $mockRestClient->shouldReceive('getAdapter->close')->once()->withNoArgs();
+
+        $sut = new InrClient($mockRestClient);
+        $sut->close();
+    }
+
+    public function testGetRestClient()
+    {
+        $mockRestClient = m::mock(RestClient::class);
+        $sut = new InrClient($mockRestClient);
+        $this->assertEquals($mockRestClient, $sut->getRestClient());
     }
 }

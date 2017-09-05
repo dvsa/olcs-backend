@@ -79,6 +79,8 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
             throw new InrClientException('There was an error sending the INR response ' . $e->getMessage());
         }
 
+        $this->inrClient->close();
+
         if ($responseCode !== Response::STATUS_CODE_202) {
             $this->updateStatus($erruRequest, ErruRequestEntity::FAILED_CASE_TYPE);
             throw new InrClientException('INR Http response code was ' . $responseCode);
