@@ -21,6 +21,8 @@ class InrClient implements InrClientInterface
      * Contructor, expects zend rest client
      *
      * @param RestClient $restClient zend rest client
+     *
+     * @return void
      */
     public function __construct($restClient)
     {
@@ -47,5 +49,25 @@ class InrClient implements InrClientInterface
         Logger::info('INR response', ['data' => $response->toString()]);
 
         return $response->getStatusCode();
+    }
+
+    /**
+     * Get the rest client
+     *
+     * @return RestClient
+     */
+    public function getRestClient()
+    {
+        return $this->restClient;
+    }
+
+    /**
+     * close connection to INR
+     *
+     * @return void
+     */
+    public function close()
+    {
+        $this->restClient->getAdapter()->close();
     }
 }
