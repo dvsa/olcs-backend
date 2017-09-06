@@ -473,7 +473,7 @@ class Licence extends AbstractRepository
             ->setParameter(
                 'licTypes',
                 [
-                    Entity::LICENCE_TYPE_SPECIAL_RESTRICTED,
+                    Entity::LICENCE_TYPE_RESTRICTED,
                     Entity::LICENCE_TYPE_STANDARD_NATIONAL,
                     Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                 ]

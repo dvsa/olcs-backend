@@ -753,7 +753,7 @@ class LicenceTest extends RepositoryTestCase
             ->andReturnSelf();
 
         $licTypes = [
-            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
+            Licence::LICENCE_TYPE_RESTRICTED,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
         ];
