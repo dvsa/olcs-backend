@@ -92,14 +92,34 @@ class SystemParameter extends AbstractRepository
      */
     public function getDisableDataRetentionDocumentDelete()
     {
-        return (bool) $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE);
+        $value = $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE);
+        // if value is null, ie not set, then its disabled for safety
+        if ($value === null) {
+            return true;
+        }
+        return (bool) $value;
+    }
+
+    /**
+     * Get Disable Data Retention Deletes
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisableDataRetentionDelete()
+    {
+        $value = $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DELETE);
+        // if value is null, ie not set, then its disabled for safety
+        if ($value === null) {
+            return true;
+        }
+        return (bool) $value;
     }
 
     /**
      * Get the user ID of the data retention system user
      *
      * @return int
-     * @throws InvalidArgumentException
+     * @throws RuntimeException
      */
     public function getSystemDataRetentionUser()
     {
@@ -110,5 +130,15 @@ class SystemParameter extends AbstractRepository
             );
         }
         return $value;
+    }
+
+    /**
+     * Get the data retention delete limit
+     *
+     * @return int
+     */
+    public function getDataRetentionDeleteLimit()
+    {
+        return (int) $this->fetchValue(Entity::DR_DELETE_LIMIT);
     }
 }

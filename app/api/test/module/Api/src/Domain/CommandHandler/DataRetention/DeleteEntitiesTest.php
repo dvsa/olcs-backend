@@ -5,15 +5,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\DeleteEntities;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\DataRetention;
-use Dvsa\Olcs\Api\Entity\DataRetentionRule;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\DeleteEntities as Cmd;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class DeleteEntitiesTest
@@ -34,6 +30,8 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['limit' => 9]);
 
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
         $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
         $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(9, 34)->once();
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
@@ -49,11 +47,12 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-
     public function testHandleCommandQueueDeleteDocuments()
     {
         $command = Cmd::create(['limit' => 9]);
 
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
         $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
         $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(9, 34)->once();
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
@@ -73,5 +72,38 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandSystemParamLimit()
+    {
+        $command = Cmd::create([]);
+
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDataRetentionDeleteLimit')->with()->once()->andReturn(54);
+        $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
+        $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(54, 34)->once();
+        $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
+            ->andReturn(true);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => []
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandDisabled()
+    {
+        $command = Cmd::create([]);
+
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')->with()->once()
+            ->andReturn(true);
+
+        $this->setExpectedException(BadRequestException::class, 'Disabled by System Parameter');
+        $this->sut->handleCommand($command);
     }
 }
