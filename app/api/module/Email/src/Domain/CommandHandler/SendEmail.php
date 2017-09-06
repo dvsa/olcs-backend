@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Send Email
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -282,7 +277,9 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
 
         foreach ($fetchedDocs as $doc) {
             $file = $this->getUploader()->download($doc->getIdentifier());
-
+            if ($file === null) {
+                throw new \RuntimeException('Unable to process attachment (empty document downloaded)');
+            }
             $downloadedDocs[] = [
                 'fileName' => basename($doc->getFilename()),
                 'content' => $file->getContent()
