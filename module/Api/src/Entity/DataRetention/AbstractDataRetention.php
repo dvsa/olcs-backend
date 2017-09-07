@@ -189,15 +189,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     protected $organisationName;
 
     /**
-     * To action
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="to_action", nullable=false)
-     */
-    protected $toAction;
-
-    /**
      * Set the action confirmation
      *
      * @param boolean $actionConfirmation new value being set
@@ -609,30 +600,6 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
     public function getOrganisationName()
     {
         return $this->organisationName;
-    }
-
-    /**
-     * Set the to action
-     *
-     * @param boolean $toAction new value being set
-     *
-     * @return DataRetention
-     */
-    public function setToAction($toAction)
-    {
-        $this->toAction = $toAction;
-
-        return $this;
-    }
-
-    /**
-     * Get the to action
-     *
-     * @return boolean
-     */
-    public function getToAction()
-    {
-        return $this->toAction;
     }
 
     /**
