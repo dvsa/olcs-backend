@@ -112,9 +112,12 @@ abstract class AbstractContinuationDetail implements BundleSerializableInterface
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="digital_reminder_sent", nullable=true)
+     * @ORM\Column(type="boolean",
+     *     name="digital_reminder_sent",
+     *     nullable=false,
+     *     options={"default": 0})
      */
-    protected $digitalReminderSent;
+    protected $digitalReminderSent = 0;
 
     /**
      * Digital signature
