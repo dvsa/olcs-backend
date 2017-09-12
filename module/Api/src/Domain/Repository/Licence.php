@@ -445,6 +445,56 @@ class Licence extends AbstractRepository
     }
 
     /**
+     * Fetch PSV licence ids to surrender
+     *
+     * @param \DateTime|null $now   current datetime
+     *
+     * @return array
+     */
+    public function fetchPsvLicenceIdsToSurrender(\DateTime $now = null)
+    {
+        if (is_null($now)) {
+            $now = new DateTime('now');
+        }
+
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata();
+
+        $qb
+            ->andWhere($qb->expr()->lt($this->alias . '.expiryDate', ':now'))
+            ->andWhere($qb->expr()->eq($this->alias .'.goodsOrPsv', ':psv'))
+            ->andWhere($qb->expr()->in($this->alias .'.licenceType', ':licTypes'))
+            ->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+            ->setParameter('now', $now)
+            ->setParameter('psv', Entity::LICENCE_CATEGORY_PSV)
+            ->setParameter(
+                'licTypes',
+                [
+                    Entity::LICENCE_TYPE_RESTRICTED,
+                    Entity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                ]
+            )
+            ->setParameter(
+                'statuses',
+                [
+                    Entity::LICENCE_STATUS_VALID,
+                    Entity::LICENCE_STATUS_CURTAILED,
+                    Entity::LICENCE_STATUS_SUSPENDED,
+                ]
+            );
+
+        $query = $qb->getQuery();
+        $results = $query->getResult(Query::HYDRATE_ARRAY);
+        $licences = array_column($results, 'id');
+
+        return $licences;
+    }
+
+    /**
      * Override parent
      *
      * @param QueryBuilder   $qb    query builder

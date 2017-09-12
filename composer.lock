@@ -4,9 +4,71 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c32b34d1b2a08c0c7eb3c669cff9c34",
-    "content-hash": "ceefdc9f89384d23817f552b5e811664",
+    "hash": "605ce7ec36a1764b6e7bade6e1b9b778",
+    "content-hash": "bf653d2da9a4656a0f3ddf9bdabd527c",
     "packages": [
+        {
+            "name": "beberlei/DoctrineExtensions",
+            "version": "v1.0.17",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beberlei/DoctrineExtensions.git",
+                "reference": "608854d5979e21cd8290ddf03a92f55017f62c80"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-608854d5979e21cd8290ddf03a92f55017f62c80-zip-d15e74.tar",
+                "reference": "608854d5979e21cd8290ddf03a92f55017f62c80",
+                "shasum": "e9a5d239ca1295f1c235db3831332e42a07e731c"
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.1",
+                "nesbot/carbon": "*",
+                "phpunit/phpunit": "~4.5",
+                "symfony/yaml": "~2.6",
+                "zf1/zend-date": "~1.12",
+                "zf1/zend-registry": "~1.12"
+            },
+            "suggest": {
+                "nesbot/carbon": "Alternative to DateTime",
+                "zf1/zend-date": "Alternative to DateTime"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DoctrineExtensions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Steve Lacey",
+                    "email": "steve@stevelacey.net"
+                }
+            ],
+            "description": "A set of extensions to Doctrine 2 that add support for additional query functions available in MySQL and Oracle.",
+            "keywords": [
+                "database",
+                "doctrine",
+                "orm"
+            ],
+            "time": "2017-06-16 07:29:39"
+        },
         {
             "name": "behat/transliterator",
             "version": "v1.2.0",
@@ -1183,7 +1245,7 @@
         },
         {
             "name": "olcs/autoload",
-            "version": "dev-release/4.21",
+            "version": "dev-release/4.22",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
@@ -1198,11 +1260,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.21",
+            "version": "dev-release/4.22",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "e8647e53069d5b42b88191a75f47f037fb7da428"
+                "reference": "55df0696e55e35eb54994bd3c8e88d89471ad03c"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1214,15 +1276,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2017-08-25 11:46:12"
+            "time": "2017-09-08 14:50:42"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.21",
+            "version": "dev-release/4.22",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "b367d2a5aba5fa9e0afcd580e520d0efba14260d"
+                "reference": "66aaea6d4d15352f40ae7eac01d77228e9cf917f"
             },
             "require": {
                 "php": ">=5.4",
@@ -1248,15 +1310,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-08-25 11:46:07"
+            "time": "2017-09-08 14:50:33"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.21",
+            "version": "dev-release/4.22",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "bc642bfffa2c54f00a959ab1ac1f3fee2a630a3d"
+                "reference": "c4630d54e3e8927d0c47820f1588a75e0b114d08"
             },
             "require": {
                 "php": ">=5.4",
@@ -1274,15 +1336,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-08-25 11:47:18"
+            "time": "2017-09-08 14:52:34"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.21",
+            "version": "dev-release/4.22",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "c139e623a890de477962e868a7f5b7ca840c8839"
+                "reference": "f31d0ec47a3b618a2790acc03930d011ef86bb9c"
             },
             "require": {
                 "php": ">=5.4",
@@ -1290,7 +1352,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-release/4.21",
+                "olcs/olcs-logging": "dev-release/4.22",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1300,15 +1362,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-08-25 11:47:34"
+            "time": "2017-09-08 14:53:04"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.21",
+            "version": "dev-release/4.22",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "7152872b83f67f1b0be0a28ee3b435e438425070"
+                "reference": "e85be3455ebd003f2f34403264b59f52d83689e9"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1329,7 +1391,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-08-25 11:45:53"
+            "time": "2017-09-08 14:49:54"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -1735,6 +1797,46 @@
             "time": "2017-03-25 12:08:31"
         },
         {
+            "name": "robrichards/xmlseclibs",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/robrichards/xmlseclibs.git",
+                "reference": "d937712f70f93a584eb0299ccd87dc6374003781"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/robrichards-xmlseclibs-d937712f70f93a584eb0299ccd87dc6374003781-zip-bd2e41.tar",
+                "reference": "d937712f70f93a584eb0299ccd87dc6374003781",
+                "shasum": "2cc58aff5005ba294dfe1debc42f848843386402"
+            },
+            "require": {
+                "php": ">= 5.4"
+            },
+            "suggest": {
+                "ext-openssl": "OpenSSL extension"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RobRichards\\XMLSecLibs\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "A PHP library for XML Security",
+            "homepage": "https://github.com/robrichards/xmlseclibs",
+            "keywords": [
+                "security",
+                "signature",
+                "xml",
+                "xmldsig"
+            ],
+            "time": "2017-08-31 09:27:07"
+        },
+        {
             "name": "ruflin/elastica",
             "version": "5.3.0",
             "source": {
@@ -1794,17 +1896,17 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v3.0.2",
+            "version": "v3.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "bacad25473258cfefb7a7fd418cc5f8a22cda0a1"
+                "reference": "bdafe52d52adb32c926c12c5139401546b4dc57b"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-bacad25473258cfefb7a7fd418cc5f8a22cda0a1-zip-331a8f.tar",
-                "reference": "bacad25473258cfefb7a7fd418cc5f8a22cda0a1",
-                "shasum": "40628e3b1676dbbd0f40f4ac3eb324d78f0aa63e"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-bdafe52d52adb32c926c12c5139401546b4dc57b-zip-ea6467.tar",
+                "reference": "bdafe52d52adb32c926c12c5139401546b4dc57b",
+                "shasum": "937330bcc535c4c296918537b6bad729df061d35"
             },
             "require": {
                 "ext-dom": "*",
@@ -1812,7 +1914,7 @@
                 "ext-zlib": "*",
                 "php": ">=5.3.3",
                 "psr/log": "~1.0",
-                "simplesamlphp/xmlseclibs": "^2.0|^3.0"
+                "robrichards/xmlseclibs": "^2.0|^3.0"
             },
             "require-dev": {
                 "mockery/mockery": "~0.9",
@@ -1843,47 +1945,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2017-08-17 12:44:35"
-        },
-        {
-            "name": "simplesamlphp/xmlseclibs",
-            "version": "3.0.0-p1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/simplesamlphp/xmlseclibs.git",
-                "reference": "f9250fc4019f20650a01a1db7959c68c2c355e3b"
-            },
-            "dist": {
-                "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-xmlseclibs-f9250fc4019f20650a01a1db7959c68c2c355e3b-zip-ca3d2a.tar",
-                "reference": "f9250fc4019f20650a01a1db7959c68c2c355e3b",
-                "shasum": "0c82e60105f09e0d351f8b250fb80046c39d5456"
-            },
-            "require": {
-                "php": ">= 5.4"
-            },
-            "suggest": {
-                "ext-openssl": "OpenSSL extension"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "RobRichards\\XMLSecLibs\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "A PHP library for XML Security",
-            "homepage": "https://github.com/robrichards/xmlseclibs",
-            "keywords": [
-                "security",
-                "signature",
-                "xml",
-                "xmldsig"
-            ],
-            "time": "2017-08-17 09:35:53"
+            "time": "2017-08-31 11:24:42"
         },
         {
             "name": "soflomo/purifier",
@@ -1940,20 +2002,20 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.3.6",
+            "version": "v3.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "b0878233cb5c4391347e5495089c7af11b8e6201"
+                "reference": "d6596cb5022b6a0bd940eae54a1de78646a5fda6"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-b0878233cb5c4391347e5495089c7af11b8e6201-zip-583df6.tar",
-                "reference": "b0878233cb5c4391347e5495089c7af11b8e6201",
-                "shasum": "5837982efaaeca42511f03b98ac68a7e6157d154"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-console-d6596cb5022b6a0bd940eae54a1de78646a5fda6-zip-c6b2a3.tar",
+                "reference": "d6596cb5022b6a0bd940eae54a1de78646a5fda6",
+                "shasum": "11ce03075907953e5a14af132d960aa81baa5561"
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^5.5.9|>=7.0.8",
                 "symfony/debug": "~2.8|~3.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
@@ -1966,7 +2028,6 @@
                 "symfony/dependency-injection": "~3.3",
                 "symfony/event-dispatcher": "~2.8|~3.0",
                 "symfony/filesystem": "~2.8|~3.0",
-                "symfony/http-kernel": "~2.8|~3.0",
                 "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
@@ -2005,24 +2066,24 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-29 21:27:59"
+            "time": "2017-08-27 14:52:21"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.3.6",
+            "version": "v3.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "7c13ae8ce1e2adbbd574fc39de7be498e1284e13"
+                "reference": "084d804fe35808eb2ef596ec83d85d9768aa6c9d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-7c13ae8ce1e2adbbd574fc39de7be498e1284e13-zip-4499eb.tar",
-                "reference": "7c13ae8ce1e2adbbd574fc39de7be498e1284e13",
-                "shasum": "ad6ef3c83a7086d18454e45f31d6973d7597336d"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-084d804fe35808eb2ef596ec83d85d9768aa6c9d-zip-ee700c.tar",
+                "reference": "084d804fe35808eb2ef596ec83d85d9768aa6c9d",
+                "shasum": "fac0776c041cbf4ed2172253f204822ac435e2ea"
             },
             "require": {
-                "php": ">=5.5.9",
+                "php": "^5.5.9|>=7.0.8",
                 "psr/log": "~1.0"
             },
             "conflict": {
@@ -2061,7 +2122,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-28 15:27:31"
+            "time": "2017-08-27 14:52:21"
         },
         {
             "name": "symfony/filesystem",
@@ -2808,22 +2869,22 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.7.0",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073"
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpspec-prophecy-93d39f1f7f9326d746203c7c056f300f7f126073-zip-f944ab.tar",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073",
-                "shasum": "dc024e7e79e156d5e1287ce3cbcc6a83cb648c7d"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpspec-prophecy-c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6-zip-1cd899.tar",
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
+                "shasum": "ee778e97b2e6bb144b930f585b0dcac34ffdc186"
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
+                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
                 "sebastian/comparator": "^1.1|^2.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
@@ -2834,7 +2895,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -2867,7 +2928,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02 20:05:34"
+            "time": "2017-09-04 11:05:03"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3619,20 +3680,20 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.3.6",
+            "version": "v3.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "ddc23324e6cfe066f3dd34a37ff494fa80b617ed"
+                "reference": "1d8c2a99c80862bdc3af94c1781bf70f86bccac0"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-ddc23324e6cfe066f3dd34a37ff494fa80b617ed-zip-f023d3.tar",
-                "reference": "ddc23324e6cfe066f3dd34a37ff494fa80b617ed",
-                "shasum": "9c75dc4c94c0ad44945fe3f9baea36fa9549bfad"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-yaml-1d8c2a99c80862bdc3af94c1781bf70f86bccac0-zip-e74c9f.tar",
+                "reference": "1d8c2a99c80862bdc3af94c1781bf70f86bccac0",
+                "shasum": "c5fd7cfc84ed0ab8a8a2daada65fe8b150cd2a4d"
             },
             "require": {
-                "php": ">=5.5.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "require-dev": {
                 "symfony/console": "~2.8|~3.0"
@@ -3670,7 +3731,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-07-23 12:43:26"
+            "time": "2017-07-29 21:54:42"
         },
         {
             "name": "webmozart/assert",

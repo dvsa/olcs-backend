@@ -68,7 +68,9 @@ final class UpdatePsvLicenceVehicle extends AbstractCommandHandler implements Tr
         if ($this->isGranted(Permission::INTERNAL_USER)) {
 
             if ($command->getSpecifiedDate() !== null) {
-                $licenceVehicle->setSpecifiedDate(new DateTime($command->getSpecifiedDate()));
+                $licenceVehicle->setSpecifiedDate(
+                    $licenceVehicle->processDate($command->getSpecifiedDate(), \DateTime::ISO8601, false)
+                );
             }
 
             if ($command->getReceivedDate() !== null) {

@@ -17,5 +17,7 @@ class RuntimeException extends Exception
     public function __construct($message)
     {
         $this->messages = [$message];
+
+        parent::__construct($message);
     }
 }

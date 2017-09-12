@@ -112,23 +112,4 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
         $this->assertSame(12, $result);
     }
-
-    public function testRunActionProc()
-    {
-        $this->em->shouldReceive('getConnection->fetchAll')->with('CALL proc(123, 99)')->once()->andReturn(['RESULTS']);
-
-        $result = $this->sut->runActionProc('proc', 123, 99);
-
-        $this->assertTrue($result);
-    }
-
-    public function testRunActionProcFalse()
-    {
-        $this->em->shouldReceive('getConnection->fetchAll')->with('CALL proc(123, 99)')->once()
-            ->andReturn(['RESULTS' => ['This is an ERROR']]);
-
-        $result = $this->sut->runActionProc('proc', 123, 99);
-
-        $this->assertFalse($result);
-    }
 }

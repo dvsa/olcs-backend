@@ -169,7 +169,7 @@ class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
             [
                 'id' => 111,
                 'version' => 1,
-                'specifiedDate' => '2015-01-01',
+                'specifiedDate' => '2015-01-01T12:00:00+01:00',
                 'receivedDate' => '2015-01-01',
                 'makeModel' => 'Foo',
                 'application' => 123
@@ -216,7 +216,9 @@ class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals('2015-01-01', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
-        $this->assertEquals('2015-01-01', $licenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
 
         $this->assertEquals('Foo', $vehicle->getMakeModel());
     }

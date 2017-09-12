@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\Task
@@ -218,5 +219,63 @@ class TaskTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->andReturn(['result']);
 
         $this->assertEquals(['result'], $this->sut->fetchByAppIdAndDescription(1, 'foo'));
+    }
+
+    public function testFetchOpenedTasksForLicences()
+    {
+        $licenceIds = [];
+        $categoryId = 1;
+        $subCategoryId = 2;
+        $description = 'foo';
+
+        $this->setUpSut(Repository\Task::class);
+
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('licence', 'l')
+            ->andReturnSelf()
+            ->once()
+            ->getMock();
+
+        $qb->shouldReceive('expr->in')->with('m.licence', ':licenceIds')->once()->andReturn('EXPR1');
+        $qb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licenceIds', $licenceIds)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.description', ':description')->once()->andReturn('EXPR2');
+        $qb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('description', $description)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.isClosed', ':isClosed')->once()->andReturn('EXPR3');
+        $qb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('isClosed', 0)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.category', ':categoryId')->once()->andReturn('EXPR4');
+        $qb->shouldReceive('andWhere')->with('EXPR4')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('categoryId', $categoryId)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.subCategory', ':subCategoryId')->once()->andReturn('EXPR5');
+        $qb->shouldReceive('andWhere')->with('EXPR5')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('subCategoryId', $subCategoryId)->once()->andReturnSelf();
+
+        $this->em
+            ->shouldReceive('getRepository->createQueryBuilder')
+            ->once()
+            ->andReturn($qb);
+
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->andReturn(['result']);
+
+        $this->assertEquals(
+            ['result'],
+            $this->sut->fetchOpenedTasksForLicences($licenceIds, $categoryId, $subCategoryId, $description)
+        );
     }
 }

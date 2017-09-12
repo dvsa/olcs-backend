@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Repository\DocumentToDelete;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Mockery as m;
@@ -22,7 +22,8 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new RemoveDeletedDocuments();
-        $this->mockRepo('DocumentToDelete', DocumentToDelete::class);
+        $this->mockRepo('DocumentToDelete', Repository\DocumentToDelete::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
         $this->mockUploader = m::mock(ContentStoreFileUploader::class);
         $this->mockedSmServices['FileUploader'] = $this->mockUploader;
@@ -67,6 +68,9 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
             (new \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete())->setDocumentStoreId('doc1.rtf'),
         ];
 
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
         $this->repoMap['DocumentToDelete']
             ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn($documentsToDelete)
             ->shouldReceive('delete')->with($documentsToDelete[0])->once()
@@ -91,6 +95,9 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([]);
 
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
         $this->repoMap['DocumentToDelete']
             ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
             ->shouldReceive('fetchListOfDocumentToDelete')->with(1)->once()->andReturn(['FOO']);
@@ -107,6 +114,24 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Remove documents : 0 success, 0 not found, 0 errors',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+    public function testHandleCommandDisabled()
+    {
+        $command = Cmd::create([]);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(true);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Removing deleted documents is disabled by system parameter',
             ]
         ];
 

@@ -335,7 +335,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'applicationId' => null
         ];
@@ -394,7 +394,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($vehicle, $savedLicenceVehicle->getVehicle());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
-        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
     }
@@ -405,7 +407,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'identifyDuplicates' => true,
             'applicationId' => null
@@ -473,7 +475,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals(100, $savedVehicle->getPlatedWeight());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
-        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
 
@@ -483,7 +487,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'applicationId' => null
         ];
@@ -552,7 +556,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals(100, $savedVehicle->getPlatedWeight());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
-        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
 
@@ -562,7 +568,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'identifyDuplicates' => true,
             'confirm' => true,
@@ -639,7 +645,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals(100, $savedVehicle->getPlatedWeight());
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
-        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
 
@@ -649,7 +657,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'applicationId' => self::APP_ID,
         ];
@@ -721,7 +729,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($this->mockLic, $savedLicenceVehicle->getLicence());
         $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
-        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
     }
@@ -732,7 +742,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'applicationId' => self::APP_ID,
         ];
@@ -793,7 +803,9 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
-        $this->assertEquals('2015-01-01', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d'));
+        $this->assertEquals(
+            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+        );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
     }
@@ -806,7 +818,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => self::VRM,
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'applicationId' => self::APP_ID,
         ];
@@ -836,7 +848,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
             'licence' => self::LIC_ID,
             'vrm' => 'ABC123',
             'platedWeight' => 100,
-            'specifiedDate' => '2015-01-01',
+            'specifiedDate' => '2015-01-01T12:00:00+01:00',
             'receivedDate' => '2015-02-02',
             'applicationId' => 999
         ];

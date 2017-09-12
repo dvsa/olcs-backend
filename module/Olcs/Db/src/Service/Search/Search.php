@@ -18,6 +18,8 @@ class Search implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
+    const MAX_NUMBER_OF_RESULTS = 10000;
+
     /**
      * @var \Elastica\Client
      */
@@ -158,7 +160,10 @@ class Search implements AuthAwareInterface
         $response = [];
         $resultSet = $es->search($elasticaQuery);
 
-        $response['Count'] = $resultSet->getTotalHits();
+        // Limit max number of results to prevent the ES "Result window is too large" error
+        $response['Count'] = ($resultSet->getTotalHits() > self::MAX_NUMBER_OF_RESULTS)
+            ? self::MAX_NUMBER_OF_RESULTS
+            : $resultSet->getTotalHits();
 
         $response['Results'] = $this->processResults($resultSet);
 

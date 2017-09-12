@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Send Email Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\OlcsTest\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Email\Service\Email;
@@ -196,6 +191,49 @@ class SendEmailTest extends CommandHandlerTestCase
                 ['bcc@foobar.com'],
                 $expectedDocs
             );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandNoAttachment()
+    {
+        $this->setExpectedException(\RuntimeException::class);
+
+        $docId1 = 33;
+        $docIdentifier1 = 'abcde123';
+
+        $docIds = [$docId1];
+
+        $data = [
+            'fromName' => 'Foo',
+            'fromEmail' => 'foobar@cake.com',
+            'to' => 'foo@bar.com',
+            'cc' => ['bar@foo.com'],
+            'bcc' => ['bcc@foobar.com'],
+            'docs' => $docIds,
+            'subject' => 'Some subject',
+            'plainBody' => 'This is the email http://selfserve/ http://internal/',
+            'htmlBody' => 'This is the html email http://selfserve/ http://internal/'
+        ];
+
+        $command = Cmd::create($data);
+
+        $this->sut->setSendAllMailTo(null);
+
+        $document1 = m::mock(DocumentEntity::class);
+        $document1->shouldReceive('getIdentifier')->once()->andReturn($docIdentifier1);
+
+        $this->repoMap['Document']
+            ->shouldReceive('fetchByIds')
+            ->once()
+            ->with($docIds)
+            ->andReturn([$document1]);
+
+        $this->mockedSmServices['FileUploader']
+            ->shouldReceive('download')
+            ->once()
+            ->with($docIdentifier1)
+            ->andReturn(null);
 
         $this->sut->handleCommand($command);
     }

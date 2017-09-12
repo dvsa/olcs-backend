@@ -47,7 +47,9 @@ class BatchController extends AbstractConsoleController
         }
 
         if ($this->params('delete')) {
-            return $this->handleExitStatus($this->handleCommand([Command\DataRetention\DeleteEntities::create([])]));
+            $limit = $this->params('limit');
+            $dto = Command\DataRetention\DeleteEntities::create(['limit' => $limit]);
+            return $this->handleExitStatus($this->handleCommand([$dto]));
         }
     }
 
@@ -214,6 +216,38 @@ class BatchController extends AbstractConsoleController
                 )
             );
         }
+        return $this->handleExitStatus(0);
+    }
+
+    /**
+     * Create PSV licence surrender tasks
+     *
+     * @return ConsoleModel
+     */
+    public function createPsvLicenceSurrenderTasksAction()
+    {
+        $dryRun = $this->isDryRun();
+        $date = new DateTime();
+
+        $dto = Query\Licence\PsvLicenceSurrenderList::create(['date' => $date]);
+        $result = $this->handleQuery($dto);
+        $this->writeVerboseMessages("{$result['count']} PSV Licence(s) found to create surrender tasks");
+        $licenceIds = $result['result'];
+
+        if (count($licenceIds) !== 0 && !$dryRun) {
+            return $this->handleExitStatus(
+                $this->handleCommand(
+                    [
+                        Command\Licence\CreateSurrenderPsvLicenceTasks::create(
+                            [
+                                'ids' => $licenceIds,
+                            ]
+                        ),
+                    ]
+                )
+            );
+        }
+
         return $this->handleExitStatus(0);
     }
 

@@ -5,15 +5,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\DeleteEntities;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\DataRetention;
-use Dvsa\Olcs\Api\Entity\DataRetentionRule;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Api\Entity\User\User;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\DeleteEntities as Cmd;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class DeleteEntitiesTest
@@ -24,43 +20,20 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
     {
         $this->sut = new DeleteEntities();
         $this->mockRepo('DataRetention', Repository\DataRetention::class);
-        $this->mockRepo('DataRetentionRule', Repository\DataRetentionRule::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
         $this->mockRepo('Queue', Repository\Queue::class);
-
-        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
-        /** @var User $currentUser */
-        $currentUser = m::mock(User::class)->makePartial();
-        $currentUser->setId(222);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
 
         parent::setUp();
     }
 
-    public function testHandleCommandIterateEntities()
+    public function testHandleCommand()
     {
-        $this->markTestSkipped('OLCS-17668 columns removed in data retention table.  This command is also deprecated');
+        $command = Cmd::create(['limit' => 9]);
 
-        $command = Cmd::create([]);
-
-        $dataRetentionRule = (new DataRetentionRule())
-            ->setActionProcedure('ACTION_PROC');
-        $dataRetention1 = (new DataRetention())
-            ->setId(11)
-            ->setEntityPk(123)
-            ->setDataRetentionRule($dataRetentionRule);
-        $dataRetention2 = (new DataRetention())
-            ->setId(12)
-            ->setEntityPk(999)
-            ->setDataRetentionRule($dataRetentionRule);
-
-        $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(10)->once()
-            ->andReturn([$dataRetention1, $dataRetention2]);
-        $this->repoMap['DataRetentionRule']->shouldReceive('runActionProc')->with('ACTION_PROC', 123, 222)->once()
-            ->andReturn(false);
-        $this->repoMap['DataRetentionRule']->shouldReceive('runActionProc')->with('ACTION_PROC', 999, 222)->once()
-            ->andReturn(true);
-        $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(1)->once()->andReturn([]);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
+        $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(9, 34)->once();
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
             ->andReturn(true);
 
@@ -68,24 +41,22 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
 
         $expected = [
             'id' => [],
-            'messages' => [
-                'ERROR data_retention.id = 11, ACTION_PROC',
-                'SUCCESS data_retention.id = 12, ACTION_PROC',
-            ]
+            'messages' => []
         ];
 
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandCreateRemoveDocsJob()
+    public function testHandleCommandQueueDeleteDocuments()
     {
-        $this->markTestSkipped('OLCS-17668 columns removed in data retention table.  This command is also deprecated');
+        $command = Cmd::create(['limit' => 9]);
 
-        $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(10)->once()
-            ->andReturn([]);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
+        $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(9, 34)->once();
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
             ->andReturn(false);
-        $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(1)->once()->andReturn([]);
 
         $this->expectedSideEffect(
             Create::class,
@@ -93,27 +64,46 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $command = Cmd::create([]);
-        $this->sut->handleCommand($command);
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => []
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandCreateAnotherProcessJob()
+    public function testHandleCommandSystemParamLimit()
     {
-        $this->markTestSkipped('OLCS-17668 columns removed in data retention table.  This command is also deprecated');
+        $command = Cmd::create([]);
 
-        $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(10)->once()
-            ->andReturn([]);
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getDataRetentionDeleteLimit')->with()->once()->andReturn(54);
+        $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
+        $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(54, 34)->once();
         $this->repoMap['Queue']->shouldReceive('isItemTypeQueued')->with(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)->once()
             ->andReturn(true);
-        $this->repoMap['DataRetention']->shouldReceive('fetchEntitiesToDelete')->with(1)->once()->andReturn(['FOO']);
 
-        $this->expectedSideEffect(
-            Create::class,
-            ['type' => Queue::TYPE_PROCESS_DATA_RETENTION, 'status' => Queue::STATUS_QUEUED],
-            new Result()
-        );
+        $result = $this->sut->handleCommand($command);
 
+        $expected = [
+            'id' => [],
+            'messages' => []
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandDisabled()
+    {
         $command = Cmd::create([]);
+
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')->with()->once()
+            ->andReturn(true);
+
+        $this->setExpectedException(BadRequestException::class, 'Disabled by System Parameter');
         $this->sut->handleCommand($command);
     }
 }

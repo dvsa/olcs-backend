@@ -194,7 +194,7 @@ return [
                 ],
                 'data-retention-rule' => [
                     'options' => [
-                        'route' => 'data-retention-rule (populate|delete) [--verbose|-v]',
+                        'route' => 'data-retention-rule (populate|delete) [--limit=] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'dataRetentionRule',
@@ -207,6 +207,15 @@ return [
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'digitalContinuationReminders',
+                        ],
+                    ],
+                ],
+                'create-psv-licence-surrender-tasks' => [
+                    'options' => [
+                        'route' => 'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'createPsvLicenceSurrenderTasks',
                         ],
                     ],
                 ],
@@ -280,8 +289,6 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\CreateForLicence::class,
             Queue::TYPE_REMOVE_DELETED_DOCUMENTS
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\RemoveDeleteDocuments::class,
-            Queue::TYPE_PROCESS_DATA_RETENTION
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ProcessDataRetention::class,
             Queue::TYPE_CREATE_CONTINUATION_SNAPSHOT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class,
             Queue::TYPE_CONT_DIGITAL_REMINDER

@@ -1,1 +1,0 @@
-mysqldump -hscdv-db02.sc.npm -uolcsetl -ppassword --databases olcsetl --no-create-db --no-create-info --compact --complete-insert > live-like-data.sql

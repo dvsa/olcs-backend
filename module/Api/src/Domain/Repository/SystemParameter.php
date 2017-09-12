@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as Entity;
 
@@ -82,5 +83,62 @@ class SystemParameter extends AbstractRepository
             $period = self::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT;
         }
         return (int)$period;
+    }
+
+    /**
+     * Get Disable Data Retention Document Delete
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisableDataRetentionDocumentDelete()
+    {
+        $value = $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE);
+        // if value is null, ie not set, then its disabled for safety
+        if ($value === null) {
+            return true;
+        }
+        return (bool) $value;
+    }
+
+    /**
+     * Get Disable Data Retention Deletes
+     *
+     * @return bool Return true if disabled
+     */
+    public function getDisableDataRetentionDelete()
+    {
+        $value = $this->fetchValue(Entity::DISABLE_DATA_RETENTION_DELETE);
+        // if value is null, ie not set, then its disabled for safety
+        if ($value === null) {
+            return true;
+        }
+        return (bool) $value;
+    }
+
+    /**
+     * Get the user ID of the data retention system user
+     *
+     * @return int
+     * @throws RuntimeException
+     */
+    public function getSystemDataRetentionUser()
+    {
+        $value = (int) $this->fetchValue(Entity::SYSTEM_DATA_RETENTION_USER);
+        if ($value === 0) {
+            throw new RuntimeException(
+                'System parameter "'. Entity::SYSTEM_DATA_RETENTION_USER .'" is not set'
+            );
+        }
+        return $value;
+    }
+
+    /**
+     * Get the data retention delete limit
+     *
+     * @return int
+     */
+    public function getDataRetentionDeleteLimit()
+    {
+        return (int) $this->fetchValue(Entity::DR_DELETE_LIMIT);
     }
 }
