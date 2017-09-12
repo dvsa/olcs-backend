@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
@@ -18,26 +19,6 @@ class DataRetentionTest extends RepositoryTestCase
     public function setUp()
     {
         $this->setUpSut(DataRetention::class, true);
-    }
-
-    public function testFetchEntitiesToDelete()
-    {
-        /** @var QueryBuilder $qb */
-        $qb = $this->createMockQb('[QUERY]');
-        $this->mockCreateQueryBuilder($qb);
-        $this->queryBuilder
-            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
-            ->shouldReceive('with')->with('dataRetentionRule', 'drr')->once()->andReturnSelf();
-
-        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['FOO']);
-
-        $result = $this->sut->fetchEntitiesToDelete(12);
-
-        $this->assertSame(['FOO'], $result);
-
-        $expectedQuery = '[QUERY] AND drr.isEnabled = 1 AND m.toAction = 1 AND m.actionConfirmation = 1 AND '.
-            'm.actionedDate IS NULL AND m.nextReviewDate IS NULL LIMIT 12';
-        $this->assertEquals($expectedQuery, $this->query);
     }
 
     public function testFetchAllWithEnabledRules()
@@ -86,5 +67,45 @@ class DataRetentionTest extends RepositoryTestCase
             ],
             $result
         );
+    }
+
+    public function testRunCleanupProc()
+    {
+        $mockStatement = m::mock();
+        $mockStatement->shouldReceive('execute')->once()->with()->andReturn(true);
+        $this->em->shouldReceive('getConnection->prepare')->with('CALL sp_dr_cleanup(99, 123, 0)')->once()
+            ->andReturn($mockStatement);
+
+        $result = $this->sut->runCleanupProc(123, 99);
+
+        $this->assertTrue($result);
+    }
+
+    public function testFetchAllProcessedForRule()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('getResult')
+                ->with(Query::HYDRATE_ARRAY)->once()
+                ->andReturn('RESULT')
+                ->getMock()
+        );
+
+        $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->once()->andReturn([]);
+        $this->em->shouldReceive('getFilters->enable')->with('soft-deleteable')->once()->andReturn([]);
+
+        $this->assertEquals(
+            'RESULT',
+            $this->sut->fetchAllProcessedForRule(12, new \DateTime('2012-02-20'), new \DateTime('2017-12-10'))
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.dataRetentionRule = [[12]] '
+            . 'AND m.deletedDate >= [[2012-02-20T00:00:00+00:00]] '
+            . 'AND m.deletedDate <= [[2017-12-10T00:00:00+00:00]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

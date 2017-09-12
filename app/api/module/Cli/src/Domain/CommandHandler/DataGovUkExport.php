@@ -119,10 +119,10 @@ final class DataGovUkExport extends AbstractCommandHandler
         $this->result->addMessage('Fetching data from DB for PSV Operators');
         $stmt = $this->dataGovUkRepo->fetchPsvOperatorList();
 
-        $file = $this->makeCsvForPsvOperatorList($stmt, 'PsvOperatorList');
+        $csvContent = $this->makeCsvForPsvOperatorList($stmt);
 
         $document = $this->handleSideEffect(
-            $this->generatePsvOperatorListDocumentCmd($file)
+            $this->generatePsvOperatorListDocumentCmd($csvContent)
         );
 
         // Send email
@@ -265,16 +265,15 @@ final class DataGovUkExport extends AbstractCommandHandler
     /**
      * Make CSV file for the list of PSV Operators
      *
-     * @param Statement $stmt     Database query response
-     * @param string    $fileName Name of file
+     * @param Statement $stmt Database query response
      *
-     * @return File
+     * @return string
      */
-    private function makeCsvForPsvOperatorList(Statement $stmt, $fileName)
+    private function makeCsvForPsvOperatorList(Statement $stmt)
     {
         $this->result->addMessage('create csv file content');
 
-        $buffer = fopen('php://temp', 'r+');
+        $handle = fopen('php://temp', 'r+');
 
         $titleAdded = false;
 
@@ -282,16 +281,17 @@ final class DataGovUkExport extends AbstractCommandHandler
         while (($row = $stmt->fetch()) !== false) {
             if (!$titleAdded) {
                 //  add title & first row
-                fputcsv($buffer, array_keys($row));
+                fputcsv($handle, array_keys($row));
                 $titleAdded = true;
             }
 
-            fputcsv($buffer, $row);
+            fputcsv($handle, $row);
         }
 
-        $fileContents = fgets($buffer);
+        rewind($handle);
+        $fileContents = stream_get_contents($handle);
 
-        fclose($buffer);
+        fclose($handle);
 
         return $fileContents;
     }

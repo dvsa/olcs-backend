@@ -74,13 +74,19 @@ class Module implements ConsoleUsageProviderInterface
                 "(optional) save result to specified file.\n" .
                 'By default, result will be saved to "<csv-path>-res.csv" file'
             ],
-            'data-retention-rule <populate|delete> [--verbose|-v]' =>
+            'data-retention-rule <populate|delete> [--limit] [--verbose|-v]' =>
                 'Run the data retention rules',
             [
                 '<populate|delete>',
-                'action to perform, ie \'populate\' the data to be deleted or \'delete\' previously populated data'
+                'action to perform, ie \'populate\' the data to be deleted or \'delete\' previously populated data',
+            ],
+            [
+                '--limit',
+                'Number of data retention records to process (NB only applicable when deleting)'
             ],
             'digital-continuation-reminders [--verbose|-v]' => 'Generate/Send checklists for digital continuations',
+            'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]' =>
+                'Create tasks to surrender PSV licences that have expired'
         ];
     }
 

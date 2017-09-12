@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
@@ -12,31 +13,6 @@ use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
 class DataRetention extends AbstractRepository
 {
     protected $entity = DataRetentionEntity::class;
-
-    /**
-     * Fetch as list of entities to delete
-     *
-     * @param int $limit Number of rows to return
-     *
-     * @return array of DataRetention entities
-     */
-    public function fetchEntitiesToDelete($limit)
-    {
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb);
-        $this->getQueryBuilder()->with('dataRetentionRule', 'drr');
-
-        $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1))
-            ->andWhere($qb->expr()->eq($this->alias . '.toAction', 1))
-            ->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', 1))
-            ->andWhere($qb->expr()->isNull($this->alias . '.actionedDate'))
-            ->andWhere($qb->expr()->isNull($this->alias . '.nextReviewDate'));
-
-        $qb->setMaxResults($limit);
-
-        return $qb->getQuery()->getResult();
-    }
 
     /**
      * Fetch all data retentions with associated rules that are enabled
@@ -67,5 +43,55 @@ class DataRetention extends AbstractRepository
             'results' => $qb->getQuery()->getResult(),
             'count' => $this->getPaginator($qb)->count()
         ];
+    }
+
+    /**
+     * Run the Data Retention cleanup stored proc,
+     * NB Warning this can delete a lot of data
+     *
+     * @param int  $limit  Number of data retention rows to process
+     * @param int  $userId User who will be audited as running the data retention deletes
+     * @param bool $dryRun If true then no rows are actually deleted
+     *
+     * @return bool
+     */
+    public function runCleanupProc($limit, $userId, $dryRun = false)
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $statement = $connection->prepare(
+            sprintf('CALL sp_dr_cleanup(%d, %d, %d)', $userId, $limit, $dryRun)
+        );
+
+        return $statement->execute();
+    }
+
+    /**
+     * Fetch a list of processed data retention rows for a data retention rule, and date range
+     *
+     * @param int       $dataRetentionRuleId Data retention rule ID
+     * @param \DateTime $startDate           Start date
+     * @param \DateTime $endDate             End date
+     *
+     * @return array
+     */
+    public function fetchAllProcessedForRule($dataRetentionRuleId, \DateTime $startDate, \DateTime $endDate)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', ':dataRetentionRuleId'));
+        $qb->andWhere($qb->expr()->gte($this->alias . '.deletedDate', ':startDate'));
+        $qb->andWhere($qb->expr()->lte($this->alias . '.deletedDate', ':endDate'));
+
+        $qb->setParameter('dataRetentionRuleId', $dataRetentionRuleId);
+        $qb->setParameter('startDate', $startDate);
+        $qb->setParameter('endDate', $endDate);
+
+        $this->disableSoftDeleteable([DataRetentionEntity::class]);
+
+        $result = $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+
+        $this->enableSoftDeleteable();
+
+        return $result;
     }
 }

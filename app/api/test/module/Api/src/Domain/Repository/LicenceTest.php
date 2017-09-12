@@ -738,4 +738,69 @@ class LicenceTest extends RepositoryTestCase
         $expectedQuery = 'BLAH AND m.organisation = [[2017]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchPsvLicenceIdsToSurrender()
+    {
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf();
+
+        $licTypes = [
+            Licence::LICENCE_TYPE_RESTRICTED,
+            Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+        ];
+
+        $statuses = [
+            Licence::LICENCE_STATUS_VALID,
+            Licence::LICENCE_STATUS_CURTAILED,
+            Licence::LICENCE_STATUS_SUSPENDED,
+        ];
+
+        /** @var EntityRepository $repo */
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Licence::class)
+            ->andReturn($repo);
+
+        $qb->shouldReceive('expr->lt')->with('m.expiryDate', ':now')->once()->andReturn('EXPR1');
+        $qb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('now', m::type(DateTime::class))->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')->with('m.goodsOrPsv', ':psv')->once()->andReturn('EXPR2');
+        $qb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('psv', Licence::LICENCE_CATEGORY_PSV)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->in')->with('m.licenceType', ':licTypes')->once()->andReturn('EXPR3');
+        $qb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('licTypes', $licTypes)->once()->andReturnSelf();
+
+        $qb->shouldReceive('expr->in')->with('m.status', ':statuses')->once()->andReturn('EXPR4');
+        $qb->shouldReceive('andWhere')->with('EXPR4')->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('statuses', $statuses)->once()->andReturnSelf();
+
+        $results = [
+            [
+                'id' => 1
+            ],
+            [
+                'id' => 2
+            ]
+        ];
+
+        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->once()->andReturn($results);
+
+        $this->assertSame([1, 2], $this->sut->fetchPsvLicenceIdsToSurrender());
+    }
 }

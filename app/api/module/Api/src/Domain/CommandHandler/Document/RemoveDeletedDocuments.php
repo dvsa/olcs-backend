@@ -21,6 +21,8 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
 
     protected $repoServiceName = 'DocumentToDelete';
 
+    protected $extraRepos = ['SystemParameter'];
+
     /**
      * @var FileUploaderInterface
      */
@@ -76,6 +78,11 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
         $successCount = 0;
         $notFoundCount = 0;
         $errorCount = 0;
+
+        if ($this->getRepo('SystemParameter')->getDisableDataRetentionDocumentDelete()) {
+            $this->result->addMessage('Removing deleted documents is disabled by system parameter');
+            return $this->result;
+        }
 
         /** @var DocumentToDelete $repo */
         $repo = $this->getRepo();

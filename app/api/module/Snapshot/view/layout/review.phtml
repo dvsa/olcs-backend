@@ -19,7 +19,9 @@
                         if (!isset($settings['hide-count'])) {
                             echo $count . '. ';
                         }
-                        echo $this->translate($section['header'], 'snapshot');
+                        if (!empty($section['header'])) {
+                            echo $this->translate($section['header'], 'snapshot');
+                        }
                     ?>
                 </h2>
                 <?php

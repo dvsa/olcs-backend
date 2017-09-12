@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Doctrine\ORM\QueryBuilder;
@@ -154,6 +155,24 @@ class SystemParameterTest extends RepositoryTestCase
         $this->assertSame($expected, $this->sut->getDisableDataRetentionRecords());
     }
 
+    /**
+     * @dataProvider boolDataProviderDeletes
+     */
+    public function testGetDisableDataRetentionDocumentDelete($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DISABLE_DATA_RETENTION_DOCUMENT_DELETE, $value);
+        $this->assertSame($expected, $this->sut->getDisableDataRetentionDocumentDelete());
+    }
+
+    /**
+     * @dataProvider boolDataProviderDeletes
+     */
+    public function testGetDisableDataRetentionDelete($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DISABLE_DATA_RETENTION_DELETE, $value);
+        $this->assertSame($expected, $this->sut->getDisableDataRetentionDelete());
+    }
+
     public function boolDataProvider()
     {
         return [
@@ -164,6 +183,21 @@ class SystemParameterTest extends RepositoryTestCase
             [false, '0'],
             [true, '1'],
             [false, null],
+            [false, ''],
+            [true, 'X'],
+        ];
+    }
+
+    public function boolDataProviderDeletes()
+    {
+        return [
+            [true, true],
+            [false, false],
+            [false, 0],
+            [true, 1],
+            [false, '0'],
+            [true, '1'],
+            [true, null],
             [false, ''],
             [true, 'X'],
         ];
@@ -187,6 +221,58 @@ class SystemParameterTest extends RepositoryTestCase
             [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, 'X'],
             [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, ''],
             [SystemParameterRepo::DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT, null],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetSystemDataRetentionUser
+     */
+    public function testGetSystemDataRetentionUser($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::SYSTEM_DATA_RETENTION_USER, $value);
+
+        if ($expected === 'EXCEPTION') {
+            $this->setExpectedException(
+                RuntimeException::class,
+                'System parameter "SYSTEM_DATA_RETENTION_USER" is not set'
+            );
+            $this->sut->getSystemDataRetentionUser();
+        } else {
+            $this->assertSame($expected, $this->sut->getSystemDataRetentionUser());
+        }
+    }
+
+    public function dataProviderTestGetSystemDataRetentionUser()
+    {
+        return [
+            [20, 20],
+            [1, '1'],
+            [99, '99'],
+            ['EXCEPTION', 'X'],
+            ['EXCEPTION', null],
+            ['EXCEPTION', 0],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetDataRetentionDeleteLimit
+     */
+    public function testGetDataRetentionDeleteLimit($expected, $value)
+    {
+        $this->setupFetchValue(SystemParameterEntity::DR_DELETE_LIMIT, $value);
+
+        $this->assertSame($expected, $this->sut->getDataRetentionDeleteLimit());
+    }
+
+    public function dataProviderTestGetDataRetentionDeleteLimit()
+    {
+        return [
+            [20, 20],
+            [1, '1'],
+            [99, '99'],
+            [0, 'X'],
+            [0, null],
+            [0, 0],
         ];
     }
 

@@ -65,6 +65,7 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_DUPLICATED = 'Duplicate payment on %s fee: %s';
     const TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE = 'Check digital signature for licence continuation';
     const TASK_DESCRIPTION_CHECK_WET_SIGNATURE = 'Check wet signature for licence continuation';
+    const TASK_DESCRIPTION_LICENCE_EXPIRED = 'Licence expired';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 

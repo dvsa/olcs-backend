@@ -56,7 +56,6 @@ class Queue extends AbstractQueue
     const TYPE_CNS_EMAIL = 'que_typ_cns_email';
     const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
     const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
-    const TYPE_PROCESS_DATA_RETENTION = 'que_typ_process_data_retention';
     const TYPE_CREATE_CONTINUATION_SNAPSHOT = 'que_typ_cont_shapshot';
     const TYPE_CONT_DIGITAL_REMINDER = 'que_typ_cont_digital_reminder';
 
@@ -82,7 +81,6 @@ class Queue extends AbstractQueue
         self::TYPE_CNS_EMAIL,
         self::TYPE_CREATE_COM_LIC,
         self::TYPE_REMOVE_DELETED_DOCUMENTS,
-        self::TYPE_PROCESS_DATA_RETENTION,
         self::TYPE_CREATE_CONTINUATION_SNAPSHOT,
         self::TYPE_CONT_DIGITAL_REMINDER,
     ];

@@ -1,20 +1,14 @@
 <?php
 
-/**
- * Refuse Interim
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Refuse Interim
@@ -26,7 +20,11 @@ final class RefuseInterim extends AbstractCommandHandler implements Transactione
     protected $repoServiceName = 'Application';
 
     /**
-     * @param Cmd $command
+     * Handle command
+     *
+     * @param Cmd $command command
+     *
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -41,33 +39,6 @@ final class RefuseInterim extends AbstractCommandHandler implements Transactione
 
         $this->getRepo()->save($application);
 
-        $this->result->merge($this->generateDocument($application));
-
         return $this->result;
-    }
-
-    protected function generateDocument(ApplicationEntity $application)
-    {
-        $type = $application->isVariation() ? 'VAR' : 'NEW';
-
-        $description = $application->isVariation() ? 'GV Refused Interim Direction' : 'GV Refused Interim Licence';
-
-        $dtoData = [
-            'template' => $type . '_APP_INT_REFUSED',
-            'query' => [
-                'licence' => $application->getLicence()->getId(),
-                'application' => $application->getId()
-            ],
-            'description' => $description,
-            'category' => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isExternal' => false,
-            'isScan' => false,
-            'licence' => $application->getLicence()->getId(),
-            'application' => $application->getId(),
-            'dispatch' => true
-        ];
-
-        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
     }
 }
