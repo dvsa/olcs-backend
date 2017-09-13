@@ -993,4 +993,5 @@ return [
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
+    TransferCommand\DataRetention\UpdateActionConfirmation::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
 ];
