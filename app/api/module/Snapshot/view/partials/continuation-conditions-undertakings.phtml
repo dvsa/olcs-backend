@@ -2,7 +2,10 @@
 
     <h2 class="heading-large"><?php echo $this->translate('continuations.conditions-undertakings.licence', 'snapshot'); ?></h2>
 
-    <?php if (count($conditionsUndertakings['licence']['conditions'])) : ?>
+    <?php if (
+        isset($conditionsUndertakings['licence']['conditions'])
+        && count($conditionsUndertakings['licence']['conditions'])
+    ) : ?>
 
         <h4><?php echo $this->translate('continuations.conditions-undertakings.conditions', 'snapshot'); ?></h4>
 
@@ -14,7 +17,10 @@
 
     <?php endif; ?>
 
-    <?php if (count($conditionsUndertakings['licence']['undertakings'])) : ?>
+    <?php if (
+        isset($conditionsUndertakings['licence']['undertakings'])
+        && count($conditionsUndertakings['licence']['undertakings'])
+    ) : ?>
 
         <h4><?php echo $this->translate('continuations.conditions-undertakings.undertakings', 'snapshot'); ?></h4>
 
@@ -31,7 +37,7 @@
 <?php endif; ?>
 
 
-<?php if (count($conditionsUndertakings['operatingCentres'])): ?>
+<?php if (isset($conditionsUndertakings['operatingCentres']) && count($conditionsUndertakings['operatingCentres'])): ?>
 
     <h2 class="heading-large"><?php echo $this->translate('Operating centres(s)', 'snapshot'); ?></h2>
 
