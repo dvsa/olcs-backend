@@ -123,7 +123,7 @@ final class Result
      */
     public function getFlag($name)
     {
-        return $this->flags[$name];
+        return isset($this->flags[$name]) ? $this->flags[$name] : null;
     }
 
     /**
