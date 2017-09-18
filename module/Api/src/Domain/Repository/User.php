@@ -252,6 +252,7 @@ class User extends AbstractRepository
             ->with('localAuthority');
 
         $qb->where($this->alias . '.pid = :pid')->setParameter('pid', $pid);
+        $qb->andWhere($this->alias . '.accountDisabled = 0');
 
         return $qb->getQuery()->getOneOrNullResult();
     }
