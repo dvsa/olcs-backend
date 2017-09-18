@@ -63,7 +63,7 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
      */
     private function canDelete(DataRetentionEntity $record)
     {
-        if ($record->getNextReviewDate() || $record->getActionedDate()) {
+        if ($record->getNextReviewDate()) {
             $this->setFalseActionConfirmation($record);
             return false;
         }
