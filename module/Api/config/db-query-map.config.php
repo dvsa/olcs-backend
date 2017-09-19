@@ -30,5 +30,7 @@ return [
         'EventHistory\GetEventHistoryDetails' => Query\EventHistory\GetEventHistoryDetails::class,
         'Task\FlagUrgentTasks' => Query\Task\FlagUrgentTasks::class,
         Query\Bus\Expire::class => Query\Bus\Expire::class,
+        Query\Organisation\FixIsIrfo::class => Query\Organisation\FixIsIrfo::class,
+        Query\Organisation\FixIsUnlicenced::class => Query\Organisation\FixIsUnlicenced::class,
     ]
 ];
