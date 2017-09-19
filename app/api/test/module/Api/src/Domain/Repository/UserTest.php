@@ -186,6 +186,7 @@ class UserTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('localAuthority')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('where')->with('u.pid = :pid')->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->with('u.accountDisabled = 0')->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('pid', '123456');
         $mockQb->shouldReceive('getQuery->getOneOrNullResult')->once()->andReturn('RESULT');
 
