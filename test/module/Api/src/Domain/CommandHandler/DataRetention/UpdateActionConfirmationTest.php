@@ -24,6 +24,39 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    public function testActionConfirmationFalseButCannotBeDeleted()
+    {
+        $command = Command::create(['ids' => [100]]);
+
+        // Record with actionConfirmation set to 0
+        // Should become a record with actionConfirmation set to 1
+        $dataRetentionRecordCurrent = m::mock(DataRetention::class);
+        $dataRetentionRecordCurrent->shouldReceive('getNextReviewDate')
+            ->once()
+            ->andReturn(true)
+            ->shouldReceive('getActionConfirmation')
+            ->once()
+            ->andReturn(false);
+
+        // Should become a record with actionConfirmation set to 1
+        $this->repoMap['DataRetention']
+            ->shouldReceive('fetchById')
+            ->with(100)
+            ->once()
+            ->andReturn($dataRetentionRecordCurrent);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                '1 Data retention record(s) updated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testActionConfirmationTrueCannotBeSetToFalse()
     {
         $command = Command::create(['ids' => [100]]);
