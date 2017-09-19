@@ -33,17 +33,12 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
             /** @var DataRetentionEntity $dataRetentionRecord */
             $dataRetentionRecord = $repo->fetchById($id);
 
-            $currentStatus = $dataRetentionRecord->getActionConfirmation();
-
             // If we cannot delete then do nothing and move to next one
             if (! $this->canDelete($dataRetentionRecord)) {
                 continue;
             }
 
-            // If actionConfirmation is true, update status to false.  Otherwise true.
-            $status = ($currentStatus)? false : true;
-
-            $dataRetentionRecord->setActionConfirmation($status);
+            $dataRetentionRecord->setActionConfirmation(true);
             $dataRetentionRecord->setActionedDate(new \DateTime('now'));
 
             // Update entity
