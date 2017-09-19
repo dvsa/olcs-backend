@@ -219,6 +219,15 @@ return [
                         ],
                     ],
                 ],
+                'database-maintenance' => [
+                    'options' => [
+                        'route' => 'database-maintenance [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'databaseMaintenance',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
