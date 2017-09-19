@@ -24,22 +24,19 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testActionConfirmationTrueSetToFalse()
+    public function testActionConfirmationTrueCannotBeSetToFalse()
     {
         $command = Command::create(['ids' => [100]]);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
-        $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->once()
-            ->andReturn(true)
-            ->shouldReceive('getNextReviewDate')
+        $dataRetentionRecordCurrent->shouldReceive('getNextReviewDate')
             ->once()
             ->andReturn(false)
             ->shouldReceive('setActionConfirmation')
             ->once()
-            ->with(false)
+            ->with(true)
             ->shouldReceive('setActionedDate')
             ->once();
 
@@ -72,10 +69,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
-        $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->once()
-            ->andReturn(false)
-            ->shouldReceive('getNextReviewDate')
+        $dataRetentionRecordCurrent->shouldReceive('getNextReviewDate')
             ->once()
             ->andReturn(false)
             ->shouldReceive('setActionConfirmation')
@@ -106,7 +100,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testActionConfirmationFalseButCannotSetToTrue()
+    public function testActionConfirmationTrueButCannotSetToTrue()
     {
         $command = Command::create(['ids' => [100]]);
 
@@ -114,18 +108,26 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
         $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->twice()
-            ->andReturn(false)
+            ->once()
+            ->andReturn(true)
             ->shouldReceive('getNextReviewDate')
             ->once()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('setActionConfirmation')
+            ->with(false)
+            ->once()
+            ->shouldReceive('setActionedDate')
+            ->once();
 
         // Should become a record with actionConfirmation set to 1
         $this->repoMap['DataRetention']
             ->shouldReceive('fetchById')
             ->with(100)
             ->once()
-            ->andReturn($dataRetentionRecordCurrent);
+            ->andReturn($dataRetentionRecordCurrent)
+            ->shouldReceive('save')
+            ->once()
+            ->with($dataRetentionRecordCurrent);
 
         $result = $this->sut->handleCommand($command);
 
@@ -147,7 +149,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
         $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->twice()
+            ->once()
             ->andReturn(true)
             ->shouldReceive('getNextReviewDate')
             ->once()
@@ -192,7 +194,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
             ->andReturn(true)
             ->shouldReceive('getNextReviewDate')
             ->times(3)
-            ->andReturn(false)
+            ->andReturn(true)
             ->shouldReceive('setActionConfirmation')
             ->times(3)
             ->with(false)
