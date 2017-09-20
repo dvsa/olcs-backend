@@ -30,7 +30,7 @@ class PrintJob extends AbstractCommandConsumer
             'id' => $item->getId(),
             'title' => $options['jobName'],
             'document' => $item->getEntityId(),
-            'user' => $options['userId'],
+            'user' => isset($options['userId']) ? $options['userId'] : null,
             'copies' => (isset($options['copies']) ? $options['copies'] : null),
         ];
     }
