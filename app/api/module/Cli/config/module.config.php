@@ -221,7 +221,7 @@ return [
                 ],
                 'database-maintenance' => [
                     'options' => [
-                        'route' => 'database-maintenance [--verbose|-v] [--dryrun|-d]',
+                        'route' => 'database-maintenance [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'databaseMaintenance',
