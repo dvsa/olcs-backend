@@ -997,4 +997,34 @@ class BatchControllerTest extends MockeryTestCase
         $result = $this->sut->digitalContinuationRemindersAction();
         $this->assertSame(0, $result->getErrorLevel());
     }
+
+    public function testDatabaseMaintenanceAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Organisation\FixIsIrfo::class))
+            ->once()
+            ->andReturnUsing(
+                function ($command) {
+                    /** @var Command\Organisation\FixIsIrfo $command */
+                    $this->assertSame([], $command->getArrayCopy());
+                    return new Command\Result();
+                }
+            )
+            ->shouldReceive('handleCommand')
+            ->with(m::type(Command\Organisation\FixIsUnlicenced::class))
+            ->once()
+            ->andReturnUsing(
+                function ($command) {
+                    /** @var Command\Organisation\FixIsUnlicenced $command */
+                    $this->assertSame([], $command->getArrayCopy());
+                    return new Command\Result();
+                }
+            );
+
+        $result = $this->sut->databaseMaintenanceAction();
+        $this->assertSame(0, $result->getErrorLevel());
+    }
 }
