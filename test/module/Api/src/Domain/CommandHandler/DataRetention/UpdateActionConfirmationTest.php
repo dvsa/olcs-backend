@@ -24,17 +24,14 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testActionConfirmationTrueSetToFalse()
+    public function testActionConfirmationIfStatusIsReview()
     {
-        $command = Command::create(['ids' => [100]]);
+        $command = Command::create(['ids' => [100], 'status' => 'review']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
-        $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->once()
-            ->andReturn(true)
-            ->shouldReceive('getNextReviewDate')
+        $dataRetentionRecordCurrent->shouldReceive('getNextReviewDate')
             ->once()
             ->andReturn(false)
             ->shouldReceive('setActionConfirmation')
@@ -65,17 +62,14 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testActionConfirmationFalseSetToTrue()
+    public function testActionConfirmationIfStatusIsDelete()
     {
-        $command = Command::create(['ids' => [100]]);
+        $command = Command::create(['ids' => [100], 'status' => 'delete']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
-        $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->once()
-            ->andReturn(false)
-            ->shouldReceive('getNextReviewDate')
+        $dataRetentionRecordCurrent->shouldReceive('getNextReviewDate')
             ->once()
             ->andReturn(false)
             ->shouldReceive('setActionConfirmation')
@@ -108,13 +102,13 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
 
     public function testActionConfirmationFalseButCannotSetToTrue()
     {
-        $command = Command::create(['ids' => [100]]);
+        $command = Command::create(['ids' => [100], 'status' => 'review']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
         $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->twice()
+            ->once()
             ->andReturn(false)
             ->shouldReceive('getNextReviewDate')
             ->once()
@@ -141,13 +135,13 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
 
     public function testActionConfirmationTrueButCannotDeleteSoResetToFalse()
     {
-        $command = Command::create(['ids' => [100]]);
+        $command = Command::create(['ids' => [100], 'status' => 'delete']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
         $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->twice()
+            ->once()
             ->andReturn(true)
             ->shouldReceive('getNextReviewDate')
             ->once()
@@ -180,17 +174,14 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testMultipleActionConfirmationTrueSetToFalse()
+    public function testMultipleActionConfirmationToReview()
     {
-        $command = Command::create(['ids' => [100, 200, 300]]);
+        $command = Command::create(['ids' => [100, 200, 300], 'status' => 'review']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
         $dataRetentionRecordCurrent = m::mock(DataRetention::class);
-        $dataRetentionRecordCurrent->shouldReceive('getActionConfirmation')
-            ->times(3)
-            ->andReturn(true)
-            ->shouldReceive('getNextReviewDate')
+        $dataRetentionRecordCurrent->shouldReceive('getNextReviewDate')
             ->times(3)
             ->andReturn(false)
             ->shouldReceive('setActionConfirmation')
