@@ -25,10 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_deleted_date", columns={"deleted_date"}),
  *        @ORM\Index(name="ix_data_retention_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_data_retention_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_organisation_id", columns={"organisation_id"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_entity_name_entity_pk", columns={"entity_name","entity_pk"})
+ *        @ORM\Index(name="ix_organisation_id", columns={"organisation_id"}),
+ *        @ORM\Index(name="ix_entity_name_entity_pk", columns={"entity_name","entity_pk"})
  *    }
  * )
  */
