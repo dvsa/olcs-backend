@@ -5,8 +5,9 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\UpdateActionConfirmation;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention;
+use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForDelete;
+use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForReview;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\DataRetention\UpdateActionConfirmation as Command;
 use Mockery as m;
 
 /**
@@ -26,7 +27,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
 
     public function testActionConfirmationIfStatusIsReview()
     {
-        $command = Command::create(['ids' => [100], 'status' => 'review']);
+        $command = MarkForReview::create(['ids' => [100]]);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
@@ -64,7 +65,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
 
     public function testActionConfirmationIfStatusIsDelete()
     {
-        $command = Command::create(['ids' => [100], 'status' => 'delete']);
+        $command = MarkForDelete::create(['ids' => [100], 'status' => 'delete']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
@@ -100,9 +101,9 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testActionConfirmationFalseButCannotSetToTrue()
+    public function testActionConfirmationReviewButCannotSetToTrue()
     {
-        $command = Command::create(['ids' => [100], 'status' => 'review']);
+        $command = MarkForReview::create(['ids' => [100], 'status' => 'review']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
@@ -135,7 +136,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
 
     public function testActionConfirmationTrueButCannotDeleteSoResetToFalse()
     {
-        $command = Command::create(['ids' => [100], 'status' => 'delete']);
+        $command = MarkForDelete::create(['ids' => [100], 'status' => 'delete']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
@@ -176,7 +177,7 @@ class UpdateActionConfirmationTest extends CommandHandlerTestCase
 
     public function testMultipleActionConfirmationToReview()
     {
-        $command = Command::create(['ids' => [100, 200, 300], 'status' => 'review']);
+        $command = MarkForReview::create(['ids' => [100, 200, 300], 'status' => 'review']);
 
         // Record with actionConfirmation set to 0
         // Should become a record with actionConfirmation set to 1
