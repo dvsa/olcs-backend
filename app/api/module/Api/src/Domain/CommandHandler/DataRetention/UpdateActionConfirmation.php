@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
-use Dvsa\Olcs\Transfer\Command\DataRetention\UpdateActionConfirmation as Command;
+use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForDelete as MarkForDelete;
 
 /**
  * Class UpdateActonConfirmation
@@ -20,7 +20,7 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
     /**
      * Handle command
      *
-     * @param CommandInterface|Command $command DTO
+     * @param CommandInterface|MarkForDelete $command DTO
      *
      * @return Result
      */
@@ -28,8 +28,6 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
     {
         /** @var DataRetention $repo */
         $repo = $this->getRepo();
-
-        $action = $command->getStatus();
 
         foreach ($command->getIds() as $id) {
             /** @var DataRetentionEntity $dataRetentionRecord */
@@ -42,7 +40,7 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
 
             $status = false;
 
-            if ($action === 'delete') {
+            if ($command instanceof MarkForDelete) {
                 $status = true;
             }
 
