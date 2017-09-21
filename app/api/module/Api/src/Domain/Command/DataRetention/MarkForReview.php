@@ -5,8 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\Command\DataRetention;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Class MarkForDelete
+ * Class MarkForReview
  */
-final class MarkForDelete extends AbstractCommand
+final class MarkForReview extends AbstractCommand
 {
 }
