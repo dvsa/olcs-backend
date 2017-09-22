@@ -85,9 +85,9 @@ class OperatingCentre extends AbstractOperatingCentre implements OrganisationPro
      */
     public function getRelatedOrganisation()
     {
-        // All applications would have to be on the same organisation, therefore we can just use the first one
+        // Application could be different if the operating centre has been S4'd, therefore choose the most recent
         if ($this->getApplications()->first()) {
-            return $this->getApplications()->first()->getRelatedOrganisation();
+            return $this->getApplications()->last()->getRelatedOrganisation();
         }
 
         // not checking Operating centres linked to Licences at the moment as its not required
