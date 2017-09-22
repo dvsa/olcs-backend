@@ -165,11 +165,11 @@ class OperatingCentreEntityTest extends EntityTester
     {
         $expectOrg = new Organisation();
         $mockApp = m::mock(ApplicationEntity\Application::class)
-            ->shouldReceive('getRelatedOrganisation')->once()->andReturn($expectOrg)
+            ->shouldReceive('getRelatedOrganisation')->never()
             ->getMock();
 
         $mockApp2 = m::mock(ApplicationEntity\Application::class)
-            ->shouldReceive('getRelatedOrganisation')->never()
+            ->shouldReceive('getRelatedOrganisation')->once()->andReturn($expectOrg)
             ->getMock();
 
         $sut = (new Entity())
