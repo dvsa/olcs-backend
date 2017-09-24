@@ -25,5 +25,48 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataRetention extends AbstractDataRetention
 {
+    /**
+     * Mark for delete
+     *
+     * @return $this
+     */
+    public function markForDelete()
+    {
+        if (!$this->canMarkForDelete()) {
+            $this->markForReview();
+            return $this;
+        }
 
+        $this->actionedDate = new \DateTime();
+        $this->actionConfirmation = true;
+
+        return $this;
+    }
+
+    /**
+     * Mark for review
+     *
+     * @return $this
+     */
+    public function markForReview()
+    {
+        $this->actionedDate = null;
+        $this->actionConfirmation = false;
+
+        return $this;
+    }
+
+    /**
+     * Validate if a record can be marked as deleted or not
+     *
+     * @return bool
+     */
+    private function canMarkForDelete()
+    {
+        if ($this->getNextReviewDate() !== null) {
+            return false;
+        }
+
+        return true;
+    }
 }
