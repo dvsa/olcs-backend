@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
 use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForDelete as MarkForDelete;
+use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForReview as MarkForReview;
 
 /**
  * Class UpdateActonConfirmation
@@ -33,19 +34,13 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
             /** @var DataRetentionEntity $dataRetentionRecord */
             $dataRetentionRecord = $repo->fetchById($id);
 
-            // If we cannot delete then do nothing and move to next one
-            if (! $this->canDelete($dataRetentionRecord)) {
-                continue;
-            }
-
-            $status = false;
-
             if ($command instanceof MarkForDelete) {
-                $status = true;
+                $dataRetentionRecord->markForDelete();
             }
 
-            $dataRetentionRecord->setActionConfirmation($status);
-            $dataRetentionRecord->setActionedDate(new \DateTime('now'));
+            if ($command instanceof MarkForReview) {
+                $dataRetentionRecord->markForReview();
+            }
 
             // Update entity
             $this->getRepo()->save($dataRetentionRecord);
@@ -53,42 +48,5 @@ final class UpdateActionConfirmation extends AbstractCommandHandler implements T
 
         return (new Result())
             ->addMessage(count($command->getIds()) . ' Data retention record(s) updated');
-    }
-
-    /**
-     * Validate if a record can be marked as deleted or not
-     *
-     * @param DataRetentionEntity $record Data retention record entity
-     *
-     * @return bool
-     */
-    private function canDelete(DataRetentionEntity $record)
-    {
-        if ($record->getNextReviewDate()) {
-            $this->setFalseActionConfirmation($record);
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * On some instances/scenarios we cannot mark as delete.  Here we ensure
-     * the record 'action_confirmation' value is always set to false.
-     *
-     * @param DataRetentionEntity $record Data retention record entity
-     *
-     * @return bool
-     */
-    private function setFalseActionConfirmation(DataRetentionEntity $record)
-    {
-        if (! $record->getActionConfirmation()) {
-            return true;
-        }
-
-        $record->setActionConfirmation(false);
-        $record->setActionedDate(new \DateTime('now'));
-
-        return $this->getRepo()->save($record);
     }
 }
