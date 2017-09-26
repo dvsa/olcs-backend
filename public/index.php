@@ -53,8 +53,17 @@ if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['RE
 require 'init_autoloader.php';
 
 // Run the application!
-Zend\Mvc\Application::init(require 'config/application.config.php')->run();
-
+try {
+    Zend\Mvc\Application::init(require 'config/application.config.php')->run();
+} catch (Zend\ServiceManager\Exception\ServiceNotCreatedException $e) {
+    do {
+        $lastException = sprintf(
+            "%s:%d %s (%d) [%s]\n", $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e)
+        );
+    } while ($e = $e->getPrevious());
+    // re-throw initial exception to get rid of plain passwords in stack trace
+    throw new \Exception($lastException);
+}
 if ($profile) {
     $end = microtime(true);
     $xhprof_data = xhprof_disable();
