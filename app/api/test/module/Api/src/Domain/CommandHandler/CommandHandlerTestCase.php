@@ -350,6 +350,22 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     }
 
     /**
+     * Set up isExternalUser
+     *
+     * @param bool|true $isExternalUser
+     *
+     * @return @void
+     */
+    protected function setupIsExternalUser($isExternalUser = true)
+    {
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER, null)
+            ->atLeast()->once()
+            ->andReturn($isExternalUser);
+    }
+
+    /**
      * Get an Application Entity to be used in tests
      *
      * @param null|Licence        $licence     If null a new Licence is created

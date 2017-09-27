@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsIrfo;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsUnlicenced;
 use Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as Repo;
@@ -476,5 +478,31 @@ class OrganisationTest extends RepositoryTestCase
             ->andReturn($repo);
 
         $this->sut->fetchAllByStatusForCpidExport(null);
+    }
+
+    public function testFixIsIrfo()
+    {
+        $this->dbQueryService->shouldReceive('get')->with(FixIsIrfo::class)->once()->andReturn(
+            m::mock()->shouldReceive('execute')->with()->once()->andReturn(
+                m::mock()->shouldReceive('rowCount')->with()->once()->andReturn(52)->getMock()
+            )->getMock()
+        );
+
+        $result = $this->sut->fixIsIrfo();
+
+        $this->assertSame(52, $result);
+    }
+
+    public function testFixIsUnlicenced()
+    {
+        $this->dbQueryService->shouldReceive('get')->with(FixIsUnlicenced::class)->once()->andReturn(
+            m::mock()->shouldReceive('execute')->with()->once()->andReturn(
+                m::mock()->shouldReceive('rowCount')->with()->once()->andReturn(12)->getMock()
+            )->getMock()
+        );
+
+        $result = $this->sut->fixIsUnlicenced();
+
+        $this->assertSame(12, $result);
     }
 }

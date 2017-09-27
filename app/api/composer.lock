@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "48cc57e5f2aaf86b965561b1eddfc6e7",
-    "content-hash": "9681ca9ae7ceae84f158160a05cefa0c",
+    "hash": "a883e9b879a3e973a65194ed7c917e90",
+    "content-hash": "fbc6a6a318c12f20906f8cfb3892db00",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -838,24 +838,24 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.10",
+            "version": "v2.5.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "c78afd51721804f4f76ff30d9b6f6159eb046161"
+                "reference": "249b737094f1e7cba4f0a8d19acf5be6cf3ed504"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-orm-c78afd51721804f4f76ff30d9b6f6159eb046161-zip-b1392f.tar",
-                "reference": "c78afd51721804f4f76ff30d9b6f6159eb046161",
-                "shasum": "5853655835311caec4aae042018047de41605088"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-orm-249b737094f1e7cba4f0a8d19acf5be6cf3ed504-zip-1c9e6f.tar",
+                "reference": "249b737094f1e7cba4f0a8d19acf5be6cf3ed504",
+                "shasum": "35be6f88a01a59fcd9b477a83065eada268b2ec8"
             },
             "require": {
                 "doctrine/cache": "~1.4",
                 "doctrine/collections": "~1.2",
                 "doctrine/common": ">=2.5-dev,<2.9-dev",
                 "doctrine/dbal": ">=2.5-dev,<2.7-dev",
-                "doctrine/instantiator": "~1.0.1",
+                "doctrine/instantiator": "^1.0.1",
                 "ext-pdo": "*",
                 "php": ">=5.4",
                 "symfony/console": "~2.5|~3.0"
@@ -910,7 +910,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2017-08-18 19:17:35"
+            "time": "2017-09-18 06:50:20"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -1245,7 +1245,7 @@
         },
         {
             "name": "olcs/autoload",
-            "version": "dev-release/4.23",
+            "version": "dev-release/4.24",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git",
@@ -1260,11 +1260,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.23",
+            "version": "dev-release/4.24",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "32841e1c328d1f5e9398db09edb65f61f5fdd60b"
+                "reference": "9658635b9433b764dc8a81b0fc97eacea290ddb2"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1276,15 +1276,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2017-09-18 16:16:49"
+            "time": "2017-09-25 12:08:47"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.23",
+            "version": "dev-release/4.24",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "5a7d7fd59af6e1a50d26348a98c74b87500b7af3"
+                "reference": "0ece19b08180e373444411ac981af9624433a8c3"
             },
             "require": {
                 "php": ">=5.4",
@@ -1310,15 +1310,15 @@
                 }
             },
             "description": "Logging Module for Olcs",
-            "time": "2017-09-18 16:16:43"
+            "time": "2017-09-25 12:08:42"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.23",
+            "version": "dev-release/4.24",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "b3aeca927508d8065d1dec5e3bd3e28d87ed5bcf"
+                "reference": "2562ac3e25af5f91a31d8d8f99fa52c7d650b8f1"
             },
             "require": {
                 "php": ">=5.4",
@@ -1336,15 +1336,15 @@
                 }
             },
             "description": "OLCS Transfer",
-            "time": "2017-09-18 16:17:43"
+            "time": "2017-09-25 12:09:44"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.23",
+            "version": "dev-release/4.24",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "7ae78f2e5f78f18fd1b998083d9c4db377eb5808"
+                "reference": "8d68b38a0921985412105ec78e0d49b870bad641"
             },
             "require": {
                 "php": ">=5.4",
@@ -1352,7 +1352,7 @@
             },
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
-                "olcs/olcs-logging": "dev-release/4.23",
+                "olcs/olcs-logging": "dev-release/4.24",
                 "phpunit/phpunit": "^4.0.0"
             },
             "type": "library",
@@ -1362,15 +1362,15 @@
                 }
             },
             "description": "OLCS Utils",
-            "time": "2017-09-18 16:17:57"
+            "time": "2017-09-25 12:09:57"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.23",
+            "version": "dev-release/4.24",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "db17ded9773fe8008fa8d51e42c8f898f6a4ece9"
+                "reference": "7b63fd54373def3f0a15c474149c5cd57ef59dea"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1391,7 +1391,7 @@
                 }
             },
             "description": "Xml tools for olcs",
-            "time": "2017-09-18 16:16:30"
+            "time": "2017-09-25 12:08:28"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -1670,17 +1670,17 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "0ef23d1b10cf1bc576e9d865a7e9c47982c5715e"
+                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ramsey-uuid-0ef23d1b10cf1bc576e9d865a7e9c47982c5715e-zip-e05ae6.tar",
-                "reference": "0ef23d1b10cf1bc576e9d865a7e9c47982c5715e",
-                "shasum": "470fdb2cac918270b467ade2ec2cf18538962927"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ramsey-uuid-45cffe822057a09e05f7bd09ec5fb88eeecd2334-zip-726304.tar",
+                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334",
+                "shasum": "52ce9edfded5f1f54cb1d1b5030fc239947e0de7"
             },
             "require": {
                 "paragonie/random_compat": "^1.0|^2.0",
@@ -1748,7 +1748,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-08-04 13:39:04"
+            "time": "2017-09-22 20:46:04"
         },
         {
             "name": "react/promise",

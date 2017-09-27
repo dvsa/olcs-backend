@@ -23,6 +23,23 @@ use Zend\View\Model\ConsoleModel;
 class BatchController extends AbstractConsoleController
 {
     /**
+     * Perform database management tasks, eg changing is_irfo flags
+     *
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function databaseMaintenanceAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    Command\Organisation\FixIsIrfo::create([]),
+                    Command\Organisation\FixIsUnlicenced::create([]),
+                ]
+            )
+        );
+    }
+
+    /**
      * Find continuations that have not been process and generate reminders
      *
      * @return \Zend\View\Model\ConsoleModel

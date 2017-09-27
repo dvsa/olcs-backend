@@ -86,7 +86,8 @@ class Module implements ConsoleUsageProviderInterface
             ],
             'digital-continuation-reminders [--verbose|-v]' => 'Generate/Send checklists for digital continuations',
             'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]' =>
-                'Create tasks to surrender PSV licences that have expired'
+                'Create tasks to surrender PSV licences that have expired',
+            'database-maintenance [--verbose|-v]' => 'Perform database management tasks, eg changing is_irfo flags',
         ];
     }
 
