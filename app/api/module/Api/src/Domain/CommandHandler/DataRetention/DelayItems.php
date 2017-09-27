@@ -32,8 +32,7 @@ final class DelayItems extends AbstractCommandHandler implements TransactionedIn
         foreach ($command->getIds() as $id) {
             /** @var DataRetentionEntity $dataRetentionRecord */
             $dataRetentionRecord = $repo->fetchById($id);
-
-            $dataRetentionRecord->setNextReviewDate($command->getNextReviewDate());
+            $dataRetentionRecord->markForDelay($command->getNextReviewDate());
 
             // Update entity
             $this->getRepo()->save($dataRetentionRecord);
