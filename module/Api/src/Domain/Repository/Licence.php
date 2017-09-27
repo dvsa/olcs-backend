@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Licence\InternationalGoodsReport;
 
 /**
  * Licence
@@ -447,7 +448,7 @@ class Licence extends AbstractRepository
     /**
      * Fetch PSV licence ids to surrender
      *
-     * @param \DateTime|null $now   current datetime
+     * @param \DateTime|null $now current datetime
      *
      * @return array
      */
@@ -609,5 +610,15 @@ class Licence extends AbstractRepository
             ->setParameter('organisationId', $organisationId);
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    /**
+     * fetch information for the international goods report
+     *
+     * @return \Doctrine\DBAL\Driver\Statement
+     */
+    public function internationalGoodsReport()
+    {
+        return $this->getDbQueryManager()->get(InternationalGoodsReport::class)->execute([]);
     }
 }
