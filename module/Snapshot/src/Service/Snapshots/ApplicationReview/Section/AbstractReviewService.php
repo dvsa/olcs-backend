@@ -107,6 +107,9 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
 
     protected function translate($string)
     {
+        if ($string === null) {
+            return '';
+        }
         return $this->getServiceLocator()->get('translator')->translate($string, 'snapshot');
     }
 
