@@ -32,5 +32,6 @@ return [
         Query\Bus\Expire::class => Query\Bus\Expire::class,
         Query\Organisation\FixIsIrfo::class => Query\Organisation\FixIsIrfo::class,
         Query\Organisation\FixIsUnlicenced::class => Query\Organisation\FixIsUnlicenced::class,
+        Query\Licence\InternationalGoodsReport::class => Query\Licence\InternationalGoodsReport::class,
     ]
 ];
