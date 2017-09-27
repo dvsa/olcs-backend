@@ -50,19 +50,21 @@ class DataRetentionEntityTest extends EntityTester
         );
     }
 
-    public function testMarkForDeleteButHasReviewDate()
+    public function testMarkForDelay()
     {
+        $date = new \DateTime('2017-01-01');
+
         $dataRetentionEntity = new Entity();
-        $dataRetentionEntity->setActionConfirmation(false);
-        $dataRetentionEntity->setNextReviewDate(new \DateTime('now'));
+        $dataRetentionEntity->setActionConfirmation(true);
+        $dataRetentionEntity->setActionedDate(new \DateTime('now'));
 
         $expectedEntity = new Entity();
         $expectedEntity->setActionConfirmation(false);
         $expectedEntity->setActionedDate(null);
-        $expectedEntity->setNextReviewDate(new \DateTime('now'));
+        $expectedEntity->setNextReviewDate($date);
 
         $this->assertEquals(
-            $dataRetentionEntity->markForDelete(),
+            $dataRetentionEntity->markForDelay($date),
             $expectedEntity
         );
     }
