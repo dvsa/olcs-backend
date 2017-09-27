@@ -256,6 +256,8 @@ return [
     TransferCommand\Organisation\UpdateBusinessType::class => CommandHandler\Organisation\UpdateBusinessType::class,
     TransferCommand\Organisation\TransferTo::class => CommandHandler\Organisation\TransferTo::class,
     Command\Organisation\ChangeBusinessType::class => CommandHandler\Organisation\ChangeBusinessType::class,
+    Command\Organisation\FixIsIrfo::class => CommandHandler\Organisation\FixIsIrfo::class,
+    Command\Organisation\FixIsUnlicenced::class => CommandHandler\Organisation\FixIsUnlicenced::class,
 
     // Transfer - OtherLicence
     TransferCommand\OtherLicence\UpdateOtherLicence::class => CommandHandler\OtherLicence\UpdateOtherLicence::class,

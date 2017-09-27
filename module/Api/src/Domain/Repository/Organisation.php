@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsIrfo;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsUnlicenced;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as Entity;
 use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -216,5 +218,29 @@ class Organisation extends AbstractRepository
         $query = $qb->getQuery();
 
         return $query->iterate();
+    }
+
+    /**
+     * Update isIrfo flag where operators are no longer irfo
+     *
+     * @return int Number of rows updated
+     */
+    public function fixIsIrfo()
+    {
+        return $this->getDbQueryManager()->get(FixIsIrfo::class)
+            ->execute()
+            ->rowCount();
+    }
+
+    /**
+     * Update isUnlicenced flag where operators no longer have unlicenced licences
+     *
+     * @return int Number of rows updated
+     */
+    public function fixIsUnlicenced()
+    {
+        return $this->getDbQueryManager()->get(FixIsUnlicenced::class)
+            ->execute()
+            ->rowCount();
     }
 }
