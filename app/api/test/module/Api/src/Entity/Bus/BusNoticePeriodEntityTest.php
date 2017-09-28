@@ -18,4 +18,13 @@ class BusNoticePeriodEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testIsScottishRules()
+    {
+        $busNotice = new Entity();
+        $busNotice->setId(Entity::NOTICE_PERIOD_SCOTLAND);
+        $this->assertTrue($busNotice->isScottishRules());
+        $busNotice->setId(Entity::NOTICE_PERIOD_OTHER);
+        $this->assertFalse($busNotice->isScottishRules());
+    }
 }

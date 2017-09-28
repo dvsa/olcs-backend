@@ -224,4 +224,150 @@ class BusShortNoticeEntityTest extends EntityTester
         $this->assertEquals('N', $this->entity->getPoliceChange());
         $this->assertEquals(null, $this->entity->getPoliceDetail());
     }
+
+    public function testFromData()
+    {
+        $this->entity->fromData(['connectionDetail' => 'foo', 'holidayDetail' => 'bar']);
+        $this->assertEquals($this->entity->getConnectionDetail(), 'foo');
+        $this->assertEquals($this->entity->getHolidayDetail(), 'bar');
+    }
+
+    /**
+     * @dataProvider hasGrantableDetailsProvider
+     */
+    public function testHasGrantableDetails($change, $details, $expected)
+    {
+        $this->entity->setBankHolidayChange($change['bankHolidayChange']);
+        $this->entity->setConnectionChange($change['connectionChange']);
+        $this->entity->setHolidayChange($change['holidayChange']);
+        $this->entity->setNotAvailableChange($change['notAvailableChange']);
+        $this->entity->setPoliceChange($change['policeChange']);
+        $this->entity->setReplacementChange($change['replacementChange']);
+        $this->entity->setSpecialOccasionChange($change['specialOccasionChange']);
+        $this->entity->setTimetableChange($change['timetableChange']);
+        $this->entity->setTrcChange($change['trcChange']);
+        $this->entity->setUnforseenChange($change['unforseenChange']);
+
+        $this->entity->setConnectionDetail($details['connectionDetail']);
+        $this->entity->setHolidayDetail($details['holidayDetail']);
+        $this->entity->setNotAvailableDetail($details['notAvailableDetail']);
+        $this->entity->setPoliceDetail($details['policeDetail']);
+        $this->entity->setReplacementDetail($details['replacementDetail']);
+        $this->entity->setSpecialOccasionDetail($details['specialOccasionDetail']);
+        $this->entity->setTimetableDetail($details['timetableDetail']);
+        $this->entity->setTrcDetail($details['trcDetail']);
+        $this->entity->setUnforseenDetail($details['unforseenDetail']);
+
+        $this->assertEquals($this->entity->hasGrantableDetails(), $expected);
+    }
+
+    public function hasGrantableDetailsProvider()
+    {
+        return [
+            [
+                [
+                    'bankHolidayChange' => 'N',
+                    'connectionChange' => 'N',
+                    'holidayChange' => 'N',
+                    'notAvailableChange' => 'N',
+                    'policeChange' => 'N',
+                    'replacementChange' => 'N',
+                    'specialOccasionChange' => 'N',
+                    'timetableChange' => 'N',
+                    'trcChange' => 'N',
+                    'unforseenChange' => 'N'
+                ],
+                [
+                    'connectionDetail' => '',
+                    'holidayDetail' => '',
+                    'notAvailableDetail' => '',
+                    'policeDetail' => '',
+                    'replacementDetail' => '',
+                    'specialOccasionDetail' => '',
+                    'timetableDetail' => '',
+                    'trcDetail' => '',
+                    'unforseenDetail' => ''
+                ],
+                false
+            ],
+            [
+                [
+                    'bankHolidayChange' => 'Y',
+                    'connectionChange' => 'N',
+                    'holidayChange' => 'N',
+                    'notAvailableChange' => 'N',
+                    'policeChange' => 'N',
+                    'replacementChange' => 'N',
+                    'specialOccasionChange' => 'N',
+                    'timetableChange' => 'N',
+                    'trcChange' => 'N',
+                    'unforseenChange' => 'N'
+                ],
+                [
+                    'connectionDetail' => '',
+                    'holidayDetail' => '',
+                    'notAvailableDetail' => '',
+                    'policeDetail' => '',
+                    'replacementDetail' => '',
+                    'specialOccasionDetail' => '',
+                    'timetableDetail' => '',
+                    'trcDetail' => '',
+                    'unforseenDetail' => ''
+                ],
+                true
+            ],
+            [
+                [
+                    'bankHolidayChange' => 'N',
+                    'connectionChange' => 'Y',
+                    'holidayChange' => 'N',
+                    'notAvailableChange' => 'N',
+                    'policeChange' => 'N',
+                    'replacementChange' => 'N',
+                    'specialOccasionChange' => 'N',
+                    'timetableChange' => 'N',
+                    'trcChange' => 'N',
+                    'unforseenChange' => 'N'
+                ],
+                [
+                    'connectionDetail' => 'foo',
+                    'holidayDetail' => '',
+                    'notAvailableDetail' => '',
+                    'policeDetail' => '',
+                    'replacementDetail' => '',
+                    'specialOccasionDetail' => '',
+                    'timetableDetail' => '',
+                    'trcDetail' => '',
+                    'unforseenDetail' => ''
+                ],
+                true
+            ],
+            [
+                [
+                    'bankHolidayChange' => 'N',
+                    'connectionChange' => 'Y',
+                    'holidayChange' => 'N',
+                    'notAvailableChange' => 'N',
+                    'policeChange' => 'N',
+                    'replacementChange' => 'N',
+                    'specialOccasionChange' => 'N',
+                    'timetableChange' => 'N',
+                    'trcChange' => 'N',
+                    'unforseenChange' => 'N'
+                ],
+                [
+                    'connectionDetail' => '',
+                    'holidayDetail' => '',
+                    'notAvailableDetail' => '',
+                    'policeDetail' => '',
+                    'replacementDetail' => '',
+                    'specialOccasionDetail' => '',
+                    'timetableDetail' => '',
+                    'trcDetail' => '',
+                    'unforseenDetail' => ''
+                ],
+                false
+            ]
+        ];
+    }
 }
