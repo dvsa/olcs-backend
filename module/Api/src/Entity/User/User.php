@@ -467,7 +467,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getPermission()
     {
