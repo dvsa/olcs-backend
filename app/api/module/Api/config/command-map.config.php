@@ -997,4 +997,5 @@ return [
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
+    TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
 ];
