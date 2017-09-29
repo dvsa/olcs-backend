@@ -61,20 +61,20 @@ class FactoryTest extends MockeryTestCase
     {
         $missingServiceName = 'Missing';
 
-        $mockEntityManager = $this->getMock('\stdClass');
+        $mockEntityManager = $this->createMock('\stdClass');
 
         $serviceManager = m::mock('\Zend\ServiceManager\ServiceManager')->makePartial();
         $serviceManager->setService('Config', ['entity_namespaces' => ['Missing' => 'Missing']]);
         $serviceManager->setService('doctrine.entitymanager.orm_default', $mockEntityManager);
 
-        $mockGenericService = $this->getMock(
-            'GenericMockService',
+        $mockGenericService = $this->createPartialMock(
+            \stdClass::class,
             array('setEntityName', 'setEntityManager', 'setServiceLocator')
         );
 
         $mockGenericName = get_class($mockGenericService);
 
-        $factory = $this->getMock('\Olcs\Db\Service\Factory', array('getServiceClassName'));
+        $factory = $this->createPartialMock('\Olcs\Db\Service\Factory', array('getServiceClassName'));
 
         $factory->expects($this->at(0))
             ->method('getServiceClassName')
@@ -101,17 +101,17 @@ class FactoryTest extends MockeryTestCase
      */
     public function testGetService()
     {
-        $mockService = $this->getMock('MockService', array('setEntityManager', 'setServiceLocator'));
+        $mockService = $this->createPartialMock('\stdClass', array('setEntityManager', 'setServiceLocator'));
 
         $className = get_class($mockService);
 
-        $mockEntityManager = $this->getMock('\stdClass');
+        $mockEntityManager = $this->createMock('\stdClass');
 
         $serviceManager = m::mock('\Zend\ServiceManager\ServiceManager')->makePartial();
         $serviceManager->setService('Config', ['entity_namespaces' => []]);
         $serviceManager->setService('doctrine.entitymanager.orm_default', $mockEntityManager);
 
-        $factory = $this->getMock('\Olcs\Db\Service\Factory', array('getServiceClassName'));
+        $factory = $this->createPartialMock('\Olcs\Db\Service\Factory', array('getServiceClassName'));
 
         $factory->expects($this->once())
             ->method('getServiceClassName')

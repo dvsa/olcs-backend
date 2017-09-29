@@ -32,7 +32,7 @@ class YesNoTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testGetSqlDeclaration()
     {
-        $mockPlatform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $mockPlatform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
 
         $this->assertEquals(
             'tinyint(1) NOT NULL COMMENT \'(DC2Type:yesno)\'',
@@ -47,7 +47,7 @@ class YesNoTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertToPhpValue($input, $output)
     {
-        $mockPlatform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $mockPlatform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
 
         $this->assertEquals($output, $this->type->convertToPHPValue($input, $mockPlatform));
     }
@@ -72,7 +72,7 @@ class YesNoTypeTest extends PHPUnit_Framework_TestCase
      */
     public function testConvertToDatabaseValue($input, $output)
     {
-        $mockPlatform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $mockPlatform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
 
         $this->assertEquals($output, $this->type->convertToDatabaseValue($input, $mockPlatform));
     }

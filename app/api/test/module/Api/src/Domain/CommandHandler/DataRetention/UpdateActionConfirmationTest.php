@@ -12,8 +12,6 @@ use Mockery as m;
 
 /**
  * Class UpdateActionConfirmationTest
- *
- * @covers UpdateActionConfirmation
  */
 class UpdateActionConfirmationTest extends CommandHandlerTestCase
 {
