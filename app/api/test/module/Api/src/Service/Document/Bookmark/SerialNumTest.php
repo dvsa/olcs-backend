@@ -23,7 +23,7 @@ class SerialNumTest extends \PHPUnit_Framework_TestCase
 
     public function testRender()
     {
-        $mock = $this->getMock('Dvsa\Olcs\Api\Service\Date');
+        $mock = $this->createMock('Dvsa\Olcs\Api\Service\Date');
         $mock->expects($this->once())
             ->method('getDate')
             ->with('d/m/Y H:i:s')

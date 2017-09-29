@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
-use Dvsa\Olcs\Api\Entity\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Mockery as m;
 
 /**
@@ -27,12 +27,9 @@ class OperatingCentreEntityTest extends EntityTester
 
     public function testGetHasEnvironmentalComplaint()
     {
-        $complaint = $this->getMock(
+        $complaint = $this->createPartialMock(
             ComplaintEntity::class,
-            ['getClosedDate', 'isEnvironmentalComplaint'], // methods
-            [], // constructor arguments
-            '', // mock class name
-            false // call constuctor
+            ['getClosedDate', 'isEnvironmentalComplaint']
         );
 
         $complaint->expects($this->once())
@@ -56,12 +53,9 @@ class OperatingCentreEntityTest extends EntityTester
 
     public function testGetHasEnvironmentalComplaintNot()
     {
-        $complaint = $this->getMock(
+        $complaint = $this->createPartialMock(
             ComplaintEntity::class,
-            ['getClosedDate', 'isEnvironmentalComplaint'], // methods
-            [], // constructor arguments
-            '', // mock class name
-            false // call constuctor
+            ['getClosedDate', 'isEnvironmentalComplaint']
         );
 
         $complaint->expects($this->once())
@@ -85,22 +79,16 @@ class OperatingCentreEntityTest extends EntityTester
     {
         $status = 'apsts_granted_1'; // allowed
 
-        $application = $this->getMock(
+        $application = $this->createPartialMock(
             ApplicationEntity::class,
-            ['getIsWithdrawn', 'getStatus', 'getId'], // methods
-            [], // constructor arguments
-            '', // mock class name
-            false // call constuctor
+            ['getIsWithdrawn', 'getStatus', 'getId']
         );
         $application->expects($this->once())->method('getStatus')->will($this->returnSelf());
         $application->expects($this->once())->method('getId')->will($this->returnValue($status));
 
-        $opposition = $this->getMock(
+        $opposition = $this->createPartialMock(
             OppositionEntity::class,
-            ['getIsWithdrawn', 'getCase', 'getApplication'], // methods
-            [], // constructor arguments
-            '', // mock class name
-            false // call constuctor
+            ['getIsWithdrawn', 'getCase', 'getApplication']
         );
 
         $opposition->expects($this->once())->method('getIsWithdrawn')->will($this->returnValue(false));
@@ -121,22 +109,16 @@ class OperatingCentreEntityTest extends EntityTester
     {
         $status = 'apsts_granted'; // not allowed
 
-        $application = $this->getMock(
+        $application = $this->createPartialMock(
             ApplicationEntity::class,
-            ['getIsWithdrawn', 'getStatus', 'getId'], // methods
-            [], // constructor arguments
-            '', // mock class name
-            false // call constuctor
+            ['getIsWithdrawn', 'getStatus', 'getId']
         );
         $application->expects($this->once())->method('getStatus')->will($this->returnSelf());
         $application->expects($this->once())->method('getId')->will($this->returnValue($status));
 
-        $opposition = $this->getMock(
+        $opposition = $this->createPartialMock(
             OppositionEntity::class,
-            ['getIsWithdrawn', 'getCase', 'getApplication'], // methods
-            [], // constructor arguments
-            '', // mock class name
-            false // call constuctor
+            ['getIsWithdrawn', 'getCase', 'getApplication']
         );
 
         $opposition->expects($this->once())->method('getIsWithdrawn')->will($this->returnValue(false));

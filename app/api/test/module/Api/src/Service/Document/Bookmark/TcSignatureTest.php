@@ -33,18 +33,18 @@ class TcSignatureTest extends \PHPUnit_Framework_TestCase
             ]
         );
 
-        $fileMock = $this->getMock('\stdClass', ['getContent']);
+        $fileMock = $this->createPartialMock('\stdClass', ['getContent']);
         $fileMock->expects($this->once())
             ->method('getContent')
             ->willReturn('content');
 
-        $fileStoreMock = $this->getMock('\stdClass', ['read']);
+        $fileStoreMock = $this->createPartialMock('\stdClass', ['read']);
         $fileStoreMock->expects($this->once())
             ->method('read')
             ->with('/templates/Image/' . $image . '.jpg')
             ->willReturn($fileMock);
 
-        $parserMock = $this->getMock('\stdClass', ['renderImage']);
+        $parserMock = $this->createPartialMock('\stdClass', ['renderImage']);
         $parserMock->expects($this->once())
             ->method('renderImage')
             ->with('content', $bookmark::CONTAINER_WIDTH, $bookmark::CONTAINER_HEIGHT, 'jpeg')

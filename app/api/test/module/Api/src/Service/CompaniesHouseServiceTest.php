@@ -42,7 +42,7 @@ class CompaniesHouseServiceTest extends MockeryTestCase
     public function setUpService($methods = array())
     {
         /** @var CompaniesHouseService $sut */
-        $sut = $this->getMock(CompaniesHouseService::class, $methods);
+        $sut = $this->createPartialMock(CompaniesHouseService::class, $methods);
 
         return $sut->createService($this->mockSl);
     }
@@ -158,12 +158,12 @@ class CompaniesHouseServiceTest extends MockeryTestCase
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass', array('setSearchRows'));
+        $mockRequest = $this->createPartialMock('\stdClass', array('setSearchRows'));
 
         $mockRequest->expects($this->once())
             ->method('setSearchRows');
 
-        $mockGateway = $this->getMock('\stdClass', array('getNameSearch', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getNameSearch', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getNameSearch')
@@ -207,12 +207,12 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass', array('setSearchRows'));
+        $mockRequest = $this->createPartialMock('\stdClass', array('setSearchRows'));
 
         $mockRequest->expects($this->once())
             ->method('setSearchRows');
 
-        $mockGateway = $this->getMock('\stdClass', array('getNumberSearch', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getNumberSearch', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getNumberSearch')
@@ -256,9 +256,9 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass');
+        $mockRequest = $this->createMock('\stdClass');
 
-        $mockGateway = $this->getMock('\stdClass', array('getCompanyDetails', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getCompanyDetails', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getCompanyDetails')
@@ -308,12 +308,12 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass', array('setSearchRows'));
+        $mockRequest = $this->createPartialMock('\stdClass', array('setSearchRows'));
 
         $mockRequest->expects($this->once())
             ->method('setSearchRows');
 
-        $mockGateway = $this->getMock('\stdClass', array('getNameSearch', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getNameSearch', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getNameSearch')
@@ -365,12 +365,12 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass', array('setSearchRows'));
+        $mockRequest = $this->createPartialMock('\stdClass', array('setSearchRows'));
 
         $mockRequest->expects($this->once())
             ->method('setSearchRows');
 
-        $mockGateway = $this->getMock('\stdClass', array('getNumberSearch', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getNumberSearch', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getNumberSearch')
@@ -420,9 +420,9 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass');
+        $mockRequest = $this->createMock('\stdClass');
 
-        $mockGateway = $this->getMock('\stdClass', array('getCompanyDetails', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getCompanyDetails', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getCompanyDetails')
@@ -463,9 +463,9 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass');
+        $mockRequest = $this->createMock('\stdClass');
 
-        $mockGateway = $this->getMock('\stdClass', array('getCompanyDetails', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getCompanyDetails', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getCompanyDetails')
@@ -529,9 +529,9 @@ XML;
 </result>
 XML;
 
-        $mockRequest = $this->getMock('\stdClass');
+        $mockRequest = $this->createMock('\stdClass');
 
-        $mockGateway = $this->getMock('\stdClass', array('getCompanyAppointments', 'getResponse'));
+        $mockGateway = $this->createPartialMock('\stdClass', array('getCompanyAppointments', 'getResponse'));
 
         $mockGateway->expects($this->once())
             ->method('getCompanyAppointments')

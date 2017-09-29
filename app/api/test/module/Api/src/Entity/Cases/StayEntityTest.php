@@ -31,10 +31,10 @@ class StayEntityTest extends EntityTester
         $expectedValuesFromEntity
     ) {
         /** @var Cases $case */
-        $case = $this->getMock(Cases::class, [], [], '', false);
+        $case = $this->createMock(Cases::class);
 
         /** @var RefData $stayType */
-        $stayType = $this->getMock(RefData::class, [], [], '', false);
+        $stayType = $this->createMock(RefData::class);
 
         $stayEntity = new Entity($case, $stayType);
         $stayEntity->values(

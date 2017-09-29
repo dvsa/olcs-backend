@@ -18,7 +18,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetOptions($config, $expected)
     {
-        $mockSl = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl
             ->expects($this->once())
             ->method('get')
@@ -70,7 +70,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService($config, $expected = null)
     {
-        $mockSl = $this->getMock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl
             ->expects($this->once())
             ->method('get')

@@ -25,13 +25,9 @@ class ExpressionBuilderTest extends PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->em = $this->getMock(
+        $this->em = $this->createPartialMock(
             'Doctrine\ORM\EntityManager',
-            array('getExpressionBuilder', 'getClassMetadata'),
-            array(),
-            '',
-            // Skip original constructor
-            false
+            array('getExpressionBuilder', 'getClassMetadata')
         );
 
         $this->em->expects($this->any())
