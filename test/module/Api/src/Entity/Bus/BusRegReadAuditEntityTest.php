@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Bus;
 
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegReadAudit as Entity;
 
@@ -18,4 +20,13 @@ class BusRegReadAuditEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testBusRegRealAudit()
+    {
+        $user = new User('123', 'foo');
+        $busReg = new BusReg();
+        $busRegRealAudit = new Entity($user, $busReg);
+        $this->assertEquals($busRegRealAudit->getUser(), $user);
+        $this->assertEquals($busRegRealAudit->getBusReg(), $busReg);
+    }
 }
