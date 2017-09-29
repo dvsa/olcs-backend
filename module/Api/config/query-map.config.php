@@ -271,6 +271,7 @@ return [
         => QueryHandler\Publication\PublicationLinkList::class,
     TransferQuery\Publication\PublicationLink::class => QueryHandler\Publication\PublicationLink::class,
     TransferQuery\Publication\PendingList::class => QueryHandler\Publication\PendingList::class,
+    TransferQuery\Publication\PublishedList::class => QueryHandler\Publication\PublishedList::class,
 
     // My Account
     TransferQuery\MyAccount\MyAccount::class => QueryHandler\MyAccount\MyAccount::class,
