@@ -51,6 +51,7 @@ return [
     QueryHandler\Processing\Note::class => IsInternalUser::class,
     QueryHandler\Processing\NoteList::class => IsInternalUser::class,
     QueryHandler\Publication\PendingList::class => IsInternalUser::class,
+    QueryHandler\Publication\PublishedList::class => IsInternalUser::class,
     QueryHandler\Publication\PublicationLink::class => IsInternalUser::class,
     QueryHandler\Publication\PublicationLinkByTm::class => IsInternalUser::class,
     QueryHandler\Publication\PublicationLinkList::class => IsInternalUser::class,

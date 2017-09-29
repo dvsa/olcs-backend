@@ -9,8 +9,10 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Publication;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Transfer\Query\Publication\PendingList;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Doctrine\ORM\EntityRepository;
@@ -19,6 +21,8 @@ use Doctrine\ORM\EntityRepository;
  * Publication test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ *
+ * @property Publication|m\Mock $sut
  */
 class PublicationTest extends RepositoryTestCase
 {
@@ -120,6 +124,7 @@ class PublicationTest extends RepositoryTestCase
      */
     public function testFetchPendingList()
     {
+        /** @var PendingList|m\Mock $query */
         $query = m::mock(PendingList::class);
 
         $count = 1;
@@ -159,5 +164,52 @@ class PublicationTest extends RepositoryTestCase
             ->andReturn($repo);
 
         $this->assertEquals($resultArray, $this->sut->fetchPendingList($query));
+    }
+
+    /**
+     * tests fetchPublishedList
+     */
+    public function testFetchPublishedList()
+    {
+        /** @var QueryInterface|m\Mock $query */
+        $query = m::mock(QueryInterface::class);
+
+        $count = 1;
+        $results = [0 => m::mock(PublicationEntity::class)];
+        $resultArray = [
+            'results' => $results,
+            'count' => $count
+        ];
+
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('expr->eq')->with('m.pubStatus', ':pubStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')
+            ->with('pubStatus', PublicationEntity::PUB_PRINTED_STATUS)
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')
+            ->andReturn($results);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')
+            ->once()
+            ->with($mockQb)->andReturnSelf();
+
+        /** @var EntityRepository $repo */
+        $repo = $this->getMockRepo($mockQb);
+
+        $this->sut->shouldReceive('buildDefaultListQuery')->once()->with($mockQb, $query)->andReturnSelf();
+
+        $this->sut->shouldReceive('fetchPaginatedCount')
+            ->once()
+            ->with($mockQb)
+            ->andReturn($count);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(PublicationEntity::class)
+            ->andReturn($repo);
+
+        $this->assertEquals($resultArray, $this->sut->fetchPublishedList($query));
     }
 }
