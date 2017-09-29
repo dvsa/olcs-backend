@@ -160,10 +160,10 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $helperMock = $this->getMock(\Dvsa\Olcs\Api\Service\Date::class);
+        $helperMock = $this->createMock(\Dvsa\Olcs\Api\Service\Date::class);
 
         /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
-        $serviceLocator = $this->getMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->expects($this->once())
             ->method('get')
             ->with('DateService')
@@ -184,10 +184,10 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $helperMock = $this->getMock(\stdClass::class);
+        $helperMock = $this->createMock(\stdClass::class);
 
         /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
-        $serviceLocator = $this->getMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator = $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $serviceLocator->expects($this->once())
             ->method('get')
             ->with('ContentStore')

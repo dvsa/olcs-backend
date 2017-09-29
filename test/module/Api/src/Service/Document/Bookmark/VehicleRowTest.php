@@ -60,7 +60,7 @@ class VehicleRowTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $parser = $this->getMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
 
         // note how we don't expect the second row to feature as it has been
         // marked as removed
@@ -76,7 +76,7 @@ class VehicleRowTest extends \PHPUnit_Framework_TestCase
             ->with('snippet', $expectedRowOne)
             ->willReturn('foo');
 
-        $bookmark = $this->getMock('Dvsa\Olcs\Api\Service\Document\Bookmark\VehicleRow', ['getSnippet']);
+        $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\VehicleRow', ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')

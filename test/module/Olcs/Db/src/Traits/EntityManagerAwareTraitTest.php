@@ -120,7 +120,7 @@ class EntityManagerAwareTraitTest extends PHPUnit_Framework_TestCase
      */
     public function testDbStartTransaction()
     {
-        $connectionMock = $this->getMock('\stdClass', array('beginTransaction'));
+        $connectionMock = $this->createPartialMock('\stdClass', array('beginTransaction'));
 
         $this->setEntityManager();
 
@@ -158,7 +158,7 @@ class EntityManagerAwareTraitTest extends PHPUnit_Framework_TestCase
      */
     public function testDbRollback()
     {
-        $connectionMock = $this->getMock('\stdClass', array('rollback'));
+        $connectionMock = $this->createPartialMock('\stdClass', array('rollback'));
 
         $this->setEntityManager();
 

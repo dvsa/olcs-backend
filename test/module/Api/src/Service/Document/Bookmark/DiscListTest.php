@@ -106,7 +106,7 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
             ],
         ];
 
-        $parser = $this->getMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
 
         $expectedRowOne = [
             'DISC1_TITLE' => '',
@@ -201,7 +201,7 @@ class DiscListTest extends \PHPUnit_Framework_TestCase
             ->with('snippet', $expectedRowThree)
             ->willReturn('baz');
 
-        $bookmark = $this->getMock('Dvsa\Olcs\Api\Service\Document\Bookmark\DiscList', ['getSnippet']);
+        $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\DiscList', ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')

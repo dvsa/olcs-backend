@@ -11,8 +11,6 @@ use Mockery as m;
 
 /**
  * Class DelayItemsTest
- *
- * @covers DelayItems
  */
 class DelayItemsTest extends CommandHandlerTestCase
 {

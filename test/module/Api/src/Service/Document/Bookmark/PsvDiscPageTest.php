@@ -66,7 +66,7 @@ class PsvDiscPageTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $parser = $this->getMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
 
         $expectedRowOne = [
             'PSV1_TITLE' => '',
@@ -129,7 +129,7 @@ class PsvDiscPageTest extends \PHPUnit_Framework_TestCase
             ->with('snippet', $expectedRowOne)
             ->willReturn('foo');
 
-        $bookmark = $this->getMock('Dvsa\Olcs\Api\Service\Document\Bookmark\PsvDiscPage', ['getSnippet']);
+        $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\PsvDiscPage', ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')
