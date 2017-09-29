@@ -903,4 +903,60 @@ class UserEntityTest extends EntityTester
 
         $this->assertEquals(0, $user->getNumberOfVehicles());
     }
+
+    public function testGetRolesByUserTypeNoRoles()
+    {
+        $user = new Entity('pid', 'foo');
+        $this->assertEquals([], $user->getRolesByUserType('foo', 'bar'));
+    }
+
+    public function testGetPermissionNoRoles()
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_PARTNER);
+        $this->assertNull($user->getPermission());
+    }
+
+    public function testUpdateOperatorWithOrganisationUsers()
+    {
+        $adminRole = m::mock(RoleEntity::class)->makePartial();
+        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+
+        $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
+        $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
+
+        $data = [
+            'userType' => Entity::USER_TYPE_OPERATOR,
+            'loginId' => 'loginId',
+            'roles' => [$adminRole],
+        ];
+
+        $organisation = m::mock(OrganisationEntity::class)->makePartial()
+            ->setId(1);
+
+        $entity = Entity::create(
+            'pid',
+            Entity::USER_TYPE_OPERATOR,
+            [
+                'loginId' => 'currentLoginId',
+                'roles' => [$nonAdminRole],
+                'organisations' => [
+                    1 => $organisation
+                ],
+            ]
+        );
+        $organisationUser = new OrganisationUser();
+        $organisationUser->setOrganisation($organisation);
+        $organisationUser->setUser($entity);
+        $organisationUsers = new ArrayCollection([1 => $organisationUser]);
+        $entity->setOrganisationUsers($organisationUsers);
+
+        $entity->update($data);
+
+        $this->assertEquals($data['loginId'], $entity->getLoginId());
+        $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
+
+        $this->assertEquals(Entity::USER_TYPE_OPERATOR, $entity->getUserType());
+        $this->assertEquals(1, $entity->getOrganisationUsers()->count());
+        $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
+    }
 }
