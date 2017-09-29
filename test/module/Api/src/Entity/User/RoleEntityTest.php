@@ -79,4 +79,12 @@ class RoleEntityTest extends EntityTester
 
         $this->assertFalse($roleEntity->hasPermission('permissionThree'));
     }
+
+    public function testAnon()
+    {
+        $role = new Entity();
+        $anon = $role->anon();
+        $this->assertEquals($anon->getId(), Entity::ROLE_ANON);
+        $this->assertEquals($anon->getRole(), Entity::ROLE_ANON);
+    }
 }
