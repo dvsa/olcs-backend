@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendInternationalGoodsCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Cli\Domain\Command\DataGovUkExport as Cmd;
@@ -55,6 +56,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
         $this->mockRepo('Category', Repository\Category::class);
         $this->mockRepo('SubCategory', Repository\SubCategory::class);
+        $this->mockRepo('Licence', Repository\Licence::class);
 
         $this->mockStmt = m::mock(PDOStatement::class);
 
@@ -113,6 +115,98 @@ class DataGovUkExportTest extends CommandHandlerTestCase
 
         //  call
         $this->sut->handleCommand($cmd);
+    }
+
+    public function testInternationalGoods()
+    {
+        $fileName = 'international_goods';
+
+        $vfsFile = new vfsStreamFile($fileName, 0777);
+        $tmpFolder = new vfsStreamDirectory('unit');
+        $tmpFolder->addChild($vfsFile);
+
+        $directory = new vfsStreamDirectory('root');
+        $directory->addChild($tmpFolder);
+
+        $row1 = [
+            'Licence number' => 'LicNo1',
+            'col1' => 'val11',
+            'col2' => 'v"\'-/\,',
+        ];
+
+        $row2 = [
+            'Licence number' => 'LicNo2',
+            'col1' => 'val21',
+            'col2' => 'val22',
+        ];
+
+        $row3 = [
+            'Licence number' => 'LicNo3',
+            'col1' => 'val31',
+            'col2' => 'val32',
+        ];
+
+        $this->mockStmt
+            ->shouldReceive('fetch')->once()->andReturn($row1)
+            ->shouldReceive('fetch')->once()->andReturn($row2)
+            ->shouldReceive('fetch')->once()->andReturn($row3)
+            ->shouldReceive('fetch')->once()->andReturn(false);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('internationalGoodsReport')
+            ->once()
+            ->andReturn($this->mockStmt);
+
+        // Create document in database
+        $documentData['description'] = 'International goods list ' . date('d/m/Y');
+        $documentData['filename'] = 'international-goods-list.csv';
+        $documentData['user'] = \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER;
+        $documentData['category'] = Category::CATEGORY_REPORT;
+        $documentData['subCategory'] = SubCategory::REPORT_SUB_CATEGORY_GV;
+
+        $this->expectedSideEffect(
+            UploadCmd::class,
+            $documentData,
+            (new Result())->addMessage('CreateDocument')->addId('document', 666)
+        );
+
+        // Send email
+        $this->expectedEmailQueueSideEffect(
+            SendInternationalGoodsCmd::class,
+            ['id' => 666],
+            666,
+            new Result()
+        );
+
+        //  call & check
+        $cmd = Cmd::create(
+            [
+                'reportName' => DataGovUkExport::INTERNATIONAL_GOODS,
+                'path' => $this->tmpPath,
+            ]
+        );
+
+        $actual = $this->sut->handleCommand($cmd);
+
+        $expectedFile = $this->tmpPath . '/' . $fileName. '_' . date(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
+
+        $expectMsg =
+            'Fetching data for international goods list' .
+            'create csv file: ' . $expectedFile;
+
+        $this->assertSame(
+            '"Licence number",col1,col2' . PHP_EOL .
+            'LicNo1,val11,"v""\'-/\\,"' . PHP_EOL .
+            'LicNo2,val21,val22' . PHP_EOL .
+            'LicNo3,val31,val32' . PHP_EOL .
+            '',
+            file_get_contents($expectedFile)
+        );
+
+        $this->assertEquals(
+            $expectMsg,
+            implode('', $actual->toArray()['messages'])
+        );
     }
 
     public function testPsvOperatorListOk()
