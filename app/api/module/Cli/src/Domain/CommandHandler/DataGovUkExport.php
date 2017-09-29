@@ -4,12 +4,11 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendIntlGoodsEmailCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
-use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
@@ -35,6 +34,7 @@ final class DataGovUkExport extends AbstractCommandHandler
     const BUS_REGISTERED_ONLY = 'bus-registered-only';
     const BUS_VARIATION = 'bus-variation';
     const PSV_OPERATOR_LIST = 'psv-operator-list';
+    const INTERNATIONAL_GOODS = 'international-goods';
 
     const FILE_DATETIME_FORMAT = 'Ymd_His';
 
@@ -50,7 +50,8 @@ final class DataGovUkExport extends AbstractCommandHandler
         'TrafficArea',
         'SystemParameter',
         'Category',
-        'SubCategory'
+        'SubCategory',
+        'Licence'
     ];
 
     /**
@@ -72,11 +73,6 @@ final class DataGovUkExport extends AbstractCommandHandler
      * @var array
      */
     private $csvPool = [];
-
-    /**
-     * @var EmailService
-     */
-    private $emailService;
 
     /**
      * Handle command
@@ -102,6 +98,8 @@ final class DataGovUkExport extends AbstractCommandHandler
             $this->processBusVariation();
         } elseif ($this->reportName === self::PSV_OPERATOR_LIST) {
             $this->processPsvOperatorList();
+        } elseif ($this->reportName === self::INTERNATIONAL_GOODS) {
+            $this->processInternationalGoodsList();
         } else {
             throw new \Exception(self::ERR_INVALID_REPORT);
         }
@@ -136,6 +134,59 @@ final class DataGovUkExport extends AbstractCommandHandler
         $this->result->merge($email);
 
         return $this->result;
+    }
+
+    /**
+     * Process international goods list and email
+     *
+     * @return Result
+     */
+    private function processInternationalGoodsList()
+    {
+        $this->result->addMessage('Fetching data for international goods list');
+
+        /** @var Repository\Licence $repo */
+        $repo = $this->getRepo('Licence');
+        $stmt = $repo->internationalGoodsReport();
+
+        $csvContent = $this->singleCsvFromStatement($stmt, 'international_goods');
+
+        $document = $this->handleSideEffect(
+            $this->generateInternationalGoodsDocumentCmd($csvContent)
+        );
+
+        // Send email
+        $emailQueue = $this->emailQueue(
+            SendIntlGoodsEmailCmd::class,
+            ['id' => $document->getId('document')],
+            $document->getId('document')
+        );
+
+        $email = $this->handleSideEffect($emailQueue);
+        $this->result->merge($email);
+
+        return $this->result;
+    }
+
+    /**
+     * Creates a command to upload the international goods csv
+     *
+     * @param string $document document content
+     *
+     * @return UploadCmd
+     */
+    private function generateInternationalGoodsDocumentCmd($document)
+    {
+        $data = [
+            'content' => base64_encode($document),
+            'category' => Category::CATEGORY_REPORT,
+            'subCategory' => SubCategory::REPORT_SUB_CATEGORY_GV,
+            'filename' => 'international-goods-list.csv',
+            'description' => 'International goods list ' . date('d/m/Y'),
+            'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+        ];
+
+        return UploadCmd::create($data);
     }
 
     /**
@@ -217,6 +268,39 @@ final class DataGovUkExport extends AbstractCommandHandler
         $stmt = $this->dataGovUkRepo->fetchBusVariation($areas);
 
         $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_Variation');
+    }
+
+    /**
+     * Fill a CSV with the result of a doctrine statement
+     *
+     * @param Statement $stmt     db records set
+     * @param string    $fileName main part of file name
+     *
+     * @return string
+     */
+    private function singleCsvFromStatement(Statement $stmt, $fileName)
+    {
+        $filePath = $this->path . '/' . $fileName . '_' . date(self::FILE_DATETIME_FORMAT) . '.csv';
+
+        //  create csv file
+        $this->result->addMessage('create csv file: ' . $filePath);
+        $fh = ExportToCsv::createFile($filePath);
+        $firstRow = false;
+
+        //  add rows
+        while (($row = $stmt->fetch()) !== false) {
+            if (!$firstRow) {
+                //add title
+                fputcsv($fh, array_keys($row));
+                $firstRow = true;
+            }
+
+            fputcsv($fh, $row);
+        }
+
+        fclose($fh);
+
+        return file_get_contents($filePath);
     }
 
     /**
@@ -339,8 +423,6 @@ final class DataGovUkExport extends AbstractCommandHandler
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-
-        $this->emailService = $sl->get('EmailService');
 
         return parent::createService($sm);
     }
