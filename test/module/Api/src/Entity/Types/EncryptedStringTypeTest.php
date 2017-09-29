@@ -46,7 +46,7 @@ class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
 
     public function testConvertToPhpValue()
     {
-        $platform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $platform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
         $blockCipher = m::mock(AES::class);
         $blockCipher->shouldReceive('decrypt')->with('ENCRYPTED')->once()->andReturn('DECRYPTED');
         $this->sut->setEncrypter($blockCipher);
@@ -55,7 +55,7 @@ class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
 
     public function testConvertToDatabaseValue()
     {
-        $platform = $this->getMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
+        $platform = $this->createMock('\Doctrine\DBAL\Platforms\MySqlPlatform');
         $blockCipher = m::mock(AES::class);
         $blockCipher->shouldReceive('encrypt')->with('DECRYPTED')->once()->andReturn('ENCRYPTED');
         $this->sut->setEncrypter($blockCipher);

@@ -171,7 +171,7 @@ class InterimOperatingCentresTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $parser = $this->getMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
 
         $conditionUndertakings = "Conditions\n\n1).\tcondition 1\n\n" .
             "Undertakings\n\n1).\tundertaking 1 UPDATED";
@@ -189,7 +189,7 @@ class InterimOperatingCentresTest extends \PHPUnit_Framework_TestCase
             ->with('snippet', $expectedRow)
             ->willReturn('foo');
 
-        $bookmark = $this->getMock('Dvsa\Olcs\Api\Service\Document\Bookmark\InterimOperatingCentres', ['getSnippet']);
+        $bookmark = $this->createPartialMock(InterimOperatingCentres::class, ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')
@@ -226,7 +226,7 @@ class InterimOperatingCentresTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $parser = $this->getMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
+        $parser = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser', ['replace']);
 
         $expectedRow = [
             'TAB_OC_ADD' => "Address 1\nAddress 2",
@@ -241,7 +241,7 @@ class InterimOperatingCentresTest extends \PHPUnit_Framework_TestCase
             ->with('snippet', $expectedRow)
             ->willReturn('foo');
 
-        $bookmark = $this->getMock('Dvsa\Olcs\Api\Service\Document\Bookmark\InterimOperatingCentres', ['getSnippet']);
+        $bookmark = $this->createPartialMock(InterimOperatingCentres::class, ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')
