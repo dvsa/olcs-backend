@@ -59,4 +59,12 @@ class ContinuationDetailEntityTest extends EntityTester
 
         $this->assertSame($expected, $continuationDetail->getAmountDeclared());
     }
+
+    public function testGetContextValue()
+    {
+        $continuationDetail = new Entity();
+        $continuationDetail->setId(87);
+
+        $this->assertSame(87, $continuationDetail->getContextValue());
+    }
 }

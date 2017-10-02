@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
@@ -142,5 +143,17 @@ class LicenceVehicleEntityTest extends EntityTester
 
         $this->assertNull($entity->getWarningLetterSeedDate());
         $this->assertNull($entity->getWarningLetterSentDate());
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getRelatedOrganisation')->with()->once()->andReturn('ORG');
+
+        /** @var Entity $entity */
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicence($licence);
+
+        $this->assertSame('ORG', $entity->getRelatedOrganisation());
     }
 }
