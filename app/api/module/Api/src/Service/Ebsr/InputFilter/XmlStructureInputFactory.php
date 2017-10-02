@@ -52,17 +52,20 @@ class XmlStructureInputFactory implements FactoryInterface
                 throw new \RuntimeException(self::XML_VALID_EXCLUDE_MSG);
             }
 
+            /** @var ServiceLocatorInterface $validatorManager */
+            $validatorManager = $serviceLocator->get('ValidatorManager');
+
             /** @var Xsd $xsdValidator */
-            $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
+            $xsdValidator = $validatorManager->get(Xsd::class);
             $xsdValidator->setXsd(sprintf(self::XSD_PATH, $config['ebsr']['transxchange_schema_version']));
             $xsdValidator->setMaxErrors($config['ebsr']['max_schema_errors']);
             $xsdValidator->setXmlMessageExclude($config['xml_valid_message_exclude']);
 
             $validatorchain->attach($xsdValidator);
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\ServiceClassification'));
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Operator'));
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Registration'));
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\SupportingDocuments'));
+            $validatorchain->attach($validatorManager->get('Structure\ServiceClassification'));
+            $validatorchain->attach($validatorManager->get('Structure\Operator'));
+            $validatorchain->attach($validatorManager->get('Structure\Registration'));
+            $validatorchain->attach($validatorManager->get('Structure\SupportingDocuments'));
         }
 
         return $service;

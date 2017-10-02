@@ -29,22 +29,13 @@ class ProcessedDataInputFactory implements FactoryInterface
 
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
-            $validatorChain->attach(
-                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\BusRegNotFound'),
-                true
-            );
-            $validatorChain->attach(
-                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\NewAppAlreadyExists')
-            );
-            $validatorChain->attach(
-                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\RegisteredBusRoute')
-            );
-            $validatorChain->attach(
-                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\LocalAuthorityMissing')
-            );
-            $validatorChain->attach(
-                $serviceLocator->get('ValidatorManager')->get('Rules\ProcessedData\VariationNumber')
-            );
+            /** @var ServiceLocatorInterface $validatorManager */
+            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorChain->attach($validatorManager->get('Rules\ProcessedData\BusRegNotFound'), true);
+            $validatorChain->attach($validatorManager->get('Rules\ProcessedData\NewAppAlreadyExists'));
+            $validatorChain->attach($validatorManager->get('Rules\ProcessedData\RegisteredBusRoute'));
+            $validatorChain->attach($validatorManager->get('Rules\ProcessedData\LocalAuthorityMissing'));
+            $validatorChain->attach($validatorManager->get('Rules\ProcessedData\VariationNumber'));
         }
 
         return $service;
