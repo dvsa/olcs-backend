@@ -737,8 +737,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class =>
