@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -21,6 +22,15 @@ class LicenceOperatingCentreEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstructor()
+    {
+        $licence = $this->createMock(Licence::class);
+        $operatingCentre = $this->createMock(OperatingCentre::class);
+        $sut = new Entity($licence, $operatingCentre);
+        $this->assertSame($licence, $sut->getLicence());
+        $this->assertSame($operatingCentre, $sut->getOperatingCentre());
+    }
 
     /**
      * Get/setup and S4
