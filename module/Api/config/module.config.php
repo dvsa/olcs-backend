@@ -86,10 +86,14 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory::class,
 
-            'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
-            'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
-            'EbsrProcessedDataInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class,
-            'EbsrShortNoticeInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
 
             'ComplianceEpisodeInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory::class,
