@@ -2,6 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
@@ -62,10 +66,10 @@ class XmlStructureInputFactory implements FactoryInterface
             $xsdValidator->setXmlMessageExclude($config['xml_valid_message_exclude']);
 
             $validatorchain->attach($xsdValidator);
-            $validatorchain->attach($validatorManager->get('Structure\ServiceClassification'));
-            $validatorchain->attach($validatorManager->get('Structure\Operator'));
-            $validatorchain->attach($validatorManager->get('Structure\Registration'));
-            $validatorchain->attach($validatorManager->get('Structure\SupportingDocuments'));
+            $validatorchain->attach($validatorManager->get(ServiceClassification::class));
+            $validatorchain->attach($validatorManager->get(Operator::class));
+            $validatorchain->attach($validatorManager->get(Registration::class));
+            $validatorchain->attach($validatorManager->get(SupportingDocuments::class));
         }
 
         return $service;
