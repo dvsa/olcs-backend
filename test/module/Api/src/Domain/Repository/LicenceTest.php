@@ -803,4 +803,10 @@ class LicenceTest extends RepositoryTestCase
 
         $this->assertSame([1, 2], $this->sut->fetchPsvLicenceIdsToSurrender());
     }
+
+    public function testInternationalGoodsReport()
+    {
+        $this->expectQueryWithData(\Dvsa\Olcs\Api\Domain\Repository\Query\Licence\InternationalGoodsReport::class, []);
+        $this->sut->internationalGoodsReport();
+    }
 }
