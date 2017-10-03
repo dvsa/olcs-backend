@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-abstract class StatementFlatTestAbstract extends BusRegFlatTestAbstract
+abstract class StatementFlatTestAbstract extends SingleValueTestAbstract
 {
     //
 }

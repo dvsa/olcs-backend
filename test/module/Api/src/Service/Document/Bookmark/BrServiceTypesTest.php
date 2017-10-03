@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrServiceTypes;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrServiceTypesTest extends BusRegFlatTestAbstract
+class BrServiceTypesTest extends SingleValueTestAbstract
 {
     const SUT_CLASS_NAME = BrServiceTypes::class;
 }

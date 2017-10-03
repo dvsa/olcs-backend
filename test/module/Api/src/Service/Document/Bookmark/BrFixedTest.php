@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrFixed;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrFixedTest extends BusRegFlatTestAbstract
+class BrFixedTest extends SingleValueTestAbstract
 {
     const SUT_CLASS_NAME = BrFixed::class;
 }
