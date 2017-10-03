@@ -12,7 +12,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-abstract class PiFlatTestAbstract extends BusRegFlatTestAbstract
+abstract class PiFlatTestAbstract extends SingleValueTestAbstract
 {
     //
 }
