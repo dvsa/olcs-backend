@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Abstracts;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Instantiator\Instantiator;
+use Dvsa\Olcs\Api\Entity\Licence\AbstractLicence;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
@@ -100,6 +102,34 @@ abstract class EntityTester extends MockeryTestCase
         if ($tested === false) {
             $this->assertTrue(true); // Mark the test as passed (None exist)
         }
+    }
+
+    /**
+     * @dataProvider dataProviderAsDateTime
+     */
+    public function testGetDates($expected, $dateTime)
+    {
+        $classToTestName = $this->getClassToTestName();
+
+        $dateProperties = ['createdOn', 'lastModifiedOn', 'deletedDate'];
+        foreach ($dateProperties as $property) {
+            if (property_exists($classToTestName, $property)) {
+                $entity = $this->instantiate($classToTestName);
+                $setMethod = 'set'. $property;
+                $getMethod = 'get'. $property;
+                $entity->$setMethod($dateTime);
+                $this->assertEquals($expected, $entity->$getMethod(true));
+            }
+        }
+    }
+
+    public function dataProviderAsDateTime()
+    {
+        return [
+            [new \DateTime('2017-09-29'), '2017-09-29'],
+            [new \DateTime('2017-09-29'), new \DateTime('2017-09-29')],
+            [null, null],
+        ];
     }
 
     public function testGettersAndSetters()
