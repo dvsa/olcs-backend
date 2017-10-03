@@ -221,4 +221,43 @@ class LicenceTest extends QueryHandlerTestCase
             'Wrong Continuation detail status' => [false, true, false, ContinuationDetail::STATUS_PRINTING],
         ];
     }
+
+    public function testHandleQueryShowExpiryWarningNoContinuationDetail()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        /** @var LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setId(111);
+
+        $licence->shouldReceive('serialize')
+            ->andReturn(['foo' => 'bar'])
+            ->shouldReceive('getNiFlag')
+            ->andReturn('N')
+            ->once()
+            ->getMock()
+            ->shouldReceive('getOrganisation')->andReturn(
+                m::mock(Organisation::class)->shouldReceive('isMlh')->once()
+                    ->andReturn(true)
+                    ->getMock()
+            )
+            ->shouldReceive('isSpecialRestricted')->andReturn(true)->once();
+
+        $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(111)
+            ->andReturn([]);
+        $this->repoMap['Note']->shouldReceive('fetchForOverview')->with(111)->once()->andReturn('latest note');
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->andReturn($licence);
+
+        $sections = ['bar', 'cake'];
+        $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
+            ->once()
+            ->with($licence)
+            ->andReturn($sections);
+
+        $result = $this->sut->handleQuery($query);
+
+        $expected = ['showExpiryWarning' => false];
+
+        $this->assertArraySubset($expected, $result->serialize());
+    }
 }

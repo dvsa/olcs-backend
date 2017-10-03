@@ -66,7 +66,8 @@ class Licence extends AbstractQueryHandler
             null;
         $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
 
-        $showExpiryWarning = $licence->isExpiring()
+        $showExpiryWarning = $continuationDetail !== null
+            && $licence->isExpiring()
             && !$this->getRepo('SystemParameter')->getDisabledDigitalContinuations()
             && (string)$continuationDetail->getStatus() === Entity\Licence\ContinuationDetail::STATUS_PRINTED;
 
