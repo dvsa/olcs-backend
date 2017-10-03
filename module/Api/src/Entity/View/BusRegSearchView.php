@@ -163,6 +163,15 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     protected $date1stReg;
 
     /**
+     * Is short notice
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="yesno", name="is_short_notice")
+     */
+    protected $isShortNotice;
+
+    /**
      * get date1stReg
      *
      * @return \DateTime
@@ -490,5 +499,27 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     public function setVariationNo($variationNo)
     {
         $this->variationNo = $variationNo;
+    }
+
+    /**
+     * set isShortNotice
+     *
+     * @param string $isShortNotice (Y or N)
+     *
+     * @return void
+     */
+    public function setIsShortNotice($isShortNotice)
+    {
+        $this->isShortNotice = $isShortNotice;
+    }
+
+    /**
+     * Is short notice (Y or N)
+     *
+     * @return string
+     */
+    public function getIsShortNotice()
+    {
+        return $this->isShortNotice;
     }
 }
