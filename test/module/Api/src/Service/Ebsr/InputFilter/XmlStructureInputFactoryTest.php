@@ -2,6 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
@@ -50,10 +54,10 @@ class XmlStructureInputFactoryTest extends TestCase
 
         $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
-        $mockSl->shouldReceive('get')->with('Structure\Operator')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Structure\Registration')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Structure\ServiceClassification')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Structure\SupportingDocuments')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(Operator::class)->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(Registration::class)->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(ServiceClassification::class)->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(SupportingDocuments::class)->andReturn($mockValidator);
 
         $sut = new XmlStructureInputFactory();
         $service = $sut->createService($mockSl);

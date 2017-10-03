@@ -10,6 +10,10 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -102,10 +106,10 @@ final class ProcessPack extends AbstractCommandHandler implements
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->xmlStructureInput = $mainServiceLocator->get('EbsrXmlStructure');
-        $this->busRegInput = $mainServiceLocator->get('EbsrBusRegInput');
-        $this->processedDataInput = $mainServiceLocator->get('EbsrProcessedDataInput');
-        $this->shortNoticeInput = $mainServiceLocator->get('EbsrShortNoticeInput');
+        $this->xmlStructureInput = $mainServiceLocator->get(XmlStructureInputFactory::class);
+        $this->busRegInput = $mainServiceLocator->get(BusRegistrationInputFactory::class);
+        $this->processedDataInput = $mainServiceLocator->get(ProcessedDataInputFactory::class);
+        $this->shortNoticeInput = $mainServiceLocator->get(ShortNoticeInputFactory::class);
         $this->submissionResultFilter = $mainServiceLocator->get('FilterManager')->get(SubmissionResultFilter::class);
         $this->result = new Result();
 

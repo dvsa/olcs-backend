@@ -2,6 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
+use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
@@ -52,17 +56,20 @@ class XmlStructureInputFactory implements FactoryInterface
                 throw new \RuntimeException(self::XML_VALID_EXCLUDE_MSG);
             }
 
+            /** @var ServiceLocatorInterface $validatorManager */
+            $validatorManager = $serviceLocator->get('ValidatorManager');
+
             /** @var Xsd $xsdValidator */
-            $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
+            $xsdValidator = $validatorManager->get(Xsd::class);
             $xsdValidator->setXsd(sprintf(self::XSD_PATH, $config['ebsr']['transxchange_schema_version']));
             $xsdValidator->setMaxErrors($config['ebsr']['max_schema_errors']);
             $xsdValidator->setXmlMessageExclude($config['xml_valid_message_exclude']);
 
             $validatorchain->attach($xsdValidator);
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\ServiceClassification'));
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Operator'));
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\Registration'));
-            $validatorchain->attach($serviceLocator->get('ValidatorManager')->get('Structure\SupportingDocuments'));
+            $validatorchain->attach($validatorManager->get(ServiceClassification::class));
+            $validatorchain->attach($validatorManager->get(Operator::class));
+            $validatorchain->attach($validatorManager->get(Registration::class));
+            $validatorchain->attach($validatorManager->get(SupportingDocuments::class));
         }
 
         return $service;
