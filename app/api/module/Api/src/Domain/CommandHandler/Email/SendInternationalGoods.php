@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -16,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendInternation
  */
 final class SendInternationalGoods extends AbstractCommandHandler implements EmailAwareInterface
 {
-    use \Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+    use EmailAwareTrait;
 
     const EMAIL_TEMPLATE = 'report-international-goods';
     const EMAIL_SUBJECT = 'email.notification.subject';
@@ -31,6 +32,7 @@ final class SendInternationalGoods extends AbstractCommandHandler implements Ema
      *
      * @param SendInternationalGoodsCmd|CommandInterface $command send international goods command
      *
+     * @throws \InvalidArgumentException
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -39,7 +41,7 @@ final class SendInternationalGoods extends AbstractCommandHandler implements Ema
         $repo = $this->getRepo();
         $email = $repo->fetchValue(SystemParameter::INTERNATIONAL_GV_REPORT_EMAIL_TO);
 
-        if (is_null($email)) {
+        if (!isset($email)) {
             throw new \InvalidArgumentException('No email specified for international GV report');
         }
 
@@ -48,8 +50,8 @@ final class SendInternationalGoods extends AbstractCommandHandler implements Ema
         $ccArray = [];
 
         //convert the cc string into a suitable array
-        if (!is_null($ccList)) {
-            $ccArray = array_map('trim', explode(', ', $ccList));
+        if (isset($ccList)) {
+            $ccArray = array_map('trim', explode(',', $ccList));
         }
 
         $message = new Message($email, self::EMAIL_SUBJECT);
