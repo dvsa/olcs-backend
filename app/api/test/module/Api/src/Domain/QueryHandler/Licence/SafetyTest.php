@@ -8,11 +8,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
+use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\Safety;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Licence\Safety as Qry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
@@ -27,7 +28,8 @@ class SafetyTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new Safety();
-        $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo('Workshop', Repository\Workshop::class);
 
         $this->repoMap['Licence']->shouldReceive('getCategoryReference')
             ->andReturnUsing(
@@ -79,6 +81,12 @@ class SafetyTest extends QueryHandlerTestCase
 
         $query = Qry::create(['id' => 111]);
 
+        $mockWorkshop = m::mock();
+        $mockWorkshop->shouldReceive('serialize')->with(['contactDetails' => ['address']])->once()
+            ->andReturn('SERIALIZED WORKSHOP');
+        $this->repoMap['Workshop']->shouldReceive('fetchList')->with($query, Query::HYDRATE_OBJECT)->once()
+            ->andReturn([$mockWorkshop]);
+        $this->repoMap['Workshop']->shouldReceive('fetchCount')->with($query)->once()->andReturn(99);
         $this->repoMap['Licence']->shouldReceive('fetchSafetyDetailsUsingId')
             ->with($query)
             ->andReturn($licence);
@@ -88,7 +96,11 @@ class SafetyTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'canHaveTrailers' => $canHaveTrailers,
                 'isShowTrailers' => false,
-                'safetyDocuments' => [['DOCUMENT']]
+                'safetyDocuments' => [['DOCUMENT']],
+                'workshops' => [
+                    'results' => ['SERIALIZED WORKSHOP'],
+                    'count' => 99,
+                ]
             ],
             $this->sut->handleQuery($query)->serialize()
         );

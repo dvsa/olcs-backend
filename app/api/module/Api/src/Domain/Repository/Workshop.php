@@ -10,6 +10,8 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Workshop as Entity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Workshop
@@ -21,10 +23,11 @@ class Workshop extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * @NOTE This method can be overridden to extend the default resource bundle
+     * Build the default query
      *
-     * @param QueryBuilder $qb
-     * @param int $id
+     * @param QueryBuilder $qb Doctrine query builder
+     * @param int          $id Identifier
+     *
      * @return \Dvsa\Olcs\Api\Domain\QueryBuilder
      */
     protected function buildDefaultQuery(QueryBuilder $qb, $id)
@@ -33,10 +36,31 @@ class Workshop extends AbstractRepository
     }
 
     /**
+     * Apply filters to default query
+     *
+     * @param QueryBuilder   $qb    Doctrine QueryBuilder
+     * @param QueryInterface $query DTO
+     *
+     * @return void
+     */
+    public function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if ($query instanceof \Dvsa\Olcs\Transfer\Query\Licence\Safety) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
+                ->setParameter('byLicence', $query->getId());
+        }
+        if ($query instanceof \Dvsa\Olcs\Transfer\Query\Application\Safety) {
+            $application = $this->getReference(ApplicationEntity::class, $query->getId());
+            $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
+                ->setParameter('byLicence', $application->getLicence()->getId());
+        }
+    }
+
+    /**
      * Fetch Workshops for a licence (with contact details and address)
      *
-     * @param int $licenceId     Licence ID
-     * @param int $hydrationMode Hydration mode Query::HYDRATE_* constant
+     * @param int $licenceId   Licence ID
+     * @param int $hydrateMode Hydration mode Query::HYDRATE_* constant
      *
      * @return array
      */

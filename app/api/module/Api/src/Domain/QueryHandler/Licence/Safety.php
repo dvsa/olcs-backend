@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Doctrine\ORM\Query;
 
 /**
  * Safety
@@ -23,6 +24,8 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 class Safety extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
+
+    protected $extraRepos = ['Workshop'];
 
     /**
      * Handle Query
@@ -46,17 +49,18 @@ class Safety extends AbstractQueryHandler
         $totalTrailers = $licence->getTotAuthTrailers();
         return $this->result(
             $licence,
-            [
-                'workshops' => [
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ],
-            ],
+            [],
             [
                 'safetyDocuments' => $this->resultList($safetyDocuments),
                 'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null)
+                'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null),
+                'workshops' => [
+                    'results' => $this->resultList(
+                        $this->getRepo('Workshop')->fetchList($query, Query::HYDRATE_OBJECT),
+                        ['contactDetails' => ['address']]
+                    ),
+                    'count' => $this->getRepo('Workshop')->fetchCount($query),
+                ],
             ]
         );
     }

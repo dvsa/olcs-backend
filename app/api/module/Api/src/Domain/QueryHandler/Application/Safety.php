@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -25,6 +26,15 @@ class Safety extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Application';
 
+    protected $extraRepos = ['Workshop'];
+
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query DTO
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var ApplicationEntity $application */
@@ -42,18 +52,20 @@ class Safety extends AbstractQueryHandler
             $application,
             [
                 'licence' => [
-                    'workshops' => [
-                        'contactDetails' => [
-                            'address'
-                        ]
-                    ],
                     'tachographIns'
                 ]
             ],
             [
                 'safetyDocuments' => $this->resultList($safetyDocuments),
                 'canHaveTrailers' => ($goodsOrPsv === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE),
-                'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null)
+                'isShowTrailers' => ($totalTrailers > 0 || $totalTrailers === null),
+                'workshops' => [
+                    'results' => $this->resultList(
+                        $this->getRepo('Workshop')->fetchList($query, Query::HYDRATE_OBJECT),
+                        ['contactDetails' => ['address']]
+                    ),
+                    'count' => $this->getRepo('Workshop')->fetchCount($query),
+                ],
             ]
         );
     }
