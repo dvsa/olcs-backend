@@ -502,9 +502,11 @@ class BusRegSearchView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * set isShortNotice (Y or N)
+     * set isShortNotice
      *
-     * @return string
+     * @param string $isShortNotice (Y or N)
+     *
+     * @return void
      */
     public function setIsShortNotice($isShortNotice)
     {
