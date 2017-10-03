@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-class BrDateReceived extends BusRegFlatAbstract
+class BrDateReceived extends SingleValueAbstract
 {
     const FORMATTER = 'Date';
     const FIELD  = 'receivedDate';

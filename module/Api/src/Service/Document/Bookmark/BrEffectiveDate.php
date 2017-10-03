@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-class BrEffectiveDate extends BusRegFlatAbstract
+class BrEffectiveDate extends SingleValueAbstract
 {
     const FORMATTER = 'Date';
     const FIELD  = 'effectiveDate';
