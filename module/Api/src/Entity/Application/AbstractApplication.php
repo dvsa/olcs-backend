@@ -648,6 +648,15 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $totCommunityLicences;
 
     /**
+     * Variation type
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="variation_type", length=32, nullable=true)
+     */
+    protected $variationType;
+
+    /**
      * Version
      *
      * @var int
@@ -2494,6 +2503,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getTotCommunityLicences()
     {
         return $this->totCommunityLicences;
+    }
+
+    /**
+     * Set the variation type
+     *
+     * @param string $variationType new value being set
+     *
+     * @return Application
+     */
+    public function setVariationType($variationType)
+    {
+        $this->variationType = $variationType;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation type
+     *
+     * @return string
+     */
+    public function getVariationType()
+    {
+        return $this->variationType;
     }
 
     /**
