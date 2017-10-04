@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrVia;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrViaTest extends BusRegFlatTestAbstract
+class BrViaTest extends SingleValueTestAbstract
 {
     const SUT_CLASS_NAME = BrVia::class;
 }

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrTasNotified;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrTasNotifiedTest extends BusRegFlatTestAbstract
+class BrTasNotifiedTest extends SingleValueTestAbstract
 {
     const SUT_CLASS_NAME = BrTasNotified::class;
 }
