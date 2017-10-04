@@ -123,4 +123,72 @@ class OverviewTest extends CommandHandlerTestCase
             $application->getLicence()->getOrganisation()->getLeadTcArea()
         );
     }
+
+    public function testHandleCommandNoExistingApplicationTracking()
+    {
+        $applicationId  = 69;
+        $licenceId      = 7;
+        $organisationId = 1;
+        $version        = 10;
+        $trackingId     = 99;
+
+        $command = Cmd::create(
+            [
+                'id' => $applicationId,
+                'version' => $version,
+                'leadTcArea' => 'B',
+                'receivedDate' => '2015-06-10',
+                'targetCompletionDate' => '2016-01-02',
+                'tracking' => [
+                    'id' => $trackingId,
+                    'version' => 1,
+                    'addressesStatus' => 2,
+                ]
+            ]
+        );
+
+        /** @var ApplicationEntity $application */
+        $application = $this->mapReference(ApplicationEntity::class, $applicationId);
+
+        /** @var LicenceEntity $licence */
+        $licence = $this->mapReference(LicenceEntity::class, $licenceId);
+
+        /** @var OrganisationEntity $organisation */
+        $organisation = $this->mapReference(OrganisationEntity::class, $organisationId);
+
+        $licence->setOrganisation($organisation);
+        $application->setLicence($licence);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, $version)
+            ->andReturn($application);
+
+        $this->repoMap['Application']
+            ->shouldReceive('save')
+            ->with($application)
+            ->once();
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'application' => $applicationId,
+                'applicationTracking' => $trackingId,
+            ],
+            'messages' => [
+                'Application updated',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('2015-06-10', $application->getReceivedDate()->format('Y-m-d'));
+        $this->assertEquals('2016-01-02', $application->getTargetCompletionDate()->format('Y-m-d'));
+        $this->assertEquals(2, $application->getApplicationTracking()->getAddressesStatus());
+        $this->assertEquals(
+            $this->mapReference(TrafficAreaEntity::class, 'B'),
+            $application->getLicence()->getOrganisation()->getLeadTcArea()
+        );
+    }
 }
