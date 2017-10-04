@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrVia extends BusRegFlatAbstract
+class BrVia extends SingleValueAbstract
 {
     const FIELD  = 'via';
     const SRCH_FLD_KEY = 'id';

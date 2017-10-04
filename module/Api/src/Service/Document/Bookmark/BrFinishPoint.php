@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-class BrFinishPoint extends BusRegFlatAbstract
+class BrFinishPoint extends SingleValueAbstract
 {
     const FORMATTER = null;
     const FIELD  = 'finishPoint';
