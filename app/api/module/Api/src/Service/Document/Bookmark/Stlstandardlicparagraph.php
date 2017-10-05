@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\CaseBundle;
 use Dvsa\Olcs\Api\Domain\Repository\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
@@ -22,17 +23,21 @@ class Stlstandardlicparagraph extends DynamicBookmark
      */
     public function getQuery(array $data)
     {
-        $bundle = ['licenceType'];
         if (isset($data['application'])) {
-            return ApplicationBundle::create(['id' => $data['application'], 'bundle' => $bundle]);
+            return ApplicationBundle::create(['id' => $data['application'], 'bundle' => ['licenceType']]);
         }
-        // Licence must be before case
-        if (isset($data['licence'])) {
-            return LicenceBundle::create(['id' => $data['licence'], 'bundle' => $bundle]);
-        }
-        // If others failed and case is present then we must be on an application
+
         if (isset($data['case'])) {
-            return ApplicationBundle::create(['case' => $data['case'], 'bundle' => $bundle]);
+            $bundle = [
+                'application' => ['licenceType'],
+                'licence' => ['licenceType'],
+            ];
+            return CaseBundle::create(['id' => $data['case'], 'bundle' => $bundle]);
+        }
+
+        // Licence must be after case, ohterwise new application, will get null for licenceType
+        if (isset($data['licence'])) {
+            return LicenceBundle::create(['id' => $data['licence'], 'bundle' => ['licenceType']]);
         }
 
         return null;
@@ -45,10 +50,34 @@ class Stlstandardlicparagraph extends DynamicBookmark
      */
     public function render()
     {
-        if ($this->data['licenceType']['id'] === Licence::LICENCE_TYPE_STANDARD_NATIONAL
-            || $this->data['licenceType']['id'] === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+        $licenceType = $this->getLicenceType();
+        if ($licenceType === Licence::LICENCE_TYPE_STANDARD_NATIONAL
+            || $licenceType === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
         ) {
             return $this->getSnippet('Stlstandardlicparagraph/standard');
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the Licence type from query data
+     *
+     * @return string|null
+     */
+    private function getLicenceType()
+    {
+        if (isset($this->data['licenceType']['id'])) {
+            return $this->data['licenceType']['id'];
+        }
+
+        // look on application before licence, for under consideration new applications
+        if (isset($this->data['application']['licenceType']['id'])) {
+            return $this->data['application']['licenceType']['id'];
+        }
+
+        if (isset($this->data['licence']['licenceType']['id'])) {
+            return $this->data['licence']['licenceType']['id'];
         }
 
         return null;
