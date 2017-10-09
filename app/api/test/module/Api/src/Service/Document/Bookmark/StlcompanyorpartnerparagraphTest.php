@@ -34,16 +34,27 @@ class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('It is important that a director of the company (who', $bookmark->render());
     }
 
-    public function testRenderLlp()
+    /**
+     * @dataProvider testRenderPartnershipsDataProvider
+     */
+    public function testRenderPartnerships($organisationTypeId)
     {
         $mockParser = m::mock();
         $mockParser->shouldReceive('getFileExtension')->with()->once()->andReturn('rtf');
 
         $bookmark = new Sut();
         $bookmark->setParser($mockParser);
-        $bookmark->setData(['organisation' => ['type' => ['id' => Organisation::ORG_TYPE_LLP]]]);
+        $bookmark->setData(['organisation' => ['type' => ['id' => $organisationTypeId]]]);
 
         $this->assertStringStartsWith('It is important that a partner who can speak and', $bookmark->render());
+    }
+
+    public function testRenderPartnershipsDataProvider()
+    {
+        return [
+            [Organisation::ORG_TYPE_PARTNERSHIP],
+            [Organisation::ORG_TYPE_LLP],
+        ];
     }
 
     /**
@@ -63,7 +74,7 @@ class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
             [Organisation::ORG_TYPE_SOLE_TRADER],
             [Organisation::ORG_TYPE_IRFO],
             [Organisation::ORG_TYPE_OTHER],
-            [Organisation::ORG_TYPE_PARTNERSHIP],
+            'invalid organisation type' => [0],
         ];
     }
 }
