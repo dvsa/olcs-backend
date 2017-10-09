@@ -24,7 +24,7 @@ class Generator extends AbstractGenerator
 {
     protected $defaultBundle = [
         'licence' => [
-            'organisation' => []
+            'organisation' => ['type']
         ]
     ];
 
