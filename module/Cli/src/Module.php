@@ -55,11 +55,13 @@ class Module implements ConsoleUsageProviderInterface
             ['--exclude=<que_typ_xxx>', '(optional) DON\'t process message type, can be a comma seperated list'],
             ['--queue-duration=SECONDS', '(optional) Number of seconds the queue process will run for'],
             'data-gov-uk-export <report-name> [--verbose|-v] [--path=<exportPath>]' => 'Export to csv for data.gov.uk',
-            ['<report-name>', 'export report name'],
-            ['    ' . DataGovUkExport::OPERATOR_LICENCE, '- export operator licences'],
-            ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, '- export bus registered only'],
-            ['    ' . DataGovUkExport::BUS_VARIATION, '- export bus variations'],
-            ['    ' . DataGovUkExport::PSV_OPERATOR_LIST, '- export psv operator list and send attachment in email'],
+            ['<report-name>', 'Export report name'],
+            ['    ' . DataGovUkExport::OPERATOR_LICENCE, 'Export operator licences'],
+            ['    ' . DataGovUkExport::BUS_REGISTERED_ONLY, 'Export bus registered only'],
+            ['    ' . DataGovUkExport::BUS_VARIATION, 'Export bus variations'],
+            ['    ' . DataGovUkExport::PSV_OPERATOR_LIST, 'Export psv operator list and send attachment in email'],
+            ['    ' . DataGovUkExport::INTERNATIONAL_GOODS, 'Export standard international goods licences report to '.
+                'CSV and send by email'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>
