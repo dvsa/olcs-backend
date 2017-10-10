@@ -90,10 +90,13 @@ class InternationalGoodsReportTest extends AbstractDbQueryTestCase
                 'column' => 'street'
             ],
             'addressLine4' => [
-                'column' => 'town'
+                'column' => 'locality'
             ],
             'postcode' => [
                 'column' => 'postcode'
+            ],
+            'town' => [
+                'column' => 'town'
             ],
             'countryCode' => [
                 'isAssociation' => true,
@@ -191,8 +194,22 @@ class InternationalGoodsReportTest extends AbstractDbQueryTestCase
 
     protected function getExpectedQuery()
     {
-        return 'SELECT o.id AS organisationId, o.name AS organisationName, l.lic_no AS licenceNo, rsts.description AS licenceStatus, rd2.description AS licenceType, l.in_force_date AS licenceStart, l.expiry_date AS licenceContinuationDate, CASE l.status WHEN :licStatusCns THEN l.cns_date WHEN :licStatusRevoked THEN l.in_force_date WHEN :licStatusSurrendered THEN l.cns_date WHEN :licStatusTerminated THEN l.cns_date ELSE \'\' END AS licenceEnd, l.tot_auth_vehicles AS vehiclesAuthorised, l.tot_auth_trailers AS trailersAuthorised, (SELECT count(*) FROM lv_table lv WHERE lv.licence_id = l.id AND lv.specified_date IS NOT NULL AND lv.removal_date IS NULL) AS vehiclesSpecified, a.saon_desc AS addressLine1, a.paon_desc AS addressLine2, a.street AS addressLine3, a.town AS addressLine4, a.postcode AS postcode, c.country_desc AS country
-FROM lic_table l JOIN org_table o ON l.organisation_id = o.id JOIN rd_table rsts ON rsts.id = l.status AND rsts.ref_data_category_id = :rdLicStatus JOIN ref_data rd2 ON rd2.id = l.licence_type LEFT JOIN cd_table cd ON cd.id = l.correspondence_cd LEFT JOIN address_table a ON a.id = cd.address_id LEFT JOIN country_table c ON c.id = a.country_code
+        return 'SELECT o.id AS organisationId, o.name AS organisationName, l.lic_no AS licenceNo, '.
+            'rsts.description AS licenceStatus, rd2.description AS licenceType, l.in_force_date AS licenceStart, '.
+            'l.expiry_date AS licenceContinuationDate, '.
+            'CASE l.status WHEN :licStatusCns THEN l.cns_date '.
+            'WHEN :licStatusRevoked THEN l.in_force_date '.
+            'WHEN :licStatusSurrendered THEN l.cns_date '.
+            'WHEN :licStatusTerminated THEN l.cns_date ELSE \'\' '.
+            'END AS licenceEnd, l.tot_auth_vehicles AS vehiclesAuthorised, l.tot_auth_trailers AS trailersAuthorised, '.
+            '(SELECT count(*) FROM lv_table lv WHERE lv.licence_id = l.id AND lv.specified_date IS NOT NULL '.
+            'AND lv.removal_date IS NULL) AS vehiclesSpecified, a.saon_desc AS addressLine1, '.
+            'a.paon_desc AS addressLine2, a.street AS addressLine3, a.locality AS addressLine4, a.town AS town, '.
+            'a.postcode AS postcode, c.country_desc AS country
+FROM lic_table l JOIN org_table o ON l.organisation_id = o.id JOIN rd_table rsts ON rsts.id = l.status '.
+            'AND rsts.ref_data_category_id = :rdLicStatus JOIN ref_data rd2 ON rd2.id = l.licence_type '.
+            'LEFT JOIN cd_table cd ON cd.id = l.correspondence_cd LEFT JOIN address_table a ON a.id = cd.address_id '.
+            'LEFT JOIN country_table c ON c.id = a.country_code
 WHERE l.status IN (:licenceStatuses) AND l.goods_or_psv = :goodsOrPsv AND l.licence_type = :licenceType
 ORDER BY o.name;';
     }
