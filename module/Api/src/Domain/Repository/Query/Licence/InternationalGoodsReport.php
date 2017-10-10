@@ -55,6 +55,7 @@ class InternationalGoodsReport extends AbstractRawQuery
 	{a.addressLine2} AS addressLine2,	
     {a.addressLine3} AS addressLine3,
 	{a.addressLine4} AS addressLine4,
+	{a.town} AS town,
 	{a.postcode} AS postcode,
 	{c.countryDesc} AS country
 FROM
