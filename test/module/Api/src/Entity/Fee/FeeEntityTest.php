@@ -215,7 +215,7 @@ class FeeEntityTest extends EntityTester
     public function ruleStartDateProvider()
     {
         $now = new DateTime();
-
+        $futureContinuationDate = new Datetime('4 years 10 days midnight');
         return [
             'immediate' => [
                 Entity::ACCRUAL_RULE_IMMEDIATE,
@@ -245,6 +245,14 @@ class FeeEntityTest extends EntityTester
                     ->andReturn('2015-04-03')
                     ->getMock(),
                 new DateTime('2015-04-04'),
+            ],
+            'continuation date more than 4 year in future' => [
+                Entity::ACCRUAL_RULE_CONTINUATION,
+                m::mock()
+                    ->shouldReceive('getExpiryDate')
+                    ->andReturn($futureContinuationDate->format('Y-m-d'))
+                    ->getMock(),
+                $futureContinuationDate->sub(new \DateInterval('P5Y'))->add(new \DateInterval('P1D')),
             ],
             'continuation date missing' => [
                 Entity::ACCRUAL_RULE_CONTINUATION,
