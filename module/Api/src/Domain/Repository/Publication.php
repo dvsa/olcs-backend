@@ -21,6 +21,16 @@ class Publication extends AbstractRepository
 {
     protected $entity = Entity::class;
 
+    /**
+     * Fetch latest publications of a given type for a given traffic area
+     *
+     * @param mixed $trafficArea the traffic area
+     * @param mixed $pubType     the publication type
+     *
+     * @return mixed
+     *
+     * @throws NotFoundException
+     */
     public function fetchLatestForTrafficAreaAndType($trafficArea, $pubType)
     {
         $qb = $this->createQueryBuilder();
@@ -48,6 +58,13 @@ class Publication extends AbstractRepository
         return $result[0];
     }
 
+    /**
+     * Fetch Pending Publications
+     *
+     * @param QueryInterface $query query object
+     *
+     * @return array
+     */
     public function fetchPendingList(QueryInterface $query)
     {
         $qb = $this->createQueryBuilder();
@@ -55,6 +72,31 @@ class Publication extends AbstractRepository
         $qb->andWhere(
             $qb->expr()->in($this->alias . '.pubStatus', ':pubStatus')
         )->setParameter('pubStatus', [Entity::PUB_NEW_STATUS, Entity::PUB_GENERATED_STATUS]);
+
+        $this->buildDefaultListQuery($qb, $query);
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        return [
+            'results' => $qb->getQuery()->getResult(),
+            'count' => $this->fetchPaginatedCount($qb)
+        ];
+    }
+
+    /**
+     * Fetch Published Publications
+     *
+     * @param QueryInterface $query query object
+     *
+     * @return array
+     */
+    public function fetchPublishedList(QueryInterface $query)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.pubStatus', ':pubStatus')
+        )->setParameter('pubStatus', Entity::PUB_PRINTED_STATUS);
 
         $this->buildDefaultListQuery($qb, $query);
 

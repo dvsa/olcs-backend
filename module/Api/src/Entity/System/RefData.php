@@ -46,6 +46,8 @@ class RefData extends AbstractRefData
     const PHONE_NUMBER_PRIMARY_TYPE = 'phone_t_primary';
     const PHONE_NUMBER_SECONDARY_TYPE = 'phone_t_secondary';
 
+    const LICENCE_STATUS = 'lic_status';
+
     /**
      * RefData constructor.
      *

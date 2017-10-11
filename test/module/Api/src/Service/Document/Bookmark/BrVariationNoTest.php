@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrVariationNo;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrVariationNoTest extends BusRegFlatTestAbstract
+class BrVariationNoTest extends SingleValueTestAbstract
 {
     const SUT_CLASS_NAME = BrVariationNo::class;
 }

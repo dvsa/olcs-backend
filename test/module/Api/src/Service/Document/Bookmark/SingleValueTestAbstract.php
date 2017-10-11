@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-abstract class BusRegFlatTestAbstract extends \PHPUnit_Framework_TestCase
+abstract class SingleValueTestAbstract extends \PHPUnit_Framework_TestCase
 {
     /**
      * Implement this in the child class
@@ -57,6 +57,17 @@ abstract class BusRegFlatTestAbstract extends \PHPUnit_Framework_TestCase
         } else {
             $this->assertEquals($value, $bookmark->render());
         }
+    }
+
+    /**
+     * tests the default value is rendered correctly in those bookmarks that populate it
+     * (base class has a default value of null)
+     */
+    public function testRenderDefaultValue()
+    {
+        $sutClassName = static::SUT_CLASS_NAME;
+        $bookmark = new $sutClassName();
+        $this->assertEquals($sutClassName::DEFAULT_VALUE, $bookmark->render());
     }
 
     public function getFormatter()

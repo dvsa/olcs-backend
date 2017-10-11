@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Mockery as m;
 
 /**
@@ -1688,6 +1689,7 @@ class BusRegEntityTest extends EntityTester
         $this->getAssertionsForIsGrantable();
 
         $this->entity->setIsShortNotice('Y');
+        $this->entity->setShortNotice('Y');
 
         $busNoticePeriod = new BusNoticePeriodEntity();
         $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
@@ -2599,5 +2601,86 @@ class BusRegEntityTest extends EntityTester
         $busReg = new Entity();
         $busReg->setTasks(new ArrayCollection());
         $this->assertEquals([], $busReg->getOpenTaskIds());
+    }
+
+    public function testIsLatestVariation()
+    {
+        $regNo = 'foo';
+        $busReg = new Entity();
+        $busReg->setRegNo($regNo);
+        $mockLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getLatestBusVariation')
+            ->with($regNo)
+            ->once()
+            ->andReturn(null)
+            ->getMock();
+
+        $busReg->setLicence($mockLicence);
+        $this->assertTrue($busReg->isLatestVariation());
+    }
+
+    public function testNotIsLatestVariation()
+    {
+        $regNo = 'foo';
+        $busReg = new Entity();
+        $busReg->setRegNo($regNo);
+        $busReg->setId(1);
+
+        $busReg1 = new Entity();
+        $busReg1->setId(2);
+
+        $mockLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getLatestBusVariation')
+            ->with($regNo)
+            ->once()
+            ->andReturn($busReg1)
+            ->getMock();
+
+        $busReg->setLicence($mockLicence);
+        $this->assertFalse($busReg->isLatestVariation());
+    }
+
+    public function testIsEbsrRefreshNoSubmissions()
+    {
+        $busReg = new Entity();
+        $busReg->setEbsrSubmissions(new ArrayCollection());
+
+        $this->assertFalse($busReg->isEbsrRefresh());
+    }
+
+    public function testAddOtherServiceNumber()
+    {
+        $busReg = new Entity();
+        $busReg->addOtherServiceNumber('foo');
+        $otherServices = new ArrayCollection();
+        $otherServices->add(new BusRegOtherServiceEntity($busReg, 'foo'));
+        $this->assertEquals($otherServices, $busReg->getOtherServices());
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $busReg = new Entity();
+        $mockLicence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getRelatedOrganisation')
+            ->andReturn('foo')
+            ->once()
+            ->getMock();
+
+        $busReg->setLicence($mockLicence);
+
+        $this->assertEquals('foo', $busReg->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisationNoLicence()
+    {
+        $this->assertNull((new Entity())->getRelatedOrganisation());
+    }
+
+    public function testCantCreateVariation()
+    {
+        $this->setExpectedException(ForbiddenException::class);
+        $busReg = new Entity();
+        $busReg->setStatus(new RefData(Entity::STATUS_NEW));
+        $busReg->createVariation(new RefData('foo'), new RefData('bar'));
     }
 }

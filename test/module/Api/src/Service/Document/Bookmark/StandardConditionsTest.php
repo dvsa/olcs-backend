@@ -25,7 +25,7 @@ class StandardConditionsTest extends \PHPUnit_Framework_TestCase
      */
     public function testRender($niFlag, $licenceType, $path)
     {
-        $bookmark = $this->getMock('Dvsa\Olcs\Api\Service\Document\Bookmark\StandardConditions', ['getSnippet']);
+        $bookmark = $this->createPartialMock(StandardConditions::class, ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')

@@ -2,6 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\XmlTools\Filter\MapXmlFile;
@@ -39,18 +49,18 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('TransExchangeXmlMapping')->andReturn($mockMappings);
 
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
-        $mockSl->shouldReceive('get')->with('InjectIsTxcApp')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('InjectReceivedDate')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('InjectNaptanCodes')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('IsScottishRules')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('Format\Via')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('Format\ExistingRegNo')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(InjectIsTxcApp::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(InjectReceivedDate::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(InjectNaptanCodes::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(IsScottishRules::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(Subsidy::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(Via::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(ExistingRegNo::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(MiscSnJustification::class)->andReturn($mockFilter);
 
-        $mockSl->shouldReceive('get')->with('Rules\EffectiveDate')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\ApplicationType')->andReturn($mockValidator);
-        $mockSl->shouldReceive('get')->with('Rules\Licence')->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(EffectiveDate::class)->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(ApplicationType::class)->andReturn($mockValidator);
+        $mockSl->shouldReceive('get')->with(Licence::class)->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with(ServiceNo::class)->andReturn($mockValidator);
         $mockSl->shouldReceive('get')->with(EndDate::class)->andReturn($mockValidator);
 
@@ -97,13 +107,13 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('TransExchangeXmlMapping')->andReturn($mockMappings);
 
         $mockSl->shouldReceive('get')->with(MapXmlFile::class)->andReturn($mockMapFilter);
-        $mockSl->shouldReceive('get')->with('InjectIsTxcApp')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('InjectReceivedDate')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('InjectNaptanCodes')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('IsScottishRules')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('Format\Subsidy')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('Format\Via')->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with('Format\ExistingRegNo')->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(InjectIsTxcApp::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(InjectReceivedDate::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(InjectNaptanCodes::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(IsScottishRules::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(Subsidy::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(Via::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(ExistingRegNo::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(MiscSnJustification::class)->andReturn($mockFilter);
 
         $sut = new BusRegistrationInputFactory();

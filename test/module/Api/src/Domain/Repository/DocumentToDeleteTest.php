@@ -8,8 +8,6 @@ use Dvsa\Olcs\Api\Domain\Repository\DocumentToDelete;
 
 /**
  * DocumentToDeleteTest
- *
- * @covers DocumentToDelete
  */
 class DocumentToDeleteTest extends RepositoryTestCase
 {

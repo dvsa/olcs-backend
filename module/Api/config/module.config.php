@@ -86,10 +86,14 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory::class,
 
-            'EbsrXmlStructure' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
-            'EbsrBusRegInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
-            'EbsrProcessedDataInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class,
-            'EbsrShortNoticeInput' => \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory::class,
             'TrafficAreaValidator' => \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class,
 
             'ComplianceEpisodeInput' => \Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory::class,
@@ -706,13 +710,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate::class
         ],
         'aliases' => [
-            'Structure\Operator' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator::class,
-            'Structure\Registration' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration::class,
-            'Structure\ServiceClassification' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification::class,
-            'Structure\SupportingDocuments' => \Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments::class,
-            'Rules\EffectiveDate' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate::class,
-            'Rules\ApplicationType' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType::class,
-            'Rules\Licence' => \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence::class,
             'Rules\ProcessedData\LocalAuthorityMissing' =>
                 \Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing::class,
             'Rules\ProcessedData\NewAppAlreadyExists' =>
@@ -733,8 +730,6 @@ return [
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
-            \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class =>
@@ -759,14 +754,5 @@ return [
         'factories' => [
             \Dvsa\Olcs\Api\Service\Nr\Filter\Vrm::class => \Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory::class
         ],
-        'aliases' => [
-            'IsScottishRules' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
-            'InjectReceivedDate' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate::class,
-            'InjectIsTxcApp' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
-            'InjectNaptanCodes' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class,
-            'Format\Subsidy' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy::class,
-            'Format\Via' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via::class,
-            'Format\ExistingRegNo' => \Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo::class
-        ]
     ],
 ];

@@ -174,8 +174,9 @@ class BusShortNotice extends AbstractBusShortNotice
     /**
      * Populate properties from data
      *
-     * @param array $data
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @param array $data data
+     *
+     * @return void
      */
     public function fromData($data)
     {

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrEndDate;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrEndDateTest extends BusRegFlatTestAbstract
+class BrEndDateTest extends SingleValueTestAbstract
 {
     const SUT_CLASS_NAME = BrEndDate::class;
 }

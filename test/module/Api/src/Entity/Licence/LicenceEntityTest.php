@@ -16,9 +16,14 @@ use Dvsa\Olcs\Api\Entity\Licence\Continuation;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\Publication\Publication;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -231,6 +236,14 @@ class LicenceEntityTest extends EntityTester
             ],
             [
                 2,
+                1,
+                'tach_na',
+                '',
+                'Y',
+                null
+            ],
+            [
+                null,
                 1,
                 'tach_na',
                 '',
@@ -1629,6 +1642,11 @@ class LicenceEntityTest extends EntityTester
         $licenceCondition4->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-01 00:00:00'));
         $licenceCondition4->setAttachedTo($attachedToLicence);
 
+        $licenceCondition5 = new ConditionUndertaking($conditionType, 'N', 'N');
+        $licenceCondition5->setNotes('lic cond 5');
+        $licenceCondition5->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00'));
+        $licenceCondition5->setAttachedTo($attachedToLicence);
+
         $licenceUndertaking1 = new ConditionUndertaking($undertakingType, 'N', 'N');
         $licenceUndertaking1->setNotes('lic und 1');
         $licenceUndertaking1->setCreatedOn(\DateTime::createFromFormat('Y-m-d H:i:s', '2016-01-04 00:00:00'));
@@ -1709,6 +1727,7 @@ class LicenceEntityTest extends EntityTester
         $conditionsUndertakings->add($licenceCondition2);
         $conditionsUndertakings->add($licenceCondition3);
         $conditionsUndertakings->add($licenceCondition4);
+        $conditionsUndertakings->add($licenceCondition5);
         $conditionsUndertakings->add($licenceUndertaking1);
         $conditionsUndertakings->add($licenceUndertaking2);
         $conditionsUndertakings->add($oc1Condition1);
@@ -1725,6 +1744,10 @@ class LicenceEntityTest extends EntityTester
         $expected = [
             'licence' => [
                 'conditions' => [
+                    [
+                        'notes' => 'lic cond 5',
+                        'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00')
+                    ],
                     [
                         'notes' => 'lic cond 2',
                         'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00')
@@ -1858,5 +1881,372 @@ class LicenceEntityTest extends EntityTester
         ];
 
         $this->assertEquals($expected, $sut->getGroupedConditionsUndertakings());
+    }
+
+    public function testGetLatestBusRouteNo()
+    {
+        /** @var BusRegEntity|m\Mock $busReg */
+        $busReg = m::mock(BusRegEntity::class)->makePartial();
+        $busReg->setRouteNo(52);
+
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getBusRegs->matching->current')->with()->twice()->andReturn($busReg);
+
+        $this->assertSame(52, $licence->getLatestBusRouteNo());
+    }
+
+    public function testGetLatestBusRouteNoNull()
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getBusRegs->matching->current')->with()->once()->andReturn(false);
+
+        $this->assertSame(0, $licence->getLatestBusRouteNo());
+    }
+
+    public function testGetActiveCommunityLicences()
+    {
+        $licence = new Licence(m::mock(OrganisationEntity::class), m::mock(RefData::class));
+
+        $communityLicStatuses = [
+            CommunityLicEntity::STATUS_ANNUL,
+            CommunityLicEntity::STATUS_ACTIVE,
+            CommunityLicEntity::STATUS_EXPIRED,
+            CommunityLicEntity::STATUS_PENDING,
+            CommunityLicEntity::STATUS_RETURNDED,
+            CommunityLicEntity::STATUS_SUSPENDED,
+            CommunityLicEntity::STATUS_WITHDRAWN,
+        ];
+
+        $communityLics = [];
+        foreach ($communityLicStatuses as $status) {
+            $communityLic = new CommunityLicEntity();
+            $communityLic->setIssueNo(0);
+            $communityLic->setStatus($status);
+            $communityLics[$status .'-'. 0] = $communityLic;
+
+            $communityLic = new CommunityLicEntity();
+            $communityLic->setIssueNo(1);
+            $communityLic->setStatus($status);
+            $communityLics[$status .'-'. 1] = $communityLic;
+        }
+        $licence->setCommunityLics(new ArrayCollection($communityLics));
+
+        $result = $licence->getActiveCommunityLicences();
+
+        $this->assertCount(3, $result);
+        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_ACTIVE .'-1']));
+        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_PENDING .'-1']));
+        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_SUSPENDED .'-1']));
+    }
+
+    public function testGetActiveVariations()
+    {
+        $licence = new Licence(m::mock(OrganisationEntity::class), m::mock(RefData::class));
+
+        $applicationStatuses = [
+            Application::APPLICATION_STATUS_CANCELLED,
+            Application::APPLICATION_STATUS_CURTAILED,
+            Application::APPLICATION_STATUS_GRANTED,
+            Application::APPLICATION_STATUS_NOT_SUBMITTED,
+            Application::APPLICATION_STATUS_NOT_TAKEN_UP,
+            Application::APPLICATION_STATUS_REFUSED,
+            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+            Application::APPLICATION_STATUS_VALID,
+            Application::APPLICATION_STATUS_WITHDRAWN,
+        ];
+
+        $applications = [];
+        foreach ($applicationStatuses as $status) {
+            $application = m::mock(Application::class)->makePartial();
+            $application->setIsVariation(false);
+            $application->setStatus($status);
+            $applications[$status .'-'. 0] = $application;
+
+            $application = m::mock(Application::class)->makePartial();
+            $application->setIsVariation(true);
+            $application->setStatus($status);
+            $applications[$status .'-'. 1] = $application;
+        }
+        $licence->setApplications(new ArrayCollection($applications));
+
+        $result = $licence->getActiveVariations();
+
+        $this->assertCount(1, $result);
+        $this->assertTrue($result->contains($applications[Application::APPLICATION_STATUS_UNDER_CONSIDERATION .'-1']));
+    }
+
+    /**
+     * @dataProvider dataProviderTestDetermineNpNumber
+     */
+    public function testDetermineNpNumber($expected, $publication)
+    {
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getLatestPublicationByType')->with(Publication::PUB_TYPE_N_P)->once()
+            ->andReturn($publication);
+
+        $this->assertSame($expected, $licence->determineNpNumber());
+    }
+
+    public function dataProviderTestDetermineNpNumber()
+    {
+        $publication = m::mock(Publication::class);
+        $publication->shouldReceive('getPublicationNo')->with()->andReturn(99);
+        return [
+            [99, $publication],
+            [null, 'X'],
+            [null, new \stdClass()]
+        ];
+    }
+
+    public function testGetPiRecordCount()
+    {
+        $licence = $this->instantiate(Entity::class);
+        $case1 = m::mock(CaseEntity::class)->makePartial();
+        $case1->setPublicInquiry('FOO');
+        $case2 = m::mock(CaseEntity::class)->makePartial();
+        $case3 = m::mock(CaseEntity::class)->makePartial();
+        $case3->setPublicInquiry('BAR');
+        $licence->setCases(new ArrayCollection([$case1, $case2, $case3]));
+
+        $this->assertSame(2, $licence->getPiRecordCount());
+    }
+
+    /**
+     * @dataProvider dataProviderTestAllowFeePayments
+     */
+    public function testAllowFeePayments($expected, $licenceStatusId)
+    {
+        $licence = $this->instantiate(Entity::class);
+        $licence->setStatus(new RefData($licenceStatusId));
+        $this->assertSame($expected, $licence->allowFeePayments());
+    }
+
+    public function dataProviderTestAllowFeePayments()
+    {
+        return [
+            [true, Licence::LICENCE_STATUS_CANCELLED],
+            [true, Licence::LICENCE_STATUS_UNDER_CONSIDERATION],
+            [true, Licence::LICENCE_STATUS_NOT_SUBMITTED],
+            [true, Licence::LICENCE_STATUS_SUSPENDED],
+            [true, Licence::LICENCE_STATUS_VALID],
+            [true, Licence::LICENCE_STATUS_CURTAILED],
+            [true, Licence::LICENCE_STATUS_GRANTED],
+            [false, Licence::LICENCE_STATUS_SURRENDERED],
+            [false, Licence::LICENCE_STATUS_WITHDRAWN],
+            [false, Licence::LICENCE_STATUS_REFUSED],
+            [false, Licence::LICENCE_STATUS_REVOKED],
+            [false, Licence::LICENCE_STATUS_NOT_TAKEN_UP],
+            [false, Licence::LICENCE_STATUS_TERMINATED],
+            [false, Licence::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT],
+            [true, Licence::LICENCE_STATUS_UNLICENSED],
+            [true, Licence::LICENCE_STATUS_CANCELLED],
+        ];
+    }
+
+    public function testGetConditionUndertakingsAddedViaLicence()
+    {
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        /** @var ConditionUndertaking $cu1 */
+        $cu1 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu1->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_APPLICATION));
+        $cu2 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu2->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_CASE));
+        $cu3 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu3->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_LICENCE));
+
+        $licence->setConditionUndertakings(new ArrayCollection([$cu1, $cu2, $cu3]));
+
+        $result = $licence->getConditionUndertakingsAddedViaLicence();
+        $this->assertCount(1, $result);
+        $this->assertSame($cu3, $result->current());
+    }
+
+    public function testGetConditionUndertakingsAddedViaImport()
+    {
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+
+        /** @var ConditionUndertaking $cu1 */
+        $cu1 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu1->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_APPLICATION));
+        $cu1->setApplication(m::mock(Application::class));
+        $cu2 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu2->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_CASE));
+        $cu3 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu3->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_LICENCE));
+        $cu4 = m::mock(ConditionUndertaking::class)->makePartial();
+        $cu4->setAddedVia(new RefData(ConditionUndertaking::ADDED_VIA_APPLICATION));
+
+        $licence->setConditionUndertakings(new ArrayCollection([$cu1, $cu2, $cu3, $cu4]));
+
+        $result = $licence->getConditionUndertakingsAddedViaImport();
+        $this->assertCount(1, $result);
+        $this->assertSame($cu4, $result->current());
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetNiFlag
+     */
+    public function testGetNiFlag($expected, $trafficArea)
+    {
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setTrafficArea($trafficArea);
+
+        $this->assertSame($expected, $licence->getNiFlag());
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetNiFlag
+     */
+    public function testIsNi($expected, $trafficArea)
+    {
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setTrafficArea($trafficArea);
+
+        $this->assertSame($expected === 'Y', $licence->isNi());
+    }
+
+    public function dataProviderTestGetNiFlag()
+    {
+        return [
+            ['Y', (new TrafficArea())->setIsNi(true)],
+            ['N', (new TrafficArea())->setIsNi(false)],
+            ['N', null],
+        ];
+    }
+
+    public function testGetLatestPublicationByType()
+    {
+        /** @var Publication $publicationNp */
+        $publicationNp1 = m::mock(Publication::class)->makePartial();
+        $publicationNp1->setPubType(new RefData(Publication::PUB_TYPE_N_P));
+        $publicationNp1->setPubDate('2017-10-02 12:45');
+        $publicationNp2 = m::mock(Publication::class)->makePartial();
+        $publicationNp2->setPubType(new RefData(Publication::PUB_TYPE_N_P));
+        $publicationNp2->setPubDate('2017-10-03 12:45');
+        $publicationAd1 = m::mock(Publication::class)->makePartial();
+        $publicationAd1->setPubType(new RefData(Publication::PUB_TYPE_A_D));
+        $publicationAd1->setPubDate('2017-09-02 12:45');
+        $publicationAd2 = m::mock(Publication::class)->makePartial();
+        $publicationAd2->setPubType(new RefData(Publication::PUB_TYPE_A_D));
+        $publicationAd2->setPubDate('2017-09-02 13:45');
+
+        /** @var PublicationLink $publicationLink1 */
+        $publicationLink1 = m::mock(PublicationLink::class)->makePartial();
+        $publicationLink1->setPublication($publicationNp1);
+        $publicationLink2 = m::mock(PublicationLink::class)->makePartial();
+        $publicationLink2->setPublication($publicationNp2);
+        $publicationLink3 = m::mock(PublicationLink::class)->makePartial();
+        $publicationLink3->setPublication($publicationAd1);
+        $publicationLink4 = m::mock(PublicationLink::class)->makePartial();
+        $publicationLink4->setPublication($publicationAd2);
+
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setPublicationLinks(
+            new ArrayCollection([$publicationLink1, $publicationLink2, $publicationLink3, $publicationLink4])
+        );
+
+        $this->assertSame(
+            $publicationAd2,
+            $licence->getLatestPublicationByType(new RefData(Publication::PUB_TYPE_A_D))
+        );
+        $this->assertSame(
+            $publicationNp2,
+            $licence->getLatestPublicationByType(new RefData(Publication::PUB_TYPE_N_P))
+        );
+    }
+
+    public function testGetLatestPublicationByTypeNull()
+    {
+        /** @var Publication $publicationNp */
+        $publicationNp1 = m::mock(Publication::class)->makePartial();
+        $publicationNp1->setPubType(new RefData(Publication::PUB_TYPE_N_P));
+        $publicationNp1->setPubDate('2017-10-02 12:45');
+        $publicationNp2 = m::mock(Publication::class)->makePartial();
+        $publicationNp2->setPubType(new RefData(Publication::PUB_TYPE_N_P));
+        $publicationNp2->setPubDate('2017-10-03 12:45');
+
+        /** @var PublicationLink $publicationLink1 */
+        $publicationLink1 = m::mock(PublicationLink::class)->makePartial();
+        $publicationLink1->setPublication($publicationNp1);
+        $publicationLink2 = m::mock(PublicationLink::class)->makePartial();
+        $publicationLink2->setPublication($publicationNp2);
+
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setPublicationLinks(
+            new ArrayCollection([$publicationLink1, $publicationLink2])
+        );
+
+        $this->assertNull(
+            $licence->getLatestPublicationByType(new RefData(Publication::PUB_TYPE_A_D))
+        );
+    }
+
+    public function testGetLocByOc()
+    {
+        $oc1 = m::mock(OperatingCentre::class);
+        $oc2 = m::mock(OperatingCentre::class);
+        $oc3 = m::mock(OperatingCentre::class);
+        $loc1 = m::mock(LicenceOperatingCentre::class)->makePartial()->setOperatingCentre($oc1);
+        $loc2 = m::mock(LicenceOperatingCentre::class)->makePartial()->setOperatingCentre($oc2);
+        $loc3 = m::mock(LicenceOperatingCentre::class)->makePartial()->setOperatingCentre($oc2);
+
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setOperatingCentres(new ArrayCollection([$loc1, $loc2, $loc3]));
+        $this->assertSame($loc2, $licence->getLocByOc($oc2));
+        $this->assertSame($loc1, $licence->getLocByOc($oc1));
+        $this->assertNull($licence->getLocByOc($oc3));
+    }
+
+    /**
+     * @dataProvider dataProviderTestHasQueuedRevocation
+     */
+    public function testHasQueuedRevocation($expected, ArrayCollection $licenceStatusRules)
+    {
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setLicenceStatusRules($licenceStatusRules);
+        $this->assertSame($expected, $licence->hasQueuedRevocation());
+    }
+
+    public function dataProviderTestHasQueuedRevocation()
+    {
+        $lsr1 = m::mock(LicenceStatusRule::class)->makePartial()
+            ->setLicenceStatus(new RefData(Licence::LICENCE_STATUS_VALID));
+        $lsr1->shouldReceive('isQueued')->with()->andReturn(false);
+        $lsr2 = m::mock(LicenceStatusRule::class)->makePartial()
+            ->setLicenceStatus(new RefData(Licence::LICENCE_STATUS_GRANTED));
+        $lsr2->shouldReceive('isQueued')->with()->andReturn(false);
+        $lsr3 = m::mock(LicenceStatusRule::class)->makePartial()
+            ->setLicenceStatus(new RefData(Licence::LICENCE_STATUS_REVOKED));
+        $lsr3->shouldReceive('isQueued')->with()->andReturn(false);
+        $lsr4 = m::mock(LicenceStatusRule::class)->makePartial()
+            ->setLicenceStatus(new RefData(Licence::LICENCE_STATUS_REVOKED));
+        $lsr4->shouldReceive('isQueued')->with()->andReturn(true);
+
+        return [
+            [true, new ArrayCollection([$lsr1, $lsr2, $lsr3, $lsr4])],
+            [true, new ArrayCollection([$lsr4])],
+            [false, new ArrayCollection()],
+            [false, new ArrayCollection([$lsr1, $lsr2, $lsr3])],
+        ];
+    }
+
+    public function testGetRelatedOrganisation()
+    {
+        $organisation = m::mock(OrganisationEntity::class);
+
+        /** @var Licence $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setOrganisation($organisation);
+
+        $this->assertSame($organisation, $licence->getRelatedOrganisation());
     }
 }

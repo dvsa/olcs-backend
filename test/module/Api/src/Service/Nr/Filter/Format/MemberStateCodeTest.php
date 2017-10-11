@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Nr\Filter\Format;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 
 /**
- * @covers \Dvsa\Olcs\Api\Service\Nr\Filter\MemberStateCode
+ * @covers \Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode
  */
 class MemberStateCodeTest extends \PHPUnit_Framework_TestCase
 {

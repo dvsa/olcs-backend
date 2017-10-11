@@ -2,8 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Licence;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceReadAudit as Entity;
+use Mockery as m;
 
 /**
  * LicenceReadAudit Entity Unit Tests
@@ -18,4 +21,15 @@ class LicenceReadAuditEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testConstructor()
+    {
+        $user = m::mock(User::class);
+        $licence = m::mock(Licence::class);
+
+        $sut = new Entity($user, $licence);
+
+        $this->assertSame($user, $sut->getUser());
+        $this->assertSame($licence, $sut->getLicence());
+    }
 }

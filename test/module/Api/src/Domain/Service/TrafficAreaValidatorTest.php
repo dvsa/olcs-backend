@@ -33,6 +33,54 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $this->sut = new \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator();
     }
 
+    public function testCalidateForSameTrafficAreasWithPostcodeWithNullPostcode()
+    {
+        $addressService = m::mock();
+        $adminAreaTrafficAreaRepo = m::mock();
+
+        $repositoryServiceManager = m::mock();
+        $repositoryServiceManager->shouldReceive('get')->with('AdminAreaTrafficArea')->once()
+            ->andReturn($adminAreaTrafficAreaRepo);
+
+        $serviceLocator = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator->shouldReceive('get')->with('AddressService')->once()->andReturn($addressService);
+        $serviceLocator->shouldReceive('get')->with('RepositoryServiceManager')->once()
+            ->andReturn($repositoryServiceManager);
+
+        $addressService->shouldReceive('fetchTrafficAreaByPostcode')->with('POSTCODE', $adminAreaTrafficAreaRepo)
+            ->once()->andReturn(null);
+
+        $application = m::mock(Application::class);
+
+        $this->sut->createService($serviceLocator);
+        $this->assertTrue($this->sut->validateForSameTrafficAreasWithPostcode($application, 'POSTCODE'));
+    }
+
+    public function testCalidateForSameTrafficAreasWithPostcode()
+    {
+        $addressService = m::mock();
+        $adminAreaTrafficAreaRepo = m::mock();
+
+        $repositoryServiceManager = m::mock();
+        $repositoryServiceManager->shouldReceive('get')->with('AdminAreaTrafficArea')->once()
+            ->andReturn($adminAreaTrafficAreaRepo);
+
+        $serviceLocator = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+        $serviceLocator->shouldReceive('get')->with('AddressService')->once()->andReturn($addressService);
+        $serviceLocator->shouldReceive('get')->with('RepositoryServiceManager')->once()
+            ->andReturn($repositoryServiceManager);
+
+        $trafficArea = m::mock()->shouldReceive('getId')->with()->once()->andReturn('X')->getMock();
+        $addressService->shouldReceive('fetchTrafficAreaByPostcode')->with('POSTCODE', $adminAreaTrafficAreaRepo)
+            ->once()->andReturn($trafficArea);
+
+        $application = m::mock(Application::class);
+        $application->shouldReceive('getLicence->getOrganisation->getLicences')->with()->once()->andReturn([]);
+
+        $this->sut->createService($serviceLocator);
+        $this->assertTrue($this->sut->validateForSameTrafficAreasWithPostcode($application, 'POSTCODE'));
+    }
+
     public function testValidateErrorWithGoodsLicence()
     {
         $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();

@@ -114,7 +114,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             'query' => 'cake'
         );
 
-        $mockPlugin = $this->getMock('\stdClass', array('fromRoute', 'fromQuery'));
+        $mockPlugin = $this->createPartialMock('\stdClass', array('fromRoute', 'fromQuery'));
 
         $mockPlugin->expects($this->once())
             ->method('fromRoute')
@@ -194,7 +194,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
     {
         $data = array();
 
-        $mockData = $this->getMock('\Zend\Http\Response');
+        $mockData = $this->createMock('\Zend\Http\Response');
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson'));
 
@@ -224,7 +224,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar'
         );
 
-        $mockService = $this->getMock('\stdClass', array('create'));
+        $mockService = $this->createPartialMock('\stdClass', array('create'));
 
         $mockService->expects($this->once())
             ->method('create')
@@ -264,7 +264,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar'
         );
 
-        $mockService = $this->getMock('\stdClass', array('create'));
+        $mockService = $this->createPartialMock('\stdClass', array('create'));
 
         $mockService->expects($this->once())
             ->method('create')
@@ -304,7 +304,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
             'foo' => 'bar'
         );
 
-        $mockService = $this->getMock('\stdClass', array('create'));
+        $mockService = $this->createPartialMock('\stdClass', array('create'));
 
         $mockService->expects($this->once())
             ->method('create')
@@ -341,7 +341,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
-        $mockService = $this->getMock('\stdClass', array('get'));
+        $mockService = $this->createPartialMock('\stdClass', array('get'));
 
         $mockService->expects($this->once())
             ->method('get')
@@ -379,7 +379,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
-        $mockService = $this->getMock('\stdClass', array('get'));
+        $mockService = $this->createPartialMock('\stdClass', array('get'));
 
         $mockService->expects($this->once())
             ->method('get')
@@ -417,7 +417,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
-        $mockService = $this->getMock('\stdClass', array('get'));
+        $mockService = $this->createPartialMock('\stdClass', array('get'));
 
         $mockService->expects($this->once())
             ->method('get')
@@ -455,7 +455,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
-        $mockService = $this->getMock('\stdClass', array('getList'));
+        $mockService = $this->createPartialMock('\stdClass', array('getList'));
 
         $mockService->expects($this->once())
             ->method('getList')
@@ -496,7 +496,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
-        $mockService = $this->getMock('\stdClass', array('getList'));
+        $mockService = $this->createPartialMock('\stdClass', array('getList'));
 
         $mockService->expects($this->once())
             ->method('getList')
@@ -534,7 +534,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond', 'getDataFromQuery'));
 
-        $mockService = $this->getMock('\stdClass', array('getList'));
+        $mockService = $this->createPartialMock('\stdClass', array('getList'));
 
         $mockService->expects($this->once())
             ->method('getList')
@@ -570,7 +570,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockController(array('checkMethod', 'formatDataFromJson'));
 
-        $responseMock = $this->getMock('\Zend\Http\Response');
+        $responseMock = $this->createMock('\Zend\Http\Response');
 
         $this->controller->expects($this->once())
             ->method('checkMethod');
@@ -593,7 +593,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
     {
         $this->getMockController(array('checkMethod', 'formatDataFromJson'));
 
-        $responseMock = $this->getMock('\Zend\Http\Response');
+        $responseMock = $this->createMock('\Zend\Http\Response');
 
         $this->controller->expects($this->once())
             ->method('checkMethod');
@@ -620,7 +620,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('update'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('update'));
 
         $serviceMock->expects($this->once())
             ->method('update')
@@ -660,7 +660,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('patch'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('patch'));
 
         $serviceMock->expects($this->once())
             ->method('patch')
@@ -701,7 +701,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('update'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('update'));
 
         $serviceMock->expects($this->once())
             ->method('update')
@@ -742,7 +742,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('patch'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('patch'));
 
         $serviceMock->expects($this->once())
             ->method('patch')
@@ -783,7 +783,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('update'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('update'));
 
         $serviceMock->expects($this->once())
             ->method('update')
@@ -824,7 +824,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('patch'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('patch'));
 
         $serviceMock->expects($this->once())
             ->method('patch')
@@ -869,7 +869,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('update', 'get'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('update', 'get'));
 
         $serviceMock->expects($this->once())
             ->method('update')
@@ -914,7 +914,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('patch', 'get'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('patch', 'get'));
 
         $serviceMock->expects($this->once())
             ->method('patch')
@@ -955,7 +955,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('update'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('update'));
 
         $serviceMock->expects($this->once())
             ->method('update')
@@ -996,7 +996,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'formatDataFromJson', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('patch'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('patch'));
 
         $serviceMock->expects($this->once())
             ->method('patch')
@@ -1034,7 +1034,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('delete'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('delete'));
 
         $serviceMock->expects($this->once())
             ->method('delete')
@@ -1068,7 +1068,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('delete'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('delete'));
 
         $serviceMock->expects($this->once())
             ->method('delete')
@@ -1102,7 +1102,7 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('checkMethod', 'getService', 'respond'));
 
-        $serviceMock = $this->getMock('\stdClass', array('delete'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('delete'));
 
         $serviceMock->expects($this->once())
             ->method('delete')
@@ -1152,23 +1152,23 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('getServiceLocator', 'serviceExists'));
 
-        $serviceMock = $this->getMock('\stdClass', array('setLanguage'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('setLanguage'));
         $serviceMock->expects($this->once())->method('setLanguage')->with($lang)->willReturnSelf();
 
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
+        $serviceFactoryMock = $this->createPartialMock('\stdClass', array('getService'));
         $serviceFactoryMock->expects($this->once())
             ->method('getService')
             ->with('Bob')
             ->willReturn($serviceMock);
 
         // Setup request.
-        $request = $this->getMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
+        $request = $this->createPartialMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
         $request->expects($this->once())->method('getHeaders')->willReturnSelf();
         $request->expects($this->once())->method('getFieldValue')->willReturn($lang);
 
         $this->controller->getEvent()->setRequest($request);
 
-        $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
+        $serviceLocatorMock = $this->createPartialMock('\stdClass', array('get'));
 
         $serviceLocatorMock->expects($this->once())
             ->method('get')
@@ -1196,23 +1196,23 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('getServiceLocator', 'serviceExists'));
 
-        $serviceMock = $this->getMock('\stdClass', array('setLanguage'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('setLanguage'));
         $serviceMock->expects($this->once())->method('setLanguage')->with($lang)->willReturnSelf();
 
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
+        $serviceFactoryMock = $this->createPartialMock('\stdClass', array('getService'));
         $serviceFactoryMock->expects($this->once())
             ->method('getService')
             ->with('Bob')
             ->will($this->returnValue($serviceMock));
 
         // Setup request.
-        $request = $this->getMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
+        $request = $this->createPartialMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
         $request->expects($this->once())->method('getHeaders')->willReturnSelf();
         $request->expects($this->once())->method('getFieldValue')->willReturn($lang);
 
         $this->controller->getEvent()->setRequest($request);
 
-        $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
+        $serviceLocatorMock = $this->createPartialMock('\stdClass', array('get'));
 
         $serviceLocatorMock->expects($this->once())
             ->method('get')
@@ -1242,22 +1242,22 @@ class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 
         $this->getMockController(array('getServiceLocator', 'serviceExists', 'getControllerName'));
 
-        $serviceMock = $this->getMock('\stdClass', array('setLanguage'));
+        $serviceMock = $this->createPartialMock('\stdClass', array('setLanguage'));
         $serviceMock->expects($this->once())->method('setLanguage')->with($lang)->willReturnSelf();
 
-        $serviceFactoryMock = $this->getMock('\stdClass', array('getService'));
+        $serviceFactoryMock = $this->createPartialMock('\stdClass', array('getService'));
         $serviceFactoryMock->expects($this->once())
             ->method('getService')
             ->with('Bob')
             ->will($this->returnValue($serviceMock));
 
         // Setup request.
-        $request = $this->getMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
+        $request = $this->createPartialMock('Zend\Http\Request', ['getHeaders', 'getFieldValue']);
         $request->expects($this->once())->method('getHeaders')->willReturnSelf();
         $request->expects($this->once())->method('getFieldValue')->willReturn($lang);
         $this->controller->getEvent()->setRequest($request);
 
-        $serviceLocatorMock = $this->getMock('\stdClass', array('get'));
+        $serviceLocatorMock = $this->createPartialMock('\stdClass', array('get'));
 
         $serviceLocatorMock->expects($this->once())
             ->method('get')

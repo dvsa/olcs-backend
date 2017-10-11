@@ -40,17 +40,17 @@ class BrLogoTest extends \PHPUnit_Framework_TestCase
         $content =  ob_get_contents();
         ob_end_clean();
 
-        $fileMock = $this->getMock('\stdClass', ['getContent']);
+        $fileMock = $this->createPartialMock('\stdClass', ['getContent']);
         $fileMock->expects($this->exactly(!empty($image) ? 1 : 0))
             ->method('getContent')
             ->willReturn($content);
 
-        $fileStoreMock = $this->getMock('\stdClass', ['read']);
+        $fileStoreMock = $this->createPartialMock('\stdClass', ['read']);
         $fileStoreMock->expects($this->exactly(!empty($image) ? 1 : 0))
             ->method('read')
             ->willReturn($fileMock);
 
-        $parserMock = $this->getMock('\stdClass', ['renderImage']);
+        $parserMock = $this->createPartialMock('\stdClass', ['renderImage']);
         $parserMock->expects($this->exactly(!empty($image) ? 1 : 0))
             ->method('renderImage')
             ->with($content, 100, $bookmark::CONTAINER_HEIGHT, 'jpeg')

@@ -9,6 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Workshop as WorkshopRepo;
@@ -130,6 +131,34 @@ class WorkshopTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchForLicence(2017));
 
         $expectedQuery = 'BLAH AND m.licence = [[2017]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testApplyFiltersLicence()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $query = m::mock(\Dvsa\Olcs\Transfer\Query\Licence\Safety::class);
+        $query->shouldReceive('getId')->with()->once()->andReturn(34);
+
+        $this->sut->applyListFilters($qb, $query);
+
+        $expectedQuery = 'BLAH AND m.licence = [[34]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testApplyFiltersApplication()
+    {
+        $qb = $this->createMockQb('BLAH');
+        $query = m::mock(\Dvsa\Olcs\Transfer\Query\Application\Safety::class);
+        $query->shouldReceive('getId')->with()->once()->andReturn(134);
+
+        $mockApplication = m::mock();
+        $mockApplication->shouldReceive('getLicence->getId')->with()->once()->andReturn(24);
+        $this->em->shouldReceive('getReference')->with(Application::class, 134)->once()->andReturn($mockApplication);
+
+        $this->sut->applyListFilters($qb, $query);
+
+        $expectedQuery = 'BLAH AND m.licence = [[24]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }

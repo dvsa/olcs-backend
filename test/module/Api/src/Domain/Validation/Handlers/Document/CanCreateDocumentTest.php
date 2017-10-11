@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument;
 
 /**
- * @covers CanCreateDocument
+ * @covers \Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanCreateDocument
  */
 class CanCreateDocumentTest extends AbstractHandlerTestCase
 {

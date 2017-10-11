@@ -232,6 +232,9 @@ class DeclarationTest extends QueryHandlerTestCase
             ->shouldReceive('getNiFlag')
             ->andReturn('Y')
             ->once()
+            ->shouldReceive('hasAuthVehiclesIncrease')
+            ->andReturn(true)
+            ->once()
             ->getMock();
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
@@ -313,6 +316,135 @@ class DeclarationTest extends QueryHandlerTestCase
             'declarations' => 'markup',
             'signature' => [],
             'interimFee' => 123.45
+        ];
+
+        $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
+    }
+
+    public function testHandleQueryInterimFeeNotExistAndNotApplicable()
+    {
+        $query = Qry::create(['id' => 111]);
+
+        $mockFeeTypeInterim = m::mock(RefDataEntity::class);
+        $mockGoodsOrPsv = m::mock(RefDataEntity::class);
+        $mockLicenceType = m::mock(RefDataEntity::class);
+        $createdOn = '2017-01-01';
+
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Entity\Application\Application::class)
+            ->shouldReceive('getId')
+            ->andReturn(111)
+            ->twice()
+            ->shouldReceive('getVariationCompletion')
+            ->andReturn('foo')
+            ->once()
+            ->shouldReceive('getDigitalSignature')
+            ->andReturn(null)
+            ->once()
+            ->shouldReceive('getGoodsOrPsv')
+            ->andReturn($mockGoodsOrPsv)
+            ->once()
+            ->shouldReceive('getLicenceType')
+            ->andReturn($mockLicenceType)
+            ->once()
+            ->shouldReceive('getCreatedOn')
+            ->andReturn($createdOn)
+            ->once()
+            ->shouldReceive('getNiFlag')
+            ->andReturn('Y')
+            ->once()
+            ->shouldReceive('hasAuthVehiclesIncrease')
+            ->andReturn(false)
+            ->once()
+            ->shouldReceive('hasAuthTrailersIncrease')
+            ->andReturn(false)
+            ->once()
+            ->shouldReceive('hasNewOperatingCentre')
+            ->andReturn(false)
+            ->once()
+            ->shouldReceive('hasIncreaseInOperatingCentre')
+            ->andReturn(false)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($query)
+            ->andReturn($mockApplication)
+            ->shouldReceive('getRefdataReference')
+            ->with(FeeTypeEntity::FEE_TYPE_GRANTINT)
+            ->andReturn($mockFeeTypeInterim)
+            ->once()
+            ->shouldReceive('getReference')
+            ->with(TrafficAreaEntity::class, TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE)
+            ->andReturn('N')
+            ->once();
+
+        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+            ->with(SystemParameterEntity::DISABLE_GDS_VERIFY_SIGNATURES)
+            ->andReturn(true)
+            ->once();
+
+        $this->repoMap['Fee']->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, true)
+            ->once()
+            ->andReturn([])
+            ->once();
+
+//        $mockFeeType = m::mock()
+//            ->shouldReceive('getFixedValue')
+//            ->twice()
+//            ->andReturn(123.45)
+//            ->getMock();
+
+        $this->repoMap['FeeType']->shouldReceive('fetchLatest')
+            ->with(
+                $mockFeeTypeInterim,
+                $mockGoodsOrPsv,
+                $mockLicenceType,
+                m::type(\DateTime::class),
+                'N',
+                true
+            )
+            ->once()
+            ->andReturn(true)
+            ->once();
+
+        $mockApplication->shouldReceive('serialize')->twice()->andReturn(['foo' => 'bar']);
+        $mockApplication->shouldReceive('canHaveInterimLicence')->with()->once()->andReturn(true);
+        $mockApplication->shouldReceive('isLicenceUpgrade')->with()->once()->andReturn('yyy');
+        $mockApplication->shouldReceive('isGoods')->with()->once()->andReturn(true);
+
+        $this->mockedSmServices['FeesHelperService']
+            ->shouldReceive('getTotalOutstandingFeeAmountForApplication')
+            ->with(111)
+            ->andReturn(123.45)
+            ->once()
+            ->getMock();
+
+        $this->mockedSmServices['SectionAccessService']
+            ->shouldReceive('getAccessibleSections')
+            ->with($mockApplication)
+            ->andReturn('bar')
+            ->once()
+            ->getMock();
+
+        $this->mockedSmServices['Review\ApplicationUndertakings']
+            ->shouldReceive('getMarkup')
+            ->with(['foo' => 'bar', 'isGoods' => true, 'isInternal' => false])
+            ->once()
+            ->andReturn('markup')
+            ->getMock();
+
+        $expected = [
+            'foo' => 'bar',
+            'canHaveInterimLicence' => true,
+            'isLicenceUpgrade' => 'yyy',
+            'outstandingFeeTotal' => 123.45,
+            'sections' => 'bar',
+            'variationCompletion' => 'foo',
+            'disableSignatures' => true,
+            'declarations' => 'markup',
+            'signature' => [],
+            'interimFee' => null
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());

@@ -98,7 +98,7 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ForbiddenException', m::type('string'));
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
 
         $this->sut->handleCommand($command);
 

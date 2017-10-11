@@ -24,9 +24,9 @@ class BusRegTest extends TestCase
 
     protected function mockHydrator()
     {
-        $mockDoctrineObject = $this->getMock('\stdClass', ['hydrate']);
+        $mockDoctrineObject = $this->createPartialMock('\stdClass', ['hydrate']);
 
-        $mockHydratorManager = $this->getMock('\stdClass', ['get']);
+        $mockHydratorManager = $this->createPartialMock('\stdClass', ['get']);
         $mockHydratorManager->expects($this->once())
             ->method('get')
             ->with('DoctrineModule\Stdlib\Hydrator\DoctrineObject')
@@ -42,7 +42,7 @@ class BusRegTest extends TestCase
         $this->sut = new BusReg();
 
         $this->sm = Bootstrap::getServiceManager();
-        $this->em = $this->getMock(
+        $this->em = $this->createPartialMock(
             '\Doctrine\ORM\EntityManager',
             [
                 'persist',
@@ -54,10 +54,7 @@ class BusRegTest extends TestCase
                 'find',
                 'lock',
                 'remove'
-            ],
-            array(),
-            '',
-            false
+            ]
         );
 
         $this->sut->setServiceLocator($this->sm);
@@ -86,7 +83,7 @@ class BusRegTest extends TestCase
             ]
         );
 
-        $mockEntity = $this->getMock(BusRegEntity::class, array('clearProperties'));
+        $mockEntity = $this->createPartialMock(BusRegEntity::class, array('clearProperties'));
         $mockEntity->expects($this->once())->method('clearProperties');
 
         $mockDoctrineObject = $this->mockHydrator();
@@ -109,7 +106,7 @@ class BusRegTest extends TestCase
         $this->em->expects($this->once())
             ->method('flush');
 
-        $mockDataService = $this->getMock('Olcs\Db\Service\BusReg\OtherServicesManager');
+        $mockDataService = $this->createMock('Olcs\Db\Service\BusReg\OtherServicesManager');
         $mockDataService->expects($this->once())
             ->method('processOtherServiceNumbers')
             ->with($mockEntity, [['serviceNo' => 'abc']])

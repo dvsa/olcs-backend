@@ -744,6 +744,7 @@ return [
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
+    Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
@@ -995,4 +996,7 @@ return [
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
+    TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
+    TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
+    TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
 ];

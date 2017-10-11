@@ -32,7 +32,7 @@ class ClientTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->mockClient = $this->getMock(\Zend\Http\Client::class);
+        $this->mockClient = $this->createMock(\Zend\Http\Client::class);
 
         $this->sut = new Client(
             $this->mockClient,

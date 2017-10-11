@@ -34,6 +34,7 @@ class BusRegSearchViewTest extends MockeryTestCase
             'routeNo' => '15711',
             'variationNo' => '6',
             'localAuthorityId' => 'unit_LaId',
+            'isShortNotice' => 'Y'
         ];
         $this->sut = new BusRegSearchView();
     }
