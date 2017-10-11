@@ -2,6 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\User;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\User\RolePermission;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\User\Role as Entity;
 
@@ -18,4 +21,70 @@ class RoleEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testEntityName()
+    {
+        $roleEntity = new Entity();
+        $roleEntity->setRole('admin');
+
+        $this->assertEquals('admin', $roleEntity->getName());
+    }
+
+    public function testHasPermission()
+    {
+        $roleEntity = new Entity();
+        $roleEntity->setRole('admin');
+
+        $roleEntity->setRolePermissions(
+            new ArrayCollection(
+                [
+                    (new RolePermission())
+                        ->setPermission(
+                            (new Permission())
+                                ->setName('permissionOne')
+                        ),
+                    (new RolePermission())
+                        ->setPermission(
+                            (new Permission())
+                                ->setName('permissionTwo')
+                        ),
+                ]
+            )
+        );
+
+        $this->assertTrue($roleEntity->hasPermission('permissionOne'));
+    }
+
+    public function testDoesNotHavePermission()
+    {
+        $roleEntity = new Entity();
+        $roleEntity->setRole('admin');
+
+        $roleEntity->setRolePermissions(
+            new ArrayCollection(
+                [
+                    (new RolePermission())
+                        ->setPermission(
+                            (new Permission())
+                                ->setName('permissionOne')
+                    ),
+                    (new RolePermission())
+                        ->setPermission(
+                            (new Permission())
+                                ->setName('permissionTwo')
+                        ),
+                ]
+            )
+        );
+
+        $this->assertFalse($roleEntity->hasPermission('permissionThree'));
+    }
+
+    public function testAnon()
+    {
+        $role = new Entity();
+        $anon = $role->anon();
+        $this->assertEquals($anon->getId(), Entity::ROLE_ANON);
+        $this->assertEquals($anon->getRole(), Entity::ROLE_ANON);
+    }
 }

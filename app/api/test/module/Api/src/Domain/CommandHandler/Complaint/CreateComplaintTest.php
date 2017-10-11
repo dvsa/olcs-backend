@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Complaint;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Complaint\CreateComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
@@ -52,7 +53,7 @@ class CreateComplaintTest extends CommandHandlerTestCase
         $command = Cmd::create(
             [
             'case' => 24,
-            "closedDate" => null,
+            "closedDate" => '2017-10-03',
             "complainantFamilyName" => "Anthony",
             "complainantForename" => "David",
             "complaintDate" => "2015-01-16",
@@ -66,16 +67,27 @@ class CreateComplaintTest extends CommandHandlerTestCase
             ]
         );
 
-        /** @var ComplaintEntity $app */
-        $comp = null;
-
         $this->repoMap['Complaint']
             ->shouldReceive('save')
             ->with(m::type(ComplaintEntity::class))
+            ->once()
             ->andReturnUsing(
-                function (ComplaintEntity $Complaint) use (&$comp) {
-                    $comp = $Complaint;
-                    $Complaint->setId(99);
+                function (ComplaintEntity $complaint) {
+                    $complaint->setId(99);
+                    $this->assertSame(24, $complaint->getCase()->getId());
+                    $this->assertSame(true, $complaint->getIsCompliance());
+                    $this->assertSame('cs_ack', (string) $complaint->getStatus());
+                    $this->assertEquals(new DateTime('2015-01-16'), $complaint->getComplaintDate());
+                    $this->assertEquals(new DateTime('2017-10-03'), $complaint->getClosedDate());
+                    $this->assertSame('Some major complaint about condition of vehicle', $complaint->getDescription());
+                    $this->assertSame('Driver L Smith', $complaint->getDriverFamilyName());
+                    $this->assertSame('Driver F John', $complaint->getDriverForename());
+                    $this->assertSame('VRM123T', $complaint->getVrm());
+                    $this->assertSame('David', $complaint->getComplainantContactDetails()->getPerson()->getForename());
+                    $this->assertSame(
+                        'Anthony',
+                        $complaint->getComplainantContactDetails()->getPerson()->getFamilyName()
+                    );
                 }
             )
             ->once();

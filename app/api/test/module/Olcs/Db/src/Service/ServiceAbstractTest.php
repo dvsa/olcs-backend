@@ -38,7 +38,7 @@ class ServiceAbstractTest extends MockeryTestCase
         );
 
         $this->sm = Bootstrap::getServiceManager();
-        $this->em = $this->getMock(
+        $this->em = $this->createPartialMock(
             '\Doctrine\ORM\EntityManager',
             [
                 'persist',
@@ -50,10 +50,7 @@ class ServiceAbstractTest extends MockeryTestCase
                 'find',
                 'lock',
                 'remove'
-            ],
-            array(),
-            '',
-            false
+            ]
         );
 
         $this->sut->setServiceLocator($this->sm);
@@ -176,13 +173,13 @@ class ServiceAbstractTest extends MockeryTestCase
             ->method('hydrate')
             ->with($hydrationData, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'));
 
-        $mockAddressService = $this->getMock('\stdClass', ['create']);
+        $mockAddressService = $this->createPartialMock('\stdClass', ['create']);
         $mockAddressService->expects($this->once())
             ->method('create')
             ->with($addressData)
             ->will($this->returnValue($addressId));
 
-        $mockServiceFactory = $this->getMock('\stdClass', ['getService']);
+        $mockServiceFactory = $this->createPartialMock('\stdClass', ['getService']);
         $mockServiceFactory->expects($this->once())
             ->method('getService')
             ->with('Address')
@@ -232,12 +229,12 @@ class ServiceAbstractTest extends MockeryTestCase
             ->method('hydrate')
             ->with($hydrationData, $this->isInstanceOf('\OlcsTest\Db\Service\Stubs\EntityStub'));
 
-        $mockAddressService = $this->getMock('\stdClass', ['update']);
+        $mockAddressService = $this->createPartialMock('\stdClass', ['update']);
         $mockAddressService->expects($this->once())
             ->method('update')
             ->with($addressId, $addressData);
 
-        $mockServiceFactory = $this->getMock('\stdClass', ['getService']);
+        $mockServiceFactory = $this->createPartialMock('\stdClass', ['getService']);
         $mockServiceFactory->expects($this->once())
             ->method('getService')
             ->with('Address')
@@ -629,7 +626,7 @@ class ServiceAbstractTest extends MockeryTestCase
             'version' => 1
         );
 
-        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stubs\EntityStub', array('clearProperties'));
+        $mockEntity = $this->createPartialMock('\OlcsTest\Db\Service\Stubs\EntityStub', array('clearProperties'));
         $mockEntity->expects($this->once())->method('clearProperties');
 
         $mockDoctrineObject = $this->mockHydrator();
@@ -668,7 +665,7 @@ class ServiceAbstractTest extends MockeryTestCase
             'version' => 1
         );
 
-        $mockEntity = $this->getMock('\OlcsTest\Db\Service\Stubs\EntityStub', array('clearProperties'));
+        $mockEntity = $this->createPartialMock('\OlcsTest\Db\Service\Stubs\EntityStub', array('clearProperties'));
         $mockEntity->expects($this->once())
             ->method('clearProperties');
 
@@ -732,9 +729,9 @@ class ServiceAbstractTest extends MockeryTestCase
 
     protected function mockHydrator()
     {
-        $mockDoctrineObject = $this->getMock('\stdClass', ['hydrate']);
+        $mockDoctrineObject = $this->createPartialMock('\stdClass', ['hydrate']);
 
-        $mockHydratorManager = $this->getMock('\stdClass', ['get']);
+        $mockHydratorManager = $this->createPartialMock('\stdClass', ['get']);
         $mockHydratorManager->expects($this->any())
             ->method('get')
             ->with('DoctrineModule\Stdlib\Hydrator\DoctrineObject')

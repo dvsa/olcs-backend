@@ -1,13 +1,16 @@
 <?php
 
-class Coverage implements PHPUnit_Framework_TestListener
+use PHPUnit\Framework\TestListener;
+use SebastianBergmann\CodeCoverage;
+
+class Coverage implements TestListener
 {
     private $tests = [];
 
     private $test;
 
     /**
-     * @var PHP_CodeCoverage_Filter
+     * @var CodeCoverage\Filter
      */
     private $filter;
 
@@ -15,7 +18,7 @@ class Coverage implements PHPUnit_Framework_TestListener
 
     public function __construct()
     {
-        $this->filter = new PHP_CodeCoverage_Filter();
+        $this->filter = new CodeCoverage\Filter();
         $this->filter->addDirectoryToWhitelist(realpath(__DIR__ . '/../module/'));
 
         foreach ($this->filter->getWhitelist() as $file) {
@@ -166,7 +169,7 @@ class Coverage implements PHPUnit_Framework_TestListener
 
             foreach ($lines as $k => $v) {
 
-                if ($v == PHP_CodeCoverage_Driver::LINE_EXECUTED) {
+                if ($v == CodeCoverage\Driver\Driver::LINE_EXECUTED) {
 
                     if (empty($this->formatData[$file][$k])) {
                         $this->formatData[$file][$k] = [];
@@ -179,11 +182,11 @@ class Coverage implements PHPUnit_Framework_TestListener
 
         $this->applyIgnoredLinesFilter();
 
-        $codeCoverage = new PHP_CodeCoverage(null, $this->filter);
+        $codeCoverage = new CodeCoverage\CodeCoverage(null, $this->filter);
         $codeCoverage->setData($this->formatData);
         $codeCoverage->setTests($this->tests);
 
-        $writer = new PHP_CodeCoverage_Report_PHP();
+        $writer = new CodeCoverage\Report\PHP();
         $writer->process($codeCoverage, realpath(__DIR__ . '/review/coverage.cov'));
     }
 
@@ -315,7 +318,7 @@ class Coverage implements PHPUnit_Framework_TestListener
                 case 'PHP_Token_NAMESPACE':
                     $ignoredLines[] = $token->getEndLine();
 
-                // Intentional fallthrough
+                    // Intentional fallthrough
                 case 'PHP_Token_OPEN_TAG':
                 case 'PHP_Token_CLOSE_TAG':
                 case 'PHP_Token_USE':

@@ -36,4 +36,5 @@ class SubCategory extends AbstractSubCategory
     const TM_SUB_CATEGORY_TM1_REMOVAL = 191;
 
     const REPORT_SUB_CATEGORY_PSV = 192;
+    const REPORT_SUB_CATEGORY_GV = 193;
 }

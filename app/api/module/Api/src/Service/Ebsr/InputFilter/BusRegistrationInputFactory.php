@@ -2,6 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -29,30 +39,35 @@ class BusRegistrationInputFactory implements FactoryInterface
         $service = new Input($inputName);
         $config = $serviceLocator->get('Config');
 
+        /** @var ServiceLocatorInterface $filterManager */
+        $filterManager = $serviceLocator->get('FilterManager');
+
         /** @var MapXmlFile $mapXmlFile */
-        $mapXmlFile = $serviceLocator->get('FilterManager')->get(MapXmlFile::class);
+        $mapXmlFile = $filterManager->get(MapXmlFile::class);
         $mapXmlFile->setMapping($serviceLocator->get('TransExchangeXmlMapping'));
 
         $filterChain = $service->getFilterChain();
         $filterChain->attach($mapXmlFile);
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('InjectIsTxcApp'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('InjectReceivedDate'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('InjectNaptanCodes'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('IsScottishRules'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Subsidy'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\Via'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get('Format\ExistingRegNo'));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(MiscSnJustification::class));
+        $filterChain->attach($filterManager->get(InjectIsTxcApp::class));
+        $filterChain->attach($filterManager->get(InjectReceivedDate::class));
+        $filterChain->attach($filterManager->get(InjectNaptanCodes::class));
+        $filterChain->attach($filterManager->get(IsScottishRules::class));
+        $filterChain->attach($filterManager->get(Subsidy::class));
+        $filterChain->attach($filterManager->get(Via::class));
+        $filterChain->attach($filterManager->get(ExistingRegNo::class));
+        $filterChain->attach($filterManager->get(MiscSnJustification::class));
 
         $validatorChain = $service->getValidatorChain();
 
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\EffectiveDate'));
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\ApplicationType'));
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get('Rules\Licence'));
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(ServiceNo::class));
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(EndDate::class));
+            /** @var ServiceLocatorInterface $validatorManager */
+            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorChain->attach($validatorManager->get(EffectiveDate::class));
+            $validatorChain->attach($validatorManager->get(ApplicationType::class));
+            $validatorChain->attach($validatorManager->get(Licence::class));
+            $validatorChain->attach($validatorManager->get(ServiceNo::class));
+            $validatorChain->attach($validatorManager->get(EndDate::class));
         }
 
         return $service;

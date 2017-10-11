@@ -31,8 +31,10 @@ class ShortNoticeInputFactory implements FactoryInterface
 
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(MissingSection::class), true);
-            $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(MissingReason::class));
+            /** @var ServiceLocatorInterface $validatorManager */
+            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorChain->attach($validatorManager->get(MissingSection::class), true);
+            $validatorChain->attach($validatorManager->get(MissingReason::class));
         }
 
         return $service;

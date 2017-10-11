@@ -25,5 +25,46 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataRetention extends AbstractDataRetention
 {
+    /**
+     * Mark for delay
+     *
+     * @param \DateTime|null $date Date to delay review until
+     *
+     * @return $this
+     */
+    public function markForDelay($date)
+    {
+        $this->markForReview();
+        $this->nextReviewDate = $date;
 
+        return $this;
+    }
+
+    /**
+     * Mark for delete
+     *
+     * @return $this
+     */
+    public function markForDelete()
+    {
+        $this->actionedDate = new \DateTime();
+        $this->actionConfirmation = true;
+        $this->nextReviewDate = null;
+
+        return $this;
+    }
+
+    /**
+     * Mark for review
+     *
+     * @return $this
+     */
+    public function markForReview()
+    {
+        $this->actionedDate = null;
+        $this->actionConfirmation = false;
+        $this->nextReviewDate = null;
+
+        return $this;
+    }
 }

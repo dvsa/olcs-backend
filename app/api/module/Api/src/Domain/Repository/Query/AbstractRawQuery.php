@@ -82,7 +82,8 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * Inject the DB connection object
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
      * @return $this
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -102,9 +103,10 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * Execute the query
      *
-     * @param array $params
-     * @param array $paramTypes
+     * @param array $params     params
+     * @param array $paramTypes param types
      *
+     * @throws RuntimeException
      * @return \Doctrine\DBAL\Driver\Statement
      */
     public function execute(array $params = [], array $paramTypes = [])
@@ -133,7 +135,9 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
             return $this->connection->executeQuery($query, $params, $paramTypes);
 
         } catch (\Exception $ex) {
-            throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
+            throw new RuntimeException(
+                'An unexpected error occurred while running query: ' .  get_class($this) . ' ' . $ex->getMessage()
+            );
         }
     }
 
@@ -171,7 +175,8 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * Grab the table name of the entity
      *
-     * @param string $entity
+     * @param string $entity entity
+     *
      * @return string
      */
     private function getTableName($entity)
@@ -182,8 +187,9 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * Grab the column name for the field
      *
-     * @param string $entity
-     * @param string $field
+     * @param string $entity entity
+     * @param string $field  field
+     *
      * @return string
      */
     private function getColumnName($entity, $field)
@@ -208,8 +214,10 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      * the output would be:
      *      UPDATE tbl_foo f INNER JOIN tbl_bar b ON b.id = f.b_id WHERE b.column_name = 1
      *
-     * @param string $template
+     * @param string $template  template
      * @param bool   $withAlias if true db fields will be prefixed with the table alias
+     *
+     * @return string
      */
     protected function buildQueryFromTemplate($template, $withAlias = true)
     {
@@ -225,7 +233,8 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * Replace a table or field name
      *
-     * @param array $matches
+     * @param array $matches matches
+     *
      * @return string
      */
     private function replaceTableOrField(array $matches = [])
@@ -242,7 +251,8 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
     /**
      * Replace a table or field name
      *
-     * @param array $matches
+     * @param array $matches matches
+     *
      * @return string
      */
     private function replaceTableOrFieldWithoutAlias(array $matches = [])

@@ -23,35 +23,10 @@ while getopts "hib:" opt; do
   esac
 done
 
-WORKSPACE=${dev_workspace}
-if [ -d "${WORKSPACE}/olcs-devtools" ]; then
-    DIR="${WORKSPACE}/olcs-devtools"
-else
-    WORKSPACE="~/git"
-    if [ -d "${WORKSPACE}/olcs-devtools" ]; then
-        DIR="${WORKSPACE}/olcs-devtools"
-    else
-	WORKSPACE="../"
-	if [ -d "${WORKSPACE}/olcs-devtools" ]; then
-            DIR="${WORKSPACE}/olcs-devtools"
-        else
-	    echo "Unable to find workspace, please set env variable for dev_workspace"
-	    exit 1;
-       fi
-   fi
-fi
-
-if [ ! -d "${DIR}/vendor" ]; then
-    if [ ! -f "${DIR}/composer.phar" ]; then
-        wget https://getcomposer.org/composer.phar -O "${DIR}/composer.phar"
-    fi
-    (cd "${DIR}" && php "composer.phar" update)
-fi
-
-PHPCS="${DIR}/vendor/bin/phpcs"
+PHPCS="vendor/bin/phpcs"
 PHPUNIT="vendor/bin/phpunit"
-PHPCOV="${DIR}/vendor/bin/phpcov"
-PHPMD="${DIR}/vendor/bin/phpmd"
+PHPCOV="vendor/bin/phpcov"
+PHPMD="vendor/bin/phpmd"
 DEVTOOLS="${DIR}"
 
 # this parses the 'project name' from the git remote url
@@ -63,7 +38,7 @@ NOW=$(date)
 
 echo "{panel:title=$PROJECT|borderStyle=solid|borderColor=#000|titleBGColor=#75e069|bgColor=#efefef}"
 
-echo "||h6. GIT revision||h6. GIT branch||h6. Time||"
+echo "||h6. GIT revision||h6. GIT branch||h6. Time||"./com
 echo "|${REVISION}|${BRANCH}|${NOW}|"
 
 echo "h2.Check PHP syntax"
@@ -93,7 +68,7 @@ do
 		then
 		if [[ ${file: -4} == ".php" ]]
 			then
-			 $PHPCS --severity=$PHPCS_SEVERITY --standard="${dev_workspace}/sonar-configuration/Profiles/DVSA/CS/ruleset.xml" $file
+			 $PHPCS --severity=$PHPCS_SEVERITY --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml $file
 		fi
 	fi
 done
@@ -110,7 +85,7 @@ do
 		then
 		if [[ ${file: -4} == ".php" ]]
 			then
-			 $PHPMD $file "Devtools\CustomTextRenderer" "${dev_workspace}/sonar-configuration/Profiles/DVSA/PMD/ruleset.xml"
+			 $PHPMD $file "Devtools\CustomTextRenderer" "vendor/olcs/coding-standards/Profiles/DVSA/PMD/ruleset.xml"
 		fi
 	fi
 done

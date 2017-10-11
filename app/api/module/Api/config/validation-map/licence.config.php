@@ -15,6 +15,7 @@ return [
     QueryHandler\Licence\OtherActiveLicences::class => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Licence\TaxiPhv::class => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Licence\TypeOfLicence::class => Misc\CanAccessLicenceWithId::class,
+    QueryHandler\Search\Licence::class => NoValidationRequired::class,
 
     // Commands
     CommandHandler\Licence\Curtail::class => Misc\IsInternalEdit::class,

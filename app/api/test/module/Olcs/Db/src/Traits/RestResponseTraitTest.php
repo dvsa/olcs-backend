@@ -61,7 +61,7 @@ class RestResponseTraitTest extends PHPUnit_Framework_TestCase
             )
         );
 
-        $mockResponse = $this->getMock(
+        $mockResponse = $this->createPartialMock(
             '\stdClass',
             array(
                 'setStatusCode',

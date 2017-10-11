@@ -12,7 +12,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers WebServiceClient
+ * WebServiceClientTest
  */
 class WebServiceClientTest extends MockeryTestCase
 {

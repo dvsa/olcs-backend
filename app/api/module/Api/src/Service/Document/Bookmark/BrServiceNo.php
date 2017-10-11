@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrServiceNo extends BusRegFlatAbstract
+class BrServiceNo extends SingleValueAbstract
 {
     const DEFAULT_VALUE = 'N/A';
     const FIELD  = 'serviceNo';

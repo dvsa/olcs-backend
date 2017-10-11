@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusFeeTypeBundle as Qry;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrFixed extends BusRegFlatAbstract
+class BrFixed extends SingleValueAbstract
 {
     const FIELD = 'fixedValue';
     const SRCH_FLD_KEY = 'id';
