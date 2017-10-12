@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Fee\Fee as QueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -88,8 +89,8 @@ class FeeTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
-        $created = new \DateTime('2015-10-29');
-        $completed = new \DateTime('2015-10-30');
+        $created = new DateTime('2015-10-29');
+        $completed = new DateTime('2015-10-30');
         $status = new RefData(TransactionEntity::STATUS_COMPLETE);
         $ft1 = $this->getMockFeeTransaction(5, $created, $completed, $status, '10.00', 'Payment', 'Cash');
         $ft2 = $this->getMockFeeTransaction(6, $created, $completed, $status, '20.00', 'Payment', 'Cash');
@@ -203,7 +204,7 @@ class FeeTest extends QueryHandlerTestCase
      * @param string $method (description)
      * @param TransactionEntity $transaction optional transaction reference
      *
-     * @return Mockery\Mock (FeeTransactionEntity)
+     * @return m\Mock (FeeTransactionEntity)
      */
     private function getMockFeeTransaction($id, $created, $completed, $status, $amount, $type, $method, $transaction = null)
     {
