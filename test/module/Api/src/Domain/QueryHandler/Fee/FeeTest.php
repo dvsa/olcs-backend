@@ -81,10 +81,10 @@ class FeeTest extends QueryHandlerTestCase
             ->shouldReceive('getLicence')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getExpiryDate')
-                ->andReturn('2017-01-01')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('getExpiryDate')
+                    ->andReturn('2017-01-01')
+                    ->once()
+                    ->getMock()
             )
             ->once()
             ->getMock();
@@ -95,7 +95,16 @@ class FeeTest extends QueryHandlerTestCase
         $ft1 = $this->getMockFeeTransaction(5, $created, $completed, $status, '10.00', 'Payment', 'Cash');
         $ft2 = $this->getMockFeeTransaction(6, $created, $completed, $status, '20.00', 'Payment', 'Cash');
         $ft3 = $this->getMockFeeTransaction(7, $created, $completed, $status, '-10.00', 'Refund', 'Refund');
-        $ft4 = $this->getMockFeeTransaction(8, $created, $completed, $status, '-20.00', null, null, $ft3->getTransaction());
+        $ft4 = $this->getMockFeeTransaction(
+            8,
+            $created,
+            $completed,
+            $status,
+            '-20.00',
+            null,
+            null,
+            $ft3->getTransaction()
+        );
         $ft5 = m::mock(FeeTransactionEntity::class)
             ->shouldReceive('getTransaction')
             ->andReturn(
@@ -195,19 +204,27 @@ class FeeTest extends QueryHandlerTestCase
     /**
      * Helper method to get a mock FeeTransaction record
      *
-     * @param int $id transaction id
-     * @param DateTime $created
-     * @param DateTime $completed
-     * @param RefData $status
-     * @param string $amount
-     * @param string $type (description)
-     * @param string $method (description)
+     * @param int               $id transaction id
+     * @param DateTime          $created
+     * @param DateTime          $completed
+     * @param RefData           $status
+     * @param string            $amount
+     * @param string            $type (description)
+     * @param string            $method (description)
      * @param TransactionEntity $transaction optional transaction reference
      *
      * @return m\Mock (FeeTransactionEntity)
      */
-    private function getMockFeeTransaction($id, $created, $completed, $status, $amount, $type, $method, $transaction = null)
-    {
+    private function getMockFeeTransaction(
+        $id,
+        $created,
+        $completed,
+        $status,
+        $amount,
+        $type,
+        $method,
+        $transaction = null
+    ) {
         if (is_null($transaction)) {
             $transaction = m::mock(TransactionEntity::class);
             $transaction
