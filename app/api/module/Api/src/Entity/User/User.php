@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -111,6 +112,14 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     protected $userType = null;
 
+    /**
+     * User constructor.
+     *
+     * @param string $pid      pid
+     * @param string $userType user type
+     *
+     * @return void
+     */
     public function __construct($pid, $userType)
     {
         parent::__construct();
@@ -119,8 +128,12 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @param string $userType
-     * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     * Create a user
+     *
+     * @param string $pid      pid
+     * @param string $userType user type
+     * @param array  $data     Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     public static function create($pid, $userType, $data)
@@ -131,6 +144,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
         return $user;
     }
 
+    /**
+     * Create anon user
+     *
+     * @return User
+     */
     public static function anon()
     {
         $user =  new static('', self::USER_TYPE_ANON);
@@ -163,7 +181,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Update a user
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     public function update(array $data)
@@ -214,7 +235,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @param string $userType
+     * Update user type
+     *
+     * @param string $userType user type
+     *
      * @return User
      */
     private function updateUserType($userType)
@@ -240,7 +264,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @param array $roles
+     * Update roles
+     *
+     * @param array $roles array of roles
+     *
      * @return User
      */
     private function updateRoles(array $roles)
@@ -276,7 +303,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @param string $accountDisabled
+     * Update whether the account is disabled
+     *
+     * @param string $accountDisabled is account disabled Y or N
+     *
      * @return User
      */
     private function updateAccountDisabled($accountDisabled)
@@ -294,7 +324,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Update internal team
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     private function updateInternal(array $data)
@@ -307,7 +340,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Update Tm user
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     private function updateTransportManager(array $data)
@@ -321,7 +357,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Update partner
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     private function updatePartner(array $data)
@@ -334,7 +373,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Update local authority
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     private function updateLocalAuthority(array $data)
@@ -347,7 +389,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Update operator
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     private function updateOperator(array $data)
@@ -382,7 +427,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
 
 
     /**
+     * Update organisation users
+     *
      * @param array $data Array of data as defined by Dvsa\Olcs\Transfer\Command\User\CreateUser
+     *
      * @return User
      */
     private function updateOrganisationUsers(array $data)
@@ -406,7 +454,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Populate organisation users
+     *
      * @param array $orgs List of Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     *
      * @return User
      */
     private function populateOrganisationUsers(array $orgs = null)
@@ -446,6 +497,8 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Checks whther the user is an administrator
+     *
      * @return bool
      */
     private function isAdministrator()
@@ -467,6 +520,8 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
+     * Get permission
+     *
      * @return string|null
      */
     public function getPermission()
@@ -485,7 +540,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @param array $roles
+     * Return roles if they exist
+     *
+     * @param array $roles roles
+     *
      * @return bool
      */
     private function hasRoles(array $roles)
@@ -506,8 +564,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
     }
 
     /**
-     * @param string $userType
-     * @param string $permission
+     * Get roles by user type
+     *
+     * @param string $userType   user type
+     * @param string $permission permission
+     *
      * @return array
      */
     public static function getRolesByUserType($userType, $permission)
@@ -519,6 +580,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
         return [];
     }
 
+    /**
+     * Get the related organisation for a user
+     *
+     * @return null|Organisation
+     */
     public function getRelatedOrganisation()
     {
         if ($this->getOrganisationUsers()->isEmpty()) {
@@ -546,7 +612,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     /**
      * Returns related Organisation Name based on the user's type
      *
-     * @var string
+     * @return string
      */
     public function getRelatedOrganisationName()
     {
@@ -574,6 +640,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
         return $name;
     }
 
+    /**
+     * Get calculated bundle values
+     *
+     * @return array
+     */
     protected function getCalculatedBundleValues()
     {
         return ['userType' => $this->getUserType()];
@@ -606,5 +677,25 @@ class User extends AbstractUser implements OrganisationProviderInterface
         }
 
         return $total;
+    }
+
+    /**
+     * Whether this user can be assigned a data retention record
+     *
+     * @return bool
+     */
+    public function canBeAssignedDataRetention()
+    {
+        return $this->isInternal() && !$this->isDisabled();
+    }
+
+    /**
+     * Whether this user is disabled
+     *
+     * @return bool
+     */
+    public function isDisabled()
+    {
+        return $this->accountDisabled === 'Y';
     }
 }

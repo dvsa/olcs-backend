@@ -959,4 +959,42 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(1, $entity->getOrganisationUsers()->count());
         $this->assertEquals('Y', $entity->getOrganisationUsers()->first()->getIsAdministrator());
     }
+
+    /**
+     * @dataProvider dpAssignedDataRetention
+     */
+    public function testCanBeAssignedDataRetention($userType, $accountDisabled, $expectedResult)
+    {
+        $data = [
+            'accountDisabled' => $accountDisabled,
+            'loginId' => 'usr'
+        ];
+
+        $entity = Entity::create('pid', $userType, $data);
+
+        $this->assertEquals($expectedResult, $entity->canBeAssignedDataRetention());
+    }
+
+    /**
+     * data provider for testCanBeAssignedDataRetention
+     *
+     * @return array
+     */
+    public function dpAssignedDataRetention()
+    {
+        return [
+            [Entity::USER_TYPE_INTERNAL, 'N', true],
+            [Entity::USER_TYPE_INTERNAL, 'Y', false],
+            [Entity::USER_TYPE_ANON, 'N', false],
+            [Entity::USER_TYPE_ANON, 'Y', false],
+            [Entity::USER_TYPE_LOCAL_AUTHORITY, 'N', false],
+            [Entity::USER_TYPE_LOCAL_AUTHORITY, 'Y', false],
+            [Entity::USER_TYPE_OPERATOR, 'N', false],
+            [Entity::USER_TYPE_OPERATOR, 'Y', false],
+            [Entity::USER_TYPE_PARTNER, 'N', false],
+            [Entity::USER_TYPE_PARTNER, 'Y', false],
+            [Entity::USER_TYPE_TRANSPORT_MANAGER, 'N', false],
+            [Entity::USER_TYPE_TRANSPORT_MANAGER, 'Y', false],
+        ];
+    }
 }
