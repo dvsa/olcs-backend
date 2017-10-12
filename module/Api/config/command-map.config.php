@@ -999,4 +999,5 @@ return [
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
+    TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
 ];
