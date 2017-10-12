@@ -93,6 +93,7 @@ class Fee extends AbstractQueryHandler
                 'transactionId' => $transaction->getId(),
                 'type' => $transaction->getType()->getDescription(),
                 'completedDate' => $transaction->getCompletedDate(),
+                'createdOn' => $transaction->getCreatedOn(),
                 'method' => $this->getMethod($transaction),
                 'processedBy' => $transaction->getProcessedByFullName(),
                 'amount' => $ft->getAmount(),
