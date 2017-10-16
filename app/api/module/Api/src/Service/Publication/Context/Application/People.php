@@ -40,7 +40,7 @@ final class People extends AbstractContext
                 case 'D':
                     if (isset($people[$aop->getPerson()->getId()])) {
                         unset($people[$aop->getPerson()->getId()]);
-                    };
+                    }
                     break;
                 case 'U':
                     $people[$aop->getOriginalPerson()->getId()] = $aop->getPerson();
