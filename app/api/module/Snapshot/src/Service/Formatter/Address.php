@@ -27,12 +27,12 @@ class Address
     /**
      * Format an address
      *
-     * @param array $data
-     * @param array $column
-     * @param \Zend\ServiceManager\ServiceManager $sm
+     * @param array $data   Data containing address
+     * @param array $column Column data
+     *
      * @return string
      */
-    public static function format($data, $column = array(), $sm = null)
+    public static function format($data, $column = array())
     {
         if (isset($column['addressFields'])) {
 
