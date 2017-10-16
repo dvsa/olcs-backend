@@ -158,9 +158,9 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     /**
      * Retention period
      *
-     * @var boolean
+     * @var int
      *
-     * @ORM\Column(type="boolean", name="retention_period", nullable=false)
+     * @ORM\Column(type="integer", name="retention_period", nullable=false)
      */
     protected $retentionPeriod;
 
@@ -497,7 +497,7 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     /**
      * Set the retention period
      *
-     * @param boolean $retentionPeriod new value being set
+     * @param int $retentionPeriod new value being set
      *
      * @return DataRetentionRule
      */
@@ -511,7 +511,7 @@ abstract class AbstractDataRetentionRule implements BundleSerializableInterface,
     /**
      * Get the retention period
      *
-     * @return boolean
+     * @return int
      */
     public function getRetentionPeriod()
     {
