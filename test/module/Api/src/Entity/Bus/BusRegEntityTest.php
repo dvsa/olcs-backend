@@ -138,9 +138,9 @@ class BusRegEntityTest extends EntityTester
     /**
      * Test isReadOnly
      *
-     * @param bool $isLatestVariation
+     * @param bool   $isLatestVariation
      * @param string $status
-     * @param bool $expected
+     * @param bool   $expected
      *
      * @dataProvider isReadOnlyProvider
      */
@@ -263,7 +263,7 @@ class BusRegEntityTest extends EntityTester
      * Test isFromEbsr
      *
      * @param string $isTxcApp
-     * @param bool $expected
+     * @param bool   $expected
      *
      * @dataProvider isFromEbsrProvider
      */
@@ -322,7 +322,7 @@ class BusRegEntityTest extends EntityTester
     /**
      * Tests isScottishRules
      *
-     * @param int $noticePeriodId
+     * @param int  $noticePeriodId
      * @param bool $expected
      *
      * @dataProvider isScottishRulesProvider
@@ -704,6 +704,7 @@ class BusRegEntityTest extends EntityTester
         $latestBusRouteNo = 3;
         $licNo = '123';
 
+        /** @var m\Mock|LicenceEntity $licenceEntityMock */
         $licenceEntityMock = m::mock(LicenceEntity::class);
         $licenceEntityMock->shouldReceive('getLatestBusRouteNo')->once()->andReturn($latestBusRouteNo);
         $licenceEntityMock->shouldReceive('getLicNo')->once()->andReturn($licNo);
@@ -1153,8 +1154,9 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * @dataProvider provideCalculateNoticeDate
-     * @param array $busNoticePeriodData
-     * @param array $busRegData
+     *
+     * @param array  $busNoticePeriodData
+     * @param array  $busRegData
      * @param string $expectedEffectiveDate
      */
     public function testRefuseByShortNotice($busNoticePeriodData, $busRegData, $expectedEffectiveDate)
@@ -1446,7 +1448,7 @@ class BusRegEntityTest extends EntityTester
      * @dataProvider getStatusForGrantDataProvider
      *
      * @param string $statusId
-     * @param array $expected
+     * @param array  $expected
      */
     public function testGetStatusForGrant($statusId, $expected)
     {
@@ -1470,7 +1472,7 @@ class BusRegEntityTest extends EntityTester
      * @dataProvider isShortNoticeRefusedDataProvider
      *
      * @param string $shortNoticeRefused
-     * @param array $expected
+     * @param array  $expected
      */
     public function testIsShortNoticeRefused($shortNoticeRefused, $expected)
     {
@@ -1493,8 +1495,8 @@ class BusRegEntityTest extends EntityTester
      *
      * @param string $statusId
      * @param string $shortNoticeRefused
-     * @param bool $withWithdrawnReason
-     * @param array $expected
+     * @param bool   $withWithdrawnReason
+     * @param array  $expected
      */
     public function testGetDecision($statusId, $shortNoticeRefused, $withWithdrawnReason, $expected)
     {
@@ -1611,6 +1613,9 @@ class BusRegEntityTest extends EntityTester
      * New and variation should return false
      *
      * @dataProvider dpIsGrantableForCancellation
+     *
+     * @param $status
+     * @param $expected
      */
     public function testIsGrantableForCancellation($status, $expected)
     {
@@ -2197,6 +2202,7 @@ class BusRegEntityTest extends EntityTester
      *
      * @dataProvider publicationSectionForGrantEmailInvalidStatusProvider
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     *
      * @param string $status
      */
     public function testPublicationSectionForGrantEmailStatusException($status)
@@ -2231,6 +2237,8 @@ class BusRegEntityTest extends EntityTester
      *
      * @dataProvider publicationSectionForGrantEmailInvalidRevertStatusProvider
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     *
+     * @param        $status
      * @param string $revertStatus
      */
     public function testPublicationSectionForGrantEmailRevertStatusException($status, $revertStatus)
@@ -2278,19 +2286,22 @@ class BusRegEntityTest extends EntityTester
         $expectedResult = $pub3No . ' ' . $pub3TrafficArea . ', ' . $pub4No . ' ' . $pub4TrafficArea;
 
         $matchPubSection = new PublicationSection();
-        $matchPubSection ->setId(PublicationSection::BUS_NEW_SHORT_SECTION);
+        $matchPubSection->setId(PublicationSection::BUS_NEW_SHORT_SECTION);
 
         $otherPubSection = new PublicationSection();
-        $otherPubSection ->setId(PublicationSection::BUS_VAR_SHORT_SECTION);
+        $otherPubSection->setId(PublicationSection::BUS_VAR_SHORT_SECTION);
 
+        /** @var m\Mock|PublicationEntity $publication2 */
         $publication2 = m::mock(PublicationEntity::class)->makePartial();
         $publication2->shouldReceive('isNew')->once()->andReturn(false);
 
+        /** @var m\Mock|PublicationEntity $publication3 */
         $publication3 = m::mock(PublicationEntity::class)->makePartial();
         $publication3->shouldReceive('isNew')->once()->andReturn(true);
         $publication3->shouldReceive('getPublicationNo')->once()->andReturn($pub3No);
         $publication3->shouldReceive('getTrafficArea->getName')->once()->andReturn($pub3TrafficArea);
 
+        /** @var m\Mock|PublicationEntity $publication4 */
         $publication4 = m::mock(PublicationEntity::class)->makePartial();
         $publication4->shouldReceive('isNew')->once()->andReturn(true);
         $publication4->shouldReceive('getPublicationNo')->once()->andReturn($pub4No);
@@ -2326,9 +2337,9 @@ class BusRegEntityTest extends EntityTester
     /**
      * @dataProvider getFormattedServiceNumbersProvider
      *
-     * @param string $serviceNo
+     * @param string          $serviceNo
      * @param ArrayCollection $otherServiceNumbers
-     * @param string $expected
+     * @param string          $expected
      */
     public function testGetFormattedServiceNumbers($serviceNo, $otherServiceNumbers, $expected)
     {
@@ -2374,6 +2385,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testIsShortNoticeStandardRules($variationNo, $receivedDate, $effectiveDate, $expected)
     {
+        /** @var m\Mock|BusNoticePeriodEntity $standardRules */
         $standardRules = m::mock(BusNoticePeriodEntity::class);
         $standardRules->shouldReceive('isScottishRules')->once()->andReturn(false);
         $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(56);
@@ -2422,6 +2434,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testIsShortNoticeNewScottishRules($variationNo, $receivedDate, $effectiveDate, $expected)
     {
+        /** @var m\Mock|BusNoticePeriodEntity $standardRules */
         $standardRules = m::mock(BusNoticePeriodEntity::class);
         $standardRules->shouldReceive('isScottishRules')->once()->andReturn(true);
         $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(42);
@@ -2453,8 +2466,10 @@ class BusRegEntityTest extends EntityTester
     /**
      * Tests the isShortNotice calculation for new scottish variations, calls populateShortNotice and checks the result
      *
-     * @param $effectiveDate
      * @param $receivedDate
+     * @param $effectiveDate
+     * @param $parentDate
+     * @param $standardPeriodCalled
      * @param $expected
      *
      * @dataProvider isShortNoticeVariationScottishProvider
@@ -2466,6 +2481,7 @@ class BusRegEntityTest extends EntityTester
         $standardPeriodCalled,
         $expected
     ) {
+        /** @var m\Mock|BusNoticePeriodEntity $scottishRules */
         $scottishRules = m::mock(BusNoticePeriodEntity::class);
         $scottishRules->shouldReceive('isScottishRules')->once()->andReturn(true);
         $scottishRules->shouldReceive('getStandardPeriod')->times($standardPeriodCalled)->andReturn(42);
@@ -2510,6 +2526,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testShortNoticeScottishRulesWithMissingParent($effectiveDate, $receivedDate, $parent)
     {
+        /** @var m\Mock|BusNoticePeriodEntity $scottishRules */
         $scottishRules = m::mock(BusNoticePeriodEntity::class);
         $scottishRules->shouldReceive('isScottishRules')->once()->andReturn(true);
 
@@ -2608,6 +2625,7 @@ class BusRegEntityTest extends EntityTester
         $regNo = 'foo';
         $busReg = new Entity();
         $busReg->setRegNo($regNo);
+        /** @var m\Mock|LicenceEntity $mockLicence */
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getLatestBusVariation')
             ->with($regNo)
@@ -2629,6 +2647,7 @@ class BusRegEntityTest extends EntityTester
         $busReg1 = new Entity();
         $busReg1->setId(2);
 
+        /** @var m\Mock|LicenceEntity $mockLicence */
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getLatestBusVariation')
             ->with($regNo)
@@ -2660,6 +2679,7 @@ class BusRegEntityTest extends EntityTester
     public function testGetRelatedOrganisation()
     {
         $busReg = new Entity();
+        /** @var m\Mock|LicenceEntity $mockLicence */
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getRelatedOrganisation')
             ->andReturn('foo')
@@ -2678,7 +2698,7 @@ class BusRegEntityTest extends EntityTester
 
     public function testCantCreateVariation()
     {
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $busReg = new Entity();
         $busReg->setStatus(new RefData(Entity::STATUS_NEW));
         $busReg->createVariation(new RefData('foo'), new RefData('bar'));
