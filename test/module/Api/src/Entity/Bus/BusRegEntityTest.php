@@ -408,71 +408,36 @@ class BusRegEntityTest extends EntityTester
      */
     public function testGetCalculatedBundleValues()
     {
-        $id = 15;
-        $regNo = 12345;
+        $bundledGetters = [
+            'isLatestVariation',
+            'isReadOnly',
+            'isScottishRules',
+            'isFromEbsr',
+            'isCancelled',
+            'isCancellation',
+            'canWithdraw',
+            'canRefuse',
+            'canRefuseByShortNotice',
+            'canCreateCancellation',
+            'canPrint',
+            'canRequestNewRouteMap',
+            'canRepublish',
+            'canCancelByAdmin',
+            'canResetRegistration',
+        ];
 
-        //the bus reg entity which exists on the licence
-        $licenceBusReg = new Entity();
-        $licenceBusReg->setId($id);
-
-        $licenceEntityMock = m::mock(LicenceEntity::class);
-        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+        $expectedBundleValues = [];
 
         /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
-        $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
-        $sut->shouldReceive('getId')->once()->andReturn($id);
-        $sut->shouldReceive('getLicence')->once()->andReturn($licenceEntityMock);
-        $sut->shouldReceive('isScottishRules')->once()->andReturn(true);
-        $sut->shouldReceive('isReadOnly')->once()->andReturn(true);
-        $sut->shouldReceive('isFromEbsr')->once()->andReturn(true);
-        $sut->shouldReceive('isCancelled')->once()->andReturn(false);
-        $sut->shouldReceive('isCancellation')->once()->andReturn(false);
 
-        $canWithdraw = new \stdClass();
-        $sut->shouldReceive('canWithdraw')->once()->andReturn($canWithdraw);
+        foreach ($bundledGetters as $getter) {
+            $testValue = new \stdClass();
+            $expectedBundleValues[$getter] = $testValue;
+            $sut->shouldReceive($getter)->once()->andReturn($testValue);
+        }
 
-        $canRefuse = new \stdClass();
-        $sut->shouldReceive('canRefuse')->once()->andReturn($canRefuse);
-
-        $canRefuseByShortNotice = new \stdClass();
-        $sut->shouldReceive('canRefuseByShortNotice')->once()->andReturn($canRefuseByShortNotice);
-
-        $canCreateCancellation = new \stdClass();
-        $sut->shouldReceive('canCreateCancellation')->once()->andReturn($canCreateCancellation);
-
-        $canPrint = new \stdClass();
-        $sut->shouldReceive('canPrint')->once()->andReturn($canPrint);
-
-        $canRequestNewRouteMap = new \stdClass();
-        $sut->shouldReceive('canRequestNewRouteMap')->once()->andReturn($canRequestNewRouteMap);
-
-        $canRepublish = new \stdClass();
-        $sut->shouldReceive('canRepublish')->once()->andReturn($canRepublish);
-
-        $canCancelByAdmin = new \stdClass();
-        $sut->shouldReceive('canCancelByAdmin')->once()->andReturn($canCancelByAdmin);
-
-        $canResetRegistration= new \stdClass();
-        $sut->shouldReceive('canResetRegistration')->once()->andReturn($canResetRegistration);
-
-        $result = $sut->getCalculatedBundleValues();
-
-        $this->assertEquals($result['isLatestVariation'], true);
-        $this->assertEquals($result['isScottishRules'], true);
-        $this->assertEquals($result['isFromEbsr'], true);
-        $this->assertEquals($result['isReadOnly'], true);
-        $this->assertEquals($result['isCancelled'], false);
-        $this->assertEquals($result['isCancellation'], false);
-        $this->assertSame($result['canWithdraw'], $canWithdraw);
-        $this->assertSame($result['canRefuse'], $canRefuse);
-        $this->assertSame($result['canRefuseByShortNotice'], $canRefuseByShortNotice);
-        $this->assertSame($result['canCreateCancellation'], $canCreateCancellation);
-        $this->assertSame($result['canPrint'], $canPrint);
-        $this->assertSame($result['canRequestNewRouteMap'], $canRequestNewRouteMap);
-        $this->assertSame($result['canRepublish'], $canRepublish);
-        $this->assertSame($result['canCancelByAdmin'], $canCancelByAdmin);
-        $this->assertSame($result['canResetRegistration'], $canResetRegistration);
+        $this->assertSame($expectedBundleValues, $sut->getCalculatedBundleValues());
     }
 
     /**
@@ -2755,18 +2720,10 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanWithdrawCases()
     {
-        return [
-            [Entity::STATUS_NEW, true],
-            [Entity::STATUS_VAR, true],
-            [Entity::STATUS_CANCEL, true],
-            [Entity::STATUS_ADMIN, false],
-            [Entity::STATUS_REGISTERED, false],
-            [Entity::STATUS_REFUSED, false],
-            [Entity::STATUS_WITHDRAWN, false],
-            [Entity::STATUS_CNS, false],
-            [Entity::STATUS_CANCELLED, false],
-            [Entity::STATUS_EXPIRED, false],
-        ];
+        $allowedStatuses = [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL];
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, $allowedStatuses, true)];
+        }
     }
 
     /**
@@ -2784,18 +2741,10 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanRefuseCases()
     {
-        return [
-            [Entity::STATUS_NEW, true],
-            [Entity::STATUS_VAR, true],
-            [Entity::STATUS_CANCEL, true],
-            [Entity::STATUS_ADMIN, false],
-            [Entity::STATUS_REGISTERED, false],
-            [Entity::STATUS_REFUSED, false],
-            [Entity::STATUS_WITHDRAWN, false],
-            [Entity::STATUS_CNS, false],
-            [Entity::STATUS_CANCELLED, false],
-            [Entity::STATUS_EXPIRED, false],
-        ];
+        $allowedStatuses = [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL];
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, $allowedStatuses, true)];
+        }
     }
 
     /**
@@ -2817,28 +2766,19 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanRefuseByShortNoticeCases()
     {
-        $statusAllowed = [
-            Entity::STATUS_NEW => true,
-            Entity::STATUS_VAR => true,
-            Entity::STATUS_CANCEL => true,
-            Entity::STATUS_ADMIN => false,
-            Entity::STATUS_REGISTERED => false,
-            Entity::STATUS_REFUSED => false,
-            Entity::STATUS_WITHDRAWN => false,
-            Entity::STATUS_CNS => false,
-            Entity::STATUS_CANCELLED => false,
-            Entity::STATUS_EXPIRED => false,
-        ];
+        $allowedStatuses = [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL];
         $isShortNoticeAllowed = [
             'Y' => true,
             'N' => false,
             'something-else' => false,
         ];
         $isShortNoticeRefusedAllowed = [
+            'Y' => false,
             'N' => true,
             'something-else' => false,
         ];
-        foreach ($statusAllowed as $status => $allowedByStatus) {
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
             foreach ($isShortNoticeAllowed as $isShortNotice => $allowedByIsShortNotice) {
                 foreach ($isShortNoticeRefusedAllowed as $isShortNoticeRefused => $allowedByIsShortNoticeRefused) {
                     yield [
@@ -2870,23 +2810,13 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanCreateCancellationCases()
     {
-        $statusAllowed = [
-            Entity::STATUS_NEW => false,
-            Entity::STATUS_VAR => false,
-            Entity::STATUS_CANCEL => false,
-            Entity::STATUS_ADMIN => false,
-            Entity::STATUS_REGISTERED => true,
-            Entity::STATUS_REFUSED => false,
-            Entity::STATUS_WITHDRAWN => false,
-            Entity::STATUS_CNS => false,
-            Entity::STATUS_CANCELLED => false,
-            Entity::STATUS_EXPIRED => false,
-        ];
+        $allowedStatuses = [Entity::STATUS_REGISTERED];
         $isLatestVariationAllowed = [
             [true, true],
             [false, false],
         ];
-        foreach ($statusAllowed as $status => $allowedByStatus) {
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
             foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
                 yield [
                     'status' => $status,
@@ -2912,18 +2842,10 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanPrintCases()
     {
-        return [
-            [Entity::STATUS_NEW, false],
-            [Entity::STATUS_VAR, false],
-            [Entity::STATUS_CANCEL, false],
-            [Entity::STATUS_ADMIN, false],
-            [Entity::STATUS_REGISTERED, true],
-            [Entity::STATUS_REFUSED, false],
-            [Entity::STATUS_WITHDRAWN, false],
-            [Entity::STATUS_CNS, false],
-            [Entity::STATUS_CANCELLED, true],
-            [Entity::STATUS_EXPIRED, false],
-        ];
+        $allowedStatuses = [Entity::STATUS_REGISTERED, Entity::STATUS_CANCELLED];
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, $allowedStatuses, true)];
+        }
     }
 
     /**
@@ -2968,23 +2890,13 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanRepublishCases()
     {
-        $statusAllowed = [
-            Entity::STATUS_NEW => false,
-            Entity::STATUS_VAR => false,
-            Entity::STATUS_CANCEL => false,
-            Entity::STATUS_ADMIN => false,
-            Entity::STATUS_REGISTERED => true,
-            Entity::STATUS_REFUSED => false,
-            Entity::STATUS_WITHDRAWN => false,
-            Entity::STATUS_CNS => false,
-            Entity::STATUS_CANCELLED => true,
-            Entity::STATUS_EXPIRED => false,
-        ];
+        $allowedStatuses = [Entity::STATUS_REGISTERED, Entity::STATUS_CANCELLED];
         $isLatestVariationAllowed = [
             [true, true],
             [false, false],
         ];
-        foreach ($statusAllowed as $status => $allowedByStatus) {
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
             foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
                 yield [
                     'status' => $status,
@@ -3013,23 +2925,13 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanCancelByAdminCases()
     {
-        $statusAllowed = [
-            Entity::STATUS_NEW => false,
-            Entity::STATUS_VAR => false,
-            Entity::STATUS_CANCEL => false,
-            Entity::STATUS_ADMIN => false,
-            Entity::STATUS_REGISTERED => true,
-            Entity::STATUS_REFUSED => false,
-            Entity::STATUS_WITHDRAWN => false,
-            Entity::STATUS_CNS => false,
-            Entity::STATUS_CANCELLED => false,
-            Entity::STATUS_EXPIRED => false,
-        ];
+        $allowedStatuses = [Entity::STATUS_REGISTERED];
         $isLatestVariationAllowed = [
             [true, true],
             [false, false],
         ];
-        foreach ($statusAllowed as $status => $allowedByStatus) {
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
             foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
                 yield [
                     'status' => $status,
@@ -3058,23 +2960,21 @@ class BusRegEntityTest extends EntityTester
 
     public function provideCanResetRegistrationCases()
     {
-        $statusAllowed = [
-            Entity::STATUS_NEW => false,
-            Entity::STATUS_VAR => false,
-            Entity::STATUS_CANCEL => false,
-            Entity::STATUS_ADMIN => true,
-            Entity::STATUS_REGISTERED => true,
-            Entity::STATUS_REFUSED => true,
-            Entity::STATUS_WITHDRAWN => true,
-            Entity::STATUS_CNS => true,
-            Entity::STATUS_CANCELLED => true,
-            Entity::STATUS_EXPIRED => true,
+        $allowedStatuses = [
+            Entity::STATUS_ADMIN,
+            Entity::STATUS_REGISTERED,
+            Entity::STATUS_REFUSED,
+            Entity::STATUS_WITHDRAWN,
+            Entity::STATUS_CNS,
+            Entity::STATUS_CANCELLED,
+            Entity::STATUS_EXPIRED,
         ];
         $isLatestVariationAllowed = [
             [true, true],
             [false, false],
         ];
-        foreach ($statusAllowed as $status => $allowedByStatus) {
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
             foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
                 yield [
                     'status' => $status,
@@ -3083,5 +2983,21 @@ class BusRegEntityTest extends EntityTester
                 ];
             }
         }
+    }
+
+    private function getAllStatuses()
+    {
+        return [
+            Entity::STATUS_NEW,
+            Entity::STATUS_VAR,
+            Entity::STATUS_CANCEL,
+            Entity::STATUS_ADMIN,
+            Entity::STATUS_REGISTERED,
+            Entity::STATUS_REFUSED,
+            Entity::STATUS_WITHDRAWN,
+            Entity::STATUS_CNS,
+            Entity::STATUS_CANCELLED,
+            Entity::STATUS_EXPIRED,
+        ];
     }
 }
