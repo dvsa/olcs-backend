@@ -47,7 +47,7 @@ class DataRetentionRule extends AbstractRepository
     /**
      * Fetch as list of all data retention rules that have not been deleted
      *
-     * @param QueryInterface $query    Query from API
+     * @param QueryInterface $query Query from API
      *
      * @return array
      */

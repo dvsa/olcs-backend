@@ -23,8 +23,6 @@ class RuleAdmin extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        $filter = $query->getArrayCopy();
-
         /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
 
