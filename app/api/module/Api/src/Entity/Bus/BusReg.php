@@ -246,8 +246,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         // create bus reg based on the previous record
         $busReg = clone $this;
 
-        $data = array_merge(
         // override columns which need different defaults for a variation
+        $data = array_merge(
             self::$defaultAll,
             [
                 // unset database metadata
@@ -1369,6 +1369,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         );
     }
 
+    /**
+     * Determine if registration can be refused
+     *
+     * @return bool
+     */
     public function canRefuse()
     {
         return in_array(
@@ -1378,6 +1383,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         );
     }
 
+    /**
+     * Determine if registration can be refused by short notice
+     *
+     * @return bool
+     */
     public function canRefuseByShortNotice()
     {
         return $this->canRefuse()
@@ -1385,34 +1395,64 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             && $this->shortNoticeRefused === 'N';
     }
 
+    /**
+     * Determine if a cancellation can be created
+     *
+     * @return bool
+     */
     public function canCreateCancellation()
     {
         return $this->status->getId() === self::STATUS_REGISTERED
             && $this->isLatestVariation();
     }
 
+    /**
+     * Determine if registration can be printed
+     *
+     * @return bool
+     */
     public function canPrint()
     {
         return in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED], true);
     }
 
+    /**
+     * Determine if a new route map can be requested
+     *
+     * @return bool
+     */
     public function canRequestNewRouteMap()
     {
         return $this->isFromEbsr();
     }
 
+    /**
+     * Determine if a registration can be republished
+     *
+     * @return bool
+     */
     public function canRepublish()
     {
         return in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED], true)
             && $this->isLatestVariation();
     }
 
+    /**
+     * Determine if registration can be admin-cancelled
+     *
+     * @return bool
+     */
     public function canCancelByAdmin()
     {
         return $this->status->getId() === self::STATUS_REGISTERED
             && $this->isLatestVariation();
     }
 
+    /**
+     * Determine if registration can be reset
+     *
+     * @return bool
+     */
     public function canResetRegistration()
     {
         return !in_array($this->status->getId(), [self::STATUS_NEW, self::STATUS_VAR, self::STATUS_CANCEL], true)
