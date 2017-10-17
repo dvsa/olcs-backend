@@ -10,5 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\AbstractListQueryHandlerTest;
 class OpenListTest extends AbstractListQueryHandlerTest
 {
     protected $sutClass = \Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Report\OpenList::class;
+    protected $repoClass = \Dvsa\Olcs\Api\Domain\Repository\Cases::class;
     protected $sutRepo = 'Cases';
+    protected $qryClass = \Dvsa\Olcs\Transfer\Query\Cases\Report\OpenList::class;
 }

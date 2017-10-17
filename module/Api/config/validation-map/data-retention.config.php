@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 return [
     CommandHandler\DataRetention\Populate::class => IsSystemUser::class,
     CommandHandler\DataRetention\DelayItems::class => IsInternalUser::class,
+    CommandHandler\DataRetention\AssignItems::class => IsInternalUser::class,
     CommandHandler\DataRetention\DeleteEntities::class => IsSystemUser::class,
     CommandHandler\DataRetention\UpdateActionConfirmation::class => IsInternalUser::class,
 
