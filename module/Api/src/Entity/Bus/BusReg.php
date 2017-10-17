@@ -786,6 +786,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      */
     public function isGrantable()
     {
+        if (!in_array($this->status->getId(), array_keys(self::$grantStatusMap), true)) {
+            return false;
+        };
+
         if (false === $this->isGrantableBasedOnRequiredFields()) {
             // bus reg without all required fields which makes it non-grantable
             return false;
