@@ -1631,6 +1631,28 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
+     * Tests that grant is only possible when in certain statuses
+     *
+     * @dataProvider provideIsGrantableForStatusCases
+     *
+     * @param $status
+     * @param $expected
+     */
+    public function testIsGrantableForStatus($status, $expected)
+    {
+        $this->getAssertionsForIsGrantable();
+        $this->entity->setStatus(new RefDataEntity($status));
+        $this->assertEquals($expected, $this->entity->isGrantable());
+    }
+
+    public function provideIsGrantableForStatusCases()
+    {
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL], true)];
+        }
+    }
+
+    /**
      * data provider for testIsGrantableForCancellation
      *
      * @return array
