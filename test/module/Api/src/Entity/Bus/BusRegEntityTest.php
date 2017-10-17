@@ -28,9 +28,11 @@ use Mockery as m;
  */
 class BusRegEntityTest extends EntityTester
 {
+    /** @var Entity */
+    protected $entity;
+
     public function setUp()
     {
-        /** @var \Dvsa\Olcs\Api\Entity\Bus\BusReg entity */
         $this->entity = $this->instantiate($this->entityClass);
     }
 
