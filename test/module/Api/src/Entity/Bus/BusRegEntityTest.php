@@ -426,6 +426,7 @@ class BusRegEntityTest extends EntityTester
             'canRepublish',
             'canCancelByAdmin',
             'canResetRegistration',
+            'canCreateVariation',
         ];
 
         $expectedBundleValues = [];
@@ -782,6 +783,10 @@ class BusRegEntityTest extends EntityTester
         $licenceEntityMock->shouldReceive('getLatestBusVariation')
             ->once()
             ->with($regNo, [])
+            ->andReturn($licenceBusReg);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')
+            ->once()
+            ->with($regNo)
             ->andReturn($licenceBusReg);
 
         $shortNotice = new BusShortNoticeEntity();
@@ -2721,11 +2726,14 @@ class BusRegEntityTest extends EntityTester
         $this->assertNull((new Entity())->getRelatedOrganisation());
     }
 
-    public function testCantCreateVariation()
+    public function testCreateVariationFailsWhenCannotCreateVariation()
     {
         $this->expectException(ForbiddenException::class);
-        $busReg = new Entity();
-        $busReg->setStatus(new RefData(Entity::STATUS_NEW));
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->shouldReceive('canCreateVariation')
+            ->with()
+            ->andReturn(false);
         $busReg->createVariation(new RefData('foo'), new RefData('bar'));
     }
 
@@ -2992,6 +3000,43 @@ class BusRegEntityTest extends EntityTester
             Entity::STATUS_CNS,
             Entity::STATUS_CANCELLED,
             Entity::STATUS_EXPIRED,
+        ];
+        $isLatestVariationAllowed = [
+            [true, true],
+            [false, false],
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+                yield [
+                    'status' => $status,
+                    'isLatestVariation' => $isLatestVariation,
+                    'expected' => $allowedByStatus && $allowedByIsLatestVariation
+                ];
+            }
+        }
+    }
+
+    /**
+     * @dataProvider provideCanCreateVariationCases
+     *
+     * @param $status
+     * @param $isLatestVariation
+     * @param $expected
+     */
+    public function testCantCreateVariation($status, $isLatestVariation, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus(new RefData($status));
+        $busReg->shouldReceive('isLatestVariation')->andReturn($isLatestVariation);
+        $this->assertSame($expected, $busReg->canCreateVariation());
+    }
+
+    public function provideCanCreateVariationCases()
+    {
+        $allowedStatuses = [
+            Entity::STATUS_REGISTERED,
         ];
         $isLatestVariationAllowed = [
             [true, true],
