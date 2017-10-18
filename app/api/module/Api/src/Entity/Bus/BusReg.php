@@ -223,7 +223,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      */
     public function canCreateVariation()
     {
-        return $this->isRegistered();
+        return $this->isRegistered()
+            && $this->isLatestVariation();
     }
 
     /**
@@ -484,6 +485,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             'canRepublish' => $this->canRepublish(),
             'canCancelByAdmin' => $this->canCancelByAdmin(),
             'canResetRegistration' => $this->canResetRegistration(),
+            'canCreateVariation' => $this->canCreateVariation(),
         ];
     }
 
