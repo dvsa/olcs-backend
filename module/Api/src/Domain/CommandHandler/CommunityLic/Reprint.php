@@ -69,7 +69,8 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
         $generateBatchCmd = GenerateBatchCommand::create(
             [
                 'licence' => $licenceId,
-                'communityLicenceIds' => $ids
+                'communityLicenceIds' => $ids,
+                'identifier' => $command->getApplication(),
             ]
         );
         $result->merge($this->handleSideEffect($generateBatchCmd));
@@ -78,6 +79,15 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
         return $result;
     }
 
+    /**
+     * Validate that Community Licences can be reprinted
+     *
+     * @param array $ids       List of Community Licence IDs
+     * @param int   $licenceId Licence ID
+     *
+     * @throws ValidationException
+     * @return void
+     */
     protected function validateLicences($ids, $licenceId)
     {
         $activeLicences = $this->getRepo()->fetchActiveLicences($licenceId);
@@ -121,7 +131,10 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
     }
 
     /**
-     * @param array $data
+     * Create a Community Licence entity with some initial data
+     *
+     * @param array $data Community Licence data
+     *
      * @return CommunityLic
      */
     private function createCommunityLicObject($data)
