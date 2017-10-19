@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Controller;
 
+use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Controller\GenericController;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
@@ -522,6 +523,34 @@ class GenericControllerTest extends TestCase
         $mockCommandHandler->shouldReceive('handleCommand')
             ->with($application)
             ->andThrow(new Exception\VersionConflictException('foo'));
+
+        $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
+
+        $sut = $this->setupSut($mockSl);
+
+        $response = $sut->update(25, []);
+
+        $this->assertSame($viewModel, $response);
+    }
+
+    public function testUpdateOptimisticLock()
+    {
+        $viewModel = new JsonModel();
+        $application = new UpdateTypeOfLicence();
+
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('error')->with(
+            409,
+            ['foo']
+        )->andReturn($viewModel);
+
+        $mockParams = m::mock(Params::class);
+        $mockParams->shouldReceive('__invoke')->with('dto')->andReturn($application);
+
+        $mockCommandHandler = m::mock(CommandHandlerInterface::class);
+        $mockCommandHandler->shouldReceive('handleCommand')
+            ->with($application)
+            ->andThrow(new OptimisticLockException('foo', m::mock()));
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
