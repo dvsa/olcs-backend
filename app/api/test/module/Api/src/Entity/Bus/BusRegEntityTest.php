@@ -28,9 +28,11 @@ use Mockery as m;
  */
 class BusRegEntityTest extends EntityTester
 {
+    /** @var Entity */
+    protected $entity;
+
     public function setUp()
     {
-        /** @var \Dvsa\Olcs\Api\Entity\Bus\BusReg entity */
         $this->entity = $this->instantiate($this->entityClass);
     }
 
@@ -138,9 +140,9 @@ class BusRegEntityTest extends EntityTester
     /**
      * Test isReadOnly
      *
-     * @param bool $isLatestVariation
+     * @param bool   $isLatestVariation
      * @param string $status
-     * @param bool $expected
+     * @param bool   $expected
      *
      * @dataProvider isReadOnlyProvider
      */
@@ -263,7 +265,7 @@ class BusRegEntityTest extends EntityTester
      * Test isFromEbsr
      *
      * @param string $isTxcApp
-     * @param bool $expected
+     * @param bool   $expected
      *
      * @dataProvider isFromEbsrProvider
      */
@@ -322,7 +324,7 @@ class BusRegEntityTest extends EntityTester
     /**
      * Tests isScottishRules
      *
-     * @param int $noticePeriodId
+     * @param int  $noticePeriodId
      * @param bool $expected
      *
      * @dataProvider isScottishRulesProvider
@@ -408,35 +410,37 @@ class BusRegEntityTest extends EntityTester
      */
     public function testGetCalculatedBundleValues()
     {
-        $id = 15;
-        $regNo = 12345;
+        $bundledGetters = [
+            'isLatestVariation',
+            'isReadOnly',
+            'isScottishRules',
+            'isFromEbsr',
+            'isCancelled',
+            'isCancellation',
+            'canWithdraw',
+            'canRefuse',
+            'canRefuseByShortNotice',
+            'canCreateCancellation',
+            'canPrint',
+            'canRequestNewRouteMap',
+            'canRepublish',
+            'canCancelByAdmin',
+            'canResetRegistration',
+            'canCreateVariation',
+        ];
 
-        //the bus reg entity which exists on the licence
-        $licenceBusReg = new Entity();
-        $licenceBusReg->setId($id);
-
-        $licenceEntityMock = m::mock(LicenceEntity::class);
-        $licenceEntityMock->shouldReceive('getLatestBusVariation')->once()->with($regNo)->andReturn($licenceBusReg);
+        $expectedBundleValues = [];
 
         /** @var Entity|m\MockInterface $sut */
         $sut = m::mock(Entity::class)->makePartial();
-        $sut->shouldReceive('getRegNo')->once()->andReturn($regNo);
-        $sut->shouldReceive('getId')->once()->andReturn($id);
-        $sut->shouldReceive('getLicence')->once()->andReturn($licenceEntityMock);
-        $sut->shouldReceive('isScottishRules')->once()->andReturn(true);
-        $sut->shouldReceive('isReadOnly')->once()->andReturn(true);
-        $sut->shouldReceive('isFromEbsr')->once()->andReturn(true);
-        $sut->shouldReceive('isCancelled')->once()->andReturn(false);
-        $sut->shouldReceive('isCancellation')->once()->andReturn(false);
 
-        $result = $sut->getCalculatedBundleValues();
+        foreach ($bundledGetters as $getter) {
+            $testValue = new \stdClass();
+            $expectedBundleValues[$getter] = $testValue;
+            $sut->shouldReceive($getter)->once()->andReturn($testValue);
+        }
 
-        $this->assertEquals($result['isLatestVariation'], true);
-        $this->assertEquals($result['isScottishRules'], true);
-        $this->assertEquals($result['isFromEbsr'], true);
-        $this->assertEquals($result['isReadOnly'], true);
-        $this->assertEquals($result['isCancelled'], false);
-        $this->assertEquals($result['isCancellation'], false);
+        $this->assertSame($expectedBundleValues, $sut->getCalculatedBundleValues());
     }
 
     /**
@@ -704,6 +708,7 @@ class BusRegEntityTest extends EntityTester
         $latestBusRouteNo = 3;
         $licNo = '123';
 
+        /** @var m\Mock|LicenceEntity $licenceEntityMock */
         $licenceEntityMock = m::mock(LicenceEntity::class);
         $licenceEntityMock->shouldReceive('getLatestBusRouteNo')->once()->andReturn($latestBusRouteNo);
         $licenceEntityMock->shouldReceive('getLicNo')->once()->andReturn($licNo);
@@ -778,6 +783,10 @@ class BusRegEntityTest extends EntityTester
         $licenceEntityMock->shouldReceive('getLatestBusVariation')
             ->once()
             ->with($regNo, [])
+            ->andReturn($licenceBusReg);
+        $licenceEntityMock->shouldReceive('getLatestBusVariation')
+            ->once()
+            ->with($regNo)
             ->andReturn($licenceBusReg);
 
         $shortNotice = new BusShortNoticeEntity();
@@ -1153,8 +1162,9 @@ class BusRegEntityTest extends EntityTester
 
     /**
      * @dataProvider provideCalculateNoticeDate
-     * @param array $busNoticePeriodData
-     * @param array $busRegData
+     *
+     * @param array  $busNoticePeriodData
+     * @param array  $busRegData
      * @param string $expectedEffectiveDate
      */
     public function testRefuseByShortNotice($busNoticePeriodData, $busRegData, $expectedEffectiveDate)
@@ -1446,7 +1456,7 @@ class BusRegEntityTest extends EntityTester
      * @dataProvider getStatusForGrantDataProvider
      *
      * @param string $statusId
-     * @param array $expected
+     * @param array  $expected
      */
     public function testGetStatusForGrant($statusId, $expected)
     {
@@ -1470,7 +1480,7 @@ class BusRegEntityTest extends EntityTester
      * @dataProvider isShortNoticeRefusedDataProvider
      *
      * @param string $shortNoticeRefused
-     * @param array $expected
+     * @param array  $expected
      */
     public function testIsShortNoticeRefused($shortNoticeRefused, $expected)
     {
@@ -1493,8 +1503,8 @@ class BusRegEntityTest extends EntityTester
      *
      * @param string $statusId
      * @param string $shortNoticeRefused
-     * @param bool $withWithdrawnReason
-     * @param array $expected
+     * @param bool   $withWithdrawnReason
+     * @param array  $expected
      */
     public function testGetDecision($statusId, $shortNoticeRefused, $withWithdrawnReason, $expected)
     {
@@ -1611,6 +1621,9 @@ class BusRegEntityTest extends EntityTester
      * New and variation should return false
      *
      * @dataProvider dpIsGrantableForCancellation
+     *
+     * @param $status
+     * @param $expected
      */
     public function testIsGrantableForCancellation($status, $expected)
     {
@@ -1620,6 +1633,28 @@ class BusRegEntityTest extends EntityTester
 
         // Grantable - Rule: Other - isShortNotice: N - Fee: none
         $this->assertEquals($expected, $this->entity->isGrantable());
+    }
+
+    /**
+     * Tests that grant is only possible when in certain statuses
+     *
+     * @dataProvider provideIsGrantableForStatusCases
+     *
+     * @param $status
+     * @param $expected
+     */
+    public function testIsGrantableForStatus($status, $expected)
+    {
+        $this->getAssertionsForIsGrantable();
+        $this->entity->setStatus(new RefDataEntity($status));
+        $this->assertEquals($expected, $this->entity->isGrantable());
+    }
+
+    public function provideIsGrantableForStatusCases()
+    {
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL], true)];
+        }
     }
 
     /**
@@ -2197,6 +2232,7 @@ class BusRegEntityTest extends EntityTester
      *
      * @dataProvider publicationSectionForGrantEmailInvalidStatusProvider
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     *
      * @param string $status
      */
     public function testPublicationSectionForGrantEmailStatusException($status)
@@ -2231,6 +2267,8 @@ class BusRegEntityTest extends EntityTester
      *
      * @dataProvider publicationSectionForGrantEmailInvalidRevertStatusProvider
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     *
+     * @param        $status
      * @param string $revertStatus
      */
     public function testPublicationSectionForGrantEmailRevertStatusException($status, $revertStatus)
@@ -2278,19 +2316,22 @@ class BusRegEntityTest extends EntityTester
         $expectedResult = $pub3No . ' ' . $pub3TrafficArea . ', ' . $pub4No . ' ' . $pub4TrafficArea;
 
         $matchPubSection = new PublicationSection();
-        $matchPubSection ->setId(PublicationSection::BUS_NEW_SHORT_SECTION);
+        $matchPubSection->setId(PublicationSection::BUS_NEW_SHORT_SECTION);
 
         $otherPubSection = new PublicationSection();
-        $otherPubSection ->setId(PublicationSection::BUS_VAR_SHORT_SECTION);
+        $otherPubSection->setId(PublicationSection::BUS_VAR_SHORT_SECTION);
 
+        /** @var m\Mock|PublicationEntity $publication2 */
         $publication2 = m::mock(PublicationEntity::class)->makePartial();
         $publication2->shouldReceive('isNew')->once()->andReturn(false);
 
+        /** @var m\Mock|PublicationEntity $publication3 */
         $publication3 = m::mock(PublicationEntity::class)->makePartial();
         $publication3->shouldReceive('isNew')->once()->andReturn(true);
         $publication3->shouldReceive('getPublicationNo')->once()->andReturn($pub3No);
         $publication3->shouldReceive('getTrafficArea->getName')->once()->andReturn($pub3TrafficArea);
 
+        /** @var m\Mock|PublicationEntity $publication4 */
         $publication4 = m::mock(PublicationEntity::class)->makePartial();
         $publication4->shouldReceive('isNew')->once()->andReturn(true);
         $publication4->shouldReceive('getPublicationNo')->once()->andReturn($pub4No);
@@ -2326,9 +2367,9 @@ class BusRegEntityTest extends EntityTester
     /**
      * @dataProvider getFormattedServiceNumbersProvider
      *
-     * @param string $serviceNo
+     * @param string          $serviceNo
      * @param ArrayCollection $otherServiceNumbers
-     * @param string $expected
+     * @param string          $expected
      */
     public function testGetFormattedServiceNumbers($serviceNo, $otherServiceNumbers, $expected)
     {
@@ -2374,6 +2415,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testIsShortNoticeStandardRules($variationNo, $receivedDate, $effectiveDate, $expected)
     {
+        /** @var m\Mock|BusNoticePeriodEntity $standardRules */
         $standardRules = m::mock(BusNoticePeriodEntity::class);
         $standardRules->shouldReceive('isScottishRules')->once()->andReturn(false);
         $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(56);
@@ -2422,6 +2464,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testIsShortNoticeNewScottishRules($variationNo, $receivedDate, $effectiveDate, $expected)
     {
+        /** @var m\Mock|BusNoticePeriodEntity $standardRules */
         $standardRules = m::mock(BusNoticePeriodEntity::class);
         $standardRules->shouldReceive('isScottishRules')->once()->andReturn(true);
         $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(42);
@@ -2453,8 +2496,10 @@ class BusRegEntityTest extends EntityTester
     /**
      * Tests the isShortNotice calculation for new scottish variations, calls populateShortNotice and checks the result
      *
-     * @param $effectiveDate
      * @param $receivedDate
+     * @param $effectiveDate
+     * @param $parentDate
+     * @param $standardPeriodCalled
      * @param $expected
      *
      * @dataProvider isShortNoticeVariationScottishProvider
@@ -2466,6 +2511,7 @@ class BusRegEntityTest extends EntityTester
         $standardPeriodCalled,
         $expected
     ) {
+        /** @var m\Mock|BusNoticePeriodEntity $scottishRules */
         $scottishRules = m::mock(BusNoticePeriodEntity::class);
         $scottishRules->shouldReceive('isScottishRules')->once()->andReturn(true);
         $scottishRules->shouldReceive('getStandardPeriod')->times($standardPeriodCalled)->andReturn(42);
@@ -2510,6 +2556,7 @@ class BusRegEntityTest extends EntityTester
      */
     public function testShortNoticeScottishRulesWithMissingParent($effectiveDate, $receivedDate, $parent)
     {
+        /** @var m\Mock|BusNoticePeriodEntity $scottishRules */
         $scottishRules = m::mock(BusNoticePeriodEntity::class);
         $scottishRules->shouldReceive('isScottishRules')->once()->andReturn(true);
 
@@ -2608,6 +2655,7 @@ class BusRegEntityTest extends EntityTester
         $regNo = 'foo';
         $busReg = new Entity();
         $busReg->setRegNo($regNo);
+        /** @var m\Mock|LicenceEntity $mockLicence */
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getLatestBusVariation')
             ->with($regNo)
@@ -2629,6 +2677,7 @@ class BusRegEntityTest extends EntityTester
         $busReg1 = new Entity();
         $busReg1->setId(2);
 
+        /** @var m\Mock|LicenceEntity $mockLicence */
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getLatestBusVariation')
             ->with($regNo)
@@ -2660,6 +2709,7 @@ class BusRegEntityTest extends EntityTester
     public function testGetRelatedOrganisation()
     {
         $busReg = new Entity();
+        /** @var m\Mock|LicenceEntity $mockLicence */
         $mockLicence = m::mock(LicenceEntity::class)
             ->shouldReceive('getRelatedOrganisation')
             ->andReturn('foo')
@@ -2676,11 +2726,347 @@ class BusRegEntityTest extends EntityTester
         $this->assertNull((new Entity())->getRelatedOrganisation());
     }
 
-    public function testCantCreateVariation()
+    public function testCreateVariationFailsWhenCannotCreateVariation()
     {
-        $this->setExpectedException(ForbiddenException::class);
-        $busReg = new Entity();
-        $busReg->setStatus(new RefData(Entity::STATUS_NEW));
+        $this->expectException(ForbiddenException::class);
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->shouldReceive('canCreateVariation')
+            ->with()
+            ->andReturn(false);
         $busReg->createVariation(new RefData('foo'), new RefData('bar'));
+    }
+
+    /**
+     * @dataProvider provideCanWithdrawCases
+     *
+     * @param $status
+     * @param $expected
+     */
+    public function testCanWithdraw($status, $expected)
+    {
+        $busReg = new Entity();
+        $busReg->setStatus(new RefData($status));
+        $this->assertSame($expected, $busReg->canWithdraw());
+    }
+
+    public function provideCanWithdrawCases()
+    {
+        $allowedStatuses = [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL];
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, $allowedStatuses, true)];
+        }
+    }
+
+    /**
+     * @dataProvider provideCanRefuseCases
+     *
+     * @param $status
+     * @param $expected
+     */
+    public function testCanRefuse($status, $expected)
+    {
+        $busReg = new Entity();
+        $busReg->setStatus(new RefData($status));
+        $this->assertSame($expected, $busReg->canRefuse());
+    }
+
+    public function provideCanRefuseCases()
+    {
+        $allowedStatuses = [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL];
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, $allowedStatuses, true)];
+        }
+    }
+
+    /**
+     * @dataProvider provideCanRefuseByShortNoticeCases
+     *
+     * @param $status
+     * @param $isShortNotice
+     * @param $isShortNoticeRefused
+     * @param $expected
+     */
+    public function testCanRefuseByShortNotice($status, $isShortNotice, $isShortNoticeRefused, $expected)
+    {
+        $busReg = new Entity();
+        $busReg->setStatus(new RefData($status));
+        $busReg->setIsShortNotice($isShortNotice);
+        $busReg->setShortNoticeRefused($isShortNoticeRefused);
+        $this->assertSame($expected, $busReg->canRefuseByShortNotice());
+    }
+
+    public function provideCanRefuseByShortNoticeCases()
+    {
+        $allowedStatuses = [Entity::STATUS_NEW, Entity::STATUS_VAR, Entity::STATUS_CANCEL];
+        $isShortNoticeAllowed = [
+            'Y' => true,
+            'N' => false,
+            'something-else' => false,
+        ];
+        $isShortNoticeRefusedAllowed = [
+            'Y' => false,
+            'N' => true,
+            'something-else' => false,
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isShortNoticeAllowed as $isShortNotice => $allowedByIsShortNotice) {
+                foreach ($isShortNoticeRefusedAllowed as $isShortNoticeRefused => $allowedByIsShortNoticeRefused) {
+                    yield [
+                        'status' => $status,
+                        'isShortNotice' => $isShortNotice,
+                        'isShortNoticeRefused' => $isShortNoticeRefused,
+                        'expected' => $allowedByStatus && $allowedByIsShortNotice && $allowedByIsShortNoticeRefused,
+                    ];
+                }
+            }
+        }
+    }
+
+    /**
+     * @dataProvider provideCanCreateCancellationCases
+     *
+     * @param $status
+     * @param $isLatestVariation
+     * @param $expected
+     */
+    public function testCanCreateCancellation($status, $isLatestVariation, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus(new RefData($status));
+        $busReg->shouldReceive('isLatestVariation')->andReturn($isLatestVariation);
+        $this->assertSame($expected, $busReg->canCreateCancellation());
+    }
+
+    public function provideCanCreateCancellationCases()
+    {
+        $allowedStatuses = [Entity::STATUS_REGISTERED];
+        $isLatestVariationAllowed = [
+            [true, true],
+            [false, false],
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+                yield [
+                    'status' => $status,
+                    'isLatestVariation' => $isLatestVariation,
+                    'expected' => $allowedByStatus && $allowedByIsLatestVariation
+                ];
+            }
+        }
+    }
+
+    /**
+     * @dataProvider provideCanPrintCases
+     *
+     * @param $status
+     * @param $expected
+     */
+    public function testCanPrint($status, $expected)
+    {
+        $busReg = new Entity();
+        $busReg->setStatus(new RefData($status));
+        $this->assertSame($expected, $busReg->canPrint());
+    }
+
+    public function provideCanPrintCases()
+    {
+        $allowedStatuses = [Entity::STATUS_REGISTERED, Entity::STATUS_CANCELLED];
+        foreach ($this->getAllStatuses() as $status) {
+            yield [$status, in_array($status, $allowedStatuses, true)];
+        }
+    }
+
+    /**
+     * @dataProvider provideCanRequestNewRouteMapCases
+     *
+     * @param $isFromEbsr
+     * @param $expected
+     *
+     * @internal     param $status
+     */
+    public function testRequestNewRouteMapPrint($isFromEbsr, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->shouldReceive('isFromEbsr')->andReturn($isFromEbsr);
+        $this->assertSame($expected, $busReg->canRequestNewRouteMap());
+    }
+
+    public function provideCanRequestNewRouteMapCases()
+    {
+        return [
+            ['isFromEbsr' => true, 'expected' => true],
+            ['isFromEbsr' => false, 'expected' => false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideCanRepublishCases
+     *
+     * @param $status
+     * @param $isLatestVariation
+     * @param $expected
+     */
+    public function testCanRepublish($status, $isLatestVariation, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus(new RefData($status));
+        $busReg->shouldReceive('isLatestVariation')->andReturn($isLatestVariation);
+        $this->assertSame($expected, $busReg->canRepublish());
+    }
+
+    public function provideCanRepublishCases()
+    {
+        $allowedStatuses = [Entity::STATUS_REGISTERED, Entity::STATUS_CANCELLED];
+        $isLatestVariationAllowed = [
+            [true, true],
+            [false, false],
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+                yield [
+                    'status' => $status,
+                    'isLatestVariation' => $isLatestVariation,
+                    'expected' => $allowedByStatus && $allowedByIsLatestVariation
+                ];
+            }
+        }
+    }
+
+    /**
+     * @dataProvider provideCanCancelByAdminCases
+     *
+     * @param $status
+     * @param $isLatestVariation
+     * @param $expected
+     */
+    public function testCanCancelByAdmin($status, $isLatestVariation, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus(new RefData($status));
+        $busReg->shouldReceive('isLatestVariation')->andReturn($isLatestVariation);
+        $this->assertSame($expected, $busReg->canCancelByAdmin());
+    }
+
+    public function provideCanCancelByAdminCases()
+    {
+        $allowedStatuses = [Entity::STATUS_REGISTERED];
+        $isLatestVariationAllowed = [
+            [true, true],
+            [false, false],
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+                yield [
+                    'status' => $status,
+                    'isLatestVariation' => $isLatestVariation,
+                    'expected' => $allowedByStatus && $allowedByIsLatestVariation
+                ];
+            }
+        }
+    }
+
+    /**
+     * @dataProvider provideCanResetRegistrationCases
+     *
+     * @param $status
+     * @param $isLatestVariation
+     * @param $expected
+     */
+    public function testCanResetRegistration($status, $isLatestVariation, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus(new RefData($status));
+        $busReg->shouldReceive('isLatestVariation')->andReturn($isLatestVariation);
+        $this->assertSame($expected, $busReg->canResetRegistration());
+    }
+
+    public function provideCanResetRegistrationCases()
+    {
+        $allowedStatuses = [
+            Entity::STATUS_ADMIN,
+            Entity::STATUS_REGISTERED,
+            Entity::STATUS_REFUSED,
+            Entity::STATUS_WITHDRAWN,
+            Entity::STATUS_CNS,
+            Entity::STATUS_CANCELLED,
+            Entity::STATUS_EXPIRED,
+        ];
+        $isLatestVariationAllowed = [
+            [true, true],
+            [false, false],
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+                yield [
+                    'status' => $status,
+                    'isLatestVariation' => $isLatestVariation,
+                    'expected' => $allowedByStatus && $allowedByIsLatestVariation
+                ];
+            }
+        }
+    }
+
+    /**
+     * @dataProvider provideCanCreateVariationCases
+     *
+     * @param $status
+     * @param $isLatestVariation
+     * @param $expected
+     */
+    public function testCantCreateVariation($status, $isLatestVariation, $expected)
+    {
+        /** @var Entity|m\Mock $busReg */
+        $busReg = m::mock(Entity::class)->makePartial();
+        $busReg->setStatus(new RefData($status));
+        $busReg->shouldReceive('isLatestVariation')->andReturn($isLatestVariation);
+        $this->assertSame($expected, $busReg->canCreateVariation());
+    }
+
+    public function provideCanCreateVariationCases()
+    {
+        $allowedStatuses = [
+            Entity::STATUS_REGISTERED,
+        ];
+        $isLatestVariationAllowed = [
+            [true, true],
+            [false, false],
+        ];
+        foreach ($this->getAllStatuses() as $status) {
+            $allowedByStatus = in_array($status, $allowedStatuses, true);
+            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+                yield [
+                    'status' => $status,
+                    'isLatestVariation' => $isLatestVariation,
+                    'expected' => $allowedByStatus && $allowedByIsLatestVariation
+                ];
+            }
+        }
+    }
+
+    private function getAllStatuses()
+    {
+        return [
+            Entity::STATUS_NEW,
+            Entity::STATUS_VAR,
+            Entity::STATUS_CANCEL,
+            Entity::STATUS_ADMIN,
+            Entity::STATUS_REGISTERED,
+            Entity::STATUS_REFUSED,
+            Entity::STATUS_WITHDRAWN,
+            Entity::STATUS_CNS,
+            Entity::STATUS_CANCELLED,
+            Entity::STATUS_EXPIRED,
+        ];
     }
 }
