@@ -17,6 +17,8 @@ class CreatePersonVariation extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         // TODO: Implement handleCommand() method.
-        return new Result();
+        $result = new Result();
+        $result->addMessage("received");
+        return $result;
     }
 }
