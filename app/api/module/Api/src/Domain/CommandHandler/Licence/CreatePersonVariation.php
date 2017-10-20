@@ -4,10 +4,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Create;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
 
 class CreatePersonVariation extends AbstractCommandHandler
 {
+    protected $repoServiceName = 'Licence';
 
     /**
      * @param CommandInterface $command
@@ -16,7 +19,29 @@ class CreatePersonVariation extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        // TODO: Implement handleCommand() method.
+        $licence = $this->getRepo()->fetchUsingId($command);
+
+        //@TODO Create Variation - Copy code from CreateVariation handler, or create command and call?
+        $createVariationCommand = CreateVariation::create([]);
+
+        //@TODO Get data into command handler (somehow?), pass to command handler / service, get response
+
+        //@TODO Get ID from created variation, load it
+
+        //@TODO Alter variation type so it is 'vtyp_person_variation', save it
+
+        //@TODO Create Person using CreatePeople command, attach to Organisation on variation
+
+        //@TODO Grant variation using Grant command / handler
+
+        //@TODO Return Variation ID in result
+
+
+
+
+
+
+
         $result = new Result();
         $result->addMessage("received");
         return $result;
