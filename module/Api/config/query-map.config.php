@@ -519,6 +519,7 @@ return [
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,
+    TransferQuery\DataRetention\RuleAdmin::class => QueryHandler\DataRetention\RuleAdmin::class,
     TransferQuery\DataRetention\Records::class => QueryHandler\DataRetention\Records::class,
     TransferQuery\DataRetention\GetProcessedList::class => QueryHandler\DataRetention\GetProcessedList::class,
 
