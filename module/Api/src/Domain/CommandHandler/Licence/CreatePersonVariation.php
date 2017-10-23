@@ -4,14 +4,16 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Create;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
 
-class CreatePersonVariation extends AbstractCommandHandler
+class CreatePersonVariation extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Licence';
+
+    protected $extraRepos = ['Variation'];
 
     /**
      * @param CommandInterface $command
@@ -30,10 +32,16 @@ class CreatePersonVariation extends AbstractCommandHandler
         );
 
         //@TODO Get data into command handler (somehow?), pass to command handler / service, get response
+        $createVariationResult = $this->handleSideEffect($createVariationCommand);
 
         //@TODO Get ID from created variation, load it
 
         //@TODO Create Person using CreatePeople command, attach to Organisation on variation
+
+
+
+
+
 
         //@TODO Grant variation using Grant command / handler
 
