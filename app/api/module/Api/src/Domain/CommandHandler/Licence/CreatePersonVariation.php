@@ -5,8 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Create;
-use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
@@ -18,27 +16,23 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
     protected $extraRepos = ['Variation'];
 
     /**
-     * @param CommandInterface $command
+     * @param \Dvsa\Olcs\Transfer\Command\Licence\CreatePersonVariation|CommandInterface $command
      *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return Result
+     * @throws \Exception
      */
     public function handleCommand(CommandInterface $command)
     {
-        $licence = $this->getRepo()->fetchUsingId($command);
-
         $personCommand = $this->proxyCommand($command, '\Dvsa\Olcs\Api\Domain\Command\Person\Create');
 
-
-        //@TODO Create Variation - Copy code from CreateVariation handler, or create command and call?
-        $createVariationCommand = CreateVariation::create(
-            [
-                'variationType' => Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            ]
+        $createVariationResult = $this->handleSideEffect(
+            CreateVariation::create(
+                [
+                    'id' => $command->getId(),
+                    'variationType' => Application::VARIATION_TYPE_DIRECTOR_CHANGE,
+                ]
+            )
         );
-
-        //@TODO Get data into command handler (somehow?), pass to command handler / service, get response
-        $createVariationResult = $this->handleSideEffect($createVariationCommand);
 
         //@TODO Get ID from created variation, load it
 
@@ -55,7 +49,6 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
 
 
         $result = new Result();
-        $result->addMessage(var_dump($response));
         return $result;
     }
 }
