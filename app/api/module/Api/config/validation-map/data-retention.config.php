@@ -14,6 +14,7 @@ return [
 
     QueryHandler\DataRetention\GetRule::class => IsInternalUser::class,
     QueryHandler\DataRetention\RuleList::class => IsInternalUser::class,
+    QueryHandler\DataRetention\RuleAdmin::class => IsInternalUser::class,
     QueryHandler\DataRetention\Records::class => IsInternalUser::class,
     QueryHandler\DataRetention\GetProcessedList::class => IsInternalUser::class,
 ];
