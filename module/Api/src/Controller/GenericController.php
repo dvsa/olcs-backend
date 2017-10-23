@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Controller;
 
+use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Olcs\Logging\Log\Logger;
@@ -101,6 +102,8 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleCommand($dto);
             return $this->response()->successfulUpdate($result);
+        } catch (OptimisticLockException $ex) {
+            return $this->response()->error(409, [$ex->getMessage()]);
         } catch (Exception\VersionConflictException $ex) {
             return $this->response()->error(409, $ex->getMessages());
         } catch (Exception\NotFoundException $ex) {
