@@ -7,12 +7,12 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVariation;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -49,6 +49,7 @@ class CreateVariationTest extends CommandHandlerTestCase
             LicenceEntity::LICENCE_STATUS_VALID,
             ApplicationEntity::APPLIED_VIA_PHONE,
             ApplicationEntity::APPLIED_VIA_SELFSERVE,
+            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
         ];
 
         parent::initReferences();
@@ -74,6 +75,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
+        /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
@@ -94,6 +96,7 @@ class CreateVariationTest extends CommandHandlerTestCase
                         $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
                         $app->getStatus()
                     );
+                    $this->assertNull(null, $app->getVariationType());
                 }
             );
 
@@ -123,6 +126,59 @@ class CreateVariationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandInternalWithVariationType()
+    {
+        $data = [
+            'id' => 111,
+            'variationType' => Application::VARIATION_TYPE_DIRECTOR_CHANGE,
+        ];
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(true)
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(Permission::SELFSERVE_USER, null)
+            ->andReturn(false);
+
+        $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
+
+        /** @var m\Mock|LicenceEntity $licence */
+        $licence = m::mock(LicenceEntity::class)->makePartial();
+        $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+
+        $licence->shouldReceive('canHaveVariation')->andReturn(true);
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($licence);
+
+        $this->repoMap['Application']->shouldReceive('save')
+            ->with(m::type(ApplicationEntity::class))
+            ->andReturnUsing(
+                function (ApplicationEntity $app) {
+                    $app->setId(222);
+                    $this->assertSame(
+                        $this->refData[Application::VARIATION_TYPE_DIRECTOR_CHANGE],
+                        $app->getVariationType()
+                    );
+                }
+            );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'application' => 222
+            ],
+            'messages' => [
+                'Variation created',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testHandleCommandInternalNoFee()
     {
         $data = [
@@ -143,7 +199,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
-        /** @var LicenceEntity $licence */
+        /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
@@ -205,7 +261,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
-        /** @var LicenceEntity $licence */
+        /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
@@ -260,7 +316,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
-        /** @var LicenceEntity $licence */
+        /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
@@ -314,7 +370,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
-        /** @var LicenceEntity $licence */
+        /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
@@ -366,7 +422,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
         $command = \Dvsa\Olcs\Transfer\Command\Licence\CreateVariation::create($data);
 
-        /** @var LicenceEntity $licence */
+        /** @var m\Mock|LicenceEntity $licence */
         $licence = m::mock(LicenceEntity::class)->makePartial();
         $licence->setLicenceType($this->refData[LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
