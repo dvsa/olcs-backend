@@ -118,6 +118,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const FINANCIAL_EVIDENCE_UPLOADED = 1;
     const FINANCIAL_EVIDENCE_UPLOAD_LATER = 2;
 
+    const VARIATION_TYPE_DIRECTOR_CHANGE = 'vtyp_director_change';
+
     /**
      * Publication No
      *
