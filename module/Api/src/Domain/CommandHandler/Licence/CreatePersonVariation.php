@@ -19,10 +19,18 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
      * @param CommandInterface $command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
         $licence = $this->getRepo()->fetchUsingId($command);
+
+        $this->proxyCommand($command, '\Dvsa\Olcs\Api\Domain\Command\Person\Create');
+
+
+
+
+
 
         //@TODO Create Variation - Copy code from CreateVariation handler, or create command and call?
         $createVariationCommand = CreateVariation::create(
@@ -49,7 +57,7 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
 
 
         $result = new Result();
-        $result->addMessage("received");
+
         return $result;
     }
 }
