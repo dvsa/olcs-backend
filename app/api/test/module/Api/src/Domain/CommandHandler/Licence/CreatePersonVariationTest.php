@@ -15,6 +15,10 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 class CreatePersonVariationTest extends CommandHandlerTestCase
 {
 
+    /**
+     * @var CreatePersonVariation
+     */
+    private $sut;
 
     public function setUp()
     {
@@ -22,4 +26,6 @@ class CreatePersonVariationTest extends CommandHandlerTestCase
 
         parent::setUp();
     }
+
+
 }
