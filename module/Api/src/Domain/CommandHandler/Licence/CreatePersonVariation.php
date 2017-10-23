@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Create;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
@@ -25,11 +27,7 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
     {
         $licence = $this->getRepo()->fetchUsingId($command);
 
-        $this->proxyCommand($command, '\Dvsa\Olcs\Api\Domain\Command\Person\Create');
-
-
-
-
+        $personCommand = $this->proxyCommand($command, '\Dvsa\Olcs\Api\Domain\Command\Person\Create');
 
 
         //@TODO Create Variation - Copy code from CreateVariation handler, or create command and call?
@@ -57,7 +55,7 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
 
 
         $result = new Result();
-
+        $result->addMessage(var_dump($response));
         return $result;
     }
 }
