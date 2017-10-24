@@ -33,7 +33,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes",
      *     columns={"psv_which_vehicle_sizes"}),
  *        @ORM\Index(name="ix_application_signature_type", columns={"signature_type"}),
- *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"})
+ *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"}),
+ *        @ORM\Index(name="ix_application_variation_type", columns={"variation_type"})
  *    }
  * )
  */
@@ -650,9 +651,10 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Variation type
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="string", name="variation_type", length=32, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="variation_type", referencedColumnName="id", nullable=true)
      */
     protected $variationType;
 
@@ -2508,7 +2510,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the variation type
      *
-     * @param string $variationType new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $variationType entity being set as the value
      *
      * @return Application
      */
@@ -2522,7 +2524,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the variation type
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getVariationType()
     {

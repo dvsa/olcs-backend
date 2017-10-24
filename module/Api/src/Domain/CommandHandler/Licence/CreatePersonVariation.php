@@ -31,6 +31,7 @@ class CreatePersonVariation extends AbstractCommandHandler implements Transactio
                 [
                     'id' => $command->getId(),
                     'variationType' => Application::VARIATION_TYPE_DIRECTOR_CHANGE,
+
                 ]
             )
         );
