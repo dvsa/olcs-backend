@@ -139,7 +139,13 @@ class ContinuationDetail extends AbstractRepository
     }
 
     /**
-     * @return array of ContinuationDetail
+     * Fetch a list of continuation details for that are require reminders
+     *
+     * @param int   $month Month of the continuation
+     * @param int   $year  Year of the continuation
+     * @param array $ids   List of continuation details IDs
+     *
+     * @return ArrayCollection of ContinuationDetail
      */
     public function fetchChecklistReminders($month, $year, array $ids = [])
     {
@@ -183,6 +189,7 @@ class ContinuationDetail extends AbstractRepository
             );
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.received', 0));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isDigital', 0));
 
         if ($ids) {
             $this->getQueryBuilder()
@@ -214,9 +221,10 @@ class ContinuationDetail extends AbstractRepository
     /**
      * Filter by fee
      *
-     * @param array $entities
-     * @param string $feeType
-     * @param array $feeStatuses
+     * @param array  $entities    Array of continuation detail entities
+     * @param string $feeType     Fee type to filter by (exclude)
+     * @param array  $feeStatuses Fee statuses to filter by (exclude)
+     *
      * @return ArrayCollection
      */
     protected function filterByFee($entities, $feeType, $feeStatuses)
@@ -239,6 +247,17 @@ class ContinuationDetail extends AbstractRepository
         return $filtered;
     }
 
+    /**
+     * Fetch Continuation Detail details
+     *
+     * @param int    $continuationId  Continuation ID
+     * @param array  $licenceStatuses List of licence statuses
+     * @param string $licNo           Licence no
+     * @param string $method          Organisation receiving preference Entity::METHOD_EMAIL or Entity::METHOD_POST
+     * @param string $status          Continuation detail status
+     *
+     * @return array of Entity
+     */
     public function fetchDetails($continuationId, $licenceStatuses, $licNo, $method, $status)
     {
         $qb = $this->createQueryBuilder();
@@ -283,6 +302,13 @@ class ContinuationDetail extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
     }
 
+    /**
+     * Fetch Continuation Detail with Licence data
+     *
+     * @param int $id Continuation Detail ID
+     *
+     * @return Entity
+     */
     public function fetchWithLicence($id)
     {
         $qb = $this->createQueryBuilder();

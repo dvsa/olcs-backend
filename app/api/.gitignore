@@ -18,3 +18,5 @@ data/cache/*
 data/db/Etl
 data/db/live-like-data.sql
 data/db/test-olcs-refdata.sql
+test/coverage/
+.scannerwork/

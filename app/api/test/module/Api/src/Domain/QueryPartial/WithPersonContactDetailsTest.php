@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryPartial;
 
+use Dvsa\Olcs\Api\Domain\QueryPartial\With;
 use Dvsa\Olcs\Api\Domain\QueryPartial\WithPersonContactDetails;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryPartial\QueryPartialInterface;
@@ -18,24 +19,48 @@ use Dvsa\Olcs\Api\Domain\QueryPartial\QueryPartialInterface;
  */
 class WithPersonContactDetailsTest extends QueryPartialTestCase
 {
+    /** @var m\Mock */
+    private $with;
+
     public function setUp()
     {
-        $with = m::mock(QueryPartialInterface::class);
-
-        $with->shouldReceive('modifyQuery')->times(5)->andReturnSelf();
-        $this->sut = new WithPersonContactDetails($with);
+        // Cannot mock With as it is Final
+        $this->with = new With();
+        $this->sut = new WithPersonContactDetails($this->with);
 
         parent::setUp();
     }
 
-    public function testModifyQuery()
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testModifyQuery($expectedDql, $arguments)
     {
-        $this->qb->shouldReceive('getRootAliases')
-            ->andReturn([0 => 'entityAlias'])
-            ->shouldReceive('setMaxResults')
-            ->with(1)
-            ->andReturnSelf();
+        $this->sut->modifyQuery($this->qb, $arguments);
+        $this->assertSame(
+            $expectedDql,
+            $this->qb->getDQL()
+        );
+    }
 
-        $this->sut->modifyQuery($this->qb, ['myContactDetailsColumn']);
+    public function dataProvider()
+    {
+        return [
+            [
+                'SELECT a, c, p, a, ct, pc FROM foo a LEFT JOIN a.contactDetails c LEFT JOIN c.person p '.
+                    'LEFT JOIN c.address a LEFT JOIN c.contactType ct LEFT JOIN c.phoneContacts pc',
+                []
+            ],
+            [
+                'SELECT a, c, p, a, ct, pc FROM foo a LEFT JOIN a.PROP c LEFT JOIN c.person p '.
+                    'LEFT JOIN c.address a LEFT JOIN c.contactType ct LEFT JOIN c.phoneContacts pc',
+                ['PROP']
+            ],
+            [
+                'SELECT a, c, p, a, ct, pc FROM foo a LEFT JOIN ENTITY.PROP c LEFT JOIN c.person p '.
+                    'LEFT JOIN c.address a LEFT JOIN c.contactType ct LEFT JOIN c.phoneContacts pc',
+                ['ENTITY.PROP']
+            ],
+        ];
     }
 }

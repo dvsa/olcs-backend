@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class Stlcompanyorpartnerparagraph extends AbstractLicenceType
 {
+    const PARTNERSHIP_ORGANISATION_TYPE_IDS = [Organisation::ORG_TYPE_PARTNERSHIP, Organisation::ORG_TYPE_LLP];
+
     /**
      * Get the query to fetch data for the bookmark
      *
@@ -30,11 +32,13 @@ class Stlcompanyorpartnerparagraph extends AbstractLicenceType
      */
     public function render()
     {
-        if ($this->data['organisation']['type']['id'] === Organisation::ORG_TYPE_REGISTERED_COMPANY) {
+        $organisationTypeId = $this->data['organisation']['type']['id'];
+
+        if ($organisationTypeId === Organisation::ORG_TYPE_REGISTERED_COMPANY) {
             return $this->getSnippet('Stlcompanyorpartnerparagraph/ltd');
         }
 
-        if ($this->data['organisation']['type']['id'] === Organisation::ORG_TYPE_LLP) {
+        if (in_array($organisationTypeId, self::PARTNERSHIP_ORGANISATION_TYPE_IDS, true)) {
             return $this->getSnippet('Stlcompanyorpartnerparagraph/llp');
         }
 

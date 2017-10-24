@@ -53,7 +53,7 @@ class OperatingCentres extends AbstractQueryHandler
         );
     }
 
-    private function getPossibleTrafficAreas(LicenceEntity $licence)
+    private function getPossibleTrafficAreas()
     {
         return $this->getRepo('TrafficArea')->getValueOptions();
     }

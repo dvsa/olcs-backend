@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Complaint;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Complaint\UpdateComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
@@ -36,7 +37,9 @@ class UpdateComplaintTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'ct_complainant'
+            'ct_complainant',
+            'ct_cov',
+            'cs_ack'
         ];
 
         $this->references = [
@@ -59,7 +62,7 @@ class UpdateComplaintTest extends CommandHandlerTestCase
                 "complainantFamilyName" => "Anthony",
                 "complainantForename" => "David",
                 "complaintDate" => "2015-01-16",
-                "closeDate" => "2015-02-26",
+                "closedDate" => "2015-02-26",
                 "complaintType" => "ct_cov",
                 "createdBy" => null,
                 "description" => "Some major complaint about condition of vehicle",
@@ -83,16 +86,28 @@ class UpdateComplaintTest extends CommandHandlerTestCase
         $complaint = m::mock(ComplaintEntity::class)->makePartial();
         $complaint->setId($command->getId());
         $complaint->setComplainantContactDetails($complainantContactDetails);
-
         $this->repoMap['Complaint']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
-            ->andReturn($complaint)
             ->once()
+            ->andReturn($complaint)
             ->shouldReceive('save')
             ->with(m::type(ComplaintEntity::class))
+            ->once()
             ->andReturnUsing(
                 function (ComplaintEntity $complaint) {
-                    $complaint->setId(99);
+                    $this->assertEquals('ct_cov', (string) $complaint->getComplaintType());
+                    $this->assertSame('cs_ack', (string) $complaint->getStatus());
+                    $this->assertEquals(new DateTime('2015-01-16'), $complaint->getComplaintDate());
+                    $this->assertEquals(new DateTime('2015-02-26'), $complaint->getClosedDate());
+                    $this->assertSame('Some major complaint about condition of vehicle', $complaint->getDescription());
+                    $this->assertSame('Driver L Smith', $complaint->getDriverFamilyName());
+                    $this->assertSame('Driver F John', $complaint->getDriverForename());
+                    $this->assertSame('VRM123T', $complaint->getVrm());
+                    $this->assertSame('David', $complaint->getComplainantContactDetails()->getPerson()->getForename());
+                    $this->assertSame(
+                        'Anthony',
+                        $complaint->getComplainantContactDetails()->getPerson()->getFamilyName()
+                    );
                 }
             )
             ->once();

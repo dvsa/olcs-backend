@@ -144,7 +144,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             self::$defaultAll,
             [
                 'variationNo' => 0,
-                 // Should this be moved to all? and the details field wiped?
+                // Should this be moved to all? and the details field wiped?
                 'needNewStop' => 'N',
                 'hasManoeuvre' => 'N',
                 'hasNotFixedStop' => 'N',
@@ -180,7 +180,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         $busReg->setRouteNo($newRouteNo);
 
         // set Reg No
-        $regNo = $licence->getLicNo().'/'.$newRouteNo;
+        $regNo = $licence->getLicNo() . '/' . $newRouteNo;
         $busReg->setRegNo($regNo);
 
         return $busReg;
@@ -223,7 +223,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      */
     public function canCreateVariation()
     {
-        return $this->isRegistered();
+        return $this->isRegistered()
+            && $this->isLatestVariation();
     }
 
     /**
@@ -246,8 +247,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         // create bus reg based on the previous record
         $busReg = clone $this;
 
+        // override columns which need different defaults for a variation
         $data = array_merge(
-            // override columns which need different defaults for a variation
             self::$defaultAll,
             [
                 // unset database metadata
@@ -440,7 +441,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
     public function isReadOnly()
     {
         return !$this->isLatestVariation() ||
-        in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED]);
+            in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED]);
     }
 
     /**
@@ -475,6 +476,16 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             'isFromEbsr' => $this->isFromEbsr(),
             'isCancelled' => $this->isCancelled(),
             'isCancellation' => $this->isCancellation(),
+            'canWithdraw' => $this->canWithdraw(),
+            'canRefuse' => $this->canRefuse(),
+            'canRefuseByShortNotice' => $this->canRefuseByShortNotice(),
+            'canCreateCancellation' => $this->canCreateCancellation(),
+            'canPrint' => $this->canPrint(),
+            'canRequestNewRouteMap' => $this->canRequestNewRouteMap(),
+            'canRepublish' => $this->canRepublish(),
+            'canCancelByAdmin' => $this->canCancelByAdmin(),
+            'canResetRegistration' => $this->canResetRegistration(),
+            'canCreateVariation' => $this->canCreateVariation(),
         ];
     }
 
@@ -777,6 +788,10 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
      */
     public function isGrantable()
     {
+        if (!in_array($this->status->getId(), array_keys(self::$grantStatusMap), true)) {
+            return false;
+        };
+
         if (false === $this->isGrantableBasedOnRequiredFields()) {
             // bus reg without all required fields which makes it non-grantable
             return false;
@@ -1344,5 +1359,109 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         }
 
         return $taskIds;
+    }
+
+    /**
+     * Determine if this Registration can be withdrawn
+     *
+     * @return bool
+     */
+    public function canWithdraw()
+    {
+        return in_array(
+            $this->status->getId(),
+            [self::STATUS_NEW, self::STATUS_VAR, self::STATUS_CANCEL],
+            true
+        );
+    }
+
+    /**
+     * Determine if registration can be refused
+     *
+     * @return bool
+     */
+    public function canRefuse()
+    {
+        return in_array(
+            $this->status->getId(),
+            [self::STATUS_NEW, self::STATUS_VAR, self::STATUS_CANCEL],
+            true
+        );
+    }
+
+    /**
+     * Determine if registration can be refused by short notice
+     *
+     * @return bool
+     */
+    public function canRefuseByShortNotice()
+    {
+        return $this->canRefuse()
+            && $this->isShortNotice === 'Y'
+            && $this->shortNoticeRefused === 'N';
+    }
+
+    /**
+     * Determine if a cancellation can be created
+     *
+     * @return bool
+     */
+    public function canCreateCancellation()
+    {
+        return $this->status->getId() === self::STATUS_REGISTERED
+            && $this->isLatestVariation();
+    }
+
+    /**
+     * Determine if registration can be printed
+     *
+     * @return bool
+     */
+    public function canPrint()
+    {
+        return in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED], true);
+    }
+
+    /**
+     * Determine if a new route map can be requested
+     *
+     * @return bool
+     */
+    public function canRequestNewRouteMap()
+    {
+        return $this->isFromEbsr();
+    }
+
+    /**
+     * Determine if a registration can be republished
+     *
+     * @return bool
+     */
+    public function canRepublish()
+    {
+        return in_array($this->status->getId(), [self::STATUS_REGISTERED, self::STATUS_CANCELLED], true)
+            && $this->isLatestVariation();
+    }
+
+    /**
+     * Determine if registration can be admin-cancelled
+     *
+     * @return bool
+     */
+    public function canCancelByAdmin()
+    {
+        return $this->status->getId() === self::STATUS_REGISTERED
+            && $this->isLatestVariation();
+    }
+
+    /**
+     * Determine if registration can be reset
+     *
+     * @return bool
+     */
+    public function canResetRegistration()
+    {
+        return !in_array($this->status->getId(), [self::STATUS_NEW, self::STATUS_VAR, self::STATUS_CANCEL], true)
+            && $this->isLatestVariation();
     }
 }

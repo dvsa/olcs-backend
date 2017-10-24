@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -15,6 +16,13 @@ class Fee extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Fee';
 
+    /**
+     * Handle a Fee query
+     *
+     * @param QueryInterface $query The query to handle
+     *
+     * @return Result
+     */
     public function handleQuery(QueryInterface $query)
     {
         /** @var FeeRepository $repo */
@@ -40,7 +48,10 @@ class Fee extends AbstractQueryHandler
     }
 
     /**
-     * @param FeeEntity $fee
+     * Get additional data from a fee
+     *
+     * @param FeeEntity $fee The fee from which to get additional data
+     *
      * @return array
      */
     private function getAdditionalFeeData(FeeEntity $fee)
@@ -73,6 +84,10 @@ class Fee extends AbstractQueryHandler
 
     /**
      * Filter and group transaction data for display
+     *
+     * @param FeeEntity $fee The Fee from which to get transaction data for display
+     *
+     * @return array
      */
     private function getDisplayTransactions(FeeEntity $fee)
     {
@@ -93,6 +108,7 @@ class Fee extends AbstractQueryHandler
                 'transactionId' => $transaction->getId(),
                 'type' => $transaction->getType()->getDescription(),
                 'completedDate' => $transaction->getCompletedDate(),
+                'createdOn' => $transaction->getCreatedOn(),
                 'method' => $this->getMethod($transaction),
                 'processedBy' => $transaction->getProcessedByFullName(),
                 'amount' => $ft->getAmount(),
@@ -104,6 +120,13 @@ class Fee extends AbstractQueryHandler
         return $displayData;
     }
 
+    /**
+     * Get the transaction method for display
+     *
+     * @param TransactionEntity $transaction the transaction from which to get the method
+     *
+     * @return string
+     */
     private function getMethod(TransactionEntity $transaction)
     {
         $method = $transaction->getPaymentMethod() ? $transaction->getPaymentMethod()->getDescription() : '';
@@ -112,7 +135,10 @@ class Fee extends AbstractQueryHandler
     }
 
     /**
-     * @param FeeEntity $fee
+     * Get the VAT for a fee
+     *
+     * @param FeeEntity $fee the fee for which to get VAT
+     *
      * @return string|null e.g. "20% (S)"
      */
     private function getVatInfo($fee)

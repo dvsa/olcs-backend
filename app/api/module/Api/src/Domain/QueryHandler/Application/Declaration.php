@@ -145,7 +145,11 @@ class Declaration extends AbstractQueryHandler
             true
         );
 
-        if ($feeType !== null) {
+        if ($feeType !== null && ($application->hasAuthVehiclesIncrease() ||
+            $application->hasAuthTrailersIncrease() ||
+            $application->hasNewOperatingCentre() ||
+            $application->hasIncreaseInOperatingCentre()
+          )) {
             return $feeType->getFixedValue() == 0 ? $feeType->getFiveYearValue() : $feeType->getFixedValue();
         }
 
