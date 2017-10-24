@@ -56,7 +56,6 @@
         "olcs/olcs-transfer": "dev-develop",
         "olcs/olcs-utils": "dev-develop",
         "olcs/olcs-logging": "dev-develop",
-        "olcs/autoload": "dev-develop",
         "zf-commons/zfc-rbac": "~2.4.0",
         "cpms/client": "dev-master",
         "soflomo/purifier": "~0.1.0",
@@ -106,7 +105,8 @@
         "ut": "vendor/bin/phpunit -c test/phpunit.xml --stop-on-failure",
         "review": "vendor/bin/review",
         "cs": "vendor/bin/phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml",
-        "cov": "vendor/bin/phpunit -c test/phpunit-coverage.xml",
+        "coverage": "vendor/bin/phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html",
+        "sonar": "vendor/bin/phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit",
         "update-syms": "vendor/bin/composer-update-syms"
     }
 }

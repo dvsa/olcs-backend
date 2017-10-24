@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
-use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
+use Dvsa\Olcs\Transfer\Query\DataRetention\Records as RecordsQry;
 use Mockery as m;
 
 /**
@@ -21,52 +21,38 @@ class DataRetentionTest extends RepositoryTestCase
         $this->setUpSut(DataRetention::class, true);
     }
 
-    public function testFetchAllWithEnabledRules()
+    public function testApplyListJoins()
     {
-        $query = Records::create(
+        $this->setUpSut(DataRetention::class, true);
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+
+        $mockQb->shouldReceive('with')->once()->with('dataRetentionRule', 'drr')->andReturnSelf();
+        $mockQb->shouldReceive('with')->once()->with('assignedTo', 'u')->andReturnSelf();
+        $mockQb->shouldReceive('with')->once()->with('u.contactDetails', 'cd')->andReturnSelf();
+        $mockQb->shouldReceive('with')->once()->with('cd.person', 'p')->andReturnSelf();
+        $this->sut->shouldReceive('getQueryBuilder')->with()->once()->andReturn($mockQb);
+
+        $this->sut->applyListJoins($mockQb);
+    }
+
+    public function testApplyListFiltersRecordsQry()
+    {
+        $query = RecordsQry::create(
             ['dataRetentionRuleId' => 13, 'sort' => 'id', 'order' => 'DESC']
         );
 
-        /** @var QueryBuilder $qb */
+        /** @var QueryBuilder|m::mock $qb */
         $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('andWhere')->times(4)->andReturnSelf();
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
-        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr1');
-        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', 13)->once()->andReturn('expr1');
-        $qb->shouldReceive('expr->isNull')->with('m.deletedDate')->once()->andReturn('expr1');
-        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once()->andReturn('expr1');
-        $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULT']);
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', 13)->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
 
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->queryBuilder
-            ->shouldReceive('with')
-            ->with('dataRetentionRule', 'drr')
-            ->andReturnSelf()
-            ->shouldReceive('modifyQuery')
-            ->andReturnSelf()
-            ->shouldReceive('withRefdata')
-            ->andReturnSelf()
-            ->shouldReceive('order')
-            ->andReturnSelf()
-            ->shouldReceive('paginate')
-            ->andReturnSelf();
-
-        $paginator = m::mock();
-        $paginator->shouldReceive('count')->withNoArgs()->andReturn(1);
-        $paginator->shouldReceive('getIterator')->andReturn('result');
-
-        $this->sut->shouldReceive('getPaginator')->andReturn($paginator);
-
-        $result = $this->sut->fetchAllWithEnabledRules($query);
-
-        $this->assertSame(
-            [
-                'results' => ['RESULT'],
-                'count' => 1
-            ],
-            $result
-        );
+        $this->sut->applyListFilters($qb, $query);
     }
 
     public function testRunCleanupProc()

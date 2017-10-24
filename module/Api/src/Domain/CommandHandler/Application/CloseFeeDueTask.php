@@ -32,7 +32,7 @@ final class CloseFeeDueTask extends AbstractCommandHandler implements Transactio
         /* @var $task Task */
         foreach ($tasks as $task) {
             $taskIdsToClose[] = $task->getId();
-        };
+        }
 
         return $this->handleSideEffect(
             \Dvsa\Olcs\Transfer\Command\Task\CloseTasks::create(['ids' => $taskIdsToClose])

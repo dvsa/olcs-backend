@@ -425,7 +425,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @return bool
      */
-    protected function hasAuthVehiclesIncrease()
+    public function hasAuthVehiclesIncrease()
     {
         return ((int) $this->getTotAuthVehicles() > (int) $this->getLicence()->getTotAuthVehicles());
     }
@@ -435,7 +435,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @return bool
      */
-    protected function hasAuthTrailersIncrease()
+    public function hasAuthTrailersIncrease()
     {
         return ($this->getTotAuthTrailers() > $this->getLicence()->getTotAuthTrailers());
     }
@@ -445,7 +445,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @return bool
      */
-    protected function hasNewOperatingCentre()
+    public function hasNewOperatingCentre()
     {
         $operatingCentres = $this->getOperatingCentres();
         /* @var $operatingCentre ApplicationOperatingCentre */
@@ -463,7 +463,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @return bool
      */
-    protected function hasIncreaseInOperatingCentre()
+    public function hasIncreaseInOperatingCentre()
     {
         $licence = array();
         $variation = array();

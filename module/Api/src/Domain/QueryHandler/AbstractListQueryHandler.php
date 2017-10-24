@@ -5,7 +5,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
@@ -17,7 +16,10 @@ class AbstractListQueryHandler extends AbstractQueryHandler
     protected $bundle = [];
 
     /**
-     * @param QueryInterface $query
+     * handle list query
+     *
+     * @param QueryInterface $query query
+     *
      * @return array
      */
     public function handleQuery(QueryInterface $query)
