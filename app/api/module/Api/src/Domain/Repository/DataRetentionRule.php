@@ -45,7 +45,7 @@ class DataRetentionRule extends AbstractRepository
     }
 
     /**
-     * Fetch as list of all data retention rules that have not been deleted
+     * Fetch a list of all data retention rules that have not been deleted
      *
      * @param QueryInterface $query Query from API
      *
@@ -53,6 +53,7 @@ class DataRetentionRule extends AbstractRepository
      */
     public function fetchAllNotDeletedRules(QueryInterface $query = null)
     {
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb);
@@ -65,7 +66,7 @@ class DataRetentionRule extends AbstractRepository
 
         return [
             'results' => $qb->getQuery()->getResult(),
-            'count' => $this->getPaginator($qb)->count()
+            'count' => $this->getPaginator($qb->getQuery())->count()
         ];
     }
 
