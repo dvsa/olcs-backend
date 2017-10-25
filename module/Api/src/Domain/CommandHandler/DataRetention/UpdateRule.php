@@ -3,8 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Exception\Exception;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
