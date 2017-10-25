@@ -11,7 +11,7 @@ return [
     CommandHandler\DataRetention\AssignItems::class => IsInternalUser::class,
     CommandHandler\DataRetention\DeleteEntities::class => IsSystemUser::class,
     CommandHandler\DataRetention\UpdateActionConfirmation::class => IsInternalUser::class,
-    CommandHandler\DataRetention\UpdateRuleCommandHandler::class => IsInternalUser::class,
+    CommandHandler\DataRetention\UpdateRule::class => IsInternalUser::class,
 
     QueryHandler\DataRetention\GetRule::class => IsInternalUser::class,
     QueryHandler\DataRetention\RuleList::class => IsInternalUser::class,

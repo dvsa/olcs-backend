@@ -10,19 +10,19 @@ use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\DataRetentionRule as DataRetentionRuleEntity;
-use Dvsa\Olcs\Transfer\Command\DataRetention\UpdateRule as UpdateRule;
+use Dvsa\Olcs\Transfer\Command\DataRetention\UpdateRule as UpdateRuleCommand;
 
 /**
  * Class UpdateRule
  */
-final class UpdateRuleCommandHandler extends AbstractCommandHandler implements TransactionedInterface
+final class UpdateRule extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'DataRetentionRule';
 
     /**
      * Handle command
      *
-     * @param CommandInterface|UpdateRule $command DTO
+     * @param CommandInterface|UpdateRuleCommand $command DTO
      *
      * @return Result
      */
