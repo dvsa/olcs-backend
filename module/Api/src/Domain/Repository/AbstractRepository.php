@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
@@ -34,6 +35,9 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
         try {
             $this->getEntityManager()->persist($entity);
             $this->getEntityManager()->flush();
+        } catch (OptimisticLockException $e) {
+            \Olcs\Logging\Log\Logger::info($e->getMessage() . get_class($entity));
+            throw $e;
         } catch (\Exception $e) {
             \Olcs\Logging\Log\Logger::crit($e->getMessage());
             throw $e;

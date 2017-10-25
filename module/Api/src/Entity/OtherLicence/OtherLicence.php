@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\OtherLicence;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 
 /**
  * OtherLicence Entity
@@ -49,6 +50,18 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         self::TYPE_HELD => ['licNo', 'holderName', 'purchaseDate']
     ];
 
+    /**
+     * Update OtherLicence properties
+     *
+     * @param string $licNo                  Licence number
+     * @param string $holderName             Holder name
+     * @param string $willSurrender          "Y" or "N"
+     * @param string $disqualificationDate   Disqualification date as string, eg '2017-10-25'
+     * @param int    $disqualificationLength Disqualification length
+     * @param string $purchaseDate           Purchase date as string, eg '2017-10-25'
+     *
+     * @return bool
+     */
     public function updateOtherLicence(
         $licNo,
         $holderName,
@@ -67,15 +80,45 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         );
         $previousLicenceType = $this->getPreviousLicenceType()->getId();
         foreach ($this->requiredFields[$previousLicenceType] as $field) {
-            if (substr($field, -4) == 'Date') {
-                $this->$field = new \DateTime($$field);
-            } else {
-                $this->$field = $$field;
+            switch ($field) {
+                case 'licNo' :
+                    $this->setLicNo($licNo);
+                    break;
+                case 'holderName' :
+                    $this->setHolderName($holderName);
+                    break;
+                case 'willSurrender' :
+                    $this->setWillSurrender($willSurrender);
+                    break;
+                case 'disqualificationDate' :
+                    $this->setDisqualificationDate(new \DateTime($disqualificationDate));
+                    break;
+                case 'disqualificationLength' :
+                    $this->setDisqualificationLength($disqualificationLength);
+                    break;
+                case 'purchaseDate' :
+                    $this->setPurchaseDate(new \DateTime($purchaseDate));
+                    break;
+                default:
+                    throw new \RuntimeException("Unexpected field '${field}'");
             }
         }
         return true;
     }
 
+    /**
+     * Validate properties to set on an OtherLicence
+     *
+     * @param string $licNo                  Licence number
+     * @param string $holderName             Holder name
+     * @param string $willSurrender          "Y" or "N"
+     * @param string $disqualificationDate   Disqualification date as string, eg '2017-10-25'
+     * @param int    $disqualificationLength Disqualification length
+     * @param string $purchaseDate           Purchase date as string, eg '2017-10-25'
+     *
+     * @return bool Return true if valid, otherwise throws ValidationException
+     * @throws ValidationException
+     */
     protected function validateOtherLicence(
         $licNo,
         $holderName,
@@ -150,6 +193,13 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         throw new ValidationException($errors);
     }
 
+    /**
+     * Is a date in the future
+     *
+     * @param string $value Datetime to test eg "2017-10-26"
+     *
+     * @return bool
+     */
     protected function isDateInFuture($value)
     {
         $dateObject = new \DateTime($value);
@@ -159,6 +209,15 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         return false;
     }
 
+    /**
+     * Check a date
+     *
+     * @param string $dateToCheck Datetime to check eg "2017-10-26"
+     * @param string $name        Name of the property being checked
+     * @param array  $errors      Any existing error messages, to be merged
+     *
+     * @return array of error messages
+     */
     protected function checkDateNotEmptyAndNotInFuture($dateToCheck, $name, $errors)
     {
         if (!$dateToCheck) {
@@ -177,6 +236,15 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         return $errors;
     }
 
+    /**
+     * Check if a required value is missing
+     *
+     * @param string $field  Property value
+     * @param string $name   Property name
+     * @param array  $errors Existing error messages to be merged
+     *
+     * @return array of error messages
+     */
     protected function checkRequiredField($field, $name, $errors)
     {
         if (!$field) {
@@ -189,6 +257,15 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         return $errors;
     }
 
+    /**
+     * Check a set of properties are valid
+     *
+     * @param array $fields Array of property values
+     * @param array $names  Array of property names
+     * @param array $errors Existing error messages to be merged
+     *
+     * @return array of error messages
+     */
     protected function checkRequiredFields($fields, $names, $errors)
     {
         for ($i = 0; $i < count($fields); $i++) {
@@ -197,6 +274,14 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         return $errors;
     }
 
+    /**
+     * Check previous licence is not empty
+     *
+     * @param string $previousLicenceType Previous licence type, refData
+     *
+     * @return void
+     * @throws ValidationException
+     */
     protected function checkEmptyPreviousLicenceType($previousLicenceType)
     {
         if (!$previousLicenceType) {
@@ -209,6 +294,18 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         }
     }
 
+    /**
+     * Update properties for a Transport Manager Licence
+     *
+     * @param string                  $role                    Role, refData
+     * @param TransportManagerLicence $transportManagerLicence Transport Manager Licence entity
+     * @param int                     $hoursPerWeek            Number of hours per week
+     * @param string                  $licNo                   Licence number
+     * @param string                  $operatingCentres        Operating centre names
+     * @param int                     $totalAuthVehicles       Total auth vehicles
+     *
+     * @return void
+     */
     public function updateOtherLicenceForTml(
         $role,
         $transportManagerLicence,

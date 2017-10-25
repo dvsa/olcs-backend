@@ -25,8 +25,16 @@ class OtherLicenceEntityTest extends EntityTester
      *
      * @dataProvider validDataProvider
      */
-    public function testUpdateOtherLicenceValid($previousLicenceType)
-    {
+    public function testUpdateOtherLicenceValid(
+        $previousLicenceType,
+        $licNo,
+        $holderName,
+        $willSurrender = null,
+        $disqualificationDate = null,
+        $disqualificationLength = null,
+        $purchaseDate = null
+    ) {
+        /** @var m\Mock|Entity $sut */
         $sut = m::mock(Entity::class)->makePartial()
             ->shouldReceive('getPreviousLicenceType')
             ->andReturn(
@@ -38,14 +46,31 @@ class OtherLicenceEntityTest extends EntityTester
             ->getMock();
 
         $result = $sut->updateOtherLicence(
-            'licNo',
-            'holderName',
-            'Y',
-            '2015-01-01',
-            '2',
-            '2014-01-01'
+            $licNo,
+            $holderName,
+            $willSurrender,
+            $disqualificationDate,
+            $disqualificationLength,
+            $purchaseDate
         );
+
         $this->assertTrue($result);
+
+        $this->assertSame($licNo, $sut->getLicNo());
+        $this->assertSame($holderName, $sut->getHolderName());
+        $this->assertSame($willSurrender, $sut->getWillSurrender());
+        if ($disqualificationDate === null) {
+            $this->assertNull($sut->getDisqualificationDate());
+        } else {
+            $this->assertEquals(new \DateTime($disqualificationDate), $sut->getDisqualificationDate());
+        }
+        $this->assertSame($disqualificationLength, $sut->getDisqualificationLength());
+
+        if ($purchaseDate === null) {
+            $this->assertNull($sut->getPurchaseDate());
+        } else {
+            $this->assertEquals(new \DateTime($purchaseDate), $sut->getPurchaseDate());
+        }
     }
 
     /**
@@ -90,13 +115,13 @@ class OtherLicenceEntityTest extends EntityTester
     public function validDataProvider()
     {
         return [
-            [Entity::TYPE_CURRENT],
-            [Entity::TYPE_APPLIED],
-            [Entity::TYPE_REFUSED],
-            [Entity::TYPE_REVOKED],
-            [Entity::TYPE_PUBLIC_INQUIRY],
-            [Entity::TYPE_DISQUALIFIED],
-            [Entity::TYPE_HELD]
+            [Entity::TYPE_CURRENT, 'licNo', 'holderName', 'Y'],
+            [Entity::TYPE_APPLIED, 'licNo', 'holderName'],
+            [Entity::TYPE_REFUSED, 'licNo', 'holderName'],
+            [Entity::TYPE_REVOKED, 'licNo', 'holderName'],
+            [Entity::TYPE_PUBLIC_INQUIRY, 'licNo', 'holderName'],
+            [Entity::TYPE_DISQUALIFIED, 'licNo', 'holderName', null, '2015-01-01', '2'],
+            [Entity::TYPE_HELD, 'licNo', 'holderName', null, null, null, '2014-01-01'],
         ];
     }
 
