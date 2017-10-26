@@ -588,6 +588,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param mixed $prevBeenAtPi           previous beenAtPi
      * @param mixed $prevBeenDisqualifiedTc previous beenDisqualifiedTc
      * @param mixed $prevPurchasedAssets    previous purchasedAssets
+     *
+     * @return void
      */
     public function updateLicenceHistory(
         $prevHasLicence,
