@@ -40,7 +40,10 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
     protected $extraRepos = ['Application'];
 
     /**
-     * @param Cmd $command
+     * @param CommandInterface|Cmd $command The command
+     *
+     * @return Result
+     * @throws ForbiddenException
      */
     public function handleCommand(CommandInterface $command)
     {

@@ -90,7 +90,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     const CODE_GV_VAR_NO_UPGRADE = 'GV81';
     const CODE_PSV_APP = 'PSV421';
     const CODE_PSV_APP_SR = 'PSV356';
-    const CODE_PSV_VAR_UPGRADE    = 'PSV431A';
+    const CODE_PSV_VAR_UPGRADE = 'PSV431A';
     const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
 
     const NOT_APPLICABLE = 'Not applicable';
@@ -129,24 +129,28 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Out of objection date
+     *
      * @var string
      */
     protected $oooDate;
 
     /**
      * Out of representation date
+     *
      * @var string
      */
     protected $oorDate;
 
     /**
      * isOpposed
+     *
      * @var bool
      */
     protected $isOpposed;
 
     /**
      * publishedDate
+     *
      * @var string
      */
     protected $publishedDate;
@@ -223,34 +227,34 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $errors = [];
 
         if (!$goodsOrPsv) {
-            $errors['goodsOrPsv'][] =[
+            $errors['goodsOrPsv'][] = [
                 self::ERROR_OT_REQUIRED => 'Operator type is required'
             ];
             // need to throw exception ealier if operator type is empty
             throw new ValidationException($errors);
         }
         if ($niFlag === 'Y' && $goodsOrPsv->getId() === Licence::LICENCE_CATEGORY_PSV) {
-            $errors['goodsOrPsv'][] =[
+            $errors['goodsOrPsv'][] = [
                 self::ERROR_NI_NON_GOODS => 'NI can only apply for goods licences'
             ];
         }
 
         if ($goodsOrPsv->getId() === Licence::LICENCE_CATEGORY_GOODS_VEHICLE
             && $licenceType->getId() === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
-            $errors['licenceType'][] =[
+            $errors['licenceType'][] = [
                 self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences'
             ];
         }
 
         if ($this->getIsVariation()) {
             if ($this->getGoodsOrPsv() != $goodsOrPsv) {
-                $errors['goodsOrPsv'][] =[
+                $errors['goodsOrPsv'][] = [
                     self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences'
                 ];
             }
 
             if ($this->getNiFlag() != $niFlag) {
-                $errors['niFlag'][] =[
+                $errors['niFlag'][] = [
                     self::ERROR_GV_NON_SR => 'GV operators cannot apply for special restricted licences',
                 ];
             }
@@ -269,7 +273,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param \Dvsa\Olcs\Api\Entity\System\Category                 $category        category
      * @param \Dvsa\Olcs\Api\Entity\System\SubCategory              $subCategory     sub category
      * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre operating centre
-     * 
+     *
      * @return Collection
      */
     public function getApplicationDocuments($category, $subCategory, $operatingCentre = null)
@@ -369,6 +373,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         throw new ValidationException($errors);
     }
 
+    /**
+     * Get other licence by type
+     *
+     * @param mixed $type licence type
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection|Collection
+     */
     public function getOtherLicencesByType($type)
     {
         $expr = Criteria::expr();
@@ -427,7 +438,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function hasAuthVehiclesIncrease()
     {
-        return ((int) $this->getTotAuthVehicles() > (int) $this->getLicence()->getTotAuthVehicles());
+        return ((int)$this->getTotAuthVehicles() > (int)$this->getLicence()->getTotAuthVehicles());
     }
 
     /**
@@ -483,7 +494,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         foreach (array_keys($licence) as $operatingCenterId) {
             // If a variation record doesnt exists or its a removal op centre.
             if (!isset($variation[$operatingCenterId]) ||
-                $variation[$operatingCenterId]->getAction() ===  ApplicationOperatingCentre::ACTION_DELETE
+                $variation[$operatingCenterId]->getAction() === ApplicationOperatingCentre::ACTION_DELETE
             ) {
                 continue;
             }
@@ -567,6 +578,17 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $this->getLicence()->isRestricted() === false;
     }
 
+    /**
+     * Update Licence history
+     *
+     * @param mixed $prevHasLicence         previous hasLicence
+     * @param mixed $prevHadLicence         previous hadLicence
+     * @param mixed $prevBeenRefused        previous beenRefused
+     * @param mixed $prevBeenRevoked        previous beenRevoked
+     * @param mixed $prevBeenAtPi           previous beenAtPi
+     * @param mixed $prevBeenDisqualifiedTc previous beenDisqualifiedTc
+     * @param mixed $prevPurchasedAssets    previous purchasedAssets
+     */
     public function updateLicenceHistory(
         $prevHasLicence,
         $prevHadLicence,
@@ -585,6 +607,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $this->prevPurchasedAssets = $prevPurchasedAssets;
     }
 
+    /**
+     * Get the application type
+     *
+     * @return int
+     */
     public function getApplicationType()
     {
         if ($this->isVariation()) {
@@ -658,7 +685,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function isVariation()
     {
-        return (boolean) $this->getIsVariation();
+        return (boolean)$this->getIsVariation();
     }
 
     /**
@@ -1037,7 +1064,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         // if application/variation organisation is sole trader or partnership
         if ($this->getLicence()->getOrganisation()->isSoleTrader() ||
             $this->getLicence()->getOrganisation()->isPartnership()
-            ) {
+        ) {
             return false;
         }
 
@@ -1045,8 +1072,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if (!$this->getIsVariation() &&
             $this->getApplicationOrganisationPersons()->count() === 0 &&
             !$this->getLicence()->getOrganisation()->hasInforceLicences()
-            ) {
-                return false;
+        ) {
+            return false;
         }
 
         return true;
@@ -1291,7 +1318,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     private function getLatestPublication()
     {
-         $publicationSections = [
+        $publicationSections = [
             \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::APP_NEW_SECTION,
             \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::VAR_NEW_SECTION,
             \Dvsa\Olcs\Api\Entity\Publication\PublicationSection::SCHEDULE_4_NEW,
@@ -1312,7 +1339,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             } elseif (
                 new \DateTime($publicationLink->getPublication()->getPubDate()) >
                 new \DateTime($latestPublication->getPubDate())
-                ) {
+            ) {
                 $latestPublication = $publicationLink->getPublication();
             }
         }
@@ -1999,7 +2026,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getApplicationReference()
     {
         if ($this->getLicence() && !empty($this->getLicence()->getLicNo())) {
-            $applicationReference = $this->getLicence()->getLicNo().'/'.$this->getId();
+            $applicationReference = $this->getLicence()->getLicNo() . '/' . $this->getId();
         } else {
             $applicationReference = $this->getId();
         }
