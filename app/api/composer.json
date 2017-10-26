@@ -62,7 +62,7 @@
         "symfony/Filesystem": "~2.6.0",
         "symfony/Finder": "~2.6.0",
         "olcs/olcs-xmltools": "dev-develop",
-	    "phprtflite/phprtflite": "~1.3.3",
+        "phprtflite/phprtflite": "~1.3.3",
         "simplesamlphp/saml2": "^3.0.0",
         "ramsey/uuid": "^3.6",
         "fzaninotto/faker": "^1.6",
@@ -96,7 +96,10 @@
     "config": {
         "process-timeout" : 600,
         "preferred-install": "dist",
-        "secure-http": false
+        "secure-http": false,
+        "platform" : {
+            "php":"5.6.31"
+        }
     },
     "scripts": {
         "ut": "vendor/bin/phpunit -c test/phpunit.xml --stop-on-failure",
