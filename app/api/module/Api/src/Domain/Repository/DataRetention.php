@@ -27,6 +27,18 @@ class DataRetention extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof RecordsQry) {
+            if ($query->getMarkedForDeletion() !== null) {
+                //
+            }
+
+            if ($query->getNextReview() !== null) {
+                //
+            }
+
+            if ($query->getUser() !== null) {
+                //
+            }
+
             $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
             $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()));
             $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
