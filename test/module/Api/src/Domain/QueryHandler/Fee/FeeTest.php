@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Fee;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Fee\Fee as QueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -80,20 +81,30 @@ class FeeTest extends QueryHandlerTestCase
             ->shouldReceive('getLicence')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('getExpiryDate')
-                ->andReturn('2017-01-01')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('getExpiryDate')
+                    ->andReturn('2017-01-01')
+                    ->once()
+                    ->getMock()
             )
             ->once()
             ->getMock();
 
-        $completed = new \DateTime('2015-10-30');
+        $created = new DateTime('2015-10-29');
+        $completed = new DateTime('2015-10-30');
         $status = new RefData(TransactionEntity::STATUS_COMPLETE);
-        $ft1 = $this->getMockFeeTransaction(5, $completed, $status, '10.00', 'Payment', 'Cash');
-        $ft2 = $this->getMockFeeTransaction(6, $completed, $status, '20.00', 'Payment', 'Cash');
-        $ft3 = $this->getMockFeeTransaction(7, $completed, $status, '-10.00', 'Refund', 'Refund');
-        $ft4 = $this->getMockFeeTransaction(8, $completed, $status, '-20.00', null, null, $ft3->getTransaction());
+        $ft1 = $this->getMockFeeTransaction(5, $created, $completed, $status, '10.00', 'Payment', 'Cash');
+        $ft2 = $this->getMockFeeTransaction(6, $created, $completed, $status, '20.00', 'Payment', 'Cash');
+        $ft3 = $this->getMockFeeTransaction(7, $created, $completed, $status, '-10.00', 'Refund', 'Refund');
+        $ft4 = $this->getMockFeeTransaction(
+            8,
+            $created,
+            $completed,
+            $status,
+            '-20.00',
+            null,
+            null,
+            $ft3->getTransaction()
+        );
         $ft5 = m::mock(FeeTransactionEntity::class)
             ->shouldReceive('getTransaction')
             ->andReturn(
@@ -150,6 +161,7 @@ class FeeTest extends QueryHandlerTestCase
                 5 => [
                     'transactionId' => 5,
                     'type' => 'Payment',
+                    'createdOn' => $created,
                     'completedDate' => $completed,
                     'method' => 'Cash DISPLAY_AMOUNT',
                     'processedBy' => 'someuser',
@@ -160,6 +172,7 @@ class FeeTest extends QueryHandlerTestCase
                 6 => [
                     'transactionId' => 6,
                     'type' => 'Payment',
+                    'createdOn' => $created,
                     'completedDate' => $completed,
                     'method' => 'Cash DISPLAY_AMOUNT',
                     'processedBy' => 'someuser',
@@ -172,6 +185,7 @@ class FeeTest extends QueryHandlerTestCase
                 7 => [
                     'transactionId' => 7,
                     'type' => 'Refund',
+                    'createdOn' => $created,
                     'completedDate' => $completed,
                     'method' => 'Refund DISPLAY_AMOUNT',
                     'processedBy' => 'someuser',
@@ -190,18 +204,27 @@ class FeeTest extends QueryHandlerTestCase
     /**
      * Helper method to get a mock FeeTransaction record
      *
-     * @param int $id transaction id
-     * @param DateTime $completed
-     * @param RefData $status
-     * @param string $amount
-     * @param string $type (description)
-     * @param string $method (description)
+     * @param int               $id transaction id
+     * @param DateTime          $created
+     * @param DateTime          $completed
+     * @param RefData           $status
+     * @param string            $amount
+     * @param string            $type (description)
+     * @param string            $method (description)
      * @param TransactionEntity $transaction optional transaction reference
      *
-     * @return Mockery\Mock (FeeTransactionEntity)
+     * @return m\Mock (FeeTransactionEntity)
      */
-    private function getMockFeeTransaction($id, $completed, $status, $amount, $type, $method, $transaction = null)
-    {
+    private function getMockFeeTransaction(
+        $id,
+        $created,
+        $completed,
+        $status,
+        $amount,
+        $type,
+        $method,
+        $transaction = null
+    ) {
         if (is_null($transaction)) {
             $transaction = m::mock(TransactionEntity::class);
             $transaction
@@ -213,6 +236,8 @@ class FeeTest extends QueryHandlerTestCase
                 ->andReturn(false)
                 ->shouldReceive('isWaive')
                 ->andReturn(false)
+                ->shouldReceive('getCreatedOn')
+                ->andReturn($created)
                 ->shouldReceive('getCompletedDate')
                 ->andReturn($completed)
                 ->shouldReceive('getStatus')

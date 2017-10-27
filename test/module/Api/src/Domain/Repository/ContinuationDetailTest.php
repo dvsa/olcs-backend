@@ -140,6 +140,8 @@ EOT;
 
         $mockQb->shouldReceive('expr->eq')->with('m.received', 0)->once()->andReturn('conditionReceived');
         $mockQb->shouldReceive('andWhere')->with('conditionReceived')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('m.isDigital', 0)->once()->andReturn('conditionIsDigital');
+        $mockQb->shouldReceive('andWhere')->with('conditionIsDigital')->once()->andReturnSelf();
 
         $this->queryBuilder->shouldReceive('filterByIds')->with([1])->once()->andReturnSelf();
 
