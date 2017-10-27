@@ -125,14 +125,16 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
                 }
                 break;
             case self::ACCRUAL_RULE_CONTINUATION:
-                // The licence continuation date + 1 day (according to calendar dates)
                 $licenceExpiry = $this->getLicence()->getExpiryDate();
-                if (!is_null($licenceExpiry)) {
-                    $date = new \DateTime($licenceExpiry);
-                    $date->add(new \DateInterval('P1D'));
-                    return $date;
+                if (is_null($licenceExpiry)) {
+                    break;
                 }
-                break;
+                $date = new \DateTime($licenceExpiry);
+                if ($date->diff(new \DateTime())->y >= 4) {
+                    $date->sub(new \DateInterval('P5Y'));
+                }
+                $date->add(new \DateInterval('P1D'));
+                return $date;
             default:
                 break;
         }
