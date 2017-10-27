@@ -427,6 +427,8 @@ return [
     TransferCommand\Submission\AssignSubmission::class => CommandHandler\Submission\AssignSubmission::class,
     TransferCommand\Submission\InformationCompleteSubmission::class =>
         CommandHandler\Submission\InformationComplete::class,
+    TransferCommand\Submission\StoreSubmissionSnapshot::class =>
+        CommandHandler\Submission\StoreSubmissionSnapshot::class,
 
     // Transfer - Document
     TransferCommand\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
@@ -999,4 +1001,6 @@ return [
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
+    TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
+    TransferCommand\DataRetention\UpdateRule::class => CommandHandler\DataRetention\UpdateRule::class,
 ];

@@ -26,7 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_data_retention_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_data_retention_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_organisation_id", columns={"organisation_id"}),
- *        @ORM\Index(name="ix_entity_name_entity_pk", columns={"entity_name","entity_pk"})
+ *        @ORM\Index(name="ix_entity_name_entity_pk", columns={"entity_name","entity_pk"}),
+ *        @ORM\Index(name="ix_assigned_to", columns={"assigned_to"})
  *    }
  * )
  */
@@ -52,6 +53,16 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
      * @ORM\Column(type="datetime", name="actioned_date", nullable=true)
      */
     protected $actionedDate;
+
+    /**
+     * Assigned to
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_to", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedTo;
 
     /**
      * Created by
@@ -238,6 +249,30 @@ abstract class AbstractDataRetention implements BundleSerializableInterface, Jso
         }
 
         return $this->actionedDate;
+    }
+
+    /**
+     * Set the assigned to
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedTo entity being set as the value
+     *
+     * @return DataRetention
+     */
+    public function setAssignedTo($assignedTo)
+    {
+        $this->assignedTo = $assignedTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned to
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getAssignedTo()
+    {
+        return $this->assignedTo;
     }
 
     /**

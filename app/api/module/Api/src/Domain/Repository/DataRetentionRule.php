@@ -45,6 +45,32 @@ class DataRetentionRule extends AbstractRepository
     }
 
     /**
+     * Fetch a list of all data retention rules that have not been deleted
+     *
+     * @param QueryInterface $query Query from API
+     *
+     * @return array
+     */
+    public function fetchAllNotDeletedRules(QueryInterface $query = null)
+    {
+        /** @var \Doctrine\ORM\QueryBuilder $qb */
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        $qb->andWhere($qb->expr()->isNull($this->alias .'.deletedDate'));
+
+        if (!is_null($query)) {
+            $this->buildDefaultListQuery($qb, $query);
+        }
+
+        return [
+            'results' => $qb->getQuery()->getResult(),
+            'count' => $this->getPaginator($qb->getQuery())->count()
+        ];
+    }
+
+    /**
      * Run a stored proc
      *
      * @param string $storedProc The stored proc to run

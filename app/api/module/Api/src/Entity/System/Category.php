@@ -76,4 +76,6 @@ class Category extends AbstractCategory
     const BUS_SUB_CATEGORY_OTHER_DOCUMENTS = 40;
     const BUS_SUB_CATEGORY_TRANSXCHANGE_ZIP = 107;
     const BUS_SUB_CATEGORY_TRANSXCHANGE_PDF = 108;
+
+    const SUBMISSION_SUB_CATEGORY_OTHER = 146;
 }

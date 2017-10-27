@@ -3,9 +3,11 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\DataRetention\Records;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as DataRetentionEntity;
+use Dvsa\Olcs\Transfer\Query\DataRetention\Records as RecordsQry;
 
 /**
  * DataRetention
@@ -15,34 +17,38 @@ class DataRetention extends AbstractRepository
     protected $entity = DataRetentionEntity::class;
 
     /**
-     * Fetch all data retentions with associated rules that are enabled
+     * Applies filters to list queries
      *
-     * @param QueryInterface|Records $query Query
+     * @param QueryBuilder              $qb    doctrine query builder
+     * @param QueryInterface|RecordsQry $query the query
      *
-     * @return array
+     * @return void
      */
-    public function fetchAllWithEnabledRules(QueryInterface $query = null)
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb);
-        $this->getQueryBuilder()->with('dataRetentionRule', 'drr');
-
-        $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
-        $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()));
-        $qb->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
-
-        $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
-        $qb->setParameter('actionType', 'Review');
-
-        if (!is_null($query)) {
-            $this->buildDefaultListQuery($qb, $query);
+        if ($query instanceof RecordsQry) {
+            $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()));
+            $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
+            $qb->setParameter('actionType', 'Review');
         }
+    }
 
-        return [
-            'results' => $qb->getQuery()->getResult(),
-            'count' => $this->getPaginator($qb)->count()
-        ];
+    /**
+     * Override to add additional data to the default fetchList() method
+     * Join tables to query by conditions
+     *
+     * @param QueryBuilder $qb Doctrine query builder
+     *
+     * @return void
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()
+            ->with('dataRetentionRule', 'drr')
+            ->with('assignedTo', 'u')
+            ->with('u.contactDetails', 'cd')
+            ->with('cd.person', 'p');
     }
 
     /**

@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Mockery as m;
 
@@ -17,6 +16,12 @@ abstract class AbstractListQueryHandlerTest extends QueryHandlerTestCase
     protected $sutClass;
 
     /** @var  string */
+    protected $qryClass;
+
+    /** @var  string */
+    protected $repoClass;
+
+    /** @var  string */
     protected $sutRepo;
 
     /** @var QueryHandler\QueryHandlerInterface */
@@ -26,14 +31,21 @@ abstract class AbstractListQueryHandlerTest extends QueryHandlerTestCase
     {
         $this->sut = new $this->sutClass();
 
-        $this->mockRepo($this->sutRepo, Repository\RepositoryInterface::class);
+        $this->mockRepo($this->sutRepo, $this->repoClass);
 
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = TransferQry\Cases\Report\OpenList::create([]);
+        /**
+         * @var TransferQry\QueryInterface $qry
+         * @var TransferQry\QueryInterface $query
+         *
+         * Once we're on PHP 7 we can switch to $query = $this->qryClass::create([]); instead
+         */
+        $qry = $this->qryClass;
+        $query = $qry::create([]);
 
         $mockResult = m::mock();
         $mockResult->shouldReceive('serialize')->once()->andReturn('EXPECT');

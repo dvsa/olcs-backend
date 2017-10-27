@@ -110,7 +110,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
                 $count++;
                 $task->setIsClosed('Y');
             }
-        };
+        }
 
         $this->getRepo()->save($application);
 
