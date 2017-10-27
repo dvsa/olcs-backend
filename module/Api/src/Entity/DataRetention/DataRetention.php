@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 class DataRetention extends AbstractDataRetention
 {
     /**
-     * Mark for delay
+     * Mark for delay @todo this shouldn't allow a date not in the future
      *
      * @param \DateTime|null $date Date to delay review until
      *
@@ -35,7 +35,7 @@ class DataRetention extends AbstractDataRetention
     public function markForDelay($date)
     {
         $this->markForReview();
-        $this->nextReviewDate = $date;
+        $this->nextReviewDate = $this->processDate($date);
 
         return $this;
     }
