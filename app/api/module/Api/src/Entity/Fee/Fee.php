@@ -130,7 +130,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
                     break;
                 }
                 $date = new \DateTime($licenceExpiry);
-                if($date->diff(new \DateTime())->y >= 4) {
+                if ($date->diff(new \DateTime())->y >= 4) {
                     $date->sub(new \DateInterval('P5Y'));
                 }
                 $date->add(new \DateInterval('P1D'));
