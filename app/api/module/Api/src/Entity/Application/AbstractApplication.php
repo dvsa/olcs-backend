@@ -33,7 +33,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_application_psv_which_vehicle_sizes",
      *     columns={"psv_which_vehicle_sizes"}),
  *        @ORM\Index(name="ix_application_signature_type", columns={"signature_type"}),
- *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"})
+ *        @ORM\Index(name="ix_application_digital_signature_id", columns={"digital_signature_id"}),
+ *        @ORM\Index(name="ix_application_variation_type", columns={"variation_type"})
  *    }
  * )
  */
@@ -646,6 +647,16 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="smallint", name="tot_community_licences", nullable=true)
      */
     protected $totCommunityLicences;
+
+    /**
+     * Variation type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="variation_type", referencedColumnName="id", nullable=true)
+     */
+    protected $variationType;
 
     /**
      * Version
@@ -2494,6 +2505,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function getTotCommunityLicences()
     {
         return $this->totCommunityLicences;
+    }
+
+    /**
+     * Set the variation type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $variationType entity being set as the value
+     *
+     * @return Application
+     */
+    public function setVariationType($variationType)
+    {
+        $this->variationType = $variationType;
+
+        return $this;
+    }
+
+    /**
+     * Get the variation type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getVariationType()
+    {
+        return $this->variationType;
     }
 
     /**
