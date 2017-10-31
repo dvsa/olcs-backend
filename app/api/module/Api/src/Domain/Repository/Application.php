@@ -85,11 +85,12 @@ class Application extends AbstractRepository
                     $qbE->eq($this->alias . '.isVariation', 1),
                     $qbE->orX(
                         $qbE->isNull($this->alias . '.variationType'),
-                        $qbE->neq($this->alias . '.variationType', $qbE->literal(Entity::VARIATION_TYPE_DIRECTOR_CHANGE))
+                        $qbE->neq($this->alias . '.variationType', ':directorChangeVariationType')
                     )
                 )
             )
-        );
+        )
+        ->setParameter('directorChangeVariationType', Entity::VARIATION_TYPE_DIRECTOR_CHANGE);
 
         return $qb->getQuery()->execute();
     }
