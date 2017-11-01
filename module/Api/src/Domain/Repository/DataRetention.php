@@ -27,23 +27,31 @@ class DataRetention extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof RecordsQry) {
-            if ($query->getMarkedForDeletion() !== null) {
-                //
+
+            if ($query->getMarkedForDeletion() != null) {
+                $actionConfirmation = $query->getMarkedForDeletion() == 'Y' ? 1 : 0;
+                $qb->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', $actionConfirmation));
             }
 
-            if ($query->getNextReview() !== null) {
-                //
+            if ($query->getNextReview() == 'deferred') {
+                $qb->andWhere($qb->expr()->isNotNull($this->alias . '.nextReviewDate'));
+            } elseif ($query->getNextReview() == 'pending') {
+                $qb->andWhere($qb->expr()->isNull($this->alias . '.nextReviewDate'));
             }
 
-            if ($query->getUser() !== null) {
-                //
+            if (is_numeric($query->getAssignedToUser())) {
+                $qb->andWhere($qb->expr()->eq($this->alias . '.assignedTo', $query->getAssignedToUser()));
+            } elseif ($query->getAssignedToUser() == 'unassigned') {
+                $qb->andWhere($qb->expr()->isNull($this->alias . '.assignedTo'));
             }
 
             $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
             $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()));
             $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
             $qb->setParameter('actionType', 'Review');
+
         }
+
     }
 
     /**
