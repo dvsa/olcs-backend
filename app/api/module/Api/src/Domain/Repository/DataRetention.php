@@ -30,7 +30,8 @@ class DataRetention extends AbstractRepository
 
             if ($query->getMarkedForDeletion() != null) {
                 $actionConfirmation = $query->getMarkedForDeletion() == 'Y' ? 1 : 0;
-                $qb->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', $actionConfirmation));
+                $qb->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', ':actionConfirmation'));
+                $qb->setParameter('actionConfirmation', $actionConfirmation);
             }
 
             if ($query->getNextReview() == 'deferred') {
@@ -40,15 +41,17 @@ class DataRetention extends AbstractRepository
             }
 
             if (is_numeric($query->getAssignedToUser())) {
-                $qb->andWhere($qb->expr()->eq($this->alias . '.assignedTo', $query->getAssignedToUser()));
+                $qb->andWhere($qb->expr()->eq($this->alias . '.assignedTo', ':assignedToUser'));
+                $qb->setParameter('assignedToUser', $query->getAssignedToUser());
             } elseif ($query->getAssignedToUser() == 'unassigned') {
                 $qb->andWhere($qb->expr()->isNull($this->alias . '.assignedTo'));
             }
 
             $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
-            $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', $query->getDataRetentionRuleId()));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', ':dataRetentionRuleId'));
             $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
             $qb->setParameter('actionType', 'Review');
+            $qb->setParameter('dataRetentionRuleId', $query->getDataRetentionRuleId());
 
         }
 
