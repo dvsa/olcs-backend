@@ -14,6 +14,7 @@ return [
     AppCommandHandler\UpdatePeople::class               => Misc\CanAccessPersonWithPerson::class,
     LicCommandHandler\CreatePeople::class               => Misc\CanAccessLicenceWithId::class,
     LicCommandHandler\DeletePeople::class               => Misc\CanAccessPeopleWithPersonIds::class,
+    LicCommandHandler\DeletePeopleViaVariation::class   => Misc\CanAccessPeopleWithPersonIds::class,
     LicCommandHandler\UpdatePeople::class               => Misc\CanAccessPersonWithPerson::class,
     QueryHandler\Licence\People::class                  => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Application\People::class              => Misc\CanAccessApplicationWithId::class,
