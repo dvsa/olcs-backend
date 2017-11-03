@@ -46,11 +46,195 @@ class DataRetentionTest extends RepositoryTestCase
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
         $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
-        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', 13)->once()->andReturn('expr3');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
         $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryMarkedForDeletionY()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'markedForDeletion' => 'Y'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->eq')->with('m.actionConfirmation', ':actionConfirmation')->once()->andReturn('expr0');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('actionConfirmation', 1)->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryMarkedForDeletionN()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'markedForDeletion' => 'N'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->eq')->with('m.actionConfirmation', ':actionConfirmation')->once()->andReturn('expr0');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('actionConfirmation', 0)->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryWithNextReviewDeferred()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'nextReview' => 'deferred'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->isNotNull')->with('m.nextReviewDate')->once()->andReturn('expr0');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryWithNextReviewPending()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'nextReview' => 'pending'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->isNull')->with('m.nextReviewDate')->once()->andReturn('expr0');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryWithAssignedToUser()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'assignedToUser' => 1
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->eq')->with('m.assignedTo', ':assignedToUser')->once()->andReturn('expr0');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('assignedToUser', 1)->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryWithAssignedToUserUnassigned()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'assignedToUser' => 'unassigned'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->isNull')->with('m.assignedTo')->once()->andReturn('expr0');
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+
+        $this->sut->applyListFilters($qb, $query);
+    }
+
+    public function testApplyListFiltersRecordsQryWithAssignedToUserAll()
+    {
+        $query = RecordsQry::create(
+            ['dataRetentionRuleId' => 13,
+                'sort' => 'id',
+                'order' => 'DESC',
+                'assignedToUser' => 'all'
+            ]
+        );
+
+        /** @var QueryBuilder|m::mock $qb */
+        $qb = m::mock(QueryBuilder::class);
+        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
+        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
+        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
 
         $this->sut->applyListFilters($qb, $query);
     }
