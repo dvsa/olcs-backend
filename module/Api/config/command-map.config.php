@@ -203,6 +203,7 @@ return [
     TransferCommand\Licence\CreatePeople::class => CommandHandler\Licence\CreatePeople::class,
     TransferCommand\Licence\UpdatePeople::class => CommandHandler\Licence\UpdatePeople::class,
     TransferCommand\Licence\DeletePeople::class => CommandHandler\Licence\DeletePeople::class,
+    TransferCommand\Licence\DeletePeopleViaVariation::class => CommandHandler\Licence\DeletePeopleViaVariation::class,
     Command\Document\DispatchDocument::class => CommandHandler\Document\DispatchDocument::class,
     TransferCommand\Licence\Overview::class => CommandHandler\Licence\Overview::class,
     TransferCommand\Licence\UpdateTrafficArea::class => CommandHandler\Licence\UpdateTrafficArea::class,
