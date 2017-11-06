@@ -939,6 +939,7 @@ return [
 
     // Domain - Variation
     Command\Variation\EndInterim::class => CommandHandler\Variation\EndInterim::class,
+    TransferCommand\Variation\GrantDirectorChange::class => CommandHandler\Variation\GrantDirectorChange::class,
 
     // Transfer - CPMS
     TransferCommand\Cpms\RequestReport::class => CommandHandler\Cpms\RequestReport::class,
