@@ -71,6 +71,19 @@ class OrganisationPerson extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function fetchCountForOrganisation($organisationId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($qb->expr()->count($this->alias . '.person'))
+            ->innerJoin($this->alias . '.person', 'p')
+            ->andWhere($qb->expr()->eq($this->alias . '.organisation', ':organisationId'))
+            ->setParameter('organisationId', $organisationId);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
     /**
      * Fetch a list for an Organisation and a Person
      *
