@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeletePeopleViaVariation;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
 use Dvsa\Olcs\Transfer\Command\Licence\DeletePeopleViaVariation as DeletePeopleViaVariationCommand;
@@ -33,7 +34,15 @@ class DeletePeopleViaVariationTest extends CommandHandlerTestCase
             ->with(m::type(CreateVariation::class), false)
             ->andReturnUsing(
                 function (CreateVariation $command) {
-                    $this->assertDtoSame(CreateVariation::create(['id' => 'TEST_LICENCE_ID']), $command);
+                    $this->assertDtoSame(
+                        CreateVariation::create(
+                            [
+                                'id' => 'TEST_LICENCE_ID',
+                                'variationType' => Application::VARIATION_TYPE_DIRECTOR_CHANGE,
+                            ]
+                        ),
+                        $command
+                    );
                     $result = new Result();
                     $result->addId('application', 'TEST_VARIATION_ID');
                     return $result;
@@ -65,7 +74,7 @@ class DeletePeopleViaVariationTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (Grant $command) use ($grantResult, &$deleteCommandHasBeenCalled) {
                     $this->assertTrue($deleteCommandHasBeenCalled, 'Grant called before delete');
-                    $this->assertDtoSame(Grant::create(['id' => 'TEST_VARIATION_ID']), $command);
+                    $this->assertDtoSame(Grant::create(['id' => 'TEST_VARIATION_ID',]), $command);
                     return $grantResult;
                 }
             );
