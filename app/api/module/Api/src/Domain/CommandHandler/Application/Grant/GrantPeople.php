@@ -34,7 +34,7 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
     protected $extraRepos = ['Person', 'OrganisationPerson'];
 
     /**
-     * @param GrantPeopleCommand|CommandInterface $command
+     * @param GrantPeopleCommand|CommandInterface $command command
      *
      * @return Result
      */
@@ -76,7 +76,9 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
     /**
      * Create a person and associate it with a new organisation person record
      *
-     * @param ApplicationOrganisationPerson $aop
+     * @param ApplicationOrganisationPerson $aop application organisation person
+     *
+     * @return void
      */
     private function createOrganisationPerson(ApplicationOrganisationPerson $aop)
     {
@@ -100,7 +102,9 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
      * Updates are actually just a combination of a delete
      * of the original person and an add of the new one
      *
-     * @param ApplicationOrganisationPerson $aop
+     * @param ApplicationOrganisationPerson $aop application organisation person
+     *
+     * @return void
      */
     private function updateOrganisationPerson(ApplicationOrganisationPerson $aop)
     {
@@ -112,9 +116,9 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
     /**
      * Delete a person
      *
-     * @param ApplicationOrganisationPerson $aop
+     * @param ApplicationOrganisationPerson $aop application organisation person
      *
-     * @internal param array $data
+     * @return void
      */
     private function deleteOrganisationPerson(ApplicationOrganisationPerson $aop)
     {
@@ -125,8 +129,10 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
      * Helper to delete both an org row and the person it
      * links to
      *
-     * @param Organisation $org
-     * @param Person       $person
+     * @param Organisation $org    organisation
+     * @param Person       $person person
+     *
+     * @return void
      */
     private function deleteByOrgAndPerson(Organisation $org, Person $person)
     {
