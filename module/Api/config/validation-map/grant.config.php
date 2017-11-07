@@ -12,6 +12,7 @@ return [
     CommandHandler\Application\Grant::class                                    => CanEditApplicationWithId::class,
     CommandHandler\Application\GrantInterim::class                             => CanAccessApplicationWithId::class,
     CommandHandler\Variation\Grant::class                                      => CanEditApplicationWithId::class,
+    CommandHandler\Variation\GrantDirectorChange::class                        => CanEditApplicationWithId::class,
     CommandHandler\Application\UndoGrant::class                                => IsInternalEdit::class,
     QueryHandler\Application\Grant::class                                      => IsInternalUser::class,
 ];
