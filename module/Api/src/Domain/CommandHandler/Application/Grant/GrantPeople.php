@@ -8,8 +8,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostGrantPeopleTasks as CreatePostGrantPeopleTasksCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrganisationPersonRepository;
@@ -32,6 +33,11 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
 
     protected $extraRepos = ['Person', 'OrganisationPerson'];
 
+    /**
+     * @param GrantPeopleCommand|CommandInterface $command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /** @var ApplicationEntity $application */
@@ -60,23 +66,9 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
 
         $this->result->addMessage('Organisation person records have been copied');
 
-        $personCount = $this->getOrganisationRepository()->fetchCountForOrganisation(
-            $application->getLicence()->getOrganisation()->getId()
+        $this->result->merge(
+            $this->handleSideEffect(CreatePostGrantPeopleTasksCommand::create(['applicationId' => $command->getId()]))
         );
-
-        if ($personCount == 0) {
-            $this->handleSideEffect(
-                CreateTask::create(
-                    [
-                        'category' => Category::CATEGORY_APPLICATION,
-                        'subCategory' => Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL,
-                        'description' => 'Last person removed',
-                        'licence' => $application->getLicence()->getId(),
-                    ]
-                )
-            );
-            $this->result->addMessage('Task created as there are no people in the organisation');
-        }
 
         return $this->result;
     }
@@ -120,7 +112,9 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
     /**
      * Delete a person
      *
-     * @param array $data
+     * @param ApplicationOrganisationPerson $aop
+     *
+     * @internal param array $data
      */
     private function deleteOrganisationPerson(ApplicationOrganisationPerson $aop)
     {
