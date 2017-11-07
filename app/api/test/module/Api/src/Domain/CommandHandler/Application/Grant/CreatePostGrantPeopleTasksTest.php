@@ -67,13 +67,19 @@ class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
     }
 
-    public function testCreateTaskWhenNoPeopleRemain()
+    /**
+     * @dataProvider provideCreateTaskWhenNoPeopleRemainCases
+     *
+     * @param $organisationType
+     * @param $expectedTaskDescription
+     */
+    public function testCreateTaskWhenNoPeopleRemain($organisationType, $expectedTaskDescription)
     {
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
 
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with('TEST_APPLICATION_ID')
-            ->andReturn($this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE));
+            ->andReturn($this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE, $organisationType));
 
         $this->repoMap['OrganisationPerson']->shouldReceive('fetchCountForOrganisation')
             ->with('TEST_ORGANISATION_ID')
@@ -84,7 +90,7 @@ class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
             [
                 'category' => Category::CATEGORY_APPLICATION,
                 'subCategory' => Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL,
-                'description' => 'Last person removed',
+                'description' => $expectedTaskDescription,
                 'licence' => 'TEST_LICENCE_ID',
             ],
             new Result()
@@ -96,11 +102,24 @@ class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
         );
     }
 
-    private function createMockApplication($variationType)
+    public function provideCreateTaskWhenNoPeopleRemainCases()
+    {
+        return [
+            [Organisation::ORG_TYPE_REGISTERED_COMPANY, 'Last director removed'],
+            [Organisation::ORG_TYPE_LLP, 'Last partner removed'],
+            [Organisation::ORG_TYPE_OTHER, 'Last person removed'],
+            ['some-other-test-type', 'Last person removed'],
+        ];
+    }
+
+    private function createMockApplication($variationType, $organisationType = null)
     {
         /** @var Organisation|m\Mock $organisation */
         $organisation = m::mock(Organisation::class)->makePartial();
         $organisation->setId('TEST_ORGANISATION_ID');
+        if ($organisationType) {
+            $organisation->setType(new RefData($organisationType));
+        }
 
         /** @var Licence|m\Mock $licence */
         $licence = m::mock(Licence::class)->makePartial();

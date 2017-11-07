@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostGrantPeopleTasks as CreatePostGrantPeopleTasksCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -38,12 +39,12 @@ final class CreatePostGrantPeopleTasks extends AbstractCommandHandler implements
             return $this->result;
         }
 
+        $organisation = $application->getLicence()->getOrganisation();
+
         /** @var OrganisationPerson $organisationPersonRepository */
         $organisationPersonRepository = $this->getRepo('OrganisationPerson');
 
-        $personCount = $organisationPersonRepository->fetchCountForOrganisation(
-            $application->getLicence()->getOrganisation()->getId()
-        );
+        $personCount = $organisationPersonRepository->fetchCountForOrganisation($organisation->getId());
 
         if ($personCount == 0) {
             $this->handleSideEffect(
@@ -51,7 +52,7 @@ final class CreatePostGrantPeopleTasks extends AbstractCommandHandler implements
                     [
                         'category' => Category::CATEGORY_APPLICATION,
                         'subCategory' => Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL,
-                        'description' => 'Last person removed',
+                        'description' => $this->getLastPersonTaskDescription($organisation),
                         'licence' => $application->getLicence()->getId(),
                     ]
                 )
@@ -60,5 +61,24 @@ final class CreatePostGrantPeopleTasks extends AbstractCommandHandler implements
         }
 
         return $this->result;
+    }
+
+    /**
+     * Get last person task description
+     *
+     * @param Organisation $organisation organisation
+     *
+     * @return string
+     */
+    private function getLastPersonTaskDescription(Organisation $organisation)
+    {
+        $organisationType = $organisation->getType()->getId();
+        if ($organisationType === Organisation::ORG_TYPE_REGISTERED_COMPANY) {
+            return 'Last director removed';
+        }
+        if ($organisationType === Organisation::ORG_TYPE_LLP) {
+            return 'Last partner removed';
+        }
+        return 'Last person removed';
     }
 }
