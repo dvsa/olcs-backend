@@ -25,7 +25,7 @@ final class CreatePostGrantPeopleTasks extends AbstractCommandHandler implements
     /**
      * Handle command
      *
-     * @param CreatePostGrantPeopleTasksCommand|CommandInterface $command
+     * @param CreatePostGrantPeopleTasksCommand|CommandInterface $command command
      *
      * @return Result
      */

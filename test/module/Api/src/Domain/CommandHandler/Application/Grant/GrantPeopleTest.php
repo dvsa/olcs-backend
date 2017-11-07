@@ -231,7 +231,6 @@ class GrantPeopleTest extends CommandHandlerTestCase
         $aops->add($aop1);
         $application = $this->createMockApplication($aops);
 
-
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($application);
