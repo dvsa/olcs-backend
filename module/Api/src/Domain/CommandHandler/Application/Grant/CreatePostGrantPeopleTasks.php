@@ -51,7 +51,7 @@ final class CreatePostGrantPeopleTasks extends AbstractCommandHandler implements
                 CreateTask::create(
                     [
                         'category' => Category::CATEGORY_APPLICATION,
-                        'subCategory' => Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL,
+                        'subCategory' => $this->getLastPersonTaskSubCategory($organisation),
                         'description' => $this->getLastPersonTaskDescription($organisation),
                         'licence' => $application->getLicence()->getId(),
                     ]
@@ -80,5 +80,24 @@ final class CreatePostGrantPeopleTasks extends AbstractCommandHandler implements
             return 'Last partner removed';
         }
         return 'Last person removed';
+    }
+
+    /**
+     * Get last person task sub category
+     *
+     * @param Organisation $organisation organisation
+     *
+     * @return int
+     */
+    private function getLastPersonTaskSubCategory(Organisation $organisation)
+    {
+        $organisationType = $organisation->getType()->getId();
+        if ($organisationType === Organisation::ORG_TYPE_REGISTERED_COMPANY) {
+            return Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL;
+        }
+        if ($organisationType === Organisation::ORG_TYPE_LLP) {
+            return Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL;
+        }
+        return Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL;
     }
 }

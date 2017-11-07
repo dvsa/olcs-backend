@@ -72,8 +72,9 @@ class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
      *
      * @param $organisationType
      * @param $expectedTaskDescription
+     * @param $expectedSubCategory
      */
-    public function testCreateTaskWhenNoPeopleRemain($organisationType, $expectedTaskDescription)
+    public function testCreateTaskWhenNoPeopleRemain($organisationType, $expectedTaskDescription, $expectedSubCategory)
     {
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
 
@@ -89,7 +90,7 @@ class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
             CreateTask::class,
             [
                 'category' => Category::CATEGORY_APPLICATION,
-                'subCategory' => Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL,
+                'subCategory' => $expectedSubCategory,
                 'description' => $expectedTaskDescription,
                 'licence' => 'TEST_LICENCE_ID',
             ],
@@ -105,10 +106,14 @@ class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
     public function provideCreateTaskWhenNoPeopleRemainCases()
     {
         return [
-            [Organisation::ORG_TYPE_REGISTERED_COMPANY, 'Last director removed'],
-            [Organisation::ORG_TYPE_LLP, 'Last partner removed'],
-            [Organisation::ORG_TYPE_OTHER, 'Last person removed'],
-            ['some-other-test-type', 'Last person removed'],
+            [
+                Organisation::ORG_TYPE_REGISTERED_COMPANY,
+                'Last director removed',
+                Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL
+            ],
+            [Organisation::ORG_TYPE_LLP, 'Last partner removed', Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_OTHER, 'Last person removed', Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+            ['some-other-test-type', 'Last person removed', Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
         ];
     }
 
