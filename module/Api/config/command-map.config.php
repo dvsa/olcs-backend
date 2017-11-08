@@ -77,6 +77,8 @@ return [
     Command\Application\Grant\GrantTransportManager::class
         => CommandHandler\Application\Grant\GrantTransportManager::class,
     Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
+    Command\Application\Grant\CreatePostGrantPeopleTasks::class
+        => CommandHandler\Application\Grant\CreatePostGrantPeopleTasks::class,
     Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
     Command\Application\Grant\Schedule41::class => CommandHandler\Application\Grant\Schedule41::class,
     Command\Application\Grant\ProcessDuplicateVehicles::class
