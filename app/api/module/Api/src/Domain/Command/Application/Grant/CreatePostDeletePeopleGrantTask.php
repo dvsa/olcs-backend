@@ -5,9 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\Command\Application\Grant;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Create Post Grant People Tasks
+ * Create tasks related to person deletion after a grant
  */
-final class CreatePostGrantPeopleTasks extends AbstractCommand
+final class CreatePostDeletePeopleGrantTask extends AbstractCommand
 {
     /**
      * @var int
