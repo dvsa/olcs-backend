@@ -117,6 +117,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('expr->andX')
             ->andReturnUsing([$this, 'mockAndX']);
 
+        $this->qb->shouldReceive('expr->count')
+            ->andReturnUsing([$this, 'mockCount']);
+
         $this->qb->shouldReceive('select')
             ->andReturnUsing([$this, 'mockAddSelect']);
 
@@ -334,6 +337,11 @@ class RepositoryTestCase extends MockeryTestCase
     public function mockAndX()
     {
         return '(' . implode(' AND ', func_get_args()) . ')';
+    }
+
+    public function mockCount($countable)
+    {
+        return sprintf('COUNT(%s)', $countable);
     }
 
     protected function formatValue($value)

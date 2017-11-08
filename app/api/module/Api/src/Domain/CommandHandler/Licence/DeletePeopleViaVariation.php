@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople as DeletePeopleCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation as CreateVariationCommand;
@@ -25,7 +26,14 @@ final class DeletePeopleViaVariation extends AbstractCommandHandler implements T
      */
     public function handleCommand(CommandInterface $command)
     {
-        $createVariationResult = $this->handleSideEffect(CreateVariationCommand::create(['id' => $command->getId()]));
+        $createVariationResult = $this->handleSideEffect(
+            CreateVariationCommand::create(
+                [
+                    'id' => $command->getId(),
+                    'variationType' => Application::VARIATION_TYPE_DIRECTOR_CHANGE,
+                ]
+            )
+        );
         $variationId = $createVariationResult->getId('application');
         $this->handleSideEffect(
             DeletePeopleCommand::create(['id' => $variationId, 'personIds' => $command->getPersonIds()])
