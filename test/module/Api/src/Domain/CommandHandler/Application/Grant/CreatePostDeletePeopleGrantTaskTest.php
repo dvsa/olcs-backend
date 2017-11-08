@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostGrantPeopleTasks as CreatePostGrantPeopleTasksCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask as CreatePostGrantPeopleTasksCommand;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\CreatePostGrantPeopleTasks;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\CreatePostDeletePeopleGrantTask;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepository;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -17,13 +17,13 @@ use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
 /**
- * Crete Post Grant Tasks Test
+ * Class CreatePostDeletePeopleGrantTaskTest
  */
-class CreatePostGrantPeopleTasksTest extends CommandHandlerTestCase
+class CreatePostDeletePeopleGrantTaskTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CreatePostGrantPeopleTasks();
+        $this->sut = new CreatePostDeletePeopleGrantTask();
         $this->mockRepo('Application', ApplicationRepository::class);
         $this->mockRepo('OrganisationPerson', OrganisationPerson::class);
 

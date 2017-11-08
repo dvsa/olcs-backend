@@ -8,7 +8,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostGrantPeopleTasks;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantPeople;
@@ -278,7 +278,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
         $tasksResult->addMessage('create-post-grant-tasks-message-1');
         $tasksResult->addMessage('create-post-grant-tasks-message-2');
         $this->expectedSideEffect(
-            CreatePostGrantPeopleTasks::class,
+            CreatePostDeletePeopleGrantTask::class,
             ['applicationId' => 'TEST_APPLICATION_ID'],
             $tasksResult
         );

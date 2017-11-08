@@ -22,7 +22,7 @@ return [
     CommandHandler\Application\Grant\GrantCommunityLicence::class                     => IsSideEffect::class,
     CommandHandler\Application\Grant\GrantTransportManager::class                     => IsSideEffect::class,
     CommandHandler\Application\Grant\GrantPeople::class                               => IsSideEffect::class,
-    CommandHandler\Application\Grant\CreatePostGrantPeopleTasks::class                => IsSideEffect::class,
+    CommandHandler\Application\Grant\CreatePostDeletePeopleGrantTask::class                => IsSideEffect::class,
     CommandHandler\Application\Grant\ValidateApplication::class                       => IsSideEffect::class,
     CommandHandler\Application\Grant\Schedule41::class                                => IsSideEffect::class,
     CommandHandler\Application\Grant\ProcessDuplicateVehicles::class                  => IsSideEffect::class,

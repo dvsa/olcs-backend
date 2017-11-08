@@ -8,7 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostGrantPeopleTasks as CreatePostGrantPeopleTasksCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask as CreatePostGrantPeopleTasksCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
