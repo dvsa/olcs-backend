@@ -11,7 +11,6 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Variation\GrantDirectorChange as Cmd;
 
-
 class GrantDirectorChange extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
