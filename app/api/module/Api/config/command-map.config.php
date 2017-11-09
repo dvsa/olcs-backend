@@ -79,6 +79,8 @@ return [
     Command\Application\Grant\GrantPeople::class => CommandHandler\Application\Grant\GrantPeople::class,
     Command\Application\Grant\CreatePostDeletePeopleGrantTask::class
         => CommandHandler\Application\Grant\CreatePostDeletePeopleGrantTask::class,
+    Command\Application\Grant\CreatePostAddPeopleGrantTask::class
+        => CommandHandler\Application\Grant\CreatePostAddPeopleGrantTask::class,
     Command\Application\Grant\ValidateApplication::class => CommandHandler\Application\Grant\ValidateApplication::class,
     Command\Application\Grant\Schedule41::class => CommandHandler\Application\Grant\Schedule41::class,
     Command\Application\Grant\ProcessDuplicateVehicles::class
