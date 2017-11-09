@@ -61,9 +61,11 @@ class GrantDirectorChangeTest extends CommandHandlerTestCase
             $grantPeopleResult
         );
 
-        $command = Command::create([
-            'id' => self::TEST_VARIATION_ID
-        ]);
+        $command = Command::create(
+            [
+                'id' => self::TEST_VARIATION_ID
+            ]
+        );
 
         $application = m::mock(ApplicationEntity::class)->makePartial();
 

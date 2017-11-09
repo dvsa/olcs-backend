@@ -11,14 +11,17 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Variation\GrantDirectorChange as Cmd;
 
+/**
+ * Class GrantDirectorChange
+ */
 class GrantDirectorChange extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'Application';
 
     /**
-     * @param CommandInterface $command
+     * @param CommandInterface $command GrantDirectorChange Command
      *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -40,6 +43,10 @@ class GrantDirectorChange extends AbstractCommandHandler implements Transactione
         return $result;
     }
 
+    /**
+     * @param int $applicationId Application ID
+     * @return Result Result
+     */
     private function createSnapshot($applicationId)
     {
         $data = [
