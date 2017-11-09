@@ -8,7 +8,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask as CreatePostGrantPeopleTasksCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask as CreatePostDeletePeopleGrantTaskCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostAddPeopleGrantTask as CreatePostAddPeopleGrantTaskCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -67,7 +68,12 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
         $this->result->addMessage('Organisation person records have been copied');
 
         $this->result->merge(
-            $this->handleSideEffect(CreatePostGrantPeopleTasksCommand::create(['applicationId' => $command->getId()]))
+            $this->handleSideEffects(
+                [
+                    CreatePostDeletePeopleGrantTaskCommand::create(['applicationId' => $command->getId()]),
+                    CreatePostAddPeopleGrantTaskCommand::create(['applicationId' => $command->getId()]),
+                ]
+            )
         );
 
         return $this->result;

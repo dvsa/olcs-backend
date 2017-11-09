@@ -8,13 +8,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostAddPeopleGrantTask;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantPeople;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
@@ -125,8 +125,10 @@ class GrantPeopleTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Organisation person records have been copied',
-                'create-post-grant-tasks-message-1',
-                'create-post-grant-tasks-message-2',
+                'create-post-delete-tasks-grant-message-1',
+                'create-post-delete-tasks-grant-message-2',
+                'create-post-add-tasks-grant-message-1',
+                'create-post-add-tasks-grant-message-2',
             ]
         ];
 
@@ -201,8 +203,10 @@ class GrantPeopleTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Organisation person records have been copied',
-                'create-post-grant-tasks-message-1',
-                'create-post-grant-tasks-message-2',
+                'create-post-delete-tasks-grant-message-1',
+                'create-post-delete-tasks-grant-message-2',
+                'create-post-add-tasks-grant-message-1',
+                'create-post-add-tasks-grant-message-2',
             ]
         ];
 
@@ -256,8 +260,10 @@ class GrantPeopleTest extends CommandHandlerTestCase
             'id' => [],
             'messages' => [
                 'Organisation person records have been copied',
-                'create-post-grant-tasks-message-1',
-                'create-post-grant-tasks-message-2',
+                'create-post-delete-tasks-grant-message-1',
+                'create-post-delete-tasks-grant-message-2',
+                'create-post-add-tasks-grant-message-1',
+                'create-post-add-tasks-grant-message-2',
             ]
         ];
 
@@ -274,13 +280,22 @@ class GrantPeopleTest extends CommandHandlerTestCase
 
     private function expectCreatePostGrantTasks()
     {
-        $tasksResult = new Result();
-        $tasksResult->addMessage('create-post-grant-tasks-message-1');
-        $tasksResult->addMessage('create-post-grant-tasks-message-2');
+        $deleteTaskResult = new Result();
+        $deleteTaskResult->addMessage('create-post-delete-tasks-grant-message-1');
+        $deleteTaskResult->addMessage('create-post-delete-tasks-grant-message-2');
         $this->expectedSideEffect(
             CreatePostDeletePeopleGrantTask::class,
             ['applicationId' => 'TEST_APPLICATION_ID'],
-            $tasksResult
+            $deleteTaskResult
+        );
+
+        $addTaskResults = new Result();
+        $addTaskResults->addMessage('create-post-add-tasks-grant-message-1');
+        $addTaskResults->addMessage('create-post-add-tasks-grant-message-2');
+        $this->expectedSideEffect(
+            CreatePostAddPeopleGrantTask::class,
+            ['applicationId' => 'TEST_APPLICATION_ID'],
+            $addTaskResults
         );
     }
 }
