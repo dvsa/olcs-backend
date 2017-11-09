@@ -72,12 +72,14 @@ class GrantDirectorChangeTest extends CommandHandlerTestCase
         $application->shouldReceive('setStatus')->with($this->refData[ApplicationEntity::APPLICATION_STATUS_VALID]);
         $application->shouldReceive('setGrantedDate')->with(m::type(DateTime::class));
 
-        $this->repoMap['Application']->shouldIgnoreMissing()
+        $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($application);
 
-        $this->repoMap['Application']->allows(['save' => '']);
+        $this->repoMap['Application']
+            ->shouldReceive('save')
+            ->with($application);
 
         $result = $this->sut->handleCommand($command);
 
