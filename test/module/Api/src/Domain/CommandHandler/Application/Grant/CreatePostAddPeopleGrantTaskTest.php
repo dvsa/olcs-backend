@@ -33,14 +33,14 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     {
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
 
-        $this->createMockApplication(null, Organisation::ORG_TYPE_REGISTERED_COMPANY);
+        $this->createMockApplication(null);
 
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
     }
 
     public function testHandleCommandWithNonDirectorChangeVariation()
     {
-        $this->createMockApplication('Some other type', Organisation::ORG_TYPE_REGISTERED_COMPANY);
+        $this->createMockApplication('Some other type');
 
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
@@ -48,10 +48,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenNoPeopleAdded()
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            Organisation::ORG_TYPE_REGISTERED_COMPANY
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(0);
 
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
@@ -60,10 +57,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
 
     public function testHandleCommandWhenPeopleAdded()
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            Organisation::ORG_TYPE_REGISTERED_COMPANY
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
         $this->commandHandler->shouldReceive('handleCommand');
@@ -77,10 +71,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
 
     public function testCreatedTaskCategory()
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            Organisation::ORG_TYPE_REGISTERED_COMPANY
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
@@ -101,11 +92,13 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     /**
      * @param $organisationType
      * @param $expectedSubCategory
+     *
      * @dataProvider provideCreatedTaskSubCategoryCases
      */
     public function testCreatedTaskSubCategory($organisationType, $expectedSubCategory)
     {
-        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE, $organisationType);
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+        $application->getLicence()->getOrganisation()->setType(new RefData($organisationType));
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
@@ -130,7 +123,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
             [Organisation::ORG_TYPE_LLP, Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL],
             [Organisation::ORG_TYPE_OTHER, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
             [Organisation::ORG_TYPE_PARTNERSHIP, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
-            [Organisation::ORG_TYPE_SOLE_TRADER,Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_SOLE_TRADER, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
             [Organisation::ORG_TYPE_IRFO, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
             ['any-other-org-type', Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
         ];
@@ -138,10 +131,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
 
     public function testCreatedTaskLicence()
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            Organisation::ORG_TYPE_REGISTERED_COMPANY
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
@@ -168,7 +158,8 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
      */
     public function testCreatedTaskDescription($organisationType, $expectedDescription)
     {
-        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE, $organisationType);
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+        $application->getLicence()->getOrganisation()->setType(new RefData($organisationType));
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
@@ -201,10 +192,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
 
     public function testCreatedTaskUrgency()
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            Organisation::ORG_TYPE_REGISTERED_COMPANY
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
@@ -222,11 +210,11 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         );
     }
 
-    private function createMockApplication($variationType, $organisationType)
+    private function createMockApplication($variationType)
     {
         /** @var Organisation|m\Mock $organisation */
         $organisation = m::mock(Organisation::class)->makePartial();
-        $organisation->setType(new RefData($organisationType));
+        $organisation->setType(new RefData('TEST_ORGANISATION_TYPE'));
 
         /** @var Licence|m\Mock $licence */
         $licence = m::mock(Licence::class)->makePartial();
