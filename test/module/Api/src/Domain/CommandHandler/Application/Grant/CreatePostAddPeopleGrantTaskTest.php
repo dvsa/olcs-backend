@@ -98,20 +98,22 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         );
     }
 
-    public function testCreatedTaskSubCategory()
+    /**
+     * @param $organisationType
+     * @param $expectedSubCategory
+     * @dataProvider provideCreatedTaskSubCategoryCases
+     */
+    public function testCreatedTaskSubCategory($organisationType, $expectedSubCategory)
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            Organisation::ORG_TYPE_REGISTERED_COMPANY
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE, $organisationType);
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
             ->andReturnUsing(
-                function (CreateTask $command) {
-                    $this->assertSame(Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL, $command->getSubCategory());
+                function (CreateTask $command) use ($expectedSubCategory) {
+                    $this->assertSame($expectedSubCategory, $command->getSubCategory());
                     return new Result();
                 }
             );
@@ -119,6 +121,19 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         $this->sut->handleCommand(
             CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
         );
+    }
+
+    public function provideCreatedTaskSubCategoryCases()
+    {
+        return [
+            [Organisation::ORG_TYPE_REGISTERED_COMPANY, Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_LLP, Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_OTHER, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_PARTNERSHIP, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_SOLE_TRADER,Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+            [Organisation::ORG_TYPE_IRFO, Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+            ['any-other-org-type', Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL],
+        ];
     }
 
     public function testCreatedTaskLicence()
@@ -153,10 +168,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
      */
     public function testCreatedTaskDescription($organisationType, $expectedDescription)
     {
-        $application = $this->createMockApplication(
-            Application::VARIATION_TYPE_DIRECTOR_CHANGE,
-            $organisationType
-        );
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE, $organisationType);
 
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
