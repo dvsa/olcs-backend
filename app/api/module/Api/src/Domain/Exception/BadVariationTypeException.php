@@ -1,8 +1,11 @@
 <?php
 namespace Dvsa\Olcs\Api\Domain\Exception;
 
-use Exception;
+use Exception as BasePHPException;
 
-class BadVariationTypeException extends Exception
+/**
+ * Class BadVariationTypeException
+ */
+class BadVariationTypeException extends BasePHPException
 {
 }
