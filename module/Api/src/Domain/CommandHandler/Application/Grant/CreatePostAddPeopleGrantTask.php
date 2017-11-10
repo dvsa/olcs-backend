@@ -51,7 +51,6 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
                     'subCategory' => Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL,
                     'description' => 'Add director(s)',
                     'licence' => $application->getLicence()->getId(),
-                    'urgent' => true,
                 ]
             )
         );
