@@ -32,66 +32,139 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     {
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
 
-        $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with('TEST_APPLICATION_ID')
-            ->andReturn($this->createMockApplication(null));
+        $this->createMockApplication(null);
 
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
     }
 
     public function testHandleCommandWithNonDirectorChangeVariation()
     {
+        $this->createMockApplication('Some other type');
+
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
-
-        $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with('TEST_APPLICATION_ID')
-            ->andReturn($this->createMockApplication('SomeOtherVariationType'));
-
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
     }
 
     public function testHandleCommandWhenNoPeopleAdded()
     {
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(0);
+
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
-
-        $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with('TEST_APPLICATION_ID')
-            ->andReturn($this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE));
-
-        $this->repoMap['OrganisationPerson']->shouldReceive('fetchById')
-            ->with('TEST_APPLICATION_ID')
-            ->andReturn(0);
-
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
     }
 
     public function testHandleCommandWhenPeopleAdded()
     {
-        $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
-
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $this->repoMap['Application']->shouldReceive('fetchById')
-            ->with('TEST_APPLICATION_ID')
-            ->andReturn($application);
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
-        $application->shouldReceive('getApplicationOrganisationPersons')
-            ->andReturn(1);
+        $this->commandHandler->shouldReceive('handleCommand');
 
-
-        $this->expectedSideEffect(
-            CreateTask::class,
-            [
-                'category' => Category::CATEGORY_APPLICATION,
-                'subCategory' => Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL,
-                'description' => 'Add director(s)',
-                'licence' => 'TEST_LICENCE_ID',
-            ],
-            new Result()
-        );
-
+        $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
         $this->assertEquals(
             ['id' => [], 'messages' => ['Task created as new people were added']],
             $this->sut->handleCommand($command)->toArray()
+        );
+    }
+
+    public function testCreatedTaskCategory()
+    {
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->andReturnUsing(
+                function (CreateTask $command) {
+                    $this->assertSame(Category::CATEGORY_APPLICATION, $command->getCategory());
+                    return new Result();
+                }
+            );
+
+        $this->sut->handleCommand(
+            CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
+        );
+    }
+
+    public function testCreatedTaskSubCategory()
+    {
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->andReturnUsing(
+                function (CreateTask $command) {
+                    $this->assertSame(Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL, $command->getSubCategory());
+                    return new Result();
+                }
+            );
+
+        $this->sut->handleCommand(
+            CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
+        );
+    }
+
+    public function testCreatedTaskLicence()
+    {
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->andReturnUsing(
+                function (CreateTask $command) {
+                    $this->assertSame('TEST_LICENCE_ID', $command->getLicence());
+                    return new Result();
+                }
+            );
+
+        $this->sut->handleCommand(
+            CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
+        );
+    }
+
+    public function testCreatedTaskDescription()
+    {
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->andReturnUsing(
+                function (CreateTask $command) {
+                    $this->assertSame('Add director(s)', $command->getDescription());
+                    return new Result();
+                }
+            );
+
+        $this->sut->handleCommand(
+            CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
+        );
+    }
+
+    public function testCreatedTaskUrgency()
+    {
+        $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+
+        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->once()
+            ->andReturnUsing(
+                function (CreateTask $command) {
+                    $this->assertSame(false, $command->getUrgent());
+                    return new Result();
+                }
+            );
+
+        $this->sut->handleCommand(
+            CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
         );
     }
 
@@ -105,6 +178,11 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->setLicence($licence);
         $application->setVariationType(is_null($variationType) ? null : new RefData($variationType));
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with('TEST_APPLICATION_ID')
+            ->andReturn($application);
+
         return $application;
     }
 }
