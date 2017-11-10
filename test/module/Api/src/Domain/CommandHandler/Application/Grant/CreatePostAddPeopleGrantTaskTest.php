@@ -72,7 +72,6 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testCreatedTaskCategory()
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
         $this->commandHandler->shouldReceive('handleCommand')
@@ -99,7 +98,6 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
         $application->getLicence()->getOrganisation()->setType(new RefData($organisationType));
-
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
         $this->commandHandler->shouldReceive('handleCommand')
@@ -132,7 +130,6 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testCreatedTaskLicence()
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
         $this->commandHandler->shouldReceive('handleCommand')
@@ -160,7 +157,6 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
         $application->getLicence()->getOrganisation()->setType(new RefData($organisationType));
-
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
 
         $this->commandHandler->shouldReceive('handleCommand')
@@ -190,17 +186,28 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         ];
     }
 
-    public function testCreatedTaskUrgency()
+    /**
+     * @param $convictionsConfirmationAnswer
+     * @param $financialAnswers
+     *
+     * @param $expectedUrgency
+     *
+     * @dataProvider provideCreatedTaskUrgencyCases
+     */
+    public function testCreatedTaskUrgency($convictionsConfirmationAnswer, $financialAnswers, $expectedUrgency)
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-
+        $application->setConvictionsConfirmation($convictionsConfirmationAnswer);
         $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+        foreach ($financialAnswers as $financialQuestion => $financialAnswer) {
+            $application->{'set' . $financialQuestion}($financialAnswer);
+        }
 
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
             ->andReturnUsing(
-                function (CreateTask $command) {
-                    $this->assertSame(false, $command->getUrgent());
+                function (CreateTask $command) use ($expectedUrgency) {
+                    $this->assertSame($expectedUrgency, $command->getUrgent());
                     return new Result();
                 }
             );
@@ -208,6 +215,27 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         $this->sut->handleCommand(
             CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID'])
         );
+    }
+
+    public function provideCreatedTaskUrgencyCases()
+    {
+        $negativeFinancialAnswers = [
+            'bankrupt' => 'N',
+            'liquidation' => 'N',
+            'receivership' => 'N',
+            'administration' => 'N',
+            'disqualified' => 'N',
+        ];
+        yield ['N', $negativeFinancialAnswers, false];
+        yield ['Y', $negativeFinancialAnswers, true];
+
+        foreach (['Y', 'N'] as $convictionsConfirmationAnswer) {
+            foreach (array_keys($negativeFinancialAnswers) as $financialQuestion) {
+                $financialAnswers = $negativeFinancialAnswers;
+                $financialAnswers[$financialQuestion] = 'Y';
+                yield [$convictionsConfirmationAnswer, $financialAnswers, true];
+            }
+        }
     }
 
     private function createMockApplication($variationType)
