@@ -53,6 +53,7 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
                     'subCategory' => $this->getTaskSubCategory($organisation),
                     'description' => $this->getTaskDescription($application->getLicence()->getOrganisation()),
                     'licence' => $application->getLicence()->getId(),
+                    'urgent' => $this->isTaskUrgent($application),
                 ]
             )
         );
@@ -95,5 +96,32 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
             return Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL;
         }
         return Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL;
+    }
+
+    /**
+     * Is task urgent?
+     *
+     * @param Application $application application
+     *
+     * @return bool
+     */
+    private function isTaskUrgent(Application $application)
+    {
+        if ($application->getConvictionsConfirmation() !== 'N') {
+            return true;
+        }
+        $financialAnswers = [
+            $application->getBankrupt(),
+            $application->getLiquidation(),
+            $application->getReceivership(),
+            $application->getAdministration(),
+            $application->getDisqualified(),
+        ];
+        foreach ($financialAnswers as $answer) {
+            if ($answer !== 'N') {
+                return true;
+            }
+        }
+        return false;
     }
 }
