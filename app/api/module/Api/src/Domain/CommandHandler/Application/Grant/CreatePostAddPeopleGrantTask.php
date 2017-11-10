@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -49,11 +50,30 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
                 [
                     'category' => Category::CATEGORY_APPLICATION,
                     'subCategory' => Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL,
-                    'description' => 'Add director(s)',
+                    'description' => $this->getTaskDescription($application->getLicence()->getOrganisation()),
                     'licence' => $application->getLicence()->getId(),
                 ]
             )
         );
         return $this->result;
+    }
+
+    /**
+     * Get task description
+     *
+     * @param Organisation $organisation organisation
+     *
+     * @return string
+     */
+    private function getTaskDescription(Organisation $organisation)
+    {
+        $organisationType = $organisation->getType()->getId();
+        if ($organisationType === Organisation::ORG_TYPE_REGISTERED_COMPANY) {
+            return 'Add director(s)';
+        }
+        if ($organisationType === Organisation::ORG_TYPE_LLP) {
+            return 'Add partner(s)';
+        }
+        return 'Add responsible person(s)';
     }
 }
