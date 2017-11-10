@@ -7,7 +7,7 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 /**
  * Create Post Grant People Tasks
  */
-final class CreatePostGrantPeopleTasks extends AbstractCommand
+final class CreatePostAddPeopleGrantTask extends AbstractCommand
 {
     /**
      * @var int
