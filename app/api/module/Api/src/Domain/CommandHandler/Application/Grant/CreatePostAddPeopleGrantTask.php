@@ -44,12 +44,13 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
 
         $this->result->addMessage('Task created as new people were added');
 
+        $organisation = $application->getLicence()->getOrganisation();
 
         $this->handleSideEffect(
             CreateTask::create(
                 [
                     'category' => Category::CATEGORY_APPLICATION,
-                    'subCategory' => Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL,
+                    'subCategory' => $this->getTaskSubCategory($organisation),
                     'description' => $this->getTaskDescription($application->getLicence()->getOrganisation()),
                     'licence' => $application->getLicence()->getId(),
                 ]
@@ -75,5 +76,24 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
             return 'Add partner(s)';
         }
         return 'Add responsible person(s)';
+    }
+
+    /**
+     * Get task sub category
+     *
+     * @param Organisation $organisation organisation
+     *
+     * @return int
+     */
+    private function getTaskSubCategory(Organisation $organisation)
+    {
+        $organisationType = $organisation->getType()->getId();
+        if ($organisationType === Organisation::ORG_TYPE_REGISTERED_COMPANY) {
+            return Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL;
+        }
+        if ($organisationType === Organisation::ORG_TYPE_LLP) {
+            return Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL;
+        }
+        return Category::TASK_SUB_CATEGORY_PERSON_CHANGE_DIGITAL;
     }
 }
