@@ -52,7 +52,8 @@ class DataRetentionEntityTest extends EntityTester
 
     public function testMarkForDelay()
     {
-        $date = new \DateTime('2017-01-01');
+        $dateString = '2060-01-01';
+        $date = new \DateTime($dateString);
 
         $dataRetentionEntity = new Entity();
         $dataRetentionEntity->setActionConfirmation(true);
@@ -64,7 +65,7 @@ class DataRetentionEntityTest extends EntityTester
         $expectedEntity->setNextReviewDate($date);
 
         $this->assertEquals(
-            $dataRetentionEntity->markForDelay($date),
+            $dataRetentionEntity->markForDelay($dateString),
             $expectedEntity
         );
     }

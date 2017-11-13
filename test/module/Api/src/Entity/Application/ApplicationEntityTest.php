@@ -716,7 +716,7 @@ class ApplicationEntityTest extends EntityTester
         $sut->shouldReceive('getIsVariation')->andReturn($isVariation);
         $sut->shouldReceive('getGoodsOrPsv->getId')->andReturn($goodsOrPsv);
         $sut->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
-        $sut->shouldReceive('isLicenceUpgrade')->andReturn($isUpgrade);
+        $sut->shouldReceive('isRealUpgrade')->andReturn($isUpgrade);
 
         $this->assertEquals($expected, $sut->getCode());
     }
