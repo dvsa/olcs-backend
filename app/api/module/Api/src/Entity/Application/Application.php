@@ -543,6 +543,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * If the application involves a licence upgrade
+     * from Restricted to Standard
      *
      * @return boolean
      */
@@ -792,7 +793,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getCode()
     {
         if ($this->isVariation()) {
-            $isUpgrade = $this->isLicenceUpgrade();
+            $isUpgrade = $this->isRealUpgrade();
             if ($this->isGoods()) {
                 $code = $isUpgrade
                     ? self::CODE_GV_VAR_UPGRADE
@@ -852,6 +853,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
     /**
      * Is real upgrade
+     * This considers upgrade either from Restricted to Standard
+     * or from Standard National To Standard International
      *
      * @return bool
      */
