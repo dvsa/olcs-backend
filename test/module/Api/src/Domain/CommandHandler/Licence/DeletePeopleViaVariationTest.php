@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
 use Dvsa\Olcs\Transfer\Command\Licence\DeletePeopleViaVariation as DeletePeopleViaVariationCommand;
-use Dvsa\Olcs\Transfer\Command\Variation\Grant;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Command\Variation\GrantDirectorChange;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 use Zend\Stdlib\ArraySerializableInterface;
 
 class DeletePeopleViaVariationTest extends CommandHandlerTestCase
@@ -70,11 +70,11 @@ class DeletePeopleViaVariationTest extends CommandHandlerTestCase
         $grantResult = new Result();
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
-            ->with(m::type(Grant::class), false)
+            ->with(m::type(GrantDirectorChange::class), false)
             ->andReturnUsing(
-                function (Grant $command) use ($grantResult, &$deleteCommandHasBeenCalled) {
+                function (GrantDirectorChange $command) use ($grantResult, &$deleteCommandHasBeenCalled) {
                     $this->assertTrue($deleteCommandHasBeenCalled, 'Grant called before delete');
-                    $this->assertDtoSame(Grant::create(['id' => 'TEST_VARIATION_ID',]), $command);
+                    $this->assertDtoSame(GrantDirectorChange::create(['id' => 'TEST_VARIATION_ID',]), $command);
                     return $grantResult;
                 }
             );
