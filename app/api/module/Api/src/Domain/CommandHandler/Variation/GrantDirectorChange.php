@@ -73,7 +73,7 @@ class GrantDirectorChange extends AbstractCommandHandler implements Transactione
      */
     private function guardAgainstBadVariationType(ApplicationEntity $application)
     {
-        if ($application->getVariationType() !== ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+        if ($application->getVariationType()->getId() !== ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
             throw new BadVariationTypeException();
         }
     }
