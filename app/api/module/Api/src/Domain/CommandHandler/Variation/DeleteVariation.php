@@ -31,9 +31,36 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
      */
     public function handleCommand(CommandInterface $command)
     {
+        $application = $this->getApplication($command);
+
+        $this->guardAgainstIncorrectVariationType($application);
+
+        $this->deletePersons($application);
+        $this->deleteDocuments($application);
+        $this->deletePreviousConvictions($application);
+        $this->deleteApplication($application);
+        return $this->result;
+    }
+
+    /**
+     * @param DeleteVariationCommand|CommandInterface $command
+     *
+     * @return Application
+     */
+    private function getApplication(CommandInterface $command)
+    {
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getId());
+        return $application;
+    }
 
+    /**
+     * @param $application
+     *
+     * @throws BadVariationTypeException
+     */
+    private function guardAgainstIncorrectVariationType(Application $application)
+    {
         if (!$application->getIsVariation()) {
             throw new BadVariationTypeException("Applications can not be deleted");
         }
@@ -46,33 +73,44 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         if ($variationType !== Application::VARIATION_TYPE_DIRECTOR_CHANGE) {
             throw new BadVariationTypeException("Variations of type '{$variationType}' can not be deleted");
         }
+    }
 
+    private function deletePersons(Application $application)
+    {
         $personIds = [];
         /** @var ApplicationOrganisationPerson $applicationOrganisationPerson */
         foreach ($application->getApplicationOrganisationPersons() as $applicationOrganisationPerson) {
             $personIds[] = $applicationOrganisationPerson->getPerson()->getId();
         }
-        $this->handleSideEffect(DeletePeople::create(['id' => $command->getId(), 'personIds' => $personIds]));
+        $this->handleSideEffect(DeletePeople::create(['id' => $application->getId(), 'personIds' => $personIds]));
+    }
 
+    private function deleteDocuments(Application $application)
+    {
         $documentIds = [];
         /** @var Document $documents */
         foreach ($application->getDocuments() as $documents) {
             $documentIds[] = $documents->getId();
         }
         $this->result->merge($this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds])));
+    }
 
+    private function deletePreviousConvictions(Application $application)
+    {
         $previousConvictionIds = [];
         /** @var PreviousConviction $previousConviction */
         foreach ($application->getPreviousConvictions() as $previousConviction) {
             $previousConvictionIds[] = $previousConviction->getId();
         }
-        $this->result->merge($this->handleSideEffect(DeletePreviousConviction::create(['ids' => $previousConvictionIds])));
+        $this->result->merge(
+            $this->handleSideEffect(DeletePreviousConviction::create(['ids' => $previousConvictionIds]))
+        );
+    }
 
+    private function deleteApplication(Application $application)
+    {
         $this->getRepo()->delete($application);
-
-        $this->result->addId('application ' . $command->getId(), $command->getId());
-        $this->result->addMessage('Application with id ' . $command->getId() . ' was deleted');
-
-        return $this->result;
+        $this->result->addId('application ' . $application->getId(), $application->getId());
+        $this->result->addMessage('Application with id ' . $application->getId() . ' was deleted');
     }
 }
