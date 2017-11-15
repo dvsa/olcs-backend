@@ -43,7 +43,9 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
     }
 
     /**
-     * @param DeleteVariationCommand|CommandInterface $command
+     * Get the variation to be deleted
+     *
+     * @param DeleteVariationCommand|CommandInterface $command command
      *
      * @return Application
      */
@@ -55,9 +57,12 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
     }
 
     /**
-     * @param $application
+     * guardAgainstIncorrectVariationType
+     *
+     * @param Application $application application
      *
      * @throws BadVariationTypeException
+     * @return void
      */
     private function guardAgainstIncorrectVariationType(Application $application)
     {
@@ -77,7 +82,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
 
     /**
      * Delete the applications person's and applicationOrganisationPersons
+     *
      * @param Application $application application
+     *
+     * @return void
      */
     private function deletePersons(Application $application)
     {
@@ -91,7 +99,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
 
     /**
      * Delete the application's documents
+     *
      * @param Application $application application
+     *
+     * @return void
      */
     private function deleteDocuments(Application $application)
     {
@@ -105,7 +116,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
 
     /**
      * Delete the application's previous convictions
+     *
      * @param Application $application application
+     *
+     * @return void
      */
     private function deletePreviousConvictions(Application $application)
     {
@@ -119,7 +133,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
 
     /**
      * Delete the application
+     *
      * @param Application $application application
+     *
+     * @return void
      */
     private function deleteApplication(Application $application)
     {
