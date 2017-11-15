@@ -77,11 +77,7 @@ class DeleteVariationTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->repoMap['Application']->shouldReceive('delete')->once()->with($application)->andReturnUsing(
-            function () {
-                $this->commandHandler->shouldHaveReceived('handleCommand', [m::type(DeletePeople::class), false]);
-            }
-        );
+        $this->repoMap['Application']->shouldReceive('delete')->once()->with($application);
 
         $result = $this->sut->handleCommand(DeleteVariation::create(['id' => 'DUMMY_APPLICATION_ID']));
 
