@@ -9,9 +9,11 @@ use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepository;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
+use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -77,6 +79,16 @@ class DeleteVariationTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $application->shouldReceive('getDocuments')->with()->andReturn(
+            [$this->createDocumentMock('DUMMY_DOCUMENT_ID_1'), $this->createDocumentMock('DUMMY_DOCUMENT_ID_2')]
+        );
+
+        $this->expectedSideEffect(
+            DeleteDocuments::class,
+            ['ids' => ['DUMMY_DOCUMENT_ID_1', 'DUMMY_DOCUMENT_ID_2',]],
+            new Result()
+        );
+
         $this->repoMap['Application']->shouldReceive('delete')->once()->with($application);
 
         $result = $this->sut->handleCommand(DeleteVariation::create(['id' => 'DUMMY_APPLICATION_ID']));
@@ -123,5 +135,15 @@ class DeleteVariationTest extends CommandHandlerTestCase
         return m::mock(ApplicationOrganisationPerson::class)->shouldReceive('getPerson')->with()->andReturn(
             m::mock(Person::class)->shouldReceive('getId')->with()->andReturn($personId)->getMock()
         )->getMock();
+    }
+
+    /**
+     * @param $str1
+     *
+     * @return m\MockInterface
+     */
+    protected function createDocumentMock($str1)
+    {
+        return m::mock(Document::class)->shouldReceive('getId')->with()->andReturn($str1)->getMock();
     }
 }
