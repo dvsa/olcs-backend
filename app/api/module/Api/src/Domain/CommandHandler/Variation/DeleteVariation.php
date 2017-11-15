@@ -92,7 +92,7 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         foreach ($application->getDocuments() as $documents) {
             $documentIds[] = $documents->getId();
         }
-        $this->result->merge($this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds])));
+        $this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds]));
     }
 
     private function deletePreviousConvictions(Application $application)
@@ -102,9 +102,7 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         foreach ($application->getPreviousConvictions() as $previousConviction) {
             $previousConvictionIds[] = $previousConviction->getId();
         }
-        $this->result->merge(
-            $this->handleSideEffect(DeletePreviousConviction::create(['ids' => $previousConvictionIds]))
-        );
+        $this->handleSideEffect(DeletePreviousConviction::create(['ids' => $previousConvictionIds]));
     }
 
     private function deleteApplication(Application $application)
