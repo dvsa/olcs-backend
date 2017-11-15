@@ -71,6 +71,14 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Clean abandoned variations
+     */
+    public function cleanUpVariationsAction()
+    {
+        return $this->handleExitStatus($this->handleCommand([CliCommand\CleanUpAbandonedVariations::create([])]));
+    }
+
+    /**
      * Expire bus registrations that have passed the end date
      *
      * @return \Zend\View\Model\ConsoleModel

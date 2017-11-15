@@ -279,4 +279,27 @@ class Application extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch abandoned variations
+     * Soft delete abandoned variations and delete (or soft delete) related data
+     *
+     * @return array
+     */
+    public function fetchAbandonedVariations($olderThanDate)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isVariation', ':isVariation'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.variationType', ':variationType'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'));
+        $qb->andWhere($qb->expr()->lt($this->alias . '.createdOn', ':olderThanDate'));
+
+        $qb->setParameter('isVariation', 1);
+        $qb->setParameter('variationType', Entity::VARIATION_TYPE_DIRECTOR_CHANGE);
+        $qb->setParameter('status', Entity::APPLICATION_STATUS_NOT_SUBMITTED);
+        $qb->setParameter('olderThanDate', $olderThanDate);
+
+        return $qb->getQuery()->getResult();
+    }
 }
