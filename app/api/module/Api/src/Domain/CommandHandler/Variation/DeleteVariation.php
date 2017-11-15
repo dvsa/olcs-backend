@@ -75,6 +75,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         }
     }
 
+    /**
+     * Delete the applications person's and applicationOrganisationPersons
+     * @param Application $application application
+     */
     private function deletePersons(Application $application)
     {
         $personIds = [];
@@ -85,6 +89,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         $this->handleSideEffect(DeletePeople::create(['id' => $application->getId(), 'personIds' => $personIds]));
     }
 
+    /**
+     * Delete the application's documents
+     * @param Application $application application
+     */
     private function deleteDocuments(Application $application)
     {
         $documentIds = [];
@@ -95,6 +103,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         $this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds]));
     }
 
+    /**
+     * Delete the application's previous convictions
+     * @param Application $application application
+     */
     private function deletePreviousConvictions(Application $application)
     {
         $previousConvictionIds = [];
@@ -105,6 +117,10 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         $this->handleSideEffect(DeletePreviousConviction::create(['ids' => $previousConvictionIds]));
     }
 
+    /**
+     * Delete the application
+     * @param Application $application application
+     */
     private function deleteApplication(Application $application)
     {
         $this->getRepo()->delete($application);
