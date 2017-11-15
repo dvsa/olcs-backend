@@ -8,8 +8,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation as DeleteVariationCommand;
 
 /**
@@ -44,13 +46,18 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         }
 
         $personIds = [];
-
         /** @var ApplicationOrganisationPerson $applicationOrganisationPerson */
         foreach ($application->getApplicationOrganisationPersons() as $applicationOrganisationPerson) {
             $personIds[] = $applicationOrganisationPerson->getPerson()->getId();
         }
-
         $this->handleSideEffect(DeletePeople::create(['id' => $command->getId(), 'personIds' => $personIds]));
+
+        $documentIds = [];
+        /** @var Document $documents */
+        foreach ($application->getDocuments() as $documents) {
+            $documentIds[] = $documents->getId();
+        }
+        $this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds]));
 
         $this->getRepo()->delete($application);
 
