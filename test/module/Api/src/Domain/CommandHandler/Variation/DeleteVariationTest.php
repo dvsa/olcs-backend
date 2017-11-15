@@ -37,21 +37,21 @@ class DeleteVariationTest extends CommandHandlerTestCase
     public function testThatApplicationsAreRejected()
     {
         $this->createMockApplication(false, null);
-        $this->expectExceptionWithMessage("Applications can not be deleted");
+        $this->expectBadVariationTypeException("Applications can not be deleted");
         $this->sut->handleCommand(DeleteVariation::create(['id' => 'DUMMY_APPLICATION_ID']));
     }
 
     public function testThatStandardVariationsAreRejected()
     {
         $this->createMockApplication(true, null);
-        $this->expectExceptionWithMessage("Standard variations can not be deleted");
+        $this->expectBadVariationTypeException("Standard variations can not be deleted");
         $this->sut->handleCommand(DeleteVariation::create(['id' => 'DUMMY_APPLICATION_ID']));
     }
 
     public function testThatOtherVariationTypesAreRejected()
     {
         $this->createMockApplication(true, 'vtyp_foo');
-        $this->expectExceptionWithMessage("Variations of type 'vtyp_foo' can not be deleted");
+        $this->expectBadVariationTypeException("Variations of type 'vtyp_foo' can not be deleted");
         $this->sut->handleCommand(DeleteVariation::create(['id' => 'DUMMY_APPLICATION_ID']));
     }
 
@@ -160,7 +160,7 @@ class DeleteVariationTest extends CommandHandlerTestCase
     /**
      * @param string $message
      */
-    private function expectExceptionWithMessage($message)
+    private function expectBadVariationTypeException($message)
     {
         $this->expectException(BadVariationTypeException::class);
         $this->expectExceptionMessage($message);
