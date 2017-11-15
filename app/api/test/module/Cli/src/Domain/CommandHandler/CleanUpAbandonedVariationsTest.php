@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * Clean up abandoned variations Test
+ */
+namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
+
+use Dvsa\Olcs\Cli\Domain\CommandHandler\CleanUpAbandonedVariations as CommandHandler;
+use Dvsa\Olcs\Cli\Domain\Command\CleanUpAbandonedVariations as Command;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Mockery as m;
+
+/**
+ * Clean up abandoned variations
+ */
+class CleanUpAbandonedVariationsTest extends CommandHandlerTestCase
+{
+    public function setUp()
+    {
+        $this->sut = new CommandHandler();
+        $this->mockRepo('Application', Application::class);
+
+        $this->mockedSmServices['Config'] = [
+            'batch_config' => [
+                'clean-abandoned-variations' => [
+                    'older-than' => '4 hours'
+                ]
+            ]
+        ];
+
+        parent::setUp();
+    }
+
+    public function testHandleCommand()
+    {
+        $date = date('Y-m-d H:i:s', strtotime('- 4 hours'));
+
+        $mockVariation1 = m::mock(ApplicationEntity::class);
+        $mockVariation1->shouldReceive('getId')->andReturn(1);
+
+        $mockVariation2 = m::mock(ApplicationEntity::class);
+        $mockVariation2->shouldReceive('getId')->andReturn(2);
+
+        $mockVariation3 = m::mock(ApplicationEntity::class);
+        $mockVariation3->shouldReceive('getId')->andReturn(3);
+
+        $this->repoMap['Application']->shouldReceive('fetchAbandonedVariations')
+            ->once()->with($date)->andReturn([$mockVariation1, $mockVariation2, $mockVariation3]);
+
+        $response = $this->sut->handleCommand(Command::create([]));
+
+        $expected = [
+            'ids' => [
+                'variation 1' => 1,
+                'variation 2' => 2,
+                'variation 3' => 3
+            ],
+            'messages' => [
+                '3 abandoned variation records deleted'
+            ]
+        ];
+
+        $this->assertEquals($expected, $response->toArray());
+    }
+}

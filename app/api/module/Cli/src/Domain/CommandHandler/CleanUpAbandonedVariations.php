@@ -47,6 +47,7 @@ final class CleanUpAbandonedVariations extends AbstractCommandHandler
         /* @var $variation ApplicationEntity */
         foreach ($abandonedVariations as $variation) {
             $this->handleSideEffect(DeleteVariation::create(['id' => $variation->getId()]));
+            $this->result->addId('variation ' . $variation->getId(), $variation->getId());
         }
 
         $this->result->addMessage(count($abandonedVariations) . ' abandoned variation records deleted');
