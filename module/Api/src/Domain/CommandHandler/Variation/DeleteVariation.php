@@ -8,10 +8,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
+use Dvsa\Olcs\Api\Entity\Application\PreviousConviction;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments;
+use Dvsa\Olcs\Transfer\Command\PreviousConviction\DeletePreviousConviction;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation as DeleteVariationCommand;
 
 /**
@@ -57,7 +59,14 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
         foreach ($application->getDocuments() as $documents) {
             $documentIds[] = $documents->getId();
         }
-        $this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds]));
+        $this->result->merge($this->handleSideEffect(DeleteDocuments::create(['ids' => $documentIds])));
+
+        $previousConvictionIds = [];
+        /** @var PreviousConviction $previousConviction */
+        foreach ($application->getPreviousConvictions() as $previousConviction) {
+            $previousConvictionIds[] = $previousConviction->getId();
+        }
+        $this->result->merge($this->handleSideEffect(DeletePreviousConviction::create(['ids' => $previousConvictionIds])));
 
         $this->getRepo()->delete($application);
 
