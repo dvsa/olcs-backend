@@ -3,11 +3,15 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\DeleteVariation as Sut;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepository;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
+use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -19,6 +23,11 @@ class DeleteVariationTest extends CommandHandlerTestCase
         $this->mockRepo('Application', ApplicationRepository::class);
         $this->sut = new Sut();
         parent::setUp();
+    }
+
+    public function testThatCommandIsTransactional()
+    {
+        $this->assertInstanceOf(TransactionedInterface::class, $this->sut);
     }
 
     public function testThatApplicationsAreRejected()
@@ -48,13 +57,42 @@ class DeleteVariationTest extends CommandHandlerTestCase
     public function testThatDirectorChangeVariationsAreDeleted()
     {
         $application = $this->createMockApplication(true, Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $this->repoMap['Application']->shouldReceive('delete')->once()->with($application);
+
+        $application->shouldReceive('getApplicationOrganisationPersons')->with()->andReturn(
+            [
+                $this->createApplicationOrganisationPersonMock('DUMMY_PERSON_ID_1'),
+                $this->createApplicationOrganisationPersonMock('DUMMY_PERSON_ID_2'),
+            ]
+        );
+
+        $this->expectedSideEffect(
+            DeletePeople::class,
+            [
+                'id' => 'DUMMY_APPLICATION_ID',
+                'personIds' => [
+                    'DUMMY_PERSON_ID_1',
+                    'DUMMY_PERSON_ID_2',
+                ]
+            ],
+            new Result()
+        );
+
+        $this->repoMap['Application']->shouldReceive('delete')->once()->with($application)->andReturnUsing(
+            function () {
+                $this->commandHandler->shouldHaveReceived('handleCommand', [m::type(DeletePeople::class), false]);
+            }
+        );
+
         $result = $this->sut->handleCommand(DeleteVariation::create(['id' => 'DUMMY_APPLICATION_ID']));
+
         self::assertInstanceOf(Result::class, $result);
         $this->assertSame(
-            ['id' => ['application DUMMY_APPLICATION_ID' => 'DUMMY_APPLICATION_ID'], 'messages' => [
-                'Application with id DUMMY_APPLICATION_ID was deleted'
-            ]],
+            [
+                'id' => ['application DUMMY_APPLICATION_ID' => 'DUMMY_APPLICATION_ID'],
+                'messages' => [
+                    'Application with id DUMMY_APPLICATION_ID was deleted'
+                ]
+            ],
             $result->toArray()
         );
     }
@@ -77,5 +115,17 @@ class DeleteVariationTest extends CommandHandlerTestCase
             $application
         );
         return $application;
+    }
+
+    /**
+     * @param $personId
+     *
+     * @return m\MockInterface
+     */
+    protected function createApplicationOrganisationPersonMock($personId)
+    {
+        return m::mock(ApplicationOrganisationPerson::class)->shouldReceive('getPerson')->with()->andReturn(
+            m::mock(Person::class)->shouldReceive('getId')->with()->andReturn($personId)->getMock()
+        )->getMock();
     }
 }

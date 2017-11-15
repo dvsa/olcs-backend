@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
+use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation as DeleteVariationCommand;
 
@@ -41,7 +43,17 @@ class DeleteVariation extends AbstractCommandHandler implements TransactionedInt
             throw new BadVariationTypeException("Variations of type '{$variationType}' can not be deleted");
         }
 
+        $personIds = [];
+
+        /** @var ApplicationOrganisationPerson $applicationOrganisationPerson */
+        foreach ($application->getApplicationOrganisationPersons() as $applicationOrganisationPerson) {
+            $personIds[] = $applicationOrganisationPerson->getPerson()->getId();
+        }
+
+        $this->handleSideEffect(DeletePeople::create(['id' => $command->getId(), 'personIds' => $personIds]));
+
         $this->getRepo()->delete($application);
+
         $this->result->addId('application ' . $command->getId(), $command->getId());
         $this->result->addMessage('Application with id ' . $command->getId() . ' was deleted');
 
