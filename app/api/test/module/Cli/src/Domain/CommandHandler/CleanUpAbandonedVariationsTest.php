@@ -10,6 +10,8 @@ use Dvsa\Olcs\Cli\Domain\Command\CleanUpAbandonedVariations as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
 /**
@@ -47,12 +49,19 @@ class CleanUpAbandonedVariationsTest extends CommandHandlerTestCase
         $mockVariation3->shouldReceive('getId')->andReturn(3);
 
         $this->repoMap['Application']->shouldReceive('fetchAbandonedVariations')
-            ->once()->with($date)->andReturn([$mockVariation1, $mockVariation2, $mockVariation3]);
+            ->once()->andReturn([$mockVariation1, $mockVariation2, $mockVariation3]);
+
+        $this->commandHandler->shouldReceive('handleCommand')
+            ->times(3)
+            ->with(m::type(DeleteVariation::class), false);
 
         $response = $this->sut->handleCommand(Command::create([]));
 
+        $deleteCommand = m::mock(DeleteVariation::class);
+        $deleteCommand->shouldReceive('handleCommand');
+
         $expected = [
-            'ids' => [
+            'id' => [
                 'variation 1' => 1,
                 'variation 2' => 2,
                 'variation 3' => 3
