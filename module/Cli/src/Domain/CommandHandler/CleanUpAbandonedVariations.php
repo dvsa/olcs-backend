@@ -10,6 +10,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation;
 
 /**
  * Remove abandoned variations
@@ -45,10 +46,7 @@ final class CleanUpAbandonedVariations extends AbstractCommandHandler
 
         /* @var $variation ApplicationEntity */
         foreach ($abandonedVariations as $variation) {
-
-            $params = ['id' => $variation->getId()];
-            //TODO: call delete command for each variation
-
+            $this->handleSideEffect(DeleteVariation::create(['id' => $variation->getId()]));
         }
 
         $this->result->addMessage(count($abandonedVariations) . ' abandoned variation records deleted');
