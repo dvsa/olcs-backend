@@ -35,6 +35,7 @@ class Module implements ConsoleUsageProviderInterface
             'process-ntu [--verbose|-v]' => 'Process Not Taken Up Applications',
             'process-cl [--verbose|-v] [--dryrun|-d]' => 'Process community licences',
             'batch-cns  [--verbose|-v] [--dryrun|-d]' => 'Process Licences for Continuation Not Sought',
+            'batch-clean-variations  [--verbose|-v] [--dryrun|-d]' => 'Clean up abandoned variations',
             'inspection-request-email [--verbose|-v]' => 'Process inspection request email',
             'remove-read-audit [--verbose|-v]' => 'Process deletion of old read audit records',
             'system-parameter name value [--verbose|-v]' => 'Set a system parameter',
