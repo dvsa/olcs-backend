@@ -284,6 +284,8 @@ class Application extends AbstractRepository
      * Fetch abandoned variations
      * Soft delete abandoned variations and delete (or soft delete) related data
      *
+     * @param string $olderThanDate The limit date to consider a variation abandoned
+     *
      * @return array
      */
     public function fetchAbandonedVariations($olderThanDate)

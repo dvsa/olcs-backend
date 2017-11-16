@@ -72,6 +72,8 @@ class BatchController extends AbstractConsoleController
 
     /**
      * Clean abandoned variations
+     *
+     * @return \Zend\View\Model\ConsoleModel
      */
     public function cleanUpVariationsAction()
     {

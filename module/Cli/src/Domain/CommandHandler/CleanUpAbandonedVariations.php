@@ -5,7 +5,9 @@
  */
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
@@ -22,6 +24,13 @@ final class CleanUpAbandonedVariations extends AbstractCommandHandler
 
     protected $olderThan = '4 hours';
 
+    /**
+     * create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator service locator
+     *
+     * @return $this|TransactioningCommandHandler
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
@@ -35,6 +44,13 @@ final class CleanUpAbandonedVariations extends AbstractCommandHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $olderThanDate = date('Y-m-d H:i:s', strtotime('-' . $this->olderThan));
