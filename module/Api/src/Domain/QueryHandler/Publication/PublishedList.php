@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Transfer\Query\Publication\PublishedList as PublishedListCommand;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 
@@ -17,7 +18,7 @@ final class PublishedList extends AbstractQueryHandler
     /**
      * Handle PublishedList query
      *
-     * @param QueryInterface $query the query
+     * @param QueryInterface|PublishedListCommand $query the query
      *
      * @return array
      */
