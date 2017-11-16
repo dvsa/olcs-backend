@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as CorrespondenceInbox
 use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
+use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
 
 /**
  * Delete Document Test
@@ -26,6 +28,7 @@ class DeleteDocumentTest extends CommandHandlerTestCase
         $this->sut = new DeleteDocument();
         $this->mockRepo('Document', Document::class);
         $this->mockRepo('CorrespondenceInbox', CorrespondenceInbox::class);
+        $this->mockRepo('SlaTargetDate', SlaTargetDate::class);
 
         $this->mockedSmServices = [
             'FileUploader' => m::mock()
@@ -80,6 +83,20 @@ class DeleteDocumentTest extends CommandHandlerTestCase
             ->with($correspondenceInbox2)
             ->once();
 
+        $slaTargetDate1 = m::mock(SlaTargetDateEntity::class);
+        $slaTargetDate2 = m::mock(SlaTargetDateEntity::class);
+        $slaTargetDates = [$slaTargetDate1, $slaTargetDate2];
+        $this->repoMap['SlaTargetDate']->shouldReceive('fetchByDocumentId')
+            ->with($documentId)
+            ->once()
+            ->andReturn($slaTargetDates)
+            ->shouldReceive('delete')
+            ->once()
+            ->with($slaTargetDate1)
+            ->shouldReceive('delete')
+            ->with($slaTargetDate2)
+            ->once();
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -123,6 +140,11 @@ class DeleteDocumentTest extends CommandHandlerTestCase
             ->with($document);
 
         $this->repoMap['CorrespondenceInbox']->shouldReceive('fetchByDocumentId')
+            ->with($documentId)
+            ->andReturn([])
+            ->once();
+
+        $this->repoMap['SlaTargetDate']->shouldReceive('fetchByDocumentId')
             ->with($documentId)
             ->andReturn([])
             ->once();
