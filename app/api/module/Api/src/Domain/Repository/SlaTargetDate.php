@@ -48,4 +48,20 @@ class SlaTargetDate extends AbstractRepository
 
         return $qb;
     }
+
+    /**
+     * Fetch by document id
+     *
+     * @param int $documentId document id
+     *
+     * @return array
+     */
+    public function fetchByDocumentId($documentId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.document', ':documentId'));
+        $qb->setParameter('documentId', $documentId);
+
+        return $qb->getQuery()->getResult();
+    }
 }
