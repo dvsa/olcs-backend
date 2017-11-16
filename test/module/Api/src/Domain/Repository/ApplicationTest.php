@@ -446,7 +446,11 @@ class ApplicationTest extends RepositoryTestCase
                 'a.isVariation = 0 ' .
                 'OR (' .
                     'l.status IN ["lsts_suspended","lsts_valid","lsts_curtailed"] ' .
-                    'AND a.isVariation = 1' .
+                    'AND a.isVariation = 1 ' .
+                    'AND (' .
+                        'a.variationType IS NULL ' .
+                        'OR a.variationType != [[' . Application::VARIATION_TYPE_DIRECTOR_CHANGE . ']]' .
+                    ')' .
                 ')' .
             ')',
             $this->query

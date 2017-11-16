@@ -3,22 +3,22 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as CreatePsvDiscsCmd;
-use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
-use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 
 /**
  * Grant
@@ -31,6 +31,12 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
     protected $extraRepos = ['GoodsDisc', 'PsvDisc', 'LicenceVehicle'];
 
+    /**
+     * handleCommand
+     *
+     * @param  CommandInterface $command Command
+     * @return Result                    Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         /* @var $command Cmd */
@@ -38,6 +44,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
 
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
+
+        $this->guardAgainstBadVariationType($application);
+
         $licence = $application->getLicence();
 
         if ($application->isPsv()) {
@@ -85,6 +94,12 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         return $result;
     }
 
+    /**
+     * createSnapshot
+     *
+     * @param int $applicationId Application ID
+     * @return Result            Result
+     */
     protected function createSnapshot($applicationId)
     {
         $data = [
@@ -96,8 +111,12 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     }
 
     /**
-     * @param ApplicationEntity|Licence $entity
-     * @param $status
+     * updateStatusAndDate
+     *
+     * @param ApplicationEntity|Licence $entity Entity
+     * @param string                    $status Status
+     *
+     * @return void
      */
     protected function updateStatusAndDate($entity, $status)
     {
@@ -105,6 +124,15 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $entity->setGrantedDate(new DateTime());
     }
 
+    /**
+     * updateExistingDiscs
+     *
+     * @param ApplicationEntity $application Application
+     * @param Licence           $licence     Licence
+     * @param Result            $result      Result
+     *
+     * @return void
+     */
     protected function updateExistingDiscs(ApplicationEntity $application, Licence $licence, Result $result)
     {
         $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
@@ -116,6 +144,14 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(false);
     }
 
+    /**
+     * updateExistingPsvDiscs
+     *
+     * @param Licence $licence Licence
+     * @param Result  $result  Result
+     *
+     * @return void
+     */
     protected function updateExistingPsvDiscs(Licence $licence, Result $result)
     {
         $discCount = $licence->getPsvDiscsNotCeased()->count();
@@ -136,6 +172,15 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         );
     }
 
+    /**
+     * updateExistingGoodsDiscs
+     *
+     * @param ApplicationEntity $application Application
+     * @param Licence           $licence     Licence
+     * @param Result            $result      Result
+     *
+     * @return void
+     */
     protected function updateExistingGoodsDiscs(ApplicationEntity $application, Licence $licence, Result $result)
     {
         $count = $this->getRepo('GoodsDisc')->updateExistingGoodsDiscs($application);
@@ -146,7 +191,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Close any TEX tasks on the application
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application Application
      *
      * @return Result
      */
@@ -164,7 +209,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Publish the application
      *
-     * @param ApplicationEntity $application
+     * @param ApplicationEntity $application Application
      *
      * @return Result
      */
@@ -227,6 +272,22 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
                 $newLicenceVehicle->setRemovalDate(new DateTime());
                 $this->getRepo('LicenceVehicle')->save($newLicenceVehicle);
             }
+        }
+    }
+
+    /**
+     * guardAgainstBadVariationType
+     *
+     * @param ApplicationEntity $application Application
+     *
+     * @throws BadVariationTypeException
+     *
+     * @return void
+     */
+    private function guardAgainstBadVariationType(ApplicationEntity $application)
+    {
+        if (!is_null($application->getVariationType())) {
+            throw new BadVariationTypeException();
         }
     }
 }
