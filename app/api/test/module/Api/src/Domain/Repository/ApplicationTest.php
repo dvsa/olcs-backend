@@ -443,15 +443,15 @@ class ApplicationTest extends RepositoryTestCase
             'INNER JOIN a.licence l WITH l.organisation = [[' . self::ORG_ID . ']] ' .
             'AND a.status IN ["unit1","unit2"] ' .
             'AND (' .
-                'a.isVariation = 0 ' .
-                'OR (' .
-                    'l.status IN ["lsts_suspended","lsts_valid","lsts_curtailed"] ' .
-                    'AND a.isVariation = 1 ' .
-                    'AND (' .
-                        'a.variationType IS NULL ' .
-                        'OR a.variationType != [[' . Application::VARIATION_TYPE_DIRECTOR_CHANGE . ']]' .
-                    ')' .
-                ')' .
+            'a.isVariation = 0 ' .
+            'OR (' .
+            'l.status IN ["lsts_suspended","lsts_valid","lsts_curtailed"] ' .
+            'AND a.isVariation = 1 ' .
+            'AND (' .
+            'a.variationType IS NULL ' .
+            'OR a.variationType != [[' . Application::VARIATION_TYPE_DIRECTOR_CHANGE . ']]' .
+            ')' .
+            ')' .
             ')',
             $this->query
         );
