@@ -578,4 +578,32 @@ class ApplicationTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
         $this->assertEquals(['RESULT'], $this->sut->fetchForNtu());
     }
+
+    public function testFetchAbandonedVariations()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
+
+        $mockQb->shouldReceive('expr->eq')->with('a.isVariation', ':isVariation')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')->with('isVariation', 1)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('a.variationType', ':variationType')->once()->andReturn('EXPR2');
+        $mockQb->shouldReceive('setParameter')->with('variationType', Application::VARIATION_TYPE_DIRECTOR_CHANGE)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('a.status', ':status')->once()->andReturn('EXPR3');
+        $mockQb->shouldReceive('setParameter')->with('status', Application::APPLICATION_STATUS_NOT_SUBMITTED)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR3')->once()->andReturnSelf();
+
+        $olderThanDate = date('Y-m-d H:i:s', strtotime('- 4 hours'));
+        $mockQb->shouldReceive('expr->lt')->with('a.createdOn', ':olderThanDate')->once()->andReturn('EXPR4');
+        $mockQb->shouldReceive('setParameter')->with('olderThanDate', $olderThanDate)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR4')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $this->assertEquals(['RESULT'], $this->sut->fetchAbandonedVariations($olderThanDate));
+
+    }
 }
