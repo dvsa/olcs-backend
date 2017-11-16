@@ -940,6 +940,19 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->expireBusRegistrationAction();
     }
 
+    public function testCleanUpVariationsAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\CleanUpAbandonedVariations::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->cleanUpVariationsAction();
+    }
+
     public function testDataRetentionRuleActionPopulate()
     {
         $this->mockParamsPlugin(

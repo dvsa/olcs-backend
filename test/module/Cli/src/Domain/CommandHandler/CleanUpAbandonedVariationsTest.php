@@ -37,7 +37,6 @@ class CleanUpAbandonedVariationsTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $date = date('Y-m-d H:i:s', strtotime('- 4 hours'));
 
         $mockVariation1 = m::mock(ApplicationEntity::class);
         $mockVariation1->shouldReceive('getId')->andReturn(1);
