@@ -45,6 +45,11 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
     protected $hasInforceLicences;
 
+    /**
+     * Has inforce licences
+     *
+     * @return bool
+     */
     public function hasInforceLicences()
     {
         if ($this->hasInforceLicences === null) {
@@ -159,11 +164,16 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     {
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
-            // prevent recursion via app -> licence -> organisation -> licence
+            /* prevent recursion via app -> licence -> organisation -> licence */
             'licences' => null,
         ];
     }
 
+    /**
+     * getCalculatedBundleValues
+     *
+     * @return array hasInforceLicences
+     */
     protected function getCalculatedBundleValues()
     {
         return [
@@ -171,6 +181,19 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         ];
     }
 
+    /**
+     * Update Organisation
+     *
+     * @param $name name
+     * @param $companyNumber company number
+     * @param $firstName first name
+     * @param $lastName last name
+     * @param $isIrfo ir info
+     * @param $natureOfBusiness nature of business
+     * @param $cpid cpid
+     * @param $allowEmail allows email
+     *
+     */
     public function updateOrganisation(
         $name,
         $companyNumber,
@@ -180,7 +203,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $natureOfBusiness,
         $cpid,
         $allowEmail
-    ) {
+    )
+    {
         $this->setCpid($cpid);
         $this->setNatureOfBusiness($natureOfBusiness);
         if ($isIrfo === 'Y' || ($this->getType() !== null && $this->getType()->getId() === self::ORG_TYPE_IRFO)) {
@@ -380,7 +404,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             }
         }
 
-        return (bool) (($totalValidLicences + $totalLicencesWithNewGoodsApplications) > 1);
+        return (bool)(($totalValidLicences + $totalLicencesWithNewGoodsApplications) > 1);
     }
 
     /**
@@ -458,15 +482,14 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
             try {
                 $user = $orgUser->getUser();
-                if (
-                    $user instanceof UserEntity
-                    && $user->getAccountDisabled() !== 'Y'
-                ) {
-                    $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
-                }
+                echo 'trying user';
+
+                $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+
             } catch (EntityNotFoundException $ex) {
                 // we may have the user id but will not be able to load it
                 // because SoftDeleteable is used
+                echo 'exception';
                 continue;
             }
 
@@ -528,14 +551,14 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             foreach ($licences as $licence) {
                 if ($licence->getStatus() &&
                     ($licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_CANCELLED ||
-                    $licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_WITHDRAWN)
+                        $licence->getStatus()->getId() === LicenceEntity::LICENCE_STATUS_WITHDRAWN)
                 ) {
                     continue;
                 }
                 if ($licence->getTrafficArea() !== null) {
                     $allowedOperatorLocation =
                         $licence->getTrafficArea()->getId() ===
-                            TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE ?
+                        TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE ?
                             self::ALLOWED_OPERATOR_LOCATION_NI : self::ALLOWED_OPERATOR_LOCATION_GB;
                     break;
                 }

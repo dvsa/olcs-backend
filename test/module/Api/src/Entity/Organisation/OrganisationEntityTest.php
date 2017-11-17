@@ -519,6 +519,7 @@ class OrganisationEntityTest extends EntityTester
 
         $user2 = m::mock(OrganisationUser::class)->makePartial();
         $user2->setIsAdministrator('Y');
+
         $user2->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email1);
 
         $user3 = m::mock(OrganisationUser::class)->makePartial();
@@ -526,6 +527,10 @@ class OrganisationEntityTest extends EntityTester
         $user3->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email2);
 
         $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2, $user3]));
+
+        var_dump("Values");
+        var_dump($entity->getAdminEmailAddresses());
+
 
         $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
     }
