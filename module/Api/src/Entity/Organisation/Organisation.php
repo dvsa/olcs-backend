@@ -455,7 +455,21 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var OrganisationUserEntity $orgUser */
         foreach ($adminUsers as $orgUser) {
-            $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+
+            try {
+                $user = $orgUser->getUser();
+                if (
+                    $user instanceof UserEntity
+                    && $user->getAccountDisabled() !== 'Y'
+                ) {
+                    $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
+                }
+            } catch (EntityNotFoundException $ex) {
+                // we may have the user id but will not be able to load it
+                // because SoftDeleteable is used
+                continue;
+            }
+
         }
 
         return $adminEmails;
