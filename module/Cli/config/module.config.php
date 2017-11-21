@@ -72,6 +72,15 @@ return [
                         ],
                     ],
                 ],
+                'batch-clean-variations' => [
+                    'options' => [
+                        'route' => 'batch-clean-variations [--verbose|-v] [--dryrun|-d]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'cleanUpVariations'
+                        ],
+                    ],
+                ],
                 'process-queue' => [
                     'options' => [
                         'route' => 'process-queue [--type=] [--exclude=] [--queue-duration=]',
@@ -317,6 +326,7 @@ return [
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => [
             Command\RemoveReadAudit::class => CommandHandler\RemoveReadAudit::class,
+            Command\CleanUpAbandonedVariations::class => CommandHandler\CleanUpAbandonedVariations::class,
             Command\CreateViExtractFiles::class => CommandHandler\CreateViExtractFiles::class,
             Command\SetViFlags::class => CommandHandler\SetViFlags::class,
             Command\DataGovUkExport::class => CommandHandler\DataGovUkExport::class,
@@ -328,6 +338,9 @@ return [
     'batch_config' => [
         'remove-read-audit' => [
             'max-age' => '1 year'
+        ],
+        'clean-abandoned-variations' => [
+            'older-than' => '4 hours'
         ]
     ]
 ];

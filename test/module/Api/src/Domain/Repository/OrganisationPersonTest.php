@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\AbstractQuery;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Mockery as m;
@@ -69,6 +70,23 @@ class OrganisationPersonTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchListForOrganisation(34));
 
         $expectedQuery = '[QUERY] INNER JOIN m.person p AND m.organisation = [[34]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchCountForOrganisation()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock(AbstractQuery::class)->shouldReceive('getSingleScalarResult')
+                ->andReturn('RESULT')
+                ->getMock()
+        );
+        $this->assertEquals('RESULT', $this->sut->fetchCountForOrganisation(34));
+
+        $expectedQuery = '[QUERY] SELECT COUNT(m.person) INNER JOIN m.person p AND m.organisation = [[34]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
