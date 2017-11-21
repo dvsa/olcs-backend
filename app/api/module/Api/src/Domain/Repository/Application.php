@@ -82,10 +82,15 @@ class Application extends AbstractRepository
                 $qbE->eq($this->alias . '.isVariation', 0),
                 $qbE->andX(
                     $qbE->in('l.status', LicenceE::ACTIVE_STATUSES),
-                    $qbE->eq($this->alias . '.isVariation', 1)
+                    $qbE->eq($this->alias . '.isVariation', 1),
+                    $qbE->orX(
+                        $qbE->isNull($this->alias . '.variationType'),
+                        $qbE->neq($this->alias . '.variationType', ':directorChangeVariationType')
+                    )
                 )
             )
-        );
+        )
+        ->setParameter('directorChangeVariationType', Entity::VARIATION_TYPE_DIRECTOR_CHANGE);
 
         return $qb->getQuery()->execute();
     }
@@ -271,6 +276,31 @@ class Application extends AbstractRepository
 
         $qb->andWhere($qb->expr()->in('ft.feeType', ':feeType'));
         $qb->setParameter('feeType', [FeeTypeEntity::FEE_TYPE_GRANT, FeeTypeEntity::FEE_TYPE_GRANTVAR]);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch abandoned variations
+     * Soft delete abandoned variations and delete (or soft delete) related data
+     *
+     * @param string $olderThanDate The limit date to consider a variation abandoned
+     *
+     * @return array
+     */
+    public function fetchAbandonedVariations($olderThanDate)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isVariation', ':isVariation'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.variationType', ':variationType'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':status'));
+        $qb->andWhere($qb->expr()->lt($this->alias . '.createdOn', ':olderThanDate'));
+
+        $qb->setParameter('isVariation', 1);
+        $qb->setParameter('variationType', Entity::VARIATION_TYPE_DIRECTOR_CHANGE);
+        $qb->setParameter('status', Entity::APPLICATION_STATUS_NOT_SUBMITTED);
+        $qb->setParameter('olderThanDate', $olderThanDate);
 
         return $qb->getQuery()->getResult();
     }

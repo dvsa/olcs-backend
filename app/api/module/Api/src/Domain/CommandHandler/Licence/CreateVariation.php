@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
@@ -39,24 +40,30 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
     protected $extraRepos = ['Application'];
 
     /**
-     * @param Cmd $command
+     * @param CommandInterface|Cmd $command The command
+     *
+     * @return Result
+     * @throws ForbiddenException
      */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
         $shouldUpdateApplicationCompletion = false;
 
+        /** @var LicenceRepository $repository */
+        $repository = $this->getRepo();
+
         /** @var Licence $licence */
-        $licence = $this->getRepo()->fetchUsingId($command);
+        $licence = $repository->fetchUsingId($command);
 
         if ($licence->canHaveVariation() === false) {
             throw new ForbiddenException('Unable to create variation due to the licence status.');
         }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-            $status = $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION);
+            $status = $repository->getRefdataReference(Application::APPLICATION_STATUS_UNDER_CONSIDERATION);
         } else {
-            $status = $this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_NOT_SUBMITTED);
+            $status = $repository->getRefdataReference(Application::APPLICATION_STATUS_NOT_SUBMITTED);
         }
 
         $variation = new Application($licence, $status, true);
@@ -69,7 +76,7 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
         $variation->setApplicationTracking($applicationTracking);
 
         if ($command->getLicenceType() !== null) {
-            $variation->setLicenceType($this->getRepo()->getRefdataReference($command->getLicenceType()));
+            $variation->setLicenceType($repository->getRefdataReference($command->getLicenceType()));
             $shouldUpdateApplicationCompletion = true;
         }
 
@@ -78,11 +85,15 @@ final class CreateVariation extends AbstractCommandHandler implements AuthAwareI
             $variation->setTargetCompletionDateFromReceivedDate();
         }
 
+        if ($command->getVariationType() !== null) {
+            $variation->setVariationType($repository->getRefdataReference($command->getVariationType()));
+        }
+
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
-            $variation->setAppliedVia($this->getRepo()->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
+            $variation->setAppliedVia($repository->getRefdataReference(Application::APPLIED_VIA_SELFSERVE));
         }
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-            $variation->setAppliedVia($this->getRepo()->getRefdataReference($command->getAppliedVia()));
+            $variation->setAppliedVia($repository->getRefdataReference($command->getAppliedVia()));
         }
 
         $this->getRepo('Application')->save($variation);

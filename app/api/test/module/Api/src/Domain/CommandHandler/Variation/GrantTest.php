@@ -3,23 +3,23 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres;
+use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\Grant;
+use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
-use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
-use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Grant Test
@@ -44,7 +44,8 @@ class GrantTest extends CommandHandlerTestCase
         $this->refData = [
             ApplicationEntity::APPLICATION_STATUS_VALID,
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+            ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE
         ];
         $this->references = [];
 
@@ -465,5 +466,23 @@ class GrantTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(ApplicationEntity::APPLICATION_STATUS_VALID, $application->getStatus()->getId());
+    }
+
+    public function testThatIncorrectVariationTypeThrowsException()
+    {
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setVariationType($this->refData[ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE]);
+
+        $command = Cmd::create(['id' => 'TEST_ID']);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($application);
+
+        $this->expectException(BadVariationTypeException::class);
+
+        $this->sut->handleCommand($command);
     }
 }

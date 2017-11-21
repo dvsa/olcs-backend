@@ -5,8 +5,11 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostAddPeopleGrantTask;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantPeople;
@@ -18,7 +21,6 @@ use Dvsa\Olcs\Api\Entity\Person\Person;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Grant People Test
@@ -49,7 +51,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
     public function testHandleCommandWithoutRecords()
     {
         $data = [
-            'id' => 111
+            'id' => 'TEST_APPLICATION_ID'
         ];
 
         $command = GrantPeopleCmd::create($data);
@@ -75,7 +77,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
     public function testHandleCommandWithoutAdd()
     {
         $data = [
-            'id' => 111
+            'id' => 'TEST_APPLICATION_ID'
         ];
 
         $command = GrantPeopleCmd::create($data);
@@ -90,9 +92,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
         $aops = new ArrayCollection();
         $aops->add($aop1);
 
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setApplicationOrganisationPersons($aops);
+        $application = $this->createMockApplication($aops);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -117,12 +117,18 @@ class GrantPeopleTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectCreatePostGrantTasks();
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Organisation person records have been copied'
+                'Organisation person records have been copied',
+                'create-post-delete-tasks-grant-message-1',
+                'create-post-delete-tasks-grant-message-2',
+                'create-post-add-tasks-grant-message-1',
+                'create-post-add-tasks-grant-message-2',
             ]
         ];
 
@@ -132,7 +138,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
     public function testHandleCommandWithoutUpdate()
     {
         $data = [
-            'id' => 111
+            'id' => 'TEST_APPLICATION_ID'
         ];
 
         $command = GrantPeopleCmd::create($data);
@@ -152,9 +158,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
         $aops = new ArrayCollection();
         $aops->add($aop1);
 
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setApplicationOrganisationPersons($aops);
+        $application = $this->createMockApplication($aops);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -191,12 +195,18 @@ class GrantPeopleTest extends CommandHandlerTestCase
             ->once()
             ->with($orgPersonRecord);
 
+        $this->expectCreatePostGrantTasks();
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Organisation person records have been copied'
+                'Organisation person records have been copied',
+                'create-post-delete-tasks-grant-message-1',
+                'create-post-delete-tasks-grant-message-2',
+                'create-post-add-tasks-grant-message-1',
+                'create-post-add-tasks-grant-message-2',
             ]
         ];
 
@@ -206,7 +216,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
     public function testHandleCommandWithoutDelete()
     {
         $data = [
-            'id' => 111
+            'id' => 'TEST_APPLICATION_ID'
         ];
 
         $command = GrantPeopleCmd::create($data);
@@ -223,10 +233,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
 
         $aops = new ArrayCollection();
         $aops->add($aop1);
-
-        /** @var ApplicationEntity $application */
-        $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->setApplicationOrganisationPersons($aops);
+        $application = $this->createMockApplication($aops);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -245,15 +252,50 @@ class GrantPeopleTest extends CommandHandlerTestCase
             ->once()
             ->with($orgPersonRecord);
 
+        $this->expectCreatePostGrantTasks();
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Organisation person records have been copied'
+                'Organisation person records have been copied',
+                'create-post-delete-tasks-grant-message-1',
+                'create-post-delete-tasks-grant-message-2',
+                'create-post-add-tasks-grant-message-1',
+                'create-post-add-tasks-grant-message-2',
             ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    private function createMockApplication($applicationOrganisationPersons)
+    {
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setApplicationOrganisationPersons($applicationOrganisationPersons);
+        return $application;
+    }
+
+    private function expectCreatePostGrantTasks()
+    {
+        $deleteTaskResult = new Result();
+        $deleteTaskResult->addMessage('create-post-delete-tasks-grant-message-1');
+        $deleteTaskResult->addMessage('create-post-delete-tasks-grant-message-2');
+        $this->expectedSideEffect(
+            CreatePostDeletePeopleGrantTask::class,
+            ['applicationId' => 'TEST_APPLICATION_ID'],
+            $deleteTaskResult
+        );
+
+        $addTaskResults = new Result();
+        $addTaskResults->addMessage('create-post-add-tasks-grant-message-1');
+        $addTaskResults->addMessage('create-post-add-tasks-grant-message-2');
+        $this->expectedSideEffect(
+            CreatePostAddPeopleGrantTask::class,
+            ['applicationId' => 'TEST_APPLICATION_ID'],
+            $addTaskResults
+        );
     }
 }
