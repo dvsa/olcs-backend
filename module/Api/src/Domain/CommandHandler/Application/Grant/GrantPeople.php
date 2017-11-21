@@ -8,7 +8,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask as CreatePostDeletePeopleGrantTaskCommand;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask
+    as CreatePostDeletePeopleGrantTaskCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostAddPeopleGrantTask as CreatePostAddPeopleGrantTaskCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -54,7 +55,8 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
         foreach ($applicationOrgPeople as $applicationOrgPerson) {
             switch ($applicationOrgPerson->getAction()) {
                 case 'A':
-                    $this->createOrganisationPerson($applicationOrgPerson);
+                    $newPersonID = $this->createOrganisationPerson($applicationOrgPerson);
+                    $this->result->addId('createdPerson', $newPersonID, true);
                     break;
                 case 'U':
                     $this->updateOrganisationPerson($applicationOrgPerson);
@@ -84,7 +86,7 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
      *
      * @param ApplicationOrganisationPerson $aop application organisation person
      *
-     * @return void
+     * @return int ID of the new person
      */
     private function createOrganisationPerson(ApplicationOrganisationPerson $aop)
     {
@@ -102,6 +104,8 @@ final class GrantPeople extends AbstractCommandHandler implements TransactionedI
         $targetOp->setPerson($targetPerson);
 
         $this->getOrganisationRepository()->save($targetOp);
+
+        return $targetOp->getPerson()->getId();
     }
 
     /**
