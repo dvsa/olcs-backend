@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -90,13 +91,18 @@ class Publication extends AbstractRepository
      *
      * @return array
      */
-    public function fetchPublishedList(QueryInterface $query)
+    public function fetchPublishedList(QueryInterface $query, $pubType)
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere(
-            $qb->expr()->eq($this->alias . '.pubStatus', ':pubStatus')
-        )->setParameter('pubStatus', Entity::PUB_PRINTED_STATUS);
+        $qb->andWhere($qb->expr()->eq($this->alias . '.pubStatus', ':pubStatus'))
+            ->setParameter('pubStatus', Entity::PUB_PRINTED_STATUS);
+
+        if ($pubType) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.pubType', ':pubType'))
+            ->setParameter('pubType', $pubType);
+        }
+
 
         $this->buildDefaultListQuery($qb, $query);
 
