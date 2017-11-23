@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\CloseableInterface;
 use Dvsa\Olcs\Api\Entity\ReopenableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Pi Entity
@@ -57,6 +58,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         CasesEntity $case,
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
+        UserEntity $assignedTo,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
@@ -65,7 +67,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     ) {
         parent::__construct();
 
-        $this->create($case, $agreedByTc, $agreedByTcRole, $piTypes, $reasons, $agreedDate, $piStatus, $comment);
+        $this->create($case, $agreedByTc, $agreedByTcRole, $assignedTo, $piTypes, $reasons, $agreedDate, $piStatus, $comment);
     }
 
     /**
@@ -83,6 +85,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         CasesEntity $case,
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
+        UserEntity $assignedTo,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
@@ -96,6 +99,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->case = $case;
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
+        $this->assignedTo = $assignedTo;
         $this->piTypes = $piTypes;
         $this->reasons = $reasons;
         $this->agreedDate = $agreedDate;
@@ -115,6 +119,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     public function updateAgreedAndLegislation(
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
+        UserEntity $assignedTo,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
@@ -126,6 +131,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
+        $this->assignedTo = $assignedTo;
         $this->piTypes = $piTypes;
         $this->reasons = $reasons;
         $this->agreedDate = $agreedDate;
