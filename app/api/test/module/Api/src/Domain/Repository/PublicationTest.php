@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -33,6 +34,7 @@ class PublicationTest extends RepositoryTestCase
 
     /**
      * @param $qb
+     *
      * @return m\MockInterface
      */
     public function getMockRepo($qb)
@@ -90,7 +92,8 @@ class PublicationTest extends RepositoryTestCase
     /**
      * @param string $trafficArea
      * @param string $pubType
-     * @param array $results
+     * @param array  $results
+     *
      * @return m\MockInterface
      */
     public function getMockTaAndTypeQb($trafficArea, $pubType, $results)
@@ -167,9 +170,9 @@ class PublicationTest extends RepositoryTestCase
     }
 
     /**
-     * tests fetchPublishedList
+     * @dataProvider providePublishedListCases
      */
-    public function testFetchPublishedList()
+    public function testFetchPublishedList($withPubType)
     {
         /** @var QueryInterface|m\Mock $query */
         $query = m::mock(QueryInterface::class);
@@ -180,14 +183,40 @@ class PublicationTest extends RepositoryTestCase
             'results' => $results,
             'count' => $count
         ];
+        $status = PublicationEntity::PUB_PRINTED_STATUS;
 
         $mockQb = m::mock(QueryBuilder::class);
-        $mockQb->shouldReceive('expr->eq')->with('m.pubStatus', ':pubStatus')->once()->andReturnSelf();
-        $mockQb->shouldReceive('andWhere')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')
-            ->with('pubStatus', PublicationEntity::PUB_PRINTED_STATUS)
+        $mockQb->shouldReceive('expr->eq')
+            ->with('m.pubStatus', ':pubStatus')
+            ->once()
+            ->andReturn('DUMMY_WHERE_PUB_STATUS');
+
+        $mockQb->shouldReceive('andWhere')
+            ->with('DUMMY_WHERE_PUB_STATUS')
             ->once()
             ->andReturnSelf();
+
+        $mockQb->shouldReceive('setParameter')
+            ->with('pubStatus', $status)
+            ->once()
+            ->andReturnSelf();
+
+        if ($withPubType) {
+            $mockQb->shouldReceive('expr->eq')
+                ->with('m.pubType', ':pubType')
+                ->once()
+                ->andReturn('DUMMY_WHERE_PUB_TYPE');
+
+            $mockQb->shouldReceive('andWhere')
+                ->with('DUMMY_WHERE_PUB_TYPE')
+                ->once()
+                ->andReturnSelf();
+
+            $mockQb->shouldReceive('setParameter')
+                ->with('pubType', $withPubType)
+                ->once()
+                ->andReturnSelf();
+        }
 
         $mockQb->shouldReceive('getQuery->getResult')
             ->andReturn($results);
@@ -210,6 +239,14 @@ class PublicationTest extends RepositoryTestCase
             ->with(PublicationEntity::class)
             ->andReturn($repo);
 
-        $this->assertEquals($resultArray, $this->sut->fetchPublishedList($query));
+        $this->assertEquals($resultArray, $this->sut->fetchPublishedList($query, $withPubType ? 'DUMMY_PUB_TYPE' : ''));
+    }
+
+    public function providePublishedListCases()
+    {
+        return [
+            [false],
+            [true],
+        ];
     }
 }

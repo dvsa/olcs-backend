@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Publication;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Publication\PublishedList;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
-use Dvsa\Olcs\Transfer\Query\Publication\PendingList as Qry;
+use Dvsa\Olcs\Transfer\Query\Publication\PublishedList as Qry;
 use Mockery as m;
 
 /**
@@ -34,7 +34,7 @@ class PublishedListTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $count = 25;
-        $query = Qry::create([]);
+        $query = Qry::create(['pubType' => 'DUMMY_PUB_TYPE']);
         $serializedResult = 'foo';
 
         $mockResult = m::mock();
@@ -46,6 +46,7 @@ class PublishedListTest extends QueryHandlerTestCase
         ];
 
         $this->repoMap['Publication']->shouldReceive('fetchPublishedList')
+            ->with($query, 'DUMMY_PUB_TYPE')
             ->andReturn($queryResult);
 
         $result = $this->sut->handleQuery($query);
