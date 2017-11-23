@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateAgreedAndLegislation as CreateCmd;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Creates Pi with agreed and legislation info
@@ -42,6 +43,9 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
         /** @var PresidingTcEntity $agreedByTc */
         $agreedByTc = $this->getRepo()->getReference(PresidingTcEntity::class, $command->getAgreedByTc());
 
+        /** @var UserEntity $assignedTo */
+        $assignedTo = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedTo());
+
         /** @var CasesEntity $case */
         $case = $this->getRepo()->getReference(CasesEntity::class, $command->getCase());
 
@@ -57,6 +61,7 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
             $case,
             $agreedByTc,
             $decidedByTcRole,
+            $assignedTo,
             $types,
             $reasons,
             $agreedDate,

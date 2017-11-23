@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTarg
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateAgreedAndLegislation as UpdateCmd;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Updates Pi with agreed and legislation info
@@ -42,6 +43,9 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         /** @var PresidingTcEntity $agreedByTc */
         $agreedByTc = $this->getRepo()->getReference(PresidingTcEntity::class, $command->getAgreedByTc());
 
+        /** @var UserEntity $assignedTo */
+        $assignedTo = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedTo());
+
         /** @var RefData $decidedByTcRole */
         $decidedByTcRole = $this->getRepo()->getRefdataReference($command->getAgreedByTcRole());
 
@@ -53,6 +57,7 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         $pi->updateAgreedAndLegislation(
             $agreedByTc,
             $decidedByTcRole,
+            $assignedTo,
             $types,
             $reasons,
             $agreedDate,
