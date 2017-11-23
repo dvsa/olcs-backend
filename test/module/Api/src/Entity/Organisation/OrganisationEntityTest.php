@@ -528,10 +528,6 @@ class OrganisationEntityTest extends EntityTester
 
         $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2, $user3]));
 
-        var_dump("Values");
-        var_dump($entity->getAdminEmailAddresses());
-
-
         $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
     }
 
