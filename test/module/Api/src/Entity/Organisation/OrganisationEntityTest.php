@@ -532,6 +532,37 @@ class OrganisationEntityTest extends EntityTester
     }
 
     /**
+     *  test if org user not found due to soft delete
+     *
+     */
+    public function testGetAdminEmailAddressesWhenOrganisationUserNotFound()
+    {
+        $entity = new Entity();
+
+        $email2 = 'bar@foo.com';
+
+        $expectedEmails = [
+            0 => $email2
+        ];
+
+        $user1 = new OrganisationUser();
+        $user1->setIsAdministrator('N');
+
+        $user2 = m::mock(OrganisationUser::class)->makePartial();
+        $user2->setIsAdministrator('Y');
+
+        $user2->shouldReceive('getUser')->once()->andThrow(EntityNotFoundException::class);
+
+        $user3 = m::mock(OrganisationUser::class)->makePartial();
+        $user3->setIsAdministrator('Y');
+        $user3->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email2);
+
+        $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2, $user3]));
+
+        $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
+    }
+
+    /**
      * Test get allowed operator location from applications
      *
      * @param int $niFlag
