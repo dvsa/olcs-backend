@@ -22,7 +22,6 @@ class Coverage implements TestListener
         $this->filter->addDirectoryToWhitelist(realpath(__DIR__ . '/../module/'));
 
         foreach ($this->filter->getWhitelist() as $file) {
-
             xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
             include_once($file);
             $fileData = xdebug_get_code_coverage();
