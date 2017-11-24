@@ -57,6 +57,11 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
 
         $agreedDate = \DateTime::createFromFormat('Y-m-d', $command->getAgreedDate());
 
+        $isEcmsCase = $command->getIsEcmsCase() === 'Y' ? 1 : 0;
+
+        $ecmsFirstReceivedDate = $command->getEcmsFirstReceivedDate() !== null ? \DateTime::createFromFormat('Y-m-d', $command->getEcmsFirstReceivedDate()) : null;
+        $ecmsFirstReceivedDateToStore = $isEcmsCase ? $ecmsFirstReceivedDate : null;
+
         $pi = new PiEntity(
             $case,
             $agreedByTc,
@@ -68,6 +73,9 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
             $piStatus,
             $command->getComment()
         );
+
+        $pi->setIsEcmsCase($isEcmsCase);
+        $pi->setEcmsFirstReceivedDate($ecmsFirstReceivedDateToStore);
 
         $this->getRepo()->save($pi);
         $result->addMessage('Pi created');
