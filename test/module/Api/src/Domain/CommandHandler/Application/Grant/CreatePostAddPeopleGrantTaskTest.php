@@ -226,14 +226,14 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
             'administration' => 'N',
             'disqualified' => 'N',
         ];
-        yield ['N', $negativeFinancialAnswers, false];
-        yield ['Y', $negativeFinancialAnswers, true];
+        yield ['N', $negativeFinancialAnswers, 'N'];
+        yield ['Y', $negativeFinancialAnswers, 'Y'];
 
         foreach (['Y', 'N'] as $convictionsConfirmationAnswer) {
             foreach (array_keys($negativeFinancialAnswers) as $financialQuestion) {
                 $financialAnswers = $negativeFinancialAnswers;
                 $financialAnswers[$financialQuestion] = 'Y';
-                yield [$convictionsConfirmationAnswer, $financialAnswers, true];
+                yield [$convictionsConfirmationAnswer, $financialAnswers, 'Y'];
             }
         }
     }

@@ -14,6 +14,7 @@ return [
     CliCommandHandler\DataGovUkExport::class => IsSystemUser::class,
     CliCommandHandler\CompaniesHouseVsOlcsDiffsExport::class => IsSystemUser::class,
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
+    CliCommandHandler\CleanUpAbandonedVariations::class => IsSystemUser::class,
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
     CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
     //  api commands
