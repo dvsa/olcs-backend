@@ -519,6 +519,7 @@ class OrganisationEntityTest extends EntityTester
 
         $user2 = m::mock(OrganisationUser::class)->makePartial();
         $user2->setIsAdministrator('Y');
+
         $user2->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email1);
 
         $user3 = m::mock(OrganisationUser::class)->makePartial();
@@ -526,6 +527,31 @@ class OrganisationEntityTest extends EntityTester
         $user3->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email2);
 
         $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2, $user3]));
+
+        $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
+    }
+
+    /**
+     *  test if org user not found due to soft delete
+     *
+     */
+    public function testGetAdminEmailAddressesWhenOrganisationUserNotFound()
+    {
+        $entity = new Entity();
+
+        $email1 = 'bar@foo.com';
+
+        $expectedEmails = [
+            0 => $email1
+        ];
+        $user1 = m::mock(OrganisationUser::class)->makePartial();
+        $user1->setIsAdministrator('Y');
+        $user1->shouldReceive('getUser')->once()->andThrow(EntityNotFoundException::class);
+        $user2 = m::mock(OrganisationUser::class)->makePartial();
+        $user2->setIsAdministrator('Y');
+        $user2->shouldReceive('getUser->getContactDetails->getEmailAddress')->once()->andReturn($email1);
+
+        $entity->setOrganisationUsers(new ArrayCollection([$user1, $user2]));
 
         $this->assertEquals($expectedEmails, $entity->getAdminEmailAddresses());
     }
