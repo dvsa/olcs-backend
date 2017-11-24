@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Task;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -30,6 +31,9 @@ final class CreateTask extends AbstractCommand
 
     protected $isClosed = false;
 
+    /**
+     * @var string|boolean 'Y', 'N', or false (false should be seen as being unset which will default to 'N')
+     */
     protected $urgent = false;
 
     protected $application;
@@ -105,7 +109,7 @@ final class CreateTask extends AbstractCommand
     }
 
     /**
-     * @return boolean
+     * @return string|boolean 'Y', 'N', or false (false should be seen as being unset which will default to 'N')
      */
     public function getUrgent()
     {

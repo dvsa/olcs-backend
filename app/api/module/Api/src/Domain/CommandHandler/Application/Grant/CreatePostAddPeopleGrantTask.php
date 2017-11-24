@@ -53,7 +53,7 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
                     'subCategory' => $this->getTaskSubCategory($organisation),
                     'description' => $this->getTaskDescription($application->getLicence()->getOrganisation()),
                     'licence' => $application->getLicence()->getId(),
-                    'urgent' => $this->isTaskUrgent($application),
+                    'urgent' => $this->isTaskUrgent($application) ? 'Y' : 'N',
                 ]
             )
         );
