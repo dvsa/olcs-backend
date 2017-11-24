@@ -184,14 +184,14 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     /**
      * Update Organisation
      *
-     * @param $name name
-     * @param $companyNumber company number
-     * @param $firstName first name
-     * @param $lastName last name
-     * @param $isIrfo ir info
+     * @param $name             name
+     * @param $companyNumber    company number
+     * @param $firstName        first name
+     * @param $lastName         last name
+     * @param $isIrfo           ir info
      * @param $natureOfBusiness nature of business
-     * @param $cpid cpid
-     * @param $allowEmail allows email
+     * @param $cpid             cpid
+     * @param $allowEmail       allows email
      *
      */
     public function updateOrganisation(
