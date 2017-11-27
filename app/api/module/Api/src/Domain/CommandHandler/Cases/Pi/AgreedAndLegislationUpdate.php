@@ -43,8 +43,8 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         /** @var PresidingTcEntity $agreedByTc */
         $agreedByTc = $this->getRepo()->getReference(PresidingTcEntity::class, $command->getAgreedByTc());
 
-        /** @var UserEntity $assignedTo */
-        $assignedTo = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedTo());
+        /** @var UserEntity $assignedCaseworker */
+        $assignedCaseworker = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedCaseworker());
 
         /** @var RefData $decidedByTcRole */
         $decidedByTcRole = $this->getRepo()->getRefdataReference($command->getAgreedByTcRole());
@@ -62,15 +62,15 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         $pi->updateAgreedAndLegislation(
             $agreedByTc,
             $decidedByTcRole,
-            $assignedTo,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDateToStore,
             $types,
             $reasons,
             $agreedDate,
             $command->getComment()
         );
 
-        $pi->setIsEcmsCase($isEcmsCase);
-        $pi->setEcmsFirstReceivedDate($ecmsFirstReceivedDateToStore);
 
         $this->getRepo()->save($pi);
         $result->addMessage('Pi updated');
