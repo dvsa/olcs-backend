@@ -64,13 +64,13 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         $pi->updateAgreedAndLegislation(
             $agreedByTc,
             $decidedByTcRole,
-            $assignedCaseworker,
-            $isEcmsCase,
-            $ecmsFirstReceivedDateToStore,
             $types,
             $reasons,
             $agreedDate,
-            $command->getComment()
+            $command->getComment(),
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDateToStore
         );
 
         $this->getRepo()->save($pi);

@@ -67,6 +67,9 @@ class CreateAgreedAndLegislationTest extends CommandHandlerTestCase
         $piTypes = ['pi_t_imp', 'pi_t_other'];
         $reasons = [5,7];
         $case = 24;
+        $assignedCaseworker = 10;
+        $isEcmsCase = true;
+        $ecmsFirstReceivedDate = '2015-10-11';
 
         $command = Cmd::Create(
             [
@@ -77,6 +80,9 @@ class CreateAgreedAndLegislationTest extends CommandHandlerTestCase
                 'agreedDate' => $agreedDate,
                 'piTypes' => $piTypes,
                 'reasons' => $reasons,
+                'assignedCaseworker' => $assignedCaseworker,
+                'isEcmsCase' => $isEcmsCase,
+                'ecmsFirstReceivedDate' => $ecmsFirstReceivedDate
             ]
         );
 
