@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Pi;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as Entity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,6 +43,9 @@ class PiEntityTest extends EntityTester
         $caseEntity->shouldReceive('isClosed')->andReturn(false);
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDateToStore = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -52,6 +56,9 @@ class PiEntityTest extends EntityTester
             $caseEntity,
             $agreedByTc,
             $agreedByTcRole,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDateToStore,
             $piTypes,
             $reasons,
             $agreedDate,
@@ -80,6 +87,9 @@ class PiEntityTest extends EntityTester
         $caseEntity->shouldReceive('isClosed')->andReturn(true);
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDateToStore = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -89,6 +99,9 @@ class PiEntityTest extends EntityTester
             $caseEntity,
             $agreedByTc,
             $agreedByTcRole,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDateToStore,
             $piTypes,
             $reasons,
             $agreedDate,
@@ -104,6 +117,9 @@ class PiEntityTest extends EntityTester
     {
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDate = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -112,6 +128,9 @@ class PiEntityTest extends EntityTester
         $this->entity->updateAgreedAndLegislation(
             $agreedByTc,
             $agreedByTcRole,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDate,
             $piTypes,
             $reasons,
             $agreedDate,
@@ -120,12 +139,53 @@ class PiEntityTest extends EntityTester
 
         $this->assertEquals($agreedByTc, $this->entity->getAgreedByTc());
         $this->assertEquals($agreedByTcRole, $this->entity->getAgreedByTcRole());
+        $this->assertEquals($assignedCaseworker, $this->entity->getAssignedCaseworker());
+        $this->assertEquals($isEcmsCase, $this->entity->getIsEcmsCase());
+        $this->assertEquals($ecmsFirstReceivedDate, $this->entity->getEcmsFirstReceivedDate());
         $this->assertEquals($piTypes, $this->entity->getPiTypes());
         $this->assertEquals($reasons, $this->entity->getReasons());
         $this->assertEquals($agreedDate, $this->entity->getAgreedDate());
         $this->assertEquals($comment, $this->entity->getComment());
     }
 
+
+    /**
+     * test agreed and legislation accepts null for assignedCaseworker and ecmsFirstReceivedDate
+     */
+    public function testAgreedAndLegislationNullValues()
+    {
+        $agreedByTc = m::mock(PresidingTcEntity::class);
+        $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = null;
+        $isEcmsCase = true;
+        $ecmsFirstReceivedDate = null;
+        $piTypes = new ArrayCollection();
+        $reasons = new ArrayCollection();
+        $agreedDate = m::mock(\DateTime::class);
+        $comment = 'comment';
+
+        $this->entity->updateAgreedAndLegislation(
+            $agreedByTc,
+            $agreedByTcRole,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDate,
+            $piTypes,
+            $reasons,
+            $agreedDate,
+            $comment
+        );
+
+        $this->assertEquals($agreedByTc, $this->entity->getAgreedByTc());
+        $this->assertEquals($agreedByTcRole, $this->entity->getAgreedByTcRole());
+        $this->assertEquals($assignedCaseworker, $this->entity->getAssignedCaseworker());
+        $this->assertEquals($isEcmsCase, $this->entity->getIsEcmsCase());
+        $this->assertEquals($ecmsFirstReceivedDate, $this->entity->getEcmsFirstReceivedDate());
+        $this->assertEquals($piTypes, $this->entity->getPiTypes());
+        $this->assertEquals($reasons, $this->entity->getReasons());
+        $this->assertEquals($agreedDate, $this->entity->getAgreedDate());
+        $this->assertEquals($comment, $this->entity->getComment());
+    }
     /**
      * test agreed and legislation throws exception when Pi is closed
      *
@@ -135,6 +195,9 @@ class PiEntityTest extends EntityTester
     {
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDateToStore = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -143,6 +206,9 @@ class PiEntityTest extends EntityTester
         $this->entity->updateAgreedAndLegislation(
             $agreedByTc,
             $agreedByTcRole,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDateToStore,
             $piTypes,
             $reasons,
             $agreedDate,
