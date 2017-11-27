@@ -29,7 +29,8 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
     /**
      * Creates a Pi with agreed and legislation
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command Command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -59,7 +60,8 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
 
         $isEcmsCase = $command->getIsEcmsCase() === 'Y' ? 1 : 0;
 
-        $ecmsFirstReceivedDate = $command->getEcmsFirstReceivedDate() !== null ? \DateTime::createFromFormat('Y-m-d', $command->getEcmsFirstReceivedDate()) : null;
+        $ecmsFirstReceivedDate = $command->getEcmsFirstReceivedDate() !== null ?
+            \DateTime::createFromFormat('Y-m-d', $command->getEcmsFirstReceivedDate()) : null;
         $ecmsFirstReceivedDateToStore = $isEcmsCase ? $ecmsFirstReceivedDate : null;
 
         $pi = new PiEntity(
@@ -97,7 +99,8 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
     /**
      * Returns collection of reasons.
      *
-     * @param array $reasons
+     * @param array $reasons Reasons
+     *
      * @return ArrayCollection
      */
     private function processReasons($reasons)
@@ -116,7 +119,8 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
     /**
      * Returns collection of types.
      *
-     * @param array $types
+     * @param array $types Types
+     *
      * @return ArrayCollection
      */
     private function processTypes($types)
