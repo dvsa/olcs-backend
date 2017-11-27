@@ -58,7 +58,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         CasesEntity $case,
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
-        UserEntity $assignedTo,
+        UserEntity $assignedCaseworker = null,
+        $isEcmsCase,
+        \DateTime $ecmsFirstReceivedDate = null,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
@@ -67,7 +69,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     ) {
         parent::__construct();
 
-        $this->create($case, $agreedByTc, $agreedByTcRole, $assignedTo, $piTypes, $reasons, $agreedDate, $piStatus, $comment);
+        $this->create($case, $agreedByTc, $agreedByTcRole, $assignedCaseworker, $isEcmsCase, $ecmsFirstReceivedDate, $piTypes, $reasons, $agreedDate, $piStatus, $comment);
     }
 
     /**
@@ -85,7 +87,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         CasesEntity $case,
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
-        UserEntity $assignedTo,
+        UserEntity $assignedCaseworker = null,
+        $isEcmsCase,
+        \DateTime $ecmsFirstReceivedDate = null,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
@@ -99,7 +103,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         $this->case = $case;
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
-        $this->assignedTo = $assignedTo;
+        $this->assignedCaseworker = $assignedCaseworker;
+        $this->isEcmsCase = $isEcmsCase;
+        $this->ecmsFirstReceivedDate = $ecmsFirstReceivedDate;
         $this->piTypes = $piTypes;
         $this->reasons = $reasons;
         $this->agreedDate = $agreedDate;
@@ -119,7 +125,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     public function updateAgreedAndLegislation(
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
-        UserEntity $assignedTo,
+        UserEntity $assignedCaseworker = null,
+        $isEcmsCase,
+        \DateTime $ecmsFirstReceivedDate = null,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
@@ -131,7 +139,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
-        $this->assignedTo = $assignedTo;
+        $this->assignedCaseworker = $assignedCaseworker;
+        $this->isEcmsCase = $isEcmsCase;
+        $this->ecmsFirstReceivedDate = $ecmsFirstReceivedDate;
         $this->piTypes = $piTypes;
         $this->reasons = $reasons;
         $this->agreedDate = $agreedDate;

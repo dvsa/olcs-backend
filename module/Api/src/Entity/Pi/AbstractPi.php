@@ -29,7 +29,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_pi_decided_by_tc_id", columns={"decided_by_tc_id"}),
  *        @ORM\Index(name="ix_pi_agreed_by_tc_role", columns={"agreed_by_tc_role"}),
  *        @ORM\Index(name="ix_pi_decided_by_tc_role", columns={"decided_by_tc_role"}),
- *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"})
+ *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"}),
+ *        @ORM\Index(name="ix_pi_assigned_caseworker", columns={"assigned_caseworker"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_pi_case_id", columns={"case_id"}),
@@ -70,6 +71,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * @ORM\Column(type="date", name="agreed_date", nullable=true)
      */
     protected $agreedDate;
+
+    /**
+     * Assigned caseworker
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_caseworker", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedCaseworker;
 
     /**
      * Assigned to
@@ -552,8 +563,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     {
         $this->piTypes = new ArrayCollection();
         $this->tmDecisions = new ArrayCollection();
-        $this->reasons = new ArrayCollection();
         $this->decisions = new ArrayCollection();
+        $this->reasons = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
         $this->slaTargetDates = new ArrayCollection();
@@ -635,6 +646,30 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
         }
 
         return $this->agreedDate;
+    }
+
+    /**
+     * Set the assigned caseworker
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedCaseworker entity being set as the value
+     *
+     * @return Pi
+     */
+    public function setAssignedCaseworker($assignedCaseworker)
+    {
+        $this->assignedCaseworker = $assignedCaseworker;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned caseworker
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getAssignedCaseworker()
+    {
+        return $this->assignedCaseworker;
     }
 
     /**

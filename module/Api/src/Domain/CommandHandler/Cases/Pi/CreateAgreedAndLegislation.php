@@ -43,8 +43,8 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
         /** @var PresidingTcEntity $agreedByTc */
         $agreedByTc = $this->getRepo()->getReference(PresidingTcEntity::class, $command->getAgreedByTc());
 
-        /** @var UserEntity $assignedTo */
-        $assignedTo = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedTo());
+        /** @var UserEntity $assignedCaseworker */
+        $assignedCaseworker = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedCaseworker());
 
         /** @var CasesEntity $case */
         $case = $this->getRepo()->getReference(CasesEntity::class, $command->getCase());
@@ -66,16 +66,15 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
             $case,
             $agreedByTc,
             $decidedByTcRole,
-            $assignedTo,
+            $assignedCaseworker,
+            $isEcmsCase,
+            $ecmsFirstReceivedDateToStore,
             $types,
             $reasons,
             $agreedDate,
             $piStatus,
             $command->getComment()
         );
-
-        $pi->setIsEcmsCase($isEcmsCase);
-        $pi->setEcmsFirstReceivedDate($ecmsFirstReceivedDateToStore);
 
         $this->getRepo()->save($pi);
         $result->addMessage('Pi created');
