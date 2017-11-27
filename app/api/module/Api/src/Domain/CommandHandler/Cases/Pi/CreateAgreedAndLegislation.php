@@ -68,14 +68,14 @@ final class CreateAgreedAndLegislation extends AbstractCommandHandler implements
             $case,
             $agreedByTc,
             $decidedByTcRole,
-            $assignedCaseworker,
-            $isEcmsCase,
-            $ecmsFirstReceivedDateToStore,
             $types,
             $reasons,
             $agreedDate,
             $piStatus,
-            $command->getComment()
+            $command->getComment(),
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDateToStore
         );
 
         $this->getRepo()->save($pi);

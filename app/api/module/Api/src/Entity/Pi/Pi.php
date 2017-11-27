@@ -58,18 +58,30 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         CasesEntity $case,
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
-        UserEntity $assignedCaseworker = null,
-        $isEcmsCase,
-        \DateTime $ecmsFirstReceivedDate = null,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
         RefData $piStatus,
-        $comment
+        $comment,
+        $isEcmsCase,
+        UserEntity $assignedCaseworker = null,
+        \DateTime $ecmsFirstReceivedDate = null
     ) {
         parent::__construct();
 
-        $this->create($case, $agreedByTc, $agreedByTcRole, $assignedCaseworker, $isEcmsCase, $ecmsFirstReceivedDate, $piTypes, $reasons, $agreedDate, $piStatus, $comment);
+        $this->create(
+            $case,
+            $agreedByTc,
+            $agreedByTcRole,
+            $piTypes,
+            $reasons,
+            $agreedDate,
+            $piStatus,
+            $comment,
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDate
+        );
     }
 
     /**
@@ -87,14 +99,14 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
         CasesEntity $case,
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
-        UserEntity $assignedCaseworker = null,
-        $isEcmsCase,
-        \DateTime $ecmsFirstReceivedDate = null,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
         RefData $piStatus,
-        $comment
+        $comment,
+        $isEcmsCase,
+        UserEntity $assignedCaseworker = null,
+        \DateTime $ecmsFirstReceivedDate = null
     ) {
         if ($case->isClosed()) {
             throw new ForbiddenException('Can\'t create a Pi for a closed case');
@@ -125,13 +137,13 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     public function updateAgreedAndLegislation(
         PresidingTcEntity $agreedByTc,
         RefData $agreedByTcRole,
-        UserEntity $assignedCaseworker = null,
-        $isEcmsCase,
-        \DateTime $ecmsFirstReceivedDate = null,
         ArrayCollection $piTypes,
         ArrayCollection $reasons,
         \DateTime $agreedDate,
-        $comment
+        $comment,
+        $isEcmsCase,
+        UserEntity $assignedCaseworker = null,
+        \DateTime $ecmsFirstReceivedDate = null
     ) {
         if ($this->isClosed()) {
             throw new ForbiddenException(self::MSG_UPDATE_CLOSED);
@@ -139,13 +151,13 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
         $this->agreedByTc = $agreedByTc;
         $this->agreedByTcRole = $agreedByTcRole;
-        $this->assignedCaseworker = $assignedCaseworker;
-        $this->isEcmsCase = $isEcmsCase;
-        $this->ecmsFirstReceivedDate = $ecmsFirstReceivedDate;
         $this->piTypes = $piTypes;
         $this->reasons = $reasons;
         $this->agreedDate = $agreedDate;
         $this->comment = $comment;
+        $this->assignedCaseworker = $assignedCaseworker;
+        $this->isEcmsCase = $isEcmsCase;
+        $this->ecmsFirstReceivedDate = $ecmsFirstReceivedDate;
     }
 
     /**
