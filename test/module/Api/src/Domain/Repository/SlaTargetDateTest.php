@@ -19,6 +19,12 @@ use \Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class SlaTargetDateTest extends RepositoryTestCase
 {
+
+    /**
+     * @var m\MockInterface|Repository\SlaTargetDate
+     */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(Repository\SlaTargetDate::class);
@@ -38,6 +44,23 @@ class SlaTargetDateTest extends RepositoryTestCase
         $result = $this->sut->fetchUsingEntityIdAndType($entityType, $entityId);
 
         $this->assertEquals('QUERY AND m.document = [[100]]', $this->query);
+
+        $this->assertEquals('foobar', $result);
+    }
+
+    public function testFetchByDocumentId()
+    {
+        $documentId = 1;
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn('foobar');
+
+        $result = $this->sut->fetchByDocumentId($documentId);
+
+        $this->assertEquals('QUERY AND m.document = [['.$documentId.']]', $this->query);
 
         $this->assertEquals('foobar', $result);
     }
