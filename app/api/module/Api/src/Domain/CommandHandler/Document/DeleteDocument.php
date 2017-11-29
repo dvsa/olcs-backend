@@ -11,6 +11,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
+use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
+use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
 
 /**
  * Delete Document
@@ -21,7 +23,7 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
 {
     protected $repoServiceName = 'Document';
 
-    protected $extraRepos = ['CorrespondenceInbox'];
+    protected $extraRepos = ['CorrespondenceInbox','SlaTargetDate'];
 
     /**
      * @var ContentStoreFileUploader
@@ -74,9 +76,18 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
             );
         }
 
-        $correspondenceInboxes = $this->getRepo('CorrespondenceInbox')->fetchByDocumentId($document->getId());
+        /** @var CorrespondenceInbox $correspondenceInboxeRepo */
+        $correspondenceInboxeRepo = $this->getRepo('CorrespondenceInbox');
+        $correspondenceInboxes = $correspondenceInboxeRepo->fetchByDocumentId($document->getId());
         foreach ($correspondenceInboxes as $correspondenceInbox) {
             $this->getRepo('CorrespondenceInbox')->delete($correspondenceInbox);
+        }
+
+        /** @var SlaTargetDate $slaTargetDateRepo */
+        $slaTargetDateRepo = $this->getRepo('SlaTargetDate');
+        $slaTargetDates = $slaTargetDateRepo->fetchByDocumentId($document->getId());
+        foreach ($slaTargetDates as $slaTargetDate) {
+            $this->getRepo('SlaTargetDate')->delete($slaTargetDate);
         }
 
         $this->getRepo()->delete($document);

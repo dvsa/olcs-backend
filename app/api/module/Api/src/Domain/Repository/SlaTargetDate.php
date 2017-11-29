@@ -36,8 +36,8 @@ class SlaTargetDate extends AbstractRepository
 
     /**
      * Apply List Filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     * @param QueryBuilder   $qb    Query Builder
+     * @param QueryInterface $query Query
      * @return QueryBuilder|void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
@@ -47,5 +47,21 @@ class SlaTargetDate extends AbstractRepository
             ->setParameter('by' . ucfirst($entityType), $query->getEntityId());
 
         return $qb;
+    }
+
+    /**
+     * Fetch by document id
+     *
+     * @param int $documentId document id
+     *
+     * @return array
+     */
+    public function fetchByDocumentId($documentId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.document', ':documentId'));
+        $qb->setParameter('documentId', $documentId);
+
+        return $qb->getQuery()->getResult();
     }
 }
