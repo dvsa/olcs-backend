@@ -29,7 +29,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_pi_decided_by_tc_id", columns={"decided_by_tc_id"}),
  *        @ORM\Index(name="ix_pi_agreed_by_tc_role", columns={"agreed_by_tc_role"}),
  *        @ORM\Index(name="ix_pi_decided_by_tc_role", columns={"decided_by_tc_role"}),
- *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"})
+ *        @ORM\Index(name="ix_pi_written_outcome", columns={"written_outcome"}),
+ *        @ORM\Index(name="ix_pi_assigned_caseworker", columns={"assigned_caseworker"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_pi_case_id", columns={"case_id"}),
@@ -70,6 +71,16 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * @ORM\Column(type="date", name="agreed_date", nullable=true)
      */
     protected $agreedDate;
+
+    /**
+     * Assigned caseworker
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_caseworker", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedCaseworker;
 
     /**
      * Assigned to
@@ -225,6 +236,15 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     protected $deletedDate;
 
     /**
+     * Ecms first received date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="ecms_first_received_date", nullable=true)
+     */
+    protected $ecmsFirstReceivedDate;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -243,6 +263,15 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      * @ORM\Column(type="yesno", name="is_cancelled", nullable=false, options={"default": 0})
      */
     protected $isCancelled = 0;
+
+    /**
+     * Is ecms case
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ecms_case", nullable=true, options={"default": 0})
+     */
+    protected $isEcmsCase = 0;
 
     /**
      * Last modified by
@@ -534,8 +563,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     {
         $this->piTypes = new ArrayCollection();
         $this->tmDecisions = new ArrayCollection();
-        $this->reasons = new ArrayCollection();
         $this->decisions = new ArrayCollection();
+        $this->reasons = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
         $this->slaTargetDates = new ArrayCollection();
@@ -617,6 +646,30 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
         }
 
         return $this->agreedDate;
+    }
+
+    /**
+     * Set the assigned caseworker
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedCaseworker entity being set as the value
+     *
+     * @return Pi
+     */
+    public function setAssignedCaseworker($assignedCaseworker)
+    {
+        $this->assignedCaseworker = $assignedCaseworker;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned caseworker
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getAssignedCaseworker()
+    {
+        return $this->assignedCaseworker;
     }
 
     /**
@@ -1061,6 +1114,36 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     }
 
     /**
+     * Set the ecms first received date
+     *
+     * @param \DateTime $ecmsFirstReceivedDate new value being set
+     *
+     * @return Pi
+     */
+    public function setEcmsFirstReceivedDate($ecmsFirstReceivedDate)
+    {
+        $this->ecmsFirstReceivedDate = $ecmsFirstReceivedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecms first received date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getEcmsFirstReceivedDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->ecmsFirstReceivedDate);
+        }
+
+        return $this->ecmsFirstReceivedDate;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -1106,6 +1189,30 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     public function getIsCancelled()
     {
         return $this->isCancelled;
+    }
+
+    /**
+     * Set the is ecms case
+     *
+     * @param boolean $isEcmsCase new value being set
+     *
+     * @return Pi
+     */
+    public function setIsEcmsCase($isEcmsCase)
+    {
+        $this->isEcmsCase = $isEcmsCase;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ecms case
+     *
+     * @return boolean
+     */
+    public function getIsEcmsCase()
+    {
+        return $this->isEcmsCase;
     }
 
     /**
