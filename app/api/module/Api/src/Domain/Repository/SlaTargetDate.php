@@ -36,8 +36,8 @@ class SlaTargetDate extends AbstractRepository
 
     /**
      * Apply List Filters
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     * @param QueryBuilder   $qb    Query Builder
+     * @param QueryInterface $query Query
      * @return QueryBuilder|void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
