@@ -12,6 +12,11 @@ use Zend\Http\PhpEnvironment\Response;
  */
 class SearchController extends AbstractController
 {
+    /**
+     * Get list from search
+     *
+     * @return \Zend\Http\Response $response http response
+     */
     public function getList()
     {
         $params = array_merge((array)$this->params()->fromRoute(), (array)$this->params()->fromQuery());
@@ -20,8 +25,6 @@ class SearchController extends AbstractController
 
         /** @var \Olcs\Db\Service\Search\Search $elastic */
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
-
-
 
         if (!empty($params['dateRanges']) && is_array($params['dateRanges'])) {
             try {
