@@ -308,7 +308,7 @@ class AgreedAndLegislationUpdateTest extends CommandHandlerTestCase
         $reasons = [5,7];
         $id = 22;
         $version = 33;
-        $isEcmsCase = 'F';
+        $isEcmsCase = 'N';
         $assignedCaseworker = 20;
         $ecmsFirstReceivedDate = '2015-12-12';
         $commandData = [
