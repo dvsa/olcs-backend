@@ -6,13 +6,20 @@ namespace Olcs\Db\Exceptions;
 
 use Throwable;
 
+/**
+ * Class SearchDateFilterParseException
+ *
+ * @package Olcs\Db\Exceptions
+ */
 class SearchDateFilterParseException extends \Exception
 {
 
     private $dateField;
 
     /**
-     * @return mixed
+     * Get the date field associated with exception
+     *
+     * @return mixed field associated with exception
      */
     public function getDateField()
     {
@@ -20,7 +27,11 @@ class SearchDateFilterParseException extends \Exception
     }
 
     /**
-     * @param mixed $dateField
+     * Set the date field associated with exception
+     *
+     * @param mixed $dateField field associated with exception
+     *
+     * @return void
      */
     public function setDateField($dateField)
     {
@@ -28,6 +39,13 @@ class SearchDateFilterParseException extends \Exception
     }
 
 
+    /**
+     * SearchDateFilterParseException constructor.
+     *
+     * @param string         $message  message from exception
+     * @param int            $code     error code
+     * @param Throwable|null $previous previous exception
+     */
     public function __construct($message = "", $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);

@@ -327,8 +327,6 @@ class Search implements AuthAwareInterface
                 $this->dateRanges[strtolower($f->filter($filterName))] = $value;
             }
         }
-
-
         return $this;
     }
 
