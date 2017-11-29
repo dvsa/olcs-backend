@@ -313,7 +313,7 @@ class Search implements AuthAwareInterface
                     ? sprintf('%04d-%02d-%02d', $value['year'], $value['month'], $value['day'])
                     : null;
                 if (strtotime($value) === false) {
-                    $exception = new SearchDateFilterParseException('invalid date');
+                    $exception = new SearchDateFilterParseException('invalid date filter');
                     $exception->setDateField($filterName);
                     throw $exception;
                 }

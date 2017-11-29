@@ -29,7 +29,7 @@ class SearchController extends AbstractController
             } catch (SearchDateFilterParseException $dateException) {
                 return  $this->respond(
                     Response::STATUS_CODE_500,
-                    'invalid search criteria',
+                    'invalid date filter criteria',
                     ['error' => $dateException->getDateField()]
                 );
             }
