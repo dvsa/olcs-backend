@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTarg
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateAgreedAndLegislation as UpdateCmd;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
  * Updates Pi with agreed and legislation info
@@ -28,7 +29,8 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
     /**
      * Updates agreed and legislation on pi
      *
-     * @param CommandInterface $command
+     * @param CommandInterface $command Command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -42,10 +44,19 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
         /** @var PresidingTcEntity $agreedByTc */
         $agreedByTc = $this->getRepo()->getReference(PresidingTcEntity::class, $command->getAgreedByTc());
 
+        /** @var UserEntity $assignedCaseworker */
+        $assignedCaseworker = $this->getRepo()->getReference(UserEntity::class, $command->getAssignedCaseworker());
+
         /** @var RefData $decidedByTcRole */
         $decidedByTcRole = $this->getRepo()->getRefdataReference($command->getAgreedByTcRole());
 
         $agreedDate = \DateTime::createFromFormat('Y-m-d', $command->getAgreedDate());
+
+        $isEcmsCase = $command->getIsEcmsCase() === 'Y' ? 1 : 0;
+
+        $ecmsFirstReceivedDate = $command->getEcmsFirstReceivedDate() !== null ?
+            \DateTime::createFromFormat('Y-m-d', $command->getEcmsFirstReceivedDate()) : null;
+        $ecmsFirstReceivedDateToStore = $isEcmsCase ? $ecmsFirstReceivedDate : null;
 
         /** @var PiEntity $pi */
         $pi = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
@@ -56,7 +67,10 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
             $types,
             $reasons,
             $agreedDate,
-            $command->getComment()
+            $command->getComment(),
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDateToStore
         );
 
         $this->getRepo()->save($pi);
@@ -80,7 +94,8 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
     /**
      * Returns collection of reasons.
      *
-     * @param array $reasons
+     * @param array $reasons Reasons
+     *
      * @return ArrayCollection
      */
     private function processReasons($reasons)
@@ -99,7 +114,8 @@ final class AgreedAndLegislationUpdate extends AbstractCommandHandler implements
     /**
      * Returns collection of types.
      *
-     * @param array $types
+     * @param array $types Types
+     *
      * @return ArrayCollection
      */
     private function processTypes($types)
