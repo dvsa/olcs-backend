@@ -45,14 +45,17 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     const MSG_DECISION_DATE_BEFORE_HEARING_DATE = 'DECISION_DATE_BEFORE_HEARING_DATE';
 
     /**
-     * @param CasesEntity $case
-     * @param PresidingTc $agreedByTc
-     * @param RefData $agreedByTcRole
-     * @param ArrayCollection $piTypes
-     * @param ArrayCollection $reasons
-     * @param \DateTime $agreedDate
-     * @param RefData $piStatus
-     * @param String $comment
+     * @param CasesEntity     $case                  Case
+     * @param PresidingTc     $agreedByTc            Agreed by
+     * @param RefData         $agreedByTcRole        Agreed by role
+     * @param ArrayCollection $piTypes               Types
+     * @param ArrayCollection $reasons               Reasons
+     * @param \DateTime       $agreedDate            Agreed date
+     * @param RefData         $piStatus              Status
+     * @param String          $comment               Comment
+     * @param boolean         $isEcmsCase            is Ecms case
+     * @param UserEntity      $assignedCaseworker    Assigned caseworker
+     * @param \DateTime       $ecmsFirstReceivedDate Ecms Date
      */
     public function __construct(
         CasesEntity $case,
@@ -85,15 +88,20 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param CasesEntity $case
-     * @param PresidingTc $agreedByTc
-     * @param RefData $agreedByTcRole
-     * @param ArrayCollection $piTypes
-     * @param ArrayCollection $reasons
-     * @param \DateTime $agreedDate
-     * @param RefData $piStatus
-     * @param String $comment
+     * @param CasesEntity     $case                  Case
+     * @param PresidingTc     $agreedByTc            Agreed by
+     * @param RefData         $agreedByTcRole        Agreed by role
+     * @param ArrayCollection $piTypes               Types
+     * @param ArrayCollection $reasons               Reasons
+     * @param \DateTime       $agreedDate            Agreed date
+     * @param RefData         $piStatus              Status
+     * @param String          $comment               Comment
+     * @param boolean         $isEcmsCase            is Ecms case
+     * @param UserEntity      $assignedCaseworker    Assigned caseworker
+     * @param \DateTime       $ecmsFirstReceivedDate Ecms Date
      * @throws ForbiddenException
+     *
+     * @return void
      */
     private function create(
         CasesEntity $case,
@@ -126,12 +134,15 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param PresidingTc $agreedByTc
-     * @param RefData $agreedByTcRole
-     * @param ArrayCollection $piTypes
-     * @param ArrayCollection $reasons
-     * @param \DateTime $agreedDate
-     * @param String $comment
+     * @param PresidingTc     $agreedByTc            Agreed by
+     * @param RefData         $agreedByTcRole        Agreed By Role
+     * @param ArrayCollection $piTypes               Pi Types
+     * @param ArrayCollection $reasons               Reasons
+     * @param \DateTime       $agreedDate            Agreed date
+     * @param String          $comment               Comment
+     * @param boolean         $isEcmsCase            Is Ecms case
+     * @param UserEntity      $assignedCaseworker    Assigned caseworker
+     * @param \DateTime       $ecmsFirstReceivedDate Ecms date
      * @throws ForbiddenException
      */
     public function updateAgreedAndLegislation(
@@ -161,9 +172,9 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param PresidingTcEntity $decidedByTc
-     * @param RefData $decidedByTcRole
-     * @param ArrayCollection $decisions
+     * @param PresidingTcEntity    $decidedByTc
+     * @param RefData              $decidedByTcRole
+     * @param ArrayCollection      $decisions
      * @param $licenceRevokedAtPi
      * @param $licenceSuspendedAtPi
      * @param $licenceCurtailedAtPi
@@ -220,8 +231,8 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
     /**
      * @param RefData|null $writtenOutcome
-     * @param string $callUpLetterDate
-     * @param string $briefToTcDate
+     * @param string       $callUpLetterDate
+     * @param string       $briefToTcDate
      * @throws ForbiddenException
      */
     public function updateWrittenOutcomeNone($writtenOutcome, $callUpLetterDate, $briefToTcDate)
@@ -243,10 +254,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param RefData $writtenOutcome
-     * @param $callUpLetterDate
-     * @param $briefToTcDate
-     * @param $writtenDecisionLetterDate
+     * @param RefData                   $writtenOutcome
+     * @param                           $callUpLetterDate
+     * @param                           $briefToTcDate
+     * @param                           $writtenDecisionLetterDate
      * @throws ForbiddenException
      */
     public function updateWrittenOutcomeVerbal(
@@ -273,10 +284,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
     /**
      * @param RefData $writtenOutcome
-     * @param string $callUpLetterDate
-     * @param string $briefToTcDate
-     * @param string $tcWrittenDecisionDate
-     * @param string $writtenDecisionLetterDate
+     * @param string  $callUpLetterDate
+     * @param string  $briefToTcDate
+     * @param string  $tcWrittenDecisionDate
+     * @param string  $writtenDecisionLetterDate
      * @throws ForbiddenException
      */
     public function updateWrittenOutcomeDecision(
@@ -304,10 +315,10 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
     /**
      * @param RefData $writtenOutcome
-     * @param string $callUpLetterDate
-     * @param string $briefToTcDate
-     * @param string $tcWrittenReasonDate
-     * @param string $writtenReasonLetterDate
+     * @param string  $callUpLetterDate
+     * @param string  $briefToTcDate
+     * @param string  $tcWrittenReasonDate
+     * @param string  $writtenReasonLetterDate
      * @throws ForbiddenException
      */
     public function updateWrittenOutcomeReason(
@@ -334,7 +345,7 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param RefData|null $writtenOutcome
+     * @param RefData|null   $writtenOutcome
      * @param \DateTime|null $callUpLetterDate
      * @param \DateTime|null $briefToTcDate
      * @param \DateTime|null $tcWrittenReasonDate
