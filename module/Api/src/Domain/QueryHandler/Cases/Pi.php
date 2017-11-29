@@ -30,6 +30,7 @@ final class Pi extends AbstractQueryHandler
         'agreedByTcRole',
         'decisions',
         'tmDecisions',
+        'assignedCaseworker',
         'assignedTo',
         'case',
     ];

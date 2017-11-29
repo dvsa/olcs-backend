@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Pi;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as Entity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,6 +48,9 @@ class PiEntityTest extends EntityTester
         $agreedDate = m::mock(\DateTime::class);
         $piStatus = m::mock(RefData::class);
         $comment = 'comment';
+        $isEcmsCase = false;
+        $assignedCaseworker = m::mock(User::class);
+        $ecmsFirstReceivedDate = new \DateTime();
 
         $pi = new Entity(
             $caseEntity,
@@ -56,7 +60,10 @@ class PiEntityTest extends EntityTester
             $reasons,
             $agreedDate,
             $piStatus,
-            $comment
+            $comment,
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDate
         );
 
         $this->assertEquals($caseEntity, $pi->getCase());
@@ -67,6 +74,9 @@ class PiEntityTest extends EntityTester
         $this->assertEquals($agreedDate, $pi->getAgreedDate());
         $this->assertEquals($piStatus, $pi->getPiStatus());
         $this->assertEquals($comment, $pi->getComment());
+        $this->assertEquals($assignedCaseworker, $pi->getAssignedCaseworker());
+        $this->assertEquals($isEcmsCase, $pi->getIsEcmsCase());
+        $this->assertEquals($ecmsFirstReceivedDate, $pi->getEcmsFirstReceivedDate());
     }
 
     /**
@@ -80,6 +90,9 @@ class PiEntityTest extends EntityTester
         $caseEntity->shouldReceive('isClosed')->andReturn(true);
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDate = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -93,7 +106,10 @@ class PiEntityTest extends EntityTester
             $reasons,
             $agreedDate,
             $piStatus,
-            ''
+            '',
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDate
         );
     }
 
@@ -104,6 +120,9 @@ class PiEntityTest extends EntityTester
     {
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDate = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -115,17 +134,61 @@ class PiEntityTest extends EntityTester
             $piTypes,
             $reasons,
             $agreedDate,
-            $comment
+            $comment,
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDate
         );
 
         $this->assertEquals($agreedByTc, $this->entity->getAgreedByTc());
         $this->assertEquals($agreedByTcRole, $this->entity->getAgreedByTcRole());
+        $this->assertEquals($assignedCaseworker, $this->entity->getAssignedCaseworker());
+        $this->assertEquals($isEcmsCase, $this->entity->getIsEcmsCase());
+        $this->assertEquals($ecmsFirstReceivedDate, $this->entity->getEcmsFirstReceivedDate());
         $this->assertEquals($piTypes, $this->entity->getPiTypes());
         $this->assertEquals($reasons, $this->entity->getReasons());
         $this->assertEquals($agreedDate, $this->entity->getAgreedDate());
         $this->assertEquals($comment, $this->entity->getComment());
     }
 
+
+    /**
+     * test agreed and legislation accepts null for assignedCaseworker and ecmsFirstReceivedDate
+     */
+    public function testAgreedAndLegislationNullValues()
+    {
+        $agreedByTc = m::mock(PresidingTcEntity::class);
+        $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = null;
+        $isEcmsCase = true;
+        $ecmsFirstReceivedDate = null;
+        $piTypes = new ArrayCollection();
+        $reasons = new ArrayCollection();
+        $agreedDate = m::mock(\DateTime::class);
+        $comment = 'comment';
+
+        $this->entity->updateAgreedAndLegislation(
+            $agreedByTc,
+            $agreedByTcRole,
+            $piTypes,
+            $reasons,
+            $agreedDate,
+            $comment,
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDate
+        );
+
+        $this->assertEquals($agreedByTc, $this->entity->getAgreedByTc());
+        $this->assertEquals($agreedByTcRole, $this->entity->getAgreedByTcRole());
+        $this->assertEquals($assignedCaseworker, $this->entity->getAssignedCaseworker());
+        $this->assertEquals($isEcmsCase, $this->entity->getIsEcmsCase());
+        $this->assertEquals($ecmsFirstReceivedDate, $this->entity->getEcmsFirstReceivedDate());
+        $this->assertEquals($piTypes, $this->entity->getPiTypes());
+        $this->assertEquals($reasons, $this->entity->getReasons());
+        $this->assertEquals($agreedDate, $this->entity->getAgreedDate());
+        $this->assertEquals($comment, $this->entity->getComment());
+    }
     /**
      * test agreed and legislation throws exception when Pi is closed
      *
@@ -135,6 +198,9 @@ class PiEntityTest extends EntityTester
     {
         $agreedByTc = m::mock(PresidingTcEntity::class);
         $agreedByTcRole = m::mock(RefData::class);
+        $assignedCaseworker = m::mock(User::class);
+        $isEcmsCase = false;
+        $ecmsFirstReceivedDate = new \DateTime();
         $piTypes = new ArrayCollection();
         $reasons = new ArrayCollection();
         $agreedDate = m::mock(\DateTime::class);
@@ -146,7 +212,10 @@ class PiEntityTest extends EntityTester
             $piTypes,
             $reasons,
             $agreedDate,
-            ''
+            '',
+            $isEcmsCase,
+            $assignedCaseworker,
+            $ecmsFirstReceivedDate
         );
     }
 
