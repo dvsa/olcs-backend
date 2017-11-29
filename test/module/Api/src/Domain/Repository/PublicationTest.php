@@ -201,6 +201,36 @@ class PublicationTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
+        $mockQb->shouldReceive('expr->gte')
+            ->with('m.pubDate', ':pubDateFrom')
+            ->once()
+            ->andReturn('DUMMY_WHERE_PUB_DATE_FROM');
+
+        $mockQb->shouldReceive('andWhere')
+            ->with('DUMMY_WHERE_PUB_DATE_FROM')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('setParameter')
+            ->with('pubDateFrom', 'DUMMY_PUB_DATE_FROM')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->lt')
+            ->with('m.pubDate', ':pubDateTo')
+            ->once()
+            ->andReturn('DUMMY_WHERE_PUB_DATE_TO');
+
+        $mockQb->shouldReceive('andWhere')
+            ->with('DUMMY_WHERE_PUB_DATE_TO')
+            ->once()
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('setParameter')
+            ->with('pubDateTo', 'DUMMY_PUB_DATE_TO')
+            ->once()
+            ->andReturnSelf();
+
         if ($withPubType) {
             $mockQb->shouldReceive('expr->eq')
                 ->with('m.pubType', ':pubType')
@@ -239,7 +269,7 @@ class PublicationTest extends RepositoryTestCase
             ->with(PublicationEntity::class)
             ->andReturn($repo);
 
-        $this->assertEquals($resultArray, $this->sut->fetchPublishedList($query, $withPubType ? 'DUMMY_PUB_TYPE' : ''));
+        $this->assertEquals($resultArray, $this->sut->fetchPublishedList($query, $withPubType ? 'DUMMY_PUB_TYPE' : '', 'DUMMY_PUB_DATE_FROM', 'DUMMY_PUB_DATE_TO'));
     }
 
     public function providePublishedListCases()

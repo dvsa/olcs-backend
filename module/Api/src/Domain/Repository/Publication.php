@@ -89,21 +89,28 @@ class Publication extends AbstractRepository
      *
      * @param QueryInterface $query   query object
      * @param string|null    $pubType pubType
+     * @param                $pubDateFrom
+     * @param                $pubDateTo
      *
      * @return array
      */
-    public function fetchPublishedList(QueryInterface $query, $pubType)
+    public function fetchPublishedList(QueryInterface $query, $pubType, $pubDateFrom, $pubDateTo)
     {
         $qb = $this->createQueryBuilder();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.pubStatus', ':pubStatus'))
             ->setParameter('pubStatus', Entity::PUB_PRINTED_STATUS);
 
+        $qb->andWhere($qb->expr()->gte($this->alias . '.pubDate', ':pubDateFrom'))
+            ->setParameter('pubDateFrom', $pubDateFrom);
+
+        $qb->andWhere($qb->expr()->lt($this->alias . '.pubDate', ':pubDateTo'))
+            ->setParameter('pubDateTo', $pubDateTo);
+
         if ($pubType) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.pubType', ':pubType'))
                 ->setParameter('pubType', $pubType);
         }
-
 
         $this->buildDefaultListQuery($qb, $query);
 
