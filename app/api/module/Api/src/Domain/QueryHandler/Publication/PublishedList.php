@@ -30,7 +30,8 @@ final class PublishedList extends AbstractQueryHandler
             $query,
             $query->getPubType(),
             $query->getPubDateFrom(),
-            $query->getPubDateTo()
+            $query->getPubDateTo(),
+            $query->getTrafficArea()
         );
 
         return [

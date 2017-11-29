@@ -39,7 +39,8 @@ class PublishedListTest extends QueryHandlerTestCase
             [
                 'pubType' => 'DUMMY_PUB_TYPE',
                 'pubDateFrom' => 'DUMMY_PUB_DATE_FROM',
-                'pubDateTo' => 'DUMMY_PUB_DATE_TO'
+                'pubDateTo' => 'DUMMY_PUB_DATE_TO',
+                'trafficArea' => 'DUMMY_TRAFFIC_AREA',
             ]
         );
         $serializedResult = 'foo';
@@ -53,7 +54,7 @@ class PublishedListTest extends QueryHandlerTestCase
         ];
 
         $this->repoMap['Publication']->shouldReceive('fetchPublishedList')
-            ->with($query, 'DUMMY_PUB_TYPE', 'DUMMY_PUB_DATE_FROM', 'DUMMY_PUB_DATE_TO')
+            ->with($query, 'DUMMY_PUB_TYPE', 'DUMMY_PUB_DATE_FROM', 'DUMMY_PUB_DATE_TO', 'DUMMY_TRAFFIC_AREA')
             ->andReturn($queryResult);
 
         $result = $this->sut->handleQuery($query);
