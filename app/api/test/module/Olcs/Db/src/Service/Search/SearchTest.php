@@ -3,6 +3,7 @@
 namespace OlcsTest\Db\Service\Search;
 
 use Elastica\Request;
+use Olcs\Db\Exceptions\SearchDateFilterParseException;
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -125,7 +126,7 @@ class SearchTest extends MockeryTestCase
             ->with(
                 '_bulk',
                 'POST',
-                '{"update":{"_id":{},"_type":{},"_index":{}}}'."\n".'{"doc":{"section_26":1}}'."\n",
+                '{"update":{"_id":{},"_type":{},"_index":{}}}' . "\n" . '{"doc":{"section_26":1}}' . "\n",
                 [],
                 Request::NDJSON_CONTENT_TYPE
             )
@@ -324,44 +325,53 @@ class SearchTest extends MockeryTestCase
                     'field2' => '2010-02-01',
                 ]
             ],
-            // invalid
+        ];
+    }
+
+    /**
+     * @dataProvider invalidDateProvider
+     * @expectedException \Olcs\Db\Exceptions\SearchDateFilterParseException
+     */
+    public function testInvalidDateFilter($data)
+    {
+        $this->sut->setDateRanges($data);
+    }
+
+    public function invalidDateProvider()
+    {
+        return    // invalid
             [
                 [
-                    'field1' => '2010',
-                    'field2' => '2010-02',
-                    'field3' => '01-02-2010',
-                    'field4' => '02-2010',
-                    'field5' => '',
-                    'field6' => [
-                        'year' => '2010',
-                        'month' => '02',
-                        'day' => '',
+                    [
+                        'field6' => [
+                            'year' => '2010',
+                            'month' => '02',
+                            'day' => '',
+                        ],
+                        'field7' => [
+                            'year' => '',
+                            'month' => '02',
+                            'day' => '01',
+                        ],
+                        'field8' => [
+                            'year' => '2010',
+                            'month' => '13',
+                            'day' => '01',
+                        ],
+                        'field9' => [
+                            'year' => '2017',
+                            'month' => '02',
+                            'day' => '',
+                        ],
+                        'field10' => [
+                            'year' => '2010',
+                            'month' => '02',
+                            'day' => '53',
+                        ],
+
                     ],
-                    'field7' => [
-                        'year' => '2010',
-                        'month' => '',
-                        'day' => '',
-                    ],
-                    'field8' => [
-                        'year' => '',
-                        'month' => '2',
-                        'day' => '',
-                    ],
-                    'field9' => [
-                        'year' => '',
-                        'month' => '',
-                        'day' => '1',
-                    ],
-                    'field10' => [
-                        'day' => '',
-                        'month' => '',
-                        'year' => ''
-                    ],
-                ],
-                [
                 ]
-            ],
-        ];
+            ];
     }
 
     public function testSearchUnderMaxResults()
