@@ -5,6 +5,7 @@
  *
  * @author Richard Ward <richard.ward@bjss.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Publication\PublishedList;
@@ -34,19 +35,25 @@ class PublishedListTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $count = 25;
-        $query = Qry::create(['pubType' => 'DUMMY_PUB_TYPE']);
+        $query = Qry::create(
+            [
+                'pubType' => 'DUMMY_PUB_TYPE',
+                'pubDateMonth' => 'DUMMY_PUB_DATE_MONTH',
+                'pubDateYear' => 'DUMMY_PUB_DATE_YEAR'
+            ]
+        );
         $serializedResult = 'foo';
 
         $mockResult = m::mock();
         $mockResult->shouldReceive('serialize')->once()->andReturn($serializedResult);
 
         $queryResult = [
-            'results' => [0 =>$mockResult],
+            'results' => [0 => $mockResult],
             'count' => $count
         ];
 
         $this->repoMap['Publication']->shouldReceive('fetchPublishedList')
-            ->with($query, 'DUMMY_PUB_TYPE')
+            ->with($query, 'DUMMY_PUB_TYPE', 'DUMMY_PUB_DATE_MONTH', 'DUMMY_PUB_DATE_YEAR')
             ->andReturn($queryResult);
 
         $result = $this->sut->handleQuery($query);

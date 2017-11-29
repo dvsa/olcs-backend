@@ -26,7 +26,12 @@ final class PublishedList extends AbstractQueryHandler
     {
         /** @var PublicationRepo $repo */
         $repo = $this->getRepo();
-        $result = $repo->fetchPublishedList($query, $query->getPubType());
+        $result = $repo->fetchPublishedList(
+            $query,
+            $query->getPubType(),
+            $query->getPubDateMonth(),
+            $query->getPubDateYear()
+        );
 
         return [
             'result' => $this->resultList(
