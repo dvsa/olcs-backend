@@ -308,11 +308,11 @@ class Search implements AuthAwareInterface
         $f = new CamelCaseToUnderscore();
 
         foreach ($dateRanges as $filterName => $value) {
-            if (is_array($value) && !empty($value['year'])) {
+            if (is_array($value)) {
                 $value = (!empty($value['year']) && !empty($value['month']) && !empty($value['day']))
                     ? sprintf('%04d-%02d-%02d', $value['year'], $value['month'], $value['day'])
                     : null;
-                if (strtotime($value) === false) {
+                if (!is_null($value) && strtotime($value) === false) {
                     $exception = new SearchDateFilterParseException('invalid date filter');
                     $exception->setDateField($filterName);
                     throw $exception;
