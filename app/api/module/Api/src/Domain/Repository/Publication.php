@@ -87,7 +87,8 @@ class Publication extends AbstractRepository
     /**
      * Fetch Published Publications
      *
-     * @param QueryInterface $query query object
+     * @param QueryInterface $query   query object
+     * @param string|null    $pubType pubType
      *
      * @return array
      */
@@ -100,7 +101,7 @@ class Publication extends AbstractRepository
 
         if ($pubType) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.pubType', ':pubType'))
-            ->setParameter('pubType', $pubType);
+                ->setParameter('pubType', $pubType);
         }
 
 
