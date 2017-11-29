@@ -25,12 +25,14 @@ class SearchController extends AbstractController
 
         /** @var \Olcs\Db\Service\Search\Search $elastic */
         $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
-
+        if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
+            $elastic->setFilters($params['filters']);
+        }
         if (!empty($params['dateRanges']) && is_array($params['dateRanges'])) {
             try {
                 $elastic->setDateRanges($params['dateRanges']);
             } catch (SearchDateFilterParseException $dateException) {
-                return  $this->respond(
+                return $this->respond(
                     Response::STATUS_CODE_500,
                     'invalid date filter criteria',
                     ['error' => $dateException->getDateField()]
