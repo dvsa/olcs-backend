@@ -106,6 +106,7 @@ class GrantPeopleTest extends CommandHandlerTestCase
                 function (Person $person) use ($person1, &$savedPerson) {
                     $this->assertNotSame($person1, $person);
                     $savedPerson = $person;
+                    $savedPerson->setId(629);
                 }
             );
 
@@ -122,7 +123,9 @@ class GrantPeopleTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'createdPerson' => 629
+            ],
             'messages' => [
                 'Organisation person records have been copied',
                 'create-post-delete-tasks-grant-message-1',
