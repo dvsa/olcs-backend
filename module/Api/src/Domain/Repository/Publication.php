@@ -87,14 +87,15 @@ class Publication extends AbstractRepository
     /**
      * Fetch Published Publications
      *
-     * @param QueryInterface $query   query object
-     * @param string|null    $pubType pubType
-     * @param                $pubDateFrom
-     * @param                $pubDateTo
+     * @param QueryInterface $query         query object
+     * @param string|null    $pubType       pubType
+     * @param string         $pubDateFrom   pubDateFrom (inclusive)
+     * @param string         $pubDateTo     pubDateTo (not inclusive)
+     * @param string|int     $trafficAreaId traffic area id
      *
      * @return array
      */
-    public function fetchPublishedList(QueryInterface $query, $pubType, $pubDateFrom, $pubDateTo)
+    public function fetchPublishedList(QueryInterface $query, $pubType, $pubDateFrom, $pubDateTo, $trafficAreaId)
     {
         $qb = $this->createQueryBuilder();
 
@@ -110,6 +111,11 @@ class Publication extends AbstractRepository
         if ($pubType) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.pubType', ':pubType'))
                 ->setParameter('pubType', $pubType);
+        }
+
+        if ($trafficAreaId) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.trafficArea', ':trafficArea'))
+                ->setParameter('trafficArea', $trafficAreaId);
         }
 
         $this->buildDefaultListQuery($qb, $query);

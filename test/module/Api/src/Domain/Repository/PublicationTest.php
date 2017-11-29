@@ -171,8 +171,11 @@ class PublicationTest extends RepositoryTestCase
 
     /**
      * @dataProvider providePublishedListCases
+     *
+     * @param $withPubType
+     * @param $withTrafficArea
      */
-    public function testFetchPublishedList($withPubType)
+    public function testFetchPublishedList($withPubType, $withTrafficArea)
     {
         /** @var QueryInterface|m\Mock $query */
         $query = m::mock(QueryInterface::class);
@@ -248,6 +251,23 @@ class PublicationTest extends RepositoryTestCase
                 ->andReturnSelf();
         }
 
+        if ($withTrafficArea) {
+            $mockQb->shouldReceive('expr->eq')
+                ->with('m.trafficArea', ':trafficArea')
+                ->once()
+                ->andReturn('DUMMY_WHERE_TRAFFIC_AREA');
+
+            $mockQb->shouldReceive('andWhere')
+                ->with('DUMMY_WHERE_TRAFFIC_AREA')
+                ->once()
+                ->andReturnSelf();
+
+            $mockQb->shouldReceive('setParameter')
+                ->with('trafficArea', 'DUMMY_TRAFFIC_AREA')
+                ->once()
+                ->andReturnSelf();
+        }
+
         $mockQb->shouldReceive('getQuery->getResult')
             ->andReturn($results);
 
@@ -269,14 +289,25 @@ class PublicationTest extends RepositoryTestCase
             ->with(PublicationEntity::class)
             ->andReturn($repo);
 
-        $this->assertEquals($resultArray, $this->sut->fetchPublishedList($query, $withPubType ? 'DUMMY_PUB_TYPE' : '', 'DUMMY_PUB_DATE_FROM', 'DUMMY_PUB_DATE_TO'));
+        $this->assertEquals(
+            $resultArray,
+            $this->sut->fetchPublishedList(
+                $query,
+                $withPubType ? 'DUMMY_PUB_TYPE' : '',
+                'DUMMY_PUB_DATE_FROM',
+                'DUMMY_PUB_DATE_TO',
+                $withTrafficArea ? 'DUMMY_TRAFFIC_AREA' : ''
+            )
+        );
     }
 
     public function providePublishedListCases()
     {
         return [
-            [false],
-            [true],
+            [false, true],
+            [true, true],
+            [false, false],
+            [true, false],
         ];
     }
 }
