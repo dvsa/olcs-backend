@@ -2,9 +2,11 @@
 
 namespace Olcs\Db\Service\Search;
 
+
 use Elastica\Aggregation\Terms;
 use Elastica\Query;
 use Elastica\ResultSet;
+use Olcs\Db\Exceptions\SearchDateFilterParseException;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -12,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 
 /**
  * Class Search
+ *
  * @package Olcs\Db\Service\Search
  */
 class Search implements AuthAwareInterface
@@ -44,6 +47,8 @@ class Search implements AuthAwareInterface
      * @var string
      */
     protected $order = '';
+
+
 
     /**
      * Elastic client to use for making requests
@@ -210,7 +215,7 @@ class Search implements AuthAwareInterface
         foreach ($resultSet as $result) {
             /** @var \Elastica\Result $result */
             $raw = $result->getSource();
-            $refined  = [];
+            $refined = [];
             foreach ($raw as $key => $value) {
                 $refined[lcfirst($f->filter($key))] = $value;
             }
@@ -303,11 +308,15 @@ class Search implements AuthAwareInterface
         $f = new CamelCaseToUnderscore();
 
         foreach ($dateRanges as $filterName => $value) {
-
             if (is_array($value)) {
                 $value = (!empty($value['year']) && !empty($value['month']) && !empty($value['day']))
                     ? sprintf('%04d-%02d-%02d', $value['year'], $value['month'], $value['day'])
                     : null;
+                if (!is_null($value) && strtotime($value) === false) {
+                    $exception = new SearchDateFilterParseException('invalid date filter');
+                    $exception->setDateField($filterName);
+                    throw $exception;
+                }
             } elseif (is_string($value) && preg_match('/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/', $value)) {
                 // value already matches the format required
             } else {
@@ -318,7 +327,6 @@ class Search implements AuthAwareInterface
                 $this->dateRanges[strtolower($f->filter($filterName))] = $value;
             }
         }
-
         return $this;
     }
 
@@ -365,7 +373,7 @@ class Search implements AuthAwareInterface
             $action->setId($result->getId());
             $action->setType($result->getType());
             $action->setIndex($result->getIndex());
-            $action->setSource(['doc' => ['section_26'=> $section26Value ? 1 : 0]]);
+            $action->setSource(['doc' => ['section_26' => $section26Value ? 1 : 0]]);
             $bulk->addAction($action);
         }
 
