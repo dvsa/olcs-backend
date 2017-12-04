@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Application;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -2191,5 +2192,23 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         return $aocsEvidenceRequired;
+    }
+
+    /**
+     * Get the application organisation persons added
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationOrganisationPersonsAdded()
+    {
+        $applicationOrgPeople = $this->getApplicationOrganisationPersons();
+        $applicationOrgPeopleAdded = new ArrayCollection();
+        /** @var ApplicationOrganisationPerson $applicationOrgPerson */
+        foreach ($applicationOrgPeople as $applicationOrgPerson) {
+            if ($applicationOrgPerson->getAction() == 'A') {
+                $applicationOrgPeopleAdded->add($applicationOrgPerson);
+            }
+        }
+        return $applicationOrgPeopleAdded;
     }
 }
