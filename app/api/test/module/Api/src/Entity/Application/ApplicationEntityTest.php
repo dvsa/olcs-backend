@@ -3625,4 +3625,65 @@ class ApplicationEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dataProviderTestGetApplicationOrganisationPersonsAdded
+     */
+    public function testGetApplicationOrganisationPersonsAdded(
+        $applicationOrganisationPersons,
+        $expectedApplicationOrganisationPersonsAdded
+    )
+    {
+        /* @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->setApplicationOrganisationPersons($applicationOrganisationPersons);
+
+        $this->assertEquals(
+            $expectedApplicationOrganisationPersonsAdded,
+            $sut->getApplicationOrganisationPersonsAdded()
+        );
+    }
+
+    public function dataProviderTestGetApplicationOrganisationPersonsAdded()
+    {
+        $dataProvider = [];
+
+        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopAdd */
+        $aopAdd = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aopAdd->setAction('A');
+
+        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopAdd2 */
+        $aopAdd2 = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aopAdd2->setAction('A');
+
+        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopDelete */
+        $aopDelete = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aopDelete->setAction('D');
+
+        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopUpdate */
+        $aopUpdate = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+        $aopUpdate->setAction('U');
+
+        $applicationOrganisationPersons1 = new \Doctrine\Common\Collections\ArrayCollection([$aopAdd,$aopAdd2]);
+        $expectedApplicationOrganisationPersonsAdded1 = new \Doctrine\Common\Collections\ArrayCollection(
+            [$aopAdd,$aopAdd2]
+        );
+
+        $dataProvider[] = [$applicationOrganisationPersons1, $expectedApplicationOrganisationPersonsAdded1];
+
+        $applicationOrganisationPersons2 = new \Doctrine\Common\Collections\ArrayCollection(
+            [$aopAdd, $aopUpdate, $aopDelete]
+        );
+        $expectedApplicationOrganisationPersonsAdded2 = new \Doctrine\Common\Collections\ArrayCollection([$aopAdd]);
+
+        $dataProvider[] = [$applicationOrganisationPersons2, $expectedApplicationOrganisationPersonsAdded2];
+
+        $applicationOrganisationPersons3 = new \Doctrine\Common\Collections\ArrayCollection([$aopUpdate, $aopDelete]);
+        $expectedApplicationOrganisationPersonsAdded3 = new \Doctrine\Common\Collections\ArrayCollection([]);
+
+        $dataProvider[] = [$applicationOrganisationPersons3, $expectedApplicationOrganisationPersonsAdded3];
+
+        return $dataProvider;
+
+    }
 }
