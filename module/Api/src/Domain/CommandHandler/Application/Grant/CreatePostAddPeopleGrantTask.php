@@ -107,7 +107,7 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
      */
     private function isTaskUrgent(Application $application)
     {
-        if ($application->getConvictionsConfirmation() !== 'N') {
+        if ($application->getPrevConviction() !== 'N') {
             return true;
         }
         $financialAnswers = [
