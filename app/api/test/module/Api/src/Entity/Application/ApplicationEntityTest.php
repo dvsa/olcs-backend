@@ -3630,60 +3630,67 @@ class ApplicationEntityTest extends EntityTester
      * @dataProvider dataProviderTestGetApplicationOrganisationPersonsAdded
      */
     public function testGetApplicationOrganisationPersonsAdded(
-        $applicationOrganisationPersons,
-        $expectedApplicationOrganisationPersonsAdded
+        $applicationOrganisationPersonsActions,
+        $expectedApplicationOrganisationPersonsActions
     )
     {
+        $applicationOrganisationPersons = new ArrayCollection();
+
+        foreach ($applicationOrganisationPersonsActions as $applicationOrganisationPersonAction) {
+            /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aop */
+            $aop = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+            $aop->setAction($applicationOrganisationPersonAction);
+            $applicationOrganisationPersons->add($aop);
+        }
+
+        $expectedApplicationOrganisationPersons = new ArrayCollection();
+
+        foreach ($expectedApplicationOrganisationPersonsActions as $expectedApplicationOrganisationPersonAction) {
+            /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $eaop */
+            $eaop = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+            $eaop->setAction($expectedApplicationOrganisationPersonAction);
+            $expectedApplicationOrganisationPersons->add($eaop);
+        }
+
         /* @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
         $sut->setApplicationOrganisationPersons($applicationOrganisationPersons);
 
+        $applicationOrganisationPersonsAdded = $sut->getApplicationOrganisationPersonsAdded();
+
         $this->assertEquals(
-            $expectedApplicationOrganisationPersonsAdded,
-            $sut->getApplicationOrganisationPersonsAdded()
+            count($expectedApplicationOrganisationPersons),
+            count($applicationOrganisationPersonsAdded)
         );
+
+        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $applicationOrganisationPersonAdded */
+        foreach ($applicationOrganisationPersonsAdded as $applicationOrganisationPersonAdded) {
+            $this->assertEquals(
+                'A',
+                $applicationOrganisationPersonAdded->getAction()
+            );
+        }
     }
 
     public function dataProviderTestGetApplicationOrganisationPersonsAdded()
     {
-        $dataProvider = [];
-
-        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopAdd */
-        $aopAdd = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
-        $aopAdd->setAction('A');
-
-        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopAdd2 */
-        $aopAdd2 = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
-        $aopAdd2->setAction('A');
-
-        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopDelete */
-        $aopDelete = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
-        $aopDelete->setAction('D');
-
-        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aopUpdate */
-        $aopUpdate = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
-        $aopUpdate->setAction('U');
-
-        $applicationOrganisationPersons1 = new \Doctrine\Common\Collections\ArrayCollection([$aopAdd,$aopAdd2]);
-        $expectedApplicationOrganisationPersonsAdded1 = new \Doctrine\Common\Collections\ArrayCollection(
-            [$aopAdd,$aopAdd2]
-        );
-
-        $dataProvider[] = [$applicationOrganisationPersons1, $expectedApplicationOrganisationPersonsAdded1];
-
-        $applicationOrganisationPersons2 = new \Doctrine\Common\Collections\ArrayCollection(
-            [$aopAdd, $aopUpdate, $aopDelete]
-        );
-        $expectedApplicationOrganisationPersonsAdded2 = new \Doctrine\Common\Collections\ArrayCollection([$aopAdd]);
-
-        $dataProvider[] = [$applicationOrganisationPersons2, $expectedApplicationOrganisationPersonsAdded2];
-
-        $applicationOrganisationPersons3 = new \Doctrine\Common\Collections\ArrayCollection([$aopUpdate, $aopDelete]);
-        $expectedApplicationOrganisationPersonsAdded3 = new \Doctrine\Common\Collections\ArrayCollection([]);
-
-        $dataProvider[] = [$applicationOrganisationPersons3, $expectedApplicationOrganisationPersonsAdded3];
+        $dataProvider = [
+            [
+                ['A','A'],
+                ['A','A']
+            ],
+            [
+                ['A','D','U'],
+                ['A']
+            ],
+            [
+                ['D','U'],
+                []
+            ]
+        ];
 
         return $dataProvider;
+
 
     }
 }
