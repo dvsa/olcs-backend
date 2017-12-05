@@ -2197,7 +2197,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     /**
      * Get the application organisation persons added
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection|ApplicationOrganisationPerson[]
      */
     public function getApplicationOrganisationPersonsAdded()
     {
