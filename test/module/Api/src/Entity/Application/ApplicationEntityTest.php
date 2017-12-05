@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntiy;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntiy;
+use \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Mockery as m;
 
 /**
@@ -3624,5 +3625,80 @@ class ApplicationEntityTest extends EntityTester
                 ApplicationCompletion::STATUS_VARIATION_REQUIRES_ATTENTION
             ],
         ];
+    }
+
+    /**
+     * @dataProvider dataProviderTestGetApplicationOrganisationPersonsAdded
+     */
+    public function testGetApplicationOrganisationPersonsAdded(
+        $applicationOrganisationPersonsActions,
+        $expectedApplicationOrganisationPersonsActions
+    )
+    {
+
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(
+            $applicationOrganisationPersonsActions
+        );
+
+        $expectedApplicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(
+            $expectedApplicationOrganisationPersonsActions
+        );
+
+
+        /* @var Entity $sut */
+        $sut = m::mock(Entity::class)->makePartial();
+        $sut->setApplicationOrganisationPersons($applicationOrganisationPersons);
+
+        $applicationOrganisationPersonsAdded = $sut->getApplicationOrganisationPersonsAdded();
+
+        $this->assertEquals(
+            count($expectedApplicationOrganisationPersons),
+            count($applicationOrganisationPersonsAdded)
+        );
+
+        /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $applicationOrganisationPersonAdded */
+        foreach ($applicationOrganisationPersonsAdded as $applicationOrganisationPersonAdded) {
+            $this->assertEquals(
+                'A',
+                $applicationOrganisationPersonAdded->getAction()
+            );
+        }
+    }
+
+    public function dataProviderTestGetApplicationOrganisationPersonsAdded()
+    {
+        $dataProvider = [
+            [
+                ['A','A'],
+                ['A','A']
+            ],
+            [
+                ['A','D','U'],
+                ['A']
+            ],
+            [
+                ['D','U'],
+                []
+            ]
+        ];
+
+        return $dataProvider;
+
+
+    }
+
+    private function createMockApplicationOrganisationPersons($actions = array())
+    {
+        $applicationOrganisationPersons = [];
+
+        foreach ($actions as $action) {
+            /* @var ApplicationOrganisationPerson $aop */
+            $aop = m::mock(ApplicationOrganisationPerson::class)->makePartial();
+            $aop->setAction($action);
+            $applicationOrganisationPersons[] = $aop;
+        }
+
+        return new ArrayCollection($applicationOrganisationPersons);
+
     }
 }

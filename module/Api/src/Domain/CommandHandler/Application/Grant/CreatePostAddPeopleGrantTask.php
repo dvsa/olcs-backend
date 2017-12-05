@@ -36,9 +36,9 @@ final class CreatePostAddPeopleGrantTask extends AbstractCommandHandler implemen
             return $this->result;
         }
 
-        $applicationOrgPeople = $application->getApplicationOrganisationPersons();
+        $applicationOrgPeople = $application->getApplicationOrganisationPersonsAdded();
 
-        if ($applicationOrgPeople < 1) {
+        if ($applicationOrgPeople->count() === 0) {
             return $this->result;
         }
 

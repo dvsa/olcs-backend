@@ -49,7 +49,10 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testHandleCommandWhenNoPeopleAdded()
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(0);
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons();
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
 
         $command = CreatePostGrantPeopleTasksCommand::create(['applicationId' => 'TEST_APPLICATION_ID']);
         $this->assertEquals(['id' => [], 'messages' => []], $this->sut->handleCommand($command)->toArray());
@@ -58,7 +61,11 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testHandleCommandWhenPeopleAdded()
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
 
         $this->commandHandler->shouldReceive('handleCommand');
 
@@ -72,7 +79,11 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testCreatedTaskCategory()
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
 
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
@@ -98,7 +109,10 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
         $application->getLicence()->getOrganisation()->setType(new RefData($organisationType));
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
 
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
@@ -130,7 +144,10 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testCreatedTaskLicence()
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
 
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
@@ -157,7 +174,10 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
         $application->getLicence()->getOrganisation()->setType(new RefData($organisationType));
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
 
         $this->commandHandler->shouldReceive('handleCommand')
             ->once()
@@ -197,8 +217,13 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     public function testCreatedTaskUrgency($previousConvictionAnswer, $financialAnswers, $expectedUrgency)
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
+
         $application->setPrevConviction($previousConvictionAnswer);
-        $application->shouldReceive('getApplicationOrganisationPersons')->andReturn(1);
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
+        $application
+            ->shouldReceive('getApplicationOrganisationPersonsAdded')
+            ->andReturn($applicationOrganisationPersons);
+
         foreach ($financialAnswers as $financialQuestion => $financialAnswer) {
             $application->{'set' . $financialQuestion}($financialAnswer);
         }
@@ -259,5 +284,20 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         return $application;
+    }
+
+    private function createMockApplicationOrganisationPersons($actions = array())
+    {
+        $applicationOrganisationPersons = [];
+
+        foreach ($actions as $action) {
+            /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aop */
+            $aop = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
+            $aop->setAction($action);
+            $applicationOrganisationPersons[] = $aop;
+        }
+
+        return new \Doctrine\Common\Collections\ArrayCollection($applicationOrganisationPersons);
+
     }
 }
