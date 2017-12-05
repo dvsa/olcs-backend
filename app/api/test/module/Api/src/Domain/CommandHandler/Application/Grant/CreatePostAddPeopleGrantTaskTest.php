@@ -207,17 +207,18 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
     }
 
     /**
-     * @param $convictionsConfirmationAnswer
+     * @param $previousConvictionAnswer
      * @param $financialAnswers
      *
      * @param $expectedUrgency
      *
      * @dataProvider provideCreatedTaskUrgencyCases
      */
-    public function testCreatedTaskUrgency($convictionsConfirmationAnswer, $financialAnswers, $expectedUrgency)
+    public function testCreatedTaskUrgency($previousConvictionAnswer, $financialAnswers, $expectedUrgency)
     {
         $application = $this->createMockApplication(Application::VARIATION_TYPE_DIRECTOR_CHANGE);
-        $application->setConvictionsConfirmation($convictionsConfirmationAnswer);
+
+        $application->setPrevConviction($previousConvictionAnswer);
         $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(['A']);
         $application
             ->shouldReceive('getApplicationOrganisationPersonsAdded')
@@ -253,11 +254,11 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         yield ['N', $negativeFinancialAnswers, 'N'];
         yield ['Y', $negativeFinancialAnswers, 'Y'];
 
-        foreach (['Y', 'N'] as $convictionsConfirmationAnswer) {
+        foreach (['Y', 'N'] as $previousConvictionAnswer) {
             foreach (array_keys($negativeFinancialAnswers) as $financialQuestion) {
                 $financialAnswers = $negativeFinancialAnswers;
                 $financialAnswers[$financialQuestion] = 'Y';
-                yield [$convictionsConfirmationAnswer, $financialAnswers, 'Y'];
+                yield [$previousConvictionAnswer, $financialAnswers, 'Y'];
             }
         }
     }
