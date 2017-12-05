@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntiy;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntiy;
+use \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Mockery as m;
 
 /**
@@ -3634,23 +3635,15 @@ class ApplicationEntityTest extends EntityTester
         $expectedApplicationOrganisationPersonsActions
     )
     {
-        $applicationOrganisationPersons = new ArrayCollection();
 
-        foreach ($applicationOrganisationPersonsActions as $applicationOrganisationPersonAction) {
-            /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $aop */
-            $aop = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
-            $aop->setAction($applicationOrganisationPersonAction);
-            $applicationOrganisationPersons->add($aop);
-        }
+        $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(
+            $applicationOrganisationPersonsActions
+        );
 
-        $expectedApplicationOrganisationPersons = new ArrayCollection();
+        $expectedApplicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(
+            $expectedApplicationOrganisationPersonsActions
+        );
 
-        foreach ($expectedApplicationOrganisationPersonsActions as $expectedApplicationOrganisationPersonAction) {
-            /* @var \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson $eaop */
-            $eaop = m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson::class)->makePartial();
-            $eaop->setAction($expectedApplicationOrganisationPersonAction);
-            $expectedApplicationOrganisationPersons->add($eaop);
-        }
 
         /* @var Entity $sut */
         $sut = m::mock(Entity::class)->makePartial();
@@ -3691,6 +3684,21 @@ class ApplicationEntityTest extends EntityTester
 
         return $dataProvider;
 
+
+    }
+
+    private function createMockApplicationOrganisationPersons($actions = array())
+    {
+        $applicationOrganisationPersons = [];
+
+        foreach ($actions as $action) {
+            /* @var ApplicationOrganisationPerson $aop */
+            $aop = m::mock(ApplicationOrganisationPerson::class)->makePartial();
+            $aop->setAction($action);
+            $applicationOrganisationPersons[] = $aop;
+        }
+
+        return new ArrayCollection($applicationOrganisationPersons);
 
     }
 }
