@@ -2,6 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
@@ -12,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
+use Zend\Http\Response;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -19,6 +24,9 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class DeleteUserTest extends CommandHandlerTestCase
 {
+    /** @var UserEntity|m\Mock */
+    private $userEntity;
+
     public function setUp()
     {
         $this->sut = new Sut();
@@ -32,135 +40,125 @@ class DeleteUserTest extends CommandHandlerTestCase
         ];
 
         parent::setUp();
+
+        $this->userEntity = m::mock(UserEntity::class)->makePartial();
+        $this->userEntity->setId('DUMMY-USER-ID');
+        $this->userEntity->setPid('DUMMY-USER-PID');
+        $this->userEntity->setLoginId('login_id');
+
+        $this->repoMap['User']
+            ->shouldReceive('fetchUsingId')
+            ->andReturn($this->userEntity);
+    }
+
+    public function testHandleCommandThrowsIncorrectPermissionException()
+    {
+        $this->setPermissionGranted(false);
+
+        $this->expectException(ForbiddenException::class);
+        $this->sut->handleCommand(Cmd::create(['id' => 111, 'version' => 1]));
+    }
+
+    public function testHandleCommandForUserWithTasks()
+    {
+        $this->setPermissionGranted(true);
+        $this->setUserTasks([['id' => 100]]);
+
+        $this->expectException(BadRequestException::class);
+        $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']));
+    }
+
+    public function testThatCommandHandlerIsTransactional()
+    {
+        $this->assertInstanceOf(TransactionedInterface::class, $this->sut);
+    }
+
+    public function testHandleCommandWhenOpenAmError()
+    {
+        $this->setPermissionGranted(true);
+        $this->setUserTasks([]);
+        $this->openAmShouldThrow(500);
+
+        $this->expectDeleteUser();
+        $this->expectDeleteOrganisationUser();
+
+        $this->expectException(FailedRequestException::class);
+        $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']));
+    }
+
+    public function testHandleCommandWhenOpenAmUserDoesNotExist()
+    {
+        $this->setPermissionGranted(true);
+        $this->setUserTasks([]);
+        $this->openAmShouldThrow(404);
+
+        $this->expectDeleteUser();
+        $this->expectDeleteOrganisationUser();
+
+        $this->assertEquals(
+            ['id' => ['user' => 'DUMMY-USER-ID'], 'messages' => ['User deleted successfully']],
+            $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']))->toArray()
+        );
     }
 
     public function testHandleCommand()
     {
-        $userId = 1;
+        $this->setPermissionGranted(true);
+        $this->setUserTasks([]);
 
-        $data = [
-            'id' => $userId
-        ];
-        $tasks = [];
+        $this->expectDeleteUser();
+        $this->expectDeleteOrganisationUser();
+        $this->expectDisableOpenAmUser();
 
-        $command = Cmd::create($data);
+        $this->assertEquals(
+            ['id' => ['user' => 'DUMMY-USER-ID'], 'messages' => ['User deleted successfully']],
+            $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']))->toArray()
+        );
+    }
 
+    private function setPermissionGranted($granted)
+    {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
+            ->andReturn($granted);
+    }
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
-            ->once()
-            ->with('pid');
-
-        $userEntity = m::mock(UserEntity::class)->makePartial();
-        $userEntity->setId(1);
-        $userEntity->setPid('pid');
-
-        $this->repoMap['User']
-            ->shouldReceive('fetchUsingId')
-            ->once()
-            ->andReturn($userEntity)
-            ->shouldReceive('delete')
-            ->once();
-
+    private function setUserTasks($tasks)
+    {
         $this->repoMap['Task']
             ->shouldReceive('fetchByUser')
-            ->with($userId, true)
-            ->once()
+            ->with('DUMMY-USER-ID', true)
             ->andReturn($tasks);
+    }
 
+    private function expectDisableOpenAmUser()
+    {
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
+            ->with('DUMMY-USER-PID')
+            ->once();
+    }
+
+    private function expectDeleteUser()
+    {
+        $this->repoMap['User']
+            ->shouldReceive('delete')
+            ->with($this->userEntity)
+            ->once();
+    }
+
+    private function expectDeleteOrganisationUser()
+    {
         $this->repoMap['OrganisationUser']
             ->shouldReceive('deleteByUserId')
-            ->with($userId)
+            ->with('DUMMY-USER-ID')
             ->once();
-
-        $result = $this->sut->handleCommand($command);
-
-        $expected = [
-            'id' => [
-                'user' => $userId
-            ],
-            'messages' => [
-                'User deleted successfully'
-            ]
-        ];
-
-        $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\BadRequestException
-     */
-    public function testHandleCommandForUserWithTasks()
+    protected function openAmShouldThrow($code)
     {
-        $userId = 1;
-
-        $data = [
-            'id' => $userId
-        ];
-
-        $tasks = [
-            ['id' => 100]
-        ];
-
-        $command = Cmd::create($data);
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(true);
-
+        $response = new Response();
+        $response->setStatusCode($code);
         $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
-            ->never();
-
-        $userEntity = m::mock(UserEntity::class)->makePartial();
-        $userEntity->setId(1);
-        $userEntity->setLoginId('login_id');
-
-        $this->repoMap['User']
-            ->shouldReceive('fetchUsingId')
-            ->once()
-            ->andReturn($userEntity)
-            ->shouldReceive('delete')
-            ->never();
-
-        $this->repoMap['Task']
-            ->shouldReceive('fetchByUser')
-            ->with($userId, true)
-            ->once()
-            ->andReturn($tasks);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testHandleCommandThrowsIncorrectPermissionException()
-    {
-        $data = [
-            'id' => 111,
-            'version' => 1,
-        ];
-
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
-            ->once()
-            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
-            ->andReturn(false);
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
-            ->never();
-
-        $this->repoMap['User']
-            ->shouldReceive('fetchUsingId')
-            ->never()
-            ->shouldReceive('delete')
-            ->never();
-
-        $command = Cmd::create($data);
-
-        $this->sut->handleCommand($command);
+            ->andThrow(new FailedRequestException($response));
     }
 }
