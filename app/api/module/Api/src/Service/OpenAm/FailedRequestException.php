@@ -3,6 +3,7 @@
 /**
  * Failed Request Exception
  */
+
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Zend\Http\Response;
@@ -18,9 +19,9 @@ class FailedRequestException extends \Exception
     private $response;
 
     /**
-     * @param Response $response
-     * @param int $code
-     * @param \Exception $previous
+     * @param Response   $response response
+     * @param int        $code     code
+     * @param \Exception $previous previous
      */
     public function __construct($response, $code = 0, \Exception $previous = null)
     {
@@ -29,7 +30,7 @@ class FailedRequestException extends \Exception
     }
 
     /**
-     * @return string
+     * @return Response
      */
     public function getResponse()
     {
