@@ -105,7 +105,14 @@ final class DeleteUser extends AbstractCommandHandler implements
         $organisationUserRepository = $this->getRepo('OrganisationUser');
         $organisationUserRepository->deleteByUserId($user->getId());
 
-        $this->getOpenAmUser()->disableUser($user->getPid());
+        try {
+            $this->getOpenAmUser()->disableUser($user->getPid());
+        } catch (FailedRequestException $exception) {
+            // if the OpenAM user is already gone (i.e. 404) then we don't need to delete. Otherwise this is an error
+            if ($exception->getResponse()->getStatusCode() !== 404) {
+                throw $exception;
+            }
+        }
     }
 
     /**
