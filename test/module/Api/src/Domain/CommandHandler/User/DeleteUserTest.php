@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
@@ -14,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
+use Zend\Http\Response;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -65,12 +68,30 @@ class DeleteUserTest extends CommandHandlerTestCase
         $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']));
     }
 
-    public function testHandleCommand()
+    public function testThatCommandHandlerIsTransactional()
+    {
+        $this->assertInstanceOf(TransactionedInterface::class, $this->sut);
+    }
+
+    public function testHandleCommandWhenOpenAmError()
     {
         $this->setPermissionGranted(true);
         $this->setUserTasks([]);
+        $this->openAmShouldThrow(500);
 
-        $this->expectDisableOpenAmUser();
+        $this->expectDeleteUser();
+        $this->expectDeleteOrganisationUser();
+
+        $this->expectException(FailedRequestException::class);
+        $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']));
+    }
+
+    public function testHandleCommandWhenOpenAmUserDoesNotExist()
+    {
+        $this->setPermissionGranted(true);
+        $this->setUserTasks([]);
+        $this->openAmShouldThrow(404);
+
         $this->expectDeleteUser();
         $this->expectDeleteOrganisationUser();
 
@@ -80,14 +101,29 @@ class DeleteUserTest extends CommandHandlerTestCase
         );
     }
 
-    protected function setPermissionGranted($granted)
+    public function testHandleCommand()
+    {
+        $this->setPermissionGranted(true);
+        $this->setUserTasks([]);
+
+        $this->expectDeleteUser();
+        $this->expectDeleteOrganisationUser();
+        $this->expectDisableOpenAmUser();
+
+        $this->assertEquals(
+            ['id' => ['user' => 'DUMMY-USER-ID'], 'messages' => ['User deleted successfully']],
+            $this->sut->handleCommand(Cmd::create(['id' => 'DUMMY-USER-ID']))->toArray()
+        );
+    }
+
+    private function setPermissionGranted($granted)
     {
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn($granted);
     }
 
-    protected function setUserTasks($tasks)
+    private function setUserTasks($tasks)
     {
         $this->repoMap['Task']
             ->shouldReceive('fetchByUser')
@@ -95,14 +131,14 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->andReturn($tasks);
     }
 
-    protected function expectDisableOpenAmUser()
+    private function expectDisableOpenAmUser()
     {
         $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
             ->with('DUMMY-USER-PID')
             ->once();
     }
 
-    protected function expectDeleteUser()
+    private function expectDeleteUser()
     {
         $this->repoMap['User']
             ->shouldReceive('delete')
@@ -110,11 +146,19 @@ class DeleteUserTest extends CommandHandlerTestCase
             ->once();
     }
 
-    protected function expectDeleteOrganisationUser()
+    private function expectDeleteOrganisationUser()
     {
         $this->repoMap['OrganisationUser']
             ->shouldReceive('deleteByUserId')
             ->with('DUMMY-USER-ID')
             ->once();
+    }
+
+    protected function openAmShouldThrow($code)
+    {
+        $response = new Response();
+        $response->setStatusCode($code);
+        $this->mockedSmServices[UserInterface::class]->shouldReceive('disableUser')
+            ->andThrow(new FailedRequestException($response));
     }
 }
