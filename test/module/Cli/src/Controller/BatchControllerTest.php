@@ -680,6 +680,32 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut->dataGovUkExportAction();
     }
 
+    public function testDataDvaNiExport()
+    {
+        $this->mockParamsPlugin(
+            [
+                'report-name' => 'unit_ReportName',
+                'path' => 'unit_Path',
+                'verbose' => true,
+            ]
+        );
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\DataDvaNiExport::class))
+            ->once()
+            ->andReturn(
+                (new Command\Result())
+                    ->addMessage('unit_message')
+            );
+
+        $this->mockConsole
+            ->shouldReceive('writeLine')->once()->with('/' . addslashes(CliCommand\DataDvaNiExport::class) . '$/')
+            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+
+        $this->sut->dataDvaNiExportAction();
+    }
+
     public function testProcessCommunityLicencesAction()
     {
         $this->mockParamsPlugin(
