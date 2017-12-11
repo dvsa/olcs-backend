@@ -66,7 +66,8 @@ class Module implements ConsoleUsageProviderInterface
                 'CSV and send by email'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
-            'data-dva-ni-export <report-name> [--verbose|-v] [--path=<exportPath>]' => 'Export to csv for Northern Ireland',
+            'data-dva-ni-export <report-name> [--verbose|-v] [--path=<exportPath>]' =>
+            'Export to csv for Northern Ireland',
             ['<report-name>', 'Export report name'],
             ['    ' . DataDvaNiExport::NI_OPERATOR_LICENCE, 'Export GV operator licences for NI'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
