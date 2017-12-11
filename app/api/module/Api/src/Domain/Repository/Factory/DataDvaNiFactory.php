@@ -13,7 +13,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 class DataDvaNiFactory implements FactoryInterface
 {
     /**
-     * @param \Dvsa\Olcs\Api\Domain\RepositoryServiceManager $sm
+     * @param \Dvsa\Olcs\Api\Domain\RepositoryServiceManager $sm the Service Manager
      *
      * @return DataDvaNi
      */

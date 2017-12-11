@@ -47,9 +47,9 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     /**
      * Fill a CSV with the result of a doctrine statement
      *
-     * @param Statement $stmt               db records set
-     * @param string    $fileName           main part of file name
-     * @param string    $$fileNameSeparator (optional) the separator between the main fileName and the timestamp
+     * @param Statement $stmt              db records set
+     * @param string    $fileName          main part of file name
+     * @param string    $fileNameSeparator (optional) the separator between the main fileName and the timestamp
      *
      * @return string
      */
