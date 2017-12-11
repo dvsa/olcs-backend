@@ -324,6 +324,7 @@ return [
             'Reason' => RepositoryFactory::class,
             'PiDefinition' => RepositoryFactory::class,
             'DataGovUk' => Repository\Factory\DataGovUkFactory::class,
+            'DataDvaNi' => Repository\Factory\DataDvaNiFactory::class,
             'CompanyHouseVsOlcsDiffs' => Repository\Factory\CompaniesHouseVsOlcsDiffsFactory::class,
             'DigitalSignature' => RepositoryFactory::class,
             'DataRetentionRule' => RepositoryFactory::class,
