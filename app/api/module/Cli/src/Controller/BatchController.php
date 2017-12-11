@@ -455,6 +455,23 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Create csv files for Northern Ireland
+     *
+     * @return ConsoleModel
+     */
+    public function dataDvaNiExportAction()
+    {
+        $params = [
+            'reportName' =>  $this->params('report-name'),
+            'path' =>  $this->params('path'),
+        ];
+
+        return $this->handleExitStatus(
+            $this->handleCommand([CliCommand\DataDvaNiExport::create($params)])
+        );
+    }
+
+    /**
      * Create csv files for data.org.uk
      *
      * @return ConsoleModel
