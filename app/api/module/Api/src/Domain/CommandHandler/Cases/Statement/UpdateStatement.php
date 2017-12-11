@@ -33,7 +33,7 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
     /**
      * Creates opposition  and associated entities
      *
-     * @param CommandInterface|Cmd $command
+     * @param CommandInterface|Cmd $command command
      *
      * @return Result
      * @throws RuntimeException

@@ -82,7 +82,7 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
     /**
      * Create the opposition object
      *
-     * @param Cmd $command
+     * @param Cmd $command command
      *
      * @return Statement
      * @throws RuntimeException
