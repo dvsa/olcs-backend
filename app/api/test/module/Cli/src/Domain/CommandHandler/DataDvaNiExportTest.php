@@ -63,19 +63,6 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         $this->tmpPath = $this->vfsStream->url() . '/unit';
     }
 
-    protected function initReferences()
-    {
-        $this->categoryReferences = [
-            Category::CATEGORY_REPORT => m::mock(Category::class),
-        ];
-
-        $this->subCategoryReferences = [
-            SubCategory::REPORT_SUB_CATEGORY_PSV  => m::mock(SubCategory::class),
-        ];
-
-        parent::initReferences();
-    }
-
     public function testInvalidReportException()
     {
         $cmd = Cmd::create(
@@ -92,7 +79,7 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         $this->sut->handleCommand($cmd);
     }
 
-    public function testOperatorLicenceOk()
+    public function testNiOperatorLicence()
     {
         $cmd = Cmd::create(
             [
