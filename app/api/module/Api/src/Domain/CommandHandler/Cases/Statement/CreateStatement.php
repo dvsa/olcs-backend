@@ -5,12 +5,14 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepository;
+use Dvsa\Olcs\Transfer\Command\Cases\Statement\CreateStatement as CreateStatementCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
@@ -28,11 +30,14 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
     protected $repoServiceName = 'Statement';
 
     protected $extraRepos = ['ContactDetails', 'Cases'];
+
     /**
      * Creates opposition  and associated entities
      *
-     * @param CommandInterface $command
+     * @param CommandInterface|CreateStatementCommand $command command
+     *
      * @return Result
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -41,7 +46,7 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
         $contactDetails = $this->createContactDetailsObject($command);
         $result->addMessage('Contact details created');
 
-        $statement = $this->createStatementObject($command, $contactDetails);
+        $statement = $this->createStatementObject($command);
         $result->addMessage('Statement created');
         $statement->setRequestorsContactDetails($contactDetails);
 
@@ -53,11 +58,21 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
         return $result;
     }
 
+    /**
+     * Create the contact details object
+     *
+     * @param CommandInterface|CreateStatementCommand $command command
+     *
+     * @return ContactDetails
+     * @throws RuntimeException
+     */
     private function createContactDetailsObject($command)
     {
+        /** @var ContactDetailsRepository $repository */
+        $repository = $this->getRepo('ContactDetails');
         return ContactDetails::create(
             $this->getRepo()->getRefdataReference(ContactDetails::CONTACT_TYPE_STATEMENT_REQUESTOR),
-            $this->getRepo('ContactDetails')->populateRefDataReference(
+            $repository->populateRefDataReference(
                 $command->getRequestorsContactDetails()
             )
         );
@@ -67,7 +82,9 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
      * Create the opposition object
      *
      * @param Cmd $command
+     *
      * @return Statement
+     * @throws RuntimeException
      */
     private function createStatementObject(Cmd $command)
     {

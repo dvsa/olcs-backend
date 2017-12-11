@@ -5,12 +5,14 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Dvsa\Olcs\Transfer\Command\Cases\Statement\UpdateStatement as Cmd;
@@ -30,8 +32,10 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
     /**
      * Creates opposition  and associated entities
      *
-     * @param CommandInterface $command
+     * @param CommandInterface|Cmd $command
+     *
      * @return Result
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -40,8 +44,10 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
         $statement = $this->updateStatementObject($command);
         $result->addMessage('Statement updated');
 
+        /** @var ContactDetails $repository */
+        $repository = $this->getRepo('ContactDetails');
         $statement->getRequestorsContactDetails()->update(
-            $this->getRepo('ContactDetails')->populateRefDataReference(
+            $repository->populateRefDataReference(
                 $command->getRequestorsContactDetails()
             )
         );
@@ -59,11 +65,14 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
     /**
      * Create the opposition object
      *
-     * @param Cmd $command
+     * @param Cmd $command command
+     *
      * @return Statement
+     * @throws RuntimeException
      */
     private function updateStatementObject(Cmd $command)
     {
+        /** @var Statement $statement */
         $statement = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $statement->setStatementType($this->getRepo()->getRefdataReference($command->getStatementType()));
