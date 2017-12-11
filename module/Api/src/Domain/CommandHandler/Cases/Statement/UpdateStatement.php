@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Dvsa\Olcs\Transfer\Command\Cases\Statement\UpdateStatement as Cmd;
@@ -81,6 +82,10 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
         $statement->setStoppedDate(new \DateTime($command->getStoppedDate()));
         $statement->setRequestedDate(new \DateTime($command->getRequestedDate()));
         $statement->setAuthorisersDecision($command->getAuthorisersDecision());
+
+        /** @var User $assignedCaseworker */
+        $assignedCaseworker = $this->getRepo()->getReference(User::class, $command->getAssignedCaseworker());
+        $statement->setAssignedCaseworker($assignedCaseworker);
 
         if ($command->getIssuedDate() !== null) {
             $statement->setIssuedDate(new \DateTime($command->getIssuedDate()));

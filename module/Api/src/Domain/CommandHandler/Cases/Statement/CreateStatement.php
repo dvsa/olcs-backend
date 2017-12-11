@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepository;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Cases\Statement\CreateStatement as CreateStatementCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Cases\Statement;
@@ -107,6 +108,10 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
         $statement->setStoppedDate(new \DateTime($command->getStoppedDate()));
         $statement->setRequestedDate(new \DateTime($command->getRequestedDate()));
         $statement->setAuthorisersDecision($command->getAuthorisersDecision());
+
+        /** @var User $assignedCaseworker */
+        $assignedCaseworker = $this->getRepo()->getReference(User::class, $command->getAssignedCaseworker());
+        $statement->setAssignedCaseworker($assignedCaseworker);
 
         if ($command->getIssuedDate() !== null) {
             $statement->setIssuedDate(new \DateTime($command->getIssuedDate()));

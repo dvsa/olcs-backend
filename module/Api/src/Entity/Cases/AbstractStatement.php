@@ -26,7 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_statement_statement_type", columns={"statement_type"}),
  *        @ORM\Index(name="ix_statement_requestors_contact_details_id",
      *     columns={"requestors_contact_details_id"}),
- *        @ORM\Index(name="ix_statement_licence_type", columns={"licence_type"})
+ *        @ORM\Index(name="ix_statement_licence_type", columns={"licence_type"}),
+ *        @ORM\Index(name="ix_statement_assigned_caseworker", columns={"assigned_caseworker"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_statement_olbs_key", columns={"olbs_key"})
@@ -37,6 +38,16 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Assigned caseworker
+     *
+     * @var \Dvsa\Olcs\Api\Entity\User\User
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_caseworker", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedCaseworker;
 
     /**
      * Authorisers decision
@@ -237,6 +248,30 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      * @ORM\Column(type="string", name="vrm", length=20, nullable=true)
      */
     protected $vrm;
+
+    /**
+     * Set the assigned caseworker
+     *
+     * @param \Dvsa\Olcs\Api\Entity\User\User $assignedCaseworker entity being set as the value
+     *
+     * @return Statement
+     */
+    public function setAssignedCaseworker($assignedCaseworker)
+    {
+        $this->assignedCaseworker = $assignedCaseworker;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned caseworker
+     *
+     * @return \Dvsa\Olcs\Api\Entity\User\User
+     */
+    public function getAssignedCaseworker()
+    {
+        return $this->assignedCaseworker;
+    }
 
     /**
      * Set the authorisers decision
