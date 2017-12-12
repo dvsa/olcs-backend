@@ -96,10 +96,11 @@ class DataRetention extends AbstractRepository
 
     /**
      * Fetch a list of processed data retention rows for a data retention rule, and date range
+     * Dates are inclusive and time portions of dates are ignored
      *
      * @param int       $dataRetentionRuleId Data retention rule ID
-     * @param \DateTime $startDate           Start date
-     * @param \DateTime $endDate             End date
+     * @param \DateTime $startDate           Start date (inclusive, time portion is ignored)
+     * @param \DateTime $endDate             End date (inclusive, time portion is ignored)
      *
      * @return array
      */
@@ -112,8 +113,8 @@ class DataRetention extends AbstractRepository
         $qb->andWhere($qb->expr()->lte($this->alias . '.deletedDate', ':endDate'));
 
         $qb->setParameter('dataRetentionRuleId', $dataRetentionRuleId);
-        $qb->setParameter('startDate', $startDate);
-        $qb->setParameter('endDate', $endDate);
+        $qb->setParameter('startDate', $startDate->format('Y-m-d'));
+        $qb->setParameter('endDate', $endDate->format('Y-m-d'));
 
         $this->disableSoftDeleteable([DataRetentionEntity::class]);
 
