@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Statement;
 
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -13,10 +15,19 @@ final class Statement extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Statement';
 
+    /**
+     * @param QueryInterface $query query
+     *
+     * @return Result
+     * @throws RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var StatementEntity $statement */
+        $statement = $this->getRepo()->fetchUsingId($query);
+        $assignedCaseworker = $statement->getAssignedCaseworker();
         return $this->result(
-            $this->getRepo()->fetchUsingId($query),
+            $statement,
             [
                 'case',
                 'requestorsContactDetails' => [
@@ -26,6 +37,9 @@ final class Statement extends AbstractQueryHandler
                     'contactType',
                     'person'
                 ]
+            ],
+            [
+                'assignedCaseworker' => $assignedCaseworker ? ['id' => $assignedCaseworker->getId()] : null,
             ]
         );
     }
