@@ -16,7 +16,6 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Statement as StatementRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Statement\Statement as Qry;
 use Mockery as m;
-use const null;
 
 /**
  * Statement Test
