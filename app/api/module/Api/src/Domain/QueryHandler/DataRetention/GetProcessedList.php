@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention;
 
+use DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -17,9 +19,10 @@ class GetProcessedList extends AbstractQueryHandler
     /**
      * Return list of data retention records that have been processed
      *
-     * @param Query $query DTO
+     * @param QueryInterface|Query $query DTO
      *
      * @return array
+     * @throws RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -29,8 +32,8 @@ class GetProcessedList extends AbstractQueryHandler
 
         $results = $repo->fetchAllProcessedForRule(
             $query->getDataRetentionRuleId(),
-            new \DateTime($query->getStartDate()),
-            new \DateTime($query->getEndDate())
+            new DateTime($query->getStartDate()),
+            new DateTime($query->getEndDate())
         );
 
         return [
