@@ -5,9 +5,11 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Statement;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\UpdateStatement;
 use Dvsa\Olcs\Api\Domain\Repository\Statement as StatementRepo;
@@ -48,21 +50,22 @@ class UpdateStatementTest extends CommandHandlerTestCase
             "version" => 2,
             "case" => 24,
             "statementType" => "statement_t_36",
+            "assignedCaseworker" => "DUMMY_CASEWORKER_ID",
             "vrm" => "AB12CDE",
-            "requestorsContactDetails" =>  [
-                "person" =>  [
+            "requestorsContactDetails" => [
+                "person" => [
                     "title" => "title_mr",
-                    "forename" =>  "Bob",
-                    "familyName" =>  "Smith"
+                    "forename" => "Bob",
+                    "familyName" => "Smith"
                 ],
-                "address" =>  [
-                    "addressLine1" =>  "Unit 5",
-                    "addressLine2" =>  "12 Albert Street",
-                    "addressLine3" =>  "Westpoint",
-                    "addressLine4" =>  "",
-                    "countryCode" =>  "GB",
-                    "postcode" =>  "LS9 6NA",
-                    "town" =>  "Leeds"
+                "address" => [
+                    "addressLine1" => "Unit 5",
+                    "addressLine2" => "12 Albert Street",
+                    "addressLine3" => "Westpoint",
+                    "addressLine4" => "",
+                    "countryCode" => "GB",
+                    "postcode" => "LS9 6NA",
+                    "town" => "Leeds"
                 ]
             ],
             "requestorsBody" => "REQUESTORS BODY",
@@ -82,20 +85,20 @@ class UpdateStatementTest extends CommandHandlerTestCase
             "case" => 24,
             "statementType" => new RefDataEntity(),
             "vrm" => "AB12CDE",
-            "requestorsContactDetails" =>  [
-                "person" =>  [
+            "requestorsContactDetails" => [
+                "person" => [
                     "title" => new RefDataEntity(),
-                    "forename" =>  "Bob",
-                    "familyName" =>  "Smith"
+                    "forename" => "Bob",
+                    "familyName" => "Smith"
                 ],
-                "address" =>  [
+                "address" => [
                     "addressLine1" => "Unit 5",
                     "addressLine2" => "12 Albert Street",
                     "addressLine3" => "Westpoint",
                     "addressLine4" => "",
                     "countryCode" => new CountryEntity(),
-                    "postcode" =>  "LS9 6NA",
-                    "town" =>  "Leeds"
+                    "postcode" => "LS9 6NA",
+                    "town" => "Leeds"
                 ]
             ],
             "requestorsBody" => "REQUESTORS BODY",
@@ -120,7 +123,10 @@ class UpdateStatementTest extends CommandHandlerTestCase
             ],
             LicenceEntity::class => [
                 7 => m::mock(LicenceEntity::class)
-            ]
+            ],
+            User::class => [
+                'DUMMY_CASEWORKER_ID' => m::mock(User::class)
+            ],
         ];
 
         parent::initReferences();
@@ -173,7 +179,8 @@ class UpdateStatementTest extends CommandHandlerTestCase
         /** @var StatementEntity $se */
         $se = null;
 
-        $this->repoMap['Statement']->shouldReceive('fetchUsingId')
+        $this->repoMap['Statement']
+            ->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, $command->getVersion())
             ->andReturn($statement)
             ->once()
@@ -193,5 +200,6 @@ class UpdateStatementTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('ids', $result);
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Statement updated', $result->getMessages());
+        $this->assertSame($this->references[User::class]['DUMMY_CASEWORKER_ID'], $se->getAssignedCaseworker());
     }
 }
