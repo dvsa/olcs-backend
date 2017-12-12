@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DataRetention;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention\GetProcessedList;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\DataRetention\GetProcessedList as Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Mockery as m;
 
 /**
  * Class GetProcessedListTest
@@ -27,7 +27,11 @@ class GetProcessedListTest extends QueryHandlerTestCase
         $query = Query::create(['dataRetentionRuleId' => 9999, 'startDate' => '2017-05-23', 'endDate' => '2017-09-01']);
 
         $this->repoMap['DataRetention']->shouldReceive('fetchAllProcessedForRule')
-            ->with(9999, m::type(\DateTime::class), m::type(\DateTime::class))
+            ->with(
+                9999,
+                equalTo(new DateTime("2017-05-23 0:0:0.0")),
+                equalTo(new DateTime("2017-09-01 0:0:0.0"))
+            )
             ->once()
             ->andReturn(['RESULTS']);
 
