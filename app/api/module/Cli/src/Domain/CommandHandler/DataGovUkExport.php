@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendIntlGoodsEmailCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\AbstractDataExport;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Service\Exception;
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-final class DataGovUkExport extends AbstractCommandHandler
+final class DataGovUkExport extends AbstractDataExport
 {
     use QueueAwareTrait;
 
@@ -44,17 +44,6 @@ final class DataGovUkExport extends AbstractCommandHandler
     protected $repoServiceName = 'DataGovUk';
 
     /**
-     * @var array
-     */
-    protected $extraRepos = [
-        'TrafficArea',
-        'SystemParameter',
-        'Category',
-        'SubCategory',
-        'Licence'
-    ];
-
-    /**
      * @var string
      */
     private $reportName;
@@ -62,17 +51,12 @@ final class DataGovUkExport extends AbstractCommandHandler
     /**
      * @var string
      */
-    private $path;
+    protected $path;
 
     /**
      * @var Repository\DataGovUk
      */
     private $dataGovUkRepo;
-
-    /**
-     * @var array
-     */
-    private $csvPool = [];
 
     /**
      * Handle command
@@ -268,141 +252,6 @@ final class DataGovUkExport extends AbstractCommandHandler
         $stmt = $this->dataGovUkRepo->fetchBusVariation($areas);
 
         $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_Variation');
-    }
-
-    /**
-     * Fill a CSV with the result of a doctrine statement
-     *
-     * @param Statement $stmt     db records set
-     * @param string    $fileName main part of file name
-     *
-     * @return string
-     */
-    private function singleCsvFromStatement(Statement $stmt, $fileName)
-    {
-        $filePath = $this->path . '/' . $fileName . '_' . date(self::FILE_DATETIME_FORMAT) . '.csv';
-
-        //  create csv file
-        $this->result->addMessage('create csv file: ' . $filePath);
-        $fh = ExportToCsv::createFile($filePath);
-        $firstRow = false;
-
-        //  add rows
-        while (($row = $stmt->fetch()) !== false) {
-            if (!$firstRow) {
-                //add title
-                fputcsv($fh, array_keys($row));
-                $firstRow = true;
-            }
-
-            fputcsv($fh, $row);
-        }
-
-        fclose($fh);
-
-        return file_get_contents($filePath);
-    }
-
-    /**
-     * Fill csv files with data. Csv created by value of Key Field and File name.
-     *
-     * @param Statement $stmt     db records set
-     * @param string    $keyFld   name of Key field in data set
-     * @param string    $fileName main part of file name
-     *
-     * @return void
-     */
-    private function makeCsvsFromStatement(Statement $stmt, $keyFld, $fileName)
-    {
-        //  add rows
-        while (($row = $stmt->fetch()) !== false) {
-            $key = $row[$keyFld];
-
-            if (!isset($this->csvPool[$key])) {
-                //  create csv file
-                $filePath = $this->path . '/' . $fileName . '_' . $key . '.csv';
-
-                $this->result->addMessage('create csv file: ' . $filePath);
-                $fh = ExportToCsv::createFile($filePath);
-
-                //  add title & first row
-                fputcsv($fh, array_keys($row));
-                fputcsv($fh, $row);
-
-                $this->csvPool[$key] = $fh;
-
-                continue;
-            }
-
-            //  add rows to csv from pool
-            $fh = $this->csvPool[$key];
-
-            fputcsv($fh, $row);
-        }
-
-        //  close files
-        foreach ($this->csvPool as $fh) {
-            fclose($fh);
-        }
-    }
-
-    /**
-     * Make CSV file for the list of PSV Operators
-     *
-     * @param Statement $stmt Database query response
-     *
-     * @return string
-     */
-    private function makeCsvForPsvOperatorList(Statement $stmt)
-    {
-        $this->result->addMessage('create csv file content');
-
-        $handle = fopen('php://temp', 'r+');
-
-        $titleAdded = false;
-
-        //  add rows
-        while (($row = $stmt->fetch()) !== false) {
-            if (!$titleAdded) {
-                //  add title & first row
-                fputcsv($handle, array_keys($row));
-                $titleAdded = true;
-            }
-
-            fputcsv($handle, $row);
-        }
-
-        rewind($handle);
-        $fileContents = stream_get_contents($handle);
-
-        fclose($handle);
-
-        return $fileContents;
-    }
-
-    /**
-     * Define list of traffic areas for which should be created report(s)
-     *
-     * @return TrafficAreaEntity[]
-     */
-    private function getTrafficAreas()
-    {
-        /** @var Repository\TrafficArea $repo */
-        $repo = $this->getRepo('TrafficArea');
-
-        //  remove Northern Ireland
-        $items = array_filter(
-            $repo->fetchAll(),
-            function (TrafficAreaEntity $item) {
-                return ($item->getId() !== TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
-            }
-        );
-
-        if (count($items) === 0) {
-            throw new Exception(self::ERR_NO_TRAFFIC_AREAS);
-        }
-
-        return $items;
     }
 
     /**

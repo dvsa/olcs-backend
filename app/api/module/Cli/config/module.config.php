@@ -165,6 +165,15 @@ return [
                         ],
                     ],
                 ],
+                'export-data-for-northern-ireland' => [
+                    'options' => [
+                        'route' => 'data-dva-ni-export <report-name> [--verbose|-v] [--path=]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'dataDvaNiExport',
+                        ],
+                    ],
+                ],
                 'process-cl' => [
                     'options' => [
                         'route' => 'process-cl [--verbose|-v] [--dryrun|-d]',
@@ -330,6 +339,7 @@ return [
             Command\CreateViExtractFiles::class => CommandHandler\CreateViExtractFiles::class,
             Command\SetViFlags::class => CommandHandler\SetViFlags::class,
             Command\DataGovUkExport::class => CommandHandler\DataGovUkExport::class,
+            Command\DataDvaNiExport::class => CommandHandler\DataDvaNiExport::class,
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
