@@ -700,7 +700,7 @@ class BatchControllerTest extends MockeryTestCase
             );
 
         $this->mockConsole
-            ->shouldReceive('writeLine')->once()->with('/' . addslashes(CliCommand\DataDvaNiExport::class) . '$/')
+            ->shouldReceive('writeLine')->once()->with('/' . preg_quote(CliCommand\DataDvaNiExport::class) . '$/')
             ->shouldReceive('writeLine')->once()->with('/unit_message$/');
 
         $this->sut->dataDvaNiExportAction();
