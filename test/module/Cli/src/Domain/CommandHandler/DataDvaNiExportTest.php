@@ -5,12 +5,11 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Cli\Domain\Command\DataDvaNiExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Doctrine\DBAL\Driver\PDOStatement;
 use Dvsa\Olcs\Api\Domain\Repository;
 use org\bovigo\vfs\vfsStream;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport
  */
@@ -114,7 +113,9 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         //  call & check
         $actual = $this->sut->handleCommand($cmd);
 
-        $expectFile = $this->tmpPath . '/NiGvLicences-'.date(DataDvaNiExport::FILE_DATETIME_FORMAT).'.csv';
+        $date = new DateTime('now');
+
+        $expectFile = $this->tmpPath . '/NiGvLicences-'.$date->format(DataDvaNiExport::FILE_DATETIME_FORMAT).'.csv';
 
         $expectMsg =
             'Fetching data from DB for NI Operator Licences' .
