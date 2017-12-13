@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
@@ -56,7 +57,9 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     protected function singleCsvFromStatement(Statement $stmt, $fileName, $fileNameSeparator = '_')
     {
 
-        $filePath = $this->path . '/' . $fileName . $fileNameSeparator . date(static::FILE_DATETIME_FORMAT) . '.csv';
+        $date = new DateTime('now');
+
+        $filePath = $this->path . '/' . $fileName . $fileNameSeparator . $date->format(static::FILE_DATETIME_FORMAT) . '.csv';
 
         //  create csv file
         $this->result->addMessage('create csv file: ' . $filePath);

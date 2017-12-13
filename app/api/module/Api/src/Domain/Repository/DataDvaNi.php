@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\DBAL\Connection;
 
 /**
- * Contains methods to get data from DB to export for data.gov.uk
+ * Contains methods to get data from DB to export for data for Northern Ireland
  */
 class DataDvaNi
 {
