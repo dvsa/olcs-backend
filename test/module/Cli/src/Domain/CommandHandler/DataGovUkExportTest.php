@@ -22,6 +22,7 @@ use org\bovigo\vfs\vfsStream;
 use Mockery as m;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
@@ -188,8 +189,10 @@ class DataGovUkExportTest extends CommandHandlerTestCase
 
         $actual = $this->sut->handleCommand($cmd);
 
-        $expectedFile = $this->tmpPath . '/' . $fileName. '_' . date(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
-
+        $date = new DateTime('now');
+        $expectedFile = $this->tmpPath . '/' . $fileName. '_' .
+            $date->format(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
+        
         $expectMsg =
             'Fetching data for international goods list' .
             'create csv file: ' . $expectedFile;
