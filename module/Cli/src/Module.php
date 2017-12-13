@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Cli;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport;
 use Zend\Console\Adapter\AdapterInterface as ConsoleAdapterInterface;
 use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
 
@@ -63,6 +64,12 @@ class Module implements ConsoleUsageProviderInterface
             ['    ' . DataGovUkExport::PSV_OPERATOR_LIST, 'Export psv operator list and send attachment in email'],
             ['    ' . DataGovUkExport::INTERNATIONAL_GOODS, 'Export standard international goods licences report to '.
                 'CSV and send by email'],
+            ['--path=<exportPath>', '(optional) save export file in specified directory'],
+            //
+            'data-dva-ni-export <report-name> [--verbose|-v] [--path=<exportPath>]' =>
+            'Export to csv for Northern Ireland',
+            ['<report-name>', 'Export report name'],
+            ['    ' . DataDvaNiExport::NI_OPERATOR_LICENCE, 'Export GV operator licences for NI'],
             ['--path=<exportPath>', '(optional) save export file in specified directory'],
             //
             'ch-vs-olcs-diffs [--verbose|-v] [--path=<exportPath>]' =>

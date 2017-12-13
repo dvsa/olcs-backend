@@ -12,6 +12,7 @@ return [
     CliCommandHandler\CreateViExtractFiles::class => IsSystemUser::class,
     CliCommandHandler\SetViFlags::class => IsSystemUser::class,
     CliCommandHandler\DataGovUkExport::class => IsSystemUser::class,
+    CliCommandHandler\DataDvaNiExport::class => IsSystemUser::class,
     CliCommandHandler\CompaniesHouseVsOlcsDiffsExport::class => IsSystemUser::class,
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
     CliCommandHandler\CleanUpAbandonedVariations::class => IsSystemUser::class,
