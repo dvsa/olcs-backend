@@ -5,12 +5,14 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficAreaEnforcementArea;
@@ -55,7 +57,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
         ];
 
         /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $licence = $this->makeMockLicence();
 
         /** @var Application $application */
         $application = m::mock(Application::class)->makePartial();
@@ -81,6 +83,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn(true);
 
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
+            ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
             ->andReturn(['foo' => 'bar']);
 
         $documents = [];
@@ -135,9 +138,8 @@ class OperatingCentresTest extends QueryHandlerTestCase
         /** @var TrafficArea $ta */
         $ta = m::mock(TrafficArea::class)->makePartial();
         $ta->setTrafficAreaEnforcementAreas($taeas);
+        $licence = $this->makeMockLicence();
 
-        /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
         $licence->setTotCommunityLicences(12);
         $licence->setTrafficArea($ta);
 
@@ -165,6 +167,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn(false);
 
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
+            ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
             ->andReturn(['foo' => 'bar']);
 
         $documents = [];
@@ -221,7 +224,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $ta->setTrafficAreaEnforcementAreas($taeas);
 
         /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $licence = $this->makeMockLicence();
         $licence->setTotCommunityLicences(12);
         $licence->setTrafficArea($ta);
 
@@ -253,6 +256,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn(false);
 
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
+            ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
             ->andReturn(['foo' => 'bar']);
 
         $documents = [];
@@ -309,7 +313,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $ta->setTrafficAreaEnforcementAreas($taeas);
 
         /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $licence = $this->makeMockLicence();
         $licence->setTotCommunityLicences(12);
         $licence->setTrafficArea($ta);
 
@@ -342,6 +346,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn(false);
 
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
+            ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
             ->andReturn(['foo' => 'bar']);
 
         $documents = [];
@@ -398,7 +403,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $ta->setTrafficAreaEnforcementAreas($taeas);
 
         /** @var Licence $licence */
-        $licence = m::mock(Licence::class)->makePartial();
+        $licence = $this->makeMockLicence();
         $licence->setTotCommunityLicences(12);
         $licence->setTrafficArea($ta);
 
@@ -431,6 +436,7 @@ class OperatingCentresTest extends QueryHandlerTestCase
             ->andReturn(false);
 
         $this->repoMap['TrafficArea']->shouldReceive('getValueOptions')
+            ->with('DUMMY_ALLOWED_OPERATOR_LOCATION')
             ->andReturn(['foo' => 'bar']);
 
         $documents = [];
@@ -456,5 +462,22 @@ class OperatingCentresTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->serialize());
+    }
+
+    /**
+     * @return Licence
+     */
+    protected function makeMockLicence()
+    {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class)->makePartial();
+
+        /** @var m\MockInterface|Organisation $organisation */
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getAllowedOperatorLocation')->andReturn('DUMMY_ALLOWED_OPERATOR_LOCATION');
+
+        $licence->setOrganisation($organisation);
+
+        return $licence;
     }
 }
