@@ -46,12 +46,24 @@ class TrafficArea extends AbstractRepository
         return $valueOptions;
     }
 
+    /**
+     * fetch all
+     *
+     * @return array
+     */
     public function fetchAll()
     {
         $qb = $this->createQueryBuilder();
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * fetch by txc names
+     *
+     * @param string[] $txcNames txc names
+     *
+     * @return mixed
+     */
     public function fetchByTxcName($txcNames)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb */
@@ -65,7 +77,7 @@ class TrafficArea extends AbstractRepository
     /**
      * Apply list filters
      *
-     * @param string $allowedOperatorLocation
+     * @param string $allowedOperatorLocation allowed operator location
      *
      * @return array
      */
