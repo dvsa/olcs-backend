@@ -140,7 +140,6 @@ class OperatingCentresTest extends QueryHandlerTestCase
         $ta->setTrafficAreaEnforcementAreas($taeas);
         $licence = $this->makeMockLicence();
 
-
         $licence->setTotCommunityLicences(12);
         $licence->setTrafficArea($ta);
 

@@ -55,7 +55,7 @@ class OperatingCentres extends AbstractQueryHandler
     /**
      * Handle the query
      *
-     * @param QueryInterface|OperatingCentresQuery $query
+     * @param QueryInterface|OperatingCentresQuery $query query
      *
      * @return Result
      * @throws RuntimeException
@@ -94,6 +94,13 @@ class OperatingCentres extends AbstractQueryHandler
         );
     }
 
+    /**
+     * Can add another?
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return bool
+     */
     protected function canAddAnother(ApplicationEntity $application)
     {
         return !($application->isNew()
@@ -102,6 +109,13 @@ class OperatingCentres extends AbstractQueryHandler
         );
     }
 
+    /**
+     * Can haev schedule 41?
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return bool
+     */
     protected function canHaveSchedule41(ApplicationEntity $application)
     {
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
@@ -123,6 +137,14 @@ class OperatingCentres extends AbstractQueryHandler
         return true;
     }
 
+    /**
+     * get possible traffic areas
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return array
+     * @throws RuntimeException
+     */
     protected function getPossibleTrafficAreas(ApplicationEntity $application)
     {
         /** @var TrafficArea $repository */
@@ -132,6 +154,13 @@ class OperatingCentres extends AbstractQueryHandler
         );
     }
 
+    /**
+     * get possible enforcement areas
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return array
+     */
     protected function getPossibleEnforcementAreas(ApplicationEntity $application)
     {
         if ($application->getLicence()->getTrafficArea() === null) {
@@ -149,6 +178,13 @@ class OperatingCentres extends AbstractQueryHandler
         return $options;
     }
 
+    /**
+     * Get tot community licences
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return int
+     */
     protected function getTotCommunityLicences(ApplicationEntity $application)
     {
         if ($application->isVariation()) {
@@ -158,6 +194,15 @@ class OperatingCentres extends AbstractQueryHandler
         return $application->getTotCommunityLicences();
     }
 
+    /**
+     * get AOC data
+     *
+     * @param ApplicationEntity $application application
+     * @param QueryInterface    $query       query
+     *
+     * @return array
+     * @throws RuntimeException
+     */
     protected function getAocData(ApplicationEntity $application, $query)
     {
         if (!$application->isVariation()) {
