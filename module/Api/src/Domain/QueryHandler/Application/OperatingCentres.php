@@ -5,11 +5,18 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Repository\Document;
+use Dvsa\Olcs\Api\Domain\Repository\TrafficArea;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficAreaEnforcementArea;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as OperatingCentresQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -31,6 +38,13 @@ class OperatingCentres extends AbstractQueryHandler
      */
     private $variationHelper;
 
+    /**
+     * Create the service
+     *
+     * @param ServiceLocatorInterface $serviceLocator serviceLocator
+     *
+     * @return $this
+     */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
@@ -38,10 +52,21 @@ class OperatingCentres extends AbstractQueryHandler
         return parent::createService($serviceLocator);
     }
 
+    /**
+     * Handle the query
+     *
+     * @param QueryInterface|OperatingCentresQuery $query query
+     *
+     * @return Result
+     * @throws RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         /* @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
+
+        /** @var Document $documentRepository */
+        $documentRepository = $this->getRepo('Document');
 
         return $this->result(
             $application,
@@ -63,12 +88,19 @@ class OperatingCentres extends AbstractQueryHandler
                 // Vars used for add form
                 'canAddAnother' => $this->canAddAnother($application),
                 'documents' => $this->resultList(
-                    $this->getRepo('Document')->fetchUnlinkedOcDocumentsForEntity($application)
+                    $documentRepository->fetchUnlinkedOcDocumentsForEntity($application)
                 )
             ]
         );
     }
 
+    /**
+     * Can add another?
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return bool
+     */
     protected function canAddAnother(ApplicationEntity $application)
     {
         return !($application->isNew()
@@ -77,6 +109,13 @@ class OperatingCentres extends AbstractQueryHandler
         );
     }
 
+    /**
+     * Can haev schedule 41?
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return bool
+     */
     protected function canHaveSchedule41(ApplicationEntity $application)
     {
         if ($this->isGranted(Permission::SELFSERVE_USER)) {
@@ -98,11 +137,30 @@ class OperatingCentres extends AbstractQueryHandler
         return true;
     }
 
+    /**
+     * get possible traffic areas
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return array
+     * @throws RuntimeException
+     */
     protected function getPossibleTrafficAreas(ApplicationEntity $application)
     {
-        return $this->getRepo('TrafficArea')->getValueOptions();
+        /** @var TrafficArea $repository */
+        $repository = $this->getRepo('TrafficArea');
+        return $repository->getValueOptions(
+            $application->getLicence()->getOrganisation()->getAllowedOperatorLocation()
+        );
     }
 
+    /**
+     * get possible enforcement areas
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return array
+     */
     protected function getPossibleEnforcementAreas(ApplicationEntity $application)
     {
         if ($application->getLicence()->getTrafficArea() === null) {
@@ -120,6 +178,13 @@ class OperatingCentres extends AbstractQueryHandler
         return $options;
     }
 
+    /**
+     * Get tot community licences
+     *
+     * @param ApplicationEntity $application application
+     *
+     * @return int
+     */
     protected function getTotCommunityLicences(ApplicationEntity $application)
     {
         if ($application->isVariation()) {
@@ -129,10 +194,21 @@ class OperatingCentres extends AbstractQueryHandler
         return $application->getTotCommunityLicences();
     }
 
+    /**
+     * get AOC data
+     *
+     * @param ApplicationEntity $application application
+     * @param QueryInterface    $query       query
+     *
+     * @return array
+     * @throws RuntimeException
+     */
     protected function getAocData(ApplicationEntity $application, $query)
     {
         if (!$application->isVariation()) {
-            return $this->getRepo('ApplicationOperatingCentre')
+            /** @var ApplicationOperatingCentre $repository */
+            $repository = $this->getRepo('ApplicationOperatingCentre');
+            return $repository
                 ->fetchByApplicationIdForOperatingCentres($application->getId(), $query);
         }
 
