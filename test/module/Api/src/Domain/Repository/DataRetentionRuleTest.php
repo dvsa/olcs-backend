@@ -186,7 +186,18 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
     public function testRunProc()
     {
-        $this->em->shouldReceive('getConnection->exec')->with('CALL proc(99)')->once()->andReturn(12);
+        $mockedStatement = m::mock(\Doctrine\DBAL\Driver\Statement::class);
+        $mockedStatement
+            ->shouldReceive('rowCount')
+            ->andReturn(12)
+            ->shouldReceive('closeCursor')
+            ->andReturn(true);
+
+        $this->em
+            ->shouldReceive('getConnection->executeQuery')
+            ->with('CALL proc(99)')
+            ->once()
+            ->andReturn($mockedStatement);
 
         $result = $this->sut->runProc('proc', 99);
 

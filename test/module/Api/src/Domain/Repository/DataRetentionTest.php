@@ -242,7 +242,13 @@ class DataRetentionTest extends RepositoryTestCase
     public function testRunCleanupProc()
     {
         $mockStatement = m::mock();
-        $mockStatement->shouldReceive('execute')->once()->with()->andReturn(true);
+        $mockStatement
+            ->shouldReceive('execute')
+            ->once()
+            ->with()
+            ->andReturn(true)
+            ->shouldReceive('closeCursor')
+            ->andReturn(true);
         $this->em->shouldReceive('getConnection->prepare')->with('CALL sp_dr_cleanup(99, 123, 0)')->once()
             ->andReturn($mockStatement);
 
