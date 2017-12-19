@@ -81,6 +81,9 @@ class DataRetentionRule extends AbstractRepository
     public function runProc($storedProc, $userId)
     {
         $callString = sprintf('CALL %s(%d)', $storedProc, (int)$userId);
-        return $this->getEntityManager()->getConnection()->exec($callString);
+        $stmt = $this->getEntityManager()->getConnection()->executeQuery($callString);
+        $count = $stmt->rowCount();
+        $stmt->closeCursor();
+        return  $count;
     }
 }
