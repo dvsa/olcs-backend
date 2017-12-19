@@ -90,8 +90,9 @@ class DataRetention extends AbstractRepository
         $statement = $connection->prepare(
             sprintf('CALL sp_dr_cleanup(%d, %d, %d)', $userId, $limit, $dryRun)
         );
-
-        return $statement->execute();
+        $result = $statement->execute();
+        $statement->closeCursor();
+        return $result;
     }
 
     /**
