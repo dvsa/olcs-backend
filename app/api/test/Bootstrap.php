@@ -17,7 +17,7 @@ class Bootstrap
     {
         date_default_timezone_set('UTC');
 
-        ini_set('memory_limit', '1500M');
+        ini_set('memory_limit', '4G');
         // Setup the autloader
         $loader = static::initAutoloader();
 
