@@ -302,6 +302,11 @@ return [
         'path' => '/var/tmp/dataGovUk',
     ],
 
+    // Path to export CSV data for DVA Northern Ireland
+    'data-dva-ni-export' => [
+        'path' => '/var/tmp/dvaoplic',
+    ],
+
     // Path to export CSV data for Companies House differences
     'ch-vs-olcs-export' => [
         'path' => '/var/tmp/companyHouse_vs_Olcs',
