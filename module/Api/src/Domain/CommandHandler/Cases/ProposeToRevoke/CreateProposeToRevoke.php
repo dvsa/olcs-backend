@@ -3,10 +3,12 @@
 /**
  * Create ProposeToRevoke
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ProposeToRevoke;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
@@ -22,6 +24,14 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
 {
     protected $repoServiceName = 'ProposeToRevoke';
 
+    /**
+     * Handle the command
+     *
+     * @param CommandInterface|Cmd $command command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         // create and save a record
@@ -36,8 +46,12 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
     }
 
     /**
-     * @param Cmd $command
+     * Create the ProposeToRevoke object
+     *
+     * @param CommandInterface|Cmd $command command
+     *
      * @return ProposeToRevoke
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function createProposeToRevokeObject(Cmd $command)
     {
@@ -51,7 +65,14 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
         $presidingTc = $this->getRepo()->getReference(PresidingTc::class, $command->getPresidingTc());
         $ptrAgreedDate = new \DateTime($command->getPtrAgreedDate());
 
-        $proposeToRevoke = new ProposeToRevoke($case, $reasons, $presidingTc, $ptrAgreedDate);
+        $assignedCaseworker = $this->getRepo()->getReference(User::class, $command->getAssignedCaseworker());
+        $proposeToRevoke = new ProposeToRevoke(
+            $case,
+            $reasons,
+            $presidingTc,
+            $ptrAgreedDate,
+            $assignedCaseworker
+        );
 
         if ($command->getClosedDate() !== null) {
             $proposeToRevoke->setClosedDate(new \DateTime($command->getClosedDate()));
