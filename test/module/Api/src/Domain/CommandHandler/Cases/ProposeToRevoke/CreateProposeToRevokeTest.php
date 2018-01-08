@@ -86,7 +86,10 @@ class CreateProposeToRevokeTest extends CommandHandlerTestCase
                         $this->references[User::class]['DUMMY-ASSIGNED-CASEWORKER-ID'],
                         $savedProposeToRevoke->getAssignedCaseworker()
                     );
-                    $this->assertEquals($data['ptrAgreedDate'], $savedProposeToRevoke->getPtrAgreedDate()->format('Y-m-d'));
+                    $this->assertEquals(
+                        $data['ptrAgreedDate'],
+                        $savedProposeToRevoke->getPtrAgreedDate()->format('Y-m-d')
+                    );
                     $this->assertEquals($data['closedDate'], $savedProposeToRevoke->getClosedDate()->format('Y-m-d'));
                     $this->assertEquals($data['comment'], $savedProposeToRevoke->getComment());
                 }
