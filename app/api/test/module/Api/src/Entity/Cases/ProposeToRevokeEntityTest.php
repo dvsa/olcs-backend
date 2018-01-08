@@ -40,7 +40,7 @@ class ProposeToRevokeEntityTest extends EntityTester
         $this->assertSame($mockCase, $entity->getCase());
         $this->assertSame($reasons, $entity->getReasons());
         $this->assertSame($ptrAgreedDate, $entity->getPtrAgreedDate());
-        $this->assertSame($ptrAgreedDate, $entity->getPtrAgreedDate());
+        $this->assertSame(null, $entity->getAssignedCaseworker());
     }
 
     public function testConstructorWithAssignedCaseworker()
