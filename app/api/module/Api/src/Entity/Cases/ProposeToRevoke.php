@@ -21,6 +21,15 @@ use Dvsa\Olcs\Api\Entity\User\User;
  */
 class ProposeToRevoke extends AbstractProposeToRevoke
 {
+    /**
+     * ProposeToRevoke constructor.
+     *
+     * @param Cases       $case               case
+     * @param array       $reasons            reasons
+     * @param PresidingTc $presidingTc        presidingTc
+     * @param \DateTime   $ptrAgreedDate      ptrAgreedDate
+     * @param User|null   $assignedCaseworker assignedCaseworker
+     */
     public function __construct(
         Cases $case,
         array $reasons,
@@ -36,6 +45,14 @@ class ProposeToRevoke extends AbstractProposeToRevoke
         $this->assignedCaseworker = $assignedCaseworker;
     }
 
+    /**
+     * @param array       $reasons            reasons
+     * @param PresidingTc $presidingTc        presidingTc
+     * @param \DateTime   $ptrAgreedDate      ptrAgreedDate
+     * @param User|null   $assignedCaseworker assignedCaseworker
+     *
+     * @return void
+     */
     public function update(
         array $reasons,
         PresidingTc $presidingTc,

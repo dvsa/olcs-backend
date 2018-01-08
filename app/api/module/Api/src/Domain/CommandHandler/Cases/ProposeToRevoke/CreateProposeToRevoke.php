@@ -24,6 +24,14 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
 {
     protected $repoServiceName = 'ProposeToRevoke';
 
+    /**
+     * Handle the command
+     *
+     * @param CommandInterface|Cmd $command command
+     *
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         // create and save a record
@@ -38,7 +46,7 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
     }
 
     /**
-     * Handle the command
+     * Create the ProposeToRevoke object
      *
      * @param CommandInterface|Cmd $command command
      *
