@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Cases;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
+use Dvsa\Olcs\Api\Entity\User\User;
 
 /**
  * ProposeToRevoke Entity
@@ -21,18 +21,47 @@ use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
  */
 class ProposeToRevoke extends AbstractProposeToRevoke
 {
-    public function __construct(Cases $case, array $reasons, PresidingTc $presidingTc, \DateTime $ptrAgreedDate)
-    {
+    /**
+     * ProposeToRevoke constructor.
+     *
+     * @param Cases       $case               case
+     * @param array       $reasons            reasons
+     * @param PresidingTc $presidingTc        presidingTc
+     * @param \DateTime   $ptrAgreedDate      ptrAgreedDate
+     * @param User|null   $assignedCaseworker assignedCaseworker
+     */
+    public function __construct(
+        Cases $case,
+        array $reasons,
+        PresidingTc $presidingTc,
+        \DateTime $ptrAgreedDate,
+        User $assignedCaseworker = null
+    ) {
+        parent::__construct();
         $this->case = $case;
         $this->reasons = $reasons;
         $this->presidingTc = $presidingTc;
         $this->ptrAgreedDate = $ptrAgreedDate;
+        $this->assignedCaseworker = $assignedCaseworker;
     }
 
-    public function update(array $reasons, PresidingTc $presidingTc, \DateTime $ptrAgreedDate)
-    {
+    /**
+     * @param array       $reasons            reasons
+     * @param PresidingTc $presidingTc        presidingTc
+     * @param \DateTime   $ptrAgreedDate      ptrAgreedDate
+     * @param User|null   $assignedCaseworker assignedCaseworker
+     *
+     * @return void
+     */
+    public function update(
+        array $reasons,
+        PresidingTc $presidingTc,
+        \DateTime $ptrAgreedDate,
+        User $assignedCaseworker = null
+    ) {
         $this->reasons = $reasons;
         $this->presidingTc = $presidingTc;
         $this->ptrAgreedDate = $ptrAgreedDate;
+        $this->assignedCaseworker = $assignedCaseworker;
     }
 }
