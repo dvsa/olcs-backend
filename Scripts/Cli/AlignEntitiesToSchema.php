@@ -218,6 +218,8 @@ class AlignEntitiesToSchema
             $this->createUnitTests();
 
             $this->importEntities();
+
+            $this->clearCacheReminder();
         } catch (\Exception $ex) {
             echo $ex->getTraceAsString() . "\n\n";
             echo $ex->getMessage();
@@ -292,6 +294,11 @@ class AlignEntitiesToSchema
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOG"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOGLOCK"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS log_update"');
+    }
+
+    protected function clearCacheReminder()
+    {
+        $this->respond('Remember to restart apache to clear the APC cache!', 'warning');
     }
 
     /**
