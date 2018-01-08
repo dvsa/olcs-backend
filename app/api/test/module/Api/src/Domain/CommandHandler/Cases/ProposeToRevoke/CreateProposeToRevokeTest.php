@@ -3,8 +3,10 @@
 /**
  * Create ProposeToRevoke Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\ProposeToRevoke;
 
+use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ProposeToRevoke\CreateProposeToRevoke;
 use Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke;
@@ -40,6 +42,9 @@ class CreateProposeToRevokeTest extends CommandHandlerTestCase
             PresidingTc::class => [
                 1 => m::mock(PresidingTc::class)
             ],
+            User::class => [
+                'DUMMY-ASSIGNED-CASEWORKER-ID' => m::mock(User::class)
+            ],
         ];
 
         parent::initReferences();
@@ -54,20 +59,36 @@ class CreateProposeToRevokeTest extends CommandHandlerTestCase
             'ptrAgreedDate' => '2015-01-01',
             'closedDate' => '2016-01-01',
             'comment' => 'testing',
+            'assignedCaseworker' => 'DUMMY-ASSIGNED-CASEWORKER-ID',
         ];
 
         $command = Cmd::create($data);
-
-        /** @var ProposeToRevokeEntity $savedProposeToRevoke */
-        $savedProposeToRevoke = null;
 
         $this->repoMap['ProposeToRevoke']->shouldReceive('save')
             ->once()
             ->with(m::type(ProposeToRevokeEntity::class))
             ->andReturnUsing(
-                function (ProposeToRevokeEntity $proposeToRevoke) use (&$savedProposeToRevoke) {
-                    $proposeToRevoke->setId(111);
-                    $savedProposeToRevoke = $proposeToRevoke;
+                function (ProposeToRevokeEntity $savedProposeToRevoke) use ($data) {
+                    $savedProposeToRevoke->setId(111);
+                    $this->assertSame(
+                        $this->references[Cases::class][$data['case']],
+                        $savedProposeToRevoke->getCase()
+                    );
+                    $this->assertSame(
+                        $this->references[Reason::class][$data['reasons'][0]],
+                        $savedProposeToRevoke->getReasons()[0]
+                    );
+                    $this->assertSame(
+                        $this->references[PresidingTc::class][$data['presidingTc']],
+                        $savedProposeToRevoke->getPresidingTc()
+                    );
+                    $this->assertSame(
+                        $this->references[User::class]['DUMMY-ASSIGNED-CASEWORKER-ID'],
+                        $savedProposeToRevoke->getAssignedCaseworker()
+                    );
+                    $this->assertEquals($data['ptrAgreedDate'], $savedProposeToRevoke->getPtrAgreedDate()->format('Y-m-d'));
+                    $this->assertEquals($data['closedDate'], $savedProposeToRevoke->getClosedDate()->format('Y-m-d'));
+                    $this->assertEquals($data['comment'], $savedProposeToRevoke->getComment());
                 }
             );
 
@@ -83,21 +104,5 @@ class CreateProposeToRevokeTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
-        $this->assertSame(
-            $this->references[Cases::class][$data['case']],
-            $savedProposeToRevoke->getCase()
-        );
-        $this->assertSame(
-            $this->references[Reason::class][$data['reasons'][0]],
-            $savedProposeToRevoke->getReasons()[0]
-        );
-        $this->assertSame(
-            $this->references[PresidingTc::class][$data['presidingTc']],
-            $savedProposeToRevoke->getPresidingTc()
-        );
-        $this->assertEquals($data['ptrAgreedDate'], $savedProposeToRevoke->getPtrAgreedDate()->format('Y-m-d'));
-        $this->assertEquals($data['closedDate'], $savedProposeToRevoke->getClosedDate()->format('Y-m-d'));
-        $this->assertEquals($data['comment'], $savedProposeToRevoke->getComment());
     }
 }
