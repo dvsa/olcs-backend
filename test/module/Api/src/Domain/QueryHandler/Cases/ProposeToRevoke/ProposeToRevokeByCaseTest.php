@@ -5,6 +5,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\ProposeToRevoke;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -36,16 +37,19 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
                     \Dvsa\Olcs\Api\Entity\Pi\Reason::class
                 ]
             )
-            ->once()
+            ->once();
+        $this->repoMap['ProposeToRevoke']
             ->shouldReceive('fetchProposeToRevokeUsingCase')
             ->with($query)
             ->andReturn(
                 m::mock(BundleSerializableInterface::class)
                     ->shouldReceive('serialize')
+                    ->with(['presidingTc', 'reasons', 'assignedCaseworker'])
                     ->andReturn(['foo'])
                     ->getMock()
             );
 
+        /** @var Result $result */
         $result = $this->sut->handleQuery($query);
         $this->assertEquals(['foo'], $result->serialize());
     }
