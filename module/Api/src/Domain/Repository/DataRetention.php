@@ -41,8 +41,10 @@ class DataRetention extends AbstractRepository
                 $qb->andWhere($qb->expr()->gt($this->alias . '.nextReviewDate', ':today'));
                 $qb->setParameter('today', $today);
             } elseif ($query->getNextReview() == 'pending') {
-                $qb->andWhere($qb->expr()->isNull($this->alias . '.nextReviewDate'));
-                $qb->orWhere($qb->expr()->lte($this->alias . '.nextReviewDate', ':today'));
+                $qb->andWhere($qb->expr()->orX(
+                    $qb->expr()->isNull($this->alias . '.nextReviewDate'),
+                    $qb->expr()->lte($this->alias . '.nextReviewDate', ':today')
+                ));
                 $qb->setParameter('today', $today);
             }
 

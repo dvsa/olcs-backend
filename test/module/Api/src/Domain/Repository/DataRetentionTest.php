@@ -122,21 +122,18 @@ class DataRetentionTest extends RepositoryTestCase
         );
 
         $today = (new DateTime())->format('Y-m-d');
-        /** @var QueryBuilder|m::mock $qb */
-        $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('expr->gt')->with('m.nextReviewDate', ':today')->once()->andReturn('expr0');
-        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
-        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
-        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
-        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
-        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
-        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
-        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
-        $qb->shouldReceive('setParameter')->with('today', $today)->once();
-        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
-        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
 
         $this->sut->applyListFilters($qb, $query);
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.nextReviewDate > [[' . $today . ']] '
+            . 'AND drr.isEnabled = 1 '
+            . 'AND m.dataRetentionRule = [[13]] '
+            . 'AND drr.actionType = [[Review]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 
     public function testApplyListFiltersRecordsQryWithNextReviewPending()
@@ -150,23 +147,18 @@ class DataRetentionTest extends RepositoryTestCase
         );
 
         $today = (new DateTime())->format('Y-m-d');
-        /** @var QueryBuilder|m::mock $qb */
-        $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('expr->isNull')->with('m.nextReviewDate')->once()->andReturn('expr0');
-        $qb->shouldReceive('expr->lte')->with('m.nextReviewDate', ':today')->once()->andReturn('expr0b');
-        $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
-        $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
-        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
-        $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
-        $qb->shouldReceive('orWhere')->once()->with('expr0b')->andReturnSelf();
-        $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
-        $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
-        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
-        $qb->shouldReceive('setParameter')->with('today', $today)->once();
-        $qb->shouldReceive('setParameter')->with('actionType', 'Review')->once();
-        $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
 
         $this->sut->applyListFilters($qb, $query);
+
+        $expectedQuery = 'BLAH '
+            . 'AND (m.nextReviewDate IS NULL OR m.nextReviewDate <= [[' . $today . ']]) '
+            . 'AND drr.isEnabled = 1 '
+            . 'AND m.dataRetentionRule = [[13]] '
+            . 'AND drr.actionType = [[Review]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 
     public function testApplyListFiltersRecordsQryWithAssignedToUser()
