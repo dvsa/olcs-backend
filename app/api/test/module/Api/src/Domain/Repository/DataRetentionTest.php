@@ -153,7 +153,7 @@ class DataRetentionTest extends RepositoryTestCase
         /** @var QueryBuilder|m::mock $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('expr->isNull')->with('m.nextReviewDate')->once()->andReturn('expr0');
-        $qb->shouldReceive('expr->lte')->with('m.nextReviewDate',':today')->once()->andReturn('expr0b');
+        $qb->shouldReceive('expr->lte')->with('m.nextReviewDate', ':today')->once()->andReturn('expr0b');
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
         $qb->shouldReceive('expr->eq')->with('drr.actionType', ':actionType')->once()->andReturn('expr2');
         $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
