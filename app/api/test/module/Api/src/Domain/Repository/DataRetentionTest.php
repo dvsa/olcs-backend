@@ -280,8 +280,8 @@ class DataRetentionTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND m.dataRetentionRule = [[12]] '
-            . 'AND m.deletedDate >= [[2012-02-20]] '
-            . 'AND m.deletedDate <= [[2017-12-10]]';
+            . 'AND m.deletedDate >= [[2012-02-20 00:00:00]] '
+            . 'AND m.deletedDate < [[2017-12-11 00:00:00]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }
