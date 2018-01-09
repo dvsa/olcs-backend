@@ -111,11 +111,14 @@ class DataRetention extends AbstractRepository
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', ':dataRetentionRuleId'));
         $qb->andWhere($qb->expr()->gte($this->alias . '.deletedDate', ':startDate'));
-        $qb->andWhere($qb->expr()->lte($this->alias . '.deletedDate', ':endDate'));
+        $qb->andWhere($qb->expr()->lt($this->alias . '.deletedDate', ':endDate'));
+
+        $start = $startDate->setTime(0, 0, 0)->format('Y-m-d H:i:s');
+        $end = $endDate->add(new \DateInterval('P1D'))->setTime(0, 0, 0)->format('Y-m-d H:i:s');
 
         $qb->setParameter('dataRetentionRuleId', $dataRetentionRuleId);
-        $qb->setParameter('startDate', $startDate->format('Y-m-d'));
-        $qb->setParameter('endDate', $endDate->format('Y-m-d'));
+        $qb->setParameter('startDate', $start);
+        $qb->setParameter('endDate', $end);
 
         $this->disableSoftDeleteable([DataRetentionEntity::class]);
 
