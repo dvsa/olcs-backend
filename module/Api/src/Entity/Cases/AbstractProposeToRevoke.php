@@ -52,6 +52,15 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     protected $actionToBeTaken;
 
     /**
+     * Approval submission issued date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="approval_submission_issued_date", nullable=true)
+     */
+    protected $approvalSubmissionIssuedDate;
+
+    /**
      * Approval submission presiding tc
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
@@ -71,15 +80,6 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      * @ORM\Column(type="date", name="approval_submission_returned_date", nullable=true)
      */
     protected $approvalSubmissionReturnedDate;
-
-    /**
-     * Approval submission sent date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="approval_submission_sent_date", nullable=true)
-     */
-    protected $approvalSubmissionSentDate;
 
     /**
      * Assigned caseworker
@@ -140,6 +140,15 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     protected $createdOn;
 
     /**
+     * Final submission issued date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="final_submission_issued_date", nullable=true)
+     */
+    protected $finalSubmissionIssuedDate;
+
+    /**
      * Final submission presiding tc
      *
      * @var \Dvsa\Olcs\Api\Entity\Pi\PresidingTc
@@ -159,15 +168,6 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     protected $finalSubmissionReturnedDate;
 
     /**
-     * Final submission sent date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="final_submission_sent_date", nullable=true)
-     */
-    protected $finalSubmissionSentDate;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -179,13 +179,13 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     protected $id;
 
     /**
-     * Ior letter sent date
+     * Ior letter issued date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="ior_letter_sent_date", nullable=true)
+     * @ORM\Column(type="date", name="ior_letter_issued_date", nullable=true)
      */
-    protected $iorLetterSentDate;
+    protected $iorLetterIssuedDate;
 
     /**
      * Is submission required for action
@@ -330,13 +330,13 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     protected $version = 1;
 
     /**
-     * Warning letter issued date date
+     * Warning letter issued date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="date", name="warning_letter_issued_date_date", nullable=true)
+     * @ORM\Column(type="date", name="warning_letter_issued_date", nullable=true)
      */
-    protected $warningLetterIssuedDateDate;
+    protected $warningLetterIssuedDate;
 
     /**
      * Initialise the collections
@@ -380,6 +380,36 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     public function getActionToBeTaken()
     {
         return $this->actionToBeTaken;
+    }
+
+    /**
+     * Set the approval submission issued date
+     *
+     * @param \DateTime $approvalSubmissionIssuedDate new value being set
+     *
+     * @return ProposeToRevoke
+     */
+    public function setApprovalSubmissionIssuedDate($approvalSubmissionIssuedDate)
+    {
+        $this->approvalSubmissionIssuedDate = $approvalSubmissionIssuedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the approval submission issued date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getApprovalSubmissionIssuedDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->approvalSubmissionIssuedDate);
+        }
+
+        return $this->approvalSubmissionIssuedDate;
     }
 
     /**
@@ -434,36 +464,6 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
         }
 
         return $this->approvalSubmissionReturnedDate;
-    }
-
-    /**
-     * Set the approval submission sent date
-     *
-     * @param \DateTime $approvalSubmissionSentDate new value being set
-     *
-     * @return ProposeToRevoke
-     */
-    public function setApprovalSubmissionSentDate($approvalSubmissionSentDate)
-    {
-        $this->approvalSubmissionSentDate = $approvalSubmissionSentDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the approval submission sent date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getApprovalSubmissionSentDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->approvalSubmissionSentDate);
-        }
-
-        return $this->approvalSubmissionSentDate;
     }
 
     /**
@@ -623,6 +623,36 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the final submission issued date
+     *
+     * @param \DateTime $finalSubmissionIssuedDate new value being set
+     *
+     * @return ProposeToRevoke
+     */
+    public function setFinalSubmissionIssuedDate($finalSubmissionIssuedDate)
+    {
+        $this->finalSubmissionIssuedDate = $finalSubmissionIssuedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the final submission issued date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getFinalSubmissionIssuedDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->finalSubmissionIssuedDate);
+        }
+
+        return $this->finalSubmissionIssuedDate;
+    }
+
+    /**
      * Set the final submission presiding tc
      *
      * @param \Dvsa\Olcs\Api\Entity\Pi\PresidingTc $finalSubmissionPresidingTc entity being set as the value
@@ -677,36 +707,6 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the final submission sent date
-     *
-     * @param \DateTime $finalSubmissionSentDate new value being set
-     *
-     * @return ProposeToRevoke
-     */
-    public function setFinalSubmissionSentDate($finalSubmissionSentDate)
-    {
-        $this->finalSubmissionSentDate = $finalSubmissionSentDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the final submission sent date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getFinalSubmissionSentDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->finalSubmissionSentDate);
-        }
-
-        return $this->finalSubmissionSentDate;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -731,33 +731,33 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the ior letter sent date
+     * Set the ior letter issued date
      *
-     * @param \DateTime $iorLetterSentDate new value being set
+     * @param \DateTime $iorLetterIssuedDate new value being set
      *
      * @return ProposeToRevoke
      */
-    public function setIorLetterSentDate($iorLetterSentDate)
+    public function setIorLetterIssuedDate($iorLetterIssuedDate)
     {
-        $this->iorLetterSentDate = $iorLetterSentDate;
+        $this->iorLetterIssuedDate = $iorLetterIssuedDate;
 
         return $this;
     }
 
     /**
-     * Get the ior letter sent date
+     * Get the ior letter issued date
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
      * @return \DateTime
      */
-    public function getIorLetterSentDate($asDateTime = false)
+    public function getIorLetterIssuedDate($asDateTime = false)
     {
         if ($asDateTime === true) {
-            return $this->asDateTime($this->iorLetterSentDate);
+            return $this->asDateTime($this->iorLetterIssuedDate);
         }
 
-        return $this->iorLetterSentDate;
+        return $this->iorLetterIssuedDate;
     }
 
     /**
@@ -1184,33 +1184,33 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the warning letter issued date date
+     * Set the warning letter issued date
      *
-     * @param \DateTime $warningLetterIssuedDateDate new value being set
+     * @param \DateTime $warningLetterIssuedDate new value being set
      *
      * @return ProposeToRevoke
      */
-    public function setWarningLetterIssuedDateDate($warningLetterIssuedDateDate)
+    public function setWarningLetterIssuedDate($warningLetterIssuedDate)
     {
-        $this->warningLetterIssuedDateDate = $warningLetterIssuedDateDate;
+        $this->warningLetterIssuedDate = $warningLetterIssuedDate;
 
         return $this;
     }
 
     /**
-     * Get the warning letter issued date date
+     * Get the warning letter issued date
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
      * @return \DateTime
      */
-    public function getWarningLetterIssuedDateDate($asDateTime = false)
+    public function getWarningLetterIssuedDate($asDateTime = false)
     {
         if ($asDateTime === true) {
-            return $this->asDateTime($this->warningLetterIssuedDateDate);
+            return $this->asDateTime($this->warningLetterIssuedDate);
         }
 
-        return $this->warningLetterIssuedDateDate;
+        return $this->warningLetterIssuedDate;
     }
 
     /**
