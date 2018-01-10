@@ -2,11 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\DataRetention;
 
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as Entity;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as CustomDateTime;
-
 
 /**
  * DataRetention Entity Unit Tests
