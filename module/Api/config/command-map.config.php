@@ -393,6 +393,8 @@ return [
         CommandHandler\Cases\ProposeToRevoke\CreateProposeToRevoke::class,
     TransferCommand\Cases\ProposeToRevoke\UpdateProposeToRevoke::class =>
         CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class,
+    TransferCommand\Cases\ProposeToRevoke\UpdateProposeToRevokeSla::class =>
+        CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevokeSla::class,
 
     // Transfer - Complaint
     TransferCommand\Complaint\CreateComplaint::class => CommandHandler\Complaint\CreateComplaint::class,
