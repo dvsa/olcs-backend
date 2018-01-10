@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\DataRetention;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as CustomDatetime;
 
 /**
  * DataRetention Entity
@@ -26,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 class DataRetention extends AbstractDataRetention
 {
     /**
-     * Mark for delay @todo this shouldn't allow a date not in the future
+     * Mark for delay
      *
      * @param \DateTime|null $date Date to delay review until
      *
@@ -47,7 +48,7 @@ class DataRetention extends AbstractDataRetention
      */
     public function markForDelete()
     {
-        $this->actionedDate = new \DateTime();
+        $this->actionedDate = new CustomDatetime();
         $this->actionConfirmation = true;
         $this->nextReviewDate = null;
 
