@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Entity\DataRetention;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as CustomDatetime;
 
-
 /**
  * DataRetention Entity
  *
@@ -28,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as CustomDatetime;
 class DataRetention extends AbstractDataRetention
 {
     /**
-     * Mark for delay @todo this shouldn't allow a date not in the future
+     * Mark for delay
      *
      * @param \DateTime|null $date Date to delay review until
      *
