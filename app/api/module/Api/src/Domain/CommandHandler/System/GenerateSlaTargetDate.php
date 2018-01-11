@@ -14,7 +14,11 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevoke;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Generate SlaTargetDate
@@ -23,7 +27,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
 {
     protected $repoServiceName = 'SlaTargetDate';
 
-    protected $extraRepos = ['Pi', 'Submission', 'Sla'];
+    protected $extraRepos = ['Pi', 'Submission', 'Sla', 'ProposeToRevoke'];
 
     /**
      * @var SlaCalculatorInterface
@@ -33,11 +37,12 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * @param CommandInterface $command
      * @return Result
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
+        /** @var GenerateSlaTargetDateCmd  $command */
         if ($command->getPi() !== null) {
             $result->merge(
                 $this->generateForEntity('Pi', $command->getPi(), ['pi', 'pi_hearing'])
@@ -45,6 +50,10 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
         } elseif ($command->getSubmission() !== null) {
             $result->merge(
                 $this->generateForEntity('Submission', $command->getSubmission(), ['submission'])
+            );
+        } elseif ($command->getProposeToRevoke() !== null) {
+            $result->merge(
+                $this->generateForEntity('ProposeToRevoke', $command->getProposeToRevoke(), ['ptr'])
             );
         }
 
@@ -59,6 +68,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
      * @param array $categories
      *
      * @return Result
+     * @throws RuntimeException
      */
     private function generateForEntity($repoName, $id, array $categories)
     {
@@ -89,11 +99,12 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Process SLA Target Dates for given entity (updates SlaTargetDates collection)
      *
-     * @param PiEntity|SubmissionEntity $entity
+     * @param PiEntity|SubmissionEntity|ProposeToRevoke $entity
      * @param TrafficAreaEntity $trafficArea
      * @param array $categories
      *
      * @return array
+     * @throws RuntimeException
      */
     private function processSlaTargetDates($entity, TrafficAreaEntity $trafficArea, array $categories)
     {
