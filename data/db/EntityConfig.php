@@ -2090,6 +2090,17 @@ return array(
                 'orphanRemoval' => 'true'
             )
         ),
+        'propose_to_revoke_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ProposeToRevoke',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'sla_id',
+                'orphanRemoval' => 'true'
+            )
+        ),
         'under_delegation' => array(
             'type' => 'yesno'
         ),
