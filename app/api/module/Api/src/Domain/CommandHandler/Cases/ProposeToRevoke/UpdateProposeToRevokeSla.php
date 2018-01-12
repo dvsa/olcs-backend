@@ -40,7 +40,7 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
         }
 
         if ($command->getApprovalSubmissionIssuedDate() !== null) {
-        $proposeToRevoke->setApprovalSubmissionIssuedDate($command->getApprovalSubmissionIssuedDate());
+            $proposeToRevoke->setApprovalSubmissionIssuedDate($command->getApprovalSubmissionIssuedDate());
         }
 
         if ($command->getApprovalSubmissionReturnedDate() !== null) {
