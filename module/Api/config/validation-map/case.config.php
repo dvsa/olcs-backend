@@ -42,6 +42,7 @@ return [
     CommandHandler\Cases\Prohibition\Update::class                          => IsInternalUser::class,
     CommandHandler\Cases\ProposeToRevoke\CreateProposeToRevoke::class       => IsInternalUser::class,
     CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevoke::class       => IsInternalUser::class,
+    CommandHandler\Cases\ProposeToRevoke\UpdateProposeToRevokeSla::class    => IsInternalUser::class,
     CommandHandler\Cases\ReopenCase::class                                  => IsInternalUser::class,
     CommandHandler\Cases\Statement\CreateStatement::class                   => IsInternalUser::class,
     CommandHandler\Cases\Statement\DeleteStatement::class                   => IsInternalUser::class,
