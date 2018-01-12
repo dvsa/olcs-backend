@@ -48,7 +48,7 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
             $this->handleSideEffect(
                 GenerateSlaTargetDateCmd::create(
                     [
-                        'ProposeToRevoke' => $proposeToRevoke->getId()
+                        'proposeToRevoke' => $proposeToRevoke->getId()
                     ]
                 )
             )

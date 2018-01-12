@@ -70,7 +70,7 @@ class GenerateSlaTargetDateTest extends CommandHandlerTestCase
         ];
         $command = Command::create($params);
 
-        $this->doTest($command, $params, 'submission', SubmissionEntity::class ,'Submission', ['submission']);
+        $this->doTest($command, $params, 'submission', SubmissionEntity::class, 'Submission', ['submission']);
     }
 
     public function testHandleCommandForProposeToRevoke()

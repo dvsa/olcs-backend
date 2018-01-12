@@ -16,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Pi\Reason;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
 use Dvsa\Olcs\Transfer\Command\Cases\ProposeToRevoke\UpdateProposeToRevoke as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Update ProposeToRevoke Test
@@ -64,7 +66,7 @@ class UpdateProposeToRevokeTest extends CommandHandlerTestCase
 
         /** @var ProposeToRevokeEntity|m\MockInterface $proposeToRevoke */
         $proposeToRevoke = m::mock(ProposeToRevokeEntity::class)->makePartial();
-        $proposeToRevoke->setId(1);
+        $proposeToRevoke->setId($data['id']);
 
         $this->repoMap['ProposeToRevoke']->shouldReceive('fetchUsingId')
             ->once()
@@ -97,11 +99,18 @@ class UpdateProposeToRevokeTest extends CommandHandlerTestCase
                 }
             );
 
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'proposeToRevoke' => $data['id']
+            ],
+            new Result()
+        );
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
-                'proposeToRevoke' => 1,
+                'proposeToRevoke' => $data['id'],
             ],
             'messages' => [
                 'Revocation updated successfully'
