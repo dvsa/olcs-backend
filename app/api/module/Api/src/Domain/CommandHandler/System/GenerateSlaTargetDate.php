@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevoke;
+use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
@@ -99,7 +99,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Process SLA Target Dates for given entity (updates SlaTargetDates collection)
      *
-     * @param PiEntity|SubmissionEntity|ProposeToRevoke $entity
+     * @param PiEntity|SubmissionEntity|ProposeToRevokeEntity $entity
      * @param TrafficAreaEntity $trafficArea
      * @param array $categories
      *
