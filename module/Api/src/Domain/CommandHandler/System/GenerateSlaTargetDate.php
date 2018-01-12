@@ -35,7 +35,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     private $slaService;
 
     /**
-     * @param CommandInterface $command
+     * @param CommandInterface $command Command
      * @return Result
      * @throws RuntimeException
      */
@@ -63,9 +63,9 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Generates and saves SLA for given entity
      *
-     * @param string $repoName
-     * @param int $id
-     * @param array $categories
+     * @param string $repoName   Repo Name
+     * @param int    $id         Id
+     * @param array  $categories Categories
      *
      * @return Result
      * @throws RuntimeException
@@ -99,9 +99,9 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Process SLA Target Dates for given entity (updates SlaTargetDates collection)
      *
-     * @param PiEntity|SubmissionEntity|ProposeToRevokeEntity $entity
-     * @param TrafficAreaEntity $trafficArea
-     * @param array $categories
+     * @param PiEntity|SubmissionEntity|ProposeToRevokeEntity $entity      Entity
+     * @param TrafficAreaEntity                               $trafficArea Traffic Area
+     * @param array                                           $categories  Categories
      *
      * @return array
      * @throws RuntimeException
@@ -162,7 +162,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Creates service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator ServiceLocator
      *
      * @return GenerateSlaTargetDate
      */
