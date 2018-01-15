@@ -77,13 +77,12 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-
         foreach ($data as $key => $value) {
 
             $getter = 'get' . ucwords($key);
             $savedValue = $proposeToRevoke->$getter();
 
-            if($key == 'approvalSubmissionPresidingTc' || $key == 'finalSubmissionPresidingTc') {
+            if ($key == 'approvalSubmissionPresidingTc' || $key == 'finalSubmissionPresidingTc') {
                 /** @var PresidingTc $presidingTc */
                 $presidingTc = $savedValue;
                 $savedValue = $presidingTc->getId();
