@@ -44,7 +44,7 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
             ->andReturn(
                 m::mock(BundleSerializableInterface::class)
                     ->shouldReceive('serialize')
-                    ->with(['presidingTc', 'reasons', 'assignedCaseworker'])
+                    ->with(['presidingTc', 'reasons', 'assignedCaseworker', 'actionToBeTaken'])
                     ->andReturn(['foo'])
                     ->getMock()
             );
