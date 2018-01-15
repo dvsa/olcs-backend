@@ -57,7 +57,7 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
 
         $proposeToRevokeEntity
             ->shouldReceive('serialize')
-            ->with(['presidingTc', 'reasons', 'assignedCaseworker'])
+            ->with(['presidingTc', 'reasons', 'assignedCaseworker', 'actionToBeTaken'])
             ->andReturn(['foo']);
 
         /** @var Result $result */
