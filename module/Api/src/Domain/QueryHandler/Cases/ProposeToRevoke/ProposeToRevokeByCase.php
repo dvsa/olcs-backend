@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ProposeToRevoke;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke;
+use Dvsa\Olcs\Api\Entity\System\SlaTargetDate;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -33,9 +34,18 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
             ]
         );
 
+        $proposeToRevoke = $repo->fetchProposeToRevokeUsingCase($query);
+
+        $slaValues = [];
+        /** @var SlaTargetDate $slaTargetDate */
+        foreach ($proposeToRevoke->getSlaTargetDates() as $slaTargetDate) {
+            $slaValues[$slaTargetDate->getSla()->getField() . 'Target'] = $slaTargetDate->getTargetDate();
+        }
+
         return $this->result(
-            $repo->fetchProposeToRevokeUsingCase($query),
-            ['presidingTc', 'reasons', 'assignedCaseworker']
+            $proposeToRevoke,
+            ['presidingTc', 'reasons', 'assignedCaseworker'],
+            $slaValues
         );
     }
 }
