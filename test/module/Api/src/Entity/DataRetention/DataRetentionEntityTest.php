@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\DataRetention;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention as Entity;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime as CustomDateTime;
 
 /**
  * DataRetention Entity Unit Tests
@@ -26,7 +27,7 @@ class DataRetentionEntityTest extends EntityTester
 
         $expectedEntity = new Entity();
         $expectedEntity->setActionConfirmation(true);
-        $expectedEntity->setActionedDate(new \DateTime('now'));
+        $expectedEntity->setActionedDate(new CustomDateTime());
 
         $this->assertEquals(
             $dataRetentionEntity->markForDelete(),
