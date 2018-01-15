@@ -29,7 +29,10 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
         $this->references = [
             PresidingTc::class => [
                 1 => m::mock(PresidingTc::class)
-            ]
+            ],
+        ];
+        $this->refData = [
+            'DUMMY-ACTION',
         ];
 
         parent::initReferences();
@@ -51,7 +54,7 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
             'finalSubmissionIssuedDate' => '2017-01-01',
             'finalSubmissionReturnedDate' => '2017-01-01',
             'finalSubmissionPresidingTc' => 1,
-            'actionToBeTaken' => 1,
+            'actionToBeTaken' => 'DUMMY-ACTION',
             'revocationLetterIssuedDate' => '2017-01-01',
             'nfaLetterIssuedDate' => '2017-01-01',
             'warningLetterIssuedDate' => '2017-01-01',
@@ -86,6 +89,9 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
                 /** @var PresidingTc $presidingTc */
                 $presidingTc = $savedValue;
                 $savedValue = $presidingTc->getId();
+            }
+            if ($key == 'actionToBeTaken') {
+                $value = $this->refData['DUMMY-ACTION'];
             }
 
             $this->assertSame($value, $savedValue);
