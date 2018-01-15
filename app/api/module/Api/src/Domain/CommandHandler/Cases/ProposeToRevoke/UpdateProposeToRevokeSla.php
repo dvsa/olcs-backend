@@ -85,7 +85,7 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
         }
 
         if ($command->getActionToBeTaken() !== null) {
-            $proposeToRevoke->setActionToBeTaken($command->getActionToBeTaken());
+            $proposeToRevoke->setActionToBeTaken($this->getRepo()->getRefdataReference($command->getActionToBeTaken()));
         }
 
         if ($command->getRevocationLetterIssuedDate() !== null) {
