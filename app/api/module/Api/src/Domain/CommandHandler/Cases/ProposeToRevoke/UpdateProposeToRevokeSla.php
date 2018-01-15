@@ -50,7 +50,10 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
 
         if ($command->getApprovalSubmissionPresidingTc() !== null) {
             $approvalSubmissionPresidingTc = $this->getRepo()
-                ->getReference(PresidingTc::class, $command->getApprovalSubmissionPresidingTc());
+                ->getReference(
+                PresidingTc::class,
+                $command->getApprovalSubmissionPresidingTc()
+            );
             $proposeToRevoke->setApprovalSubmissionPresidingTc($approvalSubmissionPresidingTc);
         }
 
@@ -80,7 +83,10 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
 
         if ($command->getFinalSubmissionPresidingTc() !== null) {
             $finalSubmissionPresidingTc = $this->getRepo()
-                ->getReference(PresidingTc::class, $command->getFinalSubmissionPresidingTc());
+                ->getReference(
+                PresidingTc::class,
+                $command->getFinalSubmissionPresidingTc()
+            );
             $proposeToRevoke->setFinalSubmissionPresidingTc($finalSubmissionPresidingTc);
         }
 
