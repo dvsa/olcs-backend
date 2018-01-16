@@ -33,9 +33,9 @@ class SlaTargetDate extends AbstractSlaTargetDate
      * Creates a new SlaTargetDate entity and sets required data. Any entity must be checked here by setting the
      * appropriate field (such as Document) to maintain a foregn key constraint.
      *
-     * @param $entity
-     * @param $agreedDate
-     * @param $underDelegation
+     * @param mixed $entity          Entity
+     * @param mixed $agreedDate      Agreed Date
+     * @param mixed $underDelegation Under Delegation
      */
     public function __construct($entity, $agreedDate, $underDelegation = null)
     {

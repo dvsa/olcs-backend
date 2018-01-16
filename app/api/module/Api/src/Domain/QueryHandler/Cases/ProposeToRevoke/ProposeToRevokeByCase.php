@@ -51,4 +51,3 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
         );
     }
 }
-
