@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Pi\Pi;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
+use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
 
 /**
  * SlaTargetDate Entity
@@ -32,9 +33,9 @@ class SlaTargetDate extends AbstractSlaTargetDate
      * Creates a new SlaTargetDate entity and sets required data. Any entity must be checked here by setting the
      * appropriate field (such as Document) to maintain a foregn key constraint.
      *
-     * @param $entity
-     * @param $agreedDate
-     * @param $underDelegation
+     * @param mixed $entity          Entity
+     * @param mixed $agreedDate      Agreed Date
+     * @param mixed $underDelegation Under Delegation
      */
     public function __construct($entity, $agreedDate, $underDelegation = null)
     {
@@ -44,6 +45,8 @@ class SlaTargetDate extends AbstractSlaTargetDate
             $this->setPi($entity);
         } elseif ($entity instanceof Submission) {
             $this->setSubmission($entity);
+        } elseif ($entity instanceof ProposeToRevoke) {
+            $this->setProposeToRevoke($entity);
         } else {
             throw new NotFoundException('Entity not found');
         }

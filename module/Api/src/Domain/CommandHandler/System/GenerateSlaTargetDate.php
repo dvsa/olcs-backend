@@ -14,7 +14,11 @@ use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Generate SlaTargetDate
@@ -23,7 +27,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
 {
     protected $repoServiceName = 'SlaTargetDate';
 
-    protected $extraRepos = ['Pi', 'Submission', 'Sla'];
+    protected $extraRepos = ['Pi', 'Submission', 'Sla', 'ProposeToRevoke'];
 
     /**
      * @var SlaCalculatorInterface
@@ -31,13 +35,14 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     private $slaService;
 
     /**
-     * @param CommandInterface $command
+     * @param CommandInterface $command Command
      * @return Result
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
+        /** @var GenerateSlaTargetDateCmd  $command */
         if ($command->getPi() !== null) {
             $result->merge(
                 $this->generateForEntity('Pi', $command->getPi(), ['pi', 'pi_hearing'])
@@ -45,6 +50,10 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
         } elseif ($command->getSubmission() !== null) {
             $result->merge(
                 $this->generateForEntity('Submission', $command->getSubmission(), ['submission'])
+            );
+        } elseif ($command->getProposeToRevoke() !== null) {
+            $result->merge(
+                $this->generateForEntity('ProposeToRevoke', $command->getProposeToRevoke(), ['ptr'])
             );
         }
 
@@ -54,11 +63,12 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Generates and saves SLA for given entity
      *
-     * @param string $repoName
-     * @param int $id
-     * @param array $categories
+     * @param string $repoName   Repo Name
+     * @param int    $id         Id
+     * @param array  $categories Categories
      *
      * @return Result
+     * @throws RuntimeException
      */
     private function generateForEntity($repoName, $id, array $categories)
     {
@@ -89,11 +99,12 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Process SLA Target Dates for given entity (updates SlaTargetDates collection)
      *
-     * @param PiEntity|SubmissionEntity $entity
-     * @param TrafficAreaEntity $trafficArea
-     * @param array $categories
+     * @param PiEntity|SubmissionEntity|ProposeToRevokeEntity $entity      Entity
+     * @param TrafficAreaEntity                               $trafficArea Traffic Area
+     * @param array                                           $categories  Categories
      *
      * @return array
+     * @throws RuntimeException
      */
     private function processSlaTargetDates($entity, TrafficAreaEntity $trafficArea, array $categories)
     {
@@ -151,7 +162,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
     /**
      * Creates service
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param ServiceLocatorInterface $serviceLocator ServiceLocator
      *
      * @return GenerateSlaTargetDate
      */

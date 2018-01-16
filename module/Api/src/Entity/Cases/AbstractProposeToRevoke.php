@@ -339,6 +339,21 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     protected $warningLetterIssuedDate;
 
     /**
+     * Sla target date
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\SlaTargetDate",
+     *     mappedBy="proposeToRevoke",
+     *     cascade={"persist"},
+     *     indexBy="sla_id",
+     *     orphanRemoval=true
+     * )
+     */
+    protected $slaTargetDates;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -356,6 +371,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     public function initCollections()
     {
         $this->reasons = new ArrayCollection();
+        $this->slaTargetDates = new ArrayCollection();
     }
 
     /**
@@ -1211,6 +1227,69 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
         }
 
         return $this->warningLetterIssuedDate;
+    }
+
+    /**
+     * Set the sla target date
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     *
+     * @return ProposeToRevoke
+     */
+    public function setSlaTargetDates($slaTargetDates)
+    {
+        $this->slaTargetDates = $slaTargetDates;
+
+        return $this;
+    }
+
+    /**
+     * Get the sla target dates
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSlaTargetDates()
+    {
+        return $this->slaTargetDates;
+    }
+
+    /**
+     * Add a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     *
+     * @return ProposeToRevoke
+     */
+    public function addSlaTargetDates($slaTargetDates)
+    {
+        if ($slaTargetDates instanceof ArrayCollection) {
+            $this->slaTargetDates = new ArrayCollection(
+                array_merge(
+                    $this->slaTargetDates->toArray(),
+                    $slaTargetDates->toArray()
+                )
+            );
+        } elseif (!$this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->add($slaTargetDates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being removed
+     *
+     * @return ProposeToRevoke
+     */
+    public function removeSlaTargetDates($slaTargetDates)
+    {
+        if ($this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->removeElement($slaTargetDates);
+        }
+
+        return $this;
     }
 
     /**

@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Cases\ProposeToRevoke\UpdateProposeToRevoke as UpdateProposeToRevokeCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Update ProposeToRevoke
@@ -67,6 +68,17 @@ final class UpdateProposeToRevoke extends AbstractCommandHandler implements Tran
         $result = new Result();
         $result->addId('proposeToRevoke', $proposeToRevoke->getId());
         $result->addMessage('Revocation updated successfully');
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->handleSideEffect(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'proposeToRevoke' => $proposeToRevoke->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }

@@ -23,7 +23,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_sla_target_date_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_sla_target_date_sla_id", columns={"sla_id"}),
  *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_sla_target_date_propose_to_revoke_idx",
+     *     columns={"propose_to_revoke_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_sla_target_date_document_id", columns={"document_id"})
@@ -140,6 +142,20 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      * @ORM\JoinColumn(name="pi_id", referencedColumnName="id", nullable=true)
      */
     protected $pi;
+
+    /**
+     * Propose to revoke
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke",
+     *     fetch="LAZY",
+     *     inversedBy="slaTargetDates"
+     * )
+     * @ORM\JoinColumn(name="propose_to_revoke_id", referencedColumnName="id", nullable=true)
+     */
+    protected $proposeToRevoke;
 
     /**
      * Sent date
@@ -464,6 +480,30 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     public function getPi()
     {
         return $this->pi;
+    }
+
+    /**
+     * Set the propose to revoke
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke $proposeToRevoke entity being set as the value
+     *
+     * @return SlaTargetDate
+     */
+    public function setProposeToRevoke($proposeToRevoke)
+    {
+        $this->proposeToRevoke = $proposeToRevoke;
+
+        return $this;
+    }
+
+    /**
+     * Get the propose to revoke
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke
+     */
+    public function getProposeToRevoke()
+    {
+        return $this->proposeToRevoke;
     }
 
     /**
