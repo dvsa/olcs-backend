@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
 use Dvsa\Olcs\Transfer\Command\Cases\ProposeToRevoke\UpdateProposeToRevokeSla as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Update ProposeToRevoke Test
@@ -79,6 +81,13 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
             ->with(m::type(ProposeToRevokeEntity::class))
             ->andReturnSelf();
 
+        $this->expectedSideEffect(
+            GenerateSlaTargetDateCmd::class,
+            [
+                'proposeToRevoke' => $data['id']
+            ],
+            new Result()
+        );
         $result = $this->sut->handleCommand($command);
 
         foreach ($data as $key => $value) {

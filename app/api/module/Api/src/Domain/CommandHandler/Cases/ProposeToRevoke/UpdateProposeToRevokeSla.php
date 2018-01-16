@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
 use Dvsa\Olcs\Transfer\Command\Cases\ProposeToRevoke\UpdateProposeToRevokeSla as UpdateProposeToRevokeCommandSla;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Update ProposeToRevokeSla
@@ -42,10 +43,11 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
         $proposeToRevoke->setApprovalSubmissionReturnedDate($command->getApprovalSubmissionReturnedDate());
 
         $proposeToRevoke->setApprovalSubmissionPresidingTc(
-            $this->getRepo()->getReference(
-                PresidingTc::class,
-                $command->getApprovalSubmissionPresidingTc()
-            )
+            $this->getRepo()
+                ->getReference(
+                    PresidingTc::class,
+                    $command->getApprovalSubmissionPresidingTc()
+                )
         );
 
         $proposeToRevoke->setIorLetterIssuedDate($command->getIorLetterIssuedDate());
@@ -61,10 +63,11 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
         $proposeToRevoke->setFinalSubmissionReturnedDate($command->getFinalSubmissionReturnedDate());
 
         $proposeToRevoke->setFinalSubmissionPresidingTc(
-            $this->getRepo()->getReference(
-                PresidingTc::class,
-                $command->getFinalSubmissionPresidingTc()
-            )
+            $this->getRepo()
+                ->getReference(
+                    PresidingTc::class,
+                    $command->getFinalSubmissionPresidingTc()
+                )
         );
 
         $proposeToRevoke->setActionToBeTaken($this->getRepo()->getRefdataReference($command->getActionToBeTaken()));
@@ -84,6 +87,17 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
         $result = new Result();
         $result->addId('proposeToRevoke', $proposeToRevoke->getId());
         $result->addMessage('Revocation Sla updated successfully');
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->handleSideEffect(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'proposeToRevoke' => $proposeToRevoke->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }

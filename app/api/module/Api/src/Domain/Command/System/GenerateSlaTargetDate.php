@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Generate SlaTargetDate
- */
 namespace Dvsa\Olcs\Api\Domain\Command\System;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -12,18 +9,19 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class GenerateSlaTargetDate extends AbstractCommand
 {
-    /**
-     * @var int
-     */
+    /** @var int|null */
     protected $pi;
 
-    /**
-     * @var int
-     */
+    /** @var int|null */
     protected $submission;
 
+    /** @var int|null */
+    protected $proposeToRevoke;
+
     /**
-     * @return int
+     * Get PI id
+     *
+     * @return int|null
      */
     public function getPi()
     {
@@ -31,10 +29,22 @@ final class GenerateSlaTargetDate extends AbstractCommand
     }
 
     /**
-     * @return int
+     * Get Submission id
+     *
+     * @return int|null
      */
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Get the value of ProposeToRevoke id
+     *
+     * @return int|null
+     */
+    public function getProposeToRevoke()
+    {
+        return $this->proposeToRevoke;
     }
 }

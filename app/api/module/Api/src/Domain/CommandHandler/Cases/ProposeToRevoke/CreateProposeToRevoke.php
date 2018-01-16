@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Pi\Reason;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
 use Dvsa\Olcs\Transfer\Command\Cases\ProposeToRevoke\CreateProposeToRevoke as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 
 /**
  * Create ProposeToRevoke
@@ -41,6 +42,17 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
         $result = new Result();
         $result->addId('proposeToRevoke', $proposeToRevoke->getId());
         $result->addMessage('Revocation created successfully');
+
+        // generate all related SLA Target Dates
+        $result->merge(
+            $this->handleSideEffect(
+                GenerateSlaTargetDateCmd::create(
+                    [
+                        'proposeToRevoke' => $proposeToRevoke->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }
