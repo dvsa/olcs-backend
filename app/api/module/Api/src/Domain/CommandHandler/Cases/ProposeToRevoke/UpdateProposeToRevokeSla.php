@@ -36,83 +36,51 @@ final class UpdateProposeToRevokeSla extends AbstractCommandHandler implements T
         /** @var ProposeToRevoke $proposeToRevoke */
         $proposeToRevoke = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        if ($command->getIsSubmissionRequiredForApproval() !== null) {
-            $proposeToRevoke->setIsSubmissionRequiredForApproval($command->getIsSubmissionRequiredForApproval());
-        }
+        $proposeToRevoke->setIsSubmissionRequiredForApproval($command->getIsSubmissionRequiredForApproval());
 
-        if ($command->getApprovalSubmissionIssuedDate() !== null) {
-            $proposeToRevoke->setApprovalSubmissionIssuedDate($command->getApprovalSubmissionIssuedDate());
-        }
+        $proposeToRevoke->setApprovalSubmissionIssuedDate($command->getApprovalSubmissionIssuedDate());
 
-        if ($command->getApprovalSubmissionReturnedDate() !== null) {
-            $proposeToRevoke->setApprovalSubmissionReturnedDate($command->getApprovalSubmissionReturnedDate());
-        }
+        $proposeToRevoke->setApprovalSubmissionReturnedDate($command->getApprovalSubmissionReturnedDate());
 
-        if ($command->getApprovalSubmissionPresidingTc() !== null) {
-            $approvalSubmissionPresidingTc = $this->getRepo()
+        $proposeToRevoke->setApprovalSubmissionPresidingTc(
+            $this->getRepo()
                 ->getReference(
                     PresidingTc::class,
                     $command->getApprovalSubmissionPresidingTc()
-                );
-            $proposeToRevoke->setApprovalSubmissionPresidingTc($approvalSubmissionPresidingTc);
-        }
+                )
+        );
 
-        if ($command->getIorLetterIssuedDate() !== null) {
-            $proposeToRevoke->setIorLetterIssuedDate($command->getIorLetterIssuedDate());
-        }
+        $proposeToRevoke->setIorLetterIssuedDate($command->getIorLetterIssuedDate());
 
-        if ($command->getOperatorResponseDueDate() !== null) {
-            $proposeToRevoke->setOperatorResponseDueDate($command->getOperatorResponseDueDate());
-        }
+        $proposeToRevoke->setOperatorResponseDueDate($command->getOperatorResponseDueDate());
 
-        if ($command->getOperatorResponseReceivedDate() !== null) {
-            $proposeToRevoke->setOperatorResponseReceivedDate($command->getOperatorResponseReceivedDate());
-        }
+        $proposeToRevoke->setOperatorResponseReceivedDate($command->getOperatorResponseReceivedDate());
 
-        if ($command->getIsSubmissionRequiredForAction() !== null) {
-            $proposeToRevoke->setIsSubmissionRequiredForAction($command->getIsSubmissionRequiredForAction());
-        }
+        $proposeToRevoke->setIsSubmissionRequiredForAction($command->getIsSubmissionRequiredForAction());
 
-        if ($command->getFinalSubmissionIssuedDate() !== null) {
-            $proposeToRevoke->setFinalSubmissionIssuedDate($command->getFinalSubmissionIssuedDate());
-        }
+        $proposeToRevoke->setFinalSubmissionIssuedDate($command->getFinalSubmissionIssuedDate());
 
-        if ($command->getFinalSubmissionReturnedDate() !== null) {
-            $proposeToRevoke->setFinalSubmissionReturnedDate($command->getFinalSubmissionReturnedDate());
-        }
+        $proposeToRevoke->setFinalSubmissionReturnedDate($command->getFinalSubmissionReturnedDate());
 
-        if ($command->getFinalSubmissionPresidingTc() !== null) {
-            $finalSubmissionPresidingTc = $this->getRepo()
+        $proposeToRevoke->setFinalSubmissionPresidingTc(
+            $this->getRepo()
                 ->getReference(
                     PresidingTc::class,
                     $command->getFinalSubmissionPresidingTc()
-                );
-            $proposeToRevoke->setFinalSubmissionPresidingTc($finalSubmissionPresidingTc);
-        }
+                )
+        );
 
-        if ($command->getActionToBeTaken() !== null) {
-            $proposeToRevoke->setActionToBeTaken($this->getRepo()->getRefdataReference($command->getActionToBeTaken()));
-        }
+        $proposeToRevoke->setActionToBeTaken($this->getRepo()->getRefdataReference($command->getActionToBeTaken()));
 
-        if ($command->getRevocationLetterIssuedDate() !== null) {
-            $proposeToRevoke->setRevocationLetterIssuedDate($command->getRevocationLetterIssuedDate());
-        }
+        $proposeToRevoke->setRevocationLetterIssuedDate($command->getRevocationLetterIssuedDate());
 
-        if ($command->getNfaLetterIssuedDate() !== null) {
-            $proposeToRevoke->setNfaLetterIssuedDate($command->getNfaLetterIssuedDate());
-        }
+        $proposeToRevoke->setNfaLetterIssuedDate($command->getNfaLetterIssuedDate());
 
-        if ($command->getWarningLetterIssuedDate() !== null) {
-            $proposeToRevoke->setWarningLetterIssuedDate($command->getWarningLetterIssuedDate());
-        }
+        $proposeToRevoke->setWarningLetterIssuedDate($command->getWarningLetterIssuedDate());
 
-        if ($command->getPiAgreedDate() !== null) {
-            $proposeToRevoke->setPiAgreedDate($command->getPiAgreedDate());
-        }
+        $proposeToRevoke->setPiAgreedDate($command->getPiAgreedDate());
 
-        if ($command->getOtherActionAgreedDate() !== null) {
-            $proposeToRevoke->setOtherActionAgreedDate($command->getOtherActionAgreedDate());
-        }
+        $proposeToRevoke->setOtherActionAgreedDate($command->getOtherActionAgreedDate());
 
         $this->getRepo()->save($proposeToRevoke);
 
