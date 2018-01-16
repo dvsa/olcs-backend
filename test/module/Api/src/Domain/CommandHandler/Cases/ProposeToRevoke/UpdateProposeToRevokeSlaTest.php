@@ -30,7 +30,8 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
     {
         $this->references = [
             PresidingTc::class => [
-                1 => m::mock(PresidingTc::class)
+                4 => m::mock(PresidingTc::class),
+                5 => m::mock(PresidingTc::class),
             ],
         ];
         $this->refData = [
@@ -43,36 +44,36 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'id' => 1,
-            'version' => 1,
-            'isSubmissionRequiredForApproval' => 1,
+            'id' => 2,
+            'version' => 3,
+            'isSubmissionRequiredForApproval' => 0,
             'approvalSubmissionIssuedDate' => '2017-01-01',
-            'approvalSubmissionReturnedDate' => '2017-01-01',
-            'approvalSubmissionPresidingTc' => 1,
-            'iorLetterIssuedDate' => '2017-01-01',
-            'operatorResponseDueDate' => '2017-01-01',
-            'operatorResponseReceivedDate' => '2017-01-01',
-            'isSubmissionRequiredForAction' => 0,
-            'finalSubmissionIssuedDate' => '2017-01-01',
-            'finalSubmissionReturnedDate' => '2017-01-01',
-            'finalSubmissionPresidingTc' => 1,
+            'approvalSubmissionReturnedDate' => '2017-01-02',
+            'approvalSubmissionPresidingTc' => 4,
+            'iorLetterIssuedDate' => '2017-01-03',
+            'operatorResponseDueDate' => '2017-01-04',
+            'operatorResponseReceivedDate' => '2017-01-05',
+            'isSubmissionRequiredForAction' => 1,
+            'finalSubmissionIssuedDate' => '2017-01-06',
+            'finalSubmissionReturnedDate' => '2017-01-07',
+            'finalSubmissionPresidingTc' => 5,
             'actionToBeTaken' => 'DUMMY-ACTION',
-            'revocationLetterIssuedDate' => '2017-01-01',
-            'nfaLetterIssuedDate' => '2017-01-01',
-            'warningLetterIssuedDate' => '2017-01-01',
-            'piAgreedDate' => '2017-01-01',
-            'otherActionAgreedDate' => '2017-01-01',
+            'revocationLetterIssuedDate' => '2017-01-08',
+            'nfaLetterIssuedDate' => '2017-01-09',
+            'warningLetterIssuedDate' => '2017-01-10',
+            'piAgreedDate' => '2017-01-11',
+            'otherActionAgreedDate' => '2017-01-12',
         ];
 
         $command = Cmd::create($data);
 
         /** @var ProposeToRevokeEntity|m\MockInterface $proposeToRevoke */
         $proposeToRevoke = m::mock(ProposeToRevokeEntity::class)->makePartial();
-        $proposeToRevoke->setId($data['id']);
+        $proposeToRevoke->setId(2);
 
         $this->repoMap['ProposeToRevoke']->shouldReceive('fetchUsingId')
             ->once()
-            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->with($command, Query::HYDRATE_OBJECT, 3)
             ->andReturn($proposeToRevoke);
 
         $this->repoMap['ProposeToRevoke']->shouldReceive('save')
@@ -90,6 +91,9 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         foreach ($data as $key => $value) {
+            if ($key == 'version') {
+                continue;
+            }
 
             $getter = 'get' . ucwords($key);
             $savedValue = $proposeToRevoke->$getter();
@@ -103,7 +107,7 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
                 $value = $this->refData['DUMMY-ACTION'];
             }
 
-            $this->assertSame($value, $savedValue);
+            $this->assertSame($value, $savedValue, $key);
 
         }
 

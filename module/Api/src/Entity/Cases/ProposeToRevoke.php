@@ -52,11 +52,12 @@ class ProposeToRevoke extends AbstractProposeToRevoke
     }
 
     /**
+     * Update
+     *
      * @param array       $reasons            reasons
      * @param PresidingTc $presidingTc        presidingTc
      * @param \DateTime   $ptrAgreedDate      ptrAgreedDate
      * @param User|null   $assignedCaseworker assignedCaseworker
-     *
      * @return void
      */
     public function update(
