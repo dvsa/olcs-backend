@@ -35,7 +35,7 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
 
         return $this->result(
             $repo->fetchProposeToRevokeUsingCase($query),
-            ['presidingTc', 'reasons', 'assignedCaseworker']
+            ['presidingTc', 'reasons', 'assignedCaseworker', 'actionToBeTaken']
         );
     }
 }
