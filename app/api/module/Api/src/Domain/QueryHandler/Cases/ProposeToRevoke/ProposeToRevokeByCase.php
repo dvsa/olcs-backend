@@ -37,9 +37,11 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
         $proposeToRevoke = $repo->fetchProposeToRevokeUsingCase($query);
 
         $slaValues = [];
-        /** @var SlaTargetDate $slaTargetDate */
-        foreach ($proposeToRevoke->getSlaTargetDates() as $slaTargetDate) {
-            $slaValues[$slaTargetDate->getSla()->getField() . 'Target'] = $slaTargetDate->getTargetDate();
+        if ($proposeToRevoke) {
+            /** @var SlaTargetDate $slaTargetDate */
+            foreach ($proposeToRevoke->getSlaTargetDates() as $slaTargetDate) {
+                $slaValues[$slaTargetDate->getSla()->getField() . 'Target'] = $slaTargetDate->getTargetDate();
+            }
         }
 
         return $this->result(
@@ -49,3 +51,4 @@ final class ProposeToRevokeByCase extends AbstractQueryHandler
         );
     }
 }
+
