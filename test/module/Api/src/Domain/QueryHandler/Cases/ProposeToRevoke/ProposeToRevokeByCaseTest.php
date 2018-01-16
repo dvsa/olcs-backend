@@ -50,10 +50,12 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
 
         $proposeToRevokeEntity
             ->shouldReceive('getSlaTargetDates')
-            ->andReturn([
-                $this->createSlaTargetDate('dummySlaProperty1', 'DUMMY-SLA-VAL-1'),
-                $this->createSlaTargetDate('dummySlaProperty2', 'DUMMY-SLA-VAL-2'),
-            ]);
+            ->andReturn(
+                [
+                    $this->createSlaTargetDate('dummySlaProperty1', 'DUMMY-SLA-VAL-1'),
+                    $this->createSlaTargetDate('dummySlaProperty2', 'DUMMY-SLA-VAL-2'),
+                ]
+            );
 
         $proposeToRevokeEntity
             ->shouldReceive('serialize')
@@ -72,11 +74,33 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
         );
     }
 
+    public function testHandleQueryWhenPtrNotFound()
+    {
+        $query = Qry::create(['case' => 1]);
+
+        $this->repoMap['ProposeToRevoke']
+            ->shouldReceive('disableSoftDeleteable')
+            ->with(
+                [
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                ]
+            )
+            ->once();
+
+        $this->repoMap['ProposeToRevoke']
+            ->shouldReceive('fetchProposeToRevokeUsingCase')
+            ->with($query)
+            ->andReturn(null);
+
+        $expected = new Result(null, ['presidingTc', 'reasons', 'assignedCaseworker', 'actionToBeTaken'], []);
+        $this->assertSame((array)$expected, (array)$this->sut->handleQuery($query));
+    }
+
     protected function createSlaTargetDate($name, $targetDate)
     {
         $mock = m::mock(SlaTargetDate::class);
-        $mock->shouldReceive('getSla->getField') ->andReturn($name);
-        $mock->shouldReceive('getTargetDate') ->andReturn($targetDate);
+        $mock->shouldReceive('getSla->getField')->andReturn($name);
+        $mock->shouldReceive('getTargetDate')->andReturn($targetDate);
         return $mock;
     }
 }
