@@ -59,7 +59,16 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
 
         $proposeToRevokeEntity
             ->shouldReceive('serialize')
-            ->with(['presidingTc', 'reasons', 'assignedCaseworker', 'actionToBeTaken'])
+            ->with(
+                [
+                    'presidingTc',
+                    'reasons',
+                    'assignedCaseworker',
+                    'actionToBeTaken',
+                    'approvalSubmissionPresidingTc',
+                    'finalSubmissionPresidingTc'
+                ]
+            )
             ->andReturn(['foo']);
 
         /** @var Result $result */
@@ -92,7 +101,18 @@ class ProposeToRevokeByCaseTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn(null);
 
-        $expected = new Result(null, ['presidingTc', 'reasons', 'assignedCaseworker', 'actionToBeTaken'], []);
+        $expected = new Result(
+            null,
+            [
+                'presidingTc',
+                'reasons',
+                'assignedCaseworker',
+                'actionToBeTaken',
+                'approvalSubmissionPresidingTc',
+                'finalSubmissionPresidingTc'
+            ],
+            []
+        );
         $this->assertSame((array)$expected, (array)$this->sut->handleQuery($query));
     }
 
