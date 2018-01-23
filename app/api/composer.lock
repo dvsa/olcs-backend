@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "56acfebe9b7db7e87561118e2f5a0203",
+    "content-hash": "2117add0b395c4accd80490ab8808ea1",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1310,11 +1310,11 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-hotfix/OLCS-18526-mitigation",
+            "version": "dev-release/4.30.2",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "16af6fe071290e369d699bbd6d635ed99b2f5de3"
+                "reference": "0149f16452d38521baa0f22e252f8db138bf16e0"
             },
             "require": {
                 "php": ">=5.4",
@@ -1352,7 +1352,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2018-01-23T14:22:47+00:00"
+            "time": "2017-12-21T11:47:35+00:00"
         },
         {
             "name": "olcs/olcs-utils",
