@@ -21,7 +21,15 @@ class PsvDisc extends AbstractRepository
 
     protected $alias = 'psv';
 
-    public function fetchDiscsToPrint($licenceType)
+    /**
+     * Fetch discs to print
+     *
+     * @param int $licenceType licence type
+     * @param int|null $maxResults
+     *
+     * @return array
+     */
+    public function fetchDiscsToPrint($licenceType, $maxResults)
     {
         $qb = $this->createQueryBuilder();
 
@@ -33,6 +41,8 @@ class PsvDisc extends AbstractRepository
             ->with('l.licenceType', 'llt')
             ->with('l.goodsOrPsv', 'lgp')
             ->order('l.licNo', 'ASC');
+
+        $qb->setMaxResults($maxResults);
 
         $this->addFilteringConditions($qb, $licenceType);
 

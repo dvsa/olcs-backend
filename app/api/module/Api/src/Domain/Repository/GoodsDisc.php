@@ -25,7 +25,15 @@ class GoodsDisc extends AbstractRepository
 
     protected $alias = 'gd';
 
-    public function fetchDiscsToPrint($niFlag, $licenceType)
+    /**
+     * Fetch discs to print
+     *
+     * @param int $licenceType licence type
+     * @param int|null $maxResults
+     *
+     * @return array
+     */
+    public function fetchDiscsToPrint($niFlag, $licenceType, $maxResults)
     {
         $qb = $this->createQueryBuilder();
 
@@ -45,6 +53,8 @@ class GoodsDisc extends AbstractRepository
             // out not being the same as in the DB
             ->order('lvl.licNo', 'ASC')
             ->order('gd.id', 'ASC');
+
+        $qb->setMaxResults($maxResults);
 
         $this->addFilteringConditions($qb, $niFlag, $licenceType);
 

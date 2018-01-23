@@ -46,6 +46,12 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
         ]
     ];
 
+    /**
+     * @param CommandInterface|\Dvsa\Olcs\Api\Domain\Command\Discs\PrintDiscs $command
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $config = $this->getConfig();
