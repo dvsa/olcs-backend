@@ -5,9 +5,12 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GoodsDisc;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc;
+use Dvsa\Olcs\Api\Entity\System\DiscSequence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -32,12 +35,23 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
 
     protected $extraRepos = ['DiscSequence'];
 
+    /**
+     * @param CommandInterface|\Dvsa\Olcs\Transfer\Command\GoodsDisc\PrintDiscs $command
+     *
+     * @return Result
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        $discsToPrint = $this->getRepo()->fetchDiscsToPrint(
-            $command->getNiFlag(), $command->getLicenceType()
+        /** @var GoodsDisc $goodsDiscRepository */
+        $goodsDiscRepository = $this->getRepo();
+        $discsToPrint = $goodsDiscRepository->fetchDiscsToPrint(
+            $command->getNiFlag(),
+            $command->getLicenceType(),
+            $command->getMaxPages() ? $command->getMaxPages() * DiscSequence::DISCS_ON_PAGE : null
         );
 
         $this->validateParameters(
