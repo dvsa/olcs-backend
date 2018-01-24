@@ -26,38 +26,22 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        if (
-            $data['prevConviction'] == 'N'
-            && $data['variationType']['id'] !=
-            ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE
-        ) {
-            return [
-                'multiItems' => [
-                    [
-                        [
-                            'label' => 'application-review-convictions-penalties-question',
-                            'value' => $this->formatYesNo($data['prevConviction'])
-                        ]
-                    ],
-                    [
-                        [
-                            'label' => 'application-review-convictions-penalties-confirmation',
-                            'value' => $this->formatConfirmed($data['convictionsConfirmation'])
-                        ]
-                    ]
+        if ($data['prevConviction'] == 'N') {
+            $multiItemsArray['multiItems'][] = [
+                [
+                    'label' => 'application-review-convictions-penalties-question',
+                    'value' => $this->formatYesNo($data['prevConviction'])
                 ]
             ];
-        } elseif ($data['prevConviction'] == 'N') {
-            return [
-                'multiItems' => [
+            if ($data['variationType']['id'] != ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+                $multiItemsArray['multiItems'][] = [
                     [
-                        [
-                            'label' => 'application-review-convictions-penalties-question',
-                            'value' => $this->formatYesNo($data['prevConviction'])
-                        ]
+                        'label' => 'application-review-convictions-penalties-confirmation',
+                        'value' => $this->formatConfirmed($data['convictionsConfirmation'])
                     ]
-                ]
-            ];
+                ];
+            }
+            return $multiItemsArray;
         }
 
         $mainItems = [];
