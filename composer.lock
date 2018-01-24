@@ -120,6 +120,12 @@
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:cpms/cpms-client.git",
                 "reference": "cc15cbf8e8ed28dc68bb3def41531f71122f3432"
             },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/cpms-client-dev-master-bd3dfd.tar",
+                "reference": "cc15cbf8e8ed28dc68bb3def41531f71122f3432",
+                "shasum": "c4ff2dafb99dff9c0cea43a36a9dfe65954f62e8"
+            },
             "require": {
                 "zendframework/zendframework": "~2.4"
             },
@@ -1314,7 +1320,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "85e4f487a195fb48721acf49de5ddfe532f1250b"
+                "reference": "7755134a4fc82db0278db08ba0741bcfaff185b0"
             },
             "require": {
                 "php": ">=5.4",
@@ -1352,7 +1358,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2018-01-23T17:53:09+00:00"
+            "time": "2018-01-24T14:26:20+00:00"
         },
         {
             "name": "olcs/olcs-utils",
