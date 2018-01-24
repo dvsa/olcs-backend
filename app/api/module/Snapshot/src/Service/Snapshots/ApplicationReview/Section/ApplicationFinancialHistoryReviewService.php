@@ -5,9 +5,11 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Application Financial History Review Service
@@ -19,11 +21,13 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
     /**
      * Format the readonly config from the given data
      *
-     * @param array $data
+     * @param array $data data
+     *
      * @return array
      */
     public function getConfigFromData(array $data = array())
     {
+
         $config = [
             'multiItems' => [
                 [
@@ -87,12 +91,14 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
             ];
         }
 
-        $config['multiItems'][] = [
-            [
-                'label' => 'application-review-financial-history-insolvencyConfirmation',
-                'value' => $this->formatConfirmed($data['insolvencyConfirmation'])
-            ]
-        ];
+        if ($data['variationType']['id'] != ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+            $config['multiItems'][] = [
+                [
+                    'label' => 'application-review-financial-history-insolvencyConfirmation',
+                    'value' => $this->formatConfirmed($data['insolvencyConfirmation'])
+                ]
+            ];
+        }
 
         return $config;
     }
@@ -100,7 +106,8 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
     /**
      * Format evidence details
      *
-     * @param array $data
+     * @param array $data data
+     *
      * @return string
      */
     private function formatEvidence($data)
