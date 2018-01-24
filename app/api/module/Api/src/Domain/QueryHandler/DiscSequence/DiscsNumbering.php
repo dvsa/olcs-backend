@@ -3,6 +3,7 @@
 /**
  * Get discs numbering information
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\DiscSequence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -19,6 +20,12 @@ class DiscsNumbering extends AbstractQueryHandler
 
     protected $extraRepos = ['GoodsDisc', 'PsvDisc'];
 
+    /**
+     * @param QueryInterface|\Dvsa\Olcs\Transfer\Query\DiscSequence\DiscsNumbering $query
+     *
+     * @return array
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleQuery(QueryInterface $query)
     {
         $result = [];
@@ -43,8 +50,14 @@ class DiscsNumbering extends AbstractQueryHandler
                 $this->getRepo('GoodsDisc')->fetchDiscsToPrintMin($query->getNiFlag(), $query->getLicenceType())
             );
         }
+        if ($query->getMaxPages()) {
+            $result['discsToPrint'] = min(
+                $result['discsToPrint'],
+                $query->getMaxPages() * DiscSequenceEntity::DISCS_ON_PAGE
+            );
+        }
 
-        $result['endNumber'] = (int) ($result['discsToPrint'] ?
+        $result['endNumber'] = (int)($result['discsToPrint'] ?
             $result['startNumber'] + $result['discsToPrint'] - 1 : 0);
         $result['originalEndNumber'] = $result['endNumber'];
         $originalStartNumber = $result['startNumber'];
@@ -72,13 +85,13 @@ class DiscsNumbering extends AbstractQueryHandler
                 $result['discsToPrint'] +
                 ((6 - $result['discsToPrint'] % DiscSequenceEntity::DISCS_ON_PAGE) % 6) - 1;
         }
-        $result['totalPages'] = (int) $result['discsToPrint'] ?
+        $result['totalPages'] = (int)$result['discsToPrint'] ?
             (ceil(($result['endNumber'] - $originalStartNumber) / DiscSequenceEntity::DISCS_ON_PAGE)) -
             (floor(($result['startNumber'] - $originalStartNumber) / DiscSequenceEntity::DISCS_ON_PAGE)) : 0;
 
         return [
             'result' => $result,
-            'count'  => count($result)
+            'count' => count($result)
         ];
     }
 }
