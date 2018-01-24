@@ -51,7 +51,7 @@ class GoodsDiscTest extends RepositoryTestCase
             ->with('lvalt.id', ':applicationLicenceType')->once()->andReturn('condition3');
         $mockQb->shouldReceive('expr->andX')
             ->with('condition1', 'condition2', 'condition3')->once()->andReturn('conditionAndX1');
-
+        $mockQb->shouldReceive('setMaxResults')->with(1)->once()->andReturn('condition4');
         $mockQb->shouldReceive('expr->eq')->with('lvlta.isNi', 1)->once()->andReturn('condition5');
         $mockQb->shouldReceive('expr->eq')->with('gd.isInterim', 0)->once()->andReturn('condition6');
         $mockQb->shouldReceive('expr->eq')->with('lvllt.id', ':licenceLicenceType')->once()->andReturn('condition7');
@@ -101,7 +101,8 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('gd')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->sut->fetchDiscsToPrint('Y', $licenceType);
+        $maxResults = 1;
+        $this->sut->fetchDiscsToPrint('Y', $licenceType, $maxResults);
     }
 
     public function testFetchDiscsToPrint()
@@ -115,6 +116,7 @@ class GoodsDiscTest extends RepositoryTestCase
             ->with('lvagp.id', ':operatorType')->once()->andReturn('condition3');
         $mockQb->shouldReceive('expr->eq')
             ->with('lvalt.id', ':applicationLicenceType')->once()->andReturn('condition4');
+        $mockQb->shouldReceive('setMaxResults')->with(1)->once()->andReturn('conditionAnd4');
         $mockQb->shouldReceive('expr->andX')
             ->with('condition1', 'condition2', 'condition3', 'condition4')
             ->once()
@@ -180,8 +182,11 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('gd')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->sut->fetchDiscsToPrint('N', $licenceType);
+        $maxResults = 1;
+        $this->sut->fetchDiscsToPrint('N', $licenceType, $maxResults);
     }
+
+
 
     public function testSetPrintingOn()
     {
@@ -366,4 +371,6 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->assertSame(83, $this->sut->createDiscsForLicence(1502));
     }
+
+
 }
