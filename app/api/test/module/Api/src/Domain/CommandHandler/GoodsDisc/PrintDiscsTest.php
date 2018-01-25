@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GoodsDisc;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\System\DiscSequence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GoodsDisc\PrintDiscs;
 use Dvsa\Olcs\Api\Domain\Repository\DiscSequened as DiscSequenceRepo;
@@ -47,6 +48,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
+        $maxResults = 1;
         $startNumber = 1;
         $discSequence = 2;
         $data = [
@@ -54,13 +56,14 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'licenceType' => $licenceType,
             'startNumber' => $startNumber,
             'discSequence' => $discSequence,
-            'user' => 1
+            'user' => 1,
+            'maxPages' => $maxResults
         ];
         $command = Cmd::create($data);
 
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
-            ->with($niFlag, $licenceType)
+            ->with($niFlag, $licenceType, $maxResults * DiscSequence::DISCS_ON_PAGE)
             ->andReturn([])
             ->once()
             ->getMock();
@@ -75,6 +78,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
+        $maxResults = 1;
         $startNumber = 1;
         $discSequence = 2;
         $data = [
@@ -82,13 +86,14 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'licenceType' => $licenceType,
             'startNumber' => $startNumber,
             'discSequence' => $discSequence,
-            'user' => 1
+            'user' => 1,
+            "maxPages" => $maxResults
         ];
         $command = Cmd::create($data);
 
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
-            ->with($niFlag, $licenceType)
+            ->with($niFlag, $licenceType, $maxResults * DiscSequence::DISCS_ON_PAGE )
             ->andReturn(['disc1'])
             ->once()
             ->getMock();
@@ -115,6 +120,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
         $this->mockAuthService();
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
+        $maxPages = 36;
         $startNumber = 1;
         $discSequence = 2;
         $data = [
@@ -122,7 +128,8 @@ class PrintDiscsTest extends CommandHandlerTestCase
             'licenceType' => $licenceType,
             'startNumber' => $startNumber,
             'discSequence' => $discSequence,
-            'user' => 1
+            'user' => 1,
+            'maxPages' =>$maxPages
         ];
         $command = Cmd::create($data);
 
@@ -130,7 +137,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
-            ->with($niFlag, $licenceType)
+            ->with($niFlag, $licenceType, $maxPages * DiscSequence::DISCS_ON_PAGE)
             ->andReturn([$disc])
             ->once()
             ->getMock();

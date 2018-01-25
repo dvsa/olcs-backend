@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\System\DiscSequence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -37,6 +38,7 @@ class PsvDiscTest extends RepositoryTestCase
     public function testFetchDiscsToPrint()
     {
         $licenceType = 'ltyp_r';
+        $maxPages = 1;
 
         $mockQb = m::mock(QueryBuilder::class);
         $mockQb->shouldReceive('expr->eq')->with('lta.isNi', 0)->once()->andReturn('condition1');
@@ -49,7 +51,7 @@ class PsvDiscTest extends RepositoryTestCase
             ->with('condition1', 'condition2', 'condition3', 'condition4')->once()->andReturn('conditionAndX');
 
         $mockQb->shouldReceive('andWhere')->with('conditionAndX')->once()->andReturnSelf();
-
+        $mockQb->shouldReceive('setMaxResults')->with(6)->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')
             ->with('licenceType', $licenceType)
             ->once()
@@ -85,7 +87,7 @@ class PsvDiscTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('psv')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->sut->fetchDiscsToPrint($licenceType);
+        $this->sut->fetchDiscsToPrint($licenceType,$maxPages * DiscSequence::DISCS_ON_PAGE);
     }
 
     public function testSetPrintingOn()
