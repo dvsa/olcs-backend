@@ -89,7 +89,7 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
             ];
         }
 
-        if ($data['variationType']['id'] != ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+        if ($data['variationType']['id'] !== ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
             $mainItems[] = [
                 'multiItems' => [
                     [], // Adds a separator
