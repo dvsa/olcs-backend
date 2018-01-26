@@ -5,7 +5,10 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
+
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
 /**
  * Application Convictions Penalties Review Service
@@ -17,28 +20,28 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
     /**
      * Format the readonly config from the given data
      *
-     * @param array $data
+     * @param array $data data
+     *
      * @return array
      */
     public function getConfigFromData(array $data = array())
     {
         if ($data['prevConviction'] == 'N') {
-            return [
-                'multiItems' => [
-                    [
-                        [
-                            'label' => 'application-review-convictions-penalties-question',
-                            'value' => $this->formatYesNo($data['prevConviction'])
-                        ]
-                    ],
-                    [
-                        [
-                            'label' => 'application-review-convictions-penalties-confirmation',
-                            'value' => $this->formatConfirmed($data['convictionsConfirmation'])
-                        ]
-                    ]
+            $multiItemsArray['multiItems'][] = [
+                [
+                    'label' => 'application-review-convictions-penalties-question',
+                    'value' => $this->formatYesNo($data['prevConviction'])
                 ]
             ];
+            if ($data['variationType']['id'] != ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+                $multiItemsArray['multiItems'][] = [
+                    [
+                        'label' => 'application-review-convictions-penalties-confirmation',
+                        'value' => $this->formatConfirmed($data['convictionsConfirmation'])
+                    ]
+                ];
+            }
+            return $multiItemsArray;
         }
 
         $mainItems = [];
@@ -86,17 +89,19 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
             ];
         }
 
-        $mainItems[] = [
-            'multiItems' => [
-                [], // Adds a separator
-                [
+        if ($data['variationType']['id'] !== ApplicationEntity::VARIATION_TYPE_DIRECTOR_CHANGE) {
+            $mainItems[] = [
+                'multiItems' => [
+                    [], // Adds a separator
                     [
-                        'label' => 'application-review-convictions-penalties-confirmation',
-                        'value' => $this->formatConfirmed($data['convictionsConfirmation'])
+                        [
+                            'label' => 'application-review-convictions-penalties-confirmation',
+                            'value' => $this->formatConfirmed($data['convictionsConfirmation'])
+                        ]
                     ]
                 ]
-            ]
-        ];
+            ];
+        }
 
         return [
             'subSections' => [
