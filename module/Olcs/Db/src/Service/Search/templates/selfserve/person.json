@@ -36,6 +36,11 @@
                         }
                      },
                      {
+                        "exists": {
+                           "field": "date_removed"
+                        }
+                     },
+                     {
                         "terms": {
                            "contact_type": [
                               "ct_obj"
