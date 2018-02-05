@@ -36,8 +36,28 @@
                         }
                      },
                      {
-                        "exists": {
-                           "field": "date_removed"
+                        "bool": {
+                           "must": [
+                              {
+                                 "terms": {
+                                    "found_as": [
+                                       "TM"
+                                    ]
+                                 }
+                              },
+                              {
+                                 "exists": {
+                                    "field": "date_removed"
+                                 }
+                              }
+                           ],
+                           "must_not": [
+                              {
+                                 "exists": {
+                                    "field": "application_id"
+                                 }
+                              }
+                           ]
                         }
                      },
                      {
