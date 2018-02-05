@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
@@ -92,11 +93,11 @@ SQL;
         $stmt = $conn->prepare($query);
         $stmt->execute($params);
         return $stmt->rowCount();
-
     }
 
     /**
      * Get next item
+     * AND increment attempts
      *
      * @param array $includeTypes Types to include, default include all
      * @param array $excludeTypes Types to exclude, default exclude none
@@ -108,6 +109,49 @@ SQL;
     public function getNextItem(array $includeTypes = [], array $excludeTypes = [])
     {
         $qb = $this->getNextItemQueryBuilder();
+
+        $result = $this->getNextItemWithQueryBuilder($includeTypes, $excludeTypes, $qb);
+
+        if (!is_null($result)) {
+            $result->incrementAttempts();
+            $result->setStatus($this->getRefdataReference(Entity::STATUS_PROCESSING));
+            $this->save($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Fetch next item even if postponed
+     * and DO NOT increment attempts
+     *
+     * @param array $includeTypes Types to include, default include all
+     * @param array $excludeTypes Types to exclude, default exclude none
+     *
+     * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function fetchNextItemIncludingPostponed(array $includeTypes = [], array $excludeTypes = [])
+    {
+        $qb = $this->fetchNextItemIncludingPostponedQueryBuilder();
+
+        return $this->getNextItemWithQueryBuilder($includeTypes, $excludeTypes, $qb);
+    }
+
+    /**
+     * Get next item
+     *
+     * @param array        $includeTypes Types to include, default include all
+     * @param array        $excludeTypes Types to exclude, default exclude none
+     * @param QueryBuilder $qb           Query builder
+     *
+     * @return Entity
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    private function getNextItemWithQueryBuilder($includeTypes, $excludeTypes, \Doctrine\ORM\QueryBuilder $qb)
+    {
 
         if (!empty($includeTypes)) {
             $qb
@@ -127,12 +171,7 @@ SQL;
             return null;
         }
 
-        $result = $results[0];
-        $result->incrementAttempts();
-        $result->setStatus($this->getRefdataReference(Entity::STATUS_PROCESSING));
-        $this->save($result);
-
-        return $result;
+        return $results[0];
     }
 
     /**
@@ -176,6 +215,24 @@ SQL;
             )
             ->setParameter('statusId', Entity::STATUS_QUEUED)
             ->setParameter('processAfter', $now)
+            ->setMaxResults(1);
+
+        return $qb;
+    }
+
+    /**
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    private function fetchNextItemIncludingPostponedQueryBuilder()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->order($this->alias . '.processAfterDate', 'ASC');
+
+        $qb
+            ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
+            ->setParameter('statusId', Entity::STATUS_QUEUED)
             ->setMaxResults(1);
 
         return $qb;

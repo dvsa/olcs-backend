@@ -23,6 +23,15 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
     use ProcessDateTrait;
 
     /**
+     * Attempts
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="attempts", nullable=false, options={"default": 0})
+     */
+    protected $attempts = 0;
+
+    /**
      * Created on
      *
      * @var \DateTime
@@ -59,6 +68,39 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Process after date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="process_after_date", nullable=true)
+     */
+    protected $processAfterDate;
+
+    /**
+     * Set the attempts
+     *
+     * @param int $attempts new value being set
+     *
+     * @return DocumentToDelete
+     */
+    public function setAttempts($attempts)
+    {
+        $this->attempts = $attempts;
+
+        return $this;
+    }
+
+    /**
+     * Get the attempts
+     *
+     * @return int
+     */
+    public function getAttempts()
+    {
+        return $this->attempts;
+    }
 
     /**
      * Set the created on
@@ -160,6 +202,36 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the process after date
+     *
+     * @param \DateTime $processAfterDate new value being set
+     *
+     * @return DocumentToDelete
+     */
+    public function setProcessAfterDate($processAfterDate)
+    {
+        $this->processAfterDate = $processAfterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the process after date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getProcessAfterDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->processAfterDate);
+        }
+
+        return $this->processAfterDate;
     }
 
     /**
