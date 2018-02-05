@@ -18,8 +18,6 @@ class DocumentToDelete extends AbstractDocumentToDelete
 
     const PROCESS_AFTER_MINUTES = 2;
 
-    const INCREMENT_PROCESS_AFTER_EXPONENTIALLY = true;
-
     public function markAsFailed()
     {
         $this->setAttempts($this->getAttempts() + 1);
@@ -32,10 +30,7 @@ class DocumentToDelete extends AbstractDocumentToDelete
     private function estimateProcessAfterDate()
     {
         $now = new DateTime();
-        $minutesToAdd = self::PROCESS_AFTER_MINUTES;
-        if (self::INCREMENT_PROCESS_AFTER_EXPONENTIALLY) {
-            $minutesToAdd = pow(self::PROCESS_AFTER_MINUTES, $this->getAttempts());
-        }
+        $minutesToAdd = pow(self::PROCESS_AFTER_MINUTES, $this->getAttempts());
 
         $now->add(new \DateInterval('PT'.$minutesToAdd.'M'));
 
