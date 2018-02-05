@@ -130,6 +130,29 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandNoDocumentsToDelete()
+    {
+        $command = Cmd::create([]);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
+        $this->repoMap['DocumentToDelete']
+            ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn([]);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Remove documents : 0 success, 0 not found, 0 errors',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testHandleCommandQueueItemCreatedWhenDocumentPostponed()
     {
         $command = Cmd::create([]);

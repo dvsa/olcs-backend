@@ -146,6 +146,13 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
         /** @var \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete $documentToDelete */
         $documentToDelete = $moreDocumentsToDelete[0];
 
+        if ($nextDocumentQueueItem !== null &&
+            ($nextDocumentQueueItem->getProcessAfterDate() === null ||
+                $nextDocumentQueueItem->getProcessAfterDate() < $documentToDelete->getProcessAfterDate())
+        ) {
+            return;
+        }
+
         $commandParameters = [
             'type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS,
             'status' => Queue::STATUS_QUEUED
@@ -156,16 +163,6 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
         }
 
         $command = Create::create($commandParameters);
-
-        if ($nextDocumentQueueItem !== null &&
-            ($nextDocumentQueueItem->getProcessAfterDate() == null ||
-                $nextDocumentQueueItem->getProcessAfterDate() < $documentToDelete->getProcessAfterDate())
-        ) {
-            $command = false;
-        }
-
-        if ($command) {
-            $this->handleSideEffect($command);
-        }
+        $this->handleSideEffect($command);
     }
 }
