@@ -256,4 +256,52 @@ SQL;
 
         $this->sut->enqueueAllOrganisations('TYPE');
     }
+
+    public function testFetchNextItemIncludingPostponedWithIncludeTypes()
+    {
+        $item = m::mock(QueueEntity::class)->makePartial();
+
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('q.processAfterDate', 'ASC')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([$item])
+                ->getMock()
+        );
+
+        $this->assertEquals($item, $this->sut->fetchNextItemIncludingPostponed(['foo']));
+
+        $now = new DateTime();
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1'.
+            ' AND q.type IN [[["foo"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchNextItemIncludingPostponedWithexcludeTypes()
+    {
+        $item = m::mock(QueueEntity::class)->makePartial();
+
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('q.processAfterDate', 'ASC')->once()->andReturnSelf();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([$item])
+                ->getMock()
+        );
+
+        $this->assertEquals($item, $this->sut->fetchNextItemIncludingPostponed(['foo'], ['bar']));
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1'.
+            ' AND q.type IN [[["foo"]]] AND q.type NOT IN [[["bar"]]]';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
