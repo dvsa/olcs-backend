@@ -122,7 +122,8 @@ SQL;
     }
 
     /**
-     * Fetch next item even if postponed and DO NOT increment attempts
+     * Fetch next item even if postponed
+     * and DO NOT increment attempts
      *
      * @param array $includeTypes Types to include, default include all
      * @param array $excludeTypes Types to exclude, default exclude none
@@ -227,11 +228,10 @@ SQL;
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->order('id', 'ASC');
+            ->order($this->alias . '.processAfterDate', 'ASC');
 
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.status', ':statusId'))
-            ->orderBy($this->alias . '.processAfterDate')
             ->setParameter('statusId', Entity::STATUS_QUEUED)
             ->setMaxResults(1);
 
