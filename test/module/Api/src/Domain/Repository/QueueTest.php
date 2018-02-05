@@ -276,7 +276,6 @@ SQL;
 
         $this->assertEquals($item, $this->sut->fetchNextItemIncludingPostponed(['foo']));
 
-        $now = new DateTime();
         $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1'.
             ' AND q.type IN [[["foo"]]]';
         $this->assertEquals($expectedQuery, $this->query);
