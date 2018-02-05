@@ -45,12 +45,12 @@ class DocumentToDelete extends AbstractRepository
     public function fetchListOfDocumentToDeleteIncludingPostponed($limit)
     {
         $qb = $this->createQueryBuilder();
-        $qb
-            ->andWhere($qb->expr()->lt($this->alias . '.attempts', ':maxAttempts'));
 
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->order($this->alias . '.processAfterDate', 'ASC');
+
+        $qb->andWhere($qb->expr()->lt($this->alias . '.attempts', ':maxAttempts'));
         $qb->setParameter('maxAttempts', Entity::MAX_ATTEMPTS);
-
-        $qb->orderBy($this->alias . '.processAfterDate');
         $qb->setMaxResults($limit);
 
         return $qb->getQuery()->getResult();

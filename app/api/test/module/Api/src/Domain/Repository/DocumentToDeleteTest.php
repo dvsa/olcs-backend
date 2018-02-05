@@ -59,4 +59,26 @@ class DocumentToDeleteTest extends RepositoryTestCase
 
         static::assertEquals($expected, $this->query);
     }
+
+    public function testFetchListOfDocumentToDeleteIncludingPostponed()
+    {
+        /** @var QueryBuilder $qb */
+        $mockQb = $this->createMockQb('{{QUERY}}');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf()
+            ->shouldReceive('order')->with('m.processAfterDate', 'ASC')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['FOO']);
+
+        $this->assertSame(['FOO'], $this->sut->fetchListOfDocumentToDeleteIncludingPostponed(77));
+
+        $expected = '{{QUERY}}' .
+            ' AND m.attempts < [[3]]' .
+            ' LIMIT 77';
+
+        static::assertEquals($expected, $this->query);
+    }
 }
