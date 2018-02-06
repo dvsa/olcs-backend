@@ -71,6 +71,35 @@
                         "exists": {
                            "field": "is_deleted"
                         }
+                     },
+                     {
+                        "bool": {
+                           "must": [
+                              {
+                                 "terms": {
+                                    "found_as": [
+                                       "TM"
+                                    ]
+                                 }
+                              },
+                              {
+                                 "exists": {
+                                    "field": "application_id"
+                                 }
+                              }
+                           ],
+                           "must_not": [
+                              {
+                                 "terms": {
+                                    "app_status_id": [
+                                       "apsts_consideration",
+                                       "apsts_granted",
+                                       "apsts_curtailed"
+                                    ]
+                                 }
+                              }
+                           ]
+                        }
                      }
                   ]
                }
