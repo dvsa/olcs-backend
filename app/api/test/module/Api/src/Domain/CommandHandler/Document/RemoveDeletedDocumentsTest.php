@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete as DocumentToDeleteEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Mockery as m;
@@ -24,6 +25,7 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
         $this->sut = new RemoveDeletedDocuments();
         $this->mockRepo('DocumentToDelete', Repository\DocumentToDelete::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+        $this->mockRepo('Queue', Repository\Queue::class);
 
         $this->mockUploader = m::mock(ContentStoreFileUploader::class);
         $this->mockedSmServices['FileUploader'] = $this->mockUploader;
@@ -62,10 +64,10 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
         );
 
         $documentsToDelete = [
-            (new \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete())->setDocumentStoreId('doc4.rtf'),
-            (new \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete())->setDocumentStoreId('doc3.rtf'),
-            (new \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete())->setDocumentStoreId('doc2.rtf'),
-            (new \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete())->setDocumentStoreId('doc1.rtf'),
+            (new DocumentToDeleteEntity())->setDocumentStoreId('doc4.rtf'),
+            (new DocumentToDeleteEntity)->setDocumentStoreId('doc3.rtf'),
+            (new DocumentToDeleteEntity)->setDocumentStoreId('doc2.rtf'),
+            (new DocumentToDeleteEntity)->setDocumentStoreId('doc1.rtf'),
         ];
 
         $this->repoMap['SystemParameter']
@@ -76,14 +78,15 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
             ->shouldReceive('delete')->with($documentsToDelete[0])->once()
             ->shouldReceive('delete')->with($documentsToDelete[2])->once()
             ->shouldReceive('delete')->with($documentsToDelete[3])->once()
-            ->shouldReceive('fetchListOfDocumentToDelete')->with(1)->once()->andReturn([]);
+            ->shouldReceive('save')->with($documentsToDelete[1])->once()
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn([]);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [],
             'messages' => [
-                'Document delete failed \'doc3.rtf\', code = 500',
+                'Document delete failed. DocumnetStoreId = \'doc3.rtf\', code = 500',
                 'Remove documents : 2 success, 1 not found, 1 errors',
             ]
         ];
@@ -95,12 +98,19 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([]);
 
+        $documentsToDelete = [
+            (new DocumentToDeleteEntity)->setDocumentStoreId('doc1.rtf'),
+        ];
+
         $this->repoMap['SystemParameter']
             ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
 
         $this->repoMap['DocumentToDelete']
             ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
-            ->shouldReceive('fetchListOfDocumentToDelete')->with(1)->once()->andReturn(['FOO']);
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn($documentsToDelete);
+
+        $this->repoMap['Queue']
+            ->shouldReceive('fetchNextItemIncludingPostponed')->with([Queue::TYPE_REMOVE_DELETED_DOCUMENTS])->once()->andReturn(null);
 
         $this->expectedSideEffect(
             Create::class,
@@ -119,6 +129,146 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
 
         $this->assertEquals($expected, $result->toArray());
     }
+
+    public function testHandleCommandNoDocumentsToDelete()
+    {
+        $command = Cmd::create([]);
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
+        $this->repoMap['DocumentToDelete']
+            ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn([]);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Remove documents : 0 success, 0 not found, 0 errors',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandQueueItemCreatedWhenDocumentPostponed()
+    {
+        $command = Cmd::create([]);
+
+        $documentToDelete = (new DocumentToDeleteEntity);
+        $documentToDelete->setDocumentStoreId('doc1.rtf');
+        $documentToDelete->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P2D')));
+
+        $documentsToDelete = [
+            (new DocumentToDeleteEntity)->setDocumentStoreId('doc1.rtf'),
+        ];
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
+        $this->repoMap['DocumentToDelete']
+            ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn($documentsToDelete);
+
+        $this->repoMap['Queue']
+            ->shouldReceive('fetchNextItemIncludingPostponed')->with([Queue::TYPE_REMOVE_DELETED_DOCUMENTS])->once()->andReturn(null);
+
+        $this->expectedSideEffect(
+            Create::class,
+            ['type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS, 'status' => Queue::STATUS_QUEUED],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Remove documents : 0 success, 0 not found, 0 errors',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandQueueItemCreatedWhenDocumentAndQueueItemPostponed()
+    {
+        $command = Cmd::create([]);
+
+        $documentToDelete = (new DocumentToDeleteEntity);
+        $documentToDelete->setDocumentStoreId('doc1.rtf');
+        $documentToDelete->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P2D')));
+
+        $documentsToDelete = [$documentToDelete];
+
+        $nextQueueItem = new Queue();
+        $nextQueueItem->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P4D')));
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
+        $this->repoMap['DocumentToDelete']
+            ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn($documentsToDelete);
+
+        $this->repoMap['Queue']
+            ->shouldReceive('fetchNextItemIncludingPostponed')->with([Queue::TYPE_REMOVE_DELETED_DOCUMENTS])->once()->andReturn($nextQueueItem);
+
+        $this->expectedSideEffect(
+            Create::class,
+            ['type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS, 'status' => Queue::STATUS_QUEUED],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Remove documents : 0 success, 0 not found, 0 errors',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandQueueItemNotCreatedWhenQueueItemPostponedBeforeDocument()
+    {
+        $command = Cmd::create([]);
+
+        $documentToDelete = (new DocumentToDeleteEntity);
+        $documentToDelete->setDocumentStoreId('doc1.rtf');
+        $documentToDelete->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P3D')));
+
+        $documentsToDelete = [$documentToDelete];
+
+        $nextQueueItem = new Queue();
+        $nextQueueItem->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P1D')));
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('getDisableDataRetentionDocumentDelete')->with()->once()->andReturn(false);
+
+        $this->repoMap['DocumentToDelete']
+            ->shouldReceive('fetchListOfDocumentToDelete')->with(100)->once()->andReturn([])
+            ->shouldReceive('fetchListOfDocumentToDeleteIncludingPostponed')->with(1)->once()->andReturn($documentsToDelete);
+
+        $this->repoMap['Queue']
+            ->shouldReceive('fetchNextItemIncludingPostponed')->with([Queue::TYPE_REMOVE_DELETED_DOCUMENTS])->once()->andReturn($nextQueueItem);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Remove documents : 0 success, 0 not found, 0 errors',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
     public function testHandleCommandDisabled()
     {
         $command = Cmd::create([]);
