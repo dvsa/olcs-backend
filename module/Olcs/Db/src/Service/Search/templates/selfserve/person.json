@@ -36,6 +36,31 @@
                         }
                      },
                      {
+                        "bool": {
+                           "must": [
+                              {
+                                 "terms": {
+                                    "found_as": [
+                                       "TM"
+                                    ]
+                                 }
+                              },
+                              {
+                                 "exists": {
+                                    "field": "date_removed"
+                                 }
+                              }
+                           ],
+                           "must_not": [
+                              {
+                                 "exists": {
+                                    "field": "application_id"
+                                 }
+                              }
+                           ]
+                        }
+                     },
+                     {
                         "terms": {
                            "contact_type": [
                               "ct_obj"
@@ -45,6 +70,35 @@
                      {
                         "exists": {
                            "field": "is_deleted"
+                        }
+                     },
+                     {
+                        "bool": {
+                           "must": [
+                              {
+                                 "terms": {
+                                    "found_as": [
+                                       "TM"
+                                    ]
+                                 }
+                              },
+                              {
+                                 "exists": {
+                                    "field": "application_id"
+                                 }
+                              }
+                           ],
+                           "must_not": [
+                              {
+                                 "terms": {
+                                    "app_status_id": [
+                                       "apsts_consideration",
+                                       "apsts_granted",
+                                       "apsts_curtailed"
+                                    ]
+                                 }
+                              }
+                           ]
                         }
                      }
                   ]
