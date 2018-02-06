@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 
 /**
  * Remove deleted documents from the file store
@@ -21,7 +22,7 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
 
     protected $repoServiceName = 'DocumentToDelete';
 
-    protected $extraRepos = ['SystemParameter'];
+    protected $extraRepos = ['SystemParameter','Queue'];
 
     /**
      * @var FileUploaderInterface
@@ -91,6 +92,7 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
         /** @var \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete $documentToDelete */
         foreach ($documentsToDelete as $documentToDelete) {
             $response = $this->getContentStoreService()->remove($documentToDelete->getDocumentStoreId());
+
             if ($response->isOk()) {
                 // Document was successfully deleted
                 $repo->delete($documentToDelete);
@@ -101,9 +103,11 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
                 $notFoundCount++;
             } else {
                 // An error occurred trying to delete the document
+                $documentToDelete->markAsFailed();
+                $repo->save($documentToDelete);
                 $this->result->addMessage(
                     sprintf(
-                        'Document delete failed \'%s\', code = %d',
+                        'Document delete failed. DocumnetStoreId = \'%s\', code = %d',
                         $documentToDelete->getDocumentStoreId(),
                         $response->getStatusCode()
                     )
@@ -121,14 +125,44 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
             )
         );
 
-        $moreDocumentsToDelete = $repo->fetchListOfDocumentToDelete(1);
-        if (count($moreDocumentsToDelete) > 0) {
-            $command = Create::create(
-                ['type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS, 'status' => Queue::STATUS_QUEUED]
-            );
-            $this->handleSideEffect($command);
-        }
+        $this->maybeCreateQueueItem($repo);
 
         return $this->result;
+    }
+
+    private function maybeCreateQueueItem(DocumentToDelete $repo)
+    {
+        /** @var QueueRepo $queue */
+        $queue = $this->getRepo('Queue');
+        $moreDocumentsToDelete = $repo->fetchListOfDocumentToDeleteIncludingPostponed(1);
+
+        if (count($moreDocumentsToDelete) == 0) {
+            return;
+        }
+
+        /** @var Queue $nextDocumentQueueItem */
+        $nextDocumentQueueItem = $queue->fetchNextItemIncludingPostponed([Queue::TYPE_REMOVE_DELETED_DOCUMENTS]);
+
+        /** @var \Dvsa\Olcs\Api\Entity\Doc\DocumentToDelete $documentToDelete */
+        $documentToDelete = $moreDocumentsToDelete[0];
+
+        if ($nextDocumentQueueItem !== null &&
+            ($nextDocumentQueueItem->getProcessAfterDate() === null ||
+                $nextDocumentQueueItem->getProcessAfterDate() < $documentToDelete->getProcessAfterDate())
+        ) {
+            return;
+        }
+
+        $commandParameters = [
+            'type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS,
+            'status' => Queue::STATUS_QUEUED
+        ];
+
+        if ($documentToDelete->getProcessAfterDate() !== null) {
+            $commandParameters['processAfterDate'] = $documentToDelete->getProcessAfterDate()->format('Y-m-d H:i:s');
+        }
+
+        $command = Create::create($commandParameters);
+        $this->handleSideEffect($command);
     }
 }
