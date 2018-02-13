@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\Driver\PDOConnection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -28,7 +29,6 @@ class DataRetention extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof RecordsQry) {
-
             if ($query->getMarkedForDeletion() != null) {
                 $actionConfirmation = $query->getMarkedForDeletion() == 'Y' ? 1 : 0;
                 $qb->andWhere($qb->expr()->eq($this->alias . '.actionConfirmation', ':actionConfirmation'));
@@ -60,9 +60,7 @@ class DataRetention extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
             $qb->setParameter('actionType', 'Review');
             $qb->setParameter('dataRetentionRuleId', $query->getDataRetentionRuleId());
-
         }
-
     }
 
     /**
@@ -94,11 +92,18 @@ class DataRetention extends AbstractRepository
      */
     public function runCleanupProc($limit, $userId, $dryRun = false)
     {
-        $connection = $this->getEntityManager()->getConnection();
+        /** @var PDOConnection $connection */
+        $connection = $this->getEntityManager()->getConnection()->getWrappedConnection();
         $statement = $connection->prepare(
             sprintf('CALL sp_dr_cleanup(%d, %d, %d)', $userId, $limit, $dryRun)
         );
+
         $result = $statement->execute();
+
+        do {
+            $statement->rowCount();
+        } while ($statement->nextRowset());
+
         $statement->closeCursor();
         return $result;
     }
