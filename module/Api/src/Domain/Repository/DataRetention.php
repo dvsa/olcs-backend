@@ -101,6 +101,11 @@ class DataRetention extends AbstractRepository
         $result = $statement->execute();
 
         do {
+            /**
+             * OLCS-18904
+             * multiple record sets will be returned
+             * rowCount to avoid empty loop
+             */
             $statement->rowCount();
         } while ($statement->nextRowset());
 
