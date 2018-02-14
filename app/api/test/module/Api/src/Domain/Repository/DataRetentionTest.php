@@ -247,8 +247,11 @@ class DataRetentionTest extends RepositoryTestCase
             ->with()
             ->andReturn(true)
             ->shouldReceive('closeCursor')
-            ->andReturn(true);
-        $this->em->shouldReceive('getConnection->prepare')->with('CALL sp_dr_cleanup(99, 123, 0)')->once()
+            ->andReturn(true)
+            ->shouldReceive('rowCount')
+            ->andReturn(1)
+            ->shouldReceive('nextRowset');
+        $this->em->shouldReceive('getConnection->getWrappedConnection->prepare')->with('CALL sp_dr_cleanup(99, 123, 0)')->once()
             ->andReturn($mockStatement);
 
         $result = $this->sut->runCleanupProc(123, 99);
