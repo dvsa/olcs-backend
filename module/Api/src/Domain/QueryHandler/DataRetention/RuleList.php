@@ -31,7 +31,7 @@ class RuleList extends AbstractQueryHandler
         // If isReview is set to 'Y' then true otherwise false
         $isReview = isset($filter['isReview']) && $filter['isReview'] === 'Y';
 
-        if($isReview) {
+        if ($isReview) {
             $rules = $repo->fetchEnabledRules($query, $isReview);
         } else {
             $rules = $repo->fetchAllNotDeletedRules($query);
