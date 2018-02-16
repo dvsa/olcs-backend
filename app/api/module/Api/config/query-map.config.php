@@ -559,4 +559,8 @@ return [
 
     // Data Service
     TransferQuery\DataService\ApplicationStatus::class => QueryHandler\DataService\ApplicationStatus::class,
+
+    // Diagnostics
+    Query\Diagnostics\CheckFkIntegrity::class => QueryHandler\Diagnostics\CheckFkIntegrity::class,
+    Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
 ];
