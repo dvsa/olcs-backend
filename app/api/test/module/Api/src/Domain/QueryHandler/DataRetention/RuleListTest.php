@@ -22,7 +22,7 @@ class RuleListTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQueryIsReview()
     {
         $query = Query::create(['id' => 1]);
 
@@ -32,8 +32,37 @@ class RuleListTest extends QueryHandlerTestCase
         $this->repoMap['DataRetentionRule']
             ->shouldReceive('fetchEnabledRules')
             ->with(
-                $query, true
+                $query,
+                true
             )
+            ->once()
+            ->andReturn(
+                [
+                    'results' => [$mockRuleList],
+                    'count' => 1,
+                ]
+            )
+            ->getMock();
+
+        $this->assertSame(
+            [
+                'result'    => ['foo'],
+                'count'     => 1,
+            ],
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    public function testHandleQueryIsReviewFalse()
+    {
+        $query = Query::create(['id' => 1, 'isReview' => 'N']);
+
+        $mockRuleList = m::mock();
+        $mockRuleList->shouldReceive('serialize')->once()->andReturn('foo');
+
+        $this->repoMap['DataRetentionRule']
+            ->shouldReceive('fetchAllNotDeletedRules')
+            ->with($query)
             ->once()
             ->andReturn(
                 [
