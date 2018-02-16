@@ -30,7 +30,7 @@ class RuleAdminTest extends QueryHandlerTestCase
         $mockRuleList->shouldReceive('serialize')->once()->andReturn('foo');
 
         $this->repoMap['DataRetentionRule']
-            ->shouldReceive('fetchAllNotDeletedRules')
+            ->shouldReceive('fetchAllRules')
             ->with($query)
             ->once()
             ->andReturn(
