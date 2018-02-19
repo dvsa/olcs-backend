@@ -30,7 +30,7 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
 
     protected $template = null;
 
-    const TO_EMAIL = 'Operatorlicensing@otc.gsi.gov.uk';
+    const TO_EMAIL = 'notifications@vehicle-operator-licensing.service.gov.uk';
     const EMAIL_TEMPLATE = 'publication-published';
     const EMAIL_SUBJECT = 'email.send-publication';
     const EMAIL_POLICE_SUBJECT = 'email.send-publication-police';
