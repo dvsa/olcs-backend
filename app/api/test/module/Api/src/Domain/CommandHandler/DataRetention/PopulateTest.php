@@ -39,8 +39,8 @@ class PopulateTest extends CommandHandlerTestCase
             ->andReturn(
                 ['results' => $dataRetentionRules]
             )
-            ->shouldReceive('runProc')->with('proc2', 222)->once()
-            ->shouldReceive('runProc')->with('proc9', 222)->once();
+            ->shouldReceive('runProc')->with('proc2', 222)->once()->andReturn(true)
+            ->shouldReceive('runProc')->with('proc9', 222)->once()->andReturn(true);
 
         /** @var User $currentUser */
         $currentUser = m::mock(User::class)->makePartial();
@@ -55,6 +55,82 @@ class PopulateTest extends CommandHandlerTestCase
             'messages' => [
                 'Running rule id 2, proc2',
                 'Running rule id 9, proc9',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWhenProcedureReturnsFalse()
+    {
+        $dataRetentionRules = [
+            (new \Dvsa\Olcs\Api\Entity\DataRetentionRule())->setId(2)->setPopulateProcedure('proc2'),
+            (new \Dvsa\Olcs\Api\Entity\DataRetentionRule())->setId(9)->setPopulateProcedure('proc9'),
+        ];
+
+        $command = Cmd::create([]);
+        $this->repoMap['DataRetentionRule']
+            ->shouldReceive('fetchEnabledRules')
+            ->with()
+            ->once()
+            ->andReturn(
+                ['results' => $dataRetentionRules]
+            )
+            ->shouldReceive('runProc')->with('proc2', 222)->once()->andReturn(true)
+            ->shouldReceive('runProc')->with('proc9', 222)->once()->andReturn(false);
+
+        /** @var User $currentUser */
+        $currentUser = m::mock(User::class)->makePartial();
+        $currentUser->setId(222);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Running rule id 2, proc2',
+                'Running rule id 9, proc9',
+                'Rule id 9, proc9 returned FALSE'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandWhenProcedureThrowsException()
+    {
+        $dataRetentionRules = [
+            (new \Dvsa\Olcs\Api\Entity\DataRetentionRule())->setId(2)->setPopulateProcedure('proc2'),
+            (new \Dvsa\Olcs\Api\Entity\DataRetentionRule())->setId(9)->setPopulateProcedure('proc9'),
+        ];
+
+        $command = Cmd::create([]);
+        $this->repoMap['DataRetentionRule']
+            ->shouldReceive('fetchEnabledRules')
+            ->with()
+            ->once()
+            ->andReturn(
+                ['results' => $dataRetentionRules]
+            )
+            ->shouldReceive('runProc')->with('proc2', 222)->once()->andReturn(true)
+            ->shouldReceive('runProc')->with('proc9', 222)->once()->andThrow(new \Exception('proc9 Error'));
+
+        /** @var User $currentUser */
+        $currentUser = m::mock(User::class)->makePartial();
+        $currentUser->setId(222);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($currentUser);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Running rule id 2, proc2',
+                'Running rule id 9, proc9',
+                'proc9 Error'
             ]
         ];
 
