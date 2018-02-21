@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\DataRetentionRule as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\DBAL\Driver\PDOConnection;
 
 /**
  * DataRetentionRule
@@ -76,14 +77,23 @@ class DataRetentionRule extends AbstractRepository
      * @param string $storedProc The stored proc to run
      * @param int    $userId     User ID os the user running the proc
      *
-     * @return int number of rows affected
+     * @return bool
      */
     public function runProc($storedProc, $userId)
     {
         $callString = sprintf('CALL %s(%d)', $storedProc, (int)$userId);
-        $stmt = $this->getEntityManager()->getConnection()->executeQuery($callString);
-        $count = $stmt->rowCount();
+
+        /** @var PDOConnection $connection */
+        $connection = $this->getEntityManager()->getConnection()->getWrappedConnection();
+        $stmt = $connection->prepare($callString);
+
+        $result = $stmt->execute();
+
+        do {
+            $stmt->rowCount();
+        } while ($stmt->nextRowset());
+
         $stmt->closeCursor();
-        return  $count;
+        return $result;
     }
 }

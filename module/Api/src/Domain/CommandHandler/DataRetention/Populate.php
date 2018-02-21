@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -42,10 +43,24 @@ final class Populate extends AbstractCommandHandler implements TransactionedInte
                     $dataRetentionRule->getPopulateProcedure()
                 )
             );
-            $repo->runProc(
-                $dataRetentionRule->getPopulateProcedure(),
-                $this->getCurrentUser()->getId()
-            );
+            try {
+                $result = $repo->runProc(
+                    $dataRetentionRule->getPopulateProcedure(),
+                    $this->getCurrentUser()->getId()
+                );
+            } catch (\Exception $e) {
+                $this->result->addMessage($e->getMessage());
+            }
+
+            if (!$result) {
+                $this->result->addMessage(
+                    sprintf(
+                        'Rule id %s, %s returned FALSE',
+                        $dataRetentionRule->getId(),
+                        $dataRetentionRule->getPopulateProcedure()
+                    )
+                );
+            }
         }
 
         return $this->result;
