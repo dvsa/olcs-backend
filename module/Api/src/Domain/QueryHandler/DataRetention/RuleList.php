@@ -23,19 +23,10 @@ class RuleList extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        $filter = $query->getArrayCopy();
-
         /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
 
-        // If isReview is set to 'Y' then true otherwise false
-        $isReview = isset($filter['isReview']) && $filter['isReview'] === 'Y';
-
-        if ($isReview) {
-            $rules = $repo->fetchEnabledRules($query, $isReview);
-        } else {
-            $rules = $repo->fetchAllNotDeletedRules($query);
-        }
+        $rules = $repo->fetchAllRules($query);
 
         return [
             'result' => $this->resultList(
