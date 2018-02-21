@@ -57,8 +57,7 @@ class DataRetention extends AbstractRepository
 
             $qb->andWhere($qb->expr()->eq('drr.isEnabled', 1));
             $qb->andWhere($qb->expr()->eq($this->alias . '.dataRetentionRule', ':dataRetentionRuleId'));
-            $qb->andWhere($qb->expr()->eq('drr.actionType', ':actionType'));
-            $qb->setParameter('actionType', 'Review');
+
             $qb->setParameter('dataRetentionRuleId', $query->getDataRetentionRuleId());
         }
     }

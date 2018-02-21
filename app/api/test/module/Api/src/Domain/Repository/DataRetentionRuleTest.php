@@ -105,12 +105,10 @@ class DataRetentionRuleTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchAllNotDeletedRules()
+    public function testFetchAllRules()
     {
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('andWhere')->with('expr1')->once()->andReturnSelf();
-        $qb->shouldReceive('expr->isNull')->with('m.deletedDate')->once()->andReturn('expr1');
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULT']);
 
         $this->mockCreateQueryBuilder($qb);
@@ -132,7 +130,7 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
         $this->sut->shouldReceive('getPaginator')->andReturn($paginator);
 
-        $result = $this->sut->fetchAllNotDeletedRules();
+        $result = $this->sut->fetchAllRules();
 
         $this->assertSame(
             [
@@ -150,8 +148,6 @@ class DataRetentionRuleTest extends RepositoryTestCase
         );
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
-        $qb->shouldReceive('andWhere')->with('expr1')->once()->andReturnSelf();
-        $qb->shouldReceive('expr->isNull')->with('m.deletedDate')->once()->andReturn('expr1');
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn(['RESULT']);
 
         $this->mockCreateQueryBuilder($qb);
@@ -173,7 +169,7 @@ class DataRetentionRuleTest extends RepositoryTestCase
 
         $this->sut->shouldReceive('getPaginator')->andReturn($paginator);
 
-        $result = $this->sut->fetchAllNotDeletedRules($query);
+        $result = $this->sut->fetchAllRules($query);
 
         $this->assertSame(
             [
