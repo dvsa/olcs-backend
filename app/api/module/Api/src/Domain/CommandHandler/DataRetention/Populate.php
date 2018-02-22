@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class Populate
@@ -50,6 +51,14 @@ final class Populate extends AbstractCommandHandler implements TransactionedInte
                 );
             } catch (\Exception $e) {
                 $this->result->addMessage($e->getMessage());
+                Logger::err(
+                    sprintf(
+                        'Error on rule id %s, %s: %s',
+                        $dataRetentionRule->getId(),
+                        $dataRetentionRule->getPopulateProcedure(),
+                        $e->getMessage()
+                    )
+                );
             }
 
             if (!$result) {
