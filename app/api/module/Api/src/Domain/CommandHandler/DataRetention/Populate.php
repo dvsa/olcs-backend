@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class Populate
@@ -42,10 +43,32 @@ final class Populate extends AbstractCommandHandler implements TransactionedInte
                     $dataRetentionRule->getPopulateProcedure()
                 )
             );
-            $repo->runProc(
-                $dataRetentionRule->getPopulateProcedure(),
-                $this->getCurrentUser()->getId()
-            );
+            try {
+                $result = $repo->runProc(
+                    $dataRetentionRule->getPopulateProcedure(),
+                    $this->getCurrentUser()->getId()
+                );
+            } catch (\Exception $e) {
+                $this->result->addMessage($e->getMessage());
+                Logger::err(
+                    sprintf(
+                        'Error on rule id %s, %s: %s',
+                        $dataRetentionRule->getId(),
+                        $dataRetentionRule->getPopulateProcedure(),
+                        $e->getMessage()
+                    )
+                );
+            }
+
+            if (!$result) {
+                $this->result->addMessage(
+                    sprintf(
+                        'Rule id %s, %s returned FALSE',
+                        $dataRetentionRule->getId(),
+                        $dataRetentionRule->getPopulateProcedure()
+                    )
+                );
+            }
         }
 
         return $this->result;
