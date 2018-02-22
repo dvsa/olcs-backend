@@ -109,7 +109,7 @@ class GoodsVehiclesTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'canReprint' => true,
             'canTransfer' => true,
-            'canExport' => false,
+            'canExport' => true,
             'canPrintVehicle' => true,
             'licenceVehicles' => [
                 'results' => [
