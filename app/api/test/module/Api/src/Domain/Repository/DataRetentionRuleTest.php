@@ -190,17 +190,20 @@ class DataRetentionRuleTest extends RepositoryTestCase
         $mockedStatement
             ->shouldReceive('rowCount')
             ->andReturn(12)
+            ->shouldReceive('nextRowset')
+            ->shouldReceive('execute')
+            ->andReturn(true)
             ->shouldReceive('closeCursor')
             ->andReturn(true);
 
         $this->em
-            ->shouldReceive('getConnection->executeQuery')
+            ->shouldReceive('getConnection->getWrappedConnection->prepare')
             ->with('CALL proc(99)')
             ->once()
             ->andReturn($mockedStatement);
 
         $result = $this->sut->runProc('proc', 99);
 
-        $this->assertSame(12, $result);
+        $this->assertSame(true, $result);
     }
 }
