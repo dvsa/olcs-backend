@@ -30,7 +30,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     protected $sut;
 
     /**
-     * @var QueryHandlerManager
+     * @var QueryHandlerManager|m\MockInterface
      */
     protected $queryHandler;
 
