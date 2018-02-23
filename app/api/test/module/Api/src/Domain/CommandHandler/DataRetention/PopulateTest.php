@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Populate;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -15,12 +17,19 @@ use ZfcRbac\Service\AuthorizationService;
  */
 class PopulateTest extends CommandHandlerTestCase
 {
+    private $mockedConnection;
+
     public function setUp()
     {
         $this->sut = new Populate();
         $this->mockRepo('DataRetentionRule', DataRetentionRule::class);
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
-
+        $this->mockedConnection = m::mock(Connection::class);
+        $this->mockedConnection->shouldReceive('beginTransaction');
+        $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
+        $this->mockedSmServices['DoctrineOrmEntityManager']
+            ->shouldReceive('getConnection')
+            ->andReturn($this->mockedConnection);
         parent::setUp();
     }
 
@@ -47,7 +56,7 @@ class PopulateTest extends CommandHandlerTestCase
         $currentUser->setId(222);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
-
+        $this->mockedConnection->shouldReceive('commit')->twice();
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -84,7 +93,7 @@ class PopulateTest extends CommandHandlerTestCase
         $currentUser->setId(222);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
-
+        $this->mockedConnection->shouldReceive('commit')->twice();
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -122,7 +131,8 @@ class PopulateTest extends CommandHandlerTestCase
         $currentUser->setId(222);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
-
+        $this->mockedConnection->shouldReceive('commit')->once();
+        $this->mockedConnection->shouldReceive('rollBack')->once();
         $result = $this->sut->handleCommand($command);
 
         $expected = [
