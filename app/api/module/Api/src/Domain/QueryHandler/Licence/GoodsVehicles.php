@@ -48,7 +48,7 @@ class GoodsVehicles extends AbstractQueryHandler
             [
                 'canReprint' => true,
                 'canTransfer' => $this->canTransfer($licence),
-                'canExport' => $this->isGranted(Permission::SELFSERVE_USER),
+                'canExport' => true,
                 'canPrintVehicle' => $this->isGranted(Permission::INTERNAL_USER),
                 'licenceVehicles' => [
                     'results' => $this->resultList(
