@@ -56,7 +56,7 @@ class PopulateTest extends CommandHandlerTestCase
         $currentUser->setId(222);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
-        $this->mockedConnection->shouldReceive('commit');
+        $this->mockedConnection->shouldReceive('commit')->twice();
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -93,7 +93,7 @@ class PopulateTest extends CommandHandlerTestCase
         $currentUser->setId(222);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
-        $this->mockedConnection->shouldReceive('commit');
+        $this->mockedConnection->shouldReceive('commit')->twice();
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -131,8 +131,8 @@ class PopulateTest extends CommandHandlerTestCase
         $currentUser->setId(222);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
-        $this->mockedConnection->shouldReceive('commit');
-        $this->mockedConnection->shouldReceive('rollBack');
+        $this->mockedConnection->shouldReceive('commit')->once();
+        $this->mockedConnection->shouldReceive('rollBack')->once();
         $result = $this->sut->handleCommand($command);
 
         $expected = [
