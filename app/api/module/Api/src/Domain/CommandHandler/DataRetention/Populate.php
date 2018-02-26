@@ -2,21 +2,40 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention;
 
+use Doctrine\DBAL\Connection;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Class Populate
  */
-final class Populate extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+final class Populate extends AbstractCommandHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
+
+    /** @var Connection */
+    private $connection;
+
+    /**
+     * @param ServiceLocatorInterface|QueryHandlerManager $serviceLocator
+     *
+     * @return AbstractCommandHandler|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        /** @var EntityManager $entityManager */
+        $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');
+        $this->connection = $entityManager->getConnection();
+        return parent::createService($serviceLocator);
+    }
 
     protected $repoServiceName = 'DataRetentionRule';
 
@@ -44,10 +63,12 @@ final class Populate extends AbstractCommandHandler implements TransactionedInte
                 )
             );
             try {
+                $this->connection->beginTransaction();
                 $result = $repo->runProc(
                     $dataRetentionRule->getPopulateProcedure(),
                     $this->getCurrentUser()->getId()
                 );
+                $this->connection->commit();
             } catch (\Exception $e) {
                 $this->result->addMessage($e->getMessage());
                 Logger::err(
@@ -58,6 +79,7 @@ final class Populate extends AbstractCommandHandler implements TransactionedInte
                         $e->getMessage()
                     )
                 );
+                $this->connection->rollBack();
             }
 
             if (!$result) {
