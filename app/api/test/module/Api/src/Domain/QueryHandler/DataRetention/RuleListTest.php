@@ -30,10 +30,8 @@ class RuleListTest extends QueryHandlerTestCase
         $mockRuleList->shouldReceive('serialize')->once()->andReturn('foo');
 
         $this->repoMap['DataRetentionRule']
-            ->shouldReceive('fetchEnabledRules')
-            ->with(
-                $query, true
-            )
+            ->shouldReceive('fetchAllRules')
+            ->with($query)
             ->once()
             ->andReturn(
                 [

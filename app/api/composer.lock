@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3fe70a5e054d2b38b272f18999c4e857",
-    "content-hash": "034439b3a604064e6d178468da62caa3",
+    "hash": "94375825b998e3dcb3426a4dd85c9e75",
+    "content-hash": "497daf8ebf1b4f81dcf526c135fe4723",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -908,17 +908,17 @@
         },
         {
             "name": "elasticsearch/elasticsearch",
-            "version": "v5.3.0",
+            "version": "v5.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "50e5b1c63db68839b8acc1f4766769570a27a448"
+                "reference": "4b29a4121e790bbfe690d5ee77da348b62d48eb8"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/elasticsearch-elasticsearch-50e5b1c63db68839b8acc1f4766769570a27a448-zip-bba019.tar",
-                "reference": "50e5b1c63db68839b8acc1f4766769570a27a448",
-                "shasum": "e6f8368b2408b0e2057cebc42fd466e9132cbc80"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/elasticsearch-elasticsearch-4b29a4121e790bbfe690d5ee77da348b62d48eb8-zip-a57dc3.tar",
+                "reference": "4b29a4121e790bbfe690d5ee77da348b62d48eb8",
+                "shasum": "3dcaf3cda78640c12c9872325d2bba7a010eb81d"
             },
             "require": {
                 "guzzlehttp/ringphp": "~1.0",
@@ -959,21 +959,21 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2017-07-19 18:44:30"
+            "time": "2017-11-08 17:04:47"
         },
         {
             "name": "ezyang/htmlpurifier",
-            "version": "v4.9.3",
+            "version": "v4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "95e1bae3182efc0f3422896a3236e991049dac69"
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ezyang-htmlpurifier-95e1bae3182efc0f3422896a3236e991049dac69-zip-22dd16.tar",
-                "reference": "95e1bae3182efc0f3422896a3236e991049dac69",
-                "shasum": "b3008fd32e3e34dfa5d8973e1013c201c9feaaf2"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ezyang-htmlpurifier-d85d39da4576a6934b72480be6978fb10c860021-zip-68f7aa.tar",
+                "reference": "d85d39da4576a6934b72480be6978fb10c860021",
+                "shasum": "70d5fd91e4d9b583fea8361f7011ef969473ad36"
             },
             "require": {
                 "php": ">=5.2"
@@ -1006,7 +1006,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2017-06-03 02:28:16"
+            "time": "2018-02-23 01:58:20"
         },
         {
             "name": "fzaninotto/faker",
@@ -1239,11 +1239,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.33",
+            "version": "dev-release/4.34",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "09bc8559007ba842f02b02de10f57160a0b1a6b6"
+                "reference": "ffd7e337fcf08c8d913bc2cf709fc599c70edc41"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1255,15 +1255,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2018-02-14 17:03:22"
+            "time": "2018-02-28 16:48:32"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.33",
+            "version": "dev-release/4.34",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "3b9146eca33d42b3e5c35b5cdb881510f01b1e78"
+                "reference": "45fac8229085fdc51cfb7148c85c9d7b0d89b79d"
             },
             "require": {
                 "php": ">=5.4",
@@ -1307,15 +1307,15 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2018-02-14 17:03:16"
+            "time": "2018-02-28 16:48:26"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.33",
+            "version": "dev-release/4.34",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "fc74045f877793a33a0b50e8328145fc609dfbfd"
+                "reference": "ad247f73c355ebf2ba5aa89ad8c529a030a6eae3"
             },
             "require": {
                 "php": ">=5.4",
@@ -1353,15 +1353,15 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2018-02-14 17:06:21"
+            "time": "2018-02-28 16:51:53"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.33",
+            "version": "dev-release/4.34",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "bad8d1535b43c64f98c9f3a3894d2ca97c983eec"
+                "reference": "2059764fcd2f3e216e871e5f4f36855f8f4ef074"
             },
             "require": {
                 "php": ">=5.4",
@@ -1370,7 +1370,7 @@
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
                 "olcs/olcs-devtools": "dev-master",
-                "olcs/olcs-logging": "dev-release/4.33"
+                "olcs/olcs-logging": "dev-release/4.34"
             },
             "type": "library",
             "autoload": {
@@ -1399,15 +1399,15 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2018-02-14 17:07:46"
+            "time": "2018-02-28 16:53:19"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.33",
+            "version": "dev-release/4.34",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "e7f4b35975e012f8a59a235ea36060b09dd12bb6"
+                "reference": "d2fe718d476dfbfa99078bc0766d278cb85770e4"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1448,7 +1448,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2018-02-14 17:02:04"
+            "time": "2018-02-28 16:47:12"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -1588,24 +1588,24 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.9",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "c9a3fe35e20eb6eeaca716d6a23cde03f52d1558"
+                "reference": "d305b780829ea4252ed9400b3f5937c2c99b51d4"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpseclib-phpseclib-c9a3fe35e20eb6eeaca716d6a23cde03f52d1558-zip-fd53ac.tar",
-                "reference": "c9a3fe35e20eb6eeaca716d6a23cde03f52d1558",
-                "shasum": "6b0de5de3e439bd12a0fd7c73fbe092a99c5b1dc"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpseclib-phpseclib-d305b780829ea4252ed9400b3f5937c2c99b51d4-zip-6096a7.tar",
+                "reference": "d305b780829ea4252ed9400b3f5937c2c99b51d4",
+                "shasum": "ff093153da061836cfe27724990beb202fa5a8b6"
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
                 "phing/phing": "~2.7",
-                "phpunit/phpunit": "~4.0",
+                "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
                 "sami/sami": "~2.0",
                 "squizlabs/php_codesniffer": "~2.0"
             },
@@ -1676,7 +1676,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2017-11-29 06:38:08"
+            "time": "2018-02-19 04:29:13"
         },
         {
             "name": "psr/log",
@@ -1893,20 +1893,20 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "5.3.0",
+            "version": "5.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "6ca31124a7753edbe3cec0f7a0cb723829da57c5"
+                "reference": "22da6b73af125899d672d952728be2c9ff93c58b"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-6ca31124a7753edbe3cec0f7a0cb723829da57c5-zip-373e79.tar",
-                "reference": "6ca31124a7753edbe3cec0f7a0cb723829da57c5",
-                "shasum": "218992f02bc7f313bbdd560cbf7cbb019e7bca91"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-22da6b73af125899d672d952728be2c9ff93c58b-zip-cab52a.tar",
+                "reference": "22da6b73af125899d672d952728be2c9ff93c58b",
+                "shasum": "bcd41a07e47de687b74688a1a5e62d1ffcfc41a0"
             },
             "require": {
-                "elasticsearch/elasticsearch": "5.3.0",
+                "elasticsearch/elasticsearch": "5.3.*",
                 "php": ">=5.6.0",
                 "psr/log": "~1.0"
             },
@@ -1923,7 +1923,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.2.x-dev"
+                    "dev-master": "5.3.x-dev"
                 }
             },
             "autoload": {
@@ -1947,21 +1947,21 @@
                 "client",
                 "search"
             ],
-            "time": "2017-07-26 12:21:58"
+            "time": "2018-02-18 21:05:14"
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v3.1.2",
+            "version": "v3.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/simplesamlphp/saml2.git",
-                "reference": "e9786e2e47971b9e3684391778d2c489e4725f26"
+                "reference": "b2ecfbaf10bee0a0a64bfb444aad23467fcbd4c9"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-e9786e2e47971b9e3684391778d2c489e4725f26-zip-857616.tar",
-                "reference": "e9786e2e47971b9e3684391778d2c489e4725f26",
-                "shasum": "8d04cceef6d07585969eecf95bfc94ea95920174"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/simplesamlphp-saml2-b2ecfbaf10bee0a0a64bfb444aad23467fcbd4c9-zip-35f8ed.tar",
+                "reference": "b2ecfbaf10bee0a0a64bfb444aad23467fcbd4c9",
+                "shasum": "4b26e35848a6de89a4b6bf9d2dc2d070101cb783"
             },
             "require": {
                 "ext-dom": "*",
@@ -2004,7 +2004,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2018-01-26 07:55:28"
+            "time": "2018-02-26 15:22:03"
         },
         {
             "name": "soflomo/purifier",
@@ -3121,17 +3121,17 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.4",
+            "version": "1.7.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "9f901e29c93dae4aa77c0bb161df4276f9c9a1be"
+                "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpspec-prophecy-9f901e29c93dae4aa77c0bb161df4276f9c9a1be-zip-663b52.tar",
-                "reference": "9f901e29c93dae4aa77c0bb161df4276f9c9a1be",
-                "shasum": "49acbc4bbbf4416256439c2baf4378bd0b7deb49"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpspec-prophecy-dfd6be44111a7c41c2e884a336cc4f461b3b2401-zip-b2cb0d.tar",
+                "reference": "dfd6be44111a7c41c2e884a336cc4f461b3b2401",
+                "shasum": "331ec76e8fa4649675973510d63eed8d00947f83"
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
@@ -3180,7 +3180,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2018-02-11 18:49:29"
+            "time": "2018-02-19 10:16:54"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4178,17 +4178,17 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.2.2",
+            "version": "3.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "d7c00c3000ac0ce79c96fcbfef86b49a71158cd1"
+                "reference": "4842476c434e375f9d3182ff7b89059583aa8b27"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/squizlabs-php_codesniffer-d7c00c3000ac0ce79c96fcbfef86b49a71158cd1-zip-8e52ca.tar",
-                "reference": "d7c00c3000ac0ce79c96fcbfef86b49a71158cd1",
-                "shasum": "404a07ac0caa9489b7f523195ae0ac9e064b0c0f"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/squizlabs-php_codesniffer-4842476c434e375f9d3182ff7b89059583aa8b27-zip-e9f2be.tar",
+                "reference": "4842476c434e375f9d3182ff7b89059583aa8b27",
+                "shasum": "aa09ec9c16555cff4655ee5a83e92224939524fe"
             },
             "require": {
                 "ext-simplexml": "*",
@@ -4197,7 +4197,7 @@
                 "php": ">=5.4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0"
+                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
             },
             "bin": [
                 "bin/phpcs",
@@ -4225,7 +4225,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-12-19 21:44:46"
+            "time": "2018-02-20 21:35:23"
         },
         {
             "name": "symfony/config",
