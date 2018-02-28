@@ -18,6 +18,24 @@ return [
                         ],
                     ],
                 ],
+                'check-fk-integrity' => [
+                    'options' => [
+                        'route' => 'check-fk-integrity',
+                        'defaults' => [
+                            'controller' => Cli\Controller\DiagnosticController::class,
+                            'action' => 'checkFkIntegrity',
+                        ],
+                    ],
+                ],
+                'check-fk-integrity-sql' => [
+                    'options' => [
+                        'route' => 'check-fk-integrity-sql',
+                        'defaults' => [
+                            'controller' => Cli\Controller\DiagnosticController::class,
+                            'action' => 'checkFkIntegritySql',
+                        ],
+                    ],
+                ],
                 'licence-status-rules' => [
                     'options' => [
                         'route' => 'licence-status-rules [--verbose|-v]',

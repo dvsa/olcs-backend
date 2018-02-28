@@ -2,9 +2,12 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Dvsa\Olcs\Api\Domain\Query\Diagnostics\CheckFkIntegrity;
+use Dvsa\Olcs\Api\Domain\Query\Diagnostics\GenerateCheckFkIntegritySql;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Zend\Console\Response;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Zend\Http\Client;
@@ -29,7 +32,7 @@ class DiagnosticController extends AbstractConsoleController
     const TEMPLATE_TO_DOWNLOAD = 'GV_LICENCE_GB';
     const TEMPLATE_TO_DOWNLOAD_ID = Document::GV_LICENCE_GB;
     const GUIDE_TO_DOWNLOAD = 'Advert_Template_GB_New.pdf';
-    const SYSTEM_USER_NAME ='usr291';
+    const SYSTEM_USER_NAME = 'usr291';
     const POSTCODE_TO_FETCH = 'LS9 6NF';
     const LICENCE_SEARCH = 'smith';
     const NYSIIS_FORENAME = 'John';
@@ -104,6 +107,28 @@ class DiagnosticController extends AbstractConsoleController
                 $this->outputSkip($section);
             }
         }
+    }
+
+    public function checkFkIntegrityAction()
+    {
+        $result = $this->handleQuery(CheckFkIntegrity::create([]));
+        $response = new Response();
+        if ($result['fk-constraint-violation-counts']) {
+            $response->setContent(json_encode($result, JSON_PRETTY_PRINT) . PHP_EOL);
+            $response->setErrorLevel(1);
+        } else {
+            $response->setContent("No fk constraint violations found" . PHP_EOL);
+        }
+        return $response;
+    }
+
+    public function checkFkIntegritySqlAction()
+    {
+        $response = new Response();
+        $response->setContent(
+            join(PHP_EOL, $this->handleQuery(GenerateCheckFkIntegritySql::create([]))['queries']) . PHP_EOL
+        );
+        return $response;
     }
 
     /**
@@ -331,7 +356,7 @@ class DiagnosticController extends AbstractConsoleController
      */
     private function addressSection()
     {
-        $this->outputMessage('Fetch postcode '. self::POSTCODE_TO_FETCH .' : ');
+        $this->outputMessage('Fetch postcode ' . self::POSTCODE_TO_FETCH . ' : ');
         try {
             /** @var \Dvsa\Olcs\Address\Service\Address */
             $service = $this->getServiceLocator()->get('AddressService');
@@ -629,7 +654,7 @@ class DiagnosticController extends AbstractConsoleController
     /**
      * Handle command
      *
-     * @param CommandInterface $dto            dto
+     * @param CommandInterface $dto dto
      * @param bool             $shouldValidate should we validate command
      *
      * @return Result

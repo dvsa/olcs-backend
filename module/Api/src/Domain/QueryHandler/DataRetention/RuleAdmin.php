@@ -26,7 +26,7 @@ class RuleAdmin extends AbstractQueryHandler
         /** @var DataRetentionRule $repo */
         $repo = $this->getRepo();
 
-        $notDeletedRules = $repo->fetchAllNotDeletedRules($query);
+        $notDeletedRules = $repo->fetchAllRules($query);
 
         return [
             'result' => $this->resultList(
