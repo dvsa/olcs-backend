@@ -5,17 +5,17 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class DeleteEntities
  */
-final class DeleteEntities extends AbstractCommandHandler implements TransactionedInterface
+final class DeleteEntities extends AbstractCommandHandler
 {
     protected $repoServiceName = 'DataRetention';
 
@@ -48,16 +48,25 @@ final class DeleteEntities extends AbstractCommandHandler implements Transaction
         /** @var DataRetention $repo */
         $repo = $this->getRepo();
 
-        $repo->runCleanupProc($limit, $systemUserId);
+        try {
+            $repo->runCleanupProc($limit, $systemUserId);
 
-        // Create queue job to remove deleted documents, if not already exists
-        if (!$this->getRepo('Queue')->isItemTypeQueued(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)) {
-            $command = Create::create(
-                ['type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS, 'status' => Queue::STATUS_QUEUED]
+            // Create queue job to remove deleted documents, if not already exists
+            if (!$this->getRepo('Queue')->isItemTypeQueued(Queue::TYPE_REMOVE_DELETED_DOCUMENTS)) {
+                $command = Create::create(
+                    ['type' => Queue::TYPE_REMOVE_DELETED_DOCUMENTS, 'status' => Queue::STATUS_QUEUED]
+                );
+                $this->handleSideEffect($command);
+            }
+        } catch (\Exception $e) {
+            Logger::err(
+                sprintf(
+                    'Error on DeleteEntities: %s',
+                    $e->getMessage()
+                )
             );
-            $this->handleSideEffect($command);
+            throw $e;
         }
-
         return $this->result;
     }
 }
