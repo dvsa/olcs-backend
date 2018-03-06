@@ -47,6 +47,20 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    public function testHandleCommandThrowException()
+    {
+        $command = Cmd::create(['limit' => 9]);
+        $exception = new \Exception('error');
+
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')
+            ->with()->once()->andReturn(false);
+        $this->repoMap['SystemParameter']->shouldReceive('getSystemDataRetentionUser')->with()->once()->andReturn(34);
+        $this->repoMap['DataRetention']->shouldReceive('runCleanupProc')->with(9, 34)->once()->andThrow($exception);
+
+        $this->expectException(\Exception::class);
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCommandQueueDeleteDocuments()
     {
         $command = Cmd::create(['limit' => 9]);
