@@ -5,6 +5,9 @@ namespace Dvsa\Olcs\Api\Entity\Publication;
 use Doctrine\ORM\Mapping as ORM;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\AddWorkingDays;
+use Dvsa\Olcs\Api\Entity\Pi\PiHearing;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -235,5 +238,17 @@ class PublicationLink extends AbstractPublicationLink
         $this->text1 = $text1;
         $this->text2 = $text2;
         $this->text3 = $text3;
+    }
+
+    public function maybeSetPublishAfterDate() {
+        if ($this->getPi() !== null && $this->getTransportManager() === null) {
+            $dateTimeDaysProcessor = new AddDays();
+            $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);
+            $publishAfterDate = $dateTimeWorkingDaysProcessor->calculateDate(
+                new \DateTime(),
+                PiHearing::PUBLISH_AFTER_DAYS
+            );
+            $this->setPublishAfterDate($publishAfterDate);
+        }
     }
 }

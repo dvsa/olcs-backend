@@ -31,6 +31,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 class PiHearing extends AbstractPiHearing
 {
     const MSG_HEARING_DATE_BEFORE_PI_DATE = 'HEARING_DATE_BEFORE_PI';
+    const PUBLISH_AFTER_DAYS = 5;
 
     /**
      * @param PiEntity $pi

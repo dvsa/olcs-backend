@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Repository\PublicationLink;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Publication\Generate as GenerateCommand;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
@@ -24,6 +25,7 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
     const DOCUMENT_DESCRIPTION = '%s %d generated';
 
     protected $repoServiceName = 'Publication';
+    protected $extraRepos = ['PublicationLink'];
 
     /**
      * Generates a publication
@@ -45,14 +47,29 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
         /** @var RefData $generatedPubStatus */
         $generatedPubStatus = $this->getRepo()->getRefdataReference(PublicationEntity::PUB_GENERATED_STATUS);
 
-        //side effects are generating the document, and creating a new publication record for next time
-        $sideEffects = [
-            $this->getGenerateDocCommand($publication),
-            CreateNextPublicationCmd::create(['id' => $publication->getId()])
-        ];
+        /** @var PublicationLink $publicationLinks */
+        $publicationLinks = $this->getRepo('PublicationLink');
+        $ineligibleLinks = $publicationLinks->fetchIneligiblePiPublicationLinks($publication);
 
         /** @var Result $result */
-        $result = $this->handleSideEffects($sideEffects);
+        $result = $this->handleSideEffect(CreateNextPublicationCmd::create(['id' => $publication->getId()]));
+
+        $newPublicationId = $result->getId('created_publication');
+        /**
+         * @var PublicationEntity $publication
+         * @var GenerateCommand $command
+         */
+        $newPublication = $this->getRepo()->fetchById($newPublicationId);
+
+        /** @var \Dvsa\Olcs\Api\Entity\Publication\PublicationLink $ineligibleLink */
+        foreach ($ineligibleLinks as $ineligibleLink) {
+            $ineligibleLink->setPublication($newPublication);
+            $publicationLinks->save($ineligibleLink);
+        }
+
+        $result->merge(
+            $this->handleSideEffect($this->getGenerateDocCommand($publication))
+        );
 
         /** @var DocumentEntity $document */
         $document = $this->getRepo()->getReference(DocumentEntity::class, $result->getId('document'));

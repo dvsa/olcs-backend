@@ -223,6 +223,15 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     protected $publicationSection;
 
     /**
+     * Publish after date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="publish_after_date", nullable=true)
+     */
+    protected $publishAfterDate;
+
+    /**
      * Text1
      *
      * @var string
@@ -719,6 +728,36 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     public function getPublicationSection()
     {
         return $this->publicationSection;
+    }
+
+    /**
+     * Set the publish after date
+     *
+     * @param \DateTime $publishAfterDate new value being set
+     *
+     * @return PublicationLink
+     */
+    public function setPublishAfterDate($publishAfterDate)
+    {
+        $this->publishAfterDate = $publishAfterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the publish after date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getPublishAfterDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->publishAfterDate);
+        }
+
+        return $this->publishAfterDate;
     }
 
     /**
