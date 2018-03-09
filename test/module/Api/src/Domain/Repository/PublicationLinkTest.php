@@ -9,6 +9,8 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\PublicationLink;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -32,6 +34,11 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\PreviousPublicationByApplication;
  */
 class PublicationLinkTest extends RepositoryTestCase
 {
+    /**
+     * @var PublicationLink
+     */
+    protected $sut;
+
     public function setUp()
     {
         $this->setUpSut(PublicationLinkRepo::class);
@@ -454,5 +461,28 @@ class PublicationLinkTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('application', $application)->once()->andReturnSelf();
 
         $sut->applyListFilters($mockQb, $query);
+    }
+
+    public function testFetchIneligiblePiPublicationLinks()
+    {
+        $publicationEntityId = 1;
+        $today = (new Datetime())->format('Y-m-d');
+        $mockQb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $mockQb->shouldReceive('getQuery->getResult');
+
+        $expectedQuery = '[QUERY]' .
+            ' AND m.pi IS NOT NULL' .
+            ' AND m.transportManager IS NULL' .
+            ' AND m.publication = [[' . $publicationEntityId . ']]'.
+            ' AND m.publishAfterDate IS NOT NULL'.
+            ' AND m.publishAfterDate > [[' . $today . ']]';
+
+        /** @var PublicationEntity $publicationEntity */
+        $publicationEntity = m::mock(PublicationEntity::class)->makePartial();
+        $publicationEntity->setId(1);
+        $this->sut->fetchIneligiblePiPublicationLinks($publicationEntity);
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

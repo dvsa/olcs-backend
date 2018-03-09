@@ -240,7 +240,8 @@ class PublicationLink extends AbstractPublicationLink
         $this->text3 = $text3;
     }
 
-    public function maybeSetPublishAfterDate() {
+    public function maybeSetPublishAfterDate()
+    {
         if ($this->getPi() !== null && $this->getTransportManager() === null) {
             $dateTimeDaysProcessor = new AddDays();
             $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);

@@ -8,8 +8,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\Generate;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as DocTemplateEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
@@ -29,7 +31,7 @@ class GenerateTest extends CommandHandlerTestCase
     {
         $this->sut = new Generate();
         $this->mockRepo('Publication', PublicationRepo::class);
-
+        $this->mockRepo('PublicationLink', PublicationLinkRepo::class);
         parent::setUp();
     }
 
@@ -57,6 +59,7 @@ class GenerateTest extends CommandHandlerTestCase
         $pubStatus = new RefData(PublicationEntity::PUB_GENERATED_STATUS);
         $pubType = 'A&D';
         $generatedDocId = 2345;
+        $nextPublicationId = 3456;
 
         $docGenerateCmdData = [
             'template' => $docTemplateId,
@@ -100,12 +103,17 @@ class GenerateTest extends CommandHandlerTestCase
             )
             ->andReturnSelf();
 
+        $publicationLinkEntity = m::mock(PublicationLinkEntity::class)->makePartial();
+
         $docGenerationResult = new Result();
         $docGenerationResult->addId('document', $generatedDocId);
         $docGenerationResult->addMessage('Document created');
 
         $this->expectedSideEffect(GenerateDocCommand::class, $docGenerateCmdData, $docGenerationResult);
-        $this->expectedSideEffect(CreateNextPublicationCmd::class, ['id' => $id], new Result());
+
+        $createNextPublicationResult = new Result();
+        $createNextPublicationResult->addId('created_publication', $nextPublicationId);
+        $this->expectedSideEffect(CreateNextPublicationCmd::class, ['id' => $id], $createNextPublicationResult);
 
         $this->repoMap['Publication']
             ->shouldReceive('fetchUsingId')
@@ -117,12 +125,29 @@ class GenerateTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(PublicationEntity::class));
 
+        $ineligibleLinks = [$publicationLinkEntity];
+
+        $this->repoMap['PublicationLink']
+            ->shouldReceive('fetchIneligiblePiPublicationLinks')
+            ->once()
+            ->andReturn($ineligibleLinks);
+
+        $this->repoMap['PublicationLink']->shouldReceive('save')
+            ->times(count($ineligibleLinks))
+            ->with(m::type(PublicationLinkEntity::class));
+
+        $this->repoMap['Publication']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($nextPublicationId);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
             'id' => [
                 'document' => $generatedDocId,
-                'generated_publication' => $id
+                'generated_publication' => $id,
+                'created_publication' => $nextPublicationId
             ],
             'messages' => [
                 'Document created',
