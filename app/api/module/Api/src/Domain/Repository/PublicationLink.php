@@ -8,11 +8,11 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * PublicationLink
@@ -158,5 +158,24 @@ class PublicationLink extends AbstractRepository
         }
 
         return $result[0];
+    }
+
+    /**
+     * @param PublicationEntity $publication
+     * @return array
+     */
+    public function fetchIneligiblePiPublicationLinks($publication)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere($qb->expr()->isNotNull($this->alias . '.pi'));
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.transportManager'));
+        $qb->andWhere($qb->expr()->eq($this->alias .'.publication', ':publicationId'))
+            ->setParameter('publicationId', $publication->getId());
+        $qb->andWhere($qb->expr()->isNotNull($this->alias . '.publishAfterDate'));
+        $qb->andWhere($qb->expr()->gt($this->alias .'.publishAfterDate', ':today'))
+            ->setParameter('today', (new Datetime())->format('Y-m-d'));
+
+        return $qb->getQuery()->getResult();
     }
 }
