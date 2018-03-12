@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddWorkingDays;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -246,7 +247,7 @@ class PublicationLink extends AbstractPublicationLink
             $dateTimeDaysProcessor = new AddDays();
             $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);
             $publishAfterDate = $dateTimeWorkingDaysProcessor->calculateDate(
-                new \DateTime(),
+                new DateTime(),
                 PiHearing::PUBLISH_AFTER_DAYS
             );
             $this->setPublishAfterDate($publishAfterDate);

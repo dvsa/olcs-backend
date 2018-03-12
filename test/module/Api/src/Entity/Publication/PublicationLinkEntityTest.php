@@ -2,6 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Publication;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\AddWorkingDays;
+use Dvsa\Olcs\Api\Entity\Pi\PiHearing;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as Entity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
@@ -293,6 +298,41 @@ class PublicationLinkEntityTest extends EntityTester
 
         $entity = new Entity();
         $entity->createImpounding($impounding, $publication, $publicationSection, $trafficArea, $licence, $application);
+    }
+
+    public function testMaybeSetPublishAfterDateDo() {
+        $sut = new Entity();
+
+        /** @var PiEntity $pi */
+        $pi = m::mock(PiEntity::class);
+        $sut->setPi($pi);
+
+        $sut->maybeSetPublishAfterDate();
+
+        $dateTimeDaysProcessor = new AddDays();
+        $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);
+        $publishAfterDate = $dateTimeWorkingDaysProcessor->calculateDate(
+            new DateTime(),
+            PiHearing::PUBLISH_AFTER_DAYS
+        );
+
+        $this->assertEquals($publishAfterDate,$sut->getPublishAfterDate());
+    }
+
+    public function testMaybeSetPublishAfterDateDoNot() {
+        $sut = new Entity();
+
+        /** @var PiEntity $pi */
+        $pi = m::mock(PiEntity::class);
+        $sut->setPi($pi);
+
+        /** @var TransportManager $tm */
+        $tm = m::mock(TransportManager::class);
+        $sut->setTransportManager($tm);
+
+        $sut->maybeSetPublishAfterDate();
+        $this->assertNull($sut->getPublishAfterDate());
+
     }
 
     /**
