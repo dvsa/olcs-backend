@@ -103,7 +103,13 @@ class GenerateTest extends CommandHandlerTestCase
             )
             ->andReturnSelf();
 
-        $publicationLinkEntity = m::mock(PublicationLinkEntity::class)->makePartial();
+        /** @var PublicationLinkEntity $publicationLinkEntityA */
+        $publicationLinkEntityA = m::mock(PublicationLinkEntity::class)->makePartial();
+        $publicationLinkEntityA->setId(1);
+
+        /** @var PublicationLinkEntity $publicationLinkEntityB */
+        $publicationLinkEntityB = m::mock(PublicationLinkEntity::class)->makePartial();
+        $publicationLinkEntityB->setId(2);
 
         $docGenerationResult = new Result();
         $docGenerationResult->addId('document', $generatedDocId);
@@ -125,16 +131,20 @@ class GenerateTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(PublicationEntity::class));
 
-        $ineligibleLinks = [$publicationLinkEntity];
+        $ineligibleLinks = [$publicationLinkEntityA, $publicationLinkEntityB];
 
         $this->repoMap['PublicationLink']
             ->shouldReceive('fetchIneligiblePiPublicationLinks')
             ->once()
             ->andReturn($ineligibleLinks);
 
-        $this->repoMap['PublicationLink']->shouldReceive('save')
-            ->times(count($ineligibleLinks))
-            ->with(m::type(PublicationLinkEntity::class));
+        $this->repoMap['PublicationLink']
+            ->shouldReceive('save')
+            ->once()
+            ->with($publicationLinkEntityA)
+            ->shouldReceive('save')
+            ->once()
+            ->with($publicationLinkEntityB);
 
         $this->repoMap['Publication']
             ->shouldReceive('fetchById')
