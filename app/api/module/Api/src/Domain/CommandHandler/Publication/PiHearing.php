@@ -227,7 +227,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
         }
 
         $publicationLink->setText2($command->getText2());
-
+        $publicationLink->maybeSetPublishAfterDate();
         return $this->createPublication($handler, $publicationLink, $this->extractHearingData($hearing));
     }
 
