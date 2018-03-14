@@ -144,13 +144,31 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     protected $sectorId;
 
     /**
+     * Sifting random factor
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="float", name="sifting_random_factor", precision=6, scale=4, nullable=true)
+     */
+    protected $siftingRandomFactor;
+
+    /**
      * Sifting value
      *
-     * @var int
+     * @var unknown
      *
-     * @ORM\Column(type="integer", name="sifting_value", nullable=true)
+     * @ORM\Column(type="float", name="sifting_value", precision=6, scale=4, nullable=true)
      */
     protected $siftingValue;
+
+    /**
+     * Sifting value random
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="float", name="sifting_value_random", precision=6, scale=4, nullable=true)
+     */
+    protected $siftingValueRandom;
 
     /**
      * Start date
@@ -478,9 +496,33 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the sifting random factor
+     *
+     * @param unknown $siftingRandomFactor new value being set
+     *
+     * @return EcmtPermits
+     */
+    public function setSiftingRandomFactor($siftingRandomFactor)
+    {
+        $this->siftingRandomFactor = $siftingRandomFactor;
+
+        return $this;
+    }
+
+    /**
+     * Get the sifting random factor
+     *
+     * @return unknown
+     */
+    public function getSiftingRandomFactor()
+    {
+        return $this->siftingRandomFactor;
+    }
+
+    /**
      * Set the sifting value
      *
-     * @param int $siftingValue new value being set
+     * @param unknown $siftingValue new value being set
      *
      * @return EcmtPermits
      */
@@ -494,11 +536,35 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the sifting value
      *
-     * @return int
+     * @return unknown
      */
     public function getSiftingValue()
     {
         return $this->siftingValue;
+    }
+
+    /**
+     * Set the sifting value random
+     *
+     * @param unknown $siftingValueRandom new value being set
+     *
+     * @return EcmtPermits
+     */
+    public function setSiftingValueRandom($siftingValueRandom)
+    {
+        $this->siftingValueRandom = $siftingValueRandom;
+
+        return $this;
+    }
+
+    /**
+     * Get the sifting value random
+     *
+     * @return unknown
+     */
+    public function getSiftingValueRandom()
+    {
+        return $this->siftingValueRandom;
     }
 
     /**
