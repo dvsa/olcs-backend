@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Diagnostics;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
+use Dvsa\Olcs\Cli\Domain\QueryHandler\DataRetention\EscapeMysqlIdentifierTrait;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use PDO;
 use RuntimeException;
@@ -12,6 +13,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
 {
+    use EscapeMysqlIdentifierTrait;
+
     /** @var string */
     private $databaseName;
 
@@ -125,13 +128,5 @@ final class GenerateCheckFkIntegritySql extends AbstractQueryHandler
         }
 
         return ['queries' => $queries];
-    }
-
-    private function escapeMysqlIdentifier($identifier)
-    {
-        if (!preg_match('/^[_a-zA-Z0-9]+$/', $identifier)) {
-            throw new RuntimeException("Bad identifier " . var_export($identifier, true));
-        }
-        return "`$identifier`";
     }
 }

@@ -19,4 +19,5 @@ return [
     QueryHandler\DataRetention\RuleAdmin::class => IsInternalUser::class,
     QueryHandler\DataRetention\Records::class => IsInternalUser::class,
     QueryHandler\DataRetention\GetProcessedList::class => IsInternalUser::class,
+    Dvsa\Olcs\Cli\Domain\QueryHandler\DataRetention\TableChecks::class => IsSystemUser::class,
 ];

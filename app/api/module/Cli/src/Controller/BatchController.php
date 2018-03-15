@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
+use Dvsa\Olcs\Cli\Domain\Query\DataRetention\TableChecks;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Enqueue;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile;
@@ -528,5 +529,31 @@ class BatchController extends AbstractCliController
                 $this->handleCommand([CliCommand\Permits\WithdrawUnpaidIrhp::create([])])
             );
         }
+    }
+
+    /**
+     * Execute query handler to check table rows pre/post DR jobs
+     *
+     * @return ConsoleModel
+     */
+    public function drTableCheckAction()
+    {
+        $isPostCheck = $this->params('postcheck') ? true : false;
+        $queryParams = ['isPostCheck' => $isPostCheck];
+
+        $result = $this->handleQuery(TableChecks::create($queryParams));
+
+        $consoleModel = new ConsoleModel();
+        $consoleModel->setResult(json_encode($result, JSON_PRETTY_PRINT));
+
+        $consoleModel->setErrorLevel(0);
+
+        if ($this->params('postcheck')
+            && (is_array($result['tableRowCountCheck']) || is_array($result['undeletedRecordsCheck']))
+        ) {
+            $consoleModel->setErrorLevel(1);
+        }
+
+        return $consoleModel;
     }
 }
