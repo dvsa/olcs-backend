@@ -10,19 +10,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * PaymentStatus Abstract Entity
+ * EcmtPaymentStatus Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="payment_status",
+ * @ORM\Table(name="ecmt_payment_status",
  *    indexes={
- *        @ORM\Index(name="ecmt_payment_status_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ecmt_ecmt_payment_status_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ecmt_ecmt_payment_status_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractPaymentStatus implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractEcmtPaymentStatus implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -30,9 +31,10 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -49,9 +51,10 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -98,9 +101,9 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setCreatedBy($createdBy)
     {
@@ -112,7 +115,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -124,7 +127,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setCreatedOn($createdOn)
     {
@@ -152,9 +155,9 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -166,7 +169,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -178,7 +181,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -208,7 +211,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
      *
      * @param int $paymentStatusId new value being set
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setPaymentStatusId($paymentStatusId)
     {
@@ -232,7 +235,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
      *
      * @param string $statusName new value being set
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setStatusName($statusName)
     {
@@ -256,7 +259,7 @@ abstract class AbstractPaymentStatus implements BundleSerializableInterface, Jso
      *
      * @param int $version new value being set
      *
-     * @return PaymentStatus
+     * @return EcmtPaymentStatus
      */
     public function setVersion($version)
     {

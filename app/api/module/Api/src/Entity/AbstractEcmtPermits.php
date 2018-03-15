@@ -18,11 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ecmt_permits",
  *    indexes={
- *        @ORM\Index(name="ecmt_ecmt_permits_application_id", columns={"ecmt_permits_application_id"}),
- *        @ORM\Index(name="ecmt_sector_id", columns={"sector_id"}),
- *        @ORM\Index(name="ecmt_payment_status_id", columns={"payment_status_id"}),
- *        @ORM\Index(name="ecmt_application_status_id", columns={"application_status_id"}),
- *        @ORM\Index(name="ecmt_ecmt_permits_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ecmt_permits_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ecmt_permits_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -43,9 +40,10 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -98,9 +96,10 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -216,7 +215,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return EcmtPermits
      */
@@ -230,7 +229,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -372,7 +371,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return EcmtPermits
      */
@@ -386,7 +385,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {

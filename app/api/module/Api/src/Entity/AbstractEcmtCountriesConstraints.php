@@ -19,7 +19,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="ecmt_countries_constraints",
  *    indexes={
- *        @ORM\Index(name="ecmt_ecmt_countries_constraints_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ecmt_ecmt_countries_constraints_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ecmt_ecmt_countries_constraints_last_modified_by",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -51,9 +53,10 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -88,9 +91,10 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -174,7 +178,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return EcmtCountriesConstraints
      */
@@ -188,7 +192,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -282,7 +286,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return EcmtCountriesConstraints
      */
@@ -296,7 +300,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {

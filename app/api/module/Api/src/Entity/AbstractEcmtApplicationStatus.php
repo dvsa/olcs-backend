@@ -10,19 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * ApplicationStatus Abstract Entity
+ * EcmtApplicationStatus Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="application_status",
+ * @ORM\Table(name="ecmt_application_status",
  *    indexes={
- *        @ORM\Index(name="ecmt_application_status_created_by", columns={"created_by"})
+ *        @ORM\Index(name="ecmt_ecmt_application_status_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ecmt_ecmt_application_status_last_modified_by",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractApplicationStatus implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractEcmtApplicationStatus implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -41,9 +43,10 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -60,9 +63,10 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -81,7 +85,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="status_name", length=10, nullable=false)
+     * @ORM\Column(type="string", name="status_name", length=32, nullable=true)
      */
     protected $statusName;
 
@@ -100,7 +104,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
      *
      * @param int $applicationStatusId new value being set
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setApplicationStatusId($applicationStatusId)
     {
@@ -122,9 +126,9 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setCreatedBy($createdBy)
     {
@@ -136,7 +140,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -148,7 +152,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setCreatedOn($createdOn)
     {
@@ -176,9 +180,9 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -190,7 +194,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -202,7 +206,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -232,7 +236,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
      *
      * @param string $statusName new value being set
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setStatusName($statusName)
     {
@@ -256,7 +260,7 @@ abstract class AbstractApplicationStatus implements BundleSerializableInterface,
      *
      * @param int $version new value being set
      *
-     * @return ApplicationStatus
+     * @return EcmtApplicationStatus
      */
     public function setVersion($version)
     {

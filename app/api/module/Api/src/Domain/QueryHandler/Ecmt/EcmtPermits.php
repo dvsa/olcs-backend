@@ -5,7 +5,7 @@
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\EcmtPermits;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Ecmt;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 
