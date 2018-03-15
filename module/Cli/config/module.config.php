@@ -38,6 +38,15 @@ return [
                         ],
                     ],
                 ],
+                'dr-checks' => [
+                    'options' => [
+                        'route' => 'dr-checks (precheck|postcheck)',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'drTableCheck',
+                        ],
+                    ],
+                ],
                 'licence-status-rules' => [
                     'options' => [
                         'route' => 'licence-status-rules [--verbose|-v]',
