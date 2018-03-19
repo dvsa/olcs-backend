@@ -20,16 +20,11 @@ class EcmtPermits extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'EcmtPermits';
 
-               public function handleQuery(QueryInterface $query){
-
-                   $repo = $this->getRepo();
-                   $results = $repo->fetchData($query);
-                   return [
-                     'result' => $results,
-                     'count' => count($results)
-                   ];
-
-           }
+        public function handleQuery(QueryInterface $query){
+            $repo = $this->getRepo();
+            $results = $repo->fetchData($query);
+            return $results;
+        }
 
 }
 

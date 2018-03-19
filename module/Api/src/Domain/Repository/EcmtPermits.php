@@ -7,14 +7,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\EcmtPermits as Entity;
-use Dvsa\Olcs\Api\Entity\EcmtPermitsApplication as PermitsApplicationEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * Sectors
@@ -32,17 +28,23 @@ class EcmtPermits extends AbstractRepository
      * @param QueryBuilder   $qb    doctrine query builder
      * @param QueryInterface $query query being run
      *
-     * @return void
+     * @return array
      */
     public function fetchData($query)
     {
 
         $hydrateMode = Query::HYDRATE_OBJECT;
-        $qb = $this->createQueryBuilder();
-        $qb->andWhere($qb->expr()->eq($this->alias . '.sectorId', ':bySector'))->setParameter('bySector', $query->getSectorId());
-        $qb->orderBy($this->alias .'.'. $query->getSort(),$query->getOrder());
 
-        $results = $qb->getQuery()->getResult($hydrateMode);
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+          ->withRefdata()
+          ->order($this->alias .'.'. $query->getSort(),$query->getOrder())
+          ->paginate($query->getPage(), $query->getLimit());
+
+        $qb->andWhere($qb->expr()->eq($this->alias . '.sectorId', ':bySector'))->setParameter('bySector', $query->getSectorId());
+
+        $results = $this->fetchPaginatedObj($qb, $hydrateMode);
 
         $data = [];
 
@@ -55,8 +57,32 @@ class EcmtPermits extends AbstractRepository
             $data[] = $row;
         }
 
-        return new \ArrayIterator($data);
+        return [
+          'result' => new \ArrayIterator($data),
+          'count' => $this->fetchPaginatedCount($qb)
+        ];
 
+    }
 
+    /**
+     * Abstracted paginator logic so it can be re-used with alternative queries
+     *
+     * @param QueryBuilder $qb          Doctrine query builder
+     * @param int          $hydrateMode Hydrate mode
+     *
+     * @return object
+     */
+    public function fetchPaginatedObj(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY)
+    {
+        $query = $qb->getQuery();
+        $query->setHydrationMode($hydrateMode);
+
+        if ($this->query instanceof PagedQueryInterface) {
+            $paginator = $this->getPaginator($query);
+
+            return $paginator->getIterator($hydrateMode);
+        }
+
+        return $query->getResult($hydrateMode);
     }
 }
