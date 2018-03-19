@@ -333,6 +333,7 @@ return [
             'DocumentToDelete' => RepositoryFactory::class,
             'Hearing' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
+            'EcmtPermits' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

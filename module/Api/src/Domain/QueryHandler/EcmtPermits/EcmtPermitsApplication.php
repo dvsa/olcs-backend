@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ECMT Permits
+ * ECMT Permit Applications
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
@@ -11,12 +11,12 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 
 
 /**
- * ECMT Permits
+ * ECMT Permit Applications
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-class EcmtPermits extends AbstractListQueryHandler
+class EcmtPermitsApplication extends AbstractListQueryHandler
 {
-    protected $repoServiceName = 'Sectors';
+    //protected $repoServiceName = 'Sectors';
 }
 
