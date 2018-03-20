@@ -85,6 +85,12 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             return $this->result;
         }
 
+        if ($currentStatusId === ApplicationEntity::INTERIM_STATUS_ENDED
+            && $command->getStatus() !== ApplicationEntity::INTERIM_STATUS_ENDED) {
+            $this->saveInterimData($application, $command, true);
+            return $this->result;
+        }
+
         return $this->result;
     }
 
@@ -137,7 +143,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         $processInForce = ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE);
 
         if ($ignoreRequested || $command->getRequested() == 'Y') {
-
             if ($status === null && $application->getCurrentInterimStatus() === null) {
                 $status = $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_REQUESTED);
             }
@@ -156,7 +161,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
             $this->result->addMessage('Interim data updated');
         } else {
-
             $application->setInterimReason(null);
             $application->setInterimStart(null);
             $application->setInterimEnd(null);
@@ -223,7 +227,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             if ($licenceVehicle->getInterimApplication() !== null
                 && !in_array($licenceVehicle->getId(), $interimVehicles)
             ) {
-
                 $licenceVehicle->setInterimApplication(null);
 
                 if ($processInForce) {
@@ -232,7 +235,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
                     // Cease active discs
                     $this->ceaseActiveDiscsForVehicle($licenceVehicle);
                 }
-
             } elseif ($licenceVehicle->getInterimApplication() === null
                 && in_array($licenceVehicle->getId(), $interimVehicles)
             ) {
