@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity\Tm;
+namespace Dvsa\Olcs\Api\Entity;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,36 +10,45 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * TmEmployment Abstract Entity
+ * EcmtCountriesConstraints Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
- * @ORM\Table(name="tm_employment",
+ * @ORM\Table(name="ecmt_countries_constraints",
  *    indexes={
- *        @ORM\Index(name="ix_tm_employment_transport_manager_id", columns={"transport_manager_id"}),
- *        @ORM\Index(name="ix_tm_employment_contact_details_id", columns={"contact_details_id"}),
- *        @ORM\Index(name="ix_tm_employment_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_tm_employment_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ecmt_ecmt_countries_constraints_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ecmt_ecmt_countries_constraints_last_modified_by",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractTmEmployment implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
 
     /**
-     * Contact details
+     * Identifier - Constraint id
      *
-     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails", fetch="LAZY")
-     * @ORM\JoinColumn(name="contact_details_id", referencedColumnName="id", nullable=false)
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="constraint_id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $contactDetails;
+    protected $constraintId;
+
+    /**
+     * Constraint name
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="constraint_name", length=32, nullable=false)
+     */
+    protected $constraintName;
 
     /**
      * Created by
@@ -71,33 +80,13 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     protected $deletedDate;
 
     /**
-     * Employer name
+     * Description
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="employer_name", length=90, nullable=true)
+     * @ORM\Column(type="text", name="description", length=65535, nullable=true)
      */
-    protected $employerName;
-
-    /**
-     * Hours per week
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="hours_per_week", length=300, nullable=true)
-     */
-    protected $hoursPerWeek;
-
-    /**
-     * Identifier - Id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $id;
+    protected $description;
 
     /**
      * Last modified by
@@ -120,60 +109,70 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     protected $lastModifiedOn;
 
     /**
-     * Position
+     * Olbs key
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", name="position", length=45, nullable=true)
+     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
      */
-    protected $position;
-
-    /**
-     * Transport manager
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Tm\TransportManager
-     *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Tm\TransportManager",
-     *     fetch="LAZY",
-     *     inversedBy="employments"
-     * )
-     * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=false)
-     */
-    protected $transportManager;
+    protected $olbsKey;
 
     /**
      * Version
      *
      * @var int
      *
-     * @ORM\Column(type="integer", name="version", nullable=false, options={"default": 1})
+     * @ORM\Column(type="smallint", name="version", nullable=true)
      * @ORM\Version
      */
-    protected $version = 1;
+    protected $version;
 
     /**
-     * Set the contact details
+     * Set the constraint id
      *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $contactDetails entity being set as the value
+     * @param int $constraintId new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
-    public function setContactDetails($contactDetails)
+    public function setConstraintId($constraintId)
     {
-        $this->contactDetails = $contactDetails;
+        $this->constraintId = $constraintId;
 
         return $this;
     }
 
     /**
-     * Get the contact details
+     * Get the constraint id
      *
-     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails
+     * @return int
      */
-    public function getContactDetails()
+    public function getConstraintId()
     {
-        return $this->contactDetails;
+        return $this->constraintId;
+    }
+
+    /**
+     * Set the constraint name
+     *
+     * @param string $constraintName new value being set
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function setConstraintName($constraintName)
+    {
+        $this->constraintName = $constraintName;
+
+        return $this;
+    }
+
+    /**
+     * Get the constraint name
+     *
+     * @return string
+     */
+    public function getConstraintName()
+    {
+        return $this->constraintName;
     }
 
     /**
@@ -181,7 +180,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
     public function setCreatedBy($createdBy)
     {
@@ -205,7 +204,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
     public function setCreatedOn($createdOn)
     {
@@ -235,7 +234,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @param \DateTime $deletedDate new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
     public function setDeletedDate($deletedDate)
     {
@@ -261,75 +260,27 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the employer name
+     * Set the description
      *
-     * @param string $employerName new value being set
+     * @param string $description new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
-    public function setEmployerName($employerName)
+    public function setDescription($description)
     {
-        $this->employerName = $employerName;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get the employer name
+     * Get the description
      *
      * @return string
      */
-    public function getEmployerName()
+    public function getDescription()
     {
-        return $this->employerName;
-    }
-
-    /**
-     * Set the hours per week
-     *
-     * @param string $hoursPerWeek new value being set
-     *
-     * @return TmEmployment
-     */
-    public function setHoursPerWeek($hoursPerWeek)
-    {
-        $this->hoursPerWeek = $hoursPerWeek;
-
-        return $this;
-    }
-
-    /**
-     * Get the hours per week
-     *
-     * @return string
-     */
-    public function getHoursPerWeek()
-    {
-        return $this->hoursPerWeek;
-    }
-
-    /**
-     * Set the id
-     *
-     * @param int $id new value being set
-     *
-     * @return TmEmployment
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
+        return $this->description;
     }
 
     /**
@@ -337,7 +288,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -361,7 +312,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -387,51 +338,27 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the position
+     * Set the olbs key
      *
-     * @param string $position new value being set
+     * @param int $olbsKey new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
-    public function setPosition($position)
+    public function setOlbsKey($olbsKey)
     {
-        $this->position = $position;
+        $this->olbsKey = $olbsKey;
 
         return $this;
     }
 
     /**
-     * Get the position
+     * Get the olbs key
      *
-     * @return string
+     * @return int
      */
-    public function getPosition()
+    public function getOlbsKey()
     {
-        return $this->position;
-    }
-
-    /**
-     * Set the transport manager
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Tm\TransportManager $transportManager entity being set as the value
-     *
-     * @return TmEmployment
-     */
-    public function setTransportManager($transportManager)
-    {
-        $this->transportManager = $transportManager;
-
-        return $this;
-    }
-
-    /**
-     * Get the transport manager
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Tm\TransportManager
-     */
-    public function getTransportManager()
-    {
-        return $this->transportManager;
+        return $this->olbsKey;
     }
 
     /**
@@ -439,7 +366,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @param int $version new value being set
      *
-     * @return TmEmployment
+     * @return EcmtCountriesConstraints
      */
     public function setVersion($version)
     {

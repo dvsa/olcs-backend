@@ -512,6 +512,13 @@ return [
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
 
+    // Sectors
+    TransferQuery\Sectors\Sectors::class => QueryHandler\Sectors\Sectors::class,
+
+    // EcmtPermits
+    TransferQuery\EcmtPermits\EcmtPermits::class => QueryHandler\EcmtPermits\EcmtPermits::class,
+
+
     // SystemParameter
     TransferQuery\SystemParameter\SystemParameter::class => QueryHandler\SystemParameter\SystemParameter::class,
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
