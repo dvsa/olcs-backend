@@ -18,15 +18,20 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Sectors extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'Sectors';
+    protected $extraRepos = ['SystemParameter'];
 
     public function handleQuery(QueryInterface $query)
     {
+        $sytemParamRepo = $this->getRepo('SystemParameter');
+        $totalPermitsNum = $sytemParamRepo->fetchValue(\Dvsa\Olcs\Api\Entity\System\SystemParameter::ECMT_TOTAL_PERMITS);
+        $retention = $sytemParamRepo->fetchValue(\Dvsa\Olcs\Api\Entity\System\SystemParameter::ECMT_RETENTION);
 
         $repo = $this->getRepo();
+
         $results = [];
 
         foreach ($repo->fetchList($query) as $row) {
-            $row['allocatedPermits'] = $repo->calculatePermitsNumber($row['siftingPercentage']);
+            $row['allocatedPermits'] = $repo->calculatePermitsNumber($row['siftingPercentage'],$totalPermitsNum,$retention);
             $row['applicationsTotal'] = $repo->getApplicationsTotal($row['sectorId']);
             $results[] = $row;
         }
