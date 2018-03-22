@@ -21,6 +21,7 @@ class EcmtPermits extends AbstractRepository
 {
 
     protected $entity = Entity::class;
+    protected $countries = ["","Austria","Switzerland","Croatia","Bulgaria","Albania","Netherlands"];
 
     /**
      * Applies filters
@@ -47,13 +48,27 @@ class EcmtPermits extends AbstractRepository
         $results = $this->fetchPaginatedObj($qb, $hydrateMode);
 
         $data = [];
-
         foreach ($results as $row)
         {
             $r = $row->getEcmtPermitsApplication()->getLicence()->getLicNo();
             $rr = $row->getEcmtPermitsApplication()->getLicence()->getOrganisation()->getName();
             $row->setEcmtPermitsApplication($r);
             $row->setStartDate($rr);
+
+            $country = explode(",",$row->getEcmtCountriesIds());
+
+            if(is_array($country) && strlen($country[0]) < 3){
+                $items = [];
+                foreach($country as $num)
+                {
+                    $items[] = $this->countries[$num];
+                }
+                $row->setEcmtCountriesIds(implode(", ",$items));
+            }
+            elseif (!is_array($country) && strlen($country[0]) < 3)
+            {
+                $row->setEcmtCountriesIds($this->countries[$row->getEcmtCountriesIds()]);
+            }
             $data[] = $row;
         }
 
