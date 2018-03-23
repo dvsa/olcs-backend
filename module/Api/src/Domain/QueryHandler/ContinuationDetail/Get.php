@@ -136,7 +136,11 @@ class Get extends AbstractQueryHandler
         $latestFee = $repo->fetchLatestPaidContinuationFee($licenceId);
         if ($latestFee) {
             $today = (new DateTime('now'))->setTime(0, 0, 0);
-            $feeDate = $latestFee->getLatestTransaction()->getCompletedDate(true)->setTime(0, 0, 0);
+            $latestTransaction = $latestFee->getLatestTransaction();
+            if (!$latestTransaction) {
+                return null;
+            }
+            $feeDate = $latestTransaction->getCompletedDate(true)->setTime(0, 0, 0);
             $plus30Days = $feeDate->add(new \DateInterval('P30D'));
             if ($plus30Days < $today) {
                 return null;
