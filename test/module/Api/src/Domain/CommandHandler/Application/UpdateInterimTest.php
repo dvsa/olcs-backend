@@ -56,14 +56,15 @@ class UpdateInterimTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    /**
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
     public function testHandleCommandValidationError()
     {
-        $this->setExpectedException(ValidationException::class);
-
         $data = [
             'id' => 111,
             'version' => 1,
-            'requested' => 'Y'
+            'requested' => 'Y',
         ];
         $command = Cmd::create($data);
 
@@ -74,6 +75,41 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testTotalAuthTrailersVehiclesValidation()
+    {
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'requested' => 'Y',
+            'reason' => 'Foo',
+            'startDate' => '2015-01-01',
+            'endDate' => '2015-01-01',
+            'authVehicles' => 10,
+            'authTrailers' => 12,
+            'operatingCentres' => [11],
+            'vehicles' => [22],
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->setId(111);
+        $application->setTotAuthVehicles(3);
+        $application->setTotAuthTrailers(4);
+
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application);
+
+
 
         $this->sut->handleCommand($command);
     }
@@ -95,7 +131,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
             'vehicles' => [22]
         ];
         $command = Cmd::create($data);
-
         /** @var ApplicationOperatingCentre $oc1 */
         $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
         $oc1->setIsInterim('Y');
@@ -133,6 +168,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setOperatingCentres($ocs);
         $application->setLicenceVehicles($lvs);
         $application->setIsVariation(false);
+        $application->setTotAuthVehicles(15);
+        $application->setTotAuthTrailers(15);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -157,7 +194,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateApplicationFee::class, $data, $result1);
 
         $result = $this->sut->handleCommand($command);
-
         $expected = [
             'id' => [],
             'messages' => [
@@ -176,8 +212,6 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertEquals('Foo', $application->getInterimReason());
         $this->assertEquals('2015-01-01', $application->getInterimStart()->format('Y-m-d'));
         $this->assertEquals('2015-01-01', $application->getInterimEnd()->format('Y-m-d'));
-        $this->assertEquals(10, $application->getInterimAuthVehicles());
-        $this->assertEquals(12, $application->getInterimAuthTrailers());
     }
 
     public function testHandleCommandRequestedNo()
@@ -403,6 +437,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
         $application->setInterimLicenceVehicles($interimLicenceVehicles);
+        $application->setTotAuthVehicles(15);
+        $application->setTotAuthTrailers(15);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
@@ -615,6 +651,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setLicenceVehicles($lvs);
         $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_INFORCE]);
         $application->setInterimLicenceVehicles([]);
+        $application->setTotAuthVehicles(15);
+        $application->setTotAuthTrailers(15);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT, 1)
