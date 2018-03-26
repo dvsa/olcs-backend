@@ -31,7 +31,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class UpdateInterim extends AbstractCommandHandler implements TransactionedInterface
 {
     const ERR_REQUIRED = 'Value is required and can\'t be empty';
-
     const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
     const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
 
@@ -140,7 +139,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         $processInForce = ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE);
 
         if ($ignoreRequested || $command->getRequested() == 'Y') {
-
             if ($status === null && $application->getCurrentInterimStatus() === null) {
                 $status = $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_REQUESTED);
             }
@@ -159,7 +157,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
             $this->result->addMessage('Interim data updated');
         } else {
-
             $application->setInterimReason(null);
             $application->setInterimStart(null);
             $application->setInterimEnd(null);
@@ -226,7 +223,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             if ($licenceVehicle->getInterimApplication() !== null
                 && !in_array($licenceVehicle->getId(), $interimVehicles)
             ) {
-
                 $licenceVehicle->setInterimApplication(null);
 
                 if ($processInForce) {
@@ -235,7 +231,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
                     // Cease active discs
                     $this->ceaseActiveDiscsForVehicle($licenceVehicle);
                 }
-
             } elseif ($licenceVehicle->getInterimApplication() === null
                 && in_array($licenceVehicle->getId(), $interimVehicles)
             ) {
@@ -273,7 +268,8 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     /**
      * Validate
      *
-     * @param Cmd $command command
+     * @param Cmd               $command
+     * @param ApplicationEntity $application
      *
      * @throws ValidationException
      * @return void
@@ -320,7 +316,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         if (!empty($messages)) {
             throw new ValidationException($messages);
         }
-
     }
 
     /**
