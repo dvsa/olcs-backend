@@ -225,4 +225,32 @@ class RefundFeeTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand($command);
     }
+
+    public function testHandleCommandCpmsServiceException()
+    {
+        $feeId = 69;
+
+        $command = Cmd::create(
+            ['id' => $feeId, 'customerReference' => null, 'customerName' => null, 'address' => null]
+        );
+
+        $fee = $this->mapReference(FeeEntity::class, $feeId);
+
+        // expectations
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($fee);
+
+        $this->mockCpmsService
+            ->shouldReceive('refundFee')
+            ->once()
+            ->with($fee, [])
+            ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsV2HelperServiceException('error'));
+
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+
+        $this->sut->handleCommand($command);
+    }
 }
