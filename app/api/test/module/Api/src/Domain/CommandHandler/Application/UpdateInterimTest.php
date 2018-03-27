@@ -81,6 +81,7 @@ class UpdateInterimTest extends CommandHandlerTestCase
 
     /**
      * @expectedException Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @throws ValidationException
      */
     public function testTotalAuthTrailersVehiclesValidation()
     {
@@ -109,9 +110,21 @@ class UpdateInterimTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application);
 
+        $messageArray = [
+            'authVehicles' => [
+                UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED => UpdateInterim::ERR_VEHICLE_AUTHORITY_EXCEEDED
+            ],
+            'authTrailers' => [
+                UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED => UpdateInterim::ERR_TRAILER_AUTHORITY_EXCEEDED
+            ],
+        ];
 
-
-        $this->sut->handleCommand($command);
+        try {
+            $this->sut->handleCommand($command);
+        } catch (ValidationException $exception) {
+            $this->assertSame($messageArray, $exception->getMessages());
+            throw $exception;
+        }
     }
 
     public function testHandleCommand()
