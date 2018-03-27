@@ -712,6 +712,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
                     'receipt_reference' => 'OLCS-1234-CASH',
+                    'schema_id' => 'client_id',
                 ]
             );
 
@@ -857,6 +858,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
                     'receipt_reference' => 'OLCS-1234-CHEQUE',
+                    'schema_id' => 'client_id',
                 ]
             );
 
@@ -988,6 +990,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
                     'receipt_reference' => 'OLCS-1234-PO',
+                    'schema_id' => 'client_id',
                 ]
             );
 
@@ -1335,6 +1338,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
                 [
                     'code' => CpmsHelper::RESPONSE_SUCCESS,
                     'receipt_reference' => 'OLCS-1234-CHEQUE',
+                    'schema_id' => 'client_id',
                 ]
             );
 
