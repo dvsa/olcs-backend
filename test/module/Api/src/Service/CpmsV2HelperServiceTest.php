@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService;
+use Dvsa\Olcs\Api\Service\CpmsV2HelperServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -288,7 +289,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ]
         );
 
-        $response = ['receipt_reference' => 'guid_123'];
+        $response = [
+            'receipt_reference' => 'guid_123',
+            'schema_id' => 'client_id'
+        ];
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -445,7 +449,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ]
         );
 
-        $response = ['receipt_reference' => 'guid_123'];
+        $response = [
+            'receipt_reference' => 'guid_123',
+            'schema_id' => 'client_id'
+        ];
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -529,7 +536,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ]
         );
 
-        $response = ['receipt_reference' => 'guid_123'];
+        $response = [
+            'receipt_reference' => 'guid_123',
+            'schema_id' => 'client_id'
+        ];
 
         $this->cpmsClient
             ->shouldReceive('post')
@@ -657,9 +667,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ]
         );
 
-         $response = [
+        $response = [
             'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CASH',
+            'schema_id' => 'client_id',
         ];
 
         $this->cpmsClient
@@ -769,6 +780,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $response = [
             'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-CHEQUE',
+            'schema_id' => 'client_id',
         ];
 
         $this->cpmsClient
@@ -879,9 +891,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ]
         );
 
-         $response = [
+        $response = [
             'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
             'receipt_reference' => 'OLCS-1234-PO',
+            'schema_id' => 'client_id',
         ];
 
         $this->cpmsClient
@@ -890,7 +903,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->once()
             ->andReturn($response);
 
-         $this->feesHelper
+        $this->feesHelper
             ->shouldReceive('allocatePayments')
             ->with('1000.00', $fees)
             ->andReturn(
@@ -984,6 +997,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             'code' => CpmsV2HelperService::PAYMENT_PAYMENT_CHARGED_BACK,
             'message' => 'ok',
             'receipt_reference' => 'REVERSAL_REFERENCE',
+            'schema_id' => 'client_id',
         ];
 
         $expectedParams = array_merge(
@@ -1323,6 +1337,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ->shouldReceive('getReference')
                     ->andReturn('payment_ref')
                     ->times(3)
+                    ->shouldReceive('getCpmsSchema')
+                    ->andReturn('client_id')
+                    ->once()
                     ->getMock()
             )
             ->getMock();
@@ -1468,6 +1485,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                     ->shouldReceive('getReference')
                     ->andReturn('payment_ref')
                     ->twice(2)
+                    ->shouldReceive('getCpmsSchema')
+                    ->once()
+                    ->andReturn(null)
                     ->getMock()
             )
             ->getMock();
@@ -1589,18 +1609,26 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $this->mockSchemaIdChange();
 
+        $txn = m::mock(TransactionEntity::class);
+        $txn->shouldReceive('getReference')
+            ->andReturn('payment_ref');
+        $txn->shouldReceive('getCpmsSchema')
+            ->andReturn('client_id');
+
+
         $ft = m::mock(FeeTransactionEntity::class);
         $ft
-            ->shouldReceive('getTransaction->getReference')
-            ->andReturn('payment_ref');
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn);
+
         $ft
             ->shouldReceive('getAmount')
             ->andReturn('100.00');
 
         $ft2 = m::mock(FeeTransactionEntity::class);
         $ft2
-            ->shouldReceive('getTransaction->getReference')
-            ->andReturn('payment_ref');
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn);
         $ft2
             ->shouldReceive('getAmount')
             ->andReturn('201.00');
@@ -1621,9 +1649,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getCountryCode')
             ->andReturn('NI')
             ->times(5)
-            ->shouldReceive('getIsNi')
-            ->andReturn('N')
-            ->once()
             ->getMock();
 
         if (!$isMiscellaneous) {
@@ -1840,6 +1865,146 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->andReturn(401);
 
         $this->sut->batchRefund($fee);
+    }
+
+    /**
+     * @dataProvider miscParamsProvider
+     */
+    public function testBatchRefundWithServiceException($miscParams, $expectedCustomer, $expectedReceiver)
+    {
+
+        $isMiscellaneous = count($miscParams) > 0 ? true : false;
+        $fee = m::mock(FeeEntity::class);
+
+        $txn = m::mock(TransactionEntity::class);
+        $txn->shouldReceive('getReference')
+            ->andReturn('payment_ref');
+        $txn->shouldReceive('getCpmsSchema')
+            ->andReturn('client_id');
+
+        $txn2 = m::mock(TransactionEntity::class);
+        $txn2->shouldReceive('getReference')
+             ->andReturn('payment_ref');
+        $txn2->shouldReceive('getCpmsSchema')
+             ->andReturn('client_id_2');
+
+        $ft = m::mock(FeeTransactionEntity::class);
+        $ft
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn);
+        $ft
+            ->shouldReceive('getAmount')
+            ->andReturn('100.00');
+
+        $ft2 = m::mock(FeeTransactionEntity::class);
+        $ft2
+            ->shouldReceive('getTransaction')
+            ->andReturn($txn2);
+        $ft2
+            ->shouldReceive('getAmount')
+            ->andReturn('201.00');
+
+        $address = new Address();
+        $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
+
+        $mockFeeType = m::mock()
+            ->shouldReceive('getDescription')
+            ->andReturn('TEST_FEE_TYPE')
+            ->times(4)
+            ->shouldReceive('getVatCode')
+            ->andReturn('VAT_CODE')
+            ->twice()
+            ->shouldReceive('getVatRate')
+            ->andReturn('VAT_RATE')
+            ->twice()
+            ->shouldReceive('getCountryCode')
+            ->andReturn('NI')
+            ->times(4)
+            ->getMock();
+
+        if (!$isMiscellaneous) {
+            $mockFeeType
+                ->shouldReceive('isMiscellaneous')
+                ->andReturn($isMiscellaneous)
+                ->twice()
+                ->shouldReceive('getIrfoFeeType')
+                ->andReturnNull()
+                ->twice()
+                ->shouldReceive('getFeeType')
+                ->andReturn(
+                    m::mock()
+                        ->shouldReceive('getId')
+                        ->andReturn('APP')
+                        ->twice()
+                        ->getMock()
+                )
+                ->twice()
+                ->getMock();
+        }
+
+        $fee
+            ->shouldReceive('getFeeTransactionsForRefund')
+            ->andReturn([$ft, $ft2])
+            ->shouldReceive('getOrganisation')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getId')
+                    ->andReturn(99)
+                    ->getMock()
+            )
+            ->shouldReceive('getId')
+            ->andReturn(101)
+            ->shouldReceive('isBalancingFee')
+            ->andReturn(false)
+            ->shouldReceive('getInvoiceLineNo')
+            ->andReturn('LINE_NO')
+            ->shouldReceive('getAmount')
+            ->andReturn('200.00')
+            ->shouldReceive('getOutstandingAmount')
+            ->andReturn('0.00')
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new \DateTime('2015-10-09'))
+            ->shouldReceive('getCustomerNameForInvoice')
+            ->andReturn('some organisation')
+            ->shouldReceive('getCustomerAddressForInvoice')
+            ->andReturn($address)
+            ->shouldReceive('getRuleStartDate')
+            ->andReturn(new \DateTime('2015-10-12'))
+            ->shouldReceive('getDefermentPeriod')
+            ->andReturn('1')
+            ->shouldReceive('getSalesPersonReference')
+            ->andReturn('TEST_SALES_PERSON_REF')
+            ->shouldReceive('getNetAmount')
+            ->andReturn('12.00')
+            ->shouldReceive('getVatAmount')
+            ->andReturn('15.00')
+            ->shouldReceive('getGrossAmount')
+            ->andReturn('9.99')
+            ->shouldReceive('getLicence')
+            ->andReturn(
+                m::mock()
+                    ->shouldReceive('getLicNo')
+                    ->andReturn('OB1234567')
+                    ->getMock()
+            )
+            ->shouldReceive('getFeeType')
+            ->andReturn($mockFeeType)
+            ->getMock();
+
+        $ft->shouldReceive('getFee')->andReturn($fee);
+        $ft2->shouldReceive('getFee')->andReturn($fee);
+
+        $response = [
+            'code' => CpmsV2HelperService::RESPONSE_SUCCESS,
+            'receipt_references' => [
+                'foo' => 'bar',
+                'baz' => 'bat',
+            ],
+        ];
+
+        $this->expectException(CpmsV2HelperServiceException::class);
+        $result = $this->sut->refundFee($fee, $miscParams);
+        $this->assertSame($response['receipt_references'], $result);
     }
 
     public function testCreateServiceWithInvoicePrefix()

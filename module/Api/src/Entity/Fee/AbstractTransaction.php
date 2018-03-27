@@ -77,6 +77,15 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     protected $completedDate;
 
     /**
+     * Cpms schema
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="cpms_schema", length=10, nullable=true)
+     */
+    protected $cpmsSchema;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -435,6 +444,30 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
         }
 
         return $this->completedDate;
+    }
+
+    /**
+     * Set the cpms schema
+     *
+     * @param string $cpmsSchema new value being set
+     *
+     * @return Transaction
+     */
+    public function setCpmsSchema($cpmsSchema)
+    {
+        $this->cpmsSchema = $cpmsSchema;
+
+        return $this;
+    }
+
+    /**
+     * Get the cpms schema
+     *
+     * @return string
+     */
+    public function getCpmsSchema()
+    {
+        return $this->cpmsSchema;
     }
 
     /**
