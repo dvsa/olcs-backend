@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
+use Dvsa\Olcs\Api\Service\CpmsV2HelperServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -63,6 +64,8 @@ final class RefundFee extends AbstractCommandHandler implements
                 $e->getCode(),
                 $e
             );
+        } catch (CpmsV2HelperServiceException $e) {
+            throw new RuntimeException('Cpms V2 HelperService Exception: ' . $e->getMessage());
         }
 
         // note, we don't record a transaction reference as CPMS returns one per original receipt_reference
@@ -81,7 +84,6 @@ final class RefundFee extends AbstractCommandHandler implements
             ->setReference($transactionReference);
 
         foreach ($fee->getFeeTransactionsForRefund() as $originalFt) {
-
             if (!array_key_exists($originalFt->getTransaction()->getReference(), $references)) {
                 // only create records for refunded transactions
                 continue;
