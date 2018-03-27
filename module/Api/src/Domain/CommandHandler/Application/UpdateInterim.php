@@ -31,6 +31,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class UpdateInterim extends AbstractCommandHandler implements TransactionedInterface
 {
     const ERR_REQUIRED = 'Value is required and can\'t be empty';
+    const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
+    const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
 
     protected $repoServiceName = 'Application';
 
@@ -131,7 +133,7 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
      */
     protected function saveInterimData(ApplicationEntity $application, Cmd $command, $ignoreRequested = false)
     {
-        $this->validate($command);
+        $this->validate($command, $application);
 
         $status = null;
 
@@ -272,12 +274,13 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
     /**
      * Validate
      *
-     * @param Cmd $command command
+     * @param Cmd               $command
+     * @param ApplicationEntity $application
      *
      * @throws ValidationException
      * @return void
      */
-    protected function validate(Cmd $command)
+    protected function validate(Cmd $command, ApplicationEntity $application)
     {
         if ($command->getRequested() !== 'Y') {
             return;
@@ -286,7 +289,6 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
         $messages = [];
 
         $reason = $command->getReason();
-
         if (empty($reason)) {
             $messages['reason'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
         }
@@ -305,8 +307,16 @@ final class UpdateInterim extends AbstractCommandHandler implements Transactione
             $messages['authVehicles'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
         }
 
+        if ($application->getTotAuthVehicles() < $command->getAuthVehicles()) {
+            $messages['authVehicles'][self::ERR_VEHICLE_AUTHORITY_EXCEEDED] = self::ERR_VEHICLE_AUTHORITY_EXCEEDED;
+        }
+
         if ($command->getAuthTrailers() === null) {
             $messages['authTrailers'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
+        }
+
+        if ($application->getTotAuthTrailers() < $command->getAuthTrailers()) {
+            $messages['authTrailers'][self::ERR_TRAILER_AUTHORITY_EXCEEDED] = self::ERR_TRAILER_AUTHORITY_EXCEEDED;
         }
 
         if (!empty($messages)) {
