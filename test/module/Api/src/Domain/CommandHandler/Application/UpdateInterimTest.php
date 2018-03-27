@@ -908,6 +908,8 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $application->setInterimReason($currentData['reason']);
         $application->setInterimStart($currentData['startDate']);
         $application->setInterimEnd($currentData['endDate']);
+        $application->setTotAuthVehicles(40);
+        $application->setTotAuthTrailers(40);
 
         $licenceVehicles = new ArrayCollection();
 
