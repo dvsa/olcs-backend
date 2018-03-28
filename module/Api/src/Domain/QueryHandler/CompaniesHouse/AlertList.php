@@ -34,6 +34,7 @@ class AlertList extends AbstractQueryHandler
             foreach ($companiesHouseAlert->getOrganisation()->getLicences() as $licence) {
                 $resultList = $this->resultList([$companiesHouseAlert], ['reasons' => ['reasonType']])[0];
                 $resultList['licence'] = $this->resultList([$licence], ['licenceType' =>['description']])[0];
+                $resultList['organisation'] = $this->resultList([$companiesHouseAlert->getOrganisation()])[0];
                 $results[] = $resultList;
             }
         }
