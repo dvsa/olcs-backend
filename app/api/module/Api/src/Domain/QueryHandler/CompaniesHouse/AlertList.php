@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\AlertList as AlertListQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/**
+/* *
  * Alert
  */
 class AlertList extends AbstractQueryHandler
@@ -26,44 +26,18 @@ class AlertList extends AbstractQueryHandler
     {
         /** @var Repository\CompaniesHouseAlert $repo */
         $repo = $this->getRepo();
+        $companiesHouseAlerts = $repo->fetchCaListWithLicences($query);
 
         $results = [];
 
-        $companiesHouseAlerts = $repo->fetchCaListWithLicences($query);
-
-        $results = $this->resultList(
-            $repo->fetchList($query, \Doctrine\ORM\Query::HYDRATE_OBJECT),
-            [
-                'organisation',
-                'reasons' => [
-                    'reasonType',
-                ],
-            ]
-        );
-        $licences = [];
         foreach ($companiesHouseAlerts as $companiesHouseAlert) {
-            $companiesHouseAlert->getOrganisation()->getActiveLicences();
-            $licences [] = $this->resultList(
-                [$companiesHouseAlert],
-                ['organisation' => ['licences'], 'reasons' => ['reasonType']]
-            );
-            foreach ($licences[0] as $licence) {
-                $data [] = $licence;
+            foreach ($companiesHouseAlert->getOrganisation()->getLicences() as $licence) {
+                $resultList = $this->resultList([$companiesHouseAlert], ['reasons' => ['reasonType']])[0];
+                $resultList['licence'] = $this->resultList([$licence], ['licenceType' =>['description']])[0];
+                $results[] = $resultList;
             }
-
         }
 
-
-        /**
-         * foreach ($companiesHouseAlerts as $companiesHouseAlert) {
-         * $result = $this->resultList([$companiesHouseAlert],
-         * ['organisation' => ['licences'], 'reasons' => ['reasonType']]);
-         * foreach ($companiesHouseAlert[0]->getOrganisation()->getLicences() as $licence) {
-         * $result['licence'] = $this->resultList([$licence])[0];
-         * }
-         * $results[] = $result;
-         * }
-         **/
         return [
             'result' => $results,
             'count' => $repo->fetchCount($query),

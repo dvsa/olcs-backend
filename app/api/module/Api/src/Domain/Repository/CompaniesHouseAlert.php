@@ -2,8 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -18,20 +16,32 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class CompaniesHouseAlert extends AbstractRepository
 {
-    protected $entity = Entity\CompaniesHouse\CompaniesHouseAlert::class;
+    protected $entity = \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert::class;
 
     protected $alias = 'ca';
 
     public function fetchCaListWithLicences(PagedQueryInterface $query)
     {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('cha', 'cha_o')
-            ->from(Entity\CompaniesHouse\CompaniesHouseAlert::class, 'cha')
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $sqlQuery = $qb->select('cha', 'cha_o', 'cha_o_ls')
+            ->from($this->entity, 'cha')
             ->innerJoin('cha.organisation', 'cha_o')
             ->innerJoin('cha_o.licences', 'cha_o_ls')
-            ->setFirstResult($query->getLimit() * $query->getPage())
+            ->where(
+                $qb->expr()->in(
+                    'cha_o_ls.status',
+                    [
+                        Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
+                        Entity\Licence\Licence::LICENCE_STATUS_VALID,
+                        Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED
+                    ]
+
+                )
+            )
+            ->setFirstResult($query->getLimit() * ($query->getPage()-1))
             ->setMaxResults($query->getLimit())
-            ->getQuery()->execute([], Query::HYDRATE_OBJECT);
+            ->getQuery();
+        return $sqlQuery->execute([], Query::HYDRATE_OBJECT);
     }
 
 
