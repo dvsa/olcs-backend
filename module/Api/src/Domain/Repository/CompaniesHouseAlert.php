@@ -22,6 +22,7 @@ class CompaniesHouseAlert extends AbstractRepository
 
     public function fetchCaListWithLicences(PagedQueryInterface $query)
     {
+
         $qb = $this->getEntityManager()->createQueryBuilder();
         $sqlQuery = $qb->select('cha', 'cha_o', 'cha_o_ls')
             ->from($this->entity, 'cha')
