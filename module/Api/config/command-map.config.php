@@ -255,6 +255,7 @@ return [
         CommandHandler\Variation\RestoreListConditionUndertaking::class,
     TransferCommand\Variation\DeleteOperatingCentre::class => CommandHandler\Variation\DeleteOperatingCentre::class,
     TransferCommand\Variation\RestoreOperatingCentre::class => CommandHandler\Variation\RestoreOperatingCentre::class,
+    TransferCommand\Variation\UpdateInterim::class => CommandHandler\Variation\UpdateInterim::class,
 
     // Transfer - Organisation
     TransferCommand\Organisation\GenerateName::class => CommandHandler\Organisation\GenerateName::class,
