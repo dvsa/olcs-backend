@@ -2,11 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Transfer\Query\PagedQueryInterface;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as CompaniesHouseAlertEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -16,33 +15,25 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class CompaniesHouseAlert extends AbstractRepository
 {
-    protected $entity = \Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert::class;
+    protected $entity = CompaniesHouseAlertEntity::class;
 
-    protected $alias = 'ca';
+    protected $alias = 'cha';
 
-    public function fetchCaListWithLicences(PagedQueryInterface $query)
+    protected function applyListJoins(QueryBuilder $qb)
     {
-
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $sqlQuery = $qb->select('cha', 'cha_o', 'cha_o_ls')
-            ->from($this->entity, 'cha')
+        parent::applyListJoins($qb);
+        $qb
+            ->addSelect('cha_o', 'cha_o_ls')
             ->innerJoin('cha.organisation', 'cha_o')
-            ->innerJoin('cha_o.licences', 'cha_o_ls')
-            ->where(
-                $qb->expr()->in(
-                    'cha_o_ls.status',
-                    [
-                        Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
-                        Entity\Licence\Licence::LICENCE_STATUS_VALID,
-                        Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED
-                    ]
-
-                )
-            )
-            ->setFirstResult($query->getLimit() * ($query->getPage()-1))
-            ->setMaxResults($query->getLimit())
-            ->getQuery();
-        return $sqlQuery->execute([], Query::HYDRATE_OBJECT);
+            ->innerJoin('cha_o.licences', 'cha_o_ls', Join::WITH, 'cha_o_ls.status IN (:licenceStatuses)')
+            ->setParameter(
+                'licenceStatuses',
+                [
+                    Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
+                    Entity\Licence\Licence::LICENCE_STATUS_VALID,
+                    Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED
+                ]
+            );
     }
 
 
@@ -56,11 +47,8 @@ class CompaniesHouseAlert extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->innerJoin($this->alias . '.organisation', 'o', Join::WITH);
-        $qb->innerJoin('o.licences', 'l');
-
         if (!$query->getIncludeClosed()) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.isClosed', 0));
+            $qb->andWhere($qb->expr()->eq('cha.isClosed', 0));
         }
 
         if ($query->getTypeOfChange()) {
