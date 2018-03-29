@@ -2,14 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\CompaniesHouse;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\AlertList as AlertListQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/* *
- * Alert
- */
 class AlertList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'CompaniesHouseAlert';
@@ -26,14 +25,16 @@ class AlertList extends AbstractQueryHandler
     {
         /** @var Repository\CompaniesHouseAlert $repo */
         $repo = $this->getRepo();
-        $companiesHouseAlerts = $repo->fetchCaListWithLicences($query);
+
+        /** @var CompaniesHouseAlert[] $companiesHouseAlerts */
+        $companiesHouseAlerts = $repo->fetchList($query, Query::HYDRATE_OBJECT);
 
         $results = [];
 
         foreach ($companiesHouseAlerts as $companiesHouseAlert) {
             foreach ($companiesHouseAlert->getOrganisation()->getLicences() as $licence) {
                 $resultList = $this->resultList([$companiesHouseAlert], ['reasons' => ['reasonType']])[0];
-                $resultList['licence'] = $this->resultList([$licence], ['licenceType' =>['description']])[0];
+                $resultList['licence'] = $this->resultList([$licence], ['licenceType' => ['description']])[0];
                 $resultList['organisation'] = $this->resultList([$companiesHouseAlert->getOrganisation()])[0];
                 $results[] = $resultList;
             }
