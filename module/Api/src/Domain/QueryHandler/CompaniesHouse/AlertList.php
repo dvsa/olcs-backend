@@ -42,7 +42,7 @@ class AlertList extends AbstractQueryHandler
 
         return [
             'result' => $results,
-            'count' => count($results), /* TODO: sort to handle pagination after query sorted */
+            'count' => $repo->fetchCount($query),
             'valueOptions' => ['companiesHouseAlertReason' => $repo->getReasonValueOptions(),]
         ];
     }

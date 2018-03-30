@@ -347,7 +347,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $this->buildDefaultListQuery($qb, $query);
         $this->applyListJoins($qb);
         $this->applyListFilters($qb, $query);
-
+        $dql = $qb->getQuery();
         return $this->fetchPaginatedList($qb, $hydrateMode);
     }
 
