@@ -43,9 +43,7 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} ' .
-            'INNER JOIN ca.organisation o ' .
-            'AND ca.isClosed = 0';
+        $expected = '{QUERY} SELECT cha_o, cha_o_ls, cha_o_lst INNER JOIN cha.organisation cha_o INNER JOIN cha_o.licences cha_o_ls WITH cha_o_ls.status IN ([[["lsts_curtailed","lsts_valid","lsts_suspended"]]]) INNER JOIN cha_o_ls.licenceType cha_o_lst AND cha.isClosed = 0';
 
         $this->assertEquals($expected, $this->query);
     }
@@ -71,9 +69,7 @@ class CompaniesHouseAlertTest extends RepositoryTestCase
 
         $this->assertEquals(['foo' => 'bar'], $this->sut->fetchList($query));
 
-        $expected = '{QUERY} ' .
-            'INNER JOIN ca.organisation o ' .
-            'INNER JOIN ca.reasons r WITH r.reasonType = [[some_type]]';
+        $expected = '{QUERY} SELECT cha_o, cha_o_ls, cha_o_lst INNER JOIN cha.organisation cha_o INNER JOIN cha_o.licences cha_o_ls WITH cha_o_ls.status IN ([[["lsts_curtailed","lsts_valid","lsts_suspended"]]]) INNER JOIN cha_o_ls.licenceType cha_o_lst INNER JOIN cha.reasons r WITH r.reasonType = [[some_type]]';
 
         $this->assertEquals($expected, $this->query);
     }

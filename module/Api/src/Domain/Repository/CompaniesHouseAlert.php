@@ -35,8 +35,6 @@ class CompaniesHouseAlert extends AbstractRepository
                     Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED
                 ]
             );
-        $sql = $qb->getQuery()->getSQL();
-        return $qb;
     }
 
 
