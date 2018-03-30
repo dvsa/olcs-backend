@@ -23,9 +23,10 @@ class CompaniesHouseAlert extends AbstractRepository
     {
         parent::applyListJoins($qb);
         $qb
-            ->addSelect('cha_o', 'cha_o_ls')
+            ->addSelect('cha_o', 'cha_o_ls', 'cha_o_lst')
             ->innerJoin('cha.organisation', 'cha_o')
             ->innerJoin('cha_o.licences', 'cha_o_ls', Join::WITH, 'cha_o_ls.status IN (:licenceStatuses)')
+            ->innerJoin('cha_o_ls.licenceType', 'cha_o_lst')
             ->setParameter(
                 'licenceStatuses',
                 [
@@ -34,6 +35,8 @@ class CompaniesHouseAlert extends AbstractRepository
                     Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED
                 ]
             );
+        $sql = $qb->getQuery()->getSQL();
+        return $qb;
     }
 
 
