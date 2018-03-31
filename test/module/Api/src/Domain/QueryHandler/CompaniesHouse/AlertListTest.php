@@ -71,6 +71,4 @@ class AlertListTest extends QueryHandlerTestCase
 
         $this->assertEquals($expected, $result);
     }
-
-
 }
