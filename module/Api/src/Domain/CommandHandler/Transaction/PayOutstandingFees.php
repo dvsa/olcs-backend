@@ -191,7 +191,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // fire off to CPMS
         if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
             $response = $this->getCpmsService()->initiateCnpRequest(
-                $command->getCpmsRedirectUrl(), $feesToPay, $extraParams
+                $command->getCpmsRedirectUrl(),
+                $feesToPay,
+                $extraParams
             );
         } elseif ($command->getStoredCardReference()) {
             $response = $this->getCpmsService()->initiateStoredCardRequest(
@@ -202,13 +204,16 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             );
         } else {
             $response = $this->getCpmsService()->initiateCardRequest(
-                $command->getCpmsRedirectUrl(), $feesToPay, $extraParams
+                $command->getCpmsRedirectUrl(),
+                $feesToPay,
+                $extraParams
             );
         }
 
         // create transaction
         $transaction = new TransactionEntity();
         $transaction
+            ->setCpmsSchema($response['schema_id'])
             ->setReference($response['receipt_reference'])
             ->setGatewayUrl($response['gateway_url'])
             ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_OUTSTANDING))
@@ -219,7 +224,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         $feeTransactions = new ArrayCollection();
         $transaction->setFeeTransactions($feeTransactions);
         foreach ($feesToPay as $fee) {
-
             $this->result->merge($this->maybeCancelPendingWaive($fee));
 
             $feeTransaction = new FeeTransactionEntity();
@@ -266,6 +270,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         // create transaction
         $transaction = new TransactionEntity();
         $transaction
+            ->setCpmsSchema($response['schema_id'])
             ->setReference($response['receipt_reference'])
             ->setStatus($this->getRepo()->getRefdataReference(TransactionEntity::STATUS_PAID))
             ->setType($this->getRepo()->getRefdataReference(TransactionEntity::TYPE_PAYMENT))
@@ -279,7 +284,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
         // create feeTransaction record(s) and cancel any pending waives
         foreach ($fees as $fee) {
-
             $this->result->merge($this->maybeCancelPendingWaive($fee));
 
             $allocatedAmount = $allocations[$fee->getId()];
@@ -440,7 +444,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
 
         foreach ($fee->getFeeTransactions() as $ft) {
             if ($ft->getTransaction()->isOutstanding()) {
-
                 $transactionId = $ft->getTransaction()->getId();
 
                 // resolve outstanding payment
