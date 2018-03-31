@@ -591,7 +591,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             $params['auth_code'] = $this->getPaymentAuthCode($reference, $fee);
         }
 
-        $response = $this->send($method, $endPoint, $scope, $params, $fee);
+        $response = $this->send($method, $endPoint, $scope, $params, $fee, $ft->getTransaction()->getCpmsSchema());
 
         $refundSuccessStatuses = [
             self::PAYMENT_REFUNDED,
@@ -623,10 +623,19 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $scope    = ApiService::SCOPE_REFUND;
 
         $payments = [];
+        $transactionSchemas = [];
 
+        /** @var \Dvsa\Olcs\Api\Entity\Fee\FeeTransaction $ft */
         foreach ($fee->getFeeTransactionsForRefund() as $ft) {
             $payments[] = $this->getRefundPaymentDataForFeeTransaction($ft, $extraParams);
+            $transactionSchemas[] = $ft->getTransaction()->getCpmsSchema();
         }
+
+        if (count(array_unique($transactionSchemas)) > 1) {
+            throw new CpmsV2HelperServiceException('Cannot refund multiple transactions with different schemas', 400);
+        }
+
+        $schema = !empty($transactionSchemas) ? $transactionSchemas[0] : null;
 
         $params = array_merge(
             [
@@ -638,7 +647,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         );
         $params = $this->addCustomerParams($params, [$fee], $fee);
 
-        $response = $this->send($method, $endPoint, $scope, $params, $fee);
+        $response = $this->send($method, $endPoint, $scope, $params, $fee, $schema);
 
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response['receipt_references'];
@@ -827,10 +836,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         // check it's an array
         if (is_array($response)) {
-
             // check we have receipt reference
             if (isset($response['receipt_reference']) && !empty($response['receipt_reference'])) {
-
                 // check we have a success code if required
                 if (!$requireSuccessCode) {
                     return $response;
@@ -893,11 +900,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         }
 
         // All bus fees linked to a licence
-        if (
-            in_array(
-                $feeType->getFeeType()->getId(),
-                [FeeTypeEntity::FEE_TYPE_BUSAPP, FeeTypeEntity::FEE_TYPE_BUSVAR]
-            )
+        if (in_array($feeType->getFeeType()->getId(), [FeeTypeEntity::FEE_TYPE_BUSAPP, FeeTypeEntity::FEE_TYPE_BUSVAR])
             && $feeLicence !== null
         ) {
             return $feeLicence->getLicNo() . 'B';
@@ -1113,7 +1116,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         }
 
         $response = $this->getClient()->$method($endPoint, $scope, $params);
-
+        if (is_array($response) && array_key_exists('receipt_reference', $response)) {
+            $response['schema_id'] = $schemaId;
+        }
         $this->debug("CPMS $scope response", ['response' => $response]);
 
         return $response;
