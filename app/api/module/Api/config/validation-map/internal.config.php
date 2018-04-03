@@ -169,5 +169,6 @@ return [
     CommandHandler\User\DeleteUser::class => IsInternalUser::class,
     CommandHandler\User\UpdateUser::class => IsInternalUser::class,
     CommandHandler\Variation\RestoreListConditionUndertaking::class => IsInternalUser::class,
+    CommandHandler\Variation\UpdateInterim::class => IsInternalUser::class,
     CommandHandler\Tm\UndoDisqualification::class => IsInternalEdit::class,
 ];
