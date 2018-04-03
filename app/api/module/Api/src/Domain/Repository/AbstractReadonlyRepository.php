@@ -34,6 +34,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
     /**
      * Force paginated queries to fetch joined tables when paginating. Default is true.
+     *
      * @see http://doctrine-orm.readthedocs.io/projects/doctrine-orm/en/latest/tutorials/pagination.html
      *
      * @var bool
@@ -278,7 +279,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         // If we are not locking and requesting an object, check the cache first
         $cache = ($version === null && $hydrateMode === Query::HYDRATE_OBJECT);
         if ($cache && isset($this->references[$id])) {
-
             return $this->references[$id];
         }
 
@@ -347,7 +347,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $this->buildDefaultListQuery($qb, $query);
         $this->applyListJoins($qb);
         $this->applyListFilters($qb, $query);
-
         return $this->fetchPaginatedList($qb, $hydrateMode);
     }
 

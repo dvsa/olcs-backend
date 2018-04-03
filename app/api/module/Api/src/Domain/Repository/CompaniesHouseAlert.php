@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as CompaniesHouseAlertEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -14,9 +15,28 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class CompaniesHouseAlert extends AbstractRepository
 {
-    protected $entity = Entity\CompaniesHouse\CompaniesHouseAlert::class;
+    protected $entity = CompaniesHouseAlertEntity::class;
 
-    protected $alias = 'ca';
+    protected $alias = 'cha';
+
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        parent::applyListJoins($qb);
+        $qb
+            ->addSelect('cha_o', 'cha_o_ls', 'cha_o_lst')
+            ->innerJoin('cha.organisation', 'cha_o')
+            ->innerJoin('cha_o.licences', 'cha_o_ls', Join::WITH, 'cha_o_ls.status IN (:licenceStatuses)')
+            ->innerJoin('cha_o_ls.licenceType', 'cha_o_lst')
+            ->setParameter(
+                'licenceStatuses',
+                [
+                    Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
+                    Entity\Licence\Licence::LICENCE_STATUS_VALID,
+                    Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED
+                ]
+            );
+    }
+
 
     /**
      * Apply List Filters
@@ -28,10 +48,8 @@ class CompaniesHouseAlert extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->innerJoin($this->alias . '.organisation', 'o', Join::WITH);
-
         if (!$query->getIncludeClosed()) {
-            $qb->andWhere($qb->expr()->eq($this->alias . '.isClosed', 0));
+            $qb->andWhere($qb->expr()->eq('cha.isClosed', 0));
         }
 
         if ($query->getTypeOfChange()) {
