@@ -127,6 +127,21 @@ trait AuthAwareTrait
         return ($this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER));
     }
 
+    public function isReadOnlyInternalUser()
+    {
+        $isReadOnlyUser = false;
+        $currentUser = $this->getCurrentUser();
+        $roles = $currentUser->getRoles()->getValues();
+
+        foreach ($roles as $role) {
+            if ($role->getRole() == \Dvsa\Olcs\Api\Entity\User\Role::ROLE_INTERNAL_LIMITED_READ_ONLY) {
+                $isReadOnlyUser = true;
+            }
+        }
+
+        return $isReadOnlyUser;
+    }
+
     /**
      * Is the current user a system user
      *

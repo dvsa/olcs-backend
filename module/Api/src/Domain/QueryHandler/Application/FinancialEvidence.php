@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -35,11 +36,16 @@ class FinancialEvidence extends AbstractQueryHandler
         $applicationRepo = $this->getRepo();
         $application = $applicationRepo->fetchUsingId($query, Query::HYDRATE_OBJECT);
 
-        // add documents
-        $financialDocuments = $application->getApplicationDocuments(
-            $applicationRepo->getCategoryReference(Category::CATEGORY_APPLICATION),
-            $applicationRepo->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
-        );
+        // add documents if not READ-ONLY user
+        $financialDocuments = null;
+        if (!$this->isReadOnlyInternalUser()) {
+            $financialDocuments = $application->getApplicationDocuments(
+                $applicationRepo->getCategoryReference(Category::CATEGORY_APPLICATION),
+                $applicationRepo->getSubCategoryReference(SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL)
+            );
+            $financialDocuments = $this->resultList($financialDocuments);
+        }
+
 
         // add calculated finance data
         $financialEvidence = $this->getTotalNumberOfAuthorisedVehicles($application);
@@ -55,7 +61,7 @@ class FinancialEvidence extends AbstractQueryHandler
                 'licence',
             ],
             [
-                'documents' => $this->resultList($financialDocuments),
+                'documents' => $financialDocuments,
                 'financialEvidence' => $financialEvidence
             ]
         );
@@ -78,7 +84,7 @@ class FinancialEvidence extends AbstractQueryHandler
         $auths[] = [
             'type' => $type,
             'count' => $application->getTotAuthVehicles(),
-            'category' =>  $application->getGoodsOrPsv()->getId(),
+            'category' => $application->getGoodsOrPsv()->getId(),
         ];
 
         // add the counts for each licence
@@ -169,4 +175,6 @@ class FinancialEvidence extends AbstractQueryHandler
             'otherApplicationVehicles' => $otherApplicationVehicles,
         ];
     }
+
+
 }
