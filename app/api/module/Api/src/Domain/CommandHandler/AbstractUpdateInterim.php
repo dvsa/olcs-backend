@@ -38,7 +38,7 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 
     protected $extraRepos = ['GoodsDisc', 'Fee', 'LicenceVehicle'];
 
-    protected $allowZeroAuthVeicles = false;
+    protected $allowZeroAuthVehicles = false;
 
     /**
      * Handle command
@@ -305,7 +305,7 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
 
         $authVehicles = $command->getAuthVehicles();
 
-        if (!$this->allowZeroAuthVeicles && empty($authVehicles)) {
+        if (!$this->allowZeroAuthVehicles && empty($authVehicles)) {
             $messages['authVehicles'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
         }
 
