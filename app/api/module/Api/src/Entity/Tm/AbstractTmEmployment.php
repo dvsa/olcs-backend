@@ -84,7 +84,7 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="hours_per_week", length=100, nullable=true)
+     * @ORM\Column(type="string", name="hours_per_week", length=300, nullable=true)
      */
     protected $hoursPerWeek;
 
@@ -492,7 +492,6 @@ abstract class AbstractTmEmployment implements BundleSerializableInterface, Json
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }
