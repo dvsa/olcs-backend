@@ -5,9 +5,12 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\FinancialEvidence;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence as Qry;
@@ -18,8 +21,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Financial Evidence Test
@@ -33,6 +37,9 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
         $this->sut = new FinancialEvidence();
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockedSmServices['FinancialStandingHelperService'] = m::mock(FinancialStandingHelperService::class);
+        $mockedAuth = m::mock(AuthorizationService::class)->makePartial();
+        $this->mockedSmServices[AuthorizationService::class] = $mockedAuth;
+
 
         return parent::setUp();
     }
@@ -142,6 +149,12 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
                     'restrictedAdditional' => 1700,
                 ]
             );
+        $mockedId = m::mock(IdentityInterface::class)->shouldReceive('getUser')->andReturn(
+            m::mock(User::class)->shouldReceive('getRoles')->andReturn(new ArrayCollection([]))->getMock()
+        )->getMock();
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity')->andReturn($mockedId);
+
 
         $expectedResult = [
             'id' => $applicationId,
