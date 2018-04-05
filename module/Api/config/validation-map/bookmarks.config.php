@@ -23,6 +23,7 @@ return [
     QueryHandler\Bookmark\InterimOperatingCentres::class            => NoValidationRequired::class,
     QueryHandler\Bookmark\InterimUnlinkedTm::class                  => NoValidationRequired::class,
     QueryHandler\Bookmark\IrfoGvPermitBundle::class                 => NoValidationRequired::class,
+    QueryHandler\Bookmark\EcmtPermitBundle::class                   => NoValidationRequired::class,
     QueryHandler\Bookmark\IrfoPsvAuthBundle::class                  => NoValidationRequired::class,
     QueryHandler\Bookmark\LicenceBundle::class                      => NoValidationRequired::class,
     QueryHandler\Bookmark\LicencePsvDiscCountNotCeased::class       => NoValidationRequired::class,

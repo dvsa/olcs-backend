@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ecmt_permits_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ecmt_permits_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ecmt_permits_application_id", columns={"ecmt_permits_application_id"})
+ *        @ORM\Index(name="ecmt_ecmt_permits_application_id", columns={"ecmt_permits_application_id"})
  *    }
  * )
  */
@@ -80,13 +80,33 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     protected $ecmtPermitsApplication;
 
     /**
-     * End date
+     * Expiry date
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="end_date", nullable=true)
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
      */
-    protected $endDate;
+    protected $expiryDate;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * In force date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="in_force_date", nullable=true)
+     */
+    protected $inForceDate;
 
     /**
      * Intensity
@@ -127,17 +147,6 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     protected $paymentStatusId;
 
     /**
-     * Identifier - Permits id
-     *
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="permits_id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    protected $permitsId;
-
-    /**
      * Sector id
      *
      * @var int
@@ -172,15 +181,6 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="float", name="sifting_value_random", precision=6, scale=4, nullable=true)
      */
     protected $siftingValueRandom;
-
-    /**
-     * Start date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="start_date", nullable=true)
-     */
-    protected $startDate;
 
     /**
      * Version
@@ -319,33 +319,87 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     }
 
     /**
-     * Set the end date
+     * Set the expiry date
      *
-     * @param \DateTime $endDate new value being set
+     * @param \DateTime $expiryDate new value being set
      *
      * @return EcmtPermits
      */
-    public function setEndDate($endDate)
+    public function setExpiryDate($expiryDate)
     {
-        $this->endDate = $endDate;
+        $this->expiryDate = $expiryDate;
 
         return $this;
     }
 
     /**
-     * Get the end date
+     * Get the expiry date
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
      * @return \DateTime
      */
-    public function getEndDate($asDateTime = false)
+    public function getExpiryDate($asDateTime = false)
     {
         if ($asDateTime === true) {
-            return $this->asDateTime($this->endDate);
+            return $this->asDateTime($this->expiryDate);
         }
 
-        return $this->endDate;
+        return $this->expiryDate;
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id new value being set
+     *
+     * @return EcmtPermits
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the in force date
+     *
+     * @param \DateTime $inForceDate new value being set
+     *
+     * @return EcmtPermits
+     */
+    public function setInForceDate($inForceDate)
+    {
+        $this->inForceDate = $inForceDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the in force date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getInForceDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->inForceDate);
+        }
+
+        return $this->inForceDate;
     }
 
     /**
@@ -451,30 +505,6 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     }
 
     /**
-     * Set the permits id
-     *
-     * @param int $permitsId new value being set
-     *
-     * @return EcmtPermits
-     */
-    public function setPermitsId($permitsId)
-    {
-        $this->permitsId = $permitsId;
-
-        return $this;
-    }
-
-    /**
-     * Get the permits id
-     *
-     * @return int
-     */
-    public function getPermitsId()
-    {
-        return $this->permitsId;
-    }
-
-    /**
      * Set the sector id
      *
      * @param int $sectorId new value being set
@@ -568,36 +598,6 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     public function getSiftingValueRandom()
     {
         return $this->siftingValueRandom;
-    }
-
-    /**
-     * Set the start date
-     *
-     * @param \DateTime $startDate new value being set
-     *
-     * @return EcmtPermits
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the start date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getStartDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->startDate);
-        }
-
-        return $this->startDate;
     }
 
     /**
