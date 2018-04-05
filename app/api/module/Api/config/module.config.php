@@ -334,6 +334,7 @@ return [
             'Hearing' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
+            'SiftingSettings' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

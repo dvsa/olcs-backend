@@ -21,7 +21,7 @@ class EcmtPermits extends AbstractRepository
 {
 
     protected $entity = Entity::class;
-    protected $countries = ["","Austria","Switzerland","Croatia","Bulgaria","Albania","Netherlands"];
+    protected $countries = ["","Austria","Belgium","Denmark","France","Germany","Netherlands", "Spain"];
 
     /**
      * Applies filters
@@ -53,7 +53,7 @@ class EcmtPermits extends AbstractRepository
             $r = $row->getEcmtPermitsApplication()->getLicence()->getLicNo();
             $rr = $row->getEcmtPermitsApplication()->getLicence()->getOrganisation()->getName();
             $row->setEcmtPermitsApplication($r);
-            $row->setStartDate($rr);
+            $row->setInForceDate($rr);
 
             $country = explode(",",$row->getEcmtCountriesIds());
 

@@ -28,7 +28,7 @@ class Sectors extends AbstractRepository
 
     public function getApplicationsTotal($sectorId){
         $qbs = $this->getEntityManager()->createQueryBuilder()
-          ->select('ep.permitsId')
+          ->select('ep.id')
           ->from(EcmtPermitsEntity::class,'ep')
           ->where('ep.sectorId = ' . $sectorId);
         return count($qbs->getQuery()->execute());

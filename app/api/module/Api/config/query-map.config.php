@@ -34,6 +34,7 @@ return [
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
     BookmarkQuery\IrfoGvPermitBundle::class => BookmarkQueryHandler\IrfoGvPermitBundle::class,
+    BookmarkQuery\EcmtPermitBundle::class => BookmarkQueryHandler\EcmtPermitBundle::class,
     BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
     BookmarkQuery\OrganisationBundle::class => BookmarkQueryHandler\OrganisationBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
@@ -518,6 +519,7 @@ return [
     // EcmtPermits
     TransferQuery\EcmtPermits\EcmtPermits::class => QueryHandler\EcmtPermits\EcmtPermits::class,
 
+    TransferQuery\EcmtPermits\EcmtSiftingSettings::class => QueryHandler\EcmtPermits\SiftingSettings::class,
 
     // SystemParameter
     TransferQuery\SystemParameter\SystemParameter::class => QueryHandler\SystemParameter\SystemParameter::class,
