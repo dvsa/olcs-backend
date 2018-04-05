@@ -175,6 +175,4 @@ class FinancialEvidence extends AbstractQueryHandler
             'otherApplicationVehicles' => $otherApplicationVehicles,
         ];
     }
-
-
 }

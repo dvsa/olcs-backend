@@ -24,6 +24,8 @@ trait AuthAwareTrait
 
     /**
      * @param AuthorizationService $service
+     *
+     * @return void
      */
     public function setAuthService(AuthorizationService $service)
     {
@@ -40,6 +42,8 @@ trait AuthAwareTrait
 
     /**
      * @param UserRepoService $service
+     *
+     * @return void
      */
     public function setUserRepository(UserRepoService $service)
     {
@@ -100,7 +104,9 @@ trait AuthAwareTrait
     }
 
     /**
-     * @param $permission
+     * @param mixed $permission permission
+     * @param null  $context    context
+     *
      * @return bool
      */
     public function isGranted($permission, $context = null)
