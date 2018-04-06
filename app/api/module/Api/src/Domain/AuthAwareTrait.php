@@ -24,6 +24,8 @@ trait AuthAwareTrait
 
     /**
      * @param AuthorizationService $service
+     *
+     * @return void
      */
     public function setAuthService(AuthorizationService $service)
     {
@@ -40,6 +42,8 @@ trait AuthAwareTrait
 
     /**
      * @param UserRepoService $service
+     *
+     * @return void
      */
     public function setUserRepository(UserRepoService $service)
     {
@@ -100,7 +104,9 @@ trait AuthAwareTrait
     }
 
     /**
-     * @param $permission
+     * @param mixed $permission permission
+     * @param null  $context    context
+     *
      * @return bool
      */
     public function isGranted($permission, $context = null)
@@ -125,6 +131,21 @@ trait AuthAwareTrait
     public function isInternalUser()
     {
         return ($this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER));
+    }
+
+    public function isReadOnlyInternalUser()
+    {
+        $isReadOnlyUser = false;
+        $currentUser = $this->getCurrentUser();
+        $roles = $currentUser->getRoles()->getValues();
+
+        foreach ($roles as $role) {
+            if ($role->getRole() == \Dvsa\Olcs\Api\Entity\User\Role::ROLE_INTERNAL_LIMITED_READ_ONLY) {
+                $isReadOnlyUser = true;
+            }
+        }
+
+        return $isReadOnlyUser;
     }
 
     /**
