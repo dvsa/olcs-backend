@@ -34,11 +34,12 @@ class EventHistory extends AbstractEventHistory
      *
      * @return EventHistory
      */
-    public function __construct(User $user, EventHistoryType $eventHistoryType, $eventData = null)
+    public function __construct(User $user, EventHistoryType $eventHistoryType, $eventData = null, $changeMadeBy = null)
     {
         $this->user = $user;
         $this->eventHistoryType = $eventHistoryType;
         $this->eventData = $eventData;
         $this->eventDatetime = new \DateTime();
+        $this->changeMadeBy = $changeMadeBy;
     }
 }

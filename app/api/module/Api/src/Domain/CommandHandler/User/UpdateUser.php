@@ -195,7 +195,8 @@ final class UpdateUser extends AbstractUserCommandHandler implements
         $eventHistory = new EventHistory(
             $this->getUser(),
             $this->getRepo('EventHistoryType')->fetchOneByEventCode(EventHistoryType::EVENT_CODE_PASSWORD_RESET),
-            $eventData
+            $eventData,
+            $changeMadeBy,
         );
         $eventHistory->setAccount($user);
 
