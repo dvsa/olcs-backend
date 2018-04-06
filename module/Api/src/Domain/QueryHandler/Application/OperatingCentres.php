@@ -64,9 +64,14 @@ class OperatingCentres extends AbstractQueryHandler
     {
         /* @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($query);
-
-        /** @var Document $documentRepository */
-        $documentRepository = $this->getRepo('Document');
+        $documents = null;
+        if (!$this->isReadOnlyInternalUser()) {
+            /** @var Document $documentRepository */
+            $documentRepository = $this->getRepo('Document');
+            $documents = $this->resultList(
+                $documentRepository->fetchUnlinkedOcDocumentsForEntity($application)
+            );
+        }
 
         return $this->result(
             $application,
@@ -87,9 +92,7 @@ class OperatingCentres extends AbstractQueryHandler
                 'possibleTrafficAreas' => $this->getPossibleTrafficAreas($application),
                 // Vars used for add form
                 'canAddAnother' => $this->canAddAnother($application),
-                'documents' => $this->resultList(
-                    $documentRepository->fetchUnlinkedOcDocumentsForEntity($application)
-                )
+                'documents' => $documents
             ]
         );
     }
