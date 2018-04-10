@@ -49,6 +49,15 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     protected $busReg;
 
     /**
+     * Change made by
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="change_made_by", nullable=true)
+     */
+    protected $changeMadeBy;
+
+    /**
      * eventDatetime
      *
      * @var \DateTime
@@ -109,6 +118,14 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     public function getBusReg()
     {
         return $this->busReg;
+    }
+
+    /**
+     * @return string
+     */
+    public function getChangeMadeBy()
+    {
+        return $this->changeMadeBy;
     }
 
     /**

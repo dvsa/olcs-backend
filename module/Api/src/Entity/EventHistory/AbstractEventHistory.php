@@ -78,6 +78,15 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     protected $case;
 
     /**
+     * Change made by
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="change_made_by", length=35, nullable=true)
+     */
+    protected $changeMadeBy;
+
+    /**
      * Entity pk
      *
      * @var int
@@ -152,6 +161,15 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
+
+    /**
+     * Member of organisation
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="member_of_organisation", length=160, nullable=true)
+     */
+    protected $memberOfOrganisation;
 
     /**
      * Olbs key
@@ -305,6 +323,30 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     public function getCase()
     {
         return $this->case;
+    }
+
+    /**
+     * Set the change made by
+     *
+     * @param string $changeMadeBy new value being set
+     *
+     * @return EventHistory
+     */
+    public function setChangeMadeBy($changeMadeBy)
+    {
+        $this->changeMadeBy = $changeMadeBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the change made by
+     *
+     * @return string
+     */
+    public function getChangeMadeBy()
+    {
+        return $this->changeMadeBy;
     }
 
     /**
@@ -503,6 +545,30 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the member of organisation
+     *
+     * @param string $memberOfOrganisation new value being set
+     *
+     * @return EventHistory
+     */
+    public function setMemberOfOrganisation($memberOfOrganisation)
+    {
+        $this->memberOfOrganisation = $memberOfOrganisation;
+
+        return $this;
+    }
+
+    /**
+     * Get the member of organisation
+     *
+     * @return string
+     */
+    public function getMemberOfOrganisation()
+    {
+        return $this->memberOfOrganisation;
     }
 
     /**
