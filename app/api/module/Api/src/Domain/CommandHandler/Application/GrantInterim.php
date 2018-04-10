@@ -79,6 +79,9 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
         $application->setInterimStatus(
             $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_GRANTED)
         );
+
+
+
         $this->result->addMessage('Interim status updated');
         $this->getRepo()->save($application);
         $this->result->addId('action', $latestFee === null ? self::ACTION_GRANTED : self::ACTION_FEE_REQUEST);

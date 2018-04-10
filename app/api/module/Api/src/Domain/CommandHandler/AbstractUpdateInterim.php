@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\AbstractUpdateInterim as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
+
 /**
  * Update Interim
  *
@@ -152,14 +153,15 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             }
 
             $application->setInterimReason($command->getReason());
-            $application->setInterimStart(new DateTime($command->getStartDate()));
-            $application->setInterimEnd(new DateTime($command->getEndDate()));
+            $application->setInterimStart(null !== $command->getStartDate() ? new DateTime($command->getStartDate()):null);
+            $application->setInterimEnd(null !== $command->getEndDate() ? new DateTime($command->getEndDate()):null);
             $application->setInterimAuthVehicles((int) $command->getAuthVehicles());
             $application->setInterimAuthTrailers((int) $command->getAuthTrailers());
 
             if ($status !== null) {
                 $application->setInterimStatus($status);
             }
+
 
             $interimOcs = $command->getOperatingCentres() !== null ? $command->getOperatingCentres() : [];
             $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
@@ -295,14 +297,6 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             $messages['reason'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
         }
 
-        if ($command->getStartDate() === null) {
-            $messages['startDate'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
-        }
-
-        if ($command->getEndDate() === null) {
-            $messages['endDate'][self::ERR_REQUIRED] = self::ERR_REQUIRED;
-        }
-
         $authVehicles = $command->getAuthVehicles();
 
         if (!$this->allowZeroAuthVehicles && empty($authVehicles)) {
@@ -320,6 +314,8 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
         if ($application->getTotAuthTrailers() < $command->getAuthTrailers()) {
             $messages['authTrailers'][self::ERR_TRAILER_AUTHORITY_EXCEEDED] = self::ERR_TRAILER_AUTHORITY_EXCEEDED;
         }
+
+
 
         if (!empty($messages)) {
             throw new ValidationException($messages);
