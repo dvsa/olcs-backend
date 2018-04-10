@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Doctrine\ORM\Query;
@@ -33,6 +34,9 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
     const ERR_REQUIRED = 'Value is required and can\'t be empty';
     const ERR_VEHICLE_AUTHORITY_EXCEEDED = "The interim vehicle authority cannot exceed the total vehicle authority";
     const ERR_TRAILER_AUTHORITY_EXCEEDED = "The interim trailer authority cannot exceed the total trailer authority";
+
+    const ERR_INTERIMSTARTDATE_EMPTY = "The interim start date is required";
+    const ERR_INTERIMENDDATE_EMPTY = "The interim end date is required";
 
     protected $repoServiceName = 'Application';
 
@@ -95,6 +99,7 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             return $this->result;
         }
 
+
         return $this->result;
     }
 
@@ -152,10 +157,12 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             }
 
             $application->setInterimReason($command->getReason());
-            $application->setInterimStart(null !== $command->getStartDate() ? new DateTime($command->getStartDate()):null);
-            $application->setInterimEnd(null !== $command->getEndDate() ? new DateTime($command->getEndDate()):null);
-            $application->setInterimAuthVehicles((int) $command->getAuthVehicles());
-            $application->setInterimAuthTrailers((int) $command->getAuthTrailers());
+            $application->setInterimStart(
+                null !== $command->getStartDate() ? new DateTime($command->getStartDate()) : null
+            );
+            $application->setInterimEnd(null !== $command->getEndDate() ? new DateTime($command->getEndDate()) : null);
+            $application->setInterimAuthVehicles((int)$command->getAuthVehicles());
+            $application->setInterimAuthTrailers((int)$command->getAuthTrailers());
 
             if ($status !== null) {
                 $application->setInterimStatus($status);
@@ -314,7 +321,14 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
             $messages['authTrailers'][self::ERR_TRAILER_AUTHORITY_EXCEEDED] = self::ERR_TRAILER_AUTHORITY_EXCEEDED;
         }
 
-
+        if ($command->getStatus() === ApplicationEntity::INTERIM_STATUS_GRANTED) {
+            if (is_null($command->getStartDate())) {
+                $messages['interimStart'][self::ERR_INTERIMSTARTDATE_EMPTY] = self::ERR_INTERIMSTARTDATE_EMPTY;
+            }
+            if (is_null($command->getEndDate())) {
+                $messages['interimEnd'][self::ERR_INTERIMENDDATE_EMPTY] = self::ERR_INTERIMENDDATE_EMPTY;
+            }
+        }
 
         if (!empty($messages)) {
             throw new ValidationException($messages);
