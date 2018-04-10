@@ -600,6 +600,112 @@ class UpdateInterimTest extends CommandHandlerTestCase
         $this->assertNull($application->getInterimAuthTrailers());
     }
 
+    public function testHandleCommandGrantedNullDate()
+    {
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'requested' => 'N',
+            'reason' => 'Foo',
+            'startDate' => null,
+            'endDate' => '2015-01-01',
+            'authVehicles' => 10,
+            'authTrailers' => 12,
+            'operatingCentres' => [11],
+            'vehicles' => [22]
+        ];
+        $command = Cmd::create($data);
+
+        /** @var ApplicationEntity $application */
+        $application->setId(111);
+
+        /** @var ApplicationOperatingCentre $oc1 */
+        $oc1 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $oc1->setIsInterim('Y');
+        $oc1->setId(99);
+        /** @var ApplicationOperatingCentre $oc2 */
+        $oc2 = m::mock(ApplicationOperatingCentre::class)->makePartial();
+        $oc2->setIsInterim('N');
+        $oc2->setId(11);
+
+        $ocs = [
+            $oc1,
+            $oc2
+        ];
+
+        /** @var LicenceVehicle $lv1 */
+        $lv1 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv1->setInterimApplication($application);
+        $lv1->setId(88);
+        /** @var LicenceVehicle $lv2 */
+        $lv2 = m::mock(LicenceVehicle::class)->makePartial();
+        $lv2->setId(22);
+
+        $lvs = [
+            $lv1,
+            $lv2
+        ];
+
+        /** @var ApplicationEntity $application */
+        $application->setId(111);
+        $application->setOperatingCentres($ocs);
+        $application->setLicenceVehicles($lvs);
+        $application->setInterimStatus($this->refData[ApplicationEntity::INTERIM_STATUS_GRANTED]);
+
+        $this->repoMap['Application']
+            ->shouldReceive('fetchUsingId')
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->with($application);
+
+        /** @var Fee $fee */
+        $fee = m::mock(Fee::class)
+            ->shouldReceive('getId')
+            ->andReturn(222)
+            ->shouldReceive('isFullyOutstanding')
+            ->andReturn(true)
+            ->getMock();
+
+        $fees = [$fee];
+
+        $this->repoMap['Fee']
+            ->shouldReceive('fetchInterimFeesByApplicationId')
+            ->with(111, true)
+            ->andReturn($fees);
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            ['id' => 222],
+            (new Result())->addMessage('fee 222 cancelled')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Interim data reset',
+                'fee 222 cancelled',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+
+        $this->assertEquals('N', $oc1->getIsInterim());
+        $this->assertEquals('N', $oc2->getIsInterim());
+        $this->assertNull($lv1->getInterimApplication());
+        $this->assertNull($lv2->getInterimApplication());
+
+        $this->assertNull($application->getInterimReason());
+        $this->assertNull($application->getInterimStart());
+        $this->assertNull($application->getInterimEnd());
+        $this->assertNull($application->getInterimAuthVehicles());
+        $this->assertNull($application->getInterimAuthTrailers());
+    }
+
     /**
      * @dataProvider statusProvider
      */
