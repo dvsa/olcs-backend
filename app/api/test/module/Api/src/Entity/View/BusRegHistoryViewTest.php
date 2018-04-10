@@ -23,6 +23,7 @@ class BusRegHistoryViewTest extends \PHPUnit_Framework_TestCase
         $this->testData = [
             'id' => 15,
             'busReg' => 1,
+            'changeMadeBy' => 'Name Surname',
             'eventDatetime' => '2015-01-01',
             'eventData' => '123',
             'eventHistoryType' => 1,
