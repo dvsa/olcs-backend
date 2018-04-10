@@ -5,10 +5,12 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as InForceInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -36,6 +38,9 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
 
     /**
      * @param Cmd $command
+     *
+     * @return Result result result
+     *
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -81,7 +86,6 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
         );
 
 
-
         $this->result->addMessage('Interim status updated');
         $this->getRepo()->save($application);
         $this->result->addId('action', $latestFee === null ? self::ACTION_GRANTED : self::ACTION_FEE_REQUEST);
@@ -93,6 +97,7 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
      * Get existing grant fees
      *
      * @param ApplicationEntity $application
+     *
      * @return array
      */
     private function getExistingFees(ApplicationEntity $application)
@@ -104,6 +109,7 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
      * Get paid grant fees
      *
      * @param ApplicationEntity $application
+     *
      * @return array
      */
     private function getPaidFees(ApplicationEntity $application)

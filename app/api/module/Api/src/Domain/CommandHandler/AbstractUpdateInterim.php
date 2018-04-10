@@ -23,7 +23,6 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\AbstractUpdateInterim as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-
 /**
  * Update Interim
  *
