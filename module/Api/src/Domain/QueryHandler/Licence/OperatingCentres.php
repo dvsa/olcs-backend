@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -46,9 +47,10 @@ class OperatingCentres extends AbstractQueryHandler
                 'possibleTrafficAreas' => $this->getPossibleTrafficAreas($licence),
                 // Vars used for add form
                 'canAddAnother' => true,
-                'documents' => $this->resultList(
-                    $this->getRepo('Document')->fetchUnlinkedOcDocumentsForEntity($licence)
-                )
+               'documents' =>
+                    $this->resultList(
+                        $this->getRepo('Document')->fetchUnlinkedOcDocumentsForEntity($licence)
+                    ),
             ]
         );
     }
