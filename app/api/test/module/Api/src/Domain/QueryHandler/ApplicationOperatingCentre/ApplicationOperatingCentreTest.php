@@ -96,7 +96,7 @@ class ApplicationOperatingCentreTest extends QueryHandlerTestCase
 
     public function testHandleQueryWithUpdated()
     {
-        $query = Qry::create(['id' => 111, 'adDocuments' => 'bar']);
+        $query = Qry::create(['id' => 111]);
 
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
