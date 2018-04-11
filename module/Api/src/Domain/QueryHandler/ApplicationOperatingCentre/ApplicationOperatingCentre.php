@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\ApplicationOperatingCentre;
 
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre as ApplicationOperatingCentreEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -24,25 +25,40 @@ class ApplicationOperatingCentre extends AbstractQueryHandler
 
         $application = $aoc->getApplication();
 
-        return $this->result(
-            $aoc,
+        $bundle =
             [
                 'operatingCentre' => [
                     'address' => [
                         'countryCode'
                     ],
-                    'adDocuments'
+                    'adDocuments',
                 ],
-            ],
-            [
-                'isPsv' => $application->isPsv(),
-                'canUpdateAddress' => ($application->isNew() || $aoc->getAction() === 'A'),
-                'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation(),
-                'currentVehiclesRequired' => $this->getNoOfVehiclesRequired($aoc, $application->getLicence()),
-                'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence()),
-                'niFlag' => $application->getNiFlag(),
-                'appliedVia' => $application->getAppliedVia()->getId(),
-            ]
+            ];
+        $data = [
+            'isPsv' => $application->isPsv(),
+            'canUpdateAddress' => ($application->isNew() || $aoc->getAction() === 'A'),
+            'wouldIncreaseRequireAdditionalAdvertisement' => $application->isVariation(),
+            'currentVehiclesRequired' => $this->getNoOfVehiclesRequired($aoc, $application->getLicence()),
+            'currentTrailersRequired' => $this->getNoOfTrailersRequired($aoc, $application->getLicence()),
+            'niFlag' => $application->getNiFlag(),
+            'appliedVia' => $application->getAppliedVia()->getId(),
+        ];
+
+        if ($this->isReadOnlyInternalUser()) {
+            $bundle =
+                [
+                    'operatingCentre' => [
+                        'address' => [
+                            'countryCode'
+                        ]
+                    ],
+                ];
+        }
+
+        return $this->result(
+            $aoc,
+            $bundle,
+            $data
         );
     }
 
