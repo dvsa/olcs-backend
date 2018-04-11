@@ -140,7 +140,7 @@ trait AuthAwareTrait
         $roles = $currentUser->getRoles()->getValues();
 
         foreach ($roles as $role) {
-            if ($role->getRole() == \Dvsa\Olcs\Api\Entity\User\Role::ROLE_INTERNAL_LIMITED_READ_ONLY) {
+            if ($role->getRole() === \Dvsa\Olcs\Api\Entity\User\Role::ROLE_INTERNAL_LIMITED_READ_ONLY) {
                 $isReadOnlyUser = true;
             }
         }
