@@ -13,11 +13,11 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class EcmtPermitsPrint extends AbstractListQueryHandler
 {
-    protected $repoServiceName = 'EcmtPermitsPrint';
+    protected $repoServiceName = 'EcmtPermits';
 
     public function handleQuery(QueryInterface $query){
         $repo = $this->getRepo();
-        $results = $repo->fetchData($query);
+        $results = $repo->fetchForPrint($query);
         return $results;
     }
 

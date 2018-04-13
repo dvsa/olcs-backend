@@ -518,6 +518,7 @@ return [
 
     // EcmtPermits
     TransferQuery\EcmtPermits\EcmtPermits::class => QueryHandler\EcmtPermits\EcmtPermits::class,
+    TransferQuery\EcmtPermits\EcmtPermitsPrint::class => QueryHandler\EcmtPermits\EcmtPermitsPrint::class,
 
     TransferQuery\EcmtPermits\EcmtSiftingSettings::class => QueryHandler\EcmtPermits\SiftingSettings::class,
 
