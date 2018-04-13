@@ -38,7 +38,6 @@ class Document implements ServiceLocatorAwareInterface
             ->extractTokens($file->getContent());
 
         $bookmarks = $this->getBookmarks($tokens);
-
         foreach ($bookmarks as $token => $bookmark) {
             // we don't need to query if the bookmark is static (i.e.
             // doesn't rely on any backend information)
@@ -80,8 +79,6 @@ class Document implements ServiceLocatorAwareInterface
         $tokens = $parser->extractTokens($content);
 
         $bookmarks = $this->getBookmarks($tokens);
-
-        \Olcs\Logging\Log\Logger::debug('bookmark', $bookmarks);
 
         foreach ($bookmarks as $token => $bookmark) {
             /**
