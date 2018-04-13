@@ -10,36 +10,36 @@
             "type": "composer"
         },
         {
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/olcs-logging.git",
             "type": "vcs"
         },
         {
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/olcs-transfer.git",
             "type": "vcs"
         },
         {
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/olcs-utils.git",
             "type": "vcs"
         },
         {
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/companies-house.git",
             "type": "vcs"
         },
         {
             "type": "vcs",
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-autoload.git"
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/olcs-autoload.git"
         },
         {
             "type": "vcs",
             "url": "git@repo.shd.ci.nonprod.dvsa.aws:cpms/cpms-client.git"
         },
         {
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/olcs-xmltools.git",
             "type": "vcs"
         },
         {
             "type": "vcs",
-            "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-devtools.git"
+            "url": "git@repo.shd.ci.nonprod.dvsa.aws:EUX/olcs-devtools.git"
         }
     ],
     "require": {
