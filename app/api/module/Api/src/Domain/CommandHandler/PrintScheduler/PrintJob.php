@@ -94,7 +94,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             $this->printFile($fileName, basename($fileName), $destination, $username, $command->getCopies());
         } finally {
             // if something goes wrong, still delete temp files
-//            $this->deleteTempFiles($fileName);
+            $this->deleteTempFiles($fileName);
         }
 
         $this->result->addMessage('Printed successfully');
@@ -201,24 +201,24 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             throw $exception;
         }
 
-//        // send to CUPS server
-//        // 2>&1 redirect STDERR to STDOUT so that any errors are included in $outputPrint
-//        $commandPrint = sprintf(
-//            'lpr %s -H %s -C %s -h -P %s -U %s -#%d -o collate=true 2>&1',
-//            escapeshellarg($pdfFile),
-//            escapeshellarg($printServer),
-//            escapeshellarg($jobTitle),
-//            escapeshellarg($destination),
-//            escapeshellarg($username),
-//            ((int)$copies ?: self::DEF_PRINT_COPIES_CNT)
-//        );
+        // send to CUPS server
+        // 2>&1 redirect STDERR to STDOUT so that any errors are included in $outputPrint
+        $commandPrint = sprintf(
+            'lpr %s -H %s -C %s -h -P %s -U %s -#%d -o collate=true 2>&1',
+            escapeshellarg($pdfFile),
+            escapeshellarg($printServer),
+            escapeshellarg($jobTitle),
+            escapeshellarg($destination),
+            escapeshellarg($username),
+            ((int)$copies ?: self::DEF_PRINT_COPIES_CNT)
+        );
 
-//        $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
-//        if ($resultPrint !== 0) {
-//            $exception = new NotReadyException('Error executing lpr command : ' . implode("\n", $outputPrint));
-//            $exception->setRetryAfter(60);
-//            throw $exception;
-//        }
+        $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
+        if ($resultPrint !== 0) {
+            $exception = new NotReadyException('Error executing lpr command : ' . implode("\n", $outputPrint));
+            $exception->setRetryAfter(60);
+            throw $exception;
+        }
     }
 
     /**
