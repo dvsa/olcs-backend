@@ -33,7 +33,6 @@ class EcmtPermits extends AbstractRepository
      */
     public function fetchData($query)
     {
-
         $hydrateMode = Query::HYDRATE_OBJECT;
 
         $qb = $this->createQueryBuilder();
@@ -99,5 +98,25 @@ class EcmtPermits extends AbstractRepository
         }
 
         return $query->getResult($hydrateMode);
+    }
+
+    public function fetchForPrint(QueryInterface $query) {
+        $qb = $this->createQueryBuilder();
+
+        $this->buildDefaultListQuery($qb, $query);
+
+        $this->getQueryBuilder()->modifyQuery($qb);
+
+        $results = $qb->getQuery()->getResult();
+
+        foreach ($results as $row) {
+            $licNo = $row->getEcmtPermitsApplication()->getLicence()->getLicNo();
+            $row->setEcmtPermitsApplication($licNo);
+        }
+
+        return [
+            'results' => $qb->getQuery()->getResult(),
+            'count' => $this->fetchPaginatedCount($qb)
+        ];
     }
 }
