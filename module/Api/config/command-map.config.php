@@ -309,6 +309,7 @@ return [
     TransferCommand\Irfo\ResetIrfoGvPermit::class => CommandHandler\Irfo\ResetIrfoGvPermit::class,
     TransferCommand\Irfo\ApproveIrfoGvPermit::class => CommandHandler\Irfo\ApproveIrfoGvPermit::class,
     TransferCommand\Irfo\GenerateIrfoGvPermit::class => CommandHandler\Irfo\GenerateIrfoGvPermit::class,
+    TransferCommand\EcmtPermits\GenerateEcmtPermit::class => CommandHandler\EcmtPermits\GenerateEcmtPermit::class,
     TransferCommand\Irfo\WithdrawIrfoGvPermit::class => CommandHandler\Irfo\WithdrawIrfoGvPermit::class,
     TransferCommand\Irfo\RefuseIrfoGvPermit::class => CommandHandler\Irfo\RefuseIrfoGvPermit::class,
     TransferCommand\Irfo\CreateIrfoPermitStock::class => CommandHandler\Irfo\CreateIrfoPermitStock::class,
@@ -990,6 +991,9 @@ return [
     TransferCommand\System\PublicHoliday\Create::class => CommandHandler\System\PublicHoliday\Create::class,
     TransferCommand\System\PublicHoliday\Update::class => CommandHandler\System\PublicHoliday\Update::class,
     TransferCommand\System\PublicHoliday\Delete::class => CommandHandler\System\PublicHoliday\Delete::class,
+
+    // Admin :: Sifting Settings
+    TransferCommand\EcmtPermits\UpdateSiftingSettings::class => CommandHandler\EcmtPermits\UpdateSiftingSettings::class,
 
     // Command - CommunityLc
     Command\Licence\EnqueueContinuationNotSought::class =>

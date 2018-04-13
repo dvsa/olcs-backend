@@ -54,6 +54,8 @@ final class GenerateAndStore extends AbstractCommandHandler implements
             $command->getKnownValues()
         );
 
+        \Olcs\Logging\Log\Logger::debug('known_values', $command->getKnownValues());
+
         $fileName = $this->getNamingService()->generateName(
             $command->getDescription(),
             // @todo If we ever stop using just RTFs during doc generation, sort this out
