@@ -77,7 +77,7 @@ class PrintJobTest extends CommandHandlerTestCase
         );
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(x)->once()->andReturn('QUEUE1');
+            ->with(\Dvsa\Olcs\Api\Entity\System\SystemParameter::SELFSERVE_USER_PRINTER)->once()->andReturn('QUEUE1');
 
         $mockFile = m::mock(\Dvsa\Olcs\DocumentShare\Data\Object\File::class);
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
