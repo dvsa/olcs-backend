@@ -112,7 +112,17 @@ class SubmitTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandSendEmailToAdminsRemoveDuplicate()
+    public function dataProviderTestHandleCommand()
+    {
+        return [
+            [false, 'application'],
+            [true, 'variation']
+        ];
+    }
+    /**
+     * @dataProvider dataProviderTestHandleCommand
+     */
+    public function testHandleCommandSendEmailToAdminsRemoveDuplicate($isVariation, $uriSegment)
     {
         $command = Command::create(['id' => 863]);
 
@@ -150,13 +160,14 @@ class SubmitTest extends CommandHandlerTestCase
             ->andReturn('Bob Smith');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
         $tma->shouldReceive('getApplication->getId')->with()->twice()->andReturn(76);
+        $tma->shouldReceive('getApplication->getIsVariation')->with()->once()->andReturn($isVariation);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->times(2)->andReturnUsing(
-            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
+            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) use ($uriSegment) {
 
                 $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
                 $this->assertSame('foo@bar.com', $message->getTo());
@@ -167,13 +178,13 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/application/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
                 $this->assertSame('default', $layout);
             },
-            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
+            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) use ($uriSegment) {
 
                 $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
                 $this->assertSame('email1', $message->getTo());
@@ -184,7 +195,7 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/application/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
@@ -211,7 +222,10 @@ class SubmitTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testHandleCommandSendEmailToCreator()
+    /**
+     * @dataProvider dataProviderTestHandleCommand
+     */
+    public function testHandleCommandSendEmailToCreator($isVariation, $uriSegment)
     {
         $command = Command::create(['id' => 863]);
 
@@ -244,13 +258,14 @@ class SubmitTest extends CommandHandlerTestCase
             ->andReturn('Bob Smith');
         $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
         $tma->shouldReceive('getApplication->getId')->with()->twice()->andReturn(76);
+        $tma->shouldReceive('getApplication->getIsVariation')->with()->once()->andReturn($isVariation);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->times(2)->andReturnUsing(
-            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
+            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) use ($uriSegment) {
 
                 $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
                 $this->assertSame('foo@bar.com', $message->getTo());
@@ -261,13 +276,13 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/application/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
                 $this->assertSame('default', $layout);
             },
-            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) {
+            function (\Dvsa\Olcs\Email\Data\Message $message, $template, $vars, $layout) use ($uriSegment) {
 
                 $this->assertSame('email.transport-manager-submitted-form.subject', $message->getSubject());
                 $this->assertSame('email1', $message->getTo());
@@ -278,7 +293,7 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/application/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
