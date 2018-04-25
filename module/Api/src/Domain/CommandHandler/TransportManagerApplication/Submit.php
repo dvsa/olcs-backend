@@ -75,7 +75,8 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
                 'licNo' => $tma->getApplication()->getLicence()->getLicNo(),
                 'applicationId' => $tma->getApplication()->getId(),
                 'tmaUrl' => sprintf(
-                    'http://selfserve/application/%d/transport-managers/details/%d/',
+                    'http://selfserve/%s/%d/transport-managers/details/%d/',
+                    $tma->getApplication()->getIsVariation() ? 'variation' : 'application',
                     $tma->getApplication()->getId(),
                     $tma->getId()
                 ),
