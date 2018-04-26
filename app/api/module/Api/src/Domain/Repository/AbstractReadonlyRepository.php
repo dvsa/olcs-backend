@@ -644,6 +644,10 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         }
 
         if ($query instanceof OrderedQueryInterface) {
+
+            if (!$query->isSortWhitelisted()) {
+                throw new \Exception("The 'sort' value is not valid.");
+            }
             if (!empty($query->getSort())) {
                 // allow ordering by multiple columns
                 $sortColumns = explode(',', $query->getSort());
