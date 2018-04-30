@@ -14,16 +14,9 @@ class EachPropertyHasAGetterTest extends \PHPUnit_Framework_TestCase
     {
         $reflectionClass = new \ReflectionClass($bookmarkClass);
 
-        $params = [];
-        foreach ($reflectionClass->getProperties() as $property) {
-            $params[$property->getName()] = uniqid();
-        }
-
-        $query = $bookmarkClass::create($params);
-
         foreach ($reflectionClass->getProperties() as $property) {
             $getMethod = 'get'. $property->getName();
-            $this->assertSame($params[$property->getName()], $query->$getMethod());
+            $this->assertTrue(method_exists($bookmarkClass, $getMethod));
         }
     }
 
