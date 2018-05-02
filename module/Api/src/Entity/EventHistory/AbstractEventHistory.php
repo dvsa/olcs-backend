@@ -82,7 +82,7 @@ abstract class AbstractEventHistory implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="change_made_by", length=35, nullable=true)
+     * @ORM\Column(type="string", name="change_made_by", length=80, nullable=true)
      */
     protected $changeMadeBy;
 
