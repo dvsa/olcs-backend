@@ -266,6 +266,15 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $licenceType;
 
     /**
+     * No tm letter flag
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="no_tm_letter_flag", nullable=true, options={"default": 0})
+     */
+    protected $noTmLetterFlag = 0;
+
+    /**
      * Olbs key
      *
      * @var int
@@ -1344,6 +1353,30 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getLicenceType()
     {
         return $this->licenceType;
+    }
+
+    /**
+     * Set the no tm letter flag
+     *
+     * @param boolean $noTmLetterFlag new value being set
+     *
+     * @return Licence
+     */
+    public function setNoTmLetterFlag($noTmLetterFlag)
+    {
+        $this->noTmLetterFlag = $noTmLetterFlag;
+
+        return $this;
+    }
+
+    /**
+     * Get the no tm letter flag
+     *
+     * @return boolean
+     */
+    public function getNoTmLetterFlag()
+    {
+        return $this->noTmLetterFlag;
     }
 
     /**
