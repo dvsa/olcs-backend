@@ -2506,8 +2506,8 @@ class BusRegEntityTest extends EntityTester
     public function testIsShortNoticeWalesRules($variationNo, $receivedDate, $effectiveDate, $expected)
     {
         $standardRules = m::mock(BusNoticePeriodEntity::class);
-        $standardRules->shouldReceive('isScottishRules')->once()->andReturn(true);
-        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(562);
+        $standardRules->shouldReceive('isWalesRules')->once()->andReturn(true);
+        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(56);
         $standardRules->shouldReceive('getCancellationPeriod')->never();
 
         $busReg = new Entity();
