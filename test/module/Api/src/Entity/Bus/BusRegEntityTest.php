@@ -2494,6 +2494,46 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
+     * Tests the isShortNotice calculation for wales apps, calls populateShortNotice and checks the result
+     *
+     * @param $variationNo
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $expected
+     *
+     * @dataProvider isShortNoticeNewScottishProvider
+     */
+    public function testIsShortNoticeWalesRules($variationNo, $receivedDate, $effectiveDate, $expected)
+    {
+        $standardRules = m::mock(BusNoticePeriodEntity::class);
+        $standardRules->shouldReceive('isScottishRules')->once()->andReturn(true);
+        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(562);
+        $standardRules->shouldReceive('getCancellationPeriod')->never();
+
+        $busReg = new Entity();
+        $busReg->setVariationNo($variationNo);
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod($standardRules);
+        $busReg->populateShortNotice();
+
+        $this->assertEquals($expected, $busReg->getIsShortNotice());
+    }
+
+    /**
+     * @return array
+     */
+    public function isShortNoticeWalesProvider()
+    {
+        return [
+            [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
+            [0, '2014-05-31', '2014-07-11', 'Y'], //41 days
+            [0, '2014-05-31', '2014-07-12', 'N'], //42 days
+            [0, '2014-05-31', '2014-08-28', 'N'], //89 days
+        ];
+    }
+
+    /**
      * Tests the isShortNotice calculation for new scottish variations, calls populateShortNotice and checks the result
      *
      * @param $receivedDate
@@ -2546,7 +2586,7 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
-     * Tests short notice returns false if there is no parent value
+     * Tests hort notice returns false if there is no parent value
      *
      * @param $effectiveDate
      * @param $receivedDate
