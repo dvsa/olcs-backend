@@ -228,8 +228,8 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
      */
     public function initCollections()
     {
-        $this->recipients = new ArrayCollection();
         $this->busRegs = new ArrayCollection();
+        $this->recipients = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->trafficAreaEnforcementAreas = new ArrayCollection();
     }

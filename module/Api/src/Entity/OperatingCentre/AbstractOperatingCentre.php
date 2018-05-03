@@ -190,8 +190,8 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
-        $this->oppositions = new ArrayCollection();
         $this->complaints = new ArrayCollection();
+        $this->oppositions = new ArrayCollection();
         $this->applications = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
         $this->adDocuments = new ArrayCollection();
