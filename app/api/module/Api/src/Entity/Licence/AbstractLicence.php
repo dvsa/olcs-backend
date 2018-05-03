@@ -266,15 +266,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $licenceType;
 
     /**
-     * No tm letter flag
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="no_tm_letter_flag", nullable=true, options={"default": 0})
-     */
-    protected $noTmLetterFlag = 0;
-
-    /**
      * Olbs key
      *
      * @var int
@@ -282,6 +273,15 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="integer", name="olbs_key", nullable=true)
      */
     protected $olbsKey;
+
+    /**
+     * Opt out tm letter
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="opt_out_tm_letter", nullable=true)
+     */
+    protected $optOutTmLetter;
 
     /**
      * Organisation
@@ -1356,30 +1356,6 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     }
 
     /**
-     * Set the no tm letter flag
-     *
-     * @param boolean $noTmLetterFlag new value being set
-     *
-     * @return Licence
-     */
-    public function setNoTmLetterFlag($noTmLetterFlag)
-    {
-        $this->noTmLetterFlag = $noTmLetterFlag;
-
-        return $this;
-    }
-
-    /**
-     * Get the no tm letter flag
-     *
-     * @return boolean
-     */
-    public function getNoTmLetterFlag()
-    {
-        return $this->noTmLetterFlag;
-    }
-
-    /**
      * Set the olbs key
      *
      * @param int $olbsKey new value being set
@@ -1401,6 +1377,30 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+    /**
+     * Set the opt out tm letter
+     *
+     * @param boolean $optOutTmLetter new value being set
+     *
+     * @return Licence
+     */
+    public function setOptOutTmLetter($optOutTmLetter)
+    {
+        $this->optOutTmLetter = $optOutTmLetter;
+
+        return $this;
+    }
+
+    /**
+     * Get the opt out tm letter
+     *
+     * @return boolean
+     */
+    public function getOptOutTmLetter()
+    {
+        return $this->optOutTmLetter;
     }
 
     /**
