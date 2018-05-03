@@ -279,9 +279,9 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="opt_out_tm_letter", nullable=true)
+     * @ORM\Column(type="boolean", name="opt_out_tm_letter", nullable=false, options={"default": 0})
      */
-    protected $optOutTmLetter;
+    protected $optOutTmLetter = 0;
 
     /**
      * Organisation
