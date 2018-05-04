@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
-use Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
