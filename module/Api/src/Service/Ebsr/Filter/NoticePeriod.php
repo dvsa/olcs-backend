@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\Filter;
 use Zend\Filter\AbstractFilter;
 use Zend\Filter\Exception;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
+
 /**
  * Class NoticePeriod
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter

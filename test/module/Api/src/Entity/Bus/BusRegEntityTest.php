@@ -2520,7 +2520,7 @@ class BusRegEntityTest extends EntityTester
         $busReg->populateShortNotice();
         $actual = $busReg->getIsShortNotice();
 
-        $this->assertEquals($expected, $actual) ;
+        $this->assertEquals($expected, $actual);
     }
 
     /**
