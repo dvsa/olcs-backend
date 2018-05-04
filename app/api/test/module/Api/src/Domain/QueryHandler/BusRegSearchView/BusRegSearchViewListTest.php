@@ -121,7 +121,9 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $this->sut->handleQuery($query));
         $this->assertNotEmpty($query->getOrganisationId());
         $this->assertEmpty($query->getLocalAuthorityId());
-        $this->assertEquals($data, $query->getArrayCopy());
+        $expectedData = $data;
+        $expectedData['sortWhitelist'] = [];
+        $this->assertEquals($expectedData, $query->getArrayCopy());
     }
 
     /**
@@ -182,7 +184,9 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         $this->assertEquals($expected, $this->sut->handleQuery($query));
         $this->assertNotEmpty($query->getLocalAuthorityId());
         $this->assertEmpty($query->getOrganisationId());
-        $this->assertEquals($data, $query->getArrayCopy());
+        $expectedData = $data;
+        $expectedData['sortWhitelist'] = [];
+        $this->assertEquals($expectedData, $query->getArrayCopy());
     }
 
     /**
@@ -240,7 +244,9 @@ class BusRegSearchViewListTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query));
-        $this->assertEquals($data, $query->getArrayCopy());
+        $expectedData = $data;
+        $expectedData['sortWhitelist'] = [];
+        $this->assertEquals($expectedData, $query->getArrayCopy());
         $this->assertArrayNotHasKey('localAuthorityId', $query->getArrayCopy());
     }
 }
