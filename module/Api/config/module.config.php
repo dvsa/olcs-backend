@@ -725,8 +725,8 @@ return [
     ],
     'filters' => [
         'invokables' => [
-            \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class =>
-                \Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules::class,
+            \Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod::class =>
+                \Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp::class,
             \Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes::class =>

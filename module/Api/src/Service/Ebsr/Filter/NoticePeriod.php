@@ -4,16 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Ebsr\Filter;
 
 use Zend\Filter\AbstractFilter;
 use Zend\Filter\Exception;
-
+use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 /**
- * Class IsScottishRules
+ * Class NoticePeriod
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter
  */
 class NoticePeriod extends AbstractFilter
 {
-    const SCOTTISH_NOTICE_PERIOD = 1;
-    const OTHER_NOTICE_PERIOD = 2;
-    const WELSH_NOTICE_PERIOD = 3;
+
 
     /**
      * Returns the result of filtering $value
@@ -24,14 +22,14 @@ class NoticePeriod extends AbstractFilter
      */
     public function filter($value)
     {
-        $value['busNoticePeriod'] = self::OTHER_NOTICE_PERIOD;
+        $value['busNoticePeriod'] = BusNoticePeriod::NOTICE_PERIOD_OTHER;
         foreach ($value['trafficAreas'] as $trafficArea) {
             if ($trafficArea == 'Scottish') {
-                $value['busNoticePeriod'] = self::SCOTTISH_NOTICE_PERIOD;
+                $value['busNoticePeriod'] = BusNoticePeriod::NOTICE_PERIOD_SCOTLAND;
                 break;
             }
             if ($trafficArea == 'Welsh') {
-                $value['busNoticePeriod'] = self::WELSH_NOTICE_PERIOD;
+                $value['busNoticePeriod'] = BusNoticePeriod::NOTICE_PERIOD_WALES;
             }
         }
 
