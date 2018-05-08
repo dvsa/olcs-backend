@@ -561,10 +561,10 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      */
     public function initCollections()
     {
-        $this->piTypes = new ArrayCollection();
-        $this->tmDecisions = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->reasons = new ArrayCollection();
+        $this->tmDecisions = new ArrayCollection();
+        $this->piTypes = new ArrayCollection();
         $this->piHearings = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
         $this->slaTargetDates = new ArrayCollection();

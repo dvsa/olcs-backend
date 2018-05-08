@@ -793,18 +793,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $fees;
 
     /**
-     * Interim licence vehicle
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle",
-     *     mappedBy="interimApplication"
-     * )
-     */
-    protected $interimLicenceVehicles;
-
-    /**
      * Licence vehicle
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -815,6 +803,18 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      * )
      */
     protected $licenceVehicles;
+
+    /**
+     * Interim licence vehicle
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle",
+     *     mappedBy="interimApplication"
+     * )
+     */
+    protected $interimLicenceVehicles;
 
     /**
      * Other licence
@@ -907,8 +907,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
         $this->conditionUndertakings = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->fees = new ArrayCollection();
-        $this->interimLicenceVehicles = new ArrayCollection();
         $this->licenceVehicles = new ArrayCollection();
+        $this->interimLicenceVehicles = new ArrayCollection();
         $this->otherLicences = new ArrayCollection();
         $this->previousConvictions = new ArrayCollection();
         $this->publicationLinks = new ArrayCollection();
@@ -3099,69 +3099,6 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     }
 
     /**
-     * Set the interim licence vehicle
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being set as the value
-     *
-     * @return Application
-     */
-    public function setInterimLicenceVehicles($interimLicenceVehicles)
-    {
-        $this->interimLicenceVehicles = $interimLicenceVehicles;
-
-        return $this;
-    }
-
-    /**
-     * Get the interim licence vehicles
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getInterimLicenceVehicles()
-    {
-        return $this->interimLicenceVehicles;
-    }
-
-    /**
-     * Add a interim licence vehicles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being added
-     *
-     * @return Application
-     */
-    public function addInterimLicenceVehicles($interimLicenceVehicles)
-    {
-        if ($interimLicenceVehicles instanceof ArrayCollection) {
-            $this->interimLicenceVehicles = new ArrayCollection(
-                array_merge(
-                    $this->interimLicenceVehicles->toArray(),
-                    $interimLicenceVehicles->toArray()
-                )
-            );
-        } elseif (!$this->interimLicenceVehicles->contains($interimLicenceVehicles)) {
-            $this->interimLicenceVehicles->add($interimLicenceVehicles);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a interim licence vehicles
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being removed
-     *
-     * @return Application
-     */
-    public function removeInterimLicenceVehicles($interimLicenceVehicles)
-    {
-        if ($this->interimLicenceVehicles->contains($interimLicenceVehicles)) {
-            $this->interimLicenceVehicles->removeElement($interimLicenceVehicles);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the licence vehicle
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being set as the value
@@ -3219,6 +3156,69 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     {
         if ($this->licenceVehicles->contains($licenceVehicles)) {
             $this->licenceVehicles->removeElement($licenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the interim licence vehicle
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being set as the value
+     *
+     * @return Application
+     */
+    public function setInterimLicenceVehicles($interimLicenceVehicles)
+    {
+        $this->interimLicenceVehicles = $interimLicenceVehicles;
+
+        return $this;
+    }
+
+    /**
+     * Get the interim licence vehicles
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getInterimLicenceVehicles()
+    {
+        return $this->interimLicenceVehicles;
+    }
+
+    /**
+     * Add a interim licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being added
+     *
+     * @return Application
+     */
+    public function addInterimLicenceVehicles($interimLicenceVehicles)
+    {
+        if ($interimLicenceVehicles instanceof ArrayCollection) {
+            $this->interimLicenceVehicles = new ArrayCollection(
+                array_merge(
+                    $this->interimLicenceVehicles->toArray(),
+                    $interimLicenceVehicles->toArray()
+                )
+            );
+        } elseif (!$this->interimLicenceVehicles->contains($interimLicenceVehicles)) {
+            $this->interimLicenceVehicles->add($interimLicenceVehicles);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a interim licence vehicles
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being removed
+     *
+     * @return Application
+     */
+    public function removeInterimLicenceVehicles($interimLicenceVehicles)
+    {
+        if ($this->interimLicenceVehicles->contains($interimLicenceVehicles)) {
+            $this->interimLicenceVehicles->removeElement($interimLicenceVehicles);
         }
 
         return $this;
