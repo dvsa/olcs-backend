@@ -275,6 +275,15 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $olbsKey;
 
     /**
+     * Opt out tm letter
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="opt_out_tm_letter", nullable=false, options={"default": 0})
+     */
+    protected $optOutTmLetter = 0;
+
+    /**
      * Organisation
      *
      * @var \Dvsa\Olcs\Api\Entity\Organisation\Organisation
@@ -1368,6 +1377,30 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+    /**
+     * Set the opt out tm letter
+     *
+     * @param boolean $optOutTmLetter new value being set
+     *
+     * @return Licence
+     */
+    public function setOptOutTmLetter($optOutTmLetter)
+    {
+        $this->optOutTmLetter = $optOutTmLetter;
+
+        return $this;
+    }
+
+    /**
+     * Get the opt out tm letter
+     *
+     * @return boolean
+     */
+    public function getOptOutTmLetter()
+    {
+        return $this->optOutTmLetter;
     }
 
     /**
