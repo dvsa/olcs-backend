@@ -33,6 +33,6 @@ class BusNoticePeriod extends AbstractBusNoticePeriod
 
     public function isWalesRules()
     {
-        return $this->id = self::NOTICE_PERIOD_WALES;
+        return $this->id === self::NOTICE_PERIOD_WALES;
     }
 }
