@@ -822,17 +822,17 @@ class LicenceTest extends RepositoryTestCase
         $this->sut->fetchForLastTmAutoLetter();
 
         $today = (new DateTime())
-            ->setTime(0,0,0,0)
+            ->setTime(0, 0, 0, 0)
             ->format('Y-m-d');
 
         $tomorrow = (new DateTime())
             ->add(new \DateInterval('P1D'))
-            ->setTime(0,0,0,0)
+            ->setTime(0, 0, 0, 0)
             ->format('Y-m-d H:i:s');
 
         $yesterday = (new DateTime())
             ->sub(new \DateInterval('P1D'))
-            ->setTime(0,0,0,0)
+            ->setTime(0, 0, 0, 0)
             ->format('Y-m-d H:i:s');
 
         $expectedQuery = '[QUERY] ' .
@@ -856,6 +856,5 @@ class LicenceTest extends RepositoryTestCase
             'AND m.id NOT IN ';
 
         $this->assertEquals($expectedQuery, $this->query);
-
     }
 }

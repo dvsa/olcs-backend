@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Licence\InternationalGoodsReport;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TMLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TMApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\GracePeriod as GracePeriodEntity;
+
 /**
  * Licence
  *
@@ -625,7 +626,8 @@ class Licence extends AbstractRepository
         return $this->getDbQueryManager()->get(InternationalGoodsReport::class)->execute([]);
     }
 
-    public function fetchForLastTmAutoLetter() {
+    public function fetchForLastTmAutoLetter()
+    {
         $this->disableSoftDeleteable(
             [
                 TMLicenceEntity::class
@@ -705,7 +707,8 @@ class Licence extends AbstractRepository
             TMLicenceEntity::class,
             'tml',
             Join::WITH,
-            $qb->expr()->eq($this->alias . '.id', 'tml.licence'));
+            $qb->expr()->eq($this->alias . '.id', 'tml.licence')
+        );
 
         /* @var \Doctrine\Orm\QueryBuilder $appQb */
         $appQb = $this->getEntityManager()->getRepository(ApplicationEntity::class)->createQueryBuilder('a');
@@ -725,7 +728,8 @@ class Licence extends AbstractRepository
             TMApplicationEntity::class,
             'tma',
             Join::WITH,
-            $appQb->expr()->eq('a.id', 'tma.application'));
+            $appQb->expr()->eq('a.id', 'tma.application')
+        );
         $qb->andWhere(
             $qb->expr()
                 ->notIn(
@@ -761,19 +765,19 @@ class Licence extends AbstractRepository
 
 
         $today = (new DateTime())
-            ->setTime(0,0,0,0)
+            ->setTime(0, 0, 0, 0)
             ->format('Y-m-d');
         $qb->setParameter('today', $today);
 
         $tomorrow = (new DateTime())
             ->add(new \DateInterval('P1D'))
-            ->setTime(0,0,0,0)
+            ->setTime(0, 0, 0, 0)
             ->format('Y-m-d H:i:s');
         $qb->setParameter('tomorrow', $tomorrow);
 
         $yesterday = (new DateTime())
             ->sub(new \DateInterval('P1D'))
-            ->setTime(0,0,0,0)
+            ->setTime(0, 0, 0, 0)
             ->format('Y-m-d H:i:s');
         $qb->setParameter('yesterday', $yesterday);
 
