@@ -641,27 +641,30 @@ class Licence extends AbstractRepository
             $qb->expr()
                 ->in(
                     $this->alias.'.goodsOrPsv',
-                    [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_CATEGORY_PSV]
+                    ':goodsOrPsv'
                 )
         );
+        $qb->setParameter('goodsOrPsv', [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_CATEGORY_PSV]);
 
         //  Valid licence status (Valid, Curtailed, Suspended)
         $qb->andWhere(
             $qb->expr()
                 ->in(
                     $this->alias.'.status',
-                    [Entity::LICENCE_STATUS_SUSPENDED, Entity::LICENCE_STATUS_VALID, Entity::LICENCE_STATUS_CURTAILED]
+                    ':statuses'
                 )
         );
+        $qb->setParameter('statuses', [Entity::LICENCE_STATUS_SUSPENDED, Entity::LICENCE_STATUS_VALID, Entity::LICENCE_STATUS_CURTAILED]);
 
         //  Standard national or standard international licence
         $qb->andWhere(
             $qb->expr()
                 ->in(
                     $this->alias.'.licenceType',
-                    [Entity::LICENCE_TYPE_STANDARD_NATIONAL, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL]
+                    ':licenceTypes'
                 )
         );
+        $qb->setParameter('licenceTypes', [Entity::LICENCE_TYPE_STANDARD_NATIONAL, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
 
         //  Licence continuation date has not passed (i.e. the licence has not expired) e.g. expiry date >= 1 day ahead of current date time
         $qb->andWhere(
@@ -711,11 +714,13 @@ class Licence extends AbstractRepository
         //  Where there are no TM's being updated/added via a variation application for the licence.
         $appQb->andWhere(
             $appQb->expr()
-                ->in(
+                ->eq(
                     'a.status',
-                    [ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION]
+                    ':applicationStatus'
                 )
         );
+        $qb->setParameter('applicationStatus', ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
+
         $appQb->innerJoin(
             TMApplicationEntity::class,
             'tma',
