@@ -673,7 +673,6 @@ class Licence extends AbstractRepository
         );
 
         //  Upon the last Transport Manager being removed online by a self service user where that removal was >1 day from current date/time
-        // (i.e. at least one day should have passed to ensure one has not been re-added or a period of grace added)
         $qb->andWhere(
             $qb->expr()->andX(
                 $qb->expr()->isNotNull('tml.deletedDate'),
@@ -684,10 +683,12 @@ class Licence extends AbstractRepository
             )
         );
 
-        //  or, where an internal user removes the last TM** and they have selected 'Yes' to the prompt / pop-up (which is not defaulted and forces the user to choose - see OLCS-19478) that states:
-        //  'You are about to remove the last transport manager for this licence.
-        //  Do you want to send a letter to the operator to all known addresses?'
-        //  Radio button Yes () No()
+        //  Letter has not been sent already for that TM
+        $qb->andWhere(
+            $qb->expr()->isNull('tml.lastTmLetterDate')
+        );
+
+        //  The licence is not marked for oupOut
         $qb->andWhere(
             $qb->expr()->eq($this->alias . '.optOutTmLetter', 0)
         );
@@ -753,9 +754,6 @@ class Licence extends AbstractRepository
                 )
         );
 
-// TODO: add logic to check letter has not been sent already for that TM
-// need to add last_tm_letter_date field in transport_manager_licence table
-// in order to exclude records where the last_tm_letter_date is not null
 
         $today = (new DateTime())
             ->setTime(0,0,0,0)
@@ -774,11 +772,6 @@ class Licence extends AbstractRepository
             ->format('Y-m-d H:i:s');
         $qb->setParameter('yesterday', $yesterday);
 
-        $log = [
-            'time' => date('Y-m-d H:i:s'),
-            'sql' => $qb->getQuery()->getSQL()
-        ];
-        file_put_contents('/var/www/olcs/logger.txt', "\n".json_encode($log, JSON_PRETTY_PRINT)."\n");
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }
