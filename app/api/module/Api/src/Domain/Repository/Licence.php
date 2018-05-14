@@ -671,7 +671,7 @@ class Licence extends AbstractRepository
         //  Licence continuation date has not passed (i.e. the licence has not expired) e.g. expiry date >= 1 day ahead of current date time
         $qb->andWhere(
             $qb->expr()
-                ->gt(
+                ->gte(
                     $this->alias . '.expiryDate',
                     ':tomorrow'
                 )
