@@ -840,7 +840,7 @@ class LicenceTest extends RepositoryTestCase
             'AND m.goodsOrPsv IN [[["lcat_gv","lcat_psv"]]] ' .
             'AND m.status IN [[["lsts_suspended","lsts_valid","lsts_curtailed"]]] ' .
             'AND m.licenceType IN [[["ltyp_sn","ltyp_si"]]] ' .
-            'AND m.expiryDate > [[' . $tomorrow . ']] ' .
+            'AND m.expiryDate >= [[' . $tomorrow . ']] ' .
             'AND (tml.deletedDate IS NOT NULL AND tml.deletedDate <= [[' . $yesterday .']]) ' .
             'AND tml.lastTmLetterDate IS NULL ' .
             'AND m.optOutTmLetter = 0 ' .
