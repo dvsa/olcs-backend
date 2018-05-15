@@ -2418,7 +2418,7 @@ class BusRegEntityTest extends EntityTester
         /** @var m\Mock|BusNoticePeriodEntity $standardRules */
         $standardRules = m::mock(BusNoticePeriodEntity::class);
         $standardRules->shouldReceive('isScottishRules')->once()->andReturn(false);
-        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(56);
+        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(42);
         $standardRules->shouldReceive('getCancellationPeriod')->never();
 
         $busReg = new Entity();
@@ -2438,16 +2438,18 @@ class BusRegEntityTest extends EntityTester
     {
         return [
             [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
-            [0, '2014-05-31', '2014-07-25', 'Y'], //55 days
+            [0, '2014-05-31', '2014-07-11', 'Y'], //41 days
+            [0, '2014-05-31', '2014-07-12', 'N'], //42 days
+            [0, '2014-05-31', '2014-07-25', 'N'], //55 days
             [0, '2014-05-31', '2014-07-26', 'N'], //56 days
-            [0, '2017-02-14', '2017-04-10', 'Y'], //55 days (example from OLCS-15276)
+            [0, '2017-02-14', '2017-04-10', 'N'], //55 days (example from OLCS-15276)
             [0, '2017-02-14', '2017-04-11', 'N'], //56 days (example from OLCS-15276)
             [0, '2014-05-31', '2014-08-28', 'N'], //89 days
             [1, '2014-05-31', '2014-07-01', 'Y'], //31 days
-            [1, '2014-05-31', '2014-07-25', 'Y'], //55 days
+            [1, '2014-05-31', '2014-07-25', 'N'], //55 days
             [1, '2014-05-31', '2014-07-26', 'N'], //56 days
             [1, '2014-05-31', '2015-08-27', 'N'], //57 days
-            [1, '2017-02-14', '2017-04-10', 'Y'], //55 days (example from OLCS-15276)
+            [1, '2017-02-14', '2017-04-10', 'N'], //55 days (example from OLCS-15276)
             [1, '2017-02-14', '2017-04-11', 'N'], //56 days (example from OLCS-15276)
         ];
     }
@@ -2490,6 +2492,49 @@ class BusRegEntityTest extends EntityTester
             [0, '2014-05-31', '2014-07-11', 'Y'], //41 days
             [0, '2014-05-31', '2014-07-12', 'N'], //42 days
             [0, '2014-05-31', '2014-08-28', 'N'], //89 days
+        ];
+    }
+
+    /**
+     * Tests the isShortNotice calculation for wales apps, calls populateShortNotice and checks the result
+     *
+     * @param $variationNo
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $expected
+     *
+     * @dataProvider isShortNoticeWalesProvider
+     */
+    public function testIsShortNoticeNewWalesRules($variationNo, $receivedDate, $effectiveDate, $expected)
+    {
+        $standardRules = m::mock(BusNoticePeriodEntity::class);
+        $standardRules->shouldReceive('isScottishRules')->once()->andReturn(false);
+        $standardRules->shouldReceive('getStandardPeriod')->once()->andReturn(56);
+        $standardRules->shouldReceive('getCancellationPeriod')->never();
+
+        $busReg = new Entity();
+        $busReg->setVariationNo($variationNo);
+        $busReg->setEffectiveDate($effectiveDate);
+        $busReg->setReceivedDate($receivedDate);
+        $busReg->setBusNoticePeriod($standardRules);
+        $busReg->populateShortNotice();
+        $actual = $busReg->getIsShortNotice();
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @return array
+     */
+    public function isShortNoticeWalesProvider()
+    {
+        return [
+            [0, '2014-05-31', '2014-07-01', 'Y'], //31 days
+            [0, '2014-05-31', '2014-07-11', 'Y'], //41 days
+            [0, '2014-05-31', '2014-07-12', 'Y'], //42 days
+            [0, '2014-05-31', '2014-08-28', 'N'], //89 days
+            [0, '2014-05-31', '2014-07-26', 'N'], //56 days
+            [0, '2014-05-31', '2014-07-25', 'Y'], //55 days
         ];
     }
 
@@ -2546,7 +2591,7 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
-     * Tests short notice returns false if there is no parent value
+     * Tests hort notice returns false if there is no parent value
      *
      * @param $effectiveDate
      * @param $receivedDate
