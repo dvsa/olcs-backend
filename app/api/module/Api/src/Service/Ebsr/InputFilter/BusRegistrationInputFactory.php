@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
-use Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
@@ -51,7 +51,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         $filterChain->attach($filterManager->get(InjectIsTxcApp::class));
         $filterChain->attach($filterManager->get(InjectReceivedDate::class));
         $filterChain->attach($filterManager->get(InjectNaptanCodes::class));
-        $filterChain->attach($filterManager->get(IsScottishRules::class));
+        $filterChain->attach($filterManager->get(NoticePeriod::class));
         $filterChain->attach($filterManager->get(Subsidy::class));
         $filterChain->attach($filterManager->get(Via::class));
         $filterChain->attach($filterManager->get(ExistingRegNo::class));
