@@ -187,8 +187,8 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      */
     public function initCollections()
     {
-        $this->pis = new ArrayCollection();
         $this->licences = new ArrayCollection();
+        $this->pis = new ArrayCollection();
     }
 
     /**
