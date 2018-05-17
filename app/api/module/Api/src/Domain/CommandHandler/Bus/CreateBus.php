@@ -51,6 +51,7 @@ final class CreateBus extends AbstractCommandHandler
             $this->getRepo()->getRefdataReference(BusReg::STATUS_NEW),
             $this->getRepo()->getRefdataReference(BusReg::STATUS_NEW),
             $this->getRepo()->getRefdataReference(BusReg::SUBSIDY_NO),
+//@todo look here
             $this->getRepo()->getReference(BusNoticePeriod::class, BusNoticePeriod::NOTICE_PERIOD_OTHER)
         );
     }
