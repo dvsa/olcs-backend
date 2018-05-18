@@ -137,7 +137,7 @@ final class LastTmLetter extends AbstractCommandHandler
 
         $data = [
             'generateCommandData' => $generateCommandData,
-            'addressBookmark' => 'op_address',
+            'addressBookmark' => 'licence_holder_address',
             'bookmarkBundle' => [
                 'correspondenceCd' => ['address']
             ]
