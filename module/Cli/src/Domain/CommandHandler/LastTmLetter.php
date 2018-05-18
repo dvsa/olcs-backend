@@ -4,13 +4,17 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TmlEntity;
 
 /**
  * Export data to csv files for data.gov.uk
@@ -38,7 +42,7 @@ final class LastTmLetter extends AbstractCommandHandler
      */
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['User','Document'];
+    protected $extraRepos = ['User','Document','DocTemplate'];
 
     /**
      * Handle command
@@ -99,10 +103,12 @@ final class LastTmLetter extends AbstractCommandHandler
             'trafficArea',
         ];
 
-        // TODO: insert OLCS-19482 to create task and get the caseworker userId from the generated task
+        $createTaskResult = $this->handleSideEffect($this->createTaskSideEffect($licence->getId()));
+        $this->result->merge($createTaskResult);
+
         $userRepo = $this->getRepo('User');
         /** @var User $user */
-        $user = $userRepo->fetchById(59);
+        $user = $userRepo->fetchById($createTaskResult->getId('assignedToUser'));
         $contactDetails = $user->serialize($caseworkerDetailsBundle);
         $licenceDetails = $licence->serialize($licenceBundle);
         $caseworkerName = $user->serialize($caseworkerNameBundle);
@@ -228,5 +234,27 @@ final class LastTmLetter extends AbstractCommandHandler
             $metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
             array_key_exists('allowEmail', $metadata['details']) &&
             $metadata['details']['allowEmail'] === 'Y';
+    }
+
+    /**
+     * Creates a command for task creation
+     *
+     * @param int  $licenceId licence id
+     * @param int  $tmId      tm id
+     *
+     * @return CreateTask
+     */
+    private function createTaskSideEffect($licenceId)
+    {
+        $params = [
+            'category' => Category::CATEGORY_LICENSING,
+            'subCategory' => SubCategory::TM_SUB_CATEGORY_TM1_REMOVAL,
+            'description' => TmlEntity::DESC_TM_REMOVED_LAST_RESPONSE,
+            'actionDate' => (new DateTime())->add(new \DateInterval('P21D'))->format('Y-m-d'),
+            'licence' => $licenceId,
+            'urgent' => 'Y'
+        ];
+
+        return CreateTask::create($params);
     }
 }
