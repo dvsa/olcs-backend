@@ -4,11 +4,14 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+
 /**
  * Export data to csv files for data.gov.uk
  *
@@ -16,14 +19,26 @@ use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  */
 final class LastTmLetter extends AbstractCommandHandler
 {
-    const GB_GV_TEMPLATE  = 'GV_Duplicate_vehicle_letter';
-    const GB_PSV_TEMPLATE = 'GV_Duplicate_vehicle_letter';
-    const NI_GV_TEMPLATE  = 'GV_Duplicate_vehicle_letter';
+    const GB_GV_TEMPLATE = [
+        'identifier' => 'GV_letter_to_op_regarding_no_TM_specified',
+        'id'         => 919
+    ];
+    const GB_PSV_TEMPLATE = [
+        'identifier' => 'PSV_letter_to_op_regarding_no_TM_specified',
+        'id'         => 920
+    ];
+    const NI_GV_TEMPLATE = [
+        'identifier' => 'GV_letter_to_op_regarding_no_TM_specified_NI',
+        'id'         => 918
+    ];
+
 
     /**
      * @var string
      */
     protected $repoServiceName = 'Licence';
+
+    protected $extraRepos = ['User','Document'];
 
     /**
      * Handle command
@@ -57,17 +72,67 @@ final class LastTmLetter extends AbstractCommandHandler
     {
         $template = $this->selectTemplate($licence);
 
+        $caseworkerDetailsBundle = [
+            'contactDetails' => [
+                'address',
+                'phoneContacts' => [
+                    'phoneContactType'
+                ],
+                'person'
+            ],
+            'team' => [
+                'trafficArea' => [
+                    'contactDetails' => [
+                        'address'
+                    ]
+                ]
+            ]
+        ];
+
+        $caseworkerNameBundle = [
+            'contactDetails' => [
+                'person'
+            ]
+        ];
+
+        $licenceBundle = [
+            'trafficArea',
+        ];
+
+        // TODO: insert OLCS-19482 to create task and get the caseworker userId from the generated task
+        $userRepo = $this->getRepo('User');
+        /** @var User $user */
+        $user = $userRepo->fetchById(59);
+        $contactDetails = $user->serialize($caseworkerDetailsBundle);
+        $licenceDetails = $licence->serialize($licenceBundle);
+        $caseworkerName = $user->serialize($caseworkerNameBundle);
+        $caseworkerDetails = [
+            $contactDetails,
+            $licenceDetails
+        ];
+
         $generateCommandData = [
-            'template' => $template,
+            'template' => $template['identifier'],
             'query' => [
                 'licence' => $licence->getId(),
-                'vehicle' => 1
             ],
-            'description' => 'Last TM letter Licence '. $licence->getLicNo(),
-            'licence'     => $licence->getId(),
-            'category'    => Category::CATEGORY_LICENSING,
-            'subCategory' => Category::DOC_SUB_CATEGORY_OTHER_DOCUMENTS,
-            'isExternal'  => false
+            'description' => 'Last TM letter Licence ' . $licence->getLicNo(),
+            'licence' => $licence->getId(),
+            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+            'subCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+            'isExternal' => false,
+            'metadata' => json_encode([
+                'details' => [
+                    'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                    'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                    'documentTemplate' => $template['id'],
+                    'allowEmail' => $licence->getOrganisation()->getAllowEmail()
+                ]
+            ]),
+            'knownValues' => [
+                'caseworker_details' => $caseworkerDetails,
+                'caseworker_name' => $caseworkerName
+            ]
         ];
 
         $data = [
@@ -88,10 +153,11 @@ final class LastTmLetter extends AbstractCommandHandler
      * @param array $documents (array of document ids)
      * @return void
      */
-    protected function printAndEmailDocuments($documents)
+    private function printAndEmailDocuments($documents)
     {
         foreach ($documents as $document) {
-            $this->printAndEmailDocument($document);
+            $this->printDocument($document);
+            $this->maybeEmailDocument($document);
         }
     }
 
@@ -99,29 +165,45 @@ final class LastTmLetter extends AbstractCommandHandler
      * @param int $document (id)
      * @return void
      */
-    protected function printAndEmailDocument($document)
+    private function printDocument($document)
     {
-        $result = $this->handleSideEffects(
-            [
+        $result = $this->handleSideEffect(
                 PrintLetter::create([
                     'id' => $document,
                     'method' => PrintLetter::METHOD_PRINT_AND_POST
-                ]),
-                PrintLetter::create([
-                    'id' => $document,
-                    'method' => PrintLetter::METHOD_EMAIL
                 ])
-            ]
         );
 
         $this->result->merge($result);
     }
 
     /**
-     * @param LicenceEntity $licence
-     * @return string
+     * @param int $document (id)
+     * @return void
      */
-    private function selectTemplate(LicenceEntity $licence): string
+    private function maybeEmailDocument($document)
+    {
+        $documentRepo = $this->getRepo('Document');
+        /** @var Document $docEntity */
+        $docEntity = $documentRepo->fetchById($document);
+        $metadata = json_decode($docEntity->getMetadata(), true);
+        if($this->shouldSendEmail($metadata)) {
+            $result = $this->handleSideEffect(
+                PrintLetter::create([
+                    'id' => $document,
+                    'method' => PrintLetter::METHOD_EMAIL
+                ])
+            );
+            $this->result->merge($result);
+        }
+
+    }
+
+    /**
+     * @param LicenceEntity $licence
+     * @return array
+     */
+    private function selectTemplate(LicenceEntity $licence)
     {
         $template = self::GB_GV_TEMPLATE;
 
@@ -132,5 +214,19 @@ final class LastTmLetter extends AbstractCommandHandler
         }
 
         return $template;
+    }
+
+    /**
+     * @param $metadata
+     * @return bool
+     */
+    private function shouldSendEmail($metadata)
+    {
+        return array_key_exists('details', $metadata) &&
+            is_array($metadata['details']) &&
+            array_key_exists('sendToAddress', $metadata['details']) &&
+            $metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
+            array_key_exists('allowEmail', $metadata['details']) &&
+            $metadata['details']['allowEmail'] === 'Y';
     }
 }

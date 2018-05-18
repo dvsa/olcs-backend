@@ -48,7 +48,8 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
         foreach ($addresses as $addressName => $addressValue) {
             $data['description'] = "$description ($addressName)";
-            $data['knownValues'] = [$addressBookmark => $this->createAddressKnownValues($bookmarkBundle, $addressValue)];
+            $data = $this->addAddressToKnownValues($bookmarkBundle, $addressValue, $data, $addressBookmark);
+            $data = $this->addAddressToMetadata($data, $addressName);
             $result = $this->handleSideEffect(GenerateAndStore::create($data));
             $documentId = $result->getId('document');
             $this->result->addId('documents', $documentId, true);
@@ -67,28 +68,37 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
         $addresses = [];
 
-        if ($sendToAddresses['correspondenceAddress']) {
+        if ($sendToAddresses['correspondenceAddress'] && $licence->getCorrespondenceCd() !== null) {
             $addresses['correspondenceAddress'] = $licence->getCorrespondenceCd()->getAddress()->serialize();
         }
 
-        if ($sendToAddresses['establishmentAddress']) {
+        if ($sendToAddresses['establishmentAddress'] && $licence->getEstablishmentCd() !== null) {
             $addresses['establishmentAddress'] = $licence->getEstablishmentCd()->getAddress()->serialize();
         }
 
-        if ($sendToAddresses['transportConsultantAddress']) {
+        if ($sendToAddresses['transportConsultantAddress'] && $licence->getTransportConsultantCd() !== null) {
             $addresses['transportConsultantAddress'] = $licence->getTransportConsultantCd()->getAddress()->serialize();
         }
 
-        if ($sendToAddresses['registeredAddress']) {
-            $addresses['registeredAddress'] = $licence->getOrganisation()->getContactDetails()->getAddress()->serialize();
+        if ($sendToAddresses['registeredAddress'] && $licence->getOrganisation()->getContactDetails() !== null) {
+            $addresses['registeredAddress'] = $licence
+                ->getOrganisation()
+                ->getContactDetails()
+                ->getAddress()
+                ->serialize();
         }
 
         if ($sendToAddresses['operatingCentresAddresses']) {
             $n = 0;
             /** @var LicenceOperatingCentre $licenceOperatingCentre */
             foreach ($licence->getOperatingCentres() as $licenceOperatingCentre) {
-                $n++;
-                $addresses['operatingCentreAddress' . $n] = $licenceOperatingCentre->getOperatingCentre()->getAddress()->serialize();
+                if($licenceOperatingCentre->getOperatingCentre() !== null) {
+                    $n++;
+                    $addresses['operatingCentreAddress' . $n] = $licenceOperatingCentre
+                        ->getOperatingCentre()
+                        ->getAddress()
+                        ->serialize();
+                }
             }
         }
 
@@ -139,22 +149,44 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
         return $validatedAddresses;
     }
 
-
     /**
-     * @param array $bookmarkBundle
-     * @param array $address
+     * @param array $data
+     * @param string $addressName
      * @return array
      */
-    private function createAddressKnownValues($bookmarkBundle, $address)
+    private function addAddressToMetadata($data, $addressName)
     {
+        if (!array_key_exists('metadata', $data)) {
+            $data['metadata'] = json_encode([]);
+        }
+        $metadata = json_decode($data['metadata'], true);
+        if (!array_key_exists('details', $metadata)) {
+            $metadata['details'] = [];
+        }
+        $metadata['details']['sendToAddress'] = $addressName;
+        $data['metadata'] = json_encode($metadata);
+        return $data;
+    }
+
+    /**
+     * @param $bookmarkBundle
+     * @param $addressValue
+     * @param $data
+     * @param $addressBookmark
+     * @return mixed
+     */
+    private function addAddressToKnownValues($bookmarkBundle, $addressValue, $data, $addressBookmark)
+    {
+        if(!array_key_exists('knownValues', $data)) {
+            $data['knownValues'] = [];
+        }
         $knownValues = [];
         foreach ($bookmarkBundle as $bundleKey => $bundleValues) {
             foreach ($bundleValues as $bundleValue) {
-                $knownValues[$bundleKey] = [$bundleValue => $address];
+                $knownValues[$bundleKey] = [$bundleValue => $addressValue];
             }
         }
-
-        return $knownValues;
+        $data['knownValues'][$addressBookmark] = $knownValues;
+        return $data;
     }
-
 }
