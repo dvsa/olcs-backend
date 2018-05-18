@@ -33,6 +33,10 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
     /**
      * @param Cmd $command
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -58,7 +62,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
+     * @param Cmd           $command
      * @param LicenceEntity $licence
      * @return array
      */
@@ -92,7 +96,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
             $n = 0;
             /** @var LicenceOperatingCentre $licenceOperatingCentre */
             foreach ($licence->getOperatingCentres() as $licenceOperatingCentre) {
-                if($licenceOperatingCentre->getOperatingCentre() !== null) {
+                if ($licenceOperatingCentre->getOperatingCentre() !== null) {
                     $n++;
                     $addresses['operatingCentreAddress' . $n] = $licenceOperatingCentre
                         ->getOperatingCentre()
@@ -107,20 +111,11 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
         return $addresses;
     }
 
-    /**
-     * @param $values
-     * @return bool
-     */
     private function isEmptyAddress($values)
     {
         return $values['addressLine1'] === null || $values['addressLine1'] === "";
     }
 
-
-    /**
-     * @param array $addresses
-     * @return array
-     */
     private function validateAddresses($addresses)
     {
         $validatedAddresses = [];
@@ -130,8 +125,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
             }
 
             foreach ($validatedAddresses as $validatedAddressKey => $validatedAddressValues) {
-                if (
-                    $validatedAddressValues['addressLine1'] === $values['addressLine1'] &&
+                if ($validatedAddressValues['addressLine1'] === $values['addressLine1'] &&
                     $validatedAddressValues['addressLine2'] === $values['addressLine2'] &&
                     $validatedAddressValues['addressLine3'] === $values['addressLine3'] &&
                     $validatedAddressValues['addressLine4'] === $values['addressLine4'] &&
@@ -149,11 +143,6 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
         return $validatedAddresses;
     }
 
-    /**
-     * @param array $data
-     * @param string $addressName
-     * @return array
-     */
     private function addAddressToMetadata($data, $addressName)
     {
         if (!array_key_exists('metadata', $data)) {
@@ -168,16 +157,9 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
         return $data;
     }
 
-    /**
-     * @param $bookmarkBundle
-     * @param $addressValue
-     * @param $data
-     * @param $addressBookmark
-     * @return mixed
-     */
     private function addAddressToKnownValues($bookmarkBundle, $addressValue, $data, $addressBookmark)
     {
-        if(!array_key_exists('knownValues', $data)) {
+        if (!array_key_exists('knownValues', $data)) {
             $data['knownValues'] = [];
         }
         $knownValues = [];

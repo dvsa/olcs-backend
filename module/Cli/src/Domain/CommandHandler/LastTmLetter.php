@@ -174,10 +174,10 @@ final class LastTmLetter extends AbstractCommandHandler
     private function printDocument($document)
     {
         $result = $this->handleSideEffect(
-                PrintLetter::create([
-                    'id' => $document,
-                    'method' => PrintLetter::METHOD_PRINT_AND_POST
-                ])
+            PrintLetter::create([
+                'id' => $document,
+                'method' => PrintLetter::METHOD_PRINT_AND_POST
+            ])
         );
 
         $this->result->merge($result);
@@ -193,7 +193,7 @@ final class LastTmLetter extends AbstractCommandHandler
         /** @var Document $docEntity */
         $docEntity = $documentRepo->fetchById($document);
         $metadata = json_decode($docEntity->getMetadata(), true);
-        if($this->shouldSendEmail($metadata)) {
+        if ($this->shouldSendEmail($metadata)) {
             $result = $this->handleSideEffect(
                 PrintLetter::create([
                     'id' => $document,
@@ -202,7 +202,6 @@ final class LastTmLetter extends AbstractCommandHandler
             );
             $this->result->merge($result);
         }
-
     }
 
     /**
@@ -223,7 +222,7 @@ final class LastTmLetter extends AbstractCommandHandler
     }
 
     /**
-     * @param $metadata
+     * @param array $metadata
      * @return bool
      */
     private function shouldSendEmail($metadata)
@@ -236,14 +235,6 @@ final class LastTmLetter extends AbstractCommandHandler
             $metadata['details']['allowEmail'] === 'Y';
     }
 
-    /**
-     * Creates a command for task creation
-     *
-     * @param int  $licenceId licence id
-     * @param int  $tmId      tm id
-     *
-     * @return CreateTask
-     */
     private function createTaskSideEffect($licenceId)
     {
         $params = [
