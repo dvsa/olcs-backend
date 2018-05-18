@@ -79,7 +79,7 @@ class Licence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        if(is_int($query)) {
+        if (is_int($query)) {
             $licenceId = $query;
         } else {
             $licenceId = $query->getId();
