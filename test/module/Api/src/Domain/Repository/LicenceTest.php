@@ -666,7 +666,7 @@ class LicenceTest extends RepositoryTestCase
         $this->assertEquals(['result'], $this->sut->fetchWithVariationsAndInterimInforce($licenceId));
     }
 
-    public function testFetchWithAddressesUsingId()
+    public function testFetchWithAddressesUsingIdWithQuery()
     {
         $id = 9999;
 
@@ -682,6 +682,8 @@ class LicenceTest extends RepositoryTestCase
             ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
             ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
             ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('organisation', 'o')->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('o.contactDetails', 'o_cd')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
             ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
             ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
@@ -699,6 +701,38 @@ class LicenceTest extends RepositoryTestCase
             ->getMock();
 
         static::assertEquals(['EXPECT'], $this->sut->fetchWithAddressesUsingId($mockQuery));
+    }
+
+    public function testFetchWithAddressesUsingIdWithInt()
+    {
+        $id = 9999;
+
+        $mockQb = $this->createMockQb('[QUERY]');
+
+        $this->mockCreateQueryBuilder($mockQb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('byId')->once()->with($id)->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('correspondenceCd', 'c')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('c.phoneContacts', 'c_p')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('c_p.phoneContactType', 'c_p_pct')->andReturnSelf()
+            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 'c_p')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('organisation', 'o')->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('o.contactDetails', 'o_cd')->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('establishmentCd', 'e')->andReturnSelf()
+            ->shouldReceive('withContactDetails')->once()->with('transportConsultantCd', 't')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('t.phoneContacts', 't_p')->andReturnSelf()
+            ->shouldReceive('with')->once()->with('t_p.phoneContactType', 't_p_pct')->andReturnSelf()
+            ->shouldReceive('withRefData')->once()->with(PhoneContactEntity::class, 't_p')->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getSingleResult')
+            ->with()
+            ->once()
+            ->andReturn(['EXPECT']);
+
+        static::assertEquals(['EXPECT'], $this->sut->fetchWithAddressesUsingId($id));
     }
 
     public function testFetchByOrganisationIdAndStatuses()
@@ -817,7 +851,7 @@ class LicenceTest extends RepositoryTestCase
 
         $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->andReturn(false);
         $qb->shouldReceive('getDQL')->twice();
-        $qb->shouldReceive('getQuery->getResult')->with(Query::HYDRATE_ARRAY)->once()->andReturn(['RESULTS']);
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
 
         $this->sut->fetchForLastTmAutoLetter();
 
@@ -835,8 +869,7 @@ class LicenceTest extends RepositoryTestCase
             ->setTime(0, 0, 0, 0)
             ->format('Y-m-d H:i:s');
 
-        $expectedQuery = '[QUERY] ' .
-            'SELECT m.id DISTINCT ' .
+        $expectedQuery = '[QUERY] DISTINCT ' .
             'AND m.goodsOrPsv IN [[["lcat_gv","lcat_psv"]]] ' .
             'AND m.status IN [[["lsts_suspended","lsts_valid","lsts_curtailed"]]] ' .
             'AND m.licenceType IN [[["ltyp_sn","ltyp_si"]]] ' .
