@@ -59,7 +59,9 @@ final class CreateTask extends AbstractCommandHandler
 
         $result = new Result();
         $result->addId('task', $task->getId());
-        $result->addId('assignedToUser', $task->getAssignedToUser()->getId());
+        if ($task->getAssignedToUser() !== null) {
+            $result->addId('assignedToUser', $task->getAssignedToUser()->getId());
+        }
         $result->addMessage('Task created successfully');
 
         return $result;
