@@ -28,7 +28,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
     {
 
         $this->sut = new LastTmLetter();
-        
+
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('User', Repository\User::class);
         $this->mockRepo('Document', Repository\Document::class);
@@ -48,7 +48,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
                     'messages' => []
                 ]
             ],
-            'licence_with_removed_tm_allow_email' => [
+            'licence_with_removed_tm_allow_email_gb_gv' => [
                 'data' => [
                     'licence' => [
                         'id' => 1,
@@ -111,13 +111,76 @@ class LastTmLetterTest extends CommandHandlerTestCase
                     ]
                 ]
             ],
-            'licence_with_removed_tm_not_allow_email' => [
+            'licence_with_removed_tm_allow_email_ni_gv' => [
+                'data' => [
+                    'licence' => [
+                        'id' => 1,
+                        'licNo' => 'AB123',
+                        'isNi' => true,
+                        'isPsv' => false,
+                        'organisation' => [
+                            'allowEmail' => 'Y'
+                        ]
+                    ],
+                    'user' => [
+                        'contactDetails ' => [
+                            'address' => '12 Food Road'
+                        ]
+                    ],
+                    'sideEffectResults' => [
+                        'GenerateAndStoreWithMultipleAddresses' => [
+                            'ids' => [
+                                'documents' => [
+                                    '123' => [
+                                        'metadata' => json_encode(['details' => [
+                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                            'documentTemplate' => 1,
+                                            'allowEmail' => 'Y',
+                                            'sendToAddress' => 'correspondenceAddress'
+                                        ]])
+                                    ],
+                                    '234'=> [
+                                        'metadata' => json_encode(['details' => [
+                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                            'documentTemplate' => 1,
+                                            'allowEmail' => 'Y',
+                                            'sendToAddress' => 'establishmentAddress'
+                                        ]])
+                                    ]
+                                ]
+                            ]
+                        ],
+                        'CreateTask' => [
+                            'ids' => [
+                                'assignedToUser' => 111
+                            ]
+
+                        ]
+                    ]
+
+                ],
+                'expect' => [
+                    'id' => [
+                        'assignedToUser' => 111,
+                        'documents' => [123, 234]
+                    ],
+                    'messages' => [
+                        "Document id '123', queued for print",
+                        "Correspondence record created",
+                        "Email sent",
+                        "Document id '234', queued for print"
+                    ]
+                ]
+            ],
+            'licence_with_removed_tm_not_allow_email_gb_psv' => [
                 'data' => [
                     'licence' => [
                         'id' => 1,
                         'licNo' => 'AB123',
                         'isNi' => false,
-                        'isPsv' => false,
+                        'isPsv' => true,
                         'organisation' => [
                             'allowEmail' => 'N'
                         ]
