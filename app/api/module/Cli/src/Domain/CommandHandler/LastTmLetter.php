@@ -238,7 +238,7 @@ final class LastTmLetter extends AbstractCommandHandler
     private function createTaskSideEffect($licenceId)
     {
         $params = [
-            'category' => Category::CATEGORY_LICENSING,
+            'category' => Category::CATEGORY_APPLICATION,
             'subCategory' => SubCategory::TM_SUB_CATEGORY_TM1_REMOVAL,
             'description' => TmlEntity::DESC_TM_REMOVED_LAST_RESPONSE,
             'actionDate' => (new DateTime())->add(new \DateInterval('P21D'))->format('Y-m-d'),
