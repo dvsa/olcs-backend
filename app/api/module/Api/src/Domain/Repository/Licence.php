@@ -69,7 +69,7 @@ class Licence extends AbstractRepository
     /**
      * fetch with addresses
      *
-     * @param QueryInterface $query the query
+     * @param QueryInterface|int $query the query | the licence id
      *
      * @return mixed
      * @throws NoResultException
@@ -79,11 +79,19 @@ class Licence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->buildDefaultQuery($qb, $query->getId())
+        if (is_int($query)) {
+            $licenceId = $query;
+        } else {
+            $licenceId = $query->getId();
+        }
+
+        $this->buildDefaultQuery($qb, $licenceId)
             ->withContactDetails('correspondenceCd', 'c')
             ->with('c.phoneContacts', 'c_p')
             ->with('c_p.phoneContactType', 'c_p_pct')
             ->withRefData(PhoneContactEntity::class, 'c_p')
+            ->with('organisation', 'o')
+            ->withContactDetails('o.contactDetails', 'o_cd')
             ->withContactDetails('establishmentCd', 'e')
             ->withContactDetails('transportConsultantCd', 't')
             ->with('t.phoneContacts', 't_p')
@@ -635,7 +643,6 @@ class Licence extends AbstractRepository
         );
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();
-        $qb->select($this->alias . '.id');
         $qb->distinct();
 
         //  Goods or PSV licence
@@ -781,6 +788,6 @@ class Licence extends AbstractRepository
             ->format('Y-m-d H:i:s');
         $qb->setParameter('yesterday', $yesterday);
 
-        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getResult();
     }
 }
