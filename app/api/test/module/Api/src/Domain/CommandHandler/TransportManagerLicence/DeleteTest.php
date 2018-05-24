@@ -52,7 +52,7 @@ class DeleteTest extends CommandHandlerTestCase
 
         $licenceEntity2 = m::mock(LicenceEntity::class);
         $licenceEntity2->shouldReceive('getTmLicences->count')->once()->withNoArgs()->andReturn(1);
-        $licenceEntity2->shouldReceive('getId')->once()->withNoArgs()->andReturn($licenceId2);
+        $licenceEntity2->shouldReceive('setOptOutTmLetter')->once()->with(0);
 
         $tmlEntity1 = m::mock(TmlEntity::class);
         $tmlEntity1->shouldReceive('getLicence')->once()->withNoArgs()->andReturn($licenceEntity1);
@@ -81,15 +81,16 @@ class DeleteTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateTaskCmd::class, $task1Params, new Result());
 
         //tm 2 was the last tm on the licence
-        $task2Params = $this->createTaskParams(TmlEntity::DESC_TM_REMOVED_LAST, $licenceId2, $tmId2, 'Y');
-        $this->expectedSideEffect(CreateTaskCmd::class, $task2Params, new Result());
+//        $task2Params = $this->createTaskParams(TmlEntity::DESC_TM_REMOVED_LAST, $licenceId2, $tmId2, 'Y');
+//        $this->expectedSideEffect(CreateTaskCmd::class, $task2Params, new Result());
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(
             [
                 'Transport manager licence ' . $tmlId1 . ' deleted',
-                'Transport manager licence ' . $tmlId2 . ' deleted'
+                'optOutTmLetter flag set to 0 for licence ' . $tmlId2,
+                'Transport manager licence ' . $tmlId2 . ' deleted',
             ],
             $result->getMessages()
         );

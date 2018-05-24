@@ -47,14 +47,30 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
 
             $last = ($licence->getTmLicences()->count() === 1 ? true : false);
 
+            if ($last) {
+                switch ($command->getYesNo()) {
+                    case 'Y' :
+                        $optOutTmLetterValue = 0;
+                        break;
+                    case 'N' :
+                        $optOutTmLetterValue = 1;
+                        break;
+                    default ;
+                        $optOutTmLetterValue = 0;
+                }
+
+                $licence->setOptOutTmLetter($optOutTmLetterValue);
+                $result->addMessage("optOutTmLetter flag set to {$optOutTmLetterValue} for licence {$tmlId}");
+            } else {
+                // The task for last TM removal is created by lastTmLetter batch job.
+                $result->merge(
+                    $this->handleSideEffect(
+                        $this->createTaskSideEffect($licence->getId(), $tmId)
+                    )
+                );
+            }
             $tmlRepo->delete($tmlEntity);
             $result->addMessage("Transport manager licence {$tmlId} deleted");
-
-            $result->merge(
-                $this->handleSideEffect(
-                    $this->createTaskSideEffect($licence->getId(), $tmId, $last)
-                )
-            );
         }
 
         return $result;
@@ -65,19 +81,18 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
      *
      * @param int  $licenceId licence id
      * @param int  $tmId      tm id
-     * @param bool $last      whether this is the last tm on the licence
      *
      * @return CreateTask
      */
-    private function createTaskSideEffect($licenceId, $tmId, $last)
+    private function createTaskSideEffect($licenceId, $tmId)
     {
         $params = [
             'category' => Category::CATEGORY_APPLICATION,
             'subCategory' => SubCategory::TM_SUB_CATEGORY_TM1_REMOVAL,
-            'description' => $last ? TmlEntity::DESC_TM_REMOVED_LAST : TmlEntity::DESC_TM_REMOVED,
+            'description' => TmlEntity::DESC_TM_REMOVED,
             'licence' => $licenceId,
             'transportManager' => $tmId,
-            'urgent' => $last ? 'Y' : 'N'
+            'urgent' => 'N',
         ];
 
         return CreateTask::create($params);
