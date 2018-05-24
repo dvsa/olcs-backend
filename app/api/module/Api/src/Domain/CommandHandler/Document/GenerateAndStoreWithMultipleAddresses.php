@@ -113,7 +113,10 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
     private function isEmptyAddress($values)
     {
-        return $values['addressLine1'] === null || $values['addressLine1'] === "";
+        return ($values['addressLine1'] === null || $values['addressLine1'] === "") &&
+        ($values['addressLine2'] === null || $values['addressLine2'] === "") &&
+        ($values['addressLine3'] === null || $values['addressLine3'] === "") &&
+        ($values['addressLine4'] === null || $values['addressLine4'] === "");
     }
 
     private function validateAddresses($addresses)

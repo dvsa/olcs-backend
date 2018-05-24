@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
-
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\GenerateAndStoreWithMultipleAddresses as CommandHandler;
@@ -120,7 +119,12 @@ class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
         $this->setUpMockLicence($mockLicence, true);
         $result = new Result();
         $addresses = $this->getAddresses();
-        $addresses['correspondenceAddress']->getAddress()->setAddressLine1(null);
+        /** @var Address $correspondenceAddress */
+        $correspondenceAddress = $addresses['correspondenceAddress']->getAddress();
+        $correspondenceAddress->setAddressLine1(null);
+        $correspondenceAddress->setAddressLine2(null);
+        $correspondenceAddress->setAddressLine3(null);
+        $correspondenceAddress->setAddressLine4(null);
         $count = 0;
         foreach ($addresses as $key => $address) {
             if ($key != 'correspondenceAddress') {

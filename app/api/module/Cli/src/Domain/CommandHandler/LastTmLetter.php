@@ -16,11 +16,6 @@ use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TmlEntity;
 
-/**
- * Export data to csv files for data.gov.uk
- *
- * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
- */
 final class LastTmLetter extends AbstractCommandHandler
 {
     const GB_GV_TEMPLATE = [
