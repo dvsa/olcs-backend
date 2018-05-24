@@ -699,6 +699,7 @@ return [
     // Domain - Document
     Command\Document\CreateDocument::class => CommandHandler\Document\CreateDocument::class,
     Command\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
+    Command\Document\GenerateAndStoreWithMultipleAddresses::class => CommandHandler\Document\GenerateAndStoreWithMultipleAddresses::class,
     TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
 

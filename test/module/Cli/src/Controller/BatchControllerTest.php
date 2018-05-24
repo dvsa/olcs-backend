@@ -1066,4 +1066,17 @@ class BatchControllerTest extends MockeryTestCase
         $result = $this->sut->databaseMaintenanceAction();
         $this->assertSame(0, $result->getErrorLevel());
     }
+
+    public function testLastTmLetterAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(\Dvsa\Olcs\Cli\Domain\Command\LastTmLetter::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
+        $this->sut->lastTmLetterAction();
+    }
 }
