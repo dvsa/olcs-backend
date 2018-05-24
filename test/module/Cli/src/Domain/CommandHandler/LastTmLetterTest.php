@@ -2,9 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
-use Doctrine\DBAL\Connection;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\LastTmLetter;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
@@ -14,13 +12,9 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TmlEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 
-/**
- * Create VI Extract Files Test
- */
 class LastTmLetterTest extends CommandHandlerTestCase
 {
 
