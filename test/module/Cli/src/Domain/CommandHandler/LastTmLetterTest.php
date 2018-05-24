@@ -37,7 +37,8 @@ class LastTmLetterTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function dpHandleCommand() {
+    public function dpHandleCommand()
+    {
         return [
             'no_licences_with_removed_tm' => [
                 'data' => [
@@ -69,22 +70,26 @@ class LastTmLetterTest extends CommandHandlerTestCase
                             'ids' => [
                                 'documents' => [
                                     '123' => [
-                                        'metadata' => json_encode(['details' => [
-                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                            'documentTemplate' => 1,
-                                            'allowEmail' => 'Y',
-                                            'sendToAddress' => 'correspondenceAddress'
-                                        ]])
+                                        'metadata' => json_encode([
+                                            'details' => [
+                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                                'documentTemplate' => 1,
+                                                'allowEmail' => 'Y',
+                                                'sendToAddress' => 'correspondenceAddress'
+                                            ]
+                                        ])
                                     ],
-                                    '234'=> [
-                                        'metadata' => json_encode(['details' => [
-                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                            'documentTemplate' => 1,
-                                            'allowEmail' => 'Y',
-                                            'sendToAddress' => 'establishmentAddress'
-                                        ]])
+                                    '234' => [
+                                        'metadata' => json_encode([
+                                            'details' => [
+                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                                'documentTemplate' => 1,
+                                                'allowEmail' => 'Y',
+                                                'sendToAddress' => 'establishmentAddress'
+                                            ]
+                                        ])
                                     ]
                                 ]
                             ]
@@ -132,22 +137,26 @@ class LastTmLetterTest extends CommandHandlerTestCase
                             'ids' => [
                                 'documents' => [
                                     '123' => [
-                                        'metadata' => json_encode(['details' => [
-                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                            'documentTemplate' => 1,
-                                            'allowEmail' => 'Y',
-                                            'sendToAddress' => 'correspondenceAddress'
-                                        ]])
+                                        'metadata' => json_encode([
+                                            'details' => [
+                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                                'documentTemplate' => 1,
+                                                'allowEmail' => 'Y',
+                                                'sendToAddress' => 'correspondenceAddress'
+                                            ]
+                                        ])
                                     ],
-                                    '234'=> [
-                                        'metadata' => json_encode(['details' => [
-                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                            'documentTemplate' => 1,
-                                            'allowEmail' => 'Y',
-                                            'sendToAddress' => 'establishmentAddress'
-                                        ]])
+                                    '234' => [
+                                        'metadata' => json_encode([
+                                            'details' => [
+                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                                'documentTemplate' => 1,
+                                                'allowEmail' => 'Y',
+                                                'sendToAddress' => 'establishmentAddress'
+                                            ]
+                                        ])
                                     ]
                                 ]
                             ]
@@ -195,22 +204,26 @@ class LastTmLetterTest extends CommandHandlerTestCase
                             'ids' => [
                                 'documents' => [
                                     '123' => [
-                                        'metadata' => json_encode(['details' => [
-                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                            'documentTemplate' => 1,
-                                            'allowEmail' => 'N',
-                                            'sendToAddress' => 'correspondenceAddress'
-                                        ]])
+                                        'metadata' => json_encode([
+                                            'details' => [
+                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                                'documentTemplate' => 1,
+                                                'allowEmail' => 'N',
+                                                'sendToAddress' => 'correspondenceAddress'
+                                            ]
+                                        ])
                                     ],
-                                    '234'=> [
-                                        'metadata' => json_encode(['details' => [
-                                            'category' => Category::CATEGORY_TRANSPORT_MANAGER,
-                                            'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
-                                            'documentTemplate' => 1,
-                                            'allowEmail' => 'N',
-                                            'sendToAddress' => 'establishmentAddress'
-                                        ]])
+                                    '234' => [
+                                        'metadata' => json_encode([
+                                            'details' => [
+                                                'category' => Category::CATEGORY_TRANSPORT_MANAGER,
+                                                'documentSubCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_CORRESPONDENCE,
+                                                'documentTemplate' => 1,
+                                                'allowEmail' => 'N',
+                                                'sendToAddress' => 'establishmentAddress'
+                                            ]
+                                        ])
                                     ]
                                 ]
                             ]
@@ -251,7 +264,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
 
         $licenceRepo->shouldReceive('fetchForLastTmAutoLetter')->andReturn($eligibleLicences);
 
-        if(!empty($eligibleLicences)) {
+        if (!empty($eligibleLicences)) {
             $userRepo = $this->repoMap['User'];
             $user = $this->mockUser();
             $userRepo->shouldReceive('fetchById')
@@ -278,8 +291,8 @@ class LastTmLetterTest extends CommandHandlerTestCase
                 $this->expectedSideEffect(PrintLetter::class, [], $printLetterResult);
 
                 $metadata = json_decode($data['metadata'], true);
-                if($metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
-                    $metadata['details']['allowEmail'] === 'Y' ) {
+                if ($metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
+                    $metadata['details']['allowEmail'] === 'Y') {
                     $printLetterEmailResult = $this->getPrintLetterEmailResult();
                     $this->expectedSideEffect(PrintLetter::class, [], $printLetterEmailResult);
                 }
@@ -372,7 +385,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
 
     private function mockLicence($dataProvider)
     {
-        if(empty($dataProvider['licence'])) {
+        if (empty($dataProvider['licence'])) {
             return null;
         }
 
@@ -393,5 +406,4 @@ class LastTmLetterTest extends CommandHandlerTestCase
 
         return $licence;
     }
-
 }
