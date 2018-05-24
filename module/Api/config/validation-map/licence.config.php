@@ -3,6 +3,7 @@
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Licence\DeleteUpdateOptOutTmLetter;
 
 return [
     // Queries
@@ -29,5 +30,6 @@ return [
     CommandHandler\Licence\UpdateBusinessDetails::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateOperatingCentres::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateTypeOfLicence::class => Misc\CanAccessLicenceWithId::class,
-    CommandHandler\Licence\EnqueueContinuationNotSought::class => Misc\IsSystemUser::class
+    CommandHandler\Licence\EnqueueContinuationNotSought::class => Misc\IsSystemUser::class,
+    CommandHandler\Licence\DeleteUpdateOptOutTmLetter::class => Misc\IsInternalUser::class,
 ];
