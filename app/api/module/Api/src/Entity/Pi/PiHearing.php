@@ -41,6 +41,7 @@ class PiHearing extends AbstractPiHearing
      * @param VenueEntity|null $venue
      * @param string $venueOther
      * @param int $witnesses
+     * @param int $drivers
      * @param string $isCancelled
      * @param string $cancelledDate
      * @param string $cancelledReason
@@ -57,6 +58,7 @@ class PiHearing extends AbstractPiHearing
         $venue,
         $venueOther,
         $witnesses,
+        $drivers,
         $isCancelled,
         $cancelledDate,
         $cancelledReason,
@@ -73,6 +75,7 @@ class PiHearing extends AbstractPiHearing
             $venue,
             $venueOther,
             $witnesses,
+            $drivers,
             $isCancelled,
             $cancelledDate,
             $cancelledReason,
@@ -91,6 +94,7 @@ class PiHearing extends AbstractPiHearing
      * @param VenueEntity|null $venue
      * @param string $venueOther
      * @param int $witnesses
+     * @param int $drivers
      * @param string $isCancelled
      * @param string $cancelledDate
      * @param string $cancelledReason
@@ -108,6 +112,7 @@ class PiHearing extends AbstractPiHearing
         $venue,
         $venueOther,
         $witnesses,
+        $drivers,
         $isCancelled,
         $cancelledDate,
         $cancelledReason,
@@ -133,6 +138,7 @@ class PiHearing extends AbstractPiHearing
         $this->venueOther = $venueOther;
         $this->hearingDate = $hearingDate;
         $this->witnesses = $witnesses;
+        $this->drivers = $drivers;
         $this->details = $details;
         $this->isCancelled = $isCancelled;
         $this->isAdjourned = $isAdjourned;
@@ -154,6 +160,7 @@ class PiHearing extends AbstractPiHearing
      * @param VenueEntity|null $venue
      * @param string $venueOther
      * @param int $witnesses
+     * @param int $drivers
      * @param string $isCancelled
      * @param string $cancelledDate
      * @param string $cancelledReason
@@ -170,6 +177,7 @@ class PiHearing extends AbstractPiHearing
         $venue,
         $venueOther,
         $witnesses,
+        $drivers,
         $isCancelled,
         $cancelledDate,
         $cancelledReason,
@@ -195,6 +203,7 @@ class PiHearing extends AbstractPiHearing
         $this->venueOther = $venueOther;
         $this->hearingDate = $hearingDate;
         $this->witnesses = $witnesses;
+        $this->drivers = $drivers;
         $this->details = $details;
         $this->isCancelled = $isCancelled;
         $this->isAdjourned = $isAdjourned;

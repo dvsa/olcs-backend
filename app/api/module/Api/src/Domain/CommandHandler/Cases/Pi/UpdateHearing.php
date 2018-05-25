@@ -70,6 +70,7 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
             $venue,
             $command->getVenueOther(),
             $command->getWitnesses(),
+            $command->getDrivers(),
             $isCancelled,
             $command->getCancelledDate(),
             $command->getCancelledReason(),
