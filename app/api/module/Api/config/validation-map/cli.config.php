@@ -18,6 +18,7 @@ return [
     CliCommandHandler\CleanUpAbandonedVariations::class => IsSystemUser::class,
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
     CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
+    CliCommandHandler\LastTmLetter::class => IsSystemUser::class,
     //  api commands
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
     CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,

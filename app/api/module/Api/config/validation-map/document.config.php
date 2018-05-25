@@ -16,6 +16,7 @@ return [
     CommandHandler\Document\CopyDocument::class => IsInternalUser::class,
     CommandHandler\Document\CreateLetter::class => IsInternalUser::class,
     CommandHandler\Document\GenerateAndStore::class => IsInternalUser::class,
+    CommandHandler\Document\GenerateAndStoreWithMultipleAddresses::class => IsSystemUser::class,
     CommandHandler\Document\MoveDocument::class => IsInternalUser::class,
     CommandHandler\Document\PrintLetter::class => CanAccessDocumentWithId::class,
     CommandHandler\Document\UpdateDocumentLinks::class => IsInternalUser::class,

@@ -310,8 +310,8 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
      */
     public function initCollections()
     {
-        $this->grounds = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
+        $this->grounds = new ArrayCollection();
     }
 
     /**

@@ -209,9 +209,9 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
      */
     public function initCollections()
     {
-        $this->submissionActions = new ArrayCollection();
         $this->pis = new ArrayCollection();
         $this->proposeToRevokes = new ArrayCollection();
+        $this->submissionActions = new ArrayCollection();
     }
 
     /**
