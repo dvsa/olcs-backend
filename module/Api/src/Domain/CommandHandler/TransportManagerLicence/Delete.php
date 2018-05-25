@@ -32,7 +32,7 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var $tmlRepo TmlRepo
+         * @var $tmlRepo   TmlRepo
          * @var $tmlEntity TmlEntity
          */
         $result = new Result();
@@ -46,16 +46,17 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
             $tmId = $tmlEntity->getTransportManager()->getId();
 
             $last = ($licence->getTmLicences()->count() === 1 ? true : false);
-
+            var_dump($command);
+            $optOut = $command->getYesNo();
             if ($last) {
-                switch ($command->getYesNo()) {
-                    case 'Y' :
+                switch ($optOut) {
+                    case 'Y':
                         $optOutTmLetterValue = 0;
                         break;
-                    case 'N' :
+                    case 'N':
                         $optOutTmLetterValue = 1;
                         break;
-                    default ;
+                    default:
                         $optOutTmLetterValue = 0;
                 }
 
@@ -79,8 +80,8 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Creates a command for task creation
      *
-     * @param int  $licenceId licence id
-     * @param int  $tmId      tm id
+     * @param int $licenceId licence id
+     * @param int $tmId      tm id
      *
      * @return CreateTask
      */
