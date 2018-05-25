@@ -34,21 +34,21 @@ class PiHearing extends AbstractPiHearing
     const PUBLISH_AFTER_DAYS = 5;
 
     /**
-     * @param PiEntity $pi
+     * @param PiEntity          $pi
      * @param PresidingTcEntity $presidingTc
-     * @param RefData $presidedByRole
-     * @param \DateTime $hearingDate
-     * @param VenueEntity|null $venue
-     * @param string $venueOther
-     * @param int $witnesses
-     * @param int $drivers
-     * @param string $isCancelled
-     * @param string $cancelledDate
-     * @param string $cancelledReason
-     * @param string $isAdjourned
-     * @param string $adjournedDate
-     * @param string $adjournedReason
-     * @param string $details
+     * @param RefData           $presidedByRole
+     * @param \DateTime         $hearingDate
+     * @param VenueEntity|null  $venue
+     * @param string            $venueOther
+     * @param int               $witnesses
+     * @param int               $drivers
+     * @param string            $isCancelled
+     * @param string            $cancelledDate
+     * @param string            $cancelledReason
+     * @param string            $isAdjourned
+     * @param string            $adjournedDate
+     * @param string            $adjournedReason
+     * @param string            $details
      */
     public function __construct(
         PiEntity $pi,
@@ -87,22 +87,23 @@ class PiHearing extends AbstractPiHearing
     }
 
     /**
-     * @param Pi $pi
-     * @param PresidingTc $presidingTc
-     * @param RefData $presidedByRole
-     * @param \DateTime $hearingDate
+     * @param Pi               $pi
+     * @param PresidingTc      $presidingTc
+     * @param RefData          $presidedByRole
+     * @param \DateTime        $hearingDate
      * @param VenueEntity|null $venue
-     * @param string $venueOther
-     * @param int $witnesses
-     * @param int $drivers
-     * @param string $isCancelled
-     * @param string $cancelledDate
-     * @param string $cancelledReason
-     * @param string $isAdjourned
-     * @param string $adjournedDate
-     * @param string $adjournedReason
-     * @param string $details
+     * @param string           $venueOther
+     * @param int              $witnesses
+     * @param int              $drivers
+     * @param string           $isCancelled
+     * @param string           $cancelledDate
+     * @param string           $cancelledReason
+     * @param string           $isAdjourned
+     * @param string           $adjournedDate
+     * @param string           $adjournedReason
+     * @param string           $details
      * @throws ForbiddenException
+     * @return void
      */
     private function create(
         PiEntity $pi,
@@ -154,21 +155,22 @@ class PiHearing extends AbstractPiHearing
     }
 
     /**
-     * @param PresidingTc $presidingTc
-     * @param RefData $presidedByRole
-     * @param \DateTime $hearingDate
+     * @param PresidingTc      $presidingTc
+     * @param RefData          $presidedByRole
+     * @param \DateTime        $hearingDate
      * @param VenueEntity|null $venue
-     * @param string $venueOther
-     * @param int $witnesses
-     * @param int $drivers
-     * @param string $isCancelled
-     * @param string $cancelledDate
-     * @param string $cancelledReason
-     * @param string $isAdjourned
-     * @param string $adjournedDate
-     * @param string $adjournedReason
-     * @param string $details
+     * @param string           $venueOther
+     * @param int              $witnesses
+     * @param int              $drivers
+     * @param string           $isCancelled
+     * @param string           $cancelledDate
+     * @param string           $cancelledReason
+     * @param string           $isAdjourned
+     * @param string           $adjournedDate
+     * @param string           $adjournedReason
+     * @param string           $details
      * @throws ForbiddenException
+     * @return void
      */
     public function update(
         PresidingTcEntity $presidingTc,
@@ -218,16 +220,6 @@ class PiHearing extends AbstractPiHearing
         );
     }
 
-    /**
-     * Process adjourned and cancelled information
-     *
-     * @param $isCancelled
-     * @param $cancelledReason
-     * @param $cancelledDate
-     * @param $isAdjourned
-     * @param $adjournedReason
-     * @param $adjournedDate
-     */
     private function processAdjournedAndCancelled(
         $isCancelled,
         $cancelledReason,
