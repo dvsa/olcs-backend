@@ -615,4 +615,16 @@ class BatchController extends AbstractConsoleController
             $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
         }
     }
+
+    /**
+     * Send Last TM letters
+     *
+     * @return ConsoleModel
+     */
+    public function lastTmLetterAction()
+    {
+        return $this->handleExitStatus(
+            $this->handleCommand([CliCommand\LastTmLetter::create([])])
+        );
+    }
 }

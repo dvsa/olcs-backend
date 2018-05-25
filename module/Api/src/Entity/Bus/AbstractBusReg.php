@@ -804,10 +804,10 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      */
     public function initCollections()
     {
-        $this->variationReasons = new ArrayCollection();
-        $this->trafficAreas = new ArrayCollection();
-        $this->localAuthoritys = new ArrayCollection();
         $this->busServiceTypes = new ArrayCollection();
+        $this->localAuthoritys = new ArrayCollection();
+        $this->trafficAreas = new ArrayCollection();
+        $this->variationReasons = new ArrayCollection();
         $this->otherServices = new ArrayCollection();
         $this->readAudits = new ArrayCollection();
         $this->documents = new ArrayCollection();

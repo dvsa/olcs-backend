@@ -459,8 +459,8 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      */
     public function initCollections()
     {
-        $this->outcomes = new ArrayCollection();
         $this->categorys = new ArrayCollection();
+        $this->outcomes = new ArrayCollection();
         $this->readAudits = new ArrayCollection();
         $this->complaints = new ArrayCollection();
         $this->conditionUndertakings = new ArrayCollection();
