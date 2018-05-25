@@ -226,7 +226,6 @@ return [
         CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs::class,
     Command\Discs\BatchVehicleListGeneratorForPsvDiscs::class =>
         CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class,
-
     Command\Licence\Withdraw::class => CommandHandler\Licence\Withdraw::class,
     Command\Licence\Grant::class => CommandHandler\Licence\Grant::class,
     Command\Licence\Refuse::class => CommandHandler\Licence\Refuse::class,

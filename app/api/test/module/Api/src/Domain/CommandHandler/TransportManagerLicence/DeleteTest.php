@@ -33,18 +33,21 @@ class DeleteTest extends CommandHandlerTestCase
     }
 
     /**
-     * test handleCommand
+     * @dataProvider dpHandleCommand
      */
-    public function testHandleCommand()
+    public function testHandleCommand($ids, $yesNo, $optOutTmLetterValue)
     {
         $licenceId1 = 111;
-        $licenceId2 = 222;
+
         $tmId1 = 333;
         $tmId2 = 444;
-        $tmlId1 = 555;
-        $tmlId2 = 666;
+        $tmlId1 = $ids[0];
+        $tmlId2 = $ids[1];
 
-        $command = DeleteCmd::create(['ids' => [$tmlId1, $tmlId2]]);
+        $command = DeleteCmd::create([
+            'ids' => [$tmlId1, $tmlId2],
+            'yesNo' => $yesNo,
+        ]);
 
         $licenceEntity1 = m::mock(LicenceEntity::class);
         $licenceEntity1->shouldReceive('getTmLicences->count')->once()->withNoArgs()->andReturn(2);
@@ -52,7 +55,8 @@ class DeleteTest extends CommandHandlerTestCase
 
         $licenceEntity2 = m::mock(LicenceEntity::class);
         $licenceEntity2->shouldReceive('getTmLicences->count')->once()->withNoArgs()->andReturn(1);
-        $licenceEntity2->shouldReceive('getId')->once()->withNoArgs()->andReturn($licenceId2);
+
+        $licenceEntity2->shouldReceive('setOptOutTmLetter')->once()->with($optOutTmLetterValue);
 
         $tmlEntity1 = m::mock(TmlEntity::class);
         $tmlEntity1->shouldReceive('getLicence')->once()->withNoArgs()->andReturn($licenceEntity1);
@@ -80,19 +84,37 @@ class DeleteTest extends CommandHandlerTestCase
         $task1Params = $this->createTaskParams(TmlEntity::DESC_TM_REMOVED, $licenceId1, $tmId1, 'N');
         $this->expectedSideEffect(CreateTaskCmd::class, $task1Params, new Result());
 
-        //tm 2 was the last tm on the licence
-        $task2Params = $this->createTaskParams(TmlEntity::DESC_TM_REMOVED_LAST, $licenceId2, $tmId2, 'Y');
-        $this->expectedSideEffect(CreateTaskCmd::class, $task2Params, new Result());
-
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(
             [
                 'Transport manager licence ' . $tmlId1 . ' deleted',
-                'Transport manager licence ' . $tmlId2 . ' deleted'
+                "optOutTmLetter flag set to {$optOutTmLetterValue} for licence " . $tmlId2,
+                'Transport manager licence ' . $tmlId2 . ' deleted',
             ],
             $result->getMessages()
         );
+    }
+
+    public function dpHandleCommand()
+    {
+        return [
+            [
+                'ids' => [555, 666],
+                'yesNo' => null,
+                'optOutTmLetterValue' =>0
+            ],
+            [
+                'ids' => [555, 666],
+                'yesNo' => 'Y',
+                'optOutTmLetterValue' =>0
+            ],
+            [
+                'ids' => [555, 666],
+                'yesNo' => 'N',
+                'optOutTmLetterValue' =>1
+            ],
+        ];
     }
 
     /**
