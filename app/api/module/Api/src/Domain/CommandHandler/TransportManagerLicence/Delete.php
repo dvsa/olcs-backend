@@ -46,7 +46,6 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
             $tmId = $tmlEntity->getTransportManager()->getId();
 
             $last = ($licence->getTmLicences()->count() === 1 ? true : false);
-            var_dump($command);
             $optOut = $command->getYesNo();
             if ($last) {
                 switch ($optOut) {
