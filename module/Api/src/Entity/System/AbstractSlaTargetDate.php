@@ -182,7 +182,11 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *
      * @var \Dvsa\Olcs\Api\Entity\Cases\Statement
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Cases\Statement", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Statement",
+     *     fetch="LAZY",
+     *     inversedBy="slaTargetDates"
+     * )
      * @ORM\JoinColumn(name="statement_id", referencedColumnName="id", nullable=true)
      */
     protected $statement;

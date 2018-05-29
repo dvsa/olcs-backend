@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
@@ -59,6 +60,16 @@ final class UpdateStatement extends AbstractCommandHandler implements Transactio
 
         $result->addId('Statement ', $statement->getId());
         $result->addId('Contact Details', $statement->getRequestorsContactDetails()->getId());
+
+        $result->merge(
+            $this->handleSideEffect(
+                GenerateSlaTargetDate::create(
+                    [
+                        'statement' => $statement->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }

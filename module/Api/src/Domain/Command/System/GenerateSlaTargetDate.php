@@ -18,6 +18,9 @@ final class GenerateSlaTargetDate extends AbstractCommand
     /** @var int|null */
     protected $proposeToRevoke;
 
+    /** @var int|null */
+    protected $statement;
+
     /**
      * Get PI id
      *
@@ -46,5 +49,15 @@ final class GenerateSlaTargetDate extends AbstractCommand
     public function getProposeToRevoke()
     {
         return $this->proposeToRevoke;
+    }
+
+    /**
+     * Get the value of Statement id
+     *
+     * @return int|null
+     */
+    public function getStatement()
+    {
+        return $this->statement;
     }
 }
