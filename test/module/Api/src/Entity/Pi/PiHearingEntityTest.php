@@ -63,6 +63,7 @@ class PiHearingEntityTest extends EntityTester
                 null,
                 null,
                 null,
+                null,
                 null
             );
 
@@ -71,7 +72,6 @@ class PiHearingEntityTest extends EntityTester
             if ($expectException === true) {
                 $this->fail('ValidationException SHOULD have been thrown');
             }
-
         } catch (ValidationException $e) {
             if ($expectException === false) {
                 $this->fail('ValidationException should NOT have been thrown');
@@ -111,13 +111,13 @@ class PiHearingEntityTest extends EntityTester
                 null,
                 null,
                 null,
+                null,
                 null
             );
 
             if ($expectException === true) {
                 $this->fail('ValidationException SHOULD have been thrown');
             }
-
         } catch (ValidationException $e) {
             if ($expectException === false) {
                 $this->fail('ValidationException should NOT have been thrown');
@@ -144,6 +144,7 @@ class PiHearingEntityTest extends EntityTester
         $venue = null;
         $venueOther = 'other venue';
         $witnesses = 2;
+        $drivers = 1;
         $isCancelled = 'N';
         $cancelledReason = 'cancelled reason';
         $isAdjourned = 'N';
@@ -160,6 +161,7 @@ class PiHearingEntityTest extends EntityTester
             $venue,
             $venueOther,
             $witnesses,
+            $drivers,
             $isCancelled,
             $cancelledDate,
             $cancelledReason,
@@ -203,6 +205,7 @@ class PiHearingEntityTest extends EntityTester
         $venue = null;
         $venueOther = 'other venue';
         $witnesses = 2;
+        $drivers = 1;
         $isCancelled = 'Y';
         $cancelledReason = 'cancelled reason';
         $isAdjourned = 'Y';
@@ -225,6 +228,7 @@ class PiHearingEntityTest extends EntityTester
             $venue,
             $venueOther,
             $witnesses,
+            $drivers,
             $isCancelled,
             $cancelledDate,
             $cancelledReason,
@@ -240,6 +244,7 @@ class PiHearingEntityTest extends EntityTester
         $this->assertEquals($venue, $this->entity->getVenue());
         $this->assertEquals($venueOther, $this->entity->getVenueOther());
         $this->assertEquals($witnesses, $this->entity->getWitnesses());
+        $this->assertEquals($drivers, $this->entity->getDrivers());
         $this->assertEquals($isCancelled, $this->entity->getIsCancelled());
         $this->assertEquals($entityCancelledDate, $this->entity->getCancelledDate());
         $this->assertEquals($cancelledReason, $this->entity->getCancelledReason());
@@ -274,6 +279,7 @@ class PiHearingEntityTest extends EntityTester
             null,
             null,
             null,
+            null,
             null
         );
     }
@@ -294,6 +300,7 @@ class PiHearingEntityTest extends EntityTester
             $presidingTc,
             $presidedByRole,
             $hearingDate,
+            null,
             null,
             null,
             null,
