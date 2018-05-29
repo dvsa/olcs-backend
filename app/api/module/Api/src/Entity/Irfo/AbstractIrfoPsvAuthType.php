@@ -382,7 +382,6 @@ abstract class AbstractIrfoPsvAuthType implements BundleSerializableInterface, J
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }
