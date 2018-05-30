@@ -28,7 +28,7 @@ class Statement extends AbstractStatement implements OrganisationProviderInterfa
 {
     /**
      * Construct Statement entity
-     * @param Cases $case
+     * @param Cases   $case
      * @param RefData $statementType
      */
     public function __construct(Cases $case, RefData $statementType)
