@@ -183,8 +183,8 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
      */
     public function initCollections()
     {
-        $this->actionTypes = new ArrayCollection();
         $this->reasons = new ArrayCollection();
+        $this->actionTypes = new ArrayCollection();
     }
 
     /**
