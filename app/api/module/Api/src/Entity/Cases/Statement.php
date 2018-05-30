@@ -33,6 +33,7 @@ class Statement extends AbstractStatement implements OrganisationProviderInterfa
      */
     public function __construct(Cases $case, RefData $statementType)
     {
+        parent::__construct();
         $this->setCase($case);
         $this->setStatementType($statementType);
     }
