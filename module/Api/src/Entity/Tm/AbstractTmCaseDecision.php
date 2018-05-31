@@ -261,8 +261,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      */
     public function initCollections()
     {
-        $this->unfitnessReasons = new ArrayCollection();
         $this->rehabMeasures = new ArrayCollection();
+        $this->unfitnessReasons = new ArrayCollection();
     }
 
     /**

@@ -1,33 +1,30 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity\Pi;
+namespace Dvsa\Olcs\Api\Entity;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Decision Abstract Entity
+ * Sectors Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
- * @ORM\Table(name="decision",
+ * @ORM\Table(name="sectors",
  *    indexes={
- *        @ORM\Index(name="ix_decision_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_decision_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_decision_goods_or_psv", columns={"goods_or_psv"})
+ *        @ORM\Index(name="permit_sectors_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="permit_sectors_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractDecision implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractSectors implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -71,16 +68,6 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     protected $description;
 
     /**
-     * Goods or psv
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="goods_or_psv", referencedColumnName="id", nullable=true)
-     */
-    protected $goodsOrPsv;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -90,24 +77,6 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-
-    /**
-     * Is ni
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_ni", nullable=false)
-     */
-    protected $isNi;
-
-    /**
-     * Is read only
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_read_only", nullable=false)
-     */
-    protected $isReadOnly;
 
     /**
      * Last modified by
@@ -130,73 +99,39 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     protected $lastModifiedOn;
 
     /**
-     * Licence
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
-     *     mappedBy="decisions",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $licences;
-
-    /**
-     * Pi
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Dvsa\Olcs\Api\Entity\Pi\Pi", mappedBy="decisions", fetch="LAZY")
-     */
-    protected $pis;
-
-    /**
-     * Section code
+     * Name
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="section_code", length=50, nullable=false)
+     * @ORM\Column(type="string", name="name", length=255, nullable=false)
      */
-    protected $sectionCode;
+    protected $name;
+
+    /**
+     * Sifting percentage
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="float", name="sifting_percentage", precision=6, scale=4, nullable=true)
+     */
+    protected $siftingPercentage;
 
     /**
      * Version
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Column(type="smallint", name="version", nullable=true)
      * @ORM\Version
      */
-    protected $version = 1;
-
-    /**
-     * Initialise the collections
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->initCollections();
-    }
-
-    /**
-     * Initialise the collections
-     *
-     * @return void
-     */
-    public function initCollections()
-    {
-        $this->licences = new ArrayCollection();
-        $this->pis = new ArrayCollection();
-    }
+    protected $version;
 
     /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setCreatedBy($createdBy)
     {
@@ -220,7 +155,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setCreatedOn($createdOn)
     {
@@ -250,7 +185,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      *
      * @param \DateTime $deletedDate new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setDeletedDate($deletedDate)
     {
@@ -280,7 +215,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      *
      * @param string $description new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setDescription($description)
     {
@@ -300,35 +235,11 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the goods or psv
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $goodsOrPsv entity being set as the value
-     *
-     * @return Decision
-     */
-    public function setGoodsOrPsv($goodsOrPsv)
-    {
-        $this->goodsOrPsv = $goodsOrPsv;
-
-        return $this;
-    }
-
-    /**
-     * Get the goods or psv
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getGoodsOrPsv()
-    {
-        return $this->goodsOrPsv;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setId($id)
     {
@@ -348,59 +259,11 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the is ni
-     *
-     * @param boolean $isNi new value being set
-     *
-     * @return Decision
-     */
-    public function setIsNi($isNi)
-    {
-        $this->isNi = $isNi;
-
-        return $this;
-    }
-
-    /**
-     * Get the is ni
-     *
-     * @return boolean
-     */
-    public function getIsNi()
-    {
-        return $this->isNi;
-    }
-
-    /**
-     * Set the is read only
-     *
-     * @param boolean $isReadOnly new value being set
-     *
-     * @return Decision
-     */
-    public function setIsReadOnly($isReadOnly)
-    {
-        $this->isReadOnly = $isReadOnly;
-
-        return $this;
-    }
-
-    /**
-     * Get the is read only
-     *
-     * @return boolean
-     */
-    public function getIsReadOnly()
-    {
-        return $this->isReadOnly;
-    }
-
-    /**
      * Set the last modified by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -424,7 +287,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -450,153 +313,51 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the licence
+     * Set the name
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being set as the value
+     * @param string $name new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
-    public function setLicences($licences)
+    public function setName($name)
     {
-        $this->licences = $licences;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get the licences
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getLicences()
-    {
-        return $this->licences;
-    }
-
-    /**
-     * Add a licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being added
-     *
-     * @return Decision
-     */
-    public function addLicences($licences)
-    {
-        if ($licences instanceof ArrayCollection) {
-            $this->licences = new ArrayCollection(
-                array_merge(
-                    $this->licences->toArray(),
-                    $licences->toArray()
-                )
-            );
-        } elseif (!$this->licences->contains($licences)) {
-            $this->licences->add($licences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a licences
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being removed
-     *
-     * @return Decision
-     */
-    public function removeLicences($licences)
-    {
-        if ($this->licences->contains($licences)) {
-            $this->licences->removeElement($licences);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the pi
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being set as the value
-     *
-     * @return Decision
-     */
-    public function setPis($pis)
-    {
-        $this->pis = $pis;
-
-        return $this;
-    }
-
-    /**
-     * Get the pis
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getPis()
-    {
-        return $this->pis;
-    }
-
-    /**
-     * Add a pis
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being added
-     *
-     * @return Decision
-     */
-    public function addPis($pis)
-    {
-        if ($pis instanceof ArrayCollection) {
-            $this->pis = new ArrayCollection(
-                array_merge(
-                    $this->pis->toArray(),
-                    $pis->toArray()
-                )
-            );
-        } elseif (!$this->pis->contains($pis)) {
-            $this->pis->add($pis);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a pis
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being removed
-     *
-     * @return Decision
-     */
-    public function removePis($pis)
-    {
-        if ($this->pis->contains($pis)) {
-            $this->pis->removeElement($pis);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the section code
-     *
-     * @param string $sectionCode new value being set
-     *
-     * @return Decision
-     */
-    public function setSectionCode($sectionCode)
-    {
-        $this->sectionCode = $sectionCode;
-
-        return $this;
-    }
-
-    /**
-     * Get the section code
+     * Get the name
      *
      * @return string
      */
-    public function getSectionCode()
+    public function getName()
     {
-        return $this->sectionCode;
+        return $this->name;
+    }
+
+    /**
+     * Set the sifting percentage
+     *
+     * @param unknown $siftingPercentage new value being set
+     *
+     * @return Sectors
+     */
+    public function setSiftingPercentage($siftingPercentage)
+    {
+        $this->siftingPercentage = $siftingPercentage;
+
+        return $this;
+    }
+
+    /**
+     * Get the sifting percentage
+     *
+     * @return unknown
+     */
+    public function getSiftingPercentage()
+    {
+        return $this->siftingPercentage;
     }
 
     /**
@@ -604,7 +365,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
      *
      * @param int $version new value being set
      *
-     * @return Decision
+     * @return Sectors
      */
     public function setVersion($version)
     {
@@ -659,11 +420,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
+                $this->$property = null;
             }
         }
     }
