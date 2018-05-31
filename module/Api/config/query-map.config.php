@@ -563,4 +563,7 @@ return [
     // Diagnostics
     Query\Diagnostics\CheckFkIntegrity::class => QueryHandler\Diagnostics\CheckFkIntegrity::class,
     Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
+
+    // Permits
+    TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
 ];
