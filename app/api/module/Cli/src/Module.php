@@ -43,6 +43,7 @@ class Module implements ConsoleUsageProviderInterface
             'resolve-payments [--verbose|-v]' => 'Resolve pending CPMS payments',
             'create-vi-extract-files' => 'Create mobile compliance VI extract files',
             'duplicate-vehicle-removal [--verbose|-v]' => 'Duplicate vehicle removal',
+            'last-tm-letter [--verbose|-v]' => 'Generate and send Last TM Letter',
                 // Describe parameters
             ['--oc|-oc', 'Export Operating Centres file'],
             ['--op|-op', 'Export Operators file'],
