@@ -143,7 +143,6 @@ if ($details['hasModifiedOn']) {
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
 <?php if ($details['hasCollections']) { ?>
                 if ($this->$property instanceof Collection) {
