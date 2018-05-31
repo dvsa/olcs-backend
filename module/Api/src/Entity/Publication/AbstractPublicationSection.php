@@ -378,7 +378,6 @@ abstract class AbstractPublicationSection implements BundleSerializableInterface
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }
