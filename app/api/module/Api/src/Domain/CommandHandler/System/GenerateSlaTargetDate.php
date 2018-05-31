@@ -27,7 +27,7 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
 {
     protected $repoServiceName = 'SlaTargetDate';
 
-    protected $extraRepos = ['Pi', 'Submission', 'Sla', 'ProposeToRevoke'];
+    protected $extraRepos = ['Pi', 'Submission', 'Sla', 'ProposeToRevoke','Statement'];
 
     /**
      * @var SlaCalculatorInterface
@@ -54,6 +54,10 @@ final class GenerateSlaTargetDate extends AbstractCommandHandler
         } elseif ($command->getProposeToRevoke() !== null) {
             $result->merge(
                 $this->generateForEntity('ProposeToRevoke', $command->getProposeToRevoke(), ['ptr'])
+            );
+        } elseif ($command->getStatement() !== null) {
+            $result->merge(
+                $this->generateForEntity('Statement', $command->getStatement(), ['statement'])
             );
         }
 

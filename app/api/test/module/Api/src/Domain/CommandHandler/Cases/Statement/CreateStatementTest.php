@@ -8,6 +8,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Statement;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\CreateStatement;
@@ -159,6 +161,7 @@ class CreateStatementTest extends CommandHandlerTestCase
             )
             ->once();
 
+        $this->expectedSideEffect(GenerateSlaTargetDate::class, [], new Result());
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);

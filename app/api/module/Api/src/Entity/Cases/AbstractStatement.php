@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -248,6 +250,41 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      * @ORM\Column(type="string", name="vrm", length=20, nullable=true)
      */
     protected $vrm;
+
+    /**
+     * Sla target date
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\SlaTargetDate",
+     *     mappedBy="statement",
+     *     cascade={"persist"},
+     *     indexBy="sla_id",
+     *     orphanRemoval=true
+     * )
+     */
+    protected $slaTargetDates;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->slaTargetDates = new ArrayCollection();
+    }
 
     /**
      * Set the assigned caseworker
@@ -790,6 +827,69 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     }
 
     /**
+     * Set the sla target date
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     *
+     * @return Statement
+     */
+    public function setSlaTargetDates($slaTargetDates)
+    {
+        $this->slaTargetDates = $slaTargetDates;
+
+        return $this;
+    }
+
+    /**
+     * Get the sla target dates
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSlaTargetDates()
+    {
+        return $this->slaTargetDates;
+    }
+
+    /**
+     * Add a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     *
+     * @return Statement
+     */
+    public function addSlaTargetDates($slaTargetDates)
+    {
+        if ($slaTargetDates instanceof ArrayCollection) {
+            $this->slaTargetDates = new ArrayCollection(
+                array_merge(
+                    $this->slaTargetDates->toArray(),
+                    $slaTargetDates->toArray()
+                )
+            );
+        } elseif (!$this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->add($slaTargetDates);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a sla target dates
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being removed
+     *
+     * @return Statement
+     */
+    public function removeSlaTargetDates($slaTargetDates)
+    {
+        if ($this->slaTargetDates->contains($slaTargetDates)) {
+            $this->slaTargetDates->removeElement($slaTargetDates);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
@@ -824,7 +924,11 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
