@@ -334,6 +334,8 @@ return [
             'Hearing' => RepositoryFactory::class,
             'GetDbValue' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
+            'ConstrainedCountries' => RepositoryFactory::class,
+
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
