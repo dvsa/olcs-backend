@@ -334,6 +334,8 @@ return [
             'Hearing' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
             'ConstrainedCountries' => RepositoryFactory::class,
+            'EcmtPermits' => RepositoryFactory::class,
+
 
         ]
     ],
