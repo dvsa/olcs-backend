@@ -579,16 +579,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      *
      * @ORM\ManyToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea",
-     *     inversedBy="busRegs",
+     *     mappedBy="busRegs",
      *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="bus_reg_traffic_area",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
-     *     }
      * )
      */
     protected $trafficAreas;

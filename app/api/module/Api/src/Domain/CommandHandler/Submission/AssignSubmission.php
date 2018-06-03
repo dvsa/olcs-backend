@@ -76,6 +76,9 @@ final class AssignSubmission extends AbstractCommandHandler implements
                 ]
             );
         }
+
+
+
         $submission->setRecipientUser(
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
