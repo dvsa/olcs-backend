@@ -16,6 +16,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
+use Qandidate\Toggle\ToggleManager;
 
 /**
  * Query Handler Test Case
@@ -90,6 +94,18 @@ class QueryHandlerTestCase extends MockeryTestCase
                 ->andReturn(
                     m::mock(AuthorizationService::class)->shouldReceive('isGranted')->andReturn(false)->getMock()
                 );
+        }
+
+        /**
+         * default the feature toggle to on for testing purposes. For more more complex testing use
+         * $this->mockedSmServices in the extending class
+         */
+        if ($this->sut instanceof ToggleRequiredInterface
+            && !array_key_exists(ToggleService::class, $this->mockedSmServices)
+        ) {
+            $toggleService = m::mock(ToggleService::class);
+            $toggleService->shouldReceive('isEnabled')->once()->with(get_class($this->sut))->andReturn(true);
+            $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
         }
 
         $this->queryHandler = m::mock(QueryHandlerManager::class);
