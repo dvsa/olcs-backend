@@ -35,8 +35,7 @@ class UserListInternal extends AbstractQueryHandler
                     'team',
                     'contactDetails' => [
                         'person'
-                    ],
-                    'roles',
+                    ]
                 ]
             ),
             'count' => $repo->fetchCount($query)
