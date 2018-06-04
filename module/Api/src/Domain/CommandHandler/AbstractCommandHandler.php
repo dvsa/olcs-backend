@@ -33,7 +33,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Abstract Command Handler
@@ -167,9 +166,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $toggleService = $mainServiceLocator->get(ToggleService::class);
 
             $fqdn = static::class;
-            $handlerName = str_replace('Dvsa\Olcs\Api\Domain\\', '', $fqdn);
 
-            if (!$toggleService->isEnabled($handlerName)) {
+            if (!$toggleService->isEnabled($fqdn)) {
                 throw new DisabledHandlerException($fqdn);
             }
 
@@ -446,14 +444,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return null;
         }
 
-        return $this->refData($refDataKey);
-    }
-
-    /**
-     * For required fields we can skip the null refdata check
-     */
-    protected function refData($refDataKey): RefDataEntity
-    {
-        return $this->getRepo()->getRefdataReference($refDataKey);
+        $repo = $this->getRepo();
+        return $repo->getRefdataReference($refDataKey);
     }
 }

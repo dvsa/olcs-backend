@@ -212,9 +212,8 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $toggleService = $mainServiceLocator->get(ToggleService::class);
 
             $fqdn = static::class;
-            $handlerName = str_replace('Dvsa\Olcs\Api\Domain\\', '', $fqdn);
 
-            if (!$toggleService->isEnabled($handlerName)) {
+            if (!$toggleService->isEnabled($fqdn)) {
                 throw new DisabledHandlerException($fqdn);
             }
 
