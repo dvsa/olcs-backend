@@ -3,6 +3,7 @@
 /**
  * Update pi hearing
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -63,13 +64,14 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
         $isAdjourned = $command->getIsAdjourned();
         $isCancelled = $command->getIsCancelled();
 
-        $piHearing ->update(
+        $piHearing->update(
             $presidingTc,
             $presidedByRole,
             $hearingDate,
             $venue,
             $command->getVenueOther(),
             $command->getWitnesses(),
+            $command->getDrivers(),
             $isCancelled,
             $command->getCancelledDate(),
             $command->getCancelledReason(),
@@ -121,7 +123,7 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
 
         $actionDate = date(
             'Y-m-d',
-            mktime(date("H"), date("i"), date("s"), date("n"), date("j")+7, date("Y"))
+            mktime(date("H"), date("i"), date("s"), date("n"), date("j") + 7, date("Y"))
         );
 
         $case = $hearing->getPi()->getCase();
@@ -147,7 +149,7 @@ final class UpdateHearing extends AbstractCommandHandler implements AuthAwareInt
     }
 
     /**
-     * @param int $id
+     * @param int              $id
      * @param CreateHearingCmd $command
      * @return PublishHearingCmd
      */

@@ -1047,7 +1047,6 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }

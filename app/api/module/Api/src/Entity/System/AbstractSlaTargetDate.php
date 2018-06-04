@@ -25,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_sla_target_date_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_sla_target_date_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_sla_target_date_propose_to_revoke_idx",
-     *     columns={"propose_to_revoke_id"})
+     *     columns={"propose_to_revoke_id"}),
+ *        @ORM\Index(name="fk_sla_target_date_statement_id_statement_id", columns={"statement_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_sla_target_date_document_id", columns={"document_id"})
@@ -175,6 +176,20 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      * @ORM\JoinColumn(name="sla_id", referencedColumnName="id", nullable=true)
      */
     protected $sla;
+
+    /**
+     * Statement
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Cases\Statement
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Cases\Statement",
+     *     fetch="LAZY",
+     *     inversedBy="slaTargetDates"
+     * )
+     * @ORM\JoinColumn(name="statement_id", referencedColumnName="id", nullable=true)
+     */
+    protected $statement;
 
     /**
      * Submission
@@ -561,6 +576,30 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     }
 
     /**
+     * Set the statement
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Cases\Statement $statement entity being set as the value
+     *
+     * @return SlaTargetDate
+     */
+    public function setStatement($statement)
+    {
+        $this->statement = $statement;
+
+        return $this;
+    }
+
+    /**
+     * Get the statement
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Cases\Statement
+     */
+    public function getStatement()
+    {
+        return $this->statement;
+    }
+
+    /**
      * Set the submission
      *
      * @param \Dvsa\Olcs\Api\Entity\Submission\Submission $submission entity being set as the value
@@ -696,7 +735,6 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }

@@ -9,6 +9,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepository;
@@ -55,6 +56,16 @@ final class CreateStatement extends AbstractCommandHandler implements Transactio
 
         $result->addId('Statement ', $statement->getId());
         $result->addId('contactDetails', $contactDetails->getId());
+
+        $result->merge(
+            $this->handleSideEffect(
+                GenerateSlaTargetDate::create(
+                    [
+                        'statement' => $statement->getId()
+                    ]
+                )
+            )
+        );
 
         return $result;
     }
