@@ -33,7 +33,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Abstract Command Handler
@@ -94,6 +93,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->applyInterfaces($mainServiceLocator);
         } catch (ZendServiceException $e) {
             $this->logServiceExceptions($e);
+        } catch (DisabledHandlerException $e) {
+            $this->logException($e);
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
@@ -136,6 +137,20 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * We want to log some exceptions (right now we only log an attempt to call a disabled handler)
+     *
+     * @param \Exception $e exception
+     *
+     * @return void
+     * @throws \Exception rethrows original Exception
+     */
+    private function logException(DisabledHandlerException $e)
+    {
+        Logger::warn(get_class($this) . ': ' . $e->getMessage());
+        throw $e;
+    }
+
+    /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
      * @param ServiceLocatorInterface $mainServiceLocator service locator
@@ -147,7 +162,19 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private function applyInterfaces($mainServiceLocator)
     {
-        if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
+        if ($this instanceof ToggleRequiredInterface) {
+            $toggleService = $mainServiceLocator->get(ToggleService::class);
+
+            $fqdn = static::class;
+
+            if (!$toggleService->isEnabled($fqdn)) {
+                throw new DisabledHandlerException($fqdn);
+            }
+
+            $this->setToggleService($toggleService);
+        }
+
+        if ($this instanceof ToggleAwareInterface && !$this instanceof ToggleRequiredInterface) {
             $toggleService = $mainServiceLocator->get(ToggleService::class);
             $this->setToggleService($toggleService);
         }
@@ -274,14 +301,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected function handleSideEffect(CommandInterface $command)
     {
-        try {
-            $result = $this->getCommandHandler()->handleCommand($command, false);
-        } catch (DisabledHandlerException $e) {
-            $result = new Result();
-            $result->addMessage($e->getMessage());
-        }
-
-        return $result;
+        return $this->getCommandHandler()->handleCommand($command, false);
     }
 
     /**
@@ -424,38 +444,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return null;
         }
 
-        return $this->refData($refDataKey);
-    }
-
-    /**
-     * For required fields we can skip the null refdata check
-     */
-    protected function refData($refDataKey): RefDataEntity
-    {
-        return $this->getRepo()->getRefdataReference($refDataKey);
-    }
-
-    /**
-     * Whether the handler is enabled (only checks handlers which require a toggle check)
-     *
-     * @return bool
-     */
-    public function isEnabled(): bool
-    {
-        if ($this instanceof ToggleRequiredInterface) {
-            $handlerName = $this->shortFqdn();
-            return $this->getToggleService()->isEnabled($handlerName);
-        }
-
-        return true;
-    }
-
-    public function shortFqdn(?string $fqdn = null): string
-    {
-        if ($fqdn === null) {
-            $fqdn = static::class;
-        }
-
-        return str_replace('Dvsa\Olcs\Api\Domain\\', '', $fqdn);
+        $repo = $this->getRepo();
+        return $repo->getRefdataReference($refDataKey);
     }
 }
