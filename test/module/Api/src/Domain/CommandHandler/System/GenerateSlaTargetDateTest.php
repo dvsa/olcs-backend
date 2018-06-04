@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\System\GenerateSlaTargetDate as CommandH
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Sla as SlaRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate as Repo;
+use Dvsa\Olcs\Api\Domain\Repository\Statement;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
@@ -18,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -34,6 +36,7 @@ class GenerateSlaTargetDateTest extends CommandHandlerTestCase
         $this->mockRepo('SlaTargetDate', Repo::class);
         $this->mockRepo('Submission', SubmissionRepo::class);
         $this->mockRepo('ProposeToRevoke', ProposeToRevoke::class);
+        $this->mockRepo('Statement', Statement::class);
 
         $this->mockedSmServices = [
             SlaCalculatorInterface::class => m::mock(SlaCalculatorInterface::class)
@@ -81,6 +84,16 @@ class GenerateSlaTargetDateTest extends CommandHandlerTestCase
         $command = Command::create($params);
 
         $this->doTest($command, $params, 'proposeToRevoke', ProposeToRevokeEntity::class, 'ProposeToRevoke', ['ptr']);
+    }
+
+    public function testHandleCommandForStatement()
+    {
+        $params = [
+            'statement' => 111,
+        ];
+        $command = Command::create($params);
+
+        $this->doTest($command, $params, 'statement', StatementEntity::class, 'Statement', ['statement']);
     }
 
     public function doTest(Command $command, $params, $entityParam, $entityClass, $repoName, $categories)

@@ -351,7 +351,6 @@ abstract class AbstractSiCategory implements BundleSerializableInterface, JsonSe
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }

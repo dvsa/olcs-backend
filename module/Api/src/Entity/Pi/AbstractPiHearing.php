@@ -101,6 +101,15 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     protected $details;
 
     /**
+     * Drivers
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="drivers", nullable=true)
+     */
+    protected $drivers;
+
+    /**
      * Hearing date
      *
      * @var \DateTime
@@ -446,6 +455,30 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     public function getDetails()
     {
         return $this->details;
+    }
+
+    /**
+     * Set the drivers
+     *
+     * @param int $drivers new value being set
+     *
+     * @return PiHearing
+     */
+    public function setDrivers($drivers)
+    {
+        $this->drivers = $drivers;
+
+        return $this;
+    }
+
+    /**
+     * Get the drivers
+     *
+     * @return int
+     */
+    public function getDrivers()
+    {
+        return $this->drivers;
     }
 
     /**
@@ -902,7 +935,6 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 $this->$property = null;
             }

@@ -2101,6 +2101,17 @@ return array(
                 'orphanRemoval' => 'true'
             )
         ),
+        'statement_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Statement',
+                'property' => 'slaTargetDate',
+                'cascade' => array(
+                    'persist'
+                ),
+                'indexBy' => 'sla_id',
+                'orphanRemoval' => 'true'
+            )
+        ),
         'under_delegation' => array(
             'type' => 'yesno'
         ),
