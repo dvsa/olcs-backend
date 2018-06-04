@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAssignSubmission;
+use Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission;
 
 class CanAssignSubmissionTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,23 +17,27 @@ class CanAssignSubmissionTest extends \PHPUnit_Framework_TestCase
 
     /**
      * testIsValid
-     * @param $firstAssignedDate
-     * @param $informationCompleteDate
-     * @param $expects
+     *
      * @dataProvider dateDataProvider
      */
     public function testIsValid($firstAssignedDate, $informationCompleteDate, $expects)
     {
-        $this->assertEquals($this->sut->isValid($firstAssignedDate, $informationCompleteDate),$expects);
+        $this->assertEquals($this->sut->isValid($firstAssignedDate, $informationCompleteDate), $expects);
     }
 
-    protected function dateDataProvider()
+    public function dateDataProvider()
     {
+        $cmd = new class('Anonymous') extends AssignSubmission
+        {
+            protected $dateFirstAssigned = '2018-01-01';
+        };
+
+
         return [
 
-            ['2018-01-01', '2018-12-31', true],
-            ['2018-01-01', '2017-12-31', false],
-            ['2018-01-01', '2018-01-01', true],
+            [$cmd, '2018-12-31', true],
+            [$cmd, '2017-12-31', false],
+            [$cmd, '2018-01-01', false],
         ];
     }
 }
