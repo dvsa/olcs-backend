@@ -22,4 +22,18 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class Country extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+/**
+ * Get all countries that are part of ECMT
+ *
+ * @return array
+ *
+ */
+    public function getEcmtCountries(){
+        $qbs = $this->getEntityManager()->createQueryBuilder()
+          ->select('c.id,c.countryDesc')
+          ->from(Entity::class,'c')
+          ->where('c.isEcmtState = 1');
+        return array(count($qbs->getQuery()->execute()),$qbs->getQuery()->execute());
+    }
 }
