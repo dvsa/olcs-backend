@@ -336,6 +336,8 @@ return [
             'Sectors' => RepositoryFactory::class,
             'ConstrainedCountries' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
+            'EcmtPermitCountryLink' => RepositoryFactory::class,
+
 
 
         ]
