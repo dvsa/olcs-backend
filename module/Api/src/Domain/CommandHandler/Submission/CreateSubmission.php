@@ -67,7 +67,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
             $this->getRepo()->getReference(CasesEntity::class, $command->getCase()),
             $this->getRepo()->getRefdataReference($command->getSubmissionType())
         );
-
+        
         $currentUser = $this->getCurrentUser();
         $submissionEntity->setAssignedDate(new \DateTime('now'));
         $submissionEntity->setSenderUser($currentUser);
