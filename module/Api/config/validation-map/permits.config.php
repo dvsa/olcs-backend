@@ -8,6 +8,6 @@ return [
   QueryHandler\Permits\SectorsList::class => NoValidationRequired::class,
   QueryHandler\Permits\ConstrainedCountries::class => NoValidationRequired::class,
   QueryHandler\Permits\EcmtPermits::class => NoValidationRequired::class,
-  CommandHandler\Permits\EcmtPermits::class => NoValidationRequired::class,
-  CommandHandler\Permits\EcmtPermitCountryLink::class => NoValidationRequired::class,
+  CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
+  CommandHandler\Permits\CreateEcmtPermitCountryLink::class => NoValidationRequired::class,
 ];
