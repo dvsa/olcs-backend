@@ -121,10 +121,10 @@ class User extends AbstractRepository
 
         if (method_exists($query, 'getExcludeLimitedReadOnly') && $query->getExcludeLimitedReadOnly() == true) {
             /* @var \Doctrine\Orm\QueryBuilder $roleQb */
-            $roleQb = $this->getEntityManager()->getRepository(Entity::class)->createQueryBuilder('u2');
+            $roleQb = $qb->getEntityManager()->getRepository(Entity::class)->createQueryBuilder('u2');
             $roleQb->select('u2.id');
             $roleQb->leftJoin('u2.roles', 'r');
-            $roleQb->andWhere($roleQb->expr()->eq('r.role',':role'));
+            $roleQb->andWhere($roleQb->expr()->eq('r.role', ':role'));
             $qb->setParameter('role', RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
 
             $qb->andWhere(
@@ -297,7 +297,7 @@ class User extends AbstractRepository
         $idx = 0;
         $test = $base;
 
-        while (
+        while(
             ($isExist = (count($this->fetchByLoginId($test)) !== 0))
             && ++$idx < $tryCnt
         ) {
