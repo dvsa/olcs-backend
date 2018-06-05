@@ -295,15 +295,15 @@ class User extends AbstractRepository
         $this->disableSoftDeleteable();
 
         $idx = 0;
-        $test = $base;
+        $user = $base;
 
-        while (($isExist = (count($this->fetchByLoginId($test)) !== 0))&& ++$idx < $tryCnt) {
-            $test = $fncSfx($base, $idx);
+        while (($isExist = (count($this->fetchByLoginId($user)) !== 0))&& ++$idx < $tryCnt) {
+            $user = $fncSfx($base, $idx);
         }
 
         $this->enableSoftDeleteable();
 
-        return !$isExist ? $test : null;
+        return !$isExist ? $user : null;
     }
 
     /**
