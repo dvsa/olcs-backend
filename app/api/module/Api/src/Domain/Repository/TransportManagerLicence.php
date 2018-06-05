@@ -37,6 +37,24 @@ class TransportManagerLicence extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function fetchRemovedTmForLicence($licenceId)
+    {
+        $this->disableSoftDeleteable(
+            [
+                $this->entity
+            ]
+        );
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
+        $qb->andWhere($qb->expr()->isNotNull($this->alias . '.deletedDate'));
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.lastTmLetterDate'));
+
+        $qb->setParameter('licenceId', $licenceId);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * Get a list of transport manager licences with contact details
      *
