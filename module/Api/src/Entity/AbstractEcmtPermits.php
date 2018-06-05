@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ecmt_permits_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ecmt_permits_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ecmt_ecmt_permits_application_id", columns={"ecmt_permits_application_id"}),
+ *        @ORM\Index(name="ecmt_permits_application_id", columns={"ecmt_permits_application_id"}),
  *        @ORM\Index(name="ecmt_permits_payment_status_id", columns={"payment_status_id"}),
  *        @ORM\Index(name="ecmt_permits_application_status_id", columns={"application_status_id"})
  *    }
@@ -64,12 +64,10 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Ecmt permits application
      *
-     * @var \Dvsa\Olcs\Api\Entity\EcmtPermitsApplication
+     * @var \Dvsa\Olcs\Api\Entity\EcmtPermitApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EcmtPermitsApplication", fetch="LAZY")
-     * @ORM\JoinColumn(name="ecmt_permits_application_id",
-     *     referencedColumnName="application_id",
-     *     nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="ecmt_permits_application_id", referencedColumnName="id", nullable=false)
      */
     protected $ecmtPermitsApplication;
 
@@ -259,7 +257,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Set the ecmt permits application
      *
-     * @param \Dvsa\Olcs\Api\Entity\EcmtPermitsApplication $ecmtPermitsApplication entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\EcmtPermitApplication $ecmtPermitsApplication entity being set as the value
      *
      * @return EcmtPermits
      */
@@ -273,7 +271,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the ecmt permits application
      *
-     * @return \Dvsa\Olcs\Api\Entity\EcmtPermitsApplication
+     * @return \Dvsa\Olcs\Api\Entity\EcmtPermitApplication
      */
     public function getEcmtPermitsApplication()
     {
