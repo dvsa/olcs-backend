@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\LastTmLetter;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Dvsa\Olcs\Transfer\Command\Task\CreateTask;
@@ -27,6 +28,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
         $this->mockRepo('User', Repository\User::class);
         $this->mockRepo('Document', Repository\Document::class);
         $this->mockRepo('DocTemplate', Repository\DocTemplate::class);
+        $this->mockRepo('TransportManagerLicence', Repository\TransportManagerLicence::class);
 
         parent::setUp();
     }
@@ -264,6 +266,17 @@ class LastTmLetterTest extends CommandHandlerTestCase
             $userRepo->shouldReceive('fetchById')
                 ->with($dataProvider['sideEffectResults']['CreateTask']['ids']['assignedToUser'])
                 ->andReturn($user);
+
+            $tmlRepo = $this->repoMap['TransportManagerLicence'];
+            foreach ($eligibleLicences as $eligibleLicence) {
+                $tmlEntity = m::mock(TransportManagerLicence::class);
+                $tmlEntity->shouldReceive('setLastTmLetterDate');
+                $tmlRepo
+                    ->shouldReceive('fetchRemovedTmForLicence')
+                    ->with($eligibleLicence->getId())
+                    ->andReturn([$tmlEntity]);
+                $tmlRepo->shouldReceive('save');
+            }
 
             $documentsData = $dataProvider['sideEffectResults']['GenerateAndStoreWithMultipleAddresses']['ids']['documents'];
 

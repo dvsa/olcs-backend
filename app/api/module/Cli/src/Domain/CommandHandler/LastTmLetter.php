@@ -15,6 +15,7 @@ use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TmlEntity;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence;
 
 final class LastTmLetter extends AbstractCommandHandler
 {
@@ -37,7 +38,7 @@ final class LastTmLetter extends AbstractCommandHandler
      */
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['User','Document','DocTemplate'];
+    protected $extraRepos = ['User','Document','DocTemplate','TransportManagerLicence'];
 
     /**
      * Handle command
@@ -58,6 +59,7 @@ final class LastTmLetter extends AbstractCommandHandler
         foreach ($eligibleLicences as $licence) {
             $documents = $this->generateDocuments($licence);
             $this->printAndEmailDocuments($documents);
+            $this->updateLastTmLetterDate($licence);
         }
 
         return $this->result;
@@ -242,5 +244,17 @@ final class LastTmLetter extends AbstractCommandHandler
         ];
 
         return CreateTask::create($params);
+    }
+
+    private function updateLastTmLetterDate(LicenceEntity $licence)
+    {
+        /** @var TransportManagerLicence $tmlRepo */
+        $tmlRepo = $this->getRepo('TransportManagerLicence');
+        $removedTms = $tmlRepo->fetchRemovedTmForLicence($licence->getId());
+        /** @var TmlEntity $removedTm */
+        foreach ($removedTms as $removedTm) {
+            $removedTm->setLastTmLetterDate(new DateTime());
+            $tmlRepo->save($removedTm);
+        }
     }
 }
