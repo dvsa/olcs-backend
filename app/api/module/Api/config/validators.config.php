@@ -50,5 +50,6 @@ return [
         'canEditApplication' => Validators\CanEditApplication::class,
         'canEditBusReg' => Validators\CanEditBusReg::class,
         'canAccessContinuationDetail' => Validators\CanAccessContinuationDetail::class,
+        'canAssignSubmission' => Validators\CanAssignSubmission::class
     ]
 ];
