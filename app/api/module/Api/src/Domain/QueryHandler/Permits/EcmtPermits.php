@@ -13,24 +13,32 @@ use Doctrine\ORM\Query;
  */
 class EcmtPermits extends AbstractQueryHandler
 {
-    //protected $repoServiceName = 'EcmtPermits';
-    protected $repoServiceName = 'EcmtPermitCountryLink';
-    protected $extraRepos = ['ConstrainedCountries'];
+    protected $repoServiceName = 'EcmtPermits';
+    protected $extraRepos = ['ConstrainedCountries','EcmtPermitCountryLink'];
 
     public function handleQuery(QueryInterface $query)
     {
 
         $repo = $this->getRepo();
         $ecmtPermits = $repo->fetchList($query, Query::HYDRATE_OBJECT);
-
+        
         $data = array();
         foreach ($ecmtPermits as $permit)
         {
+
+            $countries = $this->getRepo('EcmtPermitCountryLink')->getByPermitId($permit->getId());
+            $countriesArr = array();
+            foreach($countries as $country)
+            {
+                $countriesArr[] = $country->getCountry()->getId();
+            }
+
             // if $permit->getCountry()->getIsEcmtState()
+
             $data[] = array(
-              'id'          => $permit->getEcmtPermit()->getId(),
-              'restrictions' => $this->getRepo('ConstrainedCountries')->existsByCountryId($permit->getCountry()->getId()),
-              'status'  => $permit->getEcmtPermit()->getApplicationStatus()->getStatusName()
+              'id'          => $permit->getId(),
+              'restrictions' => $this->getRepo('ConstrainedCountries')->existsByCountryId($countriesArr),
+              'status'  => $permit->getApplicationStatus()->getStatusName()
             );
         }
 
