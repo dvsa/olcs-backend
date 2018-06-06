@@ -25,7 +25,7 @@ class ConstrainedCountries extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias .'.country', ':countryId'));
+        $qb->where($qb->expr()->in($this->alias .'.country', ':countryId'));
         $qb->setParameter('countryId', $countryId);
         $qb->setMaxResults(1);
 
