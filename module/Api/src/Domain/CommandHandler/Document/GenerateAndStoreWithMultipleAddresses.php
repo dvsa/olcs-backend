@@ -72,19 +72,27 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
 
         $addresses = [];
 
-        if ($sendToAddresses['correspondenceAddress'] && $licence->getCorrespondenceCd() !== null) {
+        if ($sendToAddresses['correspondenceAddress'] &&
+            $licence->getCorrespondenceCd() !== null &&
+            $licence->getCorrespondenceCd()->getAddress() !== null) {
             $addresses['correspondenceAddress'] = $licence->getCorrespondenceCd()->getAddress()->serialize();
         }
 
-        if ($sendToAddresses['establishmentAddress'] && $licence->getEstablishmentCd() !== null) {
+        if ($sendToAddresses['establishmentAddress'] &&
+            $licence->getEstablishmentCd() !== null &&
+            $licence->getEstablishmentCd()->getAddress() !== null) {
             $addresses['establishmentAddress'] = $licence->getEstablishmentCd()->getAddress()->serialize();
         }
 
-        if ($sendToAddresses['transportConsultantAddress'] && $licence->getTransportConsultantCd() !== null) {
+        if ($sendToAddresses['transportConsultantAddress'] &&
+            $licence->getTransportConsultantCd() !== null &&
+            $licence->getTransportConsultantCd()->getAddress() !== null) {
             $addresses['transportConsultantAddress'] = $licence->getTransportConsultantCd()->getAddress()->serialize();
         }
 
-        if ($sendToAddresses['registeredAddress'] && $licence->getOrganisation()->getContactDetails() !== null) {
+        if ($sendToAddresses['registeredAddress'] &&
+            $licence->getOrganisation()->getContactDetails() !== null &&
+            $licence->getOrganisation()->getContactDetails()->getAddress() !== null) {
             $addresses['registeredAddress'] = $licence
                 ->getOrganisation()
                 ->getContactDetails()
@@ -96,7 +104,8 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
             $n = 0;
             /** @var LicenceOperatingCentre $licenceOperatingCentre */
             foreach ($licence->getOperatingCentres() as $licenceOperatingCentre) {
-                if ($licenceOperatingCentre->getOperatingCentre() !== null) {
+                if ($licenceOperatingCentre->getOperatingCentre() !== null &&
+                    $licenceOperatingCentre->getOperatingCentre()->getAddress() !== null) {
                     $n++;
                     $addresses['operatingCentreAddress' . $n] = $licenceOperatingCentre
                         ->getOperatingCentre()
