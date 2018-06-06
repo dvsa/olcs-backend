@@ -967,6 +967,14 @@ return [
     TransferCommand\SystemParameter\DeleteSystemParameter::class =>
         CommandHandler\SystemParameter\Delete::class,
 
+    // Transfer - FeatureToggle
+    TransferCommand\FeatureToggle\Create::class =>
+        CommandHandler\FeatureToggle\Create::class,
+    TransferCommand\FeatureToggle\Update::class =>
+        CommandHandler\FeatureToggle\Update::class,
+    TransferCommand\FeatureToggle\Delete::class =>
+        CommandHandler\FeatureToggle\Delete::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
