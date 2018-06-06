@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Validation\ValidationHelperTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
@@ -33,6 +34,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
 {
     use SubmissionGeneratorAwareTrait;
     use AuthAwareTrait;
+    use ValidationHelperTrait;
 
     protected $repoServiceName = 'Submission';
 
@@ -46,17 +48,18 @@ final class AssignSubmission extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
-        $submissionEntity = $this->updateSubmission($command);
 
-        $this->getRepo()->save($submissionEntity);
+            $submissionEntity = $this->updateSubmission($command);
+            $this->getRepo()->save($submissionEntity);
 
-        $result = new Result();
-        $result->addId('submission', $submissionEntity->getId());
-        $result->addMessage('Submission updated successfully');
+            $result = new Result();
+            $result->addId('submission', $submissionEntity->getId());
+            $result->addMessage('Submission updated successfully');
 
-        $result->merge($this->handleSideEffect($this->createTaskCommand($command)));
+            $result->merge($this->handleSideEffect($this->createTaskCommand($command)));
 
-        return $result;
+            return $result;
+
     }
 
     /**
@@ -83,15 +86,21 @@ final class AssignSubmission extends AbstractCommandHandler implements
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
 
-        $submission->setAssignedDate($command->getAssignedDate());
 
-        $currentUser = $this->getCurrentUser();
-
-        $submission->setSenderUser($currentUser);
-
-        if ($command->getUrgent() !== null) {
-            $submission->setUrgent($command->getUrgent());
+        if(!$this->isValid()) {
+            throw  new ValidationException(['Cannot set first assigned date after information complete date']);
         }
+            $submission->setAssignedDate($command->getAssignedDate());
+
+            $currentUser = $this->getCurrentUser();
+
+            $submission->setSenderUser($currentUser);
+
+            if ($command->getUrgent() !== null) {
+                $submission->setUrgent($command->getUrgent());
+            }
+
+
 
         return $submission;
     }
@@ -156,5 +165,9 @@ final class AssignSubmission extends AbstractCommandHandler implements
         }
 
         return CreateTaskCmd::create($data);
+    }
+
+    private function isValid(){
+        return $this->canAssignSubmission();
     }
 }
