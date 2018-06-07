@@ -93,15 +93,6 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     protected $dataSnapshot;
 
     /**
-     * Date first assigned
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="date_first_assigned", nullable=true)
-     */
-    protected $dateFirstAssigned;
-
-    /**
      * Deleted date
      *
      * @var \DateTime
@@ -430,36 +421,6 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     public function getDataSnapshot()
     {
         return $this->dataSnapshot;
-    }
-
-    /**
-     * Set the date first assigned
-     *
-     * @param \DateTime $dateFirstAssigned new value being set
-     *
-     * @return Submission
-     */
-    public function setDateFirstAssigned($dateFirstAssigned)
-    {
-        $this->dateFirstAssigned = $dateFirstAssigned;
-
-        return $this;
-    }
-
-    /**
-     * Get the date first assigned
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDateFirstAssigned($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->dateFirstAssigned);
-        }
-
-        return $this->dateFirstAssigned;
     }
 
     /**

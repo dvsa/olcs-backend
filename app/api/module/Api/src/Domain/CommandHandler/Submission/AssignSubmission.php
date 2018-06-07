@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Validation\ValidationHelperTrait;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
@@ -22,7 +22,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
-use Dvsa\Olcs\Transfer\Command\Task\UpdateTask as UpdateTaskDto;
 
 /**
  * Assign Submission
@@ -34,7 +33,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
 {
     use SubmissionGeneratorAwareTrait;
     use AuthAwareTrait;
-    use ValidationHelperTrait;
+
 
     protected $repoServiceName = 'Submission';
 
@@ -51,7 +50,6 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
             $submissionEntity = $this->updateSubmission($command);
             $this->getRepo()->save($submissionEntity);
-
             $result = new Result();
             $result->addId('submission', $submissionEntity->getId());
             $result->addMessage('Submission updated successfully');
@@ -87,7 +85,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
         );
 
 
-        if(!$this->isValid()) {
+        if(!$this->isValid($command, $submission->getInformationCompleteDate())) {
             throw  new ValidationException(['Cannot set first assigned date after information complete date']);
         }
             $submission->setAssignedDate($command->getAssignedDate());
@@ -167,7 +165,21 @@ final class AssignSubmission extends AbstractCommandHandler implements
         return CreateTaskCmd::create($data);
     }
 
-    private function isValid(){
-        return $this->canAssignSubmission();
+    /**
+     * isValid
+     * @param \Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission  $command
+     * @param $informationCompleteDate
+     *
+     * @return bool
+     */
+    private function isValid($command, $informationCompleteDate){
+
+            $dateFirstAssigned = $command->getAssignedDate();
+            if(!empty($dateFirstAssigned)){
+            $format = 'Y-m-d';
+            $dateFirstAssigned = DateTime::createFromFormat ( $format , $dateFirstAssigned);
+            $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
+            return $dateFirstAssigned < $informationCompleteDate;
+        }
     }
 }
