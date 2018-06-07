@@ -336,6 +336,9 @@ return [
             'ConstrainedCountries' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitCountryLink' => RepositoryFactory::class,
+            'ApplicationStatus' => RepositoryFactory::class,
+            'EcmtPermitApplication' => RepositoryFactory::class,
+            'PaymentStatus' => RepositoryFactory::class,
 
 
 
