@@ -28,5 +28,4 @@ return [
     CommandHandler\Submission\UpdateSubmissionSectionComment::class => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\DeleteSubmission::class               => Handler\Misc\IsInternalUser::class,
     CommandHandler\Submission\StoreSubmissionSnapshot::class        => Handler\Misc\IsInternalUser::class,
-    CommandHandler\Submission\AssignSubmission::class               => Handler\Misc\C
 ];
