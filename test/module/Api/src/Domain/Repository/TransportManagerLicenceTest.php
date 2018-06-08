@@ -40,6 +40,21 @@ class TransportManagerLicenceTest extends RepositoryTestCase
         $this->assertSame('RESULT', $this->sut->fetchWithContactDetailsByLicence(834));
     }
 
+    public function testFetchRemovedTmForLicence()
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->andReturn(false);
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
+
+        $licenceId = 1;
+        $this->sut->fetchRemovedTmForLicence($licenceId);
+
+        $expectedQuery = '[QUERY] AND tml.licence = [[' . $licenceId . ']] AND tml.deletedDate IS NOT NULL AND tml.lastTmLetterDate IS NULL';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testFetchForTransportManager()
     {
         $mockQb = m::mock('Doctrine\ORM\QueryBuilder');

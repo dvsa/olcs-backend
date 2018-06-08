@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -127,6 +128,44 @@ class UserTest extends RepositoryTestCase
         $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
 
+        $sut->applyListFilters($mockQb, $query);
+    }
+
+    public function testApplyListFiltersUserListExcludeLimitedReadOnly()
+    {
+        $sut = m::mock(Repo::class);
+
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $query = \Dvsa\Olcs\Transfer\Query\User\UserListInternal::create(
+            [
+                'team' => 112,
+                'isInternal' => true,
+                'excludeLimitedReadOnly' => true
+            ]
+        );
+
+        $mockQb->shouldReceive('andWhere')->with('team')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('u.team', ':team')->once()
+            ->andReturn('team');
+        $mockQb->shouldReceive('setParameter')->with('team', 112)->once();
+        $mockQb->shouldReceive('expr->isNotNull')->with('u.team')->andReturn('isInternal')->once();
+        $mockQb->shouldReceive('andWhere')->with('isInternal')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->neq')->with('u.id', ':systemUser')->once()->andReturn('systemUser');
+        $mockQb->shouldReceive('andWhere')->with('systemUser')->once()->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('systemUser', PidIdentityProviderEntity::SYSTEM_USER)->once();
+
+        $em = m::mock(EntityManager::class);
+        $mockQb->shouldReceive('getEntityManager')->andReturn($em);
+
+        $subQb = $this->createMockQb('[SUBQUERY]');
+        $em->shouldReceive('getRepository->createQueryBuilder')
+            ->with('u2')
+            ->andReturn($subQb);
+
+        $mockQb->shouldReceive('setParameter')->with('role', RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY)->once();
+        $mockQb->shouldReceive('andWhere')->with("u.id NOT IN ");
+        $subQb->shouldReceive('getDQL');
         $sut->applyListFilters($mockQb, $query);
     }
 

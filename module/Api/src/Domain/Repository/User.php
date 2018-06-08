@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider as PidIdentityProviderEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 
 /**
  * User
@@ -116,6 +117,23 @@ class User extends AbstractRepository
 
         if (method_exists($query, 'getIsInternal') && $query->getIsInternal() == true) {
             $qb->andWhere($qb->expr()->isNotNull($this->alias . '.team'));
+        }
+
+        if (method_exists($query, 'getExcludeLimitedReadOnly') && $query->getExcludeLimitedReadOnly() == true) {
+            /* @var \Doctrine\Orm\QueryBuilder $roleQb */
+            $roleQb = $qb->getEntityManager()->getRepository(Entity::class)->createQueryBuilder('u2');
+            $roleQb->select('u2.id');
+            $roleQb->leftJoin('u2.roles', 'r');
+            $roleQb->andWhere($roleQb->expr()->eq('r.role', ':role'));
+            $qb->setParameter('role', RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+
+            $qb->andWhere(
+                $qb->expr()
+                    ->notIn(
+                        $this->alias . '.id',
+                        $roleQb->getDQL()
+                    )
+            );
         }
 
         // exclude system user from all lists
@@ -279,9 +297,7 @@ class User extends AbstractRepository
         $idx = 0;
         $test = $base;
 
-        while (($isExist = (count($this->fetchByLoginId($test)) !== 0))
-            && ++$idx < $tryCnt
-        ) {
+        while (($isExist = (count($this->fetchByLoginId($test)) !== 0))&& ++$idx < $tryCnt) {
             $test = $fncSfx($base, $idx);
         }
 
