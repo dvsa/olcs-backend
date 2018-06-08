@@ -18,6 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="address",
  *    indexes={
  *        @ORM\Index(name="ix_address_country_code", columns={"country_code"}),
@@ -113,6 +114,15 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
 
     /**
      * Identifier - Id
@@ -464,6 +474,36 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
         }
 
         return $this->createdOn;
+    }
+
+    /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate new value being set
+     *
+     * @return Address
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
+        return $this->deletedDate;
     }
 
     /**
