@@ -21,7 +21,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContactDetails', 'PhoneContact'];
+    protected $extraRepos = ['ContactDetails', 'PhoneContact','Address'];
 
     private $phoneTypes = array(
         'primary' => PhoneContact::TYPE_PRIMARY,
@@ -276,7 +276,12 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
             $this->updatePhoneContacts($params['contact'], $transportConsultant);
         } elseif ($licence->getTransportConsultantCd()) {
-
+            $tcContactDetails = $licence->getTransportConsultantCd();
+            $tcAddress = $tcContactDetails->getAddress();
+            $this->getRepo('ContactDetails')->delete($tcContactDetails);
+            if($tcAddress !== null) {
+                $this->getRepo('Address')->delete($tcAddress);
+            }
             $licence->setTransportConsultantCd(null);
 
             $result->setFlag('hasChanged', true);
