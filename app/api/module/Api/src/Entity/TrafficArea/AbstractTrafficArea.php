@@ -38,8 +38,16 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
      *
      * @ORM\ManyToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Bus\BusReg",
-     *     mappedBy="trafficAreas",
+     *     inversedBy="trafficAreas",
      *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="bus_reg_traffic_area",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="bus_reg_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $busRegs;
