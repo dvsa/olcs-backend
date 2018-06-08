@@ -279,8 +279,7 @@ class User extends AbstractRepository
         $idx = 0;
         $test = $base;
 
-        while (
-            ($isExist = (count($this->fetchByLoginId($test)) !== 0))
+        while (($isExist = (count($this->fetchByLoginId($test)) !== 0))
             && ++$idx < $tryCnt
         ) {
             $test = $fncSfx($base, $idx);

@@ -3,6 +3,7 @@
 /**
  * Create Submission
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -20,8 +21,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 /**
  * Create Submission
  */
-final class CreateSubmission extends AbstractCommandHandler implements SubmissionGeneratorAwareInterface,
- AuthAwareInterface
+final class CreateSubmission extends AbstractCommandHandler implements SubmissionGeneratorAwareInterface, AuthAwareInterface
 {
     use SubmissionGeneratorAwareTrait;
     use AuthAwareTrait;
@@ -30,6 +30,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
     /**
      * @param CommandInterface $command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -58,6 +59,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
     /**
      * @param Cmd $command
+     *
      * @return SubmissionEntity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -67,7 +69,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
             $this->getRepo()->getReference(CasesEntity::class, $command->getCase()),
             $this->getRepo()->getRefdataReference($command->getSubmissionType())
         );
-        
+
         $currentUser = $this->getCurrentUser();
         $submissionEntity->setAssignedDate(new \DateTime('now'));
         $submissionEntity->setSenderUser($currentUser);
@@ -79,8 +81,9 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
     /**
      * Returns an array of Comment commands set up with comment text generated from the section data.
      * Generate comments for all sections that are configured as type = 'text'
-     * 
+     *
      * @param SubmissionEntity $submissionEntity
+     *
      * @return array
      */
     private function generateCommentCommands(SubmissionEntity $submissionEntity)
@@ -91,9 +94,7 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
         // foreach section chosen
         foreach ($selectedSectionsData as $selectedSectionId => $selectedSectionData) {
-
             if (!empty($allSectionsConfig[$selectedSectionId])) {
-
                 // get the config for that section
                 $sectionConfig = $allSectionsConfig[$selectedSectionId];
 

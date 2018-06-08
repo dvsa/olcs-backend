@@ -3,6 +3,7 @@
 /**
  * Assign Submission
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -41,6 +42,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     /**
      * @param CommandInterface $command
+     *
      * @return Result
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -48,20 +50,20 @@ final class AssignSubmission extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
 
-            $submissionEntity = $this->updateSubmission($command);
-            $this->getRepo()->save($submissionEntity);
-            $result = new Result();
-            $result->addId('submission', $submissionEntity->getId());
-            $result->addMessage('Submission updated successfully');
+        $submissionEntity = $this->updateSubmission($command);
+        $this->getRepo()->save($submissionEntity);
+        $result = new Result();
+        $result->addId('submission', $submissionEntity->getId());
+        $result->addMessage('Submission updated successfully');
 
-            $result->merge($this->handleSideEffect($this->createTaskCommand($command)));
+        $result->merge($this->handleSideEffect($this->createTaskCommand($command)));
 
-            return $result;
-
+        return $result;
     }
 
     /**
      * @param Cmd $command
+     *
      * @return Submission
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -79,25 +81,23 @@ final class AssignSubmission extends AbstractCommandHandler implements
         }
 
 
-
         $submission->setRecipientUser(
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
 
 
-        if(!$this->isValid($command, $submission->getInformationCompleteDate())) {
-            throw  new ValidationException(['Cannot set first assigned date after information complete date']);
+        if (!$this->isValid($command, $submission->getInformationCompleteDate())) {
+            throw  new ValidationException(['First assigned date must be before or same as information complete date']);
         }
-            $submission->setAssignedDate($command->getAssignedDate());
+        $submission->setAssignedDate($command->getAssignedDate());
 
-            $currentUser = $this->getCurrentUser();
+        $currentUser = $this->getCurrentUser();
 
-            $submission->setSenderUser($currentUser);
+        $submission->setSenderUser($currentUser);
 
-            if ($command->getUrgent() !== null) {
-                $submission->setUrgent($command->getUrgent());
-            }
-
+        if ($command->getUrgent() !== null) {
+            $submission->setUrgent($command->getUrgent());
+        }
 
 
         return $submission;
@@ -107,6 +107,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
      * This method fetches an existing task for the submission, if it exists, close it and create a new one.
      *
      * @param Cmd $command
+     *
      * @return static
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -167,19 +168,19 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     /**
      * isValid
-     * @param \Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission  $command
-     * @param $informationCompleteDate
      *
+     * @param \Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission $command
+     * @param  \DateTime                                              $informationCompleteDate
      * @return bool
      */
-    private function isValid($command, $informationCompleteDate){
-
-            $dateFirstAssigned = $command->getAssignedDate();
-            if(!empty($dateFirstAssigned)){
+    private function isValid($command, $informationCompleteDate)
+    {
+        $dateFirstAssigned = $command->getAssignedDate();
+        if (!empty($dateFirstAssigned)) {
             $format = 'Y-m-d';
-            $dateFirstAssigned = DateTime::createFromFormat ( $format , $dateFirstAssigned);
+            $dateFirstAssigned = DateTime::createFromFormat($format, $dateFirstAssigned);
             $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
-            return $dateFirstAssigned < $informationCompleteDate;
+            return $dateFirstAssigned <= $informationCompleteDate;
         }
     }
 }
