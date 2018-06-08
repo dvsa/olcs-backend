@@ -431,10 +431,8 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (SubmissionEntity $submission) use (&$savedSubmission) {
                     $savedSubmission = $submission;
-
                 }
             );
-
         $team = new TeamEntity();
         $team->setId(5);
         $mockRecipientUser = m::mock()
@@ -660,6 +658,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
     }
 
+
     public function informationCompleteDateDataProvider()
     {
         return [
@@ -778,5 +777,127 @@ class AssignSubmissionTest extends CommandHandlerTestCase
 
     }
 
+    /**
+     * @dataProvider  nullEmptyAssignedDate
+     * testNullOrEmptyAssignedDate
+     *
+     * @param $value
+     */
+    public function testNullOrEmptyAssignedDate($value)
+    {
+        $data = [
+            'id' => 1,
+            'version' => 1,
+            'recipientUser' => 4,
+            'urgent' => 'Y',
+            'assignedDate' => $value
+        ];
+
+        $command = Cmd::create($data);
+
+        $mockUser = m::mock(UserEntity::class)->makePartial();
+        $mockUser->setId(1);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
+
+        /** @var SubmissionEntity $savedSubmission */
+        $submission = m::mock(SubmissionEntity::class)->makePartial();
+        $submission->setId(1);
+
+        $submission->shouldReceive('getCase->getId')->andReturn(12)->getMock();
+        $submission->shouldReceive('getCase->getTransportManager->getId')->andReturn(577)->getMock();
+        $submission->shouldReceive('getInformationCompleteDate')->andReturn('2017-12-31')->getMock();
+        $submission->shouldReceive('getCase->isTm')->andReturn(true)->getMock();
+
+        $this->repoMap['Task']->shouldReceive('fetchAssignedToSubmission')
+            ->once()
+            ->with($submission)
+            ->andReturnNull();
+
+        $this->repoMap['Submission']->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($submission)
+            ->shouldReceive('fetchWithCaseAndLicenceById')
+            ->with(1)
+            ->andReturn($submission)
+            ->once();
+
+        /** @var SubmissionEntity $savedSubmission */
+        $savedSubmission = null;
+
+        $this->repoMap['Submission']->shouldReceive('save')
+            ->once()
+            ->with(m::type(SubmissionEntity::class))
+            ->andReturnUsing(
+                function (SubmissionEntity $submission) use (&$savedSubmission) {
+                    $savedSubmission = $submission;
+                }
+            );
+        $team = new TeamEntity();
+        $team->setId(5);
+        $mockRecipientUser = m::mock()
+            ->shouldReceive('getId')
+            ->andReturn(4)
+            ->once()
+            ->shouldReceive('getTeam')
+            ->andReturn(
+                $team
+            )
+            ->getMock();
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->with(4)
+            ->andReturn($mockRecipientUser);
+
+        $createTaskResult = new Result();
+        $createTaskResult->addId('task', 1);
+        $createTaskResult->addMessage('Task created successfully');
+
+        $params = [
+            'category' => TaskEntity::CATEGORY_SUBMISSION,
+            'subCategory' => TaskEntity::SUBCATEGORY_SUBMISSION_ASSIGNMENT,
+            'description' => 'Transport Manager 577 Case 12 Submission 1',
+            'actionDate' => date('Y-m-d'),
+            'assignedToUser' => 4,
+            'assignedToTeam' => 5,
+            'assignedByUser' => 1,
+            'case' => 12,
+            'submission' => 1,
+            'urgent' => 'Y',
+            'isClosed' => 0,
+            'application' => null,
+            'busReg' => null,
+            'transportManager' => 577,
+            'irfoOrganisation' => null
+        ];
+        $this->expectedSideEffect(CreateTaskCmd::class, $params, $createTaskResult);
+
+        $expected = [
+            'id' => [
+                'submission' => 1,
+                'task' => 1
+            ],
+            'messages' => [
+                'Submission updated successfully',
+                'Task created successfully'
+            ]
+        ];
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function nullEmptyAssignedDate()
+    {
+        return [
+            [
+                null,
+                ''
+            ]
+        ];
+
+    }
 
 }

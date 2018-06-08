@@ -166,21 +166,15 @@ final class AssignSubmission extends AbstractCommandHandler implements
         return CreateTaskCmd::create($data);
     }
 
-    /**
-     * isValid
-     *
-     * @param \Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission $command
-     * @param  \DateTime                                              $informationCompleteDate
-     * @return bool
-     */
     private function isValid($command, $informationCompleteDate)
     {
-        $dateFirstAssigned = $command->getAssignedDate();
-        if (!empty($dateFirstAssigned)) {
-            $format = 'Y-m-d';
-            $dateFirstAssigned = DateTime::createFromFormat($format, $dateFirstAssigned);
-            $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
-            return $dateFirstAssigned <= $informationCompleteDate;
+        $assignedDate = $command->getAssignedDate();
+        if (empty($assignedDate)) {
+            return true;
         }
+        $format = 'Y-m-d';
+        $assignedDate = DateTime::createFromFormat($format, $assignedDate);
+        $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
+        return $assignedDate <= $informationCompleteDate;
     }
 }
