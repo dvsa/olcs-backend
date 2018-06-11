@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryByIdHandler;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class ById extends AbstractQueryByIdHandler
+class ById extends AbstractQueryByIdHandler
 {
     protected $repoServiceName = 'FeatureToggle';
 }

@@ -22,7 +22,7 @@ final class Create extends AbstractCommandHandler
         /**
          * @var CreateToggleCmd $command
          */
-        $toggle = ToggleEntity::create(
+        $toggle = Toggle::create(
             $command->getConfigName(),
             $command->getFriendlyName(),
             $this->refData($command->getStatus())
