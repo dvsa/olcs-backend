@@ -227,6 +227,7 @@ return [
             'Document' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
+            'FeatureToggle' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
