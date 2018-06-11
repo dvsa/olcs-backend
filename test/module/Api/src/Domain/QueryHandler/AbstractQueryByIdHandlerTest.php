@@ -20,13 +20,6 @@ abstract class AbstractQueryByIdHandlerTest extends QueryHandlerTestCase
     protected $bundle = [];
 
     /**
-     * Other values
-     *
-     * @var array
-     */
-    protected $values = [];
-
-    /**
      * FQDN of the related doctrine entity
      *
      * @var  string
@@ -84,13 +77,13 @@ abstract class AbstractQueryByIdHandlerTest extends QueryHandlerTestCase
             ->shouldReceive('serialize')
             ->once()
             ->with($this->bundle)
-            ->andReturn($resultArray)->getMock();
+            ->andReturn($resultArray);
 
         $this->repoMap[$this->sutRepo]
             ->shouldReceive('fetchUsingId')
             ->with($query)
             ->once()
-            ->andReturn($mockEntity)->getMock();
+            ->andReturn($mockEntity);
 
         self::assertSame(
             $resultArray,

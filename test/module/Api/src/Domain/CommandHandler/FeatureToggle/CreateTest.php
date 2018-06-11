@@ -16,8 +16,6 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    protected $refData = [FeatureToggleEntity::ACTIVE_STATUS];
-
     public function setUp()
     {
         $this->sut = new CreateHandler();
@@ -40,12 +38,7 @@ class CreateTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->once()
             ->with(m::type(FeatureToggleEntity::class))
-            ->andReturnUsing(
-                function (FeatureToggleEntity $featureToggle) use (&$savedFeatureToggle) {
-                    $featureToggle->setId(999);
-                    $savedFeatureToggle = $featureToggle;
-                }
-            );
+            ->getMock();
 
         $result = $this->sut->handleCommand($command);
 

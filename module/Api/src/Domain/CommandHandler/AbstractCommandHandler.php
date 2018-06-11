@@ -33,6 +33,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Abstract Command Handler
@@ -444,7 +445,14 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return null;
         }
 
-        $repo = $this->getRepo();
-        return $repo->getRefdataReference($refDataKey);
+        return $this->refData($refDataKey);
+    }
+
+    /**
+     * For required fields we can skip the null refdata check
+     */
+    protected function refData($refDataKey): RefDataEntity
+    {
+        return $this->getRepo()->getRefdataReference($refDataKey);
     }
 }

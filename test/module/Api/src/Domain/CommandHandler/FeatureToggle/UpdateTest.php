@@ -16,8 +16,6 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    protected $refData = [FeatureToggleEntity::ACTIVE_STATUS];
-
     public function setUp()
     {
         $this->sut = new UpdateHandler();
@@ -28,44 +26,26 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $id = 999;
-        $configName = 'config name';
-        $friendlyName = 'friendly name';
-        $status = FeatureToggleEntity::ACTIVE_STATUS;
-
         $cmdData = [
-            'id' => $id,
-            'friendlyName' => $friendlyName,
-            'configName' => $configName,
+            'id' => 999,
+            'friendlyName' => 'friendly name',
+            'configName' => 'config name',
             'status' => FeatureToggleEntity::ACTIVE_STATUS
         ];
 
         $command = UpdateCmd::create($cmdData);
 
-        $entity = m::mock(FeatureToggleEntity::class);
-        $entity->shouldReceive('update')
-            ->once()
-            ->with($configName, $friendlyName, $this->refData[$status]);
-        $entity->shouldReceive('getId')
-            ->twice()
-            ->andReturn($id);
-
-        $this->repoMap['FeatureToggle']
-            ->shouldReceive('fetchUsingId')
-            ->once()
-            ->with($command)
-            ->andReturn($entity);
-
         $this->repoMap['FeatureToggle']
             ->shouldReceive('save')
             ->once()
-            ->with(m::type(FeatureToggleEntity::class));
+            ->with(m::type(FeatureToggleEntity::class))
+            ->getMock();
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => ['FeatureToggle' => $id],
-            'messages' => ["Feature toggle '" . $id . "' updated"]
+            'id' => ['FeatureToggle' => 999],
+            'messages' => ["Feature toggle '999' updated"]
         ];
 
         $this->assertEquals($expected, $result->toArray());
