@@ -784,6 +784,9 @@ class Licence extends AbstractRepository
                 $tmlQb->expr()->isNull('tml2.deletedDate')
             )
         );
+        $tmlQb->andWhere(
+            $tmlQb->expr()->eq('tml2.licence', $this->alias . '.id')
+        );
         $qb->andWhere(
             $qb->expr()
                 ->notIn(
