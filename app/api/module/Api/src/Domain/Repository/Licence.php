@@ -770,6 +770,31 @@ class Licence extends AbstractRepository
                 )
         );
 
+        /* @var \Doctrine\Orm\QueryBuilder $tmlQb */
+        $tmlQb = $this->getEntityManager()->getRepository(TMLicenceEntity::class)->createQueryBuilder('tml2');
+        $tmlQb->select('IDENTITY(tml2.licence)');
+
+        //  And where there is no active period of grace for the licence or on a variation application for the licence
+        $tmlQb->andWhere(
+            $tmlQb->expr()->orX(
+                $tmlQb->expr()->gte(
+                    'tml2.deletedDate',
+                    ':today'
+                ),
+                $tmlQb->expr()->isNull('tml2.deletedDate')
+            )
+        );
+        $tmlQb->andWhere(
+            $tmlQb->expr()->eq('tml2.licence', $this->alias . '.id')
+        );
+        $qb->andWhere(
+            $qb->expr()
+                ->notIn(
+                    $this->alias . '.id',
+                    $tmlQb->getDQL()
+                )
+        );
+
 
         $today = (new DateTime())
             ->setTime(0, 0, 0, 0)
