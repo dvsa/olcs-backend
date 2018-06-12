@@ -890,6 +890,7 @@ class LicenceTest extends RepositoryTestCase
             'SELECT IDENTITY(tml2.licence) ' .
             'AND (tml2.deletedDate >= [[' . $today . ']] ' .
             'OR tml2.deletedDate IS NULL) ' .
+            'AND tml2.licence = m.id ' .
             'AND m.id NOT IN ';
 
         $this->assertEquals($expectedQuery, $this->query);
