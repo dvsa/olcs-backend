@@ -7,11 +7,14 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
@@ -21,6 +24,7 @@ use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
@@ -29,6 +33,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Abstract Command Handler
@@ -89,6 +94,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             $this->applyInterfaces($mainServiceLocator);
         } catch (ZendServiceException $e) {
             $this->logServiceExceptions($e);
+        } catch (DisabledHandlerException $e) {
+            $this->logException($e);
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
@@ -131,6 +138,20 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * We want to log some exceptions (right now we only log an attempt to call a disabled handler)
+     *
+     * @param \Exception $e exception
+     *
+     * @return void
+     * @throws \Exception rethrows original Exception
+     */
+    private function logException(DisabledHandlerException $e)
+    {
+        Logger::warn(get_class($this) . ': ' . $e->getMessage());
+        throw $e;
+    }
+
+    /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
      * @param ServiceLocatorInterface $mainServiceLocator service locator
@@ -142,6 +163,23 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private function applyInterfaces($mainServiceLocator)
     {
+        if ($this instanceof ToggleRequiredInterface) {
+            $toggleService = $mainServiceLocator->get(ToggleService::class);
+
+            $fqdn = static::class;
+
+            if (!$toggleService->isEnabled($fqdn)) {
+                throw new DisabledHandlerException($fqdn);
+            }
+
+            $this->setToggleService($toggleService);
+        }
+
+        if ($this instanceof ToggleAwareInterface && !$this instanceof ToggleRequiredInterface) {
+            $toggleService = $mainServiceLocator->get(ToggleService::class);
+            $this->setToggleService($toggleService);
+        }
+
         if ($this instanceof AuthAwareInterface) {
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
             $this->setUserRepository($mainServiceLocator->get('RepositoryServiceManager')->get('User'));
@@ -407,7 +445,14 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return null;
         }
 
-        $repo = $this->getRepo();
-        return $repo->getRefdataReference($refDataKey);
+        return $this->refData($refDataKey);
+    }
+
+    /**
+     * For required fields we can skip the null refdata check
+     */
+    protected function refData($refDataKey): RefDataEntity
+    {
+        return $this->getRepo()->getRefdataReference($refDataKey);
     }
 }
