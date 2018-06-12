@@ -125,7 +125,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'version' => 1,
             'recipientUser' => 4,
             'urgent' => 'Y',
-            'assignedDate' => '2014-01-01'
+            'assignedDate' => '2015-01-02'
         ];
 
         /** @var User $mockUser */
@@ -236,7 +236,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'version' => 1,
             'recipientUser' => 4,
             'urgent' => 'Y',
-            'assignedDate' => '2014-01-01'
+            'assignedDate' => '2015-01-02'
         ];
 
         /** @var User $mockUser */
@@ -376,7 +376,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'version' => 1,
             'recipientUser' => 4,
             'urgent' => 'Y',
-            'assignedDate' => '2014-01-01'
+            'assignedDate' => '2015-01-01'
         ];
 
         /** @var User $mockUser */
@@ -514,7 +514,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'version' => 1,
             'recipientUser' => 4,
             'urgent' => 'Y',
-            'assignedDate' => '2014-01-01'
+            'assignedDate' => '2015-01-13'
         ];
 
         /** @var User $mockUser */
@@ -616,7 +616,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
     }
 
 
-    public function testIsValidThrowsExceptionWhenDateGreaterThanInformationCompleteDate()
+    public function testIsValidThrowsExceptionWhenDateLessThanInformationCompleteDate()
     {
 
         $this->expectException(ValidationException::class);
@@ -627,7 +627,7 @@ class AssignSubmissionTest extends CommandHandlerTestCase
             'version' => 1,
             'recipientUser' => 4,
             'urgent' => 'Y',
-            'assignedDate' => '2018-01-01'
+            'assignedDate' => '2016-01-01'
         ];
 
         $command = Cmd::create($data);
@@ -670,14 +670,14 @@ class AssignSubmissionTest extends CommandHandlerTestCase
     /**
      * @dataProvider  informationCompleteDateDataProvider
      */
-    public function testSavesWhenAssignedDateEqualToOrBefore($informationCompleteDate)
+    public function testSavesWhenAssignedDateEqualToOrAfter($informationCompleteDate)
     {
         $data = [
             'id' => 1,
             'version' => 1,
             'recipientUser' => 4,
             'urgent' => 'Y',
-            'assignedDate' => '2017-01-31'
+            'assignedDate' => '2018-01-31'
         ];
 
         $command = Cmd::create($data);
