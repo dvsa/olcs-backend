@@ -6,6 +6,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DeleteContactDetailsAndAddressTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
@@ -19,9 +20,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class SaveAddresses extends AbstractCommandHandler implements TransactionedInterface
 {
+    use DeleteContactDetailsAndAddressTrait;
+
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContactDetails', 'PhoneContact','Address'];
+    protected $extraRepos = ['ContactDetails', 'PhoneContact'];
 
     private $phoneTypes = array(
         'primary' => PhoneContact::TYPE_PRIMARY,
@@ -179,7 +182,6 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
                     $result->addMessage('Phone contact ' . $phoneType . ' updated');
                     $result->setFlag('hasChanged', true);
                 }
-
             } elseif ($hasContact && $contact->getId() > 0) {
                 $contactDetails->getPhoneContacts()->removeElement($contact);
 
@@ -276,12 +278,7 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
             $this->updatePhoneContacts($params['contact'], $transportConsultant);
         } elseif ($licence->getTransportConsultantCd()) {
-            $tcContactDetails = $licence->getTransportConsultantCd();
-            $tcAddress = $tcContactDetails->getAddress();
-            $this->getRepo('ContactDetails')->delete($tcContactDetails);
-            if($tcAddress !== null) {
-                $this->getRepo('Address')->delete($tcAddress);
-            }
+            $this->maybeDeleteContactDetailsAndAddress($licence->getTransportConsultantCd());
             $licence->setTransportConsultantCd(null);
 
             $result->setFlag('hasChanged', true);
