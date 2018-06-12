@@ -21,9 +21,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_feature_toggle_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_feature_toggle_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_feature_toggle_status", columns={"status"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uk_feature_toggle_config_name", columns={"config_name"})
  *    }
  * )
  */
@@ -37,7 +34,7 @@ abstract class AbstractFeatureToggle implements BundleSerializableInterface, Jso
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="config_name", length=255, nullable=false)
+     * @ORM\Column(type="string", name="config_name", length=255, nullable=true)
      */
     protected $configName;
 
@@ -66,7 +63,7 @@ abstract class AbstractFeatureToggle implements BundleSerializableInterface, Jso
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="friendly_name", length=255, nullable=false)
+     * @ORM\Column(type="string", name="friendly_name", length=255, nullable=true)
      */
     protected $friendlyName;
 
@@ -107,7 +104,7 @@ abstract class AbstractFeatureToggle implements BundleSerializableInterface, Jso
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
      */
     protected $status;
 
