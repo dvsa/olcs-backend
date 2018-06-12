@@ -87,7 +87,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
 
         if (!$this->isValid($command, $submission->getInformationCompleteDate())) {
-            throw  new ValidationException(['First assigned date must be before or same as information complete date']);
+            throw  new ValidationException(['First assigned date must be after or same as information complete date']);
         }
         $submission->setAssignedDate($command->getAssignedDate());
 
@@ -175,6 +175,6 @@ final class AssignSubmission extends AbstractCommandHandler implements
         $format = 'Y-m-d';
         $assignedDate = DateTime::createFromFormat($format, $assignedDate);
         $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
-        return $assignedDate <= $informationCompleteDate;
+        return $assignedDate >= $informationCompleteDate;
     }
 }
