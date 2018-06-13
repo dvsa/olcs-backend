@@ -7,11 +7,16 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Workshop;
 
+use Dvsa\Olcs\Api\Domain\Repository\Address;
+use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Workshop;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Workshop\DeleteWorkshop;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Workshop\DeleteWorkshop as Cmd;
+use \Dvsa\Olcs\Api\Entity\Licence\Workshop as WorkshopEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 
 /**
  * Delete Workshop Test
@@ -24,7 +29,8 @@ class DeleteWorkshopTest extends CommandHandlerTestCase
     {
         $this->sut = new DeleteWorkshop();
         $this->mockRepo('Workshop', Workshop::class);
-
+        $this->mockRepo('ContactDetails', ContactDetails::class);
+        $this->mockRepo('Address', Address::class);
         parent::setUp();
     }
 
@@ -44,20 +50,29 @@ class DeleteWorkshopTest extends CommandHandlerTestCase
         ];
 
         $command = Cmd::create($data);
+        $workshopEntity1 = m::mock(WorkshopEntity::class);
+        $contactDetails1 = m::mock(ContactDetailsEntity::class);
+        $address1 = m::mock(AddressEntity::class);
+        $contactDetails1->shouldReceive('getAddress')->andReturn($address1);
+        $workshopEntity1->shouldReceive('getContactDetails')->andReturn($contactDetails1);
+        $workshopEntity2 = m::mock(WorkshopEntity::class);
+        $workshopEntity2->shouldReceive('getContactDetails')->andReturn(null);
+        $this->repoMap['Address']->shouldReceive('delete')->with($address1);
+        $this->repoMap['ContactDetails']->shouldReceive('delete')->with($contactDetails1);
 
         $this->repoMap['Workshop']->shouldReceive('fetchById')
             ->with(111)
             ->once()
-            ->andReturn('Entity1')
+            ->andReturn($workshopEntity1)
             ->shouldReceive('fetchById')
             ->with(222)
             ->once()
-            ->andReturn('Entity2')
+            ->andReturn($workshopEntity2)
             ->shouldReceive('delete')
-            ->with('Entity1')
+            ->with($workshopEntity1)
             ->once()
             ->shouldReceive('delete')
-            ->with('Entity2')
+            ->with($workshopEntity2)
             ->once();
 
         $result = $this->sut->handleCommand($command);
