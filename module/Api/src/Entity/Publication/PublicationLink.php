@@ -49,12 +49,13 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates Application publication entry
      *
-     * @param ApplicationEntity $application
-     * @param LicenceEntity $licence
-     * @param PublicationEntity $publication
+     * @param ApplicationEntity        $application
+     * @param LicenceEntity            $licence
+     * @param PublicationEntity        $publication
      * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity $trafficArea
+     * @param TrafficAreaEntity        $trafficArea
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function createApplication(
@@ -78,13 +79,14 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates a Bus Registration publication entry
      *
-     * @param BusRegEntity $busReg
-     * @param LicenceEntity $licence
-     * @param PublicationEntity $publication
+     * @param BusRegEntity             $busReg
+     * @param LicenceEntity            $licence
+     * @param PublicationEntity        $publication
      * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity $trafficArea
-     * @param string $text1
+     * @param TrafficAreaEntity        $trafficArea
+     * @param string                   $text1
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function createBusReg(
@@ -110,12 +112,13 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates a Pi hearing publication entry
      *
-     * @param LicenceEntity $licence
-     * @param PiEntity $pi
-     * @param PublicationEntity $publication
+     * @param LicenceEntity            $licence
+     * @param PiEntity                 $pi
+     * @param PublicationEntity        $publication
      * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity $trafficArea
+     * @param TrafficAreaEntity        $trafficArea
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function createPiHearing(
@@ -139,12 +142,13 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates a Tm Pi Hearing publication entry
      *
-     * @param TransportManagerEntity $transportManager
-     * @param PiEntity $pi
-     * @param PublicationEntity $publication
+     * @param TransportManagerEntity   $transportManager
+     * @param PiEntity                 $pi
+     * @param PublicationEntity        $publication
      * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity $trafficArea
+     * @param TrafficAreaEntity        $trafficArea
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function createTmPiHearing(
@@ -168,11 +172,12 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Create a publication link for a licence
      *
-     * @param LicenceEntity $licence
-     * @param PublicationEntity $publication
+     * @param LicenceEntity            $licence
+     * @param PublicationEntity        $publication
      * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity $trafficArea
+     * @param TrafficAreaEntity        $trafficArea
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function createLicence(
@@ -194,11 +199,14 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Create a publication link for an Impounding
      *
-     * @param ImpoundingEntity $impounding
-     * @param PublicationEntity $publication
+     * @param ImpoundingEntity         $impounding
+     * @param PublicationEntity        $publication
      * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity $trafficArea
+     * @param TrafficAreaEntity        $trafficArea
+     * @param LicenceEntity            $licence
+     * @param ApplicationEntity        $application
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function createImpounding(
@@ -228,6 +236,7 @@ class PublicationLink extends AbstractPublicationLink
      * @param string $text2
      * @param string $text3
      *
+     * @return void
      * @throws ForbiddenException
      */
     public function updateText($text1, $text2, $text3)
@@ -243,7 +252,7 @@ class PublicationLink extends AbstractPublicationLink
 
     public function maybeSetPublishAfterDate()
     {
-        if ($this->getPi() !== null && $this->getTransportManager() === null) {
+        if ($this->getPi() !== null) {
             $dateTimeDaysProcessor = new AddDays();
             $dateTimeWorkingDaysProcessor = new AddWorkingDays($dateTimeDaysProcessor);
             $publishAfterDate = $dateTimeWorkingDaysProcessor->calculateDate(

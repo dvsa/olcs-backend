@@ -300,7 +300,8 @@ class PublicationLinkEntityTest extends EntityTester
         $entity->createImpounding($impounding, $publication, $publicationSection, $trafficArea, $licence, $application);
     }
 
-    public function testMaybeSetPublishAfterDateDo() {
+    public function testMaybeSetPublishAfterDateDo()
+    {
         $sut = new Entity();
 
         /** @var PiEntity $pi */
@@ -316,23 +317,17 @@ class PublicationLinkEntityTest extends EntityTester
             PiHearing::PUBLISH_AFTER_DAYS
         );
 
-        $this->assertEquals($publishAfterDate,$sut->getPublishAfterDate());
+        $this->assertEquals($publishAfterDate, $sut->getPublishAfterDate());
     }
 
-    public function testMaybeSetPublishAfterDateDoNot() {
+    public function testMaybeSetPublishAfterDateDoNot()
+    {
         $sut = new Entity();
 
-        /** @var PiEntity $pi */
-        $pi = m::mock(PiEntity::class);
-        $sut->setPi($pi);
-
-        /** @var TransportManager $tm */
-        $tm = m::mock(TransportManager::class);
-        $sut->setTransportManager($tm);
+        $sut->setPi(null);
 
         $sut->maybeSetPublishAfterDate();
         $this->assertNull($sut->getPublishAfterDate());
-
     }
 
     /**
