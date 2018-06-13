@@ -16,7 +16,11 @@ trait DeleteContactDetailsAndAddressTrait
         }
     }
 
-    /** @var ContactDetails $contactDetails */
+    /**
+     * @param ContactDetails $contactDetails
+     *
+     * @return void
+     */
     private function maybeDeleteContactDetailsAndAddress($contactDetails)
     {
         if ($contactDetails === null) {
