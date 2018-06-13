@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -19,8 +21,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="sectors",
  *    indexes={
- *        @ORM\Index(name="permit_sectors_created_by", columns={"created_by"}),
- *        @ORM\Index(name="permit_sectors_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_permit_sectors_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_permit_sectors_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -66,6 +68,27 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="string", name="description", length=255, nullable=false)
      */
     protected $description;
+
+    /**
+     * Ecmt permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\EcmtPermits",
+     *     inversedBy="sectors",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_permit_sector_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $ecmtPermits;
 
     /**
      * Identifier - Id
@@ -125,6 +148,26 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
      * @ORM\Version
      */
     protected $version;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->ecmtPermits = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -232,6 +275,69 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the ecmt permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
+     *
+     * @return Sectors
+     */
+    public function setEcmtPermits($ecmtPermits)
+    {
+        $this->ecmtPermits = $ecmtPermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEcmtPermits()
+    {
+        return $this->ecmtPermits;
+    }
+
+    /**
+     * Add a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
+     *
+     * @return Sectors
+     */
+    public function addEcmtPermits($ecmtPermits)
+    {
+        if ($ecmtPermits instanceof ArrayCollection) {
+            $this->ecmtPermits = new ArrayCollection(
+                array_merge(
+                    $this->ecmtPermits->toArray(),
+                    $ecmtPermits->toArray()
+                )
+            );
+        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->add($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
+     *
+     * @return Sectors
+     */
+    public function removeEcmtPermits($ecmtPermits)
+    {
+        if ($this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->removeElement($ecmtPermits);
+        }
+
+        return $this;
     }
 
     /**
@@ -420,7 +526,11 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
