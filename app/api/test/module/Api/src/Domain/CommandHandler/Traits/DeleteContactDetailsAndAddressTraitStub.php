@@ -29,4 +29,14 @@ class DeleteContactDetailsAndAddressTraitStub extends AbstractCommandHandler
     {
         $this->extraRepos = $extraRepos;
     }
+
+    public function maybeDeleteContactDetailsAndAddressStub($contactDetails)
+    {
+        $this->maybeDeleteContactDetailsAndAddress($contactDetails);
+    }
+
+    public function injectReposStub()
+    {
+        $this->injectRepos();
+    }
 }

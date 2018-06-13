@@ -17,7 +17,8 @@ use Mockery as m;
  */
 class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
 {
-
+    /** @var DeleteContactDetailsAndAddressTraitStub $sut */
+    protected $sut;
     public function setUp()
     {
         $this->sut = new DeleteContactDetailsAndAddressTraitStub();
@@ -30,7 +31,7 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
     public function testInjectReposWhenNotSet()
     {
         $this->sut = new DeleteContactDetailsAndAddressTraitStub();
-        $this->invokeMethod($this->sut, 'injectRepos');
+        $this->sut->injectReposStub();
         $this->assertEquals(['ContactDetails', 'Address'], $this->sut->getExtraRepos());
     }
 
@@ -38,7 +39,7 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
     {
         $this->sut = new DeleteContactDetailsAndAddressTraitStub();
         $this->sut->setExtraRepos(['ContactDetails', 'Address']);
-        $this->invokeMethod($this->sut, 'injectRepos');
+        $this->sut->injectReposStub();
         $this->assertEquals(['ContactDetails', 'Address'], $this->sut->getExtraRepos());
     }
 
@@ -48,13 +49,13 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
         $contactDetails->shouldReceive('getAddress')->andReturn(null);
         $this->repoMap['ContactDetails']->shouldReceive('delete')->with($contactDetails);
 
-        $this->invokeMethod($this->sut, 'maybeDeleteContactDetailsAndAddress', [$contactDetails]);
+        $this->sut->maybeDeleteContactDetailsAndAddressStub($contactDetails);
     }
 
     public function testMaybeDeleteContactDetailsAndAddressWithCdNull()
     {
         $contactDetails = null;
-        $this->invokeMethod($this->sut, 'maybeDeleteContactDetailsAndAddress', [$contactDetails]);
+        $this->sut->maybeDeleteContactDetailsAndAddressStub($contactDetails);
     }
 
     public function testMaybeDeleteContactDetailsAndAddress()
@@ -65,24 +66,6 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
         $contactDetails->shouldReceive('getAddress')->andReturn($address);
         $this->repoMap['ContactDetails']->shouldReceive('delete')->with($contactDetails);
 
-        $this->invokeMethod($this->sut, 'maybeDeleteContactDetailsAndAddress', [$contactDetails]);
-    }
-
-    /**
-     * Call protected/private method of a class.
-     *
-     * @param object &$object Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
-     *
-     * @return mixed Method return.
-     */
-    private function invokeMethod(&$object, $methodName, array $parameters = array())
-    {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-
-        return $method->invokeArgs($object, $parameters);
+        $this->sut->maybeDeleteContactDetailsAndAddressStub($contactDetails);
     }
 }
