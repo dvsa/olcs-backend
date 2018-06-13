@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -19,8 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="ecmt_countries_constraints",
  *    indexes={
- *        @ORM\Index(name="ecmt_countries_constraints_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ecmt_countries_constraints_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_ecmt_countries_constraints_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_ecmt_countries_constraints_last_modified_by",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -28,6 +31,19 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     mappedBy="constraints",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $countrys;
 
     /**
      * Created by
@@ -108,15 +124,6 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     protected $name;
 
     /**
-     * Olbs key
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="olbs_key", nullable=true)
-     */
-    protected $olbsKey;
-
-    /**
      * Version
      *
      * @var int
@@ -125,6 +132,89 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      * @ORM\Version
      */
     protected $version;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->countrys = new ArrayCollection();
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
+    }
 
     /**
      * Set the created by
@@ -337,30 +427,6 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     }
 
     /**
-     * Set the olbs key
-     *
-     * @param int $olbsKey new value being set
-     *
-     * @return EcmtCountriesConstraints
-     */
-    public function setOlbsKey($olbsKey)
-    {
-        $this->olbsKey = $olbsKey;
-
-        return $this;
-    }
-
-    /**
-     * Get the olbs key
-     *
-     * @return int
-     */
-    public function getOlbsKey()
-    {
-        return $this->olbsKey;
-    }
-
-    /**
      * Set the version
      *
      * @param int $version new value being set
@@ -420,7 +486,11 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
