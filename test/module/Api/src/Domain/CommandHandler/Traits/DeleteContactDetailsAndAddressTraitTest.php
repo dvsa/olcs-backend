@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Traits;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -10,14 +9,14 @@ use Dvsa\Olcs\Api\Domain\Repository\Address as AddressRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Mockery as m;
 
-
 /**
  * Although this trait contains only private methods
  * we are testing them
  * to ensure changes in the trait are highlighted early
  * as potential impact could be high
  */
-class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase {
+class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
+{
 
     public function setUp()
     {
@@ -32,15 +31,15 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase {
     {
         $this->sut = new DeleteContactDetailsAndAddressTraitStub();
         $this->invokeMethod($this->sut, 'injectRepos');
-        $this->assertEquals(['ContactDetails','Address'], $this->sut->getExtraRepos());
+        $this->assertEquals(['ContactDetails', 'Address'], $this->sut->getExtraRepos());
     }
 
     public function testInjectRepos()
     {
         $this->sut = new DeleteContactDetailsAndAddressTraitStub();
-        $this->sut->setExtraRepos(['ContactDetails','Address']);
+        $this->sut->setExtraRepos(['ContactDetails', 'Address']);
         $this->invokeMethod($this->sut, 'injectRepos');
-        $this->assertEquals(['ContactDetails','Address'], $this->sut->getExtraRepos());
+        $this->assertEquals(['ContactDetails', 'Address'], $this->sut->getExtraRepos());
     }
 
     public function testMaybeDeleteContactDetailsAndAddressWithAddressNull()
@@ -72,7 +71,7 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase {
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
+     * @param object &$object Instantiated object that we will run method on.
      * @param string $methodName Method name to call
      * @param array  $parameters Array of parameters to pass into method.
      *
@@ -86,5 +85,4 @@ class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase {
 
         return $method->invokeArgs($object, $parameters);
     }
-
 }
