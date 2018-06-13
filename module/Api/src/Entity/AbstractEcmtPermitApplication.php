@@ -18,12 +18,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ecmt_permit_application",
  *    indexes={
- *        @ORM\Index(name="ecmt_permit_application_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ecmt_permit_application_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ecmt_permit_application_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ecmt_permit_application_payment_status_id", columns={"payment_status_id"}),
- *        @ORM\Index(name="ecmt_permit_application_application_status_id",
-     *     columns={"application_status_id"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"})
  *    }
  * )
  */
@@ -31,16 +30,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-
-    /**
-     * Application status
-     *
-     * @var \Dvsa\Olcs\Api\Entity\ApplicationStatus
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ApplicationStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="application_status_id", referencedColumnName="id", nullable=false)
-     */
-    protected $applicationStatus;
 
     /**
      * Created by
@@ -115,12 +104,22 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     /**
      * Payment status
      *
-     * @var \Dvsa\Olcs\Api\Entity\PaymentStatus
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PaymentStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_status_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="payment_status", referencedColumnName="id", nullable=false)
      */
     protected $paymentStatus;
+
+    /**
+     * Status
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     */
+    protected $status;
 
     /**
      * Version
@@ -131,30 +130,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Version
      */
     protected $version;
-
-    /**
-     * Set the application status
-     *
-     * @param \Dvsa\Olcs\Api\Entity\ApplicationStatus $applicationStatus entity being set as the value
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setApplicationStatus($applicationStatus)
-    {
-        $this->applicationStatus = $applicationStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the application status
-     *
-     * @return \Dvsa\Olcs\Api\Entity\ApplicationStatus
-     */
-    public function getApplicationStatus()
-    {
-        return $this->applicationStatus;
-    }
 
     /**
      * Set the created by
@@ -339,7 +314,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     /**
      * Set the payment status
      *
-     * @param \Dvsa\Olcs\Api\Entity\PaymentStatus $paymentStatus entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentStatus entity being set as the value
      *
      * @return EcmtPermitApplication
      */
@@ -353,11 +328,35 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     /**
      * Get the payment status
      *
-     * @return \Dvsa\Olcs\Api\Entity\PaymentStatus
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getPaymentStatus()
     {
         return $this->paymentStatus;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**
