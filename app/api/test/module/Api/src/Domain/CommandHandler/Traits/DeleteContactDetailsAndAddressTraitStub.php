@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Traits;
 
-
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\DeleteContactDetailsAndAddressTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-class DeleteContactDetailsAndAddressTraitStub extends AbstractCommandHandler {
+class DeleteContactDetailsAndAddressTraitStub extends AbstractCommandHandler
+{
     use DeleteContactDetailsAndAddressTrait;
 
     /**
@@ -29,5 +29,4 @@ class DeleteContactDetailsAndAddressTraitStub extends AbstractCommandHandler {
     {
         $this->extraRepos = $extraRepos;
     }
-
 }
