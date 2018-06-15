@@ -7,15 +7,18 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Transfer\Query\FeatureToggle\IsEnabled as IsEnabledQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Retrieve a feature toggle by id
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-final class IsEnabled extends AbstractQueryHandler implements ToggleAwareInterface
+class IsEnabled extends AbstractQueryHandler implements ToggleAwareInterface
 {
     use ToggleAwareTrait;
+
+    protected $repoServiceName = 'FeatureToggle';
 
     public function handleQuery(QueryInterface $query)
     {
