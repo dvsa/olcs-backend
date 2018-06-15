@@ -8,11 +8,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
-use Zend\Stdlib\ArraySerializableInterface as QryCmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
-use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+
 
 /**
  * Country
@@ -30,10 +27,38 @@ class Country extends AbstractRepository
  *
  */
     public function getEcmtCountries(){
-        $qbs = $this->getEntityManager()->createQueryBuilder()
-          ->select('c.id,c.countryDesc')
-          ->from(Entity::class,'c')
-          ->where('c.isEcmtState = 1');
-        return array(count($qbs->getQuery()->execute()),$qbs->getQuery()->execute());
+
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
+        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        return array(count($results),$results);
+    }
+
+    /**
+     * Get all ECMT countries that have constraints
+     *
+     * @return array
+     *
+     */
+    public function getConstrainedEcmtCountries(){
+
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
+        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        $data = array();
+
+        foreach ($results as $row){
+            if($row->getConstraints()->count() > 0){
+                $data[] = array(
+                  'id' => $row->getId(),
+                  'description' => $row->getCountryDesc()
+                );
+            }
+        }
+        return array(count($data),$data);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -12,38 +12,24 @@ use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * EcmtCountriesConstraints Abstract Entity
+ * Sectors Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
- * @ORM\Table(name="ecmt_countries_constraints",
+ * @ORM\Table(name="sectors",
  *    indexes={
- *        @ORM\Index(name="ix_ecmt_countries_constraints_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_ecmt_countries_constraints_last_modified_by",
-     *     columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_permit_sectors_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_permit_sectors_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractSectors implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-
-    /**
-     * Country
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
-     *     mappedBy="constraints",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $countrys;
 
     /**
      * Created by
@@ -79,9 +65,30 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="description", length=65535, nullable=true)
+     * @ORM\Column(type="string", name="description", length=255, nullable=false)
      */
     protected $description;
+
+    /**
+     * Ecmt permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermits",
+     *     inversedBy="sectors",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_permit_sector_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $ecmtPermits;
 
     /**
      * Identifier - Id
@@ -119,9 +126,18 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="name", length=32, nullable=false)
+     * @ORM\Column(type="string", name="name", length=255, nullable=false)
      */
     protected $name;
+
+    /**
+     * Sifting percentage
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="float", name="sifting_percentage", precision=6, scale=4, nullable=true)
+     */
+    protected $siftingPercentage;
 
     /**
      * Version
@@ -150,70 +166,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      */
     public function initCollections()
     {
-        $this->countrys = new ArrayCollection();
-    }
-
-    /**
-     * Set the country
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
-     *
-     * @return EcmtCountriesConstraints
-     */
-    public function setCountrys($countrys)
-    {
-        $this->countrys = $countrys;
-
-        return $this;
-    }
-
-    /**
-     * Get the countrys
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getCountrys()
-    {
-        return $this->countrys;
-    }
-
-    /**
-     * Add a countrys
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
-     *
-     * @return EcmtCountriesConstraints
-     */
-    public function addCountrys($countrys)
-    {
-        if ($countrys instanceof ArrayCollection) {
-            $this->countrys = new ArrayCollection(
-                array_merge(
-                    $this->countrys->toArray(),
-                    $countrys->toArray()
-                )
-            );
-        } elseif (!$this->countrys->contains($countrys)) {
-            $this->countrys->add($countrys);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a countrys
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
-     *
-     * @return EcmtCountriesConstraints
-     */
-    public function removeCountrys($countrys)
-    {
-        if ($this->countrys->contains($countrys)) {
-            $this->countrys->removeElement($countrys);
-        }
-
-        return $this;
+        $this->ecmtPermits = new ArrayCollection();
     }
 
     /**
@@ -221,7 +174,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setCreatedBy($createdBy)
     {
@@ -245,7 +198,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setCreatedOn($createdOn)
     {
@@ -275,7 +228,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param \DateTime $deletedDate new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setDeletedDate($deletedDate)
     {
@@ -305,7 +258,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param string $description new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setDescription($description)
     {
@@ -325,11 +278,74 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     }
 
     /**
+     * Set the ecmt permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
+     *
+     * @return Sectors
+     */
+    public function setEcmtPermits($ecmtPermits)
+    {
+        $this->ecmtPermits = $ecmtPermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEcmtPermits()
+    {
+        return $this->ecmtPermits;
+    }
+
+    /**
+     * Add a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
+     *
+     * @return Sectors
+     */
+    public function addEcmtPermits($ecmtPermits)
+    {
+        if ($ecmtPermits instanceof ArrayCollection) {
+            $this->ecmtPermits = new ArrayCollection(
+                array_merge(
+                    $this->ecmtPermits->toArray(),
+                    $ecmtPermits->toArray()
+                )
+            );
+        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->add($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
+     *
+     * @return Sectors
+     */
+    public function removeEcmtPermits($ecmtPermits)
+    {
+        if ($this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->removeElement($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setId($id)
     {
@@ -353,7 +369,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -377,7 +393,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -407,7 +423,7 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
      *
      * @param string $name new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setName($name)
     {
@@ -427,11 +443,35 @@ abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInt
     }
 
     /**
+     * Set the sifting percentage
+     *
+     * @param unknown $siftingPercentage new value being set
+     *
+     * @return Sectors
+     */
+    public function setSiftingPercentage($siftingPercentage)
+    {
+        $this->siftingPercentage = $siftingPercentage;
+
+        return $this;
+    }
+
+    /**
+     * Get the sifting percentage
+     *
+     * @return unknown
+     */
+    public function getSiftingPercentage()
+    {
+        return $this->siftingPercentage;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version new value being set
      *
-     * @return EcmtCountriesConstraints
+     * @return Sectors
      */
     public function setVersion($version)
     {
