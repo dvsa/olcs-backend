@@ -9,11 +9,11 @@ return array(
                 'skipManyToMany' => true
             ]
         ],
-        'Dvsa\Olcs\Api\Entity\Country' => [
+        /*'Dvsa\Olcs\Api\Entity\Country' => [
             'metadata' => [
                 'skipManyToMany' => true
             ]
-        ],
+        ],*/
         'classNameForTable' => [
            'txn' => 'Transaction',
            'fee_txn' => 'FeeTransaction'
