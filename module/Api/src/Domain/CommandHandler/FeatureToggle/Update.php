@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle as ToggleEntity;
 use Dvsa\Olcs\Transfer\Command\FeatureToggle\Update as UpdateToggleCmd;
+use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 
 /**
  * Update a FeatureToggle
@@ -22,15 +23,17 @@ final class Update extends AbstractCommandHandler
         /**
          * @var UpdateToggleCmd $command
          * @var ToggleEntity $toggle
+         * @var FeatureToggleRepo $repo
          */
-        $toggle = $this->getRepo()->fetchUsingId($command);
+        $repo = $this->getRepo();
+        $toggle = $repo->fetchUsingId($command);
         $toggle->update(
             $command->getConfigName(),
             $command->getFriendlyName(),
             $this->refData($command->getStatus())
         );
 
-        $this->getRepo()->save($toggle);
+        $repo->save($toggle);
 
         $this->result->addId('FeatureToggle', $toggle->getId());
         $this->result->addMessage("Feature toggle '{$toggle->getId()}' updated");

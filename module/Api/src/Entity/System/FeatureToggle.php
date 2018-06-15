@@ -18,5 +18,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FeatureToggle extends AbstractFeatureToggle
 {
+    const ACTIVE_STATUS = 'always-active';
+    const INACTIVE_STATUS = 'inactive';
+    const CONDITIONAL_STATUS = 'conditionally-active';
 
+    public static function create(/*string*/ $configName, /*string*/ $friendlyName, RefData $status)/*: FeatureToggle */
+    {
+        $instance = new self;
+        $instance->configName = $configName;
+        $instance->friendlyName = $friendlyName;
+        $instance->status = $status;
+
+        return $instance;
+    }
+
+    public function update(/*string*/ $configName, /*string*/ $friendlyName, RefData $status)/*: FeatureToggle */
+    {
+        $this->configName = $configName;
+        $this->friendlyName = $friendlyName;
+        $this->status = $status;
+
+        return $this;
+    }
 }
