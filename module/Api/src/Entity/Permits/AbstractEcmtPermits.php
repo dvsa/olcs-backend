@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -70,9 +70,9 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Ecmt permits application
      *
-     * @var \Dvsa\Olcs\Api\Entity\EcmtPermitApplication
+     * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
      * @ORM\JoinColumn(name="ecmt_permits_application_id", referencedColumnName="id", nullable=false)
      */
     protected $ecmtPermitsApplication;
@@ -151,7 +151,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Sectors",
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors",
      *     mappedBy="ecmtPermits",
      *     fetch="LAZY"
      * )
@@ -346,7 +346,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Set the ecmt permits application
      *
-     * @param \Dvsa\Olcs\Api\Entity\EcmtPermitApplication $ecmtPermitsApplication entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtPermitsApplication entity being set as the value
      *
      * @return EcmtPermits
      */
@@ -360,7 +360,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the ecmt permits application
      *
-     * @return \Dvsa\Olcs\Api\Entity\EcmtPermitApplication
+     * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      */
     public function getEcmtPermitsApplication()
     {

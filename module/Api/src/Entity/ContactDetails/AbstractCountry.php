@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -27,6 +29,27 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Constraint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtCountriesConstraints",
+     *     inversedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="constraint_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="constraint_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $constraints;
 
     /**
      * Country desc
@@ -58,6 +81,27 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $createdOn;
 
     /**
+     * Ecmt permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermits",
+     *     inversedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_permit_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $ecmtPermits;
+
+    /**
      * Identifier - Id
      *
      * @var string
@@ -66,6 +110,19 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="string", name="id", length=2)
      */
     protected $id;
+
+    /**
+     * Irfo psv auth
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $irfoPsvAuths;
 
     /**
      * Is ecmt state
@@ -114,6 +171,91 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->constraints = new ArrayCollection();
+        $this->ecmtPermits = new ArrayCollection();
+        $this->irfoPsvAuths = new ArrayCollection();
+    }
+
+    /**
+     * Set the constraint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being set as the value
+     *
+     * @return Country
+     */
+    public function setConstraints($constraints)
+    {
+        $this->constraints = $constraints;
+
+        return $this;
+    }
+
+    /**
+     * Get the constraints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConstraints()
+    {
+        return $this->constraints;
+    }
+
+    /**
+     * Add a constraints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being added
+     *
+     * @return Country
+     */
+    public function addConstraints($constraints)
+    {
+        if ($constraints instanceof ArrayCollection) {
+            $this->constraints = new ArrayCollection(
+                array_merge(
+                    $this->constraints->toArray(),
+                    $constraints->toArray()
+                )
+            );
+        } elseif (!$this->constraints->contains($constraints)) {
+            $this->constraints->add($constraints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a constraints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being removed
+     *
+     * @return Country
+     */
+    public function removeConstraints($constraints)
+    {
+        if ($this->constraints->contains($constraints)) {
+            $this->constraints->removeElement($constraints);
+        }
+
+        return $this;
+    }
 
     /**
      * Set the country desc
@@ -194,6 +336,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     }
 
     /**
+     * Set the ecmt permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
+     *
+     * @return Country
+     */
+    public function setEcmtPermits($ecmtPermits)
+    {
+        $this->ecmtPermits = $ecmtPermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEcmtPermits()
+    {
+        return $this->ecmtPermits;
+    }
+
+    /**
+     * Add a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
+     *
+     * @return Country
+     */
+    public function addEcmtPermits($ecmtPermits)
+    {
+        if ($ecmtPermits instanceof ArrayCollection) {
+            $this->ecmtPermits = new ArrayCollection(
+                array_merge(
+                    $this->ecmtPermits->toArray(),
+                    $ecmtPermits->toArray()
+                )
+            );
+        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->add($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
+     *
+     * @return Country
+     */
+    public function removeEcmtPermits($ecmtPermits)
+    {
+        if ($this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->removeElement($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the id
      *
      * @param string $id new value being set
@@ -215,6 +420,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrfoPsvAuths($irfoPsvAuths)
+    {
+        $this->irfoPsvAuths = $irfoPsvAuths;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auths
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrfoPsvAuths()
+    {
+        return $this->irfoPsvAuths;
+    }
+
+    /**
+     * Add a irfo psv auths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being added
+     *
+     * @return Country
+     */
+    public function addIrfoPsvAuths($irfoPsvAuths)
+    {
+        if ($irfoPsvAuths instanceof ArrayCollection) {
+            $this->irfoPsvAuths = new ArrayCollection(
+                array_merge(
+                    $this->irfoPsvAuths->toArray(),
+                    $irfoPsvAuths->toArray()
+                )
+            );
+        } elseif (!$this->irfoPsvAuths->contains($irfoPsvAuths)) {
+            $this->irfoPsvAuths->add($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irfo psv auths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrfoPsvAuths($irfoPsvAuths)
+    {
+        if ($this->irfoPsvAuths->contains($irfoPsvAuths)) {
+            $this->irfoPsvAuths->removeElement($irfoPsvAuths);
+        }
+
+        return $this;
     }
 
     /**
@@ -379,7 +647,11 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
