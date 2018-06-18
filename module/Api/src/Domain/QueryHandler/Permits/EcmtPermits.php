@@ -14,38 +14,40 @@ use Doctrine\ORM\Query;
 class EcmtPermits extends AbstractQueryHandler
 {
     protected $repoServiceName = 'EcmtPermits';
-    protected $extraRepos = ['ConstrainedCountries','EcmtPermitCountryLink'];
+    protected $extraRepos = ['Country'];
 
     public function handleQuery(QueryInterface $query)
     {
 
         $repo = $this->getRepo();
         $ecmtPermits = $repo->fetchList($query, Query::HYDRATE_OBJECT);
-        
+
         $data = array();
         foreach ($ecmtPermits as $permit)
         {
+            $countries = $permit->getCountrys();
+            $status = $permit->getStatus()->getId();
+            $constrainedCountries = $this->getRepo('Country')->getConstrainedEcmtCountries(true)[1];
 
-            $countries = $this->getRepo('EcmtPermitCountryLink')->getByPermitId($permit->getId());
-            $countriesArr = array();
-            foreach($countries as $country)
+            $restrictions = false;
+            foreach ($countries as $country)
             {
-                $countriesArr[] = $country->getCountry()->getId();
+                if (in_array($country->getId(),$constrainedCountries))
+                {
+                    $restrictions = true;
+                    break;
+                }
             }
-
-            // if $permit->getCountry()->getIsEcmtState()
 
             $data[] = array(
               'id'          => $permit->getId(),
-              'restrictions' => $this->getRepo('ConstrainedCountries')->existsByCountryId($countriesArr),
-              'status'  => $permit->getApplicationStatus()->getStatusName()
+              'restrictions' => $restrictions,
+              'status'  => $status
             );
         }
 
-        $count = $repo->fetchCount($query);
-
         return [
-          'count' => $count,
+          'count' => count($data),
           'result' => $data
         ];
         
