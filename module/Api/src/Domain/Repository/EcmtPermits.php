@@ -5,7 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\EcmtPermits as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits as Entity;
 
 /**
  * ECMT Permits

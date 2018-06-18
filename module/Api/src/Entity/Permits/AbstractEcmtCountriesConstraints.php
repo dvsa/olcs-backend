@@ -1,34 +1,49 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * EcmtPermitSectorLink Abstract Entity
+ * EcmtCountriesConstraints Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="ecmt_permit_sector_link",
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
+ * @ORM\Table(name="ecmt_countries_constraints",
  *    indexes={
- *        @ORM\Index(name="ecmt_permit_sector_link_sector_id", columns={"sector_id"}),
- *        @ORM\Index(name="ecmt_permit_sector_link_permit_id", columns={"ecmt_permit_id"}),
- *        @ORM\Index(name="ecmt_permit_sector_link_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ecmt_permit_sector_link_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_ecmt_countries_constraints_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_ecmt_countries_constraints_last_modified_by",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractEcmtCountriesConstraints implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     mappedBy="constraints",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $countrys;
 
     /**
      * Created by
@@ -51,14 +66,22 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
     protected $createdOn;
 
     /**
-     * Ecmt permit
+     * Deleted date
      *
-     * @var \Dvsa\Olcs\Api\Entity\EcmtPermits
+     * @var \DateTime
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EcmtPermits", fetch="LAZY")
-     * @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
      */
-    protected $ecmtPermit;
+    protected $deletedDate;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="description", length=65535, nullable=true)
+     */
+    protected $description;
 
     /**
      * Identifier - Id
@@ -92,14 +115,13 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
     protected $lastModifiedOn;
 
     /**
-     * Sector
+     * Name
      *
-     * @var \Dvsa\Olcs\Api\Entity\Sectors
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Sectors", fetch="LAZY")
-     * @ORM\JoinColumn(name="sector_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="name", length=32, nullable=false)
      */
-    protected $sector;
+    protected $name;
 
     /**
      * Version
@@ -112,11 +134,94 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
     protected $version;
 
     /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->countrys = new ArrayCollection();
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
     public function setCreatedBy($createdBy)
     {
@@ -140,7 +245,7 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
     public function setCreatedOn($createdOn)
     {
@@ -166,27 +271,57 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
     }
 
     /**
-     * Set the ecmt permit
+     * Set the deleted date
      *
-     * @param \Dvsa\Olcs\Api\Entity\EcmtPermits $ecmtPermit entity being set as the value
+     * @param \DateTime $deletedDate new value being set
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
-    public function setEcmtPermit($ecmtPermit)
+    public function setDeletedDate($deletedDate)
     {
-        $this->ecmtPermit = $ecmtPermit;
+        $this->deletedDate = $deletedDate;
 
         return $this;
     }
 
     /**
-     * Get the ecmt permit
+     * Get the deleted date
      *
-     * @return \Dvsa\Olcs\Api\Entity\EcmtPermits
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
      */
-    public function getEcmtPermit()
+    public function getDeletedDate($asDateTime = false)
     {
-        return $this->ecmtPermit;
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
+        return $this->deletedDate;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description new value being set
+     *
+     * @return EcmtCountriesConstraints
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -194,7 +329,7 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
      *
      * @param int $id new value being set
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
     public function setId($id)
     {
@@ -218,7 +353,7 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -242,7 +377,7 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -268,27 +403,27 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
     }
 
     /**
-     * Set the sector
+     * Set the name
      *
-     * @param \Dvsa\Olcs\Api\Entity\Sectors $sector entity being set as the value
+     * @param string $name new value being set
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
-    public function setSector($sector)
+    public function setName($name)
     {
-        $this->sector = $sector;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get the sector
+     * Get the name
      *
-     * @return \Dvsa\Olcs\Api\Entity\Sectors
+     * @return string
      */
-    public function getSector()
+    public function getName()
     {
-        return $this->sector;
+        return $this->name;
     }
 
     /**
@@ -296,7 +431,7 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
      *
      * @param int $version new value being set
      *
-     * @return EcmtPermitSectorLink
+     * @return EcmtCountriesConstraints
      */
     public function setVersion($version)
     {
@@ -351,7 +486,11 @@ abstract class AbstractEcmtPermitSectorLink implements BundleSerializableInterfa
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }

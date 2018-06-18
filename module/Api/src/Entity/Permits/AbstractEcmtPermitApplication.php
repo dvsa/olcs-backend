@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,46 +10,26 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * EcmtCountryConstraintLink Abstract Entity
+ * EcmtPermitApplication Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="ecmt_country_constraint_link",
+ * @ORM\Table(name="ecmt_permit_application",
  *    indexes={
- *        @ORM\Index(name="ecmt_country_constraint_link_country_id", columns={"country_id"}),
- *        @ORM\Index(name="ecmt_country_constraint_link_constraint_id", columns={"constraint_id"}),
- *        @ORM\Index(name="ecmt_country_constraint_link_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ecmt_country_constraint_link_last_modified_by",
-     *     columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"})
  *    }
  * )
  */
-abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractEcmtPermitApplication implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-
-    /**
-     * Constraint
-     *
-     * @var \Dvsa\Olcs\Api\Entity\EcmtCountriesConstraints
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EcmtCountriesConstraints", fetch="LAZY")
-     * @ORM\JoinColumn(name="constraint_id", referencedColumnName="id", nullable=true)
-     */
-    protected $constraint;
-
-    /**
-     * Country
-     *
-     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
-     * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=true)
-     */
-    protected $country;
 
     /**
      * Created by
@@ -103,6 +83,45 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
     protected $lastModifiedOn;
 
     /**
+     * Licence
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     */
+    protected $licence;
+
+    /**
+     * No of permits
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="no_of_permits", nullable=true)
+     */
+    protected $noOfPermits;
+
+    /**
+     * Payment status
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="payment_status", referencedColumnName="id", nullable=false)
+     */
+    protected $paymentStatus;
+
+    /**
+     * Status
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     */
+    protected $status;
+
+    /**
      * Version
      *
      * @var int
@@ -113,59 +132,11 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
     protected $version;
 
     /**
-     * Set the constraint
-     *
-     * @param \Dvsa\Olcs\Api\Entity\EcmtCountriesConstraints $constraint entity being set as the value
-     *
-     * @return EcmtCountryConstraintLink
-     */
-    public function setConstraint($constraint)
-    {
-        $this->constraint = $constraint;
-
-        return $this;
-    }
-
-    /**
-     * Get the constraint
-     *
-     * @return \Dvsa\Olcs\Api\Entity\EcmtCountriesConstraints
-     */
-    public function getConstraint()
-    {
-        return $this->constraint;
-    }
-
-    /**
-     * Set the country
-     *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $country entity being set as the value
-     *
-     * @return EcmtCountryConstraintLink
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * Get the country
-     *
-     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return EcmtCountryConstraintLink
+     * @return EcmtPermitApplication
      */
     public function setCreatedBy($createdBy)
     {
@@ -189,7 +160,7 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return EcmtCountryConstraintLink
+     * @return EcmtPermitApplication
      */
     public function setCreatedOn($createdOn)
     {
@@ -219,7 +190,7 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
      *
      * @param int $id new value being set
      *
-     * @return EcmtCountryConstraintLink
+     * @return EcmtPermitApplication
      */
     public function setId($id)
     {
@@ -243,7 +214,7 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return EcmtCountryConstraintLink
+     * @return EcmtPermitApplication
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -267,7 +238,7 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return EcmtCountryConstraintLink
+     * @return EcmtPermitApplication
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -293,11 +264,107 @@ abstract class AbstractEcmtCountryConstraintLink implements BundleSerializableIn
     }
 
     /**
+     * Set the licence
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setLicence($licence)
+    {
+        $this->licence = $licence;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
+     */
+    public function getLicence()
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Set the no of permits
+     *
+     * @param int $noOfPermits new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setNoOfPermits($noOfPermits)
+    {
+        $this->noOfPermits = $noOfPermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the no of permits
+     *
+     * @return int
+     */
+    public function getNoOfPermits()
+    {
+        return $this->noOfPermits;
+    }
+
+    /**
+     * Set the payment status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentStatus entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setPaymentStatus($paymentStatus)
+    {
+        $this->paymentStatus = $paymentStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get the payment status
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getPaymentStatus()
+    {
+        return $this->paymentStatus;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version new value being set
      *
-     * @return EcmtCountryConstraintLink
+     * @return EcmtPermitApplication
      */
     public function setVersion($version)
     {

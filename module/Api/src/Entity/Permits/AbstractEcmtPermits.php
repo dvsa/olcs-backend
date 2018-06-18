@@ -1,12 +1,14 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -18,11 +20,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="ecmt_permits",
  *    indexes={
- *        @ORM\Index(name="ecmt_permits_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ecmt_permits_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ecmt_permits_application_id", columns={"ecmt_permits_application_id"}),
- *        @ORM\Index(name="ecmt_permits_payment_status_id", columns={"payment_status_id"}),
- *        @ORM\Index(name="ecmt_permits_application_status_id", columns={"application_status_id"})
+ *        @ORM\Index(name="ix_ecmt_permits_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_ecmt_permits_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_ecmt_permits_status", columns={"status"}),
+ *        @ORM\Index(name="ix_ecmt_permits_payment_status", columns={"payment_status"}),
+ *        @ORM\Index(name="ix_ecmt_permits_ecmt_permits_application_id",
+     *     columns={"ecmt_permits_application_id"})
  *    }
  * )
  */
@@ -32,14 +35,17 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     use ProcessDateTrait;
 
     /**
-     * Application status
+     * Country
      *
-     * @var \Dvsa\Olcs\Api\Entity\ApplicationStatus
+     * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ApplicationStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="application_status_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     mappedBy="ecmtPermits",
+     *     fetch="LAZY"
+     * )
      */
-    protected $applicationStatus;
+    protected $countrys;
 
     /**
      * Created by
@@ -64,9 +70,9 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Ecmt permits application
      *
-     * @var \Dvsa\Olcs\Api\Entity\EcmtPermitApplication
+     * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
      * @ORM\JoinColumn(name="ecmt_permits_application_id", referencedColumnName="id", nullable=false)
      */
     protected $ecmtPermitsApplication;
@@ -132,12 +138,25 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Payment status
      *
-     * @var \Dvsa\Olcs\Api\Entity\PaymentStatus
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PaymentStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_status_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="payment_status", referencedColumnName="id", nullable=false)
      */
     protected $paymentStatus;
+
+    /**
+     * Sector
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors",
+     *     mappedBy="ecmtPermits",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $sectors;
 
     /**
      * Sifting random factor
@@ -167,6 +186,16 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     protected $siftingValueRandom;
 
     /**
+     * Status
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
+     */
+    protected $status;
+
+    /**
      * Version
      *
      * @var int
@@ -177,27 +206,87 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     protected $version;
 
     /**
-     * Set the application status
+     * Initialise the collections
      *
-     * @param \Dvsa\Olcs\Api\Entity\ApplicationStatus $applicationStatus entity being set as the value
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->countrys = new ArrayCollection();
+        $this->sectors = new ArrayCollection();
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
      *
      * @return EcmtPermits
      */
-    public function setApplicationStatus($applicationStatus)
+    public function setCountrys($countrys)
     {
-        $this->applicationStatus = $applicationStatus;
+        $this->countrys = $countrys;
 
         return $this;
     }
 
     /**
-     * Get the application status
+     * Get the countrys
      *
-     * @return \Dvsa\Olcs\Api\Entity\ApplicationStatus
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getApplicationStatus()
+    public function getCountrys()
     {
-        return $this->applicationStatus;
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return EcmtPermits
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return EcmtPermits
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
     }
 
     /**
@@ -257,7 +346,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Set the ecmt permits application
      *
-     * @param \Dvsa\Olcs\Api\Entity\EcmtPermitApplication $ecmtPermitsApplication entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtPermitsApplication entity being set as the value
      *
      * @return EcmtPermits
      */
@@ -271,7 +360,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the ecmt permits application
      *
-     * @return \Dvsa\Olcs\Api\Entity\EcmtPermitApplication
+     * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      */
     public function getEcmtPermitsApplication()
     {
@@ -443,7 +532,7 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Set the payment status
      *
-     * @param \Dvsa\Olcs\Api\Entity\PaymentStatus $paymentStatus entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentStatus entity being set as the value
      *
      * @return EcmtPermits
      */
@@ -457,11 +546,74 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     /**
      * Get the payment status
      *
-     * @return \Dvsa\Olcs\Api\Entity\PaymentStatus
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getPaymentStatus()
     {
         return $this->paymentStatus;
+    }
+
+    /**
+     * Set the sector
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $sectors collection being set as the value
+     *
+     * @return EcmtPermits
+     */
+    public function setSectors($sectors)
+    {
+        $this->sectors = $sectors;
+
+        return $this;
+    }
+
+    /**
+     * Get the sectors
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getSectors()
+    {
+        return $this->sectors;
+    }
+
+    /**
+     * Add a sectors
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $sectors collection being added
+     *
+     * @return EcmtPermits
+     */
+    public function addSectors($sectors)
+    {
+        if ($sectors instanceof ArrayCollection) {
+            $this->sectors = new ArrayCollection(
+                array_merge(
+                    $this->sectors->toArray(),
+                    $sectors->toArray()
+                )
+            );
+        } elseif (!$this->sectors->contains($sectors)) {
+            $this->sectors->add($sectors);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a sectors
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $sectors collection being removed
+     *
+     * @return EcmtPermits
+     */
+    public function removeSectors($sectors)
+    {
+        if ($this->sectors->contains($sectors)) {
+            $this->sectors->removeElement($sectors);
+        }
+
+        return $this;
     }
 
     /**
@@ -537,6 +689,30 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     }
 
     /**
+     * Set the status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
+     * @return EcmtPermits
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version new value being set
@@ -596,7 +772,11 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }

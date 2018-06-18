@@ -1,46 +1,35 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * EcmtPermitApplication Abstract Entity
+ * Sectors Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="ecmt_permit_application",
+ * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
+ * @ORM\Table(name="sectors",
  *    indexes={
- *        @ORM\Index(name="ecmt_permit_application_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ecmt_permit_application_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ecmt_permit_application_licence_id", columns={"licence_id"}),
- *        @ORM\Index(name="ecmt_permit_application_payment_status_id", columns={"payment_status_id"}),
- *        @ORM\Index(name="ecmt_permit_application_application_status_id",
-     *     columns={"application_status_id"})
+ *        @ORM\Index(name="ix_permit_sectors_created_by", columns={"created_by"}),
+ *        @ORM\Index(name="ix_permit_sectors_last_modified_by", columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractEcmtPermitApplication implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractSectors implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-
-    /**
-     * Application status
-     *
-     * @var \Dvsa\Olcs\Api\Entity\ApplicationStatus
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ApplicationStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="application_status_id", referencedColumnName="id", nullable=false)
-     */
-    protected $applicationStatus;
 
     /**
      * Created by
@@ -61,6 +50,45 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Deleted date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
+     */
+    protected $deletedDate;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=255, nullable=false)
+     */
+    protected $description;
+
+    /**
+     * Ecmt permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermits",
+     *     inversedBy="sectors",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_permit_sector_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $ecmtPermits;
 
     /**
      * Identifier - Id
@@ -94,33 +122,22 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $lastModifiedOn;
 
     /**
-     * Licence
+     * Name
      *
-     * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="name", length=255, nullable=false)
      */
-    protected $licence;
+    protected $name;
 
     /**
-     * No of permits
+     * Sifting percentage
      *
-     * @var int
+     * @var unknown
      *
-     * @ORM\Column(type="integer", name="no_of_permits", nullable=true)
+     * @ORM\Column(type="float", name="sifting_percentage", precision=6, scale=4, nullable=true)
      */
-    protected $noOfPermits;
-
-    /**
-     * Payment status
-     *
-     * @var \Dvsa\Olcs\Api\Entity\PaymentStatus
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\PaymentStatus", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_status_id", referencedColumnName="id", nullable=false)
-     */
-    protected $paymentStatus;
+    protected $siftingPercentage;
 
     /**
      * Version
@@ -133,27 +150,23 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $version;
 
     /**
-     * Set the application status
+     * Initialise the collections
      *
-     * @param \Dvsa\Olcs\Api\Entity\ApplicationStatus $applicationStatus entity being set as the value
-     *
-     * @return EcmtPermitApplication
+     * @return void
      */
-    public function setApplicationStatus($applicationStatus)
+    public function __construct()
     {
-        $this->applicationStatus = $applicationStatus;
-
-        return $this;
+        $this->initCollections();
     }
 
     /**
-     * Get the application status
+     * Initialise the collections
      *
-     * @return \Dvsa\Olcs\Api\Entity\ApplicationStatus
+     * @return void
      */
-    public function getApplicationStatus()
+    public function initCollections()
     {
-        return $this->applicationStatus;
+        $this->ecmtPermits = new ArrayCollection();
     }
 
     /**
@@ -161,7 +174,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
     public function setCreatedBy($createdBy)
     {
@@ -185,7 +198,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
     public function setCreatedOn($createdOn)
     {
@@ -211,11 +224,128 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the deleted date
+     *
+     * @param \DateTime $deletedDate new value being set
+     *
+     * @return Sectors
+     */
+    public function setDeletedDate($deletedDate)
+    {
+        $this->deletedDate = $deletedDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the deleted date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getDeletedDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->deletedDate);
+        }
+
+        return $this->deletedDate;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description new value being set
+     *
+     * @return Sectors
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set the ecmt permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
+     *
+     * @return Sectors
+     */
+    public function setEcmtPermits($ecmtPermits)
+    {
+        $this->ecmtPermits = $ecmtPermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEcmtPermits()
+    {
+        return $this->ecmtPermits;
+    }
+
+    /**
+     * Add a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
+     *
+     * @return Sectors
+     */
+    public function addEcmtPermits($ecmtPermits)
+    {
+        if ($ecmtPermits instanceof ArrayCollection) {
+            $this->ecmtPermits = new ArrayCollection(
+                array_merge(
+                    $this->ecmtPermits->toArray(),
+                    $ecmtPermits->toArray()
+                )
+            );
+        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->add($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ecmt permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
+     *
+     * @return Sectors
+     */
+    public function removeEcmtPermits($ecmtPermits)
+    {
+        if ($this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->removeElement($ecmtPermits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
     public function setId($id)
     {
@@ -239,7 +369,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -263,7 +393,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -289,75 +419,51 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the licence
+     * Set the name
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
+     * @param string $name new value being set
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
-    public function setLicence($licence)
+    public function setName($name)
     {
-        $this->licence = $licence;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get the licence
+     * Get the name
      *
-     * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
+     * @return string
      */
-    public function getLicence()
+    public function getName()
     {
-        return $this->licence;
+        return $this->name;
     }
 
     /**
-     * Set the no of permits
+     * Set the sifting percentage
      *
-     * @param int $noOfPermits new value being set
+     * @param unknown $siftingPercentage new value being set
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
-    public function setNoOfPermits($noOfPermits)
+    public function setSiftingPercentage($siftingPercentage)
     {
-        $this->noOfPermits = $noOfPermits;
+        $this->siftingPercentage = $siftingPercentage;
 
         return $this;
     }
 
     /**
-     * Get the no of permits
+     * Get the sifting percentage
      *
-     * @return int
+     * @return unknown
      */
-    public function getNoOfPermits()
+    public function getSiftingPercentage()
     {
-        return $this->noOfPermits;
-    }
-
-    /**
-     * Set the payment status
-     *
-     * @param \Dvsa\Olcs\Api\Entity\PaymentStatus $paymentStatus entity being set as the value
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setPaymentStatus($paymentStatus)
-    {
-        $this->paymentStatus = $paymentStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the payment status
-     *
-     * @return \Dvsa\Olcs\Api\Entity\PaymentStatus
-     */
-    public function getPaymentStatus()
-    {
-        return $this->paymentStatus;
+        return $this->siftingPercentage;
     }
 
     /**
@@ -365,7 +471,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      *
      * @param int $version new value being set
      *
-     * @return EcmtPermitApplication
+     * @return Sectors
      */
     public function setVersion($version)
     {
@@ -420,7 +526,11 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
         foreach ($properties as $property) {
 
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }

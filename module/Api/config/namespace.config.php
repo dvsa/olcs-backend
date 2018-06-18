@@ -174,4 +174,9 @@ return [
     'BusRegReadAudit' => 'Bus',
     'TransportManagerReadAudit' => 'Tm',
     'DataRetention' => 'DataRetention',
+    'EcmtCountriesConstraints' => 'Permits',
+    'EcmtPermitApplication' => 'Permits',
+    'EcmtPermits' => 'Permits',
+    'Sectors' => 'Permits',
+
 ];

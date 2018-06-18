@@ -333,14 +333,8 @@ return [
             'DocumentToDelete' => RepositoryFactory::class,
             'Hearing' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
-            'ConstrainedCountries' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
-            'EcmtPermitCountryLink' => RepositoryFactory::class,
-            'ApplicationStatus' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
-            'PaymentStatus' => RepositoryFactory::class,
-
-
 
         ]
     ],
