@@ -42,7 +42,7 @@ class Country extends AbstractRepository
      * @return array
      *
      */
-    public function getConstrainedEcmtCountries(){
+    public function getConstrainedEcmtCountries($array = false){
 
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
@@ -53,10 +53,19 @@ class Country extends AbstractRepository
 
         foreach ($results as $row){
             if($row->getConstraints()->count() > 0){
-                $data[] = array(
-                  'id' => $row->getId(),
-                  'description' => $row->getCountryDesc()
-                );
+
+                if($array)
+                {
+                    $data[] = $row->getId();
+                }
+                else
+                {
+                    $data[] = array(
+                      'id' => $row->getId(),
+                      'description' => $row->getCountryDesc()
+                    );
+                }
+
             }
         }
         return array(count($data),$data);
