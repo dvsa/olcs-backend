@@ -2,11 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -18,11 +20,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class CreateEcmtPermits extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'EcmtPermits';
-    protected $extraRepos = ['EcmtPermitApplication','Country','RefData'];
+    protected $extraRepos = ['EcmtPermitApplication','Country'];
 
     public function handleCommand(CommandInterface $command)
     {
-
 
         $status = $this->getRepo()->getRefdataReference('lsts_consideration');
         $paymentStatus = $this->getRepo()->getRefdataReference('lfs_ot');
@@ -35,27 +36,18 @@ final class CreateEcmtPermits extends AbstractCommandHandler implements Transact
         $ecmtPermit = new EcmtPermits();
 
         $ecmtPermit->setStatus($status);
+        $ecmtPermit->setPaymentStatus($paymentStatus);
         $ecmtPermit->setEcmtPermitsApplication($ecmtPermitApplication);
         $ecmtPermit->setIntensity($command->getIntensity());
-        $ecmtPermit->setPaymentStatus($paymentStatus);
 
-        $countries = array();
-        foreach($command->getCountries() as $country)
-        {
-            $countryObj = $this->getRepo('Country')->fetchById($country);
-            $countries[] = $countryObj;
-        }
-
-        $ecmtPermit->setCountrys($countries);
-
+        $countries = $this->buildArrayCollection(Country::class, $command->getCountries());
+        $ecmtPermit->addCountrys($countries);
 
         $this->getRepo()->save($ecmtPermit);
 
         $result = new Result();
         $result->addId('ecmtPermit', $ecmtPermit->getId());
         $result->addMessage("ECMT permit application ID {$ecmtPermit->getId()} created");
-
-
 
         return $result;
 
