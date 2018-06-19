@@ -138,7 +138,6 @@ return [
             'Api\Xml' => \Dvsa\Olcs\Api\Controller\XmlController::class
         ]
     ],
-    \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::CONFIG_KEY => include(__DIR__ . '/feature-toggle.config.php'),
     \Dvsa\Olcs\Api\Domain\DbQueryServiceManagerFactory::CONFIG_KEY => include(__DIR__ . '/db-query-map.config.php'),
     \Dvsa\Olcs\Api\Domain\CommandHandlerManagerFactory::CONFIG_KEY => [
         'factories' => require(__DIR__ . '/command-map.config.php')
