@@ -41,8 +41,16 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
      *
      * @ORM\ManyToMany(
      *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
-     *     mappedBy="ecmtPermits",
+     *     inversedBy="ecmtPermits",
      *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_permit_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
      * )
      */
     protected $countrys;
