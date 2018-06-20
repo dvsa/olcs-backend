@@ -34,7 +34,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
         $this->getRepo()->save($ecmtPermitApplication);
 
         $result = new Result();
-        $result->addId('ecmtPermitApplication', $bus->getId());
+        $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $result->addMessage('EcmtPermitApplication created successfully');
 
         return $result;
