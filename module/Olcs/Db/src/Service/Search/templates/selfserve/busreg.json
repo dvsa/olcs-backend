@@ -11,7 +11,8 @@
                               "lsts_not_submitted",
                               "lsts_unlicenced",
                               "lsts_withdrawn",
-                              "lsts_surrendered"
+                              "lsts_surrendered",
+                              "lsts_cancelled"
                            ]
                         }
                      },
