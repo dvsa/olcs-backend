@@ -1026,5 +1026,5 @@ return [
 
     // Permits
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
-    TransferCommand\Permits\CreateEcmtPermitCountryLink::class => CommandHandler\Permits\CreateEcmtPermitCountryLink::class,
+    TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
 ];
