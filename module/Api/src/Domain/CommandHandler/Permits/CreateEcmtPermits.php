@@ -2,12 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -20,29 +18,18 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class CreateEcmtPermits extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'EcmtPermits';
-    protected $extraRepos = ['EcmtPermitApplication','Country'];
+    protected $extraRepos = ['EcmtPermitApplication'];
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command command
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
-
-        $status = $this->getRepo()->getRefdataReference('lsts_consideration');
-        $paymentStatus = $this->getRepo()->getRefdataReference('lfs_ot');
-
-        $ecmtPermitApplication = new EcmtPermitApplication();
-        $ecmtPermitApplication->setStatus($status);
-        $ecmtPermitApplication->setPaymentStatus($paymentStatus);
-        $this->getRepo('EcmtPermitApplication')->save($ecmtPermitApplication);
-
-        $ecmtPermit = new EcmtPermits();
-
-        $ecmtPermit->setStatus($status);
-        $ecmtPermit->setPaymentStatus($paymentStatus);
-        $ecmtPermit->setEcmtPermitsApplication($ecmtPermitApplication);
-        $ecmtPermit->setIntensity($command->getIntensity());
-
-        $countries = $this->buildArrayCollection(Country::class, $command->getCountries());
-        $ecmtPermit->addCountrys($countries);
-
+        $ecmtPermit = $this->createEcmtPermitsObject($command);
         $this->getRepo()->save($ecmtPermit);
 
         $result = new Result();
@@ -50,6 +37,27 @@ final class CreateEcmtPermits extends AbstractCommandHandler implements Transact
         $result->addMessage("ECMT permit application ID {$ecmtPermit->getId()} created");
 
         return $result;
+    }
 
+    /**
+     * Create ECMT Permits object
+     *
+     * @param object $command Command
+     *
+     * @return object EcmtPermits
+     */
+    private function createEcmtPermitsObject($command)
+    {
+        $countries = $this->buildArrayCollection(Country::class, $command->getCountries());
+
+        $ecmtPermitApplication = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtPermitsApplication());
+
+        return EcmtPermits::createNew(
+          $this->getRepo()->getRefdataReference($command->getStatus()),
+          $this->getRepo()->getRefdataReference($command->getPaymentStatus()),
+          $ecmtPermitApplication,
+          $command->getIntensity(),
+          $countries
+        );
     }
 }
