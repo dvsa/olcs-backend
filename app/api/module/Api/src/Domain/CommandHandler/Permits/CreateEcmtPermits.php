@@ -34,7 +34,7 @@ final class CreateEcmtPermits extends AbstractCommandHandler implements Transact
 
         $result = new Result();
         $result->addId('ecmtPermit', $ecmtPermit->getId());
-        $result->addMessage("ECMT permit application ID {$ecmtPermit->getId()} created");
+        $result->addMessage("ECMT permit created successfully.");
 
         return $result;
     }
