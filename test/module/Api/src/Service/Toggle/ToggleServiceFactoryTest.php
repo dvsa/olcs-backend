@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Mockery as m;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory;
+
 /**
  * Class ToggleServiceFactoryTest
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
