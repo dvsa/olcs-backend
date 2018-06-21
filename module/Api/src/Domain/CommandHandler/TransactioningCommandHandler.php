@@ -65,4 +65,9 @@ class TransactioningCommandHandler implements CommandHandlerInterface
             throw $e;
         }
     }
+
+    public function isEnabled(): bool
+    {
+        return $this->wrapped->isEnabled();
+    }
 }

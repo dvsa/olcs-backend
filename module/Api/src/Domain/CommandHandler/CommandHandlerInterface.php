@@ -22,4 +22,9 @@ interface CommandHandlerInterface
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command);
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool;
 }
