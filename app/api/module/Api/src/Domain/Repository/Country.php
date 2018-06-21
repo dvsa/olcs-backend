@@ -52,7 +52,7 @@ class Country extends AbstractRepository
         $data = array();
 
         foreach ($results as $row){
-            if($row->getConstraints()->count() > 0){
+            if($row->getConstraints() && $row->getConstraints()->count() > 0){
 
                 if($array)
                 {
