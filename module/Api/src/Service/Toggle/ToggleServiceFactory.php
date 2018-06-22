@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Toggle;
 
 use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
-use Dvsa\Olcs\Transfer\Query\FeatureToggle\GetList;
-use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Query\FeatureToggle\FetchList;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Qandidate\Toggle\Serializer\InMemoryCollectionSerializer;
@@ -15,8 +14,6 @@ use Qandidate\Toggle\ToggleManager;
  */
 class ToggleServiceFactory implements FactoryInterface
 {
-    const CONFIG_KEY = 'feature_toggle';
-
     /**
      * Create the toggle service
      *
@@ -27,11 +24,10 @@ class ToggleServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator): ToggleService
     {
         /**
-         * @todo - botch job need to improve going forward
          * @var FeatureToggleRepo $repo
          */
         $repo = $serviceLocator->get('RepositoryServiceManager')->get('FeatureToggle');
-        $toggleConfig = $repo->fetchList(GetList::create(['page' => 1, 'limit' => 100]));
+        $toggleConfig = $repo->fetchList(FetchList::create([]));
 
         $configArray = [];
 
@@ -42,8 +38,6 @@ class ToggleServiceFactory implements FactoryInterface
                 'status' => $toggle['status']['id']
             ];
         }
-
-        Logger::debug('toggle config', $configArray);
 
         $collectionSerializer = new InMemoryCollectionSerializer();
         $collection = $collectionSerializer->deserialize($configArray);
