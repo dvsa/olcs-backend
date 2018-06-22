@@ -144,7 +144,7 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
                 }
 
                 $publicationLink->setText2($command->getText2());
-
+                $publicationLink->maybeSetPublishAfterDate();
                 $result->merge(
                     $this->createPublication(
                         $handler,
@@ -179,9 +179,9 @@ class PiHearing extends AbstractCommandHandler implements TransactionedInterface
     }
 
     /**
-     * @param PiHearingEntity $hearing
-     * @param PiEntity $pi
-     * @param CasesEntity $case
+     * @param PiHearingEntity  $hearing
+     * @param PiEntity         $pi
+     * @param CasesEntity      $case
      * @param CommandInterface $command
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException

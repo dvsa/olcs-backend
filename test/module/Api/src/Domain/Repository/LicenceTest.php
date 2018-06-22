@@ -850,7 +850,7 @@ class LicenceTest extends RepositoryTestCase
         $this->mockCreateQueryBuilder($qb);
 
         $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->andReturn(false);
-        $qb->shouldReceive('getDQL')->twice();
+        $qb->shouldReceive('getDQL')->times(3);
         $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
 
         $this->sut->fetchForLastTmAutoLetter();
@@ -886,6 +886,11 @@ class LicenceTest extends RepositoryTestCase
             'SELECT IDENTITY(gp.licence) ' .
             'AND (gp.startDate <= [[' . $today . ']] ' .
             'AND gp.endDate >= [[' . $today . ']]) ' .
+            'AND m.id NOT IN  ' .
+            'SELECT IDENTITY(tml2.licence) ' .
+            'AND (tml2.deletedDate >= [[' . $today . ']] ' .
+            'OR tml2.deletedDate IS NULL) ' .
+            'AND tml2.licence = m.id ' .
             'AND m.id NOT IN ';
 
         $this->assertEquals($expectedQuery, $this->query);
