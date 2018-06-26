@@ -56,6 +56,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
         $mockService = m::mock(CommandHandlerInterface::class);
         $mockService->shouldReceive('handleCommand')->with($command)->andReturn(['response']);
+        $mockService->shouldReceive('isEnabled')->once()->andReturn(true);
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($command)->andReturn(true);
@@ -72,6 +73,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
         $command->shouldReceive('getArrayCopy')->once()->andReturn(['foo' => 'bar']);
 
         $wrapped = m::mock(CommandHandlerInterface::class);
+        $wrapped->shouldReceive('isEnabled')->once()->andReturn(true);
 
         $mockService = m::mock(TransactioningCommandHandler::class);
         $mockService->shouldReceive('getWrapped')->andReturn($wrapped);
@@ -95,6 +97,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
         $mockService = m::mock(CommandHandlerInterface::class);
         $mockService->shouldReceive('handleCommand')->never();
+        $mockService->shouldReceive('isEnabled')->once()->andReturn(true);
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($command)->andReturn(false);

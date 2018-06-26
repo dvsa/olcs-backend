@@ -15,7 +15,7 @@ use Zend\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Zend\ServiceManager\Exception\RuntimeException;
-use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
 
 /**
  * Query Handler Manager
@@ -84,6 +84,7 @@ class QueryHandlerManager extends AbstractPluginManager
 
     protected function validateDto($dto, $queryHandlerFqcl)
     {
+        /** @var ValidationHandlerManager $vhm */
         $vhm = $this->getServiceLocator()->get('ValidationHandlerManager');
 
         /** @var ValidationHandlerInterface $validationHandler */

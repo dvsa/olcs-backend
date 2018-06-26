@@ -516,6 +516,11 @@ return [
     TransferQuery\SystemParameter\SystemParameter::class => QueryHandler\SystemParameter\SystemParameter::class,
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
 
+    // FeatureToggle
+    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ById::class,
+    TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
+    TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
+
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,

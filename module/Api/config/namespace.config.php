@@ -53,6 +53,7 @@ return [
     'PostcodeEnforcementArea' => 'EnforcementArea',
     'EventHistory' => 'EventHistory',
     'EventHistoryType' => 'EventHistory',
+    'FeatureToggle' => 'System',
     'Fee' => 'Fee',
     'FeeManualAlteration' => 'Fee',
     'FeeTransaction' => 'Fee',
