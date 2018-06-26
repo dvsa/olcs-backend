@@ -678,4 +678,11 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
 
         return null;
     }
+
+    public function getCustomerReference() {
+        if (empty($this->getOrganisation())) {
+            return null;
+        }
+        return $this->getOrganisation()->getId();
+    }
 }
