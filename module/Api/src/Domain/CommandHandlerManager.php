@@ -55,7 +55,7 @@ class CommandHandlerManager extends AbstractPluginManager
         );
 
         if (!$validateCommandHandler->isEnabled()) {
-            $exception = new DisabledHandlerException(get_class($commandHandler));
+            $exception = new DisabledHandlerException(get_class($validateCommandHandler));
             Logger::warn(get_class($this) . ': ' . $exception->getMessage());
             throw $exception;
         }
