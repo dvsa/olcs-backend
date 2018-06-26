@@ -72,4 +72,11 @@ class TransactioningCommandHandlerTest extends MockeryTestCase
 
         $this->sut->handleCommand($command);
     }
+
+    public function testIsEnabled()
+    {
+        $isEnabled = true;
+        $this->wrapped->shouldReceive('isEnabled')->once()->andReturn($isEnabled);
+        $this->assertEquals($isEnabled, $this->sut->isEnabled());
+    }
 }
