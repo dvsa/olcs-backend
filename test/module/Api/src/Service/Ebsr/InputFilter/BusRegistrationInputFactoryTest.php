@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
-use Dvsa\Olcs\Api\Service\Ebsr\Filter\IsScottishRules;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
@@ -52,7 +52,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(InjectIsTxcApp::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(InjectReceivedDate::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(InjectNaptanCodes::class)->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with(IsScottishRules::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(NoticePeriod::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Subsidy::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Via::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(ExistingRegNo::class)->andReturn($mockFilter);
@@ -110,7 +110,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(InjectIsTxcApp::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(InjectReceivedDate::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(InjectNaptanCodes::class)->andReturn($mockFilter);
-        $mockSl->shouldReceive('get')->with(IsScottishRules::class)->andReturn($mockFilter);
+        $mockSl->shouldReceive('get')->with(NoticePeriod::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Subsidy::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Via::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(ExistingRegNo::class)->andReturn($mockFilter);

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\System;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Entity\Cases\Statement;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Pi\Pi;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
@@ -47,6 +48,8 @@ class SlaTargetDate extends AbstractSlaTargetDate
             $this->setSubmission($entity);
         } elseif ($entity instanceof ProposeToRevoke) {
             $this->setProposeToRevoke($entity);
+        } elseif ($entity instanceof Statement) {
+            $this->setStatement($entity);
         } else {
             throw new NotFoundException('Entity not found');
         }

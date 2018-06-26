@@ -188,7 +188,10 @@ class CreateTaskTest extends CommandHandlerTestCase
             );
 
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 11],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -217,7 +220,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -257,7 +263,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -282,7 +291,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -302,7 +314,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -326,7 +341,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -354,7 +372,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -386,7 +407,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -454,7 +478,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -602,7 +629,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 
@@ -760,7 +790,10 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockSaveTask($this->references[User::class][888]);
         $result = $this->sut->handleCommand($command);
-        $expected = ['id' => ['task' => 123], 'messages' => ['Task created successfully']];
+        $expected = [
+            'id' => ['task' => 123, 'assignedToUser' => 888],
+            'messages' => ['Task created successfully']
+        ];
         $this->assertEquals($expected, $result->toArray());
     }
 }

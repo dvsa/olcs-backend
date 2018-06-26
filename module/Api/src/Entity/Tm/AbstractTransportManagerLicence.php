@@ -181,6 +181,15 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     protected $lastModifiedOn;
 
     /**
+     * Last tm letter date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="last_tm_letter_date", nullable=true)
+     */
+    protected $lastTmLetterDate;
+
+    /**
      * Licence
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
@@ -648,6 +657,36 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     }
 
     /**
+     * Set the last tm letter date
+     *
+     * @param \DateTime $lastTmLetterDate new value being set
+     *
+     * @return TransportManagerLicence
+     */
+    public function setLastTmLetterDate($lastTmLetterDate)
+    {
+        $this->lastTmLetterDate = $lastTmLetterDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the last tm letter date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getLastTmLetterDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastTmLetterDate);
+        }
+
+        return $this->lastTmLetterDate;
+    }
+
+    /**
      * Set the licence
      *
      * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence entity being set as the value
@@ -864,7 +903,6 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     public function clearProperties($properties = array())
     {
         foreach ($properties as $property) {
-
             if (property_exists($this, $property)) {
                 if ($this->$property instanceof Collection) {
                     $this->$property = new ArrayCollection(array());

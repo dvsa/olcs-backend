@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query\Expr\Join;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
@@ -17,6 +18,9 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Licence\InternationalGoodsReport;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TMLicenceEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TMApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Licence\GracePeriod as GracePeriodEntity;
 
 /**
  * Licence
@@ -65,7 +69,7 @@ class Licence extends AbstractRepository
     /**
      * fetch with addresses
      *
-     * @param QueryInterface $query the query
+     * @param QueryInterface|int $query the query | the licence id
      *
      * @return mixed
      * @throws NoResultException
@@ -75,11 +79,19 @@ class Licence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $this->buildDefaultQuery($qb, $query->getId())
+        if (is_int($query)) {
+            $licenceId = $query;
+        } else {
+            $licenceId = $query->getId();
+        }
+
+        $this->buildDefaultQuery($qb, $licenceId)
             ->withContactDetails('correspondenceCd', 'c')
             ->with('c.phoneContacts', 'c_p')
             ->with('c_p.phoneContactType', 'c_p_pct')
             ->withRefData(PhoneContactEntity::class, 'c_p')
+            ->with('organisation', 'o')
+            ->withContactDetails('o.contactDetails', 'o_cd')
             ->withContactDetails('establishmentCd', 'e')
             ->withContactDetails('transportConsultantCd', 't')
             ->with('t.phoneContacts', 't_p')
@@ -620,5 +632,187 @@ class Licence extends AbstractRepository
     public function internationalGoodsReport()
     {
         return $this->getDbQueryManager()->get(InternationalGoodsReport::class)->execute([]);
+    }
+
+    public function fetchForLastTmAutoLetter()
+    {
+        $this->disableSoftDeleteable(
+            [
+                TMLicenceEntity::class
+            ]
+        );
+        /* @var \Doctrine\Orm\QueryBuilder $qb*/
+        $qb = $this->createQueryBuilder();
+        $qb->distinct();
+
+        //  Goods or PSV licence
+        $qb->andWhere(
+            $qb->expr()
+                ->in(
+                    $this->alias.'.goodsOrPsv',
+                    ':goodsOrPsv'
+                )
+        );
+        $qb->setParameter('goodsOrPsv', [Entity::LICENCE_CATEGORY_GOODS_VEHICLE, Entity::LICENCE_CATEGORY_PSV]);
+
+        //  Valid licence status (Valid, Curtailed, Suspended)
+        $qb->andWhere(
+            $qb->expr()
+                ->in(
+                    $this->alias.'.status',
+                    ':statuses'
+                )
+        );
+        $qb->setParameter('statuses', [Entity::LICENCE_STATUS_SUSPENDED, Entity::LICENCE_STATUS_VALID, Entity::LICENCE_STATUS_CURTAILED]);
+
+        //  Standard national or standard international licence
+        $qb->andWhere(
+            $qb->expr()
+                ->in(
+                    $this->alias.'.licenceType',
+                    ':licenceTypes'
+                )
+        );
+        $qb->setParameter('licenceTypes', [Entity::LICENCE_TYPE_STANDARD_NATIONAL, Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL]);
+
+        //  Licence continuation date has not passed (i.e. the licence has not expired) e.g. expiry date >= 1 day ahead of current date time
+        $qb->andWhere(
+            $qb->expr()
+                ->gte(
+                    $this->alias . '.expiryDate',
+                    ':tomorrow'
+                )
+        );
+
+        //  Upon the last Transport Manager being removed online by a self service user where that removal was >1 day from current date/time
+        $qb->andWhere(
+            $qb->expr()->andX(
+                $qb->expr()->isNotNull('tml.deletedDate'),
+                $qb->expr()->lte(
+                    'tml.deletedDate',
+                    ':yesterday'
+                )
+            )
+        );
+
+        //  Letter has not been sent already for that TM
+        $qb->andWhere(
+            $qb->expr()->isNull('tml.lastTmLetterDate')
+        );
+
+        //  The licence is not marked for oupOut
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.optOutTmLetter', 0)
+        );
+
+        //  Vehicle authority >=1
+        $qb->andWhere(
+            $qb->expr()->gte($this->alias . '.totAuthVehicles', 1)
+        );
+
+        $qb->innerJoin(
+            TMLicenceEntity::class,
+            'tml',
+            Join::WITH,
+            $qb->expr()->eq($this->alias . '.id', 'tml.licence')
+        );
+
+        /* @var \Doctrine\Orm\QueryBuilder $appQb */
+        $appQb = $this->getEntityManager()->getRepository(ApplicationEntity::class)->createQueryBuilder('a');
+        $appQb->select('IDENTITY(a.licence)');
+
+        //  Where there are no TM's being updated/added via a variation application for the licence.
+        $appQb->andWhere(
+            $appQb->expr()
+                ->eq(
+                    'a.status',
+                    ':applicationStatus'
+                )
+        );
+        $qb->setParameter('applicationStatus', ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION);
+
+        $appQb->innerJoin(
+            TMApplicationEntity::class,
+            'tma',
+            Join::WITH,
+            $appQb->expr()->eq('a.id', 'tma.application')
+        );
+        $qb->andWhere(
+            $qb->expr()
+                ->notIn(
+                    $this->alias . '.id',
+                    $appQb->getDQL()
+                )
+        );
+
+        /* @var \Doctrine\Orm\QueryBuilder $graceQb */
+        $graceQb = $this->getEntityManager()->getRepository(GracePeriodEntity::class)->createQueryBuilder('gp');
+        $graceQb->select('IDENTITY(gp.licence)');
+
+        //  And where there is no active period of grace for the licence or on a variation application for the licence
+        $graceQb->andWhere(
+            $graceQb->expr()->andX(
+                $graceQb->expr()->lte(
+                    'gp.startDate',
+                    ':today'
+                ),
+                $graceQb->expr()->gte(
+                    'gp.endDate',
+                    ':today'
+                )
+            )
+        );
+        $qb->andWhere(
+            $qb->expr()
+                ->notIn(
+                    $this->alias . '.id',
+                    $graceQb->getDQL()
+                )
+        );
+
+        /* @var \Doctrine\Orm\QueryBuilder $tmlQb */
+        $tmlQb = $this->getEntityManager()->getRepository(TMLicenceEntity::class)->createQueryBuilder('tml2');
+        $tmlQb->select('IDENTITY(tml2.licence)');
+
+        //  And where there is no active period of grace for the licence or on a variation application for the licence
+        $tmlQb->andWhere(
+            $tmlQb->expr()->orX(
+                $tmlQb->expr()->gte(
+                    'tml2.deletedDate',
+                    ':today'
+                ),
+                $tmlQb->expr()->isNull('tml2.deletedDate')
+            )
+        );
+        $tmlQb->andWhere(
+            $tmlQb->expr()->eq('tml2.licence', $this->alias . '.id')
+        );
+        $qb->andWhere(
+            $qb->expr()
+                ->notIn(
+                    $this->alias . '.id',
+                    $tmlQb->getDQL()
+                )
+        );
+
+
+        $today = (new DateTime())
+            ->setTime(0, 0, 0, 0)
+            ->format('Y-m-d');
+        $qb->setParameter('today', $today);
+
+        $tomorrow = (new DateTime())
+            ->add(new \DateInterval('P1D'))
+            ->setTime(0, 0, 0, 0)
+            ->format('Y-m-d H:i:s');
+        $qb->setParameter('tomorrow', $tomorrow);
+
+        $yesterday = (new DateTime())
+            ->sub(new \DateInterval('P1D'))
+            ->setTime(0, 0, 0, 0)
+            ->format('Y-m-d H:i:s');
+        $qb->setParameter('yesterday', $yesterday);
+
+        return $qb->getQuery()->getResult();
     }
 }

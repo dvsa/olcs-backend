@@ -264,6 +264,15 @@ return [
                         ],
                     ],
                 ],
+                'last-tm-letter' => [
+                    'options' => [
+                        'route' => 'last-tm-letter [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'lastTmLetter',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -361,6 +370,7 @@ return [
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
+            Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
         ],
     ],
     'batch_config' => [

@@ -9,6 +9,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Address;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\SaveAddresses;
@@ -39,6 +41,7 @@ class SaveAddressesTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', Licence::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
         $this->mockRepo('PhoneContact', PhoneContact::class);
+        $this->mockRepo('Address', Address::class);
 
         parent::setUp();
     }
@@ -567,14 +570,140 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->getMock();
 
+        $transportConsultantCd = m::mock(ContactDetailsEntity::class);
+        $transportConsultantAddress = m::mock(AddressEntity::class);
+        $transportConsultantCd->shouldReceive('getAddress')->andReturn($transportConsultantAddress);
         $licence = m::mock(LicenceEntity::class)
             ->makePartial()
             ->shouldReceive('getCorrespondenceCd')
             ->andReturn($correspondenceCd)
             ->shouldReceive('getTransportConsultantCd')
+            ->andReturn($transportConsultantCd)
+            ->shouldReceive('setTransportConsultantCd')
+            ->with(null)
+            ->getMock();
+
+        $result = new Result();
+
+        $result->setFlag('hasChanged', false);
+
+        $this->expectedSideEffect(
+            SaveAddress::class,
+            [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+                'contactType' => 'ct_corr'
+            ],
+            $result
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($licence)
+            ->once()
+            ->shouldReceive('save')
+            ->with($licence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')
+            ->with($correspondenceCd);
+        $this->repoMap['ContactDetails']->shouldReceive('delete')
+            ->with($transportConsultantCd);
+
+        $this->repoMap['PhoneContact']->shouldReceive('save')
+            ->times(2)
+            ->shouldReceive('fetchById')
+            ->with(1, 1, 1)
             ->andReturn(
-                m::mock(ContactDetailsEntity::class)
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->getMock()
             )
+            ->shouldReceive('fetchById')
+            ->with(2, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                ->makePartial()
+                ->shouldReceive('setContactDetails')
+                ->with($correspondenceCd)
+                ->getMock()
+            )
+            ->getMock();
+
+        $this->repoMap['Address']->shouldReceive('delete')->with($transportConsultantAddress);
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Transport consultant deleted'
+            ],
+            'flags' => ['isDirty' => 1, 'hasChanged' => 1]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleExistingCorrespondenceUpdateWithNoChangeAndDeletedTcWithoutCd()
+    {
+        $data = [
+            'id' => 10,
+            'correspondence' => [
+                'id' => '',
+                'version' => '',
+                'fao' => 'foo bar'
+            ],
+            'correspondenceAddress' => [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+            ],
+            'contact' => [
+                'phone_primary' => '01131231234',
+                'phone_primary_id' => '1',
+                'phone_primary_version' => '1',
+
+                'phone_secondary' => '01131231234',
+                'phone_secondary_id' => '2',
+                'phone_secondary_version' => '1',
+
+                'email' => 'contact@email.com'
+            ],
+            'consultant' => [
+                'add-transport-consultant' => 'N'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $correspondenceCd = m::mock(ContactDetailsEntity::class)
+            ->shouldReceive('setFao')
+            ->with('foo bar')
+            ->shouldReceive('setEmailAddress')
+            ->with('contact@email.com')
+            ->shouldReceive('getVersion')
+            ->andReturn(1)
+            ->getMock();
+
+        $licence = m::mock(LicenceEntity::class)
+            ->makePartial()
+            ->shouldReceive('getCorrespondenceCd')
+            ->andReturn($correspondenceCd)
+            ->shouldReceive('getTransportConsultantCd')
+            ->andReturn(null)
             ->shouldReceive('setTransportConsultantCd')
             ->with(null)
             ->getMock();
@@ -618,21 +747,146 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->with(1, 1, 1)
             ->andReturn(
                 m::mock(PhoneContactEntity::class)
-                ->makePartial()
-                ->shouldReceive('setContactDetails')
-                ->with($correspondenceCd)
-                ->getMock()
+                    ->makePartial()
+                    ->shouldReceive('setContactDetails')
+                    ->with($correspondenceCd)
+                    ->getMock()
             )
             ->shouldReceive('fetchById')
             ->with(2, 1, 1)
             ->andReturn(
                 m::mock(PhoneContactEntity::class)
-                ->makePartial()
-                ->shouldReceive('setContactDetails')
-                ->with($correspondenceCd)
-                ->getMock()
+                    ->makePartial()
+                    ->shouldReceive('setContactDetails')
+                    ->with($correspondenceCd)
+                    ->getMock()
             )
             ->getMock();
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [],
+            'flags' => ['isDirty' => false, 'hasChanged' => false]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleExistingCorrespondenceUpdateWithNoChangeAndDeletedTcWithoutAddress()
+    {
+        $data = [
+            'id' => 10,
+            'correspondence' => [
+                'id' => '',
+                'version' => '',
+                'fao' => 'foo bar'
+            ],
+            'correspondenceAddress' => [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+            ],
+            'contact' => [
+                'phone_primary' => '01131231234',
+                'phone_primary_id' => '1',
+                'phone_primary_version' => '1',
+
+                'phone_secondary' => '01131231234',
+                'phone_secondary_id' => '2',
+                'phone_secondary_version' => '1',
+
+                'email' => 'contact@email.com'
+            ],
+            'consultant' => [
+                'add-transport-consultant' => 'N'
+            ]
+        ];
+
+        $command = Cmd::create($data);
+
+        $correspondenceCd = m::mock(ContactDetailsEntity::class)
+            ->shouldReceive('setFao')
+            ->with('foo bar')
+            ->shouldReceive('setEmailAddress')
+            ->with('contact@email.com')
+            ->shouldReceive('getVersion')
+            ->andReturn(1)
+            ->getMock();
+
+        $transportConsultantCd = m::mock(ContactDetailsEntity::class);
+        $transportConsultantCd->shouldReceive('getAddress')->andReturn(null);
+        $licence = m::mock(LicenceEntity::class)
+            ->makePartial()
+            ->shouldReceive('getCorrespondenceCd')
+            ->andReturn($correspondenceCd)
+            ->shouldReceive('getTransportConsultantCd')
+            ->andReturn($transportConsultantCd)
+            ->shouldReceive('setTransportConsultantCd')
+            ->with(null)
+            ->getMock();
+
+        $result = new Result();
+
+        $result->setFlag('hasChanged', false);
+
+        $this->expectedSideEffect(
+            SaveAddress::class,
+            [
+                'id' => '',
+                'version' => '',
+                'addressLine1' => 'Address 1',
+                'addressLine2' => null,
+                'addressLine3' => null,
+                'addressLine4' => null,
+                'town' => 'Leeds',
+                'postcode' => 'LS9 6NF',
+                'countryCode' => 'GB',
+                'contactType' => 'ct_corr'
+            ],
+            $result
+        );
+
+        $this->repoMap['Licence']->shouldReceive('fetchUsingId')
+            ->with($command)
+            ->andReturn($licence)
+            ->once()
+            ->shouldReceive('save')
+            ->with($licence)
+            ->once()
+            ->getMock();
+
+        $this->repoMap['ContactDetails']->shouldReceive('save')
+            ->with($correspondenceCd);
+        $this->repoMap['ContactDetails']->shouldReceive('delete')
+            ->with($transportConsultantCd);
+
+        $this->repoMap['PhoneContact']->shouldReceive('save')
+            ->times(2)
+            ->shouldReceive('fetchById')
+            ->with(1, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                    ->makePartial()
+                    ->shouldReceive('setContactDetails')
+                    ->with($correspondenceCd)
+                    ->getMock()
+            )
+            ->shouldReceive('fetchById')
+            ->with(2, 1, 1)
+            ->andReturn(
+                m::mock(PhoneContactEntity::class)
+                    ->makePartial()
+                    ->shouldReceive('setContactDetails')
+                    ->with($correspondenceCd)
+                    ->getMock()
+            )
+            ->getMock();
+
 
         $result = $this->sut->handleCommand($command);
 
@@ -641,7 +895,7 @@ class SaveAddressesTest extends CommandHandlerTestCase
             'messages' => [
                 'Transport consultant deleted'
             ],
-            'flags' => ['isDirty' => 1, 'hasChanged' => 1]
+            'flags' => ['isDirty' => true, 'hasChanged' => true]
         ];
 
         $this->assertEquals($expected, $result->toArray());

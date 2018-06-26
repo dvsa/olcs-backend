@@ -701,6 +701,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
             $interval = new \DateInterval('P' . $busRules->getCancellationPeriod() . 'D');
 
+
+
             //this rule applies until the day AFTER the cancellation period
             //so for a 90 day cancellation period, short notice applies until the 91st day
             if ($effectiveDate->setTime(0, 0) <= $lastDateTime->add($interval)->setTime(0, 0)) {

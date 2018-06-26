@@ -3,10 +3,12 @@
 /**
  * Assign Submission
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
@@ -21,7 +23,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
-use Dvsa\Olcs\Transfer\Command\Task\UpdateTask as UpdateTaskDto;
 
 /**
  * Assign Submission
@@ -34,22 +35,23 @@ final class AssignSubmission extends AbstractCommandHandler implements
     use SubmissionGeneratorAwareTrait;
     use AuthAwareTrait;
 
+
     protected $repoServiceName = 'Submission';
 
     protected $extraRepos = ['User', 'Task'];
 
     /**
      * @param CommandInterface $command
+     *
      * @return Result
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
+
         $submissionEntity = $this->updateSubmission($command);
-
         $this->getRepo()->save($submissionEntity);
-
         $result = new Result();
         $result->addId('submission', $submissionEntity->getId());
         $result->addMessage('Submission updated successfully');
@@ -61,6 +63,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
 
     /**
      * @param Cmd $command
+     *
      * @return Submission
      * @throws ValidationException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -76,11 +79,17 @@ final class AssignSubmission extends AbstractCommandHandler implements
                 ]
             );
         }
+
+
         $submission->setRecipientUser(
             $this->getRepo()->getReference(UserEntity::class, $command->getRecipientUser())
         );
 
-        $submission->setAssignedDate(new \DateTime('now'));
+
+        if (!$this->isValid($command, $submission->getInformationCompleteDate())) {
+            throw  new ValidationException(['First assigned date must be after or same as information complete date']);
+        }
+        $submission->setAssignedDate($command->getAssignedDate());
 
         $currentUser = $this->getCurrentUser();
 
@@ -90,6 +99,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
             $submission->setUrgent($command->getUrgent());
         }
 
+
         return $submission;
     }
 
@@ -97,6 +107,7 @@ final class AssignSubmission extends AbstractCommandHandler implements
      * This method fetches an existing task for the submission, if it exists, close it and create a new one.
      *
      * @param Cmd $command
+     *
      * @return static
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -153,5 +164,17 @@ final class AssignSubmission extends AbstractCommandHandler implements
         }
 
         return CreateTaskCmd::create($data);
+    }
+
+    private function isValid($command, $informationCompleteDate)
+    {
+        $assignedDate = $command->getAssignedDate();
+        if (empty($assignedDate)) {
+            return true;
+        }
+        $format = 'Y-m-d';
+        $assignedDate = DateTime::createFromFormat($format, $assignedDate);
+        $informationCompleteDate = DateTime::createFromFormat($format, $informationCompleteDate);
+        return $assignedDate >= $informationCompleteDate;
     }
 }
