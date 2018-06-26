@@ -134,7 +134,7 @@ class GenerateTest extends CommandHandlerTestCase
         $ineligibleLinks = [$publicationLinkEntityA, $publicationLinkEntityB];
 
         $this->repoMap['PublicationLink']
-            ->shouldReceive('fetchIneligiblePiPublicationLinks')
+            ->shouldReceive('fetchIneligiblePublicationLinks')
             ->once()
             ->andReturn($ineligibleLinks);
 
