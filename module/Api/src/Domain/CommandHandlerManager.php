@@ -62,6 +62,12 @@ class CommandHandlerManager extends AbstractPluginManager
 
         $commandHandlerFqcn = get_class($validateCommandHandler);
 
+        if (!$validateCommandHandler->isEnabled()) {
+            $exception = new DisabledHandlerException($commandHandlerFqcn);
+            Logger::warn(get_class($this) . ': ' . $exception->getMessage());
+            throw $exception;
+        }
+
         if ($validate) {
             $this->validateDto($command, $commandHandlerFqcn);
         }
@@ -90,10 +96,11 @@ class CommandHandlerManager extends AbstractPluginManager
 
     /**
      * Validate command data
-     * 
+     *
      * @param CommandInterface $dto
      * @param string           $queryHandlerFqcl
-     * 
+     *
+     * @return void
      * @throws ForbiddenException
      */
     protected function validateDto($dto, $queryHandlerFqcl)
