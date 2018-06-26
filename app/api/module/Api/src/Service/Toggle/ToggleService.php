@@ -23,6 +23,11 @@ class ToggleService
 
     /**
      * return whether the toggle is enabled
+     *
+     * @param string  $name
+     * @param Context $context
+     *
+     * @return bool
      */
     public function isEnabled(string $name, Context $context = null): bool
     {
@@ -35,6 +40,10 @@ class ToggleService
 
     /**
      * override config to toggle a named feature on (for this single request only)
+     *
+     * @param string $name
+     *
+     * @return Toggle
      */
     public function enable(string $name): Toggle
     {
@@ -44,6 +53,10 @@ class ToggleService
 
     /**
      * override config to toggle a named feature off (for this single request only)
+     *
+     * @param string $name
+     *
+     * @return Toggle
      */
     public function disable(string $name): Toggle
     {
@@ -53,6 +66,10 @@ class ToggleService
 
     /**
      * make a toggle active
+     *
+     * @param Toggle $toggle
+     *
+     * @return Toggle
      */
     private function enableToggle(Toggle $toggle): Toggle
     {
@@ -63,6 +80,10 @@ class ToggleService
 
     /**
      * make a toggle inactive
+     *
+     * @param Toggle $toggle
+     *
+     * @return Toggle
      */
     private function disableToggle(Toggle $toggle): Toggle
     {
@@ -73,6 +94,10 @@ class ToggleService
 
     /**
      * fetch a toggle object
+     *
+     * @param string $name
+     *
+     * @return Toggle
      */
     private function fetchToggle(string $name): Toggle
     {
@@ -83,6 +108,10 @@ class ToggleService
 
     /**
      * updates the toggle inside the toggle manager
+     *
+     * @param Toggle $toggle
+     *
+     * @return void
      */
     private function updateToggle(Toggle $toggle): void
     {
