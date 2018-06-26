@@ -18,6 +18,8 @@ trait ToggleAwareTrait
 
     /**
      * @param ToggleService $toggleService
+     *
+     * @return void
      */
     public function setToggleService(ToggleService $toggleService): void
     {
