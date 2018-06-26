@@ -429,8 +429,12 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
     /**
      * For required fields we can skip the null refdata check
+     *
+     * @param string $refDataKey
+     *
+     * @return RefDataEntity
      */
-    protected function refData($refDataKey): RefDataEntity
+    protected function refData(string $refDataKey): RefDataEntity
     {
         return $this->getRepo()->getRefdataReference($refDataKey);
     }

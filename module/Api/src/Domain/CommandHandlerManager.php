@@ -90,10 +90,11 @@ class CommandHandlerManager extends AbstractPluginManager
 
     /**
      * Validate command data
-     * 
+     *
      * @param CommandInterface $dto
      * @param string           $queryHandlerFqcl
-     * 
+     *
+     * @return void
      * @throws ForbiddenException
      */
     protected function validateDto($dto, $queryHandlerFqcl)
