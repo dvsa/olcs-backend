@@ -94,8 +94,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             $transactionDate = $this->asDateTime($transaction->getCreatedOn());
             $interval = new \DateInterval('PT' . $pendingPaymentsTimeout . 'S');
             $maxPendingDate = $transactionDate->add($interval);
-            if (
-                $transaction->isOutstanding()
+            if ($transaction->isOutstanding()
                 && $transaction->getType()->getId() !== Transaction::TYPE_WAIVE
                 && $maxPendingDate > (new DateTime('now'))
             ) {
@@ -513,7 +512,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     public function isCancelled()
     {
         return $this->getFeeStatus()->getId() === self::STATUS_CANCELLED;
-
     }
 
     public function isPaid()
@@ -565,8 +563,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         $feeTransactions = [];
 
         foreach ($this->getFeeTransactions() as $ft) {
-            if (
-                $ft->getTransaction()->isCompletePaymentOrAdjustment()
+            if ($ft->getTransaction()->isCompletePaymentOrAdjustment()
                 && !$ft->isRefundedOrReversed()
                 && empty($ft->getReversedFeeTransaction())
             ) {
@@ -679,7 +676,8 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         return null;
     }
 
-    public function getCustomerReference() {
+    public function getCustomerReference()
+    {
         if (empty($this->getOrganisation())) {
             return null;
         }
