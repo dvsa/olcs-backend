@@ -54,12 +54,6 @@ class CommandHandlerManager extends AbstractPluginManager
             ['data' => ['commandData' => $data]]
         );
 
-        if (!$validateCommandHandler->isEnabled()) {
-            $exception = new DisabledHandlerException(get_class($commandHandler));
-            Logger::warn(get_class($this) . ': ' . $exception->getMessage());
-            throw $exception;
-        }
-
         $commandHandlerFqcn = get_class($validateCommandHandler);
 
         if (!$validateCommandHandler->isEnabled()) {
