@@ -568,4 +568,9 @@ return [
     // Diagnostics
     Query\Diagnostics\CheckFkIntegrity::class => QueryHandler\Diagnostics\CheckFkIntegrity::class,
     Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
+
+    // Permits
+    TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
+    TransferQuery\Permits\ConstrainedCountries::class => QueryHandler\Permits\ConstrainedCountries::class,
+    TransferQuery\Permits\EcmtPermits::class => QueryHandler\Permits\EcmtPermits::class,
 ];
