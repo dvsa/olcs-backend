@@ -627,4 +627,22 @@ class BatchController extends AbstractConsoleController
             $this->handleCommand([CliCommand\LastTmLetter::create([])])
         );
     }
+
+    /**
+     * updateToggleAction
+     *
+     * @return ConsoleModel
+     */
+    public function updateToggleAction()
+    {
+        $params = [
+            'friendlyName'=>$this->params('friendlyName'),
+            'status' =>$this->params('status'),
+            'configName' =>$this->params('configName')
+        ];
+        return $this->handleExitStatus(
+            $this->handleCommand([CliCommand\UpdateFeatureToggle::create($params)])
+        );
+    }
 }
+
