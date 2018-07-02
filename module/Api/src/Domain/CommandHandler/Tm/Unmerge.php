@@ -69,7 +69,6 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
      * Validate the donor and recipient Transport Managers
      *
      * @param TransportManager $tm
-     * @param TransportManager $recipientTm
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
@@ -85,6 +84,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
     /**
      * Unmerge all the entities that previously were associated with the TM
      *
+     * @return void
      * @param TransportManager $tm
      */
     protected function unmerge(TransportManager $tm)
@@ -134,7 +134,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
     }
 
     /**
-     * @param $entityName
+     * @param string $entityName
      * @return null|string|string[]
      */
     protected function cleanyProxyEntity($entityName)
@@ -142,5 +142,4 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
         $cleanEntityName =  preg_replace('#^.*Proxy\\\\__CG__\\\\#', '', $entityName);
         return $cleanEntityName;
     }
-
 }
