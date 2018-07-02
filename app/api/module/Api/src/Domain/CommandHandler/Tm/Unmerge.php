@@ -129,7 +129,6 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
 
         /** @var AbstractReadonlyRepository $repo */
         $repo = $this->getRepo($entityRepoMap[$cleanEntityName]);
-        $repo->disableSoftDeleteable([$cleanEntityName]);
         return $repo->fetchById($id);
     }
 
