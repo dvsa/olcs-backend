@@ -39,12 +39,15 @@ class QueryHandlerManager extends AbstractPluginManager
 
         $queryFqcl = get_class($query);
 
+        /** @var QueryHandlerInterface $queryHandler */
         $queryHandler = $this->get($queryFqcl);
 
         Logger::debug(
             'Query Received: ' . $queryFqcl,
             ['data' => ['queryData' => $query->getArrayCopy()]]
         );
+
+        $queryHandler->checkEnabled();
 
         $queryHandlerFqcl = get_class($queryHandler);
 

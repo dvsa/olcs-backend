@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -42,6 +43,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  */
 abstract class AbstractCommandHandler implements CommandHandlerInterface, FactoryInterface
 {
+    use HandlerEnabledTrait;
+
     /**
      * The name of the default repo
      */
@@ -75,6 +78,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * @var Result
      */
     protected $result;
+
+    /**
+     * @var array
+     */
+    protected $toggleConfig = [];
 
     /**
      * create service
@@ -437,29 +445,5 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     protected function refData(string $refDataKey): RefDataEntity
     {
         return $this->getRepo()->getRefdataReference($refDataKey);
-    }
-
-    /**
-     * Whether the handler is enabled (only checks handlers which require a toggle check)
-     *
-     * @return bool
-     */
-    public function isEnabled(): bool
-    {
-        if ($this instanceof ToggleRequiredInterface) {
-            $handlerName = $this->shortFqdn();
-            return $this->getToggleService()->isEnabled($handlerName);
-        }
-
-        return true;
-    }
-
-    public function shortFqdn(?string $fqdn = null): string
-    {
-        if ($fqdn === null) {
-            $fqdn = static::class;
-        }
-
-        return str_replace('Dvsa\Olcs\Api\Domain\\', '', $fqdn);
     }
 }
