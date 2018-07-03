@@ -2,11 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
-use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -29,6 +29,7 @@ use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
+    use HandlerEnabledTrait;
 
     /**
      * The name of the default repo
@@ -74,8 +75,6 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $this->applyInterfaces($mainServiceLocator);
         } catch (ZendServiceException $e) {
             $this->logServiceExceptions($e);
-        } catch (DisabledHandlerException $e) {
-            $this->logException($e);
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
@@ -208,20 +207,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     private function applyInterfaces($mainServiceLocator)
     {
-        if ($this instanceof ToggleRequiredInterface) {
-            $toggleService = $mainServiceLocator->get(ToggleService::class);
-
-            $fqdn = static::class;
-            $handlerName = str_replace('Dvsa\Olcs\Api\Domain\\', '', $fqdn);
-
-            if (!$toggleService->isEnabled($handlerName)) {
-                throw new DisabledHandlerException($fqdn);
-            }
-
-            $this->setToggleService($toggleService);
-        }
-
-        if ($this instanceof ToggleAwareInterface && !$this instanceof ToggleRequiredInterface) {
+        if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
             $toggleService = $mainServiceLocator->get(ToggleService::class);
             $this->setToggleService($toggleService);
         }
@@ -275,19 +261,5 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         } while ($e);
 
         throw $rethrow;
-    }
-
-    /**
-     * We want to log some exceptions (right now we only log an attempt to call a disabled handler)
-     *
-     * @param \Exception $e exception
-     *
-     * @return void
-     * @throws \Exception rethrows original Exception
-     */
-    private function logException(DisabledHandlerException $e)
-    {
-        Logger::warn(get_class($this) . ': ' . $e->getMessage());
-        throw $e;
     }
 }
