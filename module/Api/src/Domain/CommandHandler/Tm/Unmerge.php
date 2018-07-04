@@ -71,6 +71,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
      * @param TransportManager $tm
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @return void
      */
     protected function validate(TransportManager $tm)
     {
