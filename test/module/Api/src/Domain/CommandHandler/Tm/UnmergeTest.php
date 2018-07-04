@@ -80,7 +80,7 @@ class UnmergeTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Entity\Task\Task::class => [20, 21],
             \Dvsa\Olcs\Api\Entity\Note\Note::class => [22, 23],
             \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class => [24, 25],
-            \Dvsa\Olcs\Api\Entity\User\User::class => [26, 27],
+            \Dvsa\Olcs\Api\Entity\Proxy\__CG__\Dvsa\Olcs\Api\Entity\User\User::class => [26, 27],
         ];
         $mockTm->setMergeDetails($mergeDetails);
 
