@@ -73,6 +73,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
      * @param TransportManager $tm
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @return void
      */
     protected function validate(TransportManager $tm)
     {
@@ -136,11 +137,11 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
         $repo = $this->getRepo($entityRepoMap[$cleanEntityName]);
         $repo->disableSoftDeleteable([$cleanEntityName]);
         try {
-            $tmId = $repo->fetchById($id);
+            $entity = $repo->fetchById($id);
         } catch (Exception\NotFoundException $e) {
         }
 
-        return $tmId;
+        return $entity;
     }
 
     /**
