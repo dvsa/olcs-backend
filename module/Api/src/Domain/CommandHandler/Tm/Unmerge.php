@@ -8,6 +8,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Domain\Repository\AbstractReadonlyRepository;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Unmerge Transport Manager
@@ -30,6 +31,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
 
     /**
      * Record of changes made during the merge
+     *
      * @var array
      */
     protected $changes = [];
@@ -85,6 +87,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
      * Unmerge all the entities that previously were associated with the TM
      *
      * @return void
+     *
      * @param TransportManager $tm
      */
     protected function unmerge(TransportManager $tm)
@@ -93,7 +96,9 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
         foreach ($mergeDetails as $entityName => $ids) {
             foreach ($ids as $id) {
                 $entity = $this->getEntity($entityName, $id);
-                $entity->setTransportManager($tm);
+                if ($entity !== null) {
+                    $entity->setTransportManager($tm);
+                }
             }
         }
     }
@@ -124,22 +129,28 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
 
         // if mapping is not setup, then error
         if (!isset($entityRepoMap[$cleanEntityName])) {
-            throw new \RuntimeException('Unable to unmerge entity '. $cleanEntityName);
+            throw new \RuntimeException('Unable to unmerge entity ' . $cleanEntityName);
         }
 
         /** @var AbstractReadonlyRepository $repo */
         $repo = $this->getRepo($entityRepoMap[$cleanEntityName]);
         $repo->disableSoftDeleteable([$cleanEntityName]);
-        return $repo->fetchById($id);
+        try {
+            $tmId = $repo->fetchById($id);
+        } catch (Exception\NotFoundException $e) {
+        }
+
+        return $tmId;
     }
 
     /**
      * @param string $entityName
+     *
      * @return null|string|string[]
      */
     protected function cleanyProxyEntity($entityName)
     {
-        $cleanEntityName =  preg_replace('#^.*Proxy\\\\__CG__\\\\#', '', $entityName);
+        $cleanEntityName = preg_replace('#^.*Proxy\\\\__CG__\\\\#', '', $entityName);
         return $cleanEntityName;
     }
 }
