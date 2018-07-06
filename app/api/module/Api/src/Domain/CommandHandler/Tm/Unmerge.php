@@ -96,7 +96,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
         $mergeDetails = $tm->getMergeDetails();
         foreach ($mergeDetails as $entityName => $ids) {
             foreach ($ids as $id) {
-                $entity = $this->getEntity($entityName, $id);
+                $entity = $this->getEntityIfExists($entityName, $id);
                 if ($entity !== null) {
                     $entity->setTransportManager($tm);
                 }
@@ -105,53 +105,33 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
     }
 
     /**
-     * Get an entity
+     * Get an entity if exists else return null
      *
      * @param string $entityName
      * @param int    $id
      *
-     * @return object Entity
+     * @return object Entity | null
      * @throws \RuntimeException
      */
-    protected function getEntity($entityName, $id)
+    protected function getEntityIfExists($entityName, $id)
     {
-        $cleanEntityName = $this->cleanyProxyEntity($entityName);
-        // map entity names to the repos they can be retrieved from
-        $entityRepoMap = [
-            \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication::class => 'TransportManagerApplication',
-            \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence::class => 'TransportManagerLicence',
-            \Dvsa\Olcs\Api\Entity\Cases\Cases::class => 'Cases',
-            \Dvsa\Olcs\Api\Entity\Doc\Document::class => 'Document',
-            \Dvsa\Olcs\Api\Entity\Task\Task::class => 'Task',
-            \Dvsa\Olcs\Api\Entity\Note\Note::class => 'Note',
-            \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class => 'EventHistory',
-            \Dvsa\Olcs\Api\Entity\User\User::class => 'User',
-        ];
+        $entityNameStartPos = strrpos($entityName, '\\');
 
-        // if mapping is not setup, then error
-        if (!isset($entityRepoMap[$cleanEntityName])) {
-            throw new \RuntimeException('Unable to unmerge entity ' . $cleanEntityName);
+        if ($entityNameStartPos === false) {
+            throw new \RuntimeException('Unable to unmerge entity ' . $entityName);
         }
 
+        $cleanEntityName = substr($entityName, $entityNameStartPos + 1);
+
         /** @var AbstractReadonlyRepository $repo */
-        $repo = $this->getRepo($entityRepoMap[$cleanEntityName]);
+        $repo = $this->getRepo($cleanEntityName);
         $repo->disableSoftDeleteable([$cleanEntityName]);
         try {
             $entity = $repo->fetchById($id);
         } catch (Exception\NotFoundException $e) {
+            return null;
         }
 
         return $entity;
-    }
-
-    /**
-     * @param string $entityName
-     *
-     * @return null|string|string[]
-     */
-    protected function cleanyProxyEntity($entityName)
-    {
-        $cleanEntityName = preg_replace('#^.*Proxy\\\\__CG__\\\\#', '', $entityName);
-        return $cleanEntityName;
     }
 }
