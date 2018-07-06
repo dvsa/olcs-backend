@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Command\Tm\Unmerge as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Class UnmergeTest
@@ -77,7 +78,7 @@ class UnmergeTest extends CommandHandlerTestCase
             \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence::class => [14, 15],
             \Dvsa\Olcs\Api\Entity\Cases\Cases::class => [16, 17],
             \Dvsa\Olcs\Api\Entity\Doc\Document::class => [18, 19],
-            \Dvsa\Olcs\Api\Entity\Task\Task::class => [20, 21],
+            \Dvsa\Olcs\Api\Entity\Task\Task::class => [20, 21, 22],
             \Dvsa\Olcs\Api\Entity\Note\Note::class => [22, 23],
             \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class => [24, 25],
             \Dvsa\Olcs\Api\Entity\Proxy\__CG__\Dvsa\Olcs\Api\Entity\User\User::class => [26, 27],
@@ -88,24 +89,42 @@ class UnmergeTest extends CommandHandlerTestCase
         $mockEntity->shouldReceive('setTransportManager')->with($mockTm)->times(16);
 
         $this->repoMap['TransportManager']->shouldReceive('fetchById')->with(3)->once()->andReturn($mockTm);
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(12)->once()
             ->andReturn($mockEntity);
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(13)->once()
             ->andReturn($mockEntity);
+
+        $this->repoMap['TransportManagerLicence']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['TransportManagerLicence']->shouldReceive('fetchById')->with(14)->once()
             ->andReturn($mockEntity);
         $this->repoMap['TransportManagerLicence']->shouldReceive('fetchById')->with(15)->once()
             ->andReturn($mockEntity);
+
+        $this->repoMap['Cases']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['Cases']->shouldReceive('fetchById')->with(16)->once()->andReturn($mockEntity);
         $this->repoMap['Cases']->shouldReceive('fetchById')->with(17)->once()->andReturn($mockEntity);
+
+        $this->repoMap['Document']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['Document']->shouldReceive('fetchById')->with(18)->once()->andReturn($mockEntity);
         $this->repoMap['Document']->shouldReceive('fetchById')->with(19)->once()->andReturn($mockEntity);
+
+        $this->repoMap['Task']->shouldReceive('disableSoftDeleteable')->times(3);
         $this->repoMap['Task']->shouldReceive('fetchById')->with(20)->once()->andReturn($mockEntity);
         $this->repoMap['Task']->shouldReceive('fetchById')->with(21)->once()->andReturn($mockEntity);
+        $this->repoMap['Task']->shouldReceive('fetchById')->with(22)->once()
+            ->andReturnNull()->andThrow(Exception\NotFoundException::class)->andReturnNull();
+
+        $this->repoMap['Note']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['Note']->shouldReceive('fetchById')->with(22)->once()->andReturn($mockEntity);
         $this->repoMap['Note']->shouldReceive('fetchById')->with(23)->once()->andReturn($mockEntity);
+
+        $this->repoMap['EventHistory']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['EventHistory']->shouldReceive('fetchById')->with(24)->once()->andReturn($mockEntity);
         $this->repoMap['EventHistory']->shouldReceive('fetchById')->with(25)->once()->andReturn($mockEntity);
+
+        $this->repoMap['User']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['User']->shouldReceive('fetchById')->with(26)->once()->andReturn($mockEntity);
         $this->repoMap['User']->shouldReceive('fetchById')->with(27)->once()->andReturn($mockEntity);
 
