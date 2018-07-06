@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Command\Tm\Unmerge as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Class UnmergeTest
@@ -112,7 +113,8 @@ class UnmergeTest extends CommandHandlerTestCase
         $this->repoMap['Task']->shouldReceive('disableSoftDeleteable')->times(3);
         $this->repoMap['Task']->shouldReceive('fetchById')->with(20)->once()->andReturn($mockEntity);
         $this->repoMap['Task']->shouldReceive('fetchById')->with(21)->once()->andReturn($mockEntity);
-        $this->repoMap['Task']->shouldReceive('fetchById')->with(22)->once()->andReturn(null);
+        $this->repoMap['Task']->shouldReceive('fetchById')->with(22)->once()
+            ->andReturnNull()->andThrow(Exception\NotFoundException::class)->andReturnNull();
 
         $this->repoMap['Note']->shouldReceive('disableSoftDeleteable')->twice();
         $this->repoMap['Note']->shouldReceive('fetchById')->with(22)->once()->andReturn($mockEntity);
