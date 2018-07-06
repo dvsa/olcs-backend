@@ -17,7 +17,7 @@ use Dvsa\Olcs\Cli\Domain\Command\UpdateFeatureToggle as UpdateToggleCmd;
  * Class UpdateFeatureToggle
  *
  * @package Dvsa\Olcs\Cli\Domain\CommandHandler
- * 
+ *
  */
 class UpdateFeatureToggle extends AbstractCommandHandler
 {
@@ -43,7 +43,7 @@ class UpdateFeatureToggle extends AbstractCommandHandler
     }
 
     /**
-     * validate the user running this is internal admin
+     * validate the user running this is an internal admin
      *
      * @return bool
      */
