@@ -8,6 +8,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Domain\Repository\AbstractReadonlyRepository;
+use Dvsa\Olcs\Api\Domain\Exception;
 
 /**
  * Unmerge Transport Manager
@@ -30,6 +31,7 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
 
     /**
      * Record of changes made during the merge
+     *
      * @var array
      */
     protected $changes = [];
@@ -85,61 +87,51 @@ final class Unmerge extends AbstractCommandHandler implements TransactionedInter
     /**
      * Unmerge all the entities that previously were associated with the TM
      *
-     * @param TransportManager $tm
      * @return void
+     *
+     * @param TransportManager $tm
      */
     protected function unmerge(TransportManager $tm)
     {
         $mergeDetails = $tm->getMergeDetails();
         foreach ($mergeDetails as $entityName => $ids) {
             foreach ($ids as $id) {
-                $entity = $this->getEntity($entityName, $id);
-                $entity->setTransportManager($tm);
+                $entity = $this->getEntityIfExists($entityName, $id);
+                if ($entity !== null) {
+                    $entity->setTransportManager($tm);
+                }
             }
         }
     }
 
     /**
-     * Get an entity
+     * Get an entity if exists else return null
      *
      * @param string $entityName
      * @param int    $id
      *
-     * @return object Entity
+     * @return object Entity | null
      * @throws \RuntimeException
      */
-    protected function getEntity($entityName, $id)
+    protected function getEntityIfExists($entityName, $id)
     {
-        $cleanEntityName = $this->cleanyProxyEntity($entityName);
-        // map entity names to the repos they can be retrieved from
-        $entityRepoMap = [
-            \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication::class => 'TransportManagerApplication',
-            \Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence::class => 'TransportManagerLicence',
-            \Dvsa\Olcs\Api\Entity\Cases\Cases::class => 'Cases',
-            \Dvsa\Olcs\Api\Entity\Doc\Document::class => 'Document',
-            \Dvsa\Olcs\Api\Entity\Task\Task::class => 'Task',
-            \Dvsa\Olcs\Api\Entity\Note\Note::class => 'Note',
-            \Dvsa\Olcs\Api\Entity\EventHistory\EventHistory::class => 'EventHistory',
-            \Dvsa\Olcs\Api\Entity\User\User::class => 'User',
-        ];
+        $entityNameStartPos = strrpos($entityName, '\\');
 
-        // if mapping is not setup, then error
-        if (!isset($entityRepoMap[$cleanEntityName])) {
-            throw new \RuntimeException('Unable to unmerge entity '. $cleanEntityName);
+        if ($entityNameStartPos === false) {
+            throw new \RuntimeException('Unable to unmerge entity ' . $entityName);
         }
 
-        /** @var AbstractReadonlyRepository $repo */
-        $repo = $this->getRepo($entityRepoMap[$cleanEntityName]);
-        return $repo->fetchById($id);
-    }
+        $cleanEntityName = substr($entityName, $entityNameStartPos + 1);
 
-    /**
-     * @param string $entityName
-     * @return null|string|string[]
-     */
-    protected function cleanyProxyEntity($entityName)
-    {
-        $cleanEntityName =  preg_replace('#^.*Proxy\\\\__CG__\\\\#', '', $entityName);
-        return $cleanEntityName;
+        /** @var AbstractReadonlyRepository $repo */
+        $repo = $this->getRepo($cleanEntityName);
+        $repo->disableSoftDeleteable([$cleanEntityName]);
+        try {
+            $entity = $repo->fetchById($id);
+        } catch (Exception\NotFoundException $e) {
+            return null;
+        }
+
+        return $entity;
     }
 }
