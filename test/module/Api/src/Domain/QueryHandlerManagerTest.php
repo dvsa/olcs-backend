@@ -53,6 +53,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $query->shouldReceive('getArrayCopy')->once()->andReturn(['foo' => 'bar']);
 
         $mockService = m::mock(QueryHandlerInterface::class);
+        $mockService->shouldReceive('checkEnabled')->once()->andReturn(true);
         $mockService->shouldReceive('handleQuery')->with($query)->andReturn(['response']);
 
         $mockValidator = m::mock(HandlerInterface::class);
@@ -73,6 +74,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $response->shouldReceive('serialize')->with()->once()->andReturn(['response']);
 
         $mockService = m::mock(QueryHandlerInterface::class);
+        $mockService->shouldReceive('checkEnabled')->once()->andReturn(true);
         $mockService->shouldReceive('handleQuery')->with($query)->andReturn($response);
 
         $mockValidator = m::mock(HandlerInterface::class);
@@ -92,6 +94,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $query->shouldReceive('getArrayCopy')->twice()->andReturn(['foo' => 'bar']);
 
         $mockService = m::mock(QueryHandlerInterface::class);
+        $mockService->shouldReceive('checkEnabled')->once()->andReturn(true);
         $mockService->shouldReceive('handleQuery')->never();
 
         $mockValidator = m::mock(HandlerInterface::class);
