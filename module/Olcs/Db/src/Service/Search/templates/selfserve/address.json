@@ -10,7 +10,8 @@
                            "lic_status": [
                               "lsts_not_submitted",
                               "lsts_unlicenced",
-                              "lsts_withdrawn"
+                              "lsts_withdrawn",
+                              "lsts_cancelled"
                            ]
                         }
                      },
