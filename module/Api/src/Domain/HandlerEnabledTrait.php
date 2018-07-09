@@ -9,6 +9,7 @@ use Olcs\Logging\Log\Logger;
  * HandlerEnabledTrait
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ * @todo this needs a bit of a refactor, as it's quite difficult to test right now
  */
 trait HandlerEnabledTrait
 {
