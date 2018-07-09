@@ -64,8 +64,12 @@ class TransactioningCommandHandler implements CommandHandlerInterface
         }
     }
 
-    public function isEnabled(): bool
+    /**
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException
+     */
+    public function checkEnabled(): bool
     {
-        return $this->wrapped->isEnabled();
+        return $this->wrapped->checkEnabled();
     }
 }
