@@ -52,6 +52,16 @@ class AlignEntitiesToSchema
         'entity-config' => ''
     );
 
+    private $defaultOptions = [
+        'u' => 'root',
+        'p' => 'password',
+        'd' => 'olcs_be',
+        'mapping-files' => '/var/www/olcs/olcs-backend/data/mapping/',
+        'entity-files' => '/var/www/olcs/olcs-backend/module/Api/src/Entity/',
+        'test-files' => '/var/www/olcs/olcs-backend/test/module/Api/src/Entity/',
+        'entity-config' => '/var/www/olcs/olcs-backend/data/db/EntityConfig.php'
+    ];
+
     /**
      * Output colours
      *
@@ -163,17 +173,27 @@ class AlignEntitiesToSchema
     {
         $this->options = getopt(
             'u:p:d:',
-            array('help', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
+            array('help', 'default', 'import-schema:', 'mapping-files:', 'entity-files:', 'test-files:', 'entity-config:')
         );
 
         if (isset($this->options['help'])) {
             $this->exitResponse(
-                'Usage \'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql '
-                . '--mapping-files /var/www/olcs/olcs-backend/data/mapping/ --entity-files '
-                . '/var/www/olcs/olcs-backend/module/Api/src/Entity/ --test-files '
-                . '/var/www/olcs/olcs-backend/test/module/Api/src/Entity/ --entity-config '
-                . '/var/www/olcs/olcs-backend/data/db/EntityConfig.php -uroot -ppassword -dolcs_be\''
+                "Usage 'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql "
+                . "--mapping-files " . $this->defaultOptions['mapping-files'] . " "
+                . "--entity-files " . $this->defaultOptions['entity-files'] . " "
+                . "--test-files " . $this->defaultOptions['test-files'] . " "
+                . "--entity-config " . $this->defaultOptions['entity-config'] . " "
+                . "-u" . $this->defaultOptions['u'] . " "
+                . "-p" . $this->defaultOptions['p'] . " "
+                . "-d" . $this->defaultOptions['d']
+
             );
+        }
+
+        if (isset($this->options['default'])) {
+            foreach ($this->defaultOptions as $option => $value) {
+                $this->options[$option] = $value;
+            }
         }
 
         $this->checkForRequiredParams();
@@ -219,7 +239,9 @@ class AlignEntitiesToSchema
 
             $this->importEntities();
 
-            $this->clearCacheReminder();
+            $this->rebuildDbUsingLiquidbase();
+
+            $this->restartApache();
         } catch (\Exception $ex) {
             echo $ex->getTraceAsString() . "\n\n";
             echo $ex->getMessage();
@@ -294,11 +316,6 @@ class AlignEntitiesToSchema
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOG"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS DATABASECHANGELOGLOCK"');
         shell_exec($mysqlCommand .' -e "DROP TABLE IF EXISTS log_update"');
-    }
-
-    protected function clearCacheReminder()
-    {
-        $this->respond('Remember to restart apache to clear the APC cache!', 'warning');
     }
 
     /**
@@ -818,6 +835,34 @@ class AlignEntitiesToSchema
         $this->respond($output, 'info');
 
         $this->respond('Entities imported', 'success');
+    }
+
+    private function rebuildDbUsingLiquidbase()
+    {
+        $this->respond('Rebuilding db using Liquidbase (olcs-etl)...', 'info');
+
+        passthru('cd /var/www/olcs/olcs-etl/ && make create-db && make update', $result);
+
+        if($result !== 0) {
+            $this->exitResponse('Unable to rebuild database', 'error');
+        }
+
+        $this->respond('Database rebuilt and updated', 'success');
+
+    }
+
+    private function restartApache()
+    {
+        $this->respond('Restarting Apache to clear APC...', 'info');
+
+        passthru('sudo service httpd restart', $result);
+
+        if($result !== 0) {
+            $this->exitResponse('Unable to restart Apache', 'error');
+        }
+
+        $this->respond('Apache restarted', 'success');
+
     }
 
     /**
