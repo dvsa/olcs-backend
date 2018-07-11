@@ -26,16 +26,21 @@ class Organisation extends AbstractQueryHandler
         /* @var $organisation \Dvsa\Olcs\Api\Entity\Organisation\Organisation */
         $organisation = $this->getRepo()->fetchUsingId($query);
         $allowedOperatorLocation = $organisation->getAllowedOperatorLocation();
+        $relevantLicences = $organisation->getStandardInternationalLicences();
+
+        //var_dump($relevantLicences);die();
 
         return $this->result(
             $organisation,
             [
-                'disqualifications'
+                'disqualifications',
+                //'licences' => ['trafficArea','licenceType','status']
             ],
             [
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
                 'taValueOptions' => $this->getTrafficAreaValueOptions($allowedOperatorLocation),
-                'allowedOperatorLocation' => $allowedOperatorLocation
+                'allowedOperatorLocation' => $allowedOperatorLocation,
+                'relevantLicences' => $relevantLicences
             ]
         );
     }
