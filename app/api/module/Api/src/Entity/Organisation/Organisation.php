@@ -12,6 +12,8 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+
 
 /**
  * Organisation Entity
@@ -572,4 +574,57 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         return !empty($this->getLicences()->matching($criteria)->toArray());
     }
+
+    /**
+     * Get standard international licences
+     **
+     * @return ArrayCollection LicenceEntity[]
+     */
+    public function getStandardInternationalLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+          $criteria->expr()->in(
+            'status',
+            [
+              LicenceEntity::LICENCE_STATUS_SUSPENDED,
+              LicenceEntity::LICENCE_STATUS_VALID,
+              LicenceEntity::LICENCE_STATUS_CURTAILED
+            ]
+          )
+        );
+        $criteria->andWhere(
+          $criteria->expr()->in(
+            'goodsOrPsv',
+            [
+              LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+            ]
+          )
+        );
+        $criteria->andWhere(
+          $criteria->expr()->in(
+            'licenceType',
+            [
+              LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            ]
+          )
+        );
+
+        $licences = $this->getLicences()->matching($criteria);
+
+        if ($licences) {
+            foreach ($licences as $licence)
+            {
+                $licencesArr[] = [
+                  'id' => $licence->getId(),
+                  'licNo' => $licence->getLicNo(),
+                  'trafficArea' => $licence->getTrafficArea()->getName(),
+                  'totAuthVehicles' => $licence->getTotAuthVehicles()
+                ];
+            }
+        }
+
+        return $licencesArr;
+    }
 }
+
