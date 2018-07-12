@@ -5,6 +5,8 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\RefreshSubmissionSections;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
@@ -49,6 +51,8 @@ class RefreshSubmissionSectionsTest extends CommandHandlerTestCase
     {
         $this->sut = new RefreshSubmissionSections();
         $this->mockRepo('Submission', SubmissionRepo::class);
+        $this->mockRepo('TransportManagerApplication', TmApplicationRepo::class);
+        $this->mockRepo('TransportManagerLicence', TmLicenceRepo::class);
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
