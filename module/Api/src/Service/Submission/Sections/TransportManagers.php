@@ -5,11 +5,13 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
 /**
  * Class TransportManagers
@@ -146,13 +148,43 @@ final class TransportManagers extends AbstractSection
     private function extractOtherLicenceData(TransportManager $transportManager)
     {
         $otherLicenceData = [];
+        /** @var TmApplicationRepo $tmRepo */
+        $tmApplicationRepo = $this->getRepo(TmApplicationRepo::class);
+        /** @var TmLicenceRepo $tmLicenceRepo */
+        $tmLicenceRepo = $this->getRepo(TmLicenceRepo::class);
 
-        /** @var OtherLicence $otherLicence */
-        foreach ($transportManager->getOtherLicences() as $otherLicence) {
-            $thisOtherRow = array();
-            $thisOtherRow['licNo'] = $otherLicence->getLicNo();
-            $thisOtherRow['applicationId'] = (null !== $otherLicence->getApplication()) ?
-            $otherLicence->getApplication()->getId() : '';
+        $tmApplications = $tmApplicationRepo->fetchForTransportManager(
+            $transportManager->getId(),
+            [
+                Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                Application::APPLICATION_STATUS_GRANTED
+            ],
+            true
+        );
+
+        /** @var TransportManagerApplication $tmApplication */
+        foreach ($tmApplications as $tmApplication) {
+            $thisOtherRow = [];
+            $thisOtherRow['licNo'] = $tmApplication->getApplication()->getLicence()->getLicNo();
+            $thisOtherRow['applicationId'] = $tmApplication->getApplication()->getId();
+            $otherLicenceData[] = $thisOtherRow;
+        }
+
+        $tmLicences = $tmLicenceRepo->fetchForTransportManager(
+            $transportManager->getId(),
+            [
+                Licence::LICENCE_STATUS_VALID,
+                Licence::LICENCE_STATUS_SUSPENDED,
+                Licence::LICENCE_STATUS_CURTAILED
+            ]
+        );
+
+        /** @var TransportManagerLicence $tmLicence */
+        foreach ($tmLicences as $tmLicence) {
+            $thisOtherRow = [];
+            $thisOtherRow['licNo'] = $tmLicence->getLicence()->getLicNo();
+            $thisOtherRow['applicationId'] = false;
             $otherLicenceData[] = $thisOtherRow;
         }
 
