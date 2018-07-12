@@ -42,7 +42,7 @@ class SubmissionGenerator
      * @return SubmissionEntity
      * @throws \Exception
      */
-    public function generateSubmission(SubmissionEntity $submissionEntity, $sections)
+    public function generateSubmission(SubmissionEntity $submissionEntity, $sections, $repos = [])
     {
         $isTm = $submissionEntity->getCase()->isTm();
 
@@ -65,7 +65,7 @@ class SubmissionGenerator
             if (isset($snapshot[$sectionId])) {
                 $data = $snapshot[$sectionId];
             } else {
-                $data = $this->generateSubmissionSectionData($submissionEntity, $sectionId);
+                $data = $this->generateSubmissionSectionData($submissionEntity, $sectionId, null, $repos);
             }
 
             $submissionEntity->setSectionData($sectionId, $data);
