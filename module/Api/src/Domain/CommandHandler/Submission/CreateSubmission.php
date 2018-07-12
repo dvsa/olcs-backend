@@ -17,6 +17,8 @@ use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as SectionCommentCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
 /**
  * Create Submission
@@ -28,6 +30,8 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
 
     protected $repoServiceName = 'Submission';
 
+    protected $extraRepos = ['TransportManagerApplication','TransportManagerLicence'];
+
     /**
      * @param CommandInterface $command
      *
@@ -37,10 +41,14 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
     {
         /** @var SubmissionEntity $submissionEntity */
         $submissionEntity = $this->createSubmission($command);
-
+        $repos = [
+            TmLicenceRepo::class => $this->getRepo('TransportManagerLicence'),
+            TmApplicationRepo::class => $this->getRepo('TransportManagerApplication')
+        ];
         $submissionEntity = $this->getSubmissionGenerator()->generateSubmission(
             $submissionEntity,
-            $command->getSections()
+            $command->getSections(),
+            $repos
         );
 
         $this->getRepo()->save($submissionEntity);
