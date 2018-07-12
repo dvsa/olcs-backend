@@ -50,7 +50,7 @@ class TransportManagersTest extends SubmissionSectionTest
                                 ],
                                 1 => [
                                     'licNo' => '1-licNo',
-                                    'applicationId' => null
+                                    'applicationId' => false
                                 ]
                             ],
                             'birthDate' => '22/01/1977',
