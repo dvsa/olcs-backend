@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -22,7 +24,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"})
  *    }
  * )
  */
@@ -30,6 +33,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Cabotage
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="cabotage", nullable=true)
+     */
+    protected $cabotage;
+
+    /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     inversedBy="ecmtApplications",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_application_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="ecmt_application_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $countrys;
 
     /**
      * Created by
@@ -52,6 +85,24 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $createdOn;
 
     /**
+     * Declaration
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="declaration", nullable=true)
+     */
+    protected $declaration;
+
+    /**
+     * Emissions
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="emissions", nullable=true)
+     */
+    protected $emissions;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -61,6 +112,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * International journeys
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="international_journeys", nullable=true)
+     */
+    protected $internationalJourneys;
 
     /**
      * Last modified by
@@ -112,6 +172,25 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $paymentStatus;
 
     /**
+     * Permits required
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="permits_required", nullable=true)
+     */
+    protected $permitsRequired;
+
+    /**
+     * Sectors
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors", fetch="LAZY")
+     * @ORM\JoinColumn(name="sectors_id", referencedColumnName="id", nullable=true)
+     */
+    protected $sectors;
+
+    /**
      * Status
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -122,6 +201,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $status;
 
     /**
+     * Trips
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="trips", nullable=true)
+     */
+    protected $trips;
+
+    /**
      * Version
      *
      * @var int
@@ -130,6 +218,113 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Version
      */
     protected $version;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->countrys = new ArrayCollection();
+    }
+
+    /**
+     * Set the cabotage
+     *
+     * @param boolean $cabotage new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setCabotage($cabotage)
+    {
+        $this->cabotage = $cabotage;
+
+        return $this;
+    }
+
+    /**
+     * Get the cabotage
+     *
+     * @return boolean
+     */
+    public function getCabotage()
+    {
+        return $this->cabotage;
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return EcmtPermitApplication
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
+    }
 
     /**
      * Set the created by
@@ -186,6 +381,54 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the declaration
+     *
+     * @param boolean $declaration new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setDeclaration($declaration)
+    {
+        $this->declaration = $declaration;
+
+        return $this;
+    }
+
+    /**
+     * Get the declaration
+     *
+     * @return boolean
+     */
+    public function getDeclaration()
+    {
+        return $this->declaration;
+    }
+
+    /**
+     * Set the emissions
+     *
+     * @param boolean $emissions new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setEmissions($emissions)
+    {
+        $this->emissions = $emissions;
+
+        return $this;
+    }
+
+    /**
+     * Get the emissions
+     *
+     * @return boolean
+     */
+    public function getEmissions()
+    {
+        return $this->emissions;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -207,6 +450,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the international journeys
+     *
+     * @param int $internationalJourneys new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setInternationalJourneys($internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+
+        return $this;
+    }
+
+    /**
+     * Get the international journeys
+     *
+     * @return int
+     */
+    public function getInternationalJourneys()
+    {
+        return $this->internationalJourneys;
     }
 
     /**
@@ -336,6 +603,54 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the permits required
+     *
+     * @param int $permitsRequired new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setPermitsRequired($permitsRequired)
+    {
+        $this->permitsRequired = $permitsRequired;
+
+        return $this;
+    }
+
+    /**
+     * Get the permits required
+     *
+     * @return int
+     */
+    public function getPermitsRequired()
+    {
+        return $this->permitsRequired;
+    }
+
+    /**
+     * Set the sectors
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\Sectors $sectors entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setSectors($sectors)
+    {
+        $this->sectors = $sectors;
+
+        return $this;
+    }
+
+    /**
+     * Get the sectors
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     */
+    public function getSectors()
+    {
+        return $this->sectors;
+    }
+
+    /**
      * Set the status
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
@@ -357,6 +672,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set the trips
+     *
+     * @param int $trips new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setTrips($trips)
+    {
+        $this->trips = $trips;
+
+        return $this;
+    }
+
+    /**
+     * Get the trips
+     *
+     * @return int
+     */
+    public function getTrips()
+    {
+        return $this->trips;
     }
 
     /**
@@ -418,7 +757,11 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
