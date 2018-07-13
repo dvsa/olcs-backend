@@ -5,12 +5,13 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
+use Doctrine\ORM\Query;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\CreateSubmission;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\UpdateSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
-use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
+use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -24,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 /**
  * Create Submission Test
  */
-class CreateSubmissionTest extends CommandHandlerTestCase
+class UpdateSubmissionTest extends CommandHandlerTestCase
 {
     protected $submissionConfig = [
         'submissions' => [
@@ -44,14 +45,20 @@ class CreateSubmissionTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        $this->sut = new CreateSubmission();
+        $this->sut = new UpdateSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);
         $this->mockRepo('TransportManagerApplication', TmApplicationRepo::class);
         $this->mockRepo('TransportManagerLicence', TmLicenceRepo::class);
         $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);
 
+        $mockSubmissionGenerator = m::mock(SubmissionGenerator::class);
+        $mockSubmissionGenerator
+            ->shouldReceive('generateSubmission')
+            ->andReturn(m::mock(SubmissionEntity::class)->shouldReceive('getId')->andReturn(111)->getMock())
+        ;
+
         $this->mockedSmServices = [
-            SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
+            SubmissionGenerator::class => $mockSubmissionGenerator,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
             PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
         ];
@@ -98,50 +105,17 @@ class CreateSubmissionTest extends CommandHandlerTestCase
             ]
         ];
 
-        $submissionMock = m::mock(SubmissionEntity::class)->makePartial();
+        $mockSubmissionEntity = m::mock(SubmissionEntity::class);
+        $mockSubmissionEntity->shouldReceive('setSubmissionType')->once()->getMock();
+        $this->repoMap['Submission']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->andReturn($mockSubmissionEntity);
+        $this->repoMap['Submission']
+            ->shouldReceive('save')
+            ->once();
 
         $command = Cmd::create($data);
-        $this->mockedSmServices[SubmissionGenerator::class]->shouldReceive('generateSubmission')->once()
-            ->andReturnUsing(
-                function (
-                    SubmissionEntity $submission
-                ) use (&$submissionMock) {
-                    $submission->setId(111);
-                    $submission->setSectionData(
-                        'introduction',
-                        [
-                            'data' => [
-                                'text' => 'test comment'
-                            ]
-                        ]
-                    );
-                    $submissionMock = $submission;
-                    return $submissionMock;
-                }
-            );
-
-        $this->repoMap['Submission']->shouldReceive('save')
-            ->once()
-            ->with(m::type(SubmissionEntity::class))
-            ->andReturnUsing(
-                function (
-                    SubmissionEntity $submission
-                ) use (&$savedSubmission) {
-                    $submission->setId(111);
-                }
-            );
-
-        $this->expectedSideEffect(
-            CommentCommand::class,
-            [
-                'id' => '',
-                'submission' => 111,
-                'submissionSection' => 'introduction',
-                'comment' => 'test comment',
-            ],
-            new Result()
-        );
-
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -149,7 +123,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
                 'submission' => 111,
             ],
             'messages' => [
-                'Submission created successfully'
+                'Submission updated successfully'
             ]
         ];
 

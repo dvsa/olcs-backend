@@ -6,6 +6,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
@@ -23,6 +25,8 @@ final class RefreshSubmissionSections extends AbstractCommandHandler implements 
     use SubmissionGeneratorAwareTrait;
 
     protected $repoServiceName = 'Submission';
+
+    protected $extraRepos = ['TransportManagerApplication','TransportManagerLicence'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -50,10 +54,17 @@ final class RefreshSubmissionSections extends AbstractCommandHandler implements 
 
         $sectionToRefresh = !empty($command->getSubSection()) ? $command->getSubSection() : $command->getSection();
 
+        $repos = [
+            TmLicenceRepo::class => $this->getRepo('TransportManagerLicence'),
+            TmApplicationRepo::class => $this->getRepo('TransportManagerApplication')
+        ];
+
         // get the refresh data
         $refreshData = $this->getSubmissionGenerator()->generateSubmissionSectionData(
             $submissionEntity,
-            $command->getSection()
+            $command->getSection(),
+            null,
+            $repos
         );
 
         // assign new data
