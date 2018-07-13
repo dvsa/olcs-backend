@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\Organisation as Qry;
 use Mockery as m;
+use SAML2\Utilities\ArrayCollection;
 
 /**
  * Organisation Test
@@ -38,6 +39,7 @@ class OrganisationTest extends QueryHandlerTestCase
         $mockOrganisation->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockOrganisation->shouldReceive('getDisqualifications->count')->andReturn(2);
         $mockOrganisation->shouldReceive('getAllowedOperatorLocation')->andReturn('GB')->once();
+        $mockOrganisation->shouldReceive('getStandardInternationalLicences')->andReturn(['foo' => 'bar'])->once();
 
         $mockTa = m::mock()
             ->shouldReceive('getId')
@@ -62,7 +64,8 @@ class OrganisationTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'isDisqualified' => true,
             'allowedOperatorLocation' => 'GB',
-            'taValueOptions' => [1 => 'foo']
+            'taValueOptions' => [1 => 'foo'],
+            'relevantLicences' => ['foo' => 'bar']
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
@@ -76,6 +79,7 @@ class OrganisationTest extends QueryHandlerTestCase
         $mockOrganisation->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockOrganisation->shouldReceive('getDisqualifications->count')->andReturn(0);
         $mockOrganisation->shouldReceive('getAllowedOperatorLocation')->andReturn('GB')->once();
+        $mockOrganisation->shouldReceive('getStandardInternationalLicences')->andReturn(['foo' => 'bar'])->once();
 
         $mockTa = m::mock()
             ->shouldReceive('getId')
@@ -100,7 +104,8 @@ class OrganisationTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'isDisqualified' => false,
             'allowedOperatorLocation' => 'GB',
-            'taValueOptions' => [1 => 'foo']
+            'taValueOptions' => [1 => 'foo'],
+            'relevantLicences' => ['foo' => 'bar']
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());

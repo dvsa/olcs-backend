@@ -6,9 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-
 
 /**
  * Create an ECMT Permit application
@@ -50,15 +48,8 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     private function createPermitApplicationObject($command)
     {
         return EcmtPermitApplication::createNew(
-          $this->getRepo()->getRefdataReference($command->getStatus()),
-          $this->getRepo()->getRefdataReference($command->getPaymentStatus())
+            $this->getRepo()->getRefdataReference($command->getStatus()),
+            $this->getRepo()->getRefdataReference($command->getPaymentStatus())
         );
     }
-
-
-
-
-
-
 }
-

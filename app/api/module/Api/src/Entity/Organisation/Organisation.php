@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
-
 /**
  * Organisation Entity
  *
@@ -88,10 +87,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($adminUsers as $orgUser) {
             try {
                 $user = $orgUser->getUser();
-                if (
-                    $user instanceof UserEntity
-                    && $user->getAccountDisabled() !== 'Y'
-                ) {
+                if ($user instanceof UserEntity
+                    && $user->getAccountDisabled() !== 'Y') {
                     $enabledOrgUsers->add($orgUser);
                 }
             } catch (EntityNotFoundException $ex) {
@@ -117,10 +114,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($this->getAdminOrganisationUsers() as $orgUser) {
             $email = $orgUser->getUser()->getContactDetails()->getEmailAddress();
 
-            if (
-                !empty($email)
-                && $emailValidator->isValid($email)
-            ) {
+            if (!empty($email)
+                && $emailValidator->isValid($email)) {
                 return true;
             }
         }
@@ -587,9 +582,9 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
           $criteria->expr()->in(
             'status',
             [
-              LicenceEntity::LICENCE_STATUS_SUSPENDED,
-              LicenceEntity::LICENCE_STATUS_VALID,
-              LicenceEntity::LICENCE_STATUS_CURTAILED
+                LicenceEntity::LICENCE_STATUS_VALID,
+                LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                LicenceEntity::LICENCE_STATUS_CURTAILED
             ]
           )
         );
@@ -597,7 +592,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
           $criteria->expr()->in(
             'goodsOrPsv',
             [
-              LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
             ]
           )
         );
@@ -605,13 +600,14 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
           $criteria->expr()->in(
             'licenceType',
             [
-              LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
             ]
           )
         );
 
         $licences = $this->getLicences()->matching($criteria);
 
+        $licencesArr = array();
         if ($licences) {
             foreach ($licences as $licence)
             {
