@@ -4,8 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
-
 
 /**
  * Get a list of Constrained Countries
