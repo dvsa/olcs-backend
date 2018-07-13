@@ -754,7 +754,48 @@ class OrganisationEntityTest extends EntityTester
         $this->assertTrue($organisation->hasUnlicencedLicences());
     }
 
+    /**
+     * Test whether the organisation is eligible for permits.
+     * Use 3 mock licences
+     * The first one will not meet the criteria and be skipped
+     * The second one will meet the criteria
+     * The third licence won't need to be checked at all
+     */
+    public function testIsEligibleForPermitsWhenTrue()
+    {
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->shouldReceive('isValidSiGoods')->once()->andReturn(true);
+        $mockLicence3 = m::mock(LicenceEntity::class);
+        $mockLicence3->shouldReceive('isValidSiGoods')->never();
 
+        $licences = new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3]);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicences($licences);
+        $this->assertEquals(true, $entity->isEligibleForPermits());
+    }
+
+    /**
+     * Test whether the organisation is eligible for permits.
+     * Use 3 mock licences, all 3 won't meet the criteria hence we return false
+     */
+    public function testIsEligibleForPermitsWhenFalse()
+    {
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence3 = m::mock(LicenceEntity::class);
+        $mockLicence3->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+
+        $licences = new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3]);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicences($licences);
+        $this->assertEquals(false, $entity->isEligibleForPermits());
+    }
 
     public function testGetStandardInternationalLicences()
     {
