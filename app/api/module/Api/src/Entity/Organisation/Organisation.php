@@ -100,6 +100,27 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $enabledOrgUsers;
     }
 
+    /**
+     * Whether a user can access permits
+     */
+    public function isEligibleForPermits()
+    {
+        $licences = $this->getLicences();
+
+        /**
+         * Iterate through the licences, looking for a (valid) standard international goods licence
+         * Stop as soon as we find one
+         *
+         * @var LicenceEntity $licence
+         */
+        foreach ($licences as $licence) {
+            if ($licence->isValidSiGoods()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Has even one Operator-admin users a corrent email address
