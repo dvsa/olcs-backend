@@ -32,7 +32,7 @@ class EcmtPermits extends AbstractQueryHandler
             $restrictions = false;
             foreach ($countries as $country)
             {
-                if (in_array($country->getId(),$constrainedCountries))
+                if (in_array($country->getId(), $constrainedCountries))
                 {
                     $restrictions = true;
                     break;
@@ -50,6 +50,5 @@ class EcmtPermits extends AbstractQueryHandler
           'count' => count($data),
           'result' => $data
         ];
-        
     }
 }

@@ -53,11 +53,11 @@ final class CreateEcmtPermits extends AbstractCommandHandler implements Transact
         $ecmtPermitApplication = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtPermitsApplication());
 
         return EcmtPermits::createNew(
-          $this->getRepo()->getRefdataReference($command->getStatus()),
-          $this->getRepo()->getRefdataReference($command->getPaymentStatus()),
-          $ecmtPermitApplication,
-          $command->getIntensity(),
-          $countries
+            $this->getRepo()->getRefdataReference($command->getStatus()),
+            $this->getRepo()->getRefdataReference($command->getPaymentStatus()),
+            $ecmtPermitApplication,
+            $command->getIntensity(),
+            $countries
         );
     }
 }
