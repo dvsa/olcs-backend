@@ -3,9 +3,11 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Zend\View\Renderer\PhpRenderer;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * Class AbstractSection
@@ -22,6 +24,37 @@ abstract class AbstractSection implements SectionGeneratorInterface
      * @var /Zend\View\Renderer\PhpRenderer
      */
     private $viewRenderer;
+
+    private $repos = [];
+
+    /**
+     * @return array
+     */
+    public function getRepos(): array
+    {
+        return $this->repos;
+    }
+
+    /**
+     * @param array $repos
+     */
+    public function setRepos(array $repos): void
+    {
+        $this->repos = $repos;
+    }
+
+
+    /**
+     * @return RepositoryInterface
+     */
+    public function getRepo($name)
+    {
+        if (!array_key_exists($name, $this->repos)) {
+            throw new RuntimeException('You have not injected the ' . $name . ' repository in this section');
+        }
+
+        return $this->repos[$name];
+    }
 
     public function __construct(QueryHandlerManager $queryHandler, PhpRenderer $viewRenderer)
     {

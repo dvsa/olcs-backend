@@ -75,7 +75,9 @@ class SubmissionGeneratorTest extends MockeryTestCase
         ];
 
         /** @var SectionGeneratorPluginManager | m\MockInterface $mockSectionGeneratorPluginManager */
-        $mockSectionGeneratorPluginManager = m::mock(SectionGeneratorPluginManager::class);
+        $mockSectionGeneratorPluginManager = m::mock(SectionGeneratorPluginManager::class)
+        ->shouldReceive('setRepos')
+        ->getMock();
 
         /** @var SubmissionEntity | m\MockInterface $mockSubmission */
         $mockSubmission = m::mock(SubmissionEntity::class)->makePartial();
@@ -148,7 +150,8 @@ class SubmissionGeneratorTest extends MockeryTestCase
             ->andReturnSelf()
             ->shouldReceive('generateSection')
             ->with($mockCase)
-            ->andReturn('foo');
+            ->andReturn('foo')
+            ->shouldReceive('setRepos');
 
         /** @var SubmissionEntity | m\MockInterface $mockSubmission */
         $mockSubmission = m::mock(SubmissionEntity::class)->makePartial();
@@ -192,6 +195,7 @@ class SubmissionGeneratorTest extends MockeryTestCase
         $mockSerctionGenPluginMngr = m::mock(SectionGeneratorPluginManager::class)
             ->shouldReceive('get')->once()->with($sectionId)->andReturnSelf()
             ->shouldReceive('generateSection')->with($mockCase)->andReturn($data)
+            ->shouldReceive('setRepos')
             ->getMock();
 
         $sut = new SubmissionGenerator([], $mockSerctionGenPluginMngr);
