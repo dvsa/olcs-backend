@@ -111,7 +111,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         }
 
         /**
-         * default the feature toggle to on for testing purposes. For more more complex testing use
+         * If the handler is toggle aware, provide this for free. For more more complex testing use
          * $this->mockedSmServices in the extending class
          */
         if ($this->sut instanceof ToggleRequiredInterface || $this->sut instanceof ToggleAwareInterface

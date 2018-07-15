@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\FactoryInterface;
 
@@ -25,6 +26,7 @@ interface CommandHandlerInterface
 
     /**
      * @return bool
+     * @throws DisabledHandlerException
      */
-    public function isEnabled(): bool;
+    public function checkEnabled(): bool;
 }

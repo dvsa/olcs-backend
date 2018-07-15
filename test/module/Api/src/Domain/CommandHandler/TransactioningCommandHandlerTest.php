@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
+use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
@@ -73,10 +74,17 @@ class TransactioningCommandHandlerTest extends MockeryTestCase
         $this->sut->handleCommand($command);
     }
 
-    public function testIsEnabled()
+    public function testCheckEnabled()
     {
         $isEnabled = true;
-        $this->wrapped->shouldReceive('isEnabled')->once()->andReturn($isEnabled);
-        $this->assertEquals($isEnabled, $this->sut->isEnabled());
+        $this->wrapped->shouldReceive('checkEnabled')->once()->andReturn($isEnabled);
+        $this->assertEquals($isEnabled, $this->sut->checkEnabled());
+    }
+
+    public function testCheckEnabledExceptionPassedBack()
+    {
+        $this->setExpectedException(DisabledHandlerException::class);
+        $this->wrapped->shouldReceive('checkEnabled')->once()->andThrow(DisabledHandlerException::class);
+        $this->sut->checkEnabled();
     }
 }
