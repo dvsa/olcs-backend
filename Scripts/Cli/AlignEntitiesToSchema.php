@@ -178,14 +178,34 @@ class AlignEntitiesToSchema
 
         if (isset($this->options['help'])) {
             $this->exitResponse(
-                "Usage 'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql "
+                "\n\n=========================================\n"
+                . "Default options: \n"
+                . "=========================================\n\n"
+                . "     import-schema    /var/www/olcs/olcs-etl/olcs_schema.sql \n"
+                . "     mapping-files    " . $this->defaultOptions['mapping-files'] . " \n"
+                . "     entity-files     " . $this->defaultOptions['entity-files'] . " \n"
+                . "     test-files       " . $this->defaultOptions['test-files'] . " \n"
+                . "     entity-config    " . $this->defaultOptions['entity-config'] . " \n"
+                . "     -u               " . $this->defaultOptions['u'] . " \n"
+                . "     -p               " . $this->defaultOptions['p'] . " \n"
+                . "     -d               " . $this->defaultOptions['d'] . " \n"
+                . " \n\n"
+                . "=========================================\n"
+                . "Sample usage with default options \n"
+                . "=========================================\n\n"
+                . "'php AlignEntitiesToSchema.php --default'\n"
+                . " \n\n"
+                . "=========================================\n"
+                . "Sample Usage with custom options \n"
+                . "=========================================\n\n"
+                . "'php AlignEntitiesToSchema.php --import-schema /var/www/olcs/olcs-etl/olcs_schema.sql "
                 . "--mapping-files " . $this->defaultOptions['mapping-files'] . " "
                 . "--entity-files " . $this->defaultOptions['entity-files'] . " "
                 . "--test-files " . $this->defaultOptions['test-files'] . " "
                 . "--entity-config " . $this->defaultOptions['entity-config'] . " "
                 . "-u" . $this->defaultOptions['u'] . " "
                 . "-p" . $this->defaultOptions['p'] . " "
-                . "-d" . $this->defaultOptions['d']
+                . "-d" . $this->defaultOptions['d'] . "'\n\n"
 
             );
         }
