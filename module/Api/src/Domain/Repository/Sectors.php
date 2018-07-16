@@ -7,7 +7,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\Sectors as Entity;
 
-
 /**
  * Sectors
  */

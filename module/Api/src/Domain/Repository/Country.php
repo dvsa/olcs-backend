@@ -10,7 +10,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
 
-
 /**
  * Country
  *
@@ -26,8 +25,8 @@ class Country extends AbstractRepository
  * @return array
  *
  */
-    public function getEcmtCountries(){
-
+    public function getEcmtCountries()
+    {
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
         $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
@@ -42,8 +41,8 @@ class Country extends AbstractRepository
      * @return array
      *
      */
-    public function getConstrainedEcmtCountries($array = false){
-
+    public function getConstrainedEcmtCountries($array = false)
+    {
         $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
         $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
@@ -51,10 +50,11 @@ class Country extends AbstractRepository
 
         $data = array();
 
-        foreach ($results as $row){
-            if($row->getConstraints() && $row->getConstraints()->count() > 0){
-
-                if($array)
+        foreach ($results as $row)
+        {
+            if ($row->getConstraints() && $row->getConstraints()->count() > 0)
+            {
+                if ($array)
                 {
                     $data[] = $row->getId();
                 }
@@ -65,7 +65,6 @@ class Country extends AbstractRepository
                       'description' => $row->getCountryDesc()
                     );
                 }
-
             }
         }
         return array(count($data),$data);

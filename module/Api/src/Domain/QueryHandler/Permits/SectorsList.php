@@ -22,7 +22,7 @@ class SectorsList extends AbstractQueryHandler
         $count = $repo->fetchCount($query);
         return [
           'result' => $this->resultList(
-            $repo->fetchList($query, Query::HYDRATE_OBJECT)
+              $repo->fetchList($query, Query::HYDRATE_OBJECT)
           ),
           'count' => $count,
         ];
