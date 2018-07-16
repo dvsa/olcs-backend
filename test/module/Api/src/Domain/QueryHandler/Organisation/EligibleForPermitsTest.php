@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\EligibleForPermits as Eligibl
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\EligibleForPermits as EligibleForPermitsQry;
+use Dvsa\Olcs\Transfer\Query\Organisation\EligibleForPermitsById as EligibleForPermitsByIdQry;
 use Mockery as m;
 use ZfcRbac\Identity\IdentityInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -34,7 +35,7 @@ class EligibleForPermitsTest extends QueryHandlerTestCase
     {
         $isEligible = false;
         $orgId = 111;
-        $query = EligibleForPermitsQry::create(['id' => $orgId]);
+        $query = EligibleForPermitsByIdQry::create(['id' => $orgId]);
 
         $organisation = m::mock(OrganisationEntity::class);
         $organisation->shouldReceive('isEligibleForPermits')->once()->withNoArgs()->andReturn($isEligible);
