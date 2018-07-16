@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Organisation;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Query\Organisation\EligibleForPermits as EligibleForPermitsQry;
+use Dvsa\Olcs\Transfer\Query\Organisation\EligibleForPermitsById as EligibleForPermitsByIdQry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -25,7 +26,7 @@ final class EligibleForPermits extends AbstractQueryHandler
          *
          * @var EligibleForPermitsQry $query
          */
-        if (!empty($query->getId())) {
+        if ($query instanceof EligibleForPermitsByIdQry) {
             $organisation = $this->getRepo()->fetchUsingId($query);
         } else {
             $organisation = $this->getCurrentOrganisation();
