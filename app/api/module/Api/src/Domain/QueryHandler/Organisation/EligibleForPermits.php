@@ -24,7 +24,7 @@ final class EligibleForPermits extends AbstractQueryHandler
         /**
          * If no id is provided then we're looking at the organisation for the current user
          *
-         * @var EligibleForPermitsQry $query
+         * @var EligibleForPermitsQry|EligibleForPermitsByIdQry $query
          */
         if ($query instanceof EligibleForPermitsByIdQry) {
             $organisation = $this->getRepo()->fetchUsingId($query);
