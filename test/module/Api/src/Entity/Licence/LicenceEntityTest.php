@@ -391,8 +391,6 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
-
-        $this->assertNull($licence->getStatus());
         $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
         $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
         $licence->setLicenceType(new RefData($licenceType));
@@ -420,8 +418,6 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
-
-        $this->assertNull($licence->getStatus());
         $licence->setStatus(new RefData($status));
 
         $this->assertEquals($expectedResult, $licence->isValid());
@@ -455,8 +451,6 @@ class LicenceEntityTest extends EntityTester
     {
         /** @var Entity $licence */
         $licence = $this->instantiate(Entity::class);
-
-        $this->assertNull($licence->getStatus());
         $licence->setStatus(new RefData($status));
         $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
 
