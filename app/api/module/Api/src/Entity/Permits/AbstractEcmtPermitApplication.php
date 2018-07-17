@@ -23,6 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_permit_type", columns={"permit_type"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"})
@@ -170,6 +171,16 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\JoinColumn(name="payment_status", referencedColumnName="id", nullable=false)
      */
     protected $paymentStatus;
+
+    /**
+     * Permit type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="permit_type", referencedColumnName="id", nullable=false)
+     */
+    protected $permitType;
 
     /**
      * Permits required
@@ -600,6 +611,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getPaymentStatus()
     {
         return $this->paymentStatus;
+    }
+
+    /**
+     * Set the permit type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $permitType entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setPermitType($permitType)
+    {
+        $this->permitType = $permitType;
+
+        return $this;
+    }
+
+    /**
+     * Get the permit type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getPermitType()
+    {
+        return $this->permitType;
     }
 
     /**
