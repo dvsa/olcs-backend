@@ -145,8 +145,14 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
      */
     public function getAttributesFromResponse($response)
     {
+        echo "\n======================================\n";
+        echo 'getAttributesFromResponse $response:' . "\n";
+        var_dump($response);
         $binding = new \Dvsa\Olcs\GdsVerify\SAML2\Binding();
         $samlResponse = $binding->processResponse($response);
+        echo "\n======================================\n";
+        echo 'getAttributesFromResponse $samlResponse:' . "\n";
+        var_dump($samlResponse);
 
         if (!$samlResponse->isSuccess()) {
             // If not a success message return empty attributes
@@ -155,13 +161,22 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
 
         // Get MSA signing certificate
         $msaCert = $this->getMatchingServiceAdapterSigningCertificate();
+        echo "\n======================================\n";
+        echo 'getAttributesFromResponse $msaCert:' . "\n";
+        var_dump($msaCert);
 
+        echo "\n======================================\n";
+        echo 'getAttributesFromResponse $samlResponse->getAssertions(): '. "\n";
+        var_dump($samlResponse->getAssertions());
         $attributes = [];
         foreach ($samlResponse->getAssertions() as $assertion) {
             /* @var $assertion \SAML2\EncryptedAssertion */
 
             // decrypt the assertion
             $decryptedAssertion = $this->decrytAssertion($assertion);
+            echo "\n======================================\n";
+            echo 'getAttributesFromResponse $samlResponse->getAssertions() => $decryptedAssertion:' . "\n";
+            var_dump($decryptedAssertion);
 
             // Validate that the assertion is signed by the Matching Service Adapter
             try {
