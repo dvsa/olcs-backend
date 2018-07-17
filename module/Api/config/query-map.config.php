@@ -572,5 +572,6 @@ return [
     // Permits
     TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
     TransferQuery\Permits\ConstrainedCountries::class => QueryHandler\Permits\ConstrainedCountries::class,
+    TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\EcmtPermits::class => QueryHandler\Permits\EcmtPermits::class,
 ];
