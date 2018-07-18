@@ -9,6 +9,7 @@ return [
   QueryHandler\Permits\ConstrainedCountries::class => NoValidationRequired::class,
   QueryHandler\Permits\EcmtPermits::class => NoValidationRequired::class,
   QueryHandler\Permits\EcmtPermitApplication::class => NoValidationRequired::class,
+  QueryHandler\Permits\ById::class => NoValidationRequired::class,
   CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
   CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
 ];

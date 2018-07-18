@@ -517,7 +517,7 @@ return [
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
 
     // FeatureToggle
-    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ById::class,
+    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ApplicationById::class,
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
 
     // Admin :: Data Retention
@@ -573,4 +573,5 @@ return [
     TransferQuery\Permits\ConstrainedCountries::class => QueryHandler\Permits\ConstrainedCountries::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\EcmtPermits::class => QueryHandler\Permits\EcmtPermits::class,
+    TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
 ];
