@@ -12,5 +12,5 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryByIdHandler;
 final class ById extends AbstractQueryByIdHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $bundle = ['licence'];
+    protected $bundle = ['licence'=>['trafficArea']];
 }
