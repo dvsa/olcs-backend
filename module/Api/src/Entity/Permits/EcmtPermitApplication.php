@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * EcmtPermitApplication Entity
@@ -31,18 +31,21 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @param RefData               $status           Status
      * @param RefData               $paymentStatus    Payment status
      * @param RefData               $permitType       Permit type
+     * @param Licence               $licence          Licence
      *
      * @return BusReg
      */
     public static function createNew(
       RefData $status,
       RefData $paymentStatus,
-      RefData $permitType
+      RefData $permitType,
+      Licence $licence
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->setStatus($status);
         $ecmtPermitApplication->setPaymentStatus($paymentStatus);
         $ecmtPermitApplication->setPermitType($permitType);
+        $ecmtPermitApplication->setLicence($licence);
 
         return $ecmtPermitApplication;
     }

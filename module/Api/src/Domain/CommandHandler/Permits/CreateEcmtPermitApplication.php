@@ -16,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class CreateEcmtPermitApplication extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'EcmtPermitApplication';
+    protected $extraRepos = ['Licence'];
 
     /**
      * Handle command
@@ -51,7 +52,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
             $this->getRepo()->getRefdataReference($command->getStatus()),
             $this->getRepo()->getRefdataReference($command->getPaymentStatus()),
             $this->getRepo()->getRefdataReference($command->getPermitType()),
-            $command->getLicence()
+            $this->getRepo('Licence')->fetchById($command->getLicence())
         );
     }
 }

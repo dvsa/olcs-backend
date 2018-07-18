@@ -17,8 +17,10 @@ class EcmtPermitApplication extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
+
         $repo = $this->getRepo();
         $count = $repo->fetchCount($query);
+
         return [
           'result' => $this->resultList(
             $repo->fetchList($query, Query::HYDRATE_OBJECT),
