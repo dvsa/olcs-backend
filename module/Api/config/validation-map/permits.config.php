@@ -12,4 +12,5 @@ return [
   QueryHandler\Permits\ById::class => NoValidationRequired::class,
   CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
   CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
 ];
