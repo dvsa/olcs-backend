@@ -137,6 +137,8 @@ return [
     TransferQuery\Organisation\CpidOrganisation::class
         => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
+    TransferQuery\Organisation\EligibleForPermits::class => QueryHandler\Organisation\EligibleForPermits::class,
+    TransferQuery\Organisation\EligibleForPermitsById::class => QueryHandler\Organisation\EligibleForPermits::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -517,7 +519,7 @@ return [
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
 
     // FeatureToggle
-    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ApplicationById::class,
+    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ById::class,
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 

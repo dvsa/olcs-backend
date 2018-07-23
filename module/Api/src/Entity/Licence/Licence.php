@@ -563,6 +563,36 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Is this a valid standard international goods licence
+     *
+     * @return bool
+     */
+    public function isValidSiGoods()
+    {
+        return $this->isValidGoods() && $this->isStandardInternational();
+    }
+
+    /**
+     * Whether the licence is active goods (sometimes also described as valid)
+     *
+     * @return bool
+     */
+    public function isValidGoods()
+    {
+        return $this->isValid() && $this->isGoods();
+    }
+
+    /**
+     * Whether the licence is active (sometimes also described as valid)
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return in_array($this->status->getId(), self::ACTIVE_STATUSES);
+    }
+
+    /**
      * Returns whether the licence is a goods licence
      *
      * @return boolean|null
