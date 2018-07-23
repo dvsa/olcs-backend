@@ -519,7 +519,7 @@ return [
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
 
     // FeatureToggle
-    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ApplicationById::class,
+    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ById::class,
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
 
     // Admin :: Data Retention
