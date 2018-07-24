@@ -11,6 +11,7 @@ use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Comma
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
+use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
 
 /**
  * OperatorApproveTest
@@ -70,6 +71,9 @@ class OperatorApproveTest extends CommandHandlerTestCase
                 ->getMock()
             )
             ->twice()
+            ->shouldReceive('getId')
+            ->andReturn(123)
+            ->once()
             ->getMock();
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
@@ -89,8 +93,16 @@ class OperatorApproveTest extends CommandHandlerTestCase
         );
         $this->repoMap['TransportManager']->shouldReceive('save')->once();
 
-        $this->assertEmailSent($tma);
+        $data = [
+            'id' => 12,
+            'user' => 123
+        ];
 
+        $result = new Result();
+        $this->expectedSideEffect(Snapshot::class, $data, $result);
+
+
+        $this->assertEmailSent($tma);
         $this->sut->handleCommand($command);
     }
 
@@ -116,7 +128,7 @@ class OperatorApproveTest extends CommandHandlerTestCase
             ->once()
             ->shouldReceive('getId')
             ->andReturn(1)
-            ->once()
+            ->twice()
             ->getMock();
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
@@ -135,6 +147,14 @@ class OperatorApproveTest extends CommandHandlerTestCase
             }
         );
         $this->repoMap['TransportManager']->shouldReceive('save')->once();
+
+        $data = [
+            'id' => 12,
+            'user' => 1
+        ];
+
+        $result = new Result();
+        $this->expectedSideEffect(Snapshot::class, $data, $result);
 
         $this->sut->handleCommand($command);
     }
@@ -165,7 +185,6 @@ class OperatorApproveTest extends CommandHandlerTestCase
                     $vars
                 );
                 $this->assertSame('default', $layout);
-
             }
         );
 

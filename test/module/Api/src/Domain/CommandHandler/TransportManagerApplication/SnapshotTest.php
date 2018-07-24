@@ -52,6 +52,8 @@ class SnapshotTest extends CommandHandlerTestCase
         $tma->shouldReceive('getApplication->getLicence->getId')
             ->andReturn(444);
 
+        $tma->shouldReceive('getTmApplicationStatus->getId');
+
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')
             ->with($command)
             ->andReturn($tma);
