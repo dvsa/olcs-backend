@@ -249,8 +249,10 @@ class ImportUsersFromCsv extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $sm)
     {
+        // TODO: remove use of deprecated method getServiceLocator
         /** @var ServiceLocatorInterface $sl */
         $sl = $sm->getServiceLocator();
+
 
         $this->openAmSrv = $sl->get(OpenAm\UserInterface::class);
         $this->openAmClient = $sl->get(OpenAm\ClientInterface::class);

@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 use Zend\Json\Json as ZendJson;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -90,6 +91,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('getServiceLocator')->andReturn($sm);
         if (property_exists($this, 'submissionConfig')) {
             $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
         }
@@ -109,12 +111,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->getMock();
         }
 
-        $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
-
-        $this->sut->createService($this->commandHandler);
+        $this->sut->createService($sm);
 
         $this->sideEffects = [];
         $this->commands = [];

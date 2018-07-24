@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 use Zend\ServiceManager\FactoryInterface;
@@ -80,29 +81,31 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $this->result = new Result();
 
-        /** @var ServiceLocatorInterface $mainServiceLocator  */
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
         try {
-            $this->applyInterfaces($mainServiceLocator);
+            $this->applyInterfaces($container);
         } catch (ZendServiceException $e) {
             $this->logServiceExceptions($e);
         }
 
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->repoManager = $container->get('RepositoryServiceManager');
 
         if ($this->repoServiceName !== null) {
             $this->extraRepos[] = $this->repoServiceName;
         }
 
-        $this->commandHandler = $serviceLocator;
+        $this->commandHandler = $container;
 
-        $this->pidIdentityProvider = $mainServiceLocator->get(PidIdentityProvider::class);
+        $this->pidIdentityProvider = $container->get(PidIdentityProvider::class);
 
         if ($this instanceof TransactionedInterface) {
-            return new TransactioningCommandHandler($this, $mainServiceLocator->get('TransactionManager'));
+            return new TransactioningCommandHandler($this, $container->get('TransactionManager'));
         }
 
         return $this;
@@ -133,7 +136,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * Warnings suppressed as by design this is just a series of 'if' conditions
      *
-     * @param ServiceLocatorInterface $mainServiceLocator service locator
+     * @param ContainerInterface $mainServiceLocator service locator
      *
      * @return void
      *
