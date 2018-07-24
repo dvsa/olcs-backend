@@ -116,7 +116,7 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
      *
      * @return Result
      */
-    protected function createSnapshot($tmaId, $user)
+    private function createSnapshot($tmaId, $user)
     {
         $data = [
             'id' => $tmaId,
