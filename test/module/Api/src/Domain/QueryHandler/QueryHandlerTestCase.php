@@ -79,7 +79,7 @@ class QueryHandlerTestCase extends MockeryTestCase
         $sm = m::mock(ServiceLocatorInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
-
+        $sm->shouldReceive('getServiceLocator')->andReturn($sm);
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
@@ -92,14 +92,9 @@ class QueryHandlerTestCase extends MockeryTestCase
                 );
         }
 
-        $this->queryHandler = m::mock(QueryHandlerManager::class);
-        $this->queryHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
-
         $this->initReferences();
 
-        $this->sut = $this->sut->createService($this->queryHandler);
+        $this->sut = $this->sut->createService($sm);
     }
 
     protected function initReferences()

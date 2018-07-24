@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -62,43 +63,47 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+       return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
 
         if ($this instanceof AuthAwareInterface) {
-            $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
+            $this->setAuthService($container->get(AuthorizationService::class));
         }
 
         if ($this instanceof UploaderAwareInterface) {
-            $this->setUploader($mainServiceLocator->get('FileUploader'));
+            $this->setUploader($container->get('FileUploader'));
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
-            $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
+            $this->setCpmsService($container->get('CpmsHelperService'));
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
-            $this->setCompaniesHouseService($mainServiceLocator->get('CompaniesHouseService'));
+            $this->setCompaniesHouseService($container->get('CompaniesHouseService'));
         }
 
         if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
-            $this->setAddressService($mainServiceLocator->get('AddressService'));
+            $this->setAddressService($container->get('AddressService'));
         }
 
         if ($this instanceof NationalRegisterAwareInterface) {
-            $this->setNationalRegisterConfig($mainServiceLocator->get('Config')['nr']);
+            $this->setNationalRegisterConfig($container->get('Config')['nr']);
         }
 
         if ($this instanceof OpenAmUserAwareInterface) {
-            $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
+            $this->setOpenAmUser($container->get(UserInterface::class));
         }
 
-        $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
+        $this->repoManager = $container->get('RepositoryServiceManager');
 
         $this->extraRepos[] = $this->repoServiceName;
 
-        $this->queryHandler = $serviceLocator;
+        $this->queryHandler = $container;
 
-        $this->commandHandler = $mainServiceLocator->get('CommandHandlerManager');
+        $this->commandHandler = $container->get('CommandHandlerManager');
 
         return $this;
     }
