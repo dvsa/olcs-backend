@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Address\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,7 +21,12 @@ class AddressFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (!isset($config['address']['client']['baseuri'])) {
             throw new \RuntimeException('Address service baseuri not set');
