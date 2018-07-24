@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\InputFilter;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
@@ -28,7 +29,12 @@ class XmlStructureInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (!isset($config['nr']['compliance_episode']['xmlNs'])) {
             throw new \RuntimeException(self::XML_NS_MSG);
@@ -45,12 +51,12 @@ class XmlStructureInputFactory implements FactoryInterface
         $service = new Input('xml_structure');
 
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(ParseXmlString::class));
+        $filterChain->attach($container->get('FilterManager')->get(ParseXmlString::class));
 
         $validatorChain = $service->getValidatorChain();
 
         /** @var Xsd $xsdValidator */
-        $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
+        $xsdValidator = $container->get('ValidatorManager')->get(Xsd::class);
         $xsdValidator->setXsd($config['nr']['compliance_episode']['xmlNs']);
         $xsdValidator->setMaxErrors($config['nr']['max_schema_errors']);
         $xsdValidator->setXmlMessageExclude($config['xml_valid_message_exclude']);
