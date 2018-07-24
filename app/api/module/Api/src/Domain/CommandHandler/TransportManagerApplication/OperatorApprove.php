@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
 
 final class OperatorApprove extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
@@ -54,6 +56,8 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
             Logger::warn('Empty email address for TM ' . $tma->getTransportManager()->getId());
             $this->result->addMessage('Email is not sent.');
         }
+
+        $this->result->merge($this->createSnapshot($tma->getId(), $tma->getTransportManager()->getId()));
 
         return $this->result;
     }
@@ -102,5 +106,23 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
     {
         $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
         $this->getRepo('TransportManager')->save($tm);
+    }
+
+    /**
+     * Create snapshot
+     *
+     * @param int $tmaId tma id
+     * @param int $user  transport manager id
+     *
+     * @return Result
+     */
+    protected function createSnapshot($tmaId, $user)
+    {
+        $data = [
+            'id' => $tmaId,
+            'user' => $user
+        ];
+
+        return $this->handleSideEffect(Snapshot::create($data));
     }
 }
