@@ -8,7 +8,7 @@
  */
 namespace Dvsa\Olcs\Cli\Controller;
 
-use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 
 /**

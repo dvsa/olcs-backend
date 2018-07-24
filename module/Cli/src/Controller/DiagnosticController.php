@@ -8,7 +8,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Zend\Console\Response;
-use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 use Zend\Http\Client;
 use Dvsa\Olcs\Api\Entity\Doc\Document;

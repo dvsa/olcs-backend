@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Response;
-use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 
 /**
