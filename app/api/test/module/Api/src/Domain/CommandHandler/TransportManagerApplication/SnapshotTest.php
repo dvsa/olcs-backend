@@ -37,7 +37,10 @@ class SnapshotTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand($tmaStatus, $expectedString)
     {
         $command = Command::create(['id' => 111, 'user' => 1]);
 
@@ -52,7 +55,8 @@ class SnapshotTest extends CommandHandlerTestCase
         $tma->shouldReceive('getApplication->getLicence->getId')
             ->andReturn(444);
 
-        $tma->shouldReceive('getTmApplicationStatus->getId');
+        $tma->shouldReceive('getTmApplicationStatus->getId')
+            ->andReturn($tmaStatus);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -67,7 +71,7 @@ class SnapshotTest extends CommandHandlerTestCase
         $result->addMessage('Upload');
         $data = [
             'content' => base64_encode('<markup>'),
-            'filename' => 'TM222 snapshot for application 333 (at grant).html',
+            'filename' => 'TM222 snapshot for application 333 (at ' . $expectedString . ').html',
             'category' => Category::CATEGORY_TRANSPORT_MANAGER,
             'subCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_TM1_ASSISTED_DIGITAL,
             'isExternal' => false,
@@ -90,5 +94,23 @@ class SnapshotTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function dpTestHandleCommand()
+    {
+        return [
+            [
+                'tmaStatus' => TransportManagerApplication::STATUS_OPERATOR_SIGNED,
+                'expectedString' => 'submission'
+            ],
+            [
+                'tmaStatus' => TransportManagerApplication::STATUS_AWAITING_SIGNATURE,
+                'expectedString' => 'grant'
+            ],
+            [
+                'tmaStatus' => TransportManagerApplication::STATUS_INCOMPLETE,
+                'expectedString' => 'grant'
+            ]
+        ];
     }
 }
