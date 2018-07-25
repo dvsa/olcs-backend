@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
@@ -32,7 +33,12 @@ class VariationOperatingCentreHelper implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $repoSm = $serviceLocator->get('RepositoryServiceManager');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $repoSm = $container->get('RepositoryServiceManager');
 
         $this->aocRepo = $repoSm->get('ApplicationOperatingCentre');
         $this->locRepo = $repoSm->get('LicenceOperatingCentre');
