@@ -5,6 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,10 +22,15 @@ class WithContactDetailsFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new WithContactDetails(
-            $serviceLocator->getServiceLocator()->get('doctrine.entitymanager.orm_default'),
-            $serviceLocator->get('with'),
-            $serviceLocator->get('withRefdata')
+            $container->get('doctrine.entitymanager.orm_default'),
+            $container->get('with'),
+            $container->get('withRefdata')
         );
     }
 }
