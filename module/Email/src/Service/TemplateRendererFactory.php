@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,8 +22,13 @@ class TemplateRendererFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $templateRenderer = new TemplateRenderer();
-        $templateRenderer->setViewRenderer($serviceLocator->get('ViewRenderer'));
+        $templateRenderer->setViewRenderer($container->get('ViewRenderer'));
 
         return $templateRenderer;
     }
