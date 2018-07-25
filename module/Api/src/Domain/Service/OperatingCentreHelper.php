@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document as DocRepo;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
@@ -77,15 +78,19 @@ class OperatingCentreHelper implements FactoryInterface
      *
      * @return $this
      *
-     * @TODO this needs to be in a factory.  How can a factory be integrated into a service?
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->addressService = $serviceLocator->get('AddressService');
-        $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
-        $this->trafficAreaValidator = $serviceLocator->get('TrafficAreaValidator');
+        return $this($serviceLocator, self::class);
+    }
 
-        $this->docRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->addressService = $container->get('AddressService');
+        $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+        $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
+
+        $this->docRepo = $container->get('RepositoryServiceManager')->get('Document');
 
         return $this;
     }
