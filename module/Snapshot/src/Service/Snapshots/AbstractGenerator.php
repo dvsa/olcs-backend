@@ -2,8 +2,7 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -11,9 +10,8 @@ use Zend\View\Model\ViewModel;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractGenerator implements ServiceLocatorAwareInterface
+abstract class AbstractGenerator extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
 
     protected function generateReadonly(array $config, $template = 'review')
     {
