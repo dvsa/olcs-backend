@@ -4,13 +4,15 @@ namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\FactoryInterface;
 
 /**
  * TrafficAreaValidator
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
+class TrafficAreaValidator implements FactoryInterface
 {
     const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
     const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
@@ -30,8 +32,13 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
 
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->addressService = $serviceLocator->get('AddressService');
-        $this->adminAreaTrafficAreaRepo = $serviceLocator->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->addressService = $container->get('AddressService');
+        $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
 
         return $this;
     }
