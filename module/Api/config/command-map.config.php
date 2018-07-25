@@ -1033,4 +1033,5 @@ return [
     // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
+    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
 ];
