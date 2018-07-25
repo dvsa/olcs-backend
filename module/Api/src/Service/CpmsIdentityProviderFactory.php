@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Api\Service;
 
+use Interop\Container\ContainerInterface;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -22,9 +23,14 @@ class CpmsIdentityProviderFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $service = new CpmsIdentityProvider();
 
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         if (!isset($config['cpms_credentials'])) {
             throw new RuntimeException('Missing required CPMS configuration');
@@ -41,7 +47,7 @@ class CpmsIdentityProviderFactory implements FactoryInterface
         }
 
         // set the CPMS userID to be OLCS users PID
-        $authService = $serviceLocator->get(\ZfcRbac\Service\AuthorizationService::class);
+        $authService = $container->get(\ZfcRbac\Service\AuthorizationService::class);
         /* @var $authService \ZfcRbac\Service\AuthorizationService */
         $pid = $authService->getIdentity()->getUser()->getPid();
 
