@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\Client;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Stdlib\ArrayUtils;
@@ -64,12 +65,17 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->setNamingService($serviceLocator->get('DocumentNamingService'));
-        $this->documentService = $serviceLocator->get('Document');
-        $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
-        $this->uploader = $serviceLocator->get('FileUploader');
-        $this->contentStore = $serviceLocator->get('ContentStore');
-        $this->documentRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->setNamingService($container->get('DocumentNamingService'));
+        $this->documentService = $container->get('Document');
+        $this->queryHandlerManager = $container->get('QueryHandlerManager');
+        $this->uploader = $container->get('FileUploader');
+        $this->contentStore = $container->get('ContentStore');
+        $this->documentRepo = $container->get('RepositoryServiceManager')->get('Document');
 
         return $this;
     }
