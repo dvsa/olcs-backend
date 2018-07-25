@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -44,9 +45,14 @@ class FinancialStandingHelperService implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->ratesRepo = $serviceLocator->get('RepositoryServiceManager')->get('FinancialStandingRate');
-        $this->organisationRepo = $serviceLocator->get('RepositoryServiceManager')->get('Organisation');
-        $this->applicationRepo = $serviceLocator->get('RepositoryServiceManager')->get('Application');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->ratesRepo = $container->get('RepositoryServiceManager')->get('FinancialStandingRate');
+        $this->organisationRepo = $container->get('RepositoryServiceManager')->get('Organisation');
+        $this->applicationRepo = $container->get('RepositoryServiceManager')->get('Application');
         return $this;
     }
 
