@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,6 +26,11 @@ class QueryBuilderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new QueryBuilder($serviceLocator->get('QueryPartialServiceManager'));
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new QueryBuilder($container->get('QueryPartialServiceManager'));
     }
 }
