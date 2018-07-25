@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\GdsVerify\Service;
 
+use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\StorageInterface;
 use Zend\Log\LoggerInterface;
+use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use \RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
@@ -15,7 +17,7 @@ use Dvsa\Olcs\GdsVerify\Data;
  *
  * @package Dvsa\Olcs\GdsVerify\Service
  */
-class GdsVerify implements \Zend\ServiceManager\FactoryInterface
+class GdsVerify implements FactoryInterface
 {
     const CONFIG_KEY = 'gds_verify';
     const CONFIG_ENTITY_ID = 'entity_identifier';
@@ -59,8 +61,13 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $config = [];
-        $globalConfig = $serviceLocator->get('config');
+        $globalConfig = $container->get('config');
         if (isset($globalConfig[self::CONFIG_KEY])) {
             $config = $globalConfig[self::CONFIG_KEY];
         }
@@ -68,13 +75,13 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
         $this->config = $config;
 
         \SAML2\Compat\ContainerSingleton::setContainer(
-            $this->getContainer($serviceLocator->get('logger'))
+            $this->getContainer($container->get('logger'))
         );
         $this->setMetadataLoader(new Data\Loader($this->getCache()));
 
-        if ($serviceLocator->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
+        if ($container->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
             $this->getMetadataLoader()->setHttpClient(
-                $serviceLocator->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
+                $container->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
             );
         }
 
