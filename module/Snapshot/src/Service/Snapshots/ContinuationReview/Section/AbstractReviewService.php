@@ -2,18 +2,15 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Abstract Review Service
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService extends AbstractPluginManager implements ReviewServiceInterface
 {
-    use ServiceLocatorAwareTrait;
-
     /**
      * Translate
      *
