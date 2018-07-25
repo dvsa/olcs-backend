@@ -11,6 +11,7 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Response;
 use CompaniesHouse\CHXmlGateway;
@@ -63,7 +64,12 @@ class CompaniesHouseService implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->config = $container->get('Config');
         return $this;
     }
 
