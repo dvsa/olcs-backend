@@ -30,8 +30,6 @@ final class UpdateEcmtEmissions extends AbstractCommandHandler
 
         $ecmtApplication->setEmissions($command->getEmissions());
 
-        Logger::debug("AAAAAAAAAAAAAAAAAAAAAAAAAA" + var_dump($ecmtApplication));
-
         $this->getRepo()->save($ecmtApplication);
         $result->addId('ecmtEuro6', $ecmtApplication->getId());
         $result->addMessage('ECMT Permit Application Euro6 updated');
