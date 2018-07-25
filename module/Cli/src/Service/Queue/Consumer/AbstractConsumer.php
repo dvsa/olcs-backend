@@ -7,17 +7,15 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Failed as FailedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as RetryCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Abstract Queue Consumer
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLocatorAwareInterface
+abstract class AbstractConsumer extends AbstractPluginManager implements MessageConsumerInterface
 {
-    use ServiceLocatorAwareTrait;
 
     /**
      * Called when processing the message was successful
