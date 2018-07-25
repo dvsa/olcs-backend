@@ -1030,4 +1030,5 @@ return [
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
+    TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
 ];
