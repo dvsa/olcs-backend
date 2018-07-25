@@ -8,9 +8,8 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Abstract Review Service
@@ -20,13 +19,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService extends AbstractPluginManager implements ReviewServiceInterface
 {
     const SIGNATURE = 'markup-application_undertakings_signature';
     const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
     const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
-
-    use ServiceLocatorAwareTrait;
 
     protected function formatText($text)
     {
