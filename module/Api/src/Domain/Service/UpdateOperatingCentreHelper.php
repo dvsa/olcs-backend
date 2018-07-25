@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Service;
 
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -39,7 +40,12 @@ class UpdateOperatingCentreHelper implements FactoryInterface
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->authService = $serviceLocator->get(AuthorizationService::class);
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->authService = $container->get(AuthorizationService::class);
 
         return $this;
     }
