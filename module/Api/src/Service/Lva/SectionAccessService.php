@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -50,9 +51,14 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->restrictionService = $serviceLocator->get('RestrictionService');
-        $this->sectionConfig = $serviceLocator->get('SectionConfig');
-        $this->setAuthService($serviceLocator->get(AuthorizationService::class));
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->restrictionService = $container->get('RestrictionService');
+        $this->sectionConfig = $container->get('SectionConfig');
+        $this->setAuthService($container->get(AuthorizationService::class));
 
         return $this;
     }
