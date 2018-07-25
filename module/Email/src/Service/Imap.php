@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Email\Service;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail\Storage;
@@ -28,7 +29,12 @@ class Imap implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
         if (!isset($config['mailboxes'])) {
             throw new ZendMailRuntimeException('No mailbox config found');
         }
