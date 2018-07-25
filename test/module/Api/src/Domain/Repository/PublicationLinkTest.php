@@ -473,8 +473,6 @@ class PublicationLinkTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult');
 
         $expectedQuery = '[QUERY]' .
-            ' AND m.pi IS NOT NULL' .
-            ' AND m.transportManager IS NULL' .
             ' AND m.publication = [[' . $publicationEntityId . ']]'.
             ' AND m.publishAfterDate IS NOT NULL'.
             ' AND m.publishAfterDate > [[' . $today . ']]';
@@ -482,7 +480,7 @@ class PublicationLinkTest extends RepositoryTestCase
         /** @var PublicationEntity $publicationEntity */
         $publicationEntity = m::mock(PublicationEntity::class)->makePartial();
         $publicationEntity->setId(1);
-        $this->sut->fetchIneligiblePiPublicationLinks($publicationEntity);
+        $this->sut->fetchIneligiblePublicationLinks($publicationEntity);
         $this->assertEquals($expectedQuery, $this->query);
     }
 }

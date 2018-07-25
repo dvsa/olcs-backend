@@ -3,6 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
+use Mockery as m;
 
 /**
  * Class TransportManagersTest
@@ -40,6 +47,10 @@ class TransportManagersTest extends SubmissionSectionTest
                                 0 => [
                                     'licNo' => '1-licNo',
                                     'applicationId' => 2255
+                                ],
+                                1 => [
+                                    'licNo' => '1-licNo',
+                                    'applicationId' => false
                                 ]
                             ],
                             'birthDate' => '22/01/1977',
@@ -68,5 +79,93 @@ class TransportManagersTest extends SubmissionSectionTest
         return [
             [$case, $expectedResult],
         ];
+    }
+
+    protected function mockSetRepos($sut): void
+    {
+        $mockTmLicenceRepo = m::mock(TmLicenceRepo::class);
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('getLicNo')
+            ->andReturn('1-licNo')
+            ->getMock();
+
+        $mockTmLicences = [
+            m::mock(TransportManagerLicence::class)
+                ->shouldReceive('getLicence')
+                ->andReturn($mockLicence)
+                ->getMock()
+        ];
+        $mockTmLicenceRepo->shouldReceive('fetchForTransportManager')
+            ->with(
+                43,
+                [
+                    Licence::LICENCE_STATUS_VALID,
+                    Licence::LICENCE_STATUS_SUSPENDED,
+                    Licence::LICENCE_STATUS_CURTAILED
+                ]
+            )
+            ->andReturn($mockTmLicences);
+
+        $mockTmLicenceRepo->shouldReceive('fetchForTransportManager')
+            ->with(
+                216,
+                [
+                    Licence::LICENCE_STATUS_VALID,
+                    Licence::LICENCE_STATUS_SUSPENDED,
+                    Licence::LICENCE_STATUS_CURTAILED
+                ]
+            )
+            ->andReturn([]);
+
+
+        $mockTmApplicationRepo = m::mock(TmApplicationRepo::class);
+
+
+        $mockApplication = m::mock(Application::class)
+            ->shouldReceive('getLicence')
+            ->once()
+            ->andReturn($mockLicence)
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn(2255)
+            ->getMock();
+
+        $mockTmApplications = [
+            m::mock(TransportManagerApplication::class)
+                ->shouldReceive('getApplication')
+                ->andReturn($mockApplication)
+                ->getMock()
+        ];
+
+        $mockTmApplicationRepo->shouldReceive('fetchForTransportManager')
+            ->with(
+                43,
+                [
+                    Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                    Application::APPLICATION_STATUS_GRANTED
+                ],
+                true
+            )
+            ->andReturn($mockTmApplications);
+
+        $mockTmApplicationRepo->shouldReceive('fetchForTransportManager')
+            ->with(
+                216,
+                [
+                    Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                    Application::APPLICATION_STATUS_GRANTED
+                ],
+                true
+            )
+            ->andReturn([]);
+
+        $mockRepos = [
+            TmLicenceRepo::class => $mockTmLicenceRepo,
+            TmApplicationRepo::class => $mockTmApplicationRepo
+        ];
+
+        $sut->setRepos($mockRepos);
     }
 }

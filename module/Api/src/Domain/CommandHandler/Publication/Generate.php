@@ -49,7 +49,7 @@ final class Generate extends AbstractCommandHandler implements TransactionedInte
 
         /** @var PublicationLink $publicationLinks */
         $publicationLinks = $this->getRepo('PublicationLink');
-        $ineligibleLinks = $publicationLinks->fetchIneligiblePiPublicationLinks($publication);
+        $ineligibleLinks = $publicationLinks->fetchIneligiblePublicationLinks($publication);
 
         /** @var Result $result */
         $result = $this->handleSideEffect(CreateNextPublicationCmd::create(['id' => $publication->getId()]));

@@ -93,7 +93,9 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
-
+        if (property_exists($this, 'submissionConfig')) {
+            $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
+        }
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
