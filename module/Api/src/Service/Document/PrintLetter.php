@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -81,7 +82,12 @@ class PrintLetter implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->repoDocTemplate = $serviceLocator->get('RepositoryServiceManager')->get('DocTemplate');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->repoDocTemplate = $container->get('RepositoryServiceManager')->get('DocTemplate');
         return $this;
     }
 }
