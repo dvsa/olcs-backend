@@ -13,4 +13,5 @@ return [
   CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
   CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
 ];
