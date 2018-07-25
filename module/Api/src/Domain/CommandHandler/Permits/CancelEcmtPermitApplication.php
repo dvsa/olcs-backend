@@ -37,7 +37,7 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler
         }
 
         /** @var EcmtPermitApplication $application */
-        $application->setStatus($this->getRepo()->getRefdataReference('permit_cancelled'));
+        $application->setStatus($this->getRepo()->getRefdataReference('ecmt_permit_cancelled'));
 
         $this->getRepo()->save($application);
 
