@@ -12,8 +12,8 @@ use Doctrine\DBAL\DBALException;
 use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem as NextQueueItemQry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
+
 
 /**
  * Queue Processor
@@ -21,9 +21,8 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
  * @author Rob Caiger <rob@clocal.co.uk>
  * @note ported from olcs-internal Cli\Service\Queue
  */
-class QueueProcessor implements ServiceLocatorAwareInterface
+class QueueProcessor extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
 
     /**
      * Process next item

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
+use Interop\Container\ContainerInterface;
 use RuntimeException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -29,7 +30,12 @@ class ClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $clientOptions = $this->getOptions($serviceLocator, 'client');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $clientOptions = $this->getOptions($container, 'client');
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
@@ -38,7 +44,7 @@ class ClientFactory implements FactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        $options = $this->getOptions($serviceLocator, 'http');
+        $options = $this->getOptions($container, 'http');
         $httpClient = new HttpClient();
         $httpClient->setOptions($options);
 
@@ -57,22 +63,21 @@ class ClientFactory implements FactoryInterface
         }
 
         return $client;
-
     }
 
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl  Service Manager
-     * @param string                  $key Key
+     * @param ContainerInterface $container ContainerInterface
+     * @param string             $key       Key
      *
      * @return \Zend\Stdlib\AbstractOptions
      * @throws \RuntimeException
      */
-    public function getOptions(ServiceLocatorInterface $sl, $key)
+    public function getOptions(ContainerInterface $container, $key)
     {
         if (is_null($this->options)) {
-            $options = $sl->get('Configuration');
+            $options = $container->get('Configuration');
             $this->options = isset($options['document_share']) ? $options['document_share'] : array();
         }
 
