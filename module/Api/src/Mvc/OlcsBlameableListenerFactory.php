@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Mvc;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -20,8 +21,13 @@ class OlcsBlameableListenerFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $listener = new OlcsBlameableListener($serviceLocator);
-        $listener->setServiceLocator($serviceLocator);
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $listener = new OlcsBlameableListener($container);
+        $listener->setServiceLocator($container);
 
         return $listener;
     }
