@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\InputFilter;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
@@ -23,14 +24,19 @@ class SeriousInfringementInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $service = new Input('serious_infringement');
 
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(IsExecuted::class));
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(SiDateFilter::class));
+        $filterChain->attach($container->get('FilterManager')->get(IsExecuted::class));
+        $filterChain->attach($container->get('FilterManager')->get(SiDateFilter::class));
 
         $validatorChain = $service->getValidatorChain();
-        $validatorChain->attach($serviceLocator->get('ValidatorManager')->get(ImposedDateValidator::class));
+        $validatorChain->attach($container->get('ValidatorManager')->get(ImposedDateValidator::class));
 
         return $service;
     }
