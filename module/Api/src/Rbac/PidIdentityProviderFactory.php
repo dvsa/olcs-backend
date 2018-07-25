@@ -5,6 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Rbac;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,11 +22,15 @@ class PidIdentityProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
 
-        return new PidIdentityProvider(
-            $serviceLocator->get('RepositoryServiceManager')->get('User'),
-            $serviceLocator->get('Request'),
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
+
+        return new PidIdentityProvider($container->get('RepositoryServiceManager')->get('User'),
+            $container->get('Request'),
             isset($config['openam']['pid_header']) ? $config['openam']['pid_header'] : 'X-Pid'
         );
     }
