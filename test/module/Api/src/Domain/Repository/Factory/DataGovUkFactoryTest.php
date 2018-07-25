@@ -27,16 +27,9 @@ class DataGovUkFactoryTest extends MockeryTestCase
             ->andReturn($mockConn)
             ->getMock();
 
-        /** @var ServiceManager $mockSm */
-        $mockSm = m::mock(ServiceManager::class)
-            ->shouldReceive('getServiceLocator')
-            ->once()
-            ->andReturn($mockSl)
-            ->getMock();
-
         static::assertInstanceOf(
             DataGovUk::class,
-            (new DataGovUkFactory())->createService($mockSm)
+            (new DataGovUkFactory())->createService($mockSl)
         );
     }
 }
