@@ -37,7 +37,6 @@ class RepositoryFactoryTest extends MockeryTestCase
     {
         /** @var RepositoryServiceManager $sm */
         $sm = m::mock(RepositoryServiceManager::class)->makePartial();
-        $sm->setServiceLocator($sm);
 
         $em = m::mock(EntityManager::class);
         $qb = m::mock(QueryBuilder::class);
@@ -50,7 +49,7 @@ class RepositoryFactoryTest extends MockeryTestCase
         $name = 'Application';
         $requestedName = 'Application';
 
-        $service = $this->sut->createService($sm, $name, $requestedName);
+        $service = $this->sut->__invoke($sm, $name);
 
         $this->assertInstanceOf(Application::class, $service);
     }

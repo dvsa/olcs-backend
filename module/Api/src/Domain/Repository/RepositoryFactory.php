@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,16 +26,20 @@ class RepositoryFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $class = __NAMESPACE__ . '\\' . $requestedName;
-        $sm = $serviceLocator->getServiceLocator();
 
         $repo = new $class(
-            $sm->get('doctrine.entitymanager.orm_default'),
-            $sm->get('QueryBuilder'),
-            $sm->get('DbQueryServiceManager')
+            $container->get('doctrine.entitymanager.orm_default'),
+            $container->get('QueryBuilder'),
+            $container->get('DbQueryServiceManager')
         );
 
-        $repo->initService($serviceLocator);
+        $repo->initService($container);
 
         return $repo;
     }
