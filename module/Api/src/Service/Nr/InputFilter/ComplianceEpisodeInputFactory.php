@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm as VrmFilter;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,7 +26,12 @@ class ComplianceEpisodeInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $fm = $serviceLocator->get('FilterManager');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $fm = $container->get('FilterManager');
 
         $service = new Input('compliance_episode');
 
