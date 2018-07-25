@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Interop\Container\ContainerInterface;
 
 /**
  * Modify
