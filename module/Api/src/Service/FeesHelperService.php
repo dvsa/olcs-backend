@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -40,7 +41,12 @@ class FeesHelperService implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $repoManager = $serviceLocator->get('RepositoryServiceManager');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $repoManager = $container->get('RepositoryServiceManager');
 
         // inject required repos
         $this->applicationRepo = $repoManager->get('Application');
