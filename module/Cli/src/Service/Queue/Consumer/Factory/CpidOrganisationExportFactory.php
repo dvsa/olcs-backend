@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory;
 
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\CpidOrganisationExport;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -23,12 +24,14 @@ class CpidOrganisationExportFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        /** @var \Zend\ServiceManager\ServiceManager $sl */
-        $sl = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $repo = $sl->get('RepositoryServiceManager')->get('Organisation');
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $repo = $container->get('RepositoryServiceManager')->get('Organisation');
         /** @var \Dvsa\Olcs\Api\Domain\CommandHandlerManager $commandHandler */
-        $commandHandler = $sl->get('CommandHandlerManager');
+        $commandHandler = $container->get('CommandHandlerManager');
 
         return new CpidOrganisationExport($repo, $commandHandler);
     }
