@@ -6,17 +6,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Abstract Review Service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractReviewService implements ReviewServiceInterface, ServiceLocatorAwareInterface
+abstract class AbstractReviewService extends AbstractPluginManager implements ReviewServiceInterface
 {
-    use ServiceLocatorAwareTrait;
 
     /**
      * Format Full name
