@@ -1026,5 +1026,4 @@ return [
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
-    TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
 ];
