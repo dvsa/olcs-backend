@@ -8,6 +8,8 @@
  */
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
+use Zend\Config\Config;
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 
@@ -23,16 +25,28 @@ class QueueController extends AbstractConsoleController
 
     protected $startTime;
     protected $endTime;
-    protected $sleepFor = 1000000; // microseconds
-
+    protected $sleepFor = 1000000;
     /**
-     * Index Action
-     *
-     * @return void
+     * @var Config
      */
+    private $config;
+    /**
+     * @var QueueProcessor
+     */
+    private $queueProcessor; // microseconds
+
+
+    public function __construct(Config $config, QueueProcessor  $queueProcessor)
+    {
+
+        $this->config = $config;
+        $this->queueProcessor = $queueProcessor;
+    }
+
+
     public function indexAction()
     {
-        $config = $this->getServiceLocator()->get('Config')['queue'];
+        $config = $this->config['queue'];
 
         // Which message type to process, if null then we process any message type
         $includeTypes = $this->getIncludeTypes();
@@ -43,8 +57,8 @@ class QueueController extends AbstractConsoleController
         $this->getConsole()->writeLine('Exclude types = '. implode(',', $excludeTypes));
         $this->getConsole()->writeLine('Queue duration = '. $queueDuration);
 
-        /** @var \Dvsa\Olcs\Cli\Service\Queue\QueueProcessor $service */
-        $service = $this->getServiceLocator()->get('Queue');
+        /** @var QueueProcessor $service */
+        $service = $this->queueProcessor;
 
         // Then we need to run for a given length of time
         if (empty($config['isLongRunningProcess'])) {

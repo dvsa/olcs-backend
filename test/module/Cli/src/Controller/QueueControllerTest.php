@@ -7,12 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Cli\Controller;
 
+use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Cli\Controller\QueueController;
 use OlcsTest\Bootstrap;
+use Zend\Config\Config;
 use Zend\Mvc\MvcEvent;
-use Zend\Mvc\Router\RouteMatch;
+use Zend\Mvc\Console\Router\RouteMatch;
 
 /**
  * Queue Controller Test
@@ -36,13 +38,10 @@ class QueueControllerTest extends MockeryTestCase
         $this->routeMatch = new RouteMatch([]);
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
-        $this->sm = Bootstrap::getServiceManager();
+
         $this->console = m::mock('Zend\Console\Adapter\AdapterInterface');
 
-        $this->sut = new QueueController();
-        $this->sut->setEvent($this->event);
-        $this->sut->setServiceLocator($this->sm);
-        $this->sut->setConsole($this->console);
+
     }
 
     public function testIndexActionEmptyQueue()
@@ -54,9 +53,10 @@ class QueueControllerTest extends MockeryTestCase
                 'sleepFor' => 50, // microseconds
             ]
         ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
+
+        $config = new Config($mockConfig);
+        $mockQueue = m::mock(QueueProcessor::class);
+        $this->createSut($config, $mockQueue);
 
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
@@ -87,9 +87,9 @@ class QueueControllerTest extends MockeryTestCase
                 'sleepFor' => 50,
             ]
         ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
+        $config = new Config($mockConfig);
+        $mockQueue = m::mock(QueueProcessor::class);
+        $this->createSut($config, $mockQueue);
 
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
@@ -122,10 +122,9 @@ class QueueControllerTest extends MockeryTestCase
                 'sleepFor' => 50,
             ]
         ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
-
+        $config = new Config($mockConfig);
+        $mockQueue = m::mock(QueueProcessor::class);
+        $this->createSut($config, $mockQueue);
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo,bar');
         $this->request->shouldReceive('getParam')->with('exclude')->andReturn('aaa,bbb');
@@ -155,9 +154,9 @@ class QueueControllerTest extends MockeryTestCase
                 'runFor' => 22,
             ]
         ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
+        $config = new Config($mockConfig);
+        $mockQueue = m::mock(QueueProcessor::class);
+        $this->createSut($config, $mockQueue);
 
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo,bar');
@@ -188,9 +187,9 @@ class QueueControllerTest extends MockeryTestCase
                 'runFor' => 0.01,
             ]
         ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
+        $config = new Config($mockConfig);
+        $mockQueue = m::mock(QueueProcessor::class);
+        $this->createSut($config, $mockQueue);
 
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
@@ -222,9 +221,9 @@ class QueueControllerTest extends MockeryTestCase
                 'runFor' => 0.01,
             ]
         ];
-        $mockQueue = m::mock();
-        $this->sm->setService('Config', $mockConfig);
-        $this->sm->setService('Queue', $mockQueue);
+        $config = new Config($mockConfig);
+        $mockQueue = m::mock(QueueProcessor::class);
+        $this->createSut($config, $mockQueue);
 
         // Expectations
         $this->request->shouldReceive('getParam')->with('type')->andReturn('foo');
@@ -249,5 +248,22 @@ class QueueControllerTest extends MockeryTestCase
         $model = $this->sut->dispatch($this->request);
 
         $this->assertEquals(1, $model->getErrorLevel());
+    }
+
+    /**
+     * createSut
+     *
+     * @param $config
+     * @param $mockQueue
+     */
+    private function createSut($config, $mockQueue): void
+    {
+        $sut = new QueueController($config, $mockQueue);
+        $sut->setEvent($this->event);
+
+        $sut->setConsole($this->console);
+
+        $this->sut = $sut;
+
     }
 }
