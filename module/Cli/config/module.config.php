@@ -4,6 +4,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command;
 use Dvsa\Olcs\Cli;
+use Zend\Mvc\Controller\LazyControllerAbstractFactory;
 
 return [
     'console' => [
@@ -278,9 +279,11 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            Cli\Controller\BatchController::class => Cli\Controller\BatchController::class,
             Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
             Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticController::class,
+        ],
+        'factories' =>[
+            Cli\Controller\BatchController::class => LazyControllerAbstractFactory::class
         ]
     ],
     'cache' => [

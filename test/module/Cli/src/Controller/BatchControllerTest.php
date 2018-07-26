@@ -19,6 +19,7 @@ use Zend\Http\Response;
 use Zend\Mvc\Controller\PluginManager;
 use Zend\ServiceManager\ServiceManager;
 
+
 /**
  * @covers \Dvsa\Olcs\Cli\Controller\BatchController
  * @author Mat Evans <mat.evans@valtech.co.uk>
@@ -44,21 +45,16 @@ class BatchControllerTest extends MockeryTestCase
         $this->mockCommandHandler = m::mock(CommandHandlerManager::class);
         $this->mockQueryHandler = m::mock(QueryHandlerManager::class);
 
-        $this->sm = m::mock(ServiceManager::class)
-            ->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->mockCommandHandler)
-            ->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->mockQueryHandler)
-            ->getMock();
-
         $this->pm = m::mock(PluginManager::class);
         $this->pm->shouldReceive('setController');
 
         $this->mockConsole = m::mock(AdapterInterface::class);
 
-        $this->sut = new BatchController();
+        $this->sut = new BatchController($this->mockCommandHandler, $this->mockQueryHandler);
         $this->sut
             ->setConsole($this->mockConsole)
-            ->setPluginManager($this->pm)
-            ->setServiceLocator($this->sm);
+            ->setPluginManager($this->pm);
+
     }
 
     public function testLicenceStatusRulesActionVerboseMessages()
