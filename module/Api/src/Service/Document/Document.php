@@ -5,18 +5,16 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\FileStoreAwareInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
+
 
 /**
  * Document generation service
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class Document implements ServiceLocatorAwareInterface
+class Document extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
-
     const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
 
     /**

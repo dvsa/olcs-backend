@@ -9,17 +9,17 @@
 namespace Olcs\Db\Utility;
 
 use Doctrine\ORM\Query\Expr\Join;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Bundle Query
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class BundleQuery implements ServiceLocatorAwareInterface
+
+// TODO: Refactored only to avoid Fatal Error, but needs proper refactory to work
+class BundleQuery extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
 
     /**
      * @var \Doctrine\ORM\QueryBuilder
@@ -59,7 +59,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
      * @param string $parent Class name of the parent
      * @param array $stack The stack of nodes from the parents
      */
-    public function build($config, $alias = 'm', $parent = null, $stack = [], $checkIsRefdata = true)
+    public function buildBundle($config, $alias = 'm', $parent = null, $stack = [], $checkIsRefdata = true)
     {
         $this->addSelect($alias);
 
@@ -133,7 +133,7 @@ class BundleQuery implements ServiceLocatorAwareInterface
 
             $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
 
-            $this->build($childConfig, $childAlias, $entityClass, $childStack, $newCheckIsRefdata);
+            $this->buildBundle($childConfig, $childAlias, $entityClass, $childStack, $newCheckIsRefdata);
         }
     }
 

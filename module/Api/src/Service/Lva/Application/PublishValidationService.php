@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Lva\Application;
 
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Interop\Container\ContainerInterface;
 
 /**
  * PublishValidationService
@@ -26,7 +27,12 @@ class PublishValidationService implements \Zend\ServiceManager\FactoryInterface
 
     public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->feesHelper = $serviceLocator->get('FeesHelperService');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->feesHelper = $container->get('FeesHelperService');
 
         return $this;
     }
