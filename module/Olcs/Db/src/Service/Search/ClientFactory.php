@@ -20,7 +20,7 @@ class ClientFactory implements FactoryInterface
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @throws \Zend\ServiceManager\Exception\RuntimeException
+     * @throws \Zend\ServiceManager\Exception\InvalidServiceException
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
