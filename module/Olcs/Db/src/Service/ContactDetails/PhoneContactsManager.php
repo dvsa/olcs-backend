@@ -4,6 +4,7 @@ namespace Olcs\Db\Service\ContactDetails;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -42,7 +43,12 @@ class PhoneContactsManager implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = $serviceLocator->get('ServiceFactory')->getService('ContactDetailsPhoneContacts');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $service = $container->get('ServiceFactory')->getService('ContactDetailsPhoneContacts');
         $this->setDataService($service);
 
         return $this;

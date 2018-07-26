@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissin
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\NewAppAlreadyExists;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
@@ -26,16 +27,21 @@ class ProcessedDataInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $inputName = 'processed_data';
         $service = new Input($inputName);
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         $validatorChain = $service->getValidatorChain();
 
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
             /** @var ServiceLocatorInterface $validatorManager */
-            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorManager = $container->get('ValidatorManager');
             $validatorChain->attach($validatorManager->get(BusRegNotFound::class), true);
             $validatorChain->attach($validatorManager->get(NewAppAlreadyExists::class));
             $validatorChain->attach($validatorManager->get(RegisteredBusRoute::class));

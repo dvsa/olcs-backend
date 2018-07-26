@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeType;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -82,7 +83,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('config');
         if (isset($config['cpms']['invoice_prefix'])) {
             $this->setInvoicePrefix($config['cpms']['invoice_prefix']);
         }
@@ -103,9 +109,9 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ? $config['cpms_credentials']['client_secret']
             : null;
 
-        $this->identity = $serviceLocator->get($config['cpms_api']['identity_provider']);
-        $this->cpmsClient = $serviceLocator->get('cpms\service\api');
-        $this->feesHelper = $serviceLocator->get('FeesHelperService');
+        $this->identity = $container->get($config['cpms_api']['identity_provider']);
+        $this->cpmsClient = $container->get('cpms\service\api');
+        $this->feesHelper = $container->get('FeesHelperService');
         return $this;
     }
 

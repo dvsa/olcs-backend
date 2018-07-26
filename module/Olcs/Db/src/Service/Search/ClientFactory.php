@@ -3,6 +3,7 @@
 namespace Olcs\Db\Service\Search;
 
 use Elastica\Client;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Olcs\Logging\Log\ZendLogPsr3Adapter;
 use Zend\ServiceManager\FactoryInterface;
@@ -19,14 +20,19 @@ class ClientFactory implements FactoryInterface
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @throws \Zend\ServiceManager\Exception\RuntimeException
+     * @throws \Zend\ServiceManager\Exception\InvalidServiceException
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
         if (!isset($config['elastic_search'])) {
-            throw new Exception\RuntimeException('Elastic search config not found');
+            throw new Exception\InvalidServiceException('Elastic search config not found');
         }
 
         $service = new Client($config['elastic_search']);

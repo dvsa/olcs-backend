@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
@@ -20,8 +21,13 @@ class VrmFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $service = new Vrm();
-        $service->setVrmFilter($serviceLocator->get(TransferVrmFilter::class));
+        $service->setVrmFilter($container->get(TransferVrmFilter::class));
 
         return $service;
     }

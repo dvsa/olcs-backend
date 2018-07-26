@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\ConvertToPdf;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as HttpClient;
@@ -21,7 +22,12 @@ class WebServiceClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('config');
         if (!isset($config['convert_to_pdf']['uri'])) {
             throw new \RuntimeException('Missing print service config[convert_to_pdf][uri]');
         }

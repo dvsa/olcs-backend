@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -88,14 +89,18 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $sm = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $this->em = $sm->get('doctrine.entitymanager.orm_default');
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+
+        $this->em = $container->get('doctrine.entitymanager.orm_default');
         $this->connection = $this->em->getConnection();
-        $this->pidIdentityProvider = $sm->get(PidIdentityProvider::class);
+        $this->pidIdentityProvider = $container->get(PidIdentityProvider::class);
 
-        $this->setAuthService($sm->get(AuthorizationService::class));
-        $this->setUserRepository($sm->get('RepositoryServiceManager')->get('User'));
+        $this->setAuthService($container->get(AuthorizationService::class));
+        $this->setUserRepository($container->get('RepositoryServiceManager')->get('User'));
 
         return $this;
     }

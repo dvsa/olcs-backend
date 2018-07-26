@@ -33,7 +33,7 @@ class ClientFactoryTest extends \PHPUnit_Framework_TestCase
         $passed = false;
         try {
             $service = $sut->createService($mockSl);
-        } catch (\Zend\ServiceManager\Exception\RuntimeException $e) {
+        } catch (\Zend\ServiceManager\Exception\InvalidServiceException $e) {
             if ($e->getMessage() === 'Elastic search config not found') {
                 $passed = true;
             }

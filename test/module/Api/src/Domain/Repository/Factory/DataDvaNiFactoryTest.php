@@ -27,16 +27,9 @@ class DataDvaNiFactoryTest extends MockeryTestCase
             ->andReturn($mockConn)
             ->getMock();
 
-        /** @var ServiceManager $mockSm */
-        $mockSm = m::mock(ServiceManager::class)
-            ->shouldReceive('getServiceLocator')
-            ->once()
-            ->andReturn($mockSl)
-            ->getMock();
-
         static::assertInstanceOf(
             DataDvaNi::class,
-            (new DataDvaNiFactory())->createService($mockSm)
+            (new DataDvaNiFactory())->createService($mockSl)
         );
     }
 }

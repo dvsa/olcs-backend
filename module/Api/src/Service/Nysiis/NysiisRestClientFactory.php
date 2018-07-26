@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nysiis;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as RestClient;
@@ -23,7 +24,12 @@ class NysiisRestClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (!isset($config['nysiis']['rest']['uri'])) {
             throw new \RuntimeException('Missing nysiis rest client uri');

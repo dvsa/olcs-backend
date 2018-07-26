@@ -24,7 +24,7 @@ class RepositoryServiceManager extends AbstractPluginManager
         }
     }
 
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
 
     }

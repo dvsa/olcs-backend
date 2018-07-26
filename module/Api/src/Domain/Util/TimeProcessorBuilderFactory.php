@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Util;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -18,6 +19,11 @@ class TimeProcessorBuilderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new TimeProcessorBuilder($serviceLocator->get('RepositoryServiceManager')->get('PublicHoliday'));
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new TimeProcessorBuilder($container->get('RepositoryServiceManager')->get('PublicHoliday'));
     }
 }

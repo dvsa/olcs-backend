@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository\Factory;
 
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -22,10 +23,13 @@ class CompaniesHouseVsOlcsDiffsFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $sm)
     {
-        $sl = $sm->getServiceLocator();
+        return $this($sm, self::class);
+    }
 
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new CompaniesHouseVsOlcsDiffs(
-            $sl->get('doctrine.connection.export')
+            $container->get('doctrine.connection.export')
         );
     }
 }

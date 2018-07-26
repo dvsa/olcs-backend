@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
@@ -119,17 +120,21 @@ trait ValidationHelperTrait
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceManager = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
 
         if ($this instanceof AuthAwareInterface) {
-            $this->setAuthService($mainServiceManager->get(AuthorizationService::class));
+            $this->setAuthService($container->get(AuthorizationService::class));
         }
 
         if ($this instanceof RepositoryManagerAwareInterface) {
-            $this->setRepoManager($mainServiceManager->get('RepositoryServiceManager'));
+            $this->setRepoManager($container->get('RepositoryServiceManager'));
         }
 
-        $this->setValidatorManager($mainServiceManager->get('DomainValidatorManager'));
+        $this->setValidatorManager($container->get('DomainValidatorManager'));
 
         return $this;
     }

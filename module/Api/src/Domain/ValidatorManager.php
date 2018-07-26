@@ -25,7 +25,7 @@ class ValidatorManager extends AbstractPluginManager
         }
     }
 
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
     }
 }
