@@ -3,8 +3,10 @@
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Dvsa\Olcs\Api\Domain\Command;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
@@ -15,6 +17,7 @@ use Zend\Http\Response;
 use Zend\Mvc\Console\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 
+
 /**
  * BatchController
  *
@@ -22,6 +25,20 @@ use Zend\View\Model\ConsoleModel;
  */
 class BatchController extends AbstractConsoleController
 {
+    /**
+     * @var CommandHandlerManager
+     */
+    private $commandHandlerManager;
+    /**
+     * @var QueryHandlerManager
+     */
+    private $queryHandlerManager;
+
+    public function __construct(CommandHandlerManager $commandHandlerManager, QueryHandlerManager $queryHandlerManager)
+    {
+        $this->commandHandlerManager = $commandHandlerManager;
+        $this->queryHandlerManager = $queryHandlerManager;
+    }
     /**
      * Perform database management tasks, eg changing is_irfo flags
      *
@@ -539,7 +556,7 @@ class BatchController extends AbstractConsoleController
                 $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
 
                 /** @var \Dvsa\Olcs\Api\Domain\Command\Result $result */
-                $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
+                $result = $this->commandHandlerManager->handleCommand($dtoCommand);
 
                 $this->writeVerboseMessages($result->getMessages());
             }
@@ -568,7 +585,8 @@ class BatchController extends AbstractConsoleController
     {
         try {
             $this->writeVerboseMessages("Handle query ". get_class($dto));
-            return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+            return $this->queryHandlerManager->handleQuery($dto);
+            //getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
         } catch (Exception\Exception $e) {
