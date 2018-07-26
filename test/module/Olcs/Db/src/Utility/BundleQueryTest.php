@@ -7,6 +7,7 @@
  */
 namespace OlcsTest\Db\Utility;
 
+use Interop\Container\ContainerInterface;
 use OlcsTest\Bootstrap;
 use Olcs\Db\Utility\BundleQuery;
 use Mockery as m;
@@ -17,6 +18,7 @@ use PHPUnit_Framework_TestCase;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+// TODO: Refactored only to avoid Fatal Error, but needs proper refactory to work
 class BundleQueryTest extends PHPUnit_Framework_TestCase
 {
     protected $qb;
@@ -33,10 +35,10 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->andReturn($this->em);
 
         $this->sm = Bootstrap::getServiceManager();
-
-        $this->sut = new BundleQuery();
+        $mockCi = m::mock(ContainerInterface::class);
+        $this->sut = new BundleQuery($mockCi);
         $this->sut->setQueryBuilder($this->qb);
-        $this->sut->setServiceLocator($this->sm);
+//        $this->sut->setServiceLocator($this->sm);
     }
 
     /**
@@ -57,7 +59,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
         $this->qb->shouldReceive('addSelect')
             ->with('m');
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
     }
 
     /**
@@ -151,7 +153,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('\Some\Entity')
             ->andReturn($metadata);
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
 
         $this->assertEquals(array('bob'), $this->sut->getParams());
     }
@@ -238,7 +240,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('\Some\Entity')
             ->andReturn($metadata);
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
 
         $this->assertEquals(array('bob', 'bob'), $this->sut->getParams());
     }
@@ -284,7 +286,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('\Some\Entity')
             ->andReturn($metadata);
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
     }
 
     /**
@@ -324,7 +326,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('\Some\Entity')
             ->andReturn($metadata);
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
     }
 
     /**
@@ -373,7 +375,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('\Some\Entity')
             ->andReturn($metadata);
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
     }
 
     /**
@@ -422,6 +424,6 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
             ->with('\Some\Entity')
             ->andReturn($metadata);
 
-        $this->sut->build($config);
+        $this->sut->buildBundle($config);
     }
 }

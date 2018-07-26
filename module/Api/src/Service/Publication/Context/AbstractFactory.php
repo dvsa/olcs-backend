@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -34,7 +35,16 @@ class AbstractFactory implements AbstractFactoryInterface
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        $mainSl = $serviceLocator->getServiceLocator();
-        return new $requestedName($mainSl->get('QueryHandlerManager'));
+        return new $requestedName($serviceLocator->get('QueryHandlerManager'));
+    }
+
+    public function canCreate(ContainerInterface $container, $requestedName)
+    {
+        return class_exists($requestedName);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return new $requestedName();
     }
 }

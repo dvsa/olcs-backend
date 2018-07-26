@@ -11,8 +11,7 @@ namespace Olcs\Db\Service;
 use Doctrine\Instantiator\Instantiator;
 use Olcs\Db\Traits\LanguageAwareTrait;
 use Olcs\Logging\Log\Logger;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\AbstractPluginManager;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
 use Olcs\Db\Exceptions\NoVersionException;
 use Doctrine\DBAL\LockMode;
@@ -24,10 +23,9 @@ use Doctrine\ORM\Query;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class ServiceAbstract implements ServiceLocatorAwareInterface
+abstract class ServiceAbstract extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait,
-        EntityManagerAwareTrait,
+    use EntityManagerAwareTrait,
         LanguageAwareTrait;
 
     protected $entityNamespace = '\Dvsa\Olcs\Api\Entity\\';
