@@ -279,11 +279,12 @@ return [
     ],
     'controllers' => [
         'invokables' => [
-            Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
+
             Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticController::class,
         ],
         'factories' =>[
-            Cli\Controller\BatchController::class => LazyControllerAbstractFactory::class
+            Cli\Controller\BatchController::class => LazyControllerAbstractFactory::class,
+            Cli\Controller\QueueController::class => LazyControllerAbstractFactory::class
         ]
     ],
     'cache' => [
