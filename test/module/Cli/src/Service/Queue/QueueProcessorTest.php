@@ -32,8 +32,7 @@ class QueueProcessorTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new QueueProcessor();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new QueueProcessor($this->sm);
     }
 
     public function testProcessNextItemWithoutItem()

@@ -11,6 +11,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 
 /**
  * Message Consumer Manager Test
@@ -51,29 +52,19 @@ class MessageConsumerManagerTest extends MockeryTestCase
         $this->sut->initialize($instance);
     }
 
-    public function testInitializeWithInterface()
-    {
-        $instance = m::mock('\Zend\ServiceManager\ServiceLocatorAwareInterface');
-        $instance->shouldReceive('setServiceLocator')
-            ->once()
-            ->with($this->sm);
-
-        $this->sut->initialize($instance);
-    }
-
     public function testValidatePluginInvalid()
     {
-        $this->setExpectedException('\Zend\ServiceManager\Exception\RuntimeException');
+        $this->expectException(InvalidServiceException::class);
 
         $plugin = m::mock();
 
-        $this->sut->validatePlugin($plugin);
+        $this->sut->validate($plugin);
     }
 
     public function testValidatePlugin()
     {
         $plugin = m::mock('\Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface');
 
-        $this->assertNull($this->sut->validatePlugin($plugin));
+        $this->assertNull($this->sut->validate($plugin));
     }
 }

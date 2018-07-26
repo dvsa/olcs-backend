@@ -26,6 +26,7 @@ class MessageConsumerManagerFactory extends AbstractPluginManagerFactory
         $configObject = new Config($config['message_consumer_manager']);
 
         $plugins = new MessageConsumerManager($configObject);
+
         $plugins->setServiceLocator($serviceLocator);
 
         return $plugins;

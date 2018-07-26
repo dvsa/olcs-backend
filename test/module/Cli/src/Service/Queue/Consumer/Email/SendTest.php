@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\OlcsTest\Cli\Service\Queue\Consumer\AbstractConsumerTestCase;
 use Zend\Serializer\Adapter\Json as ZendJson;
-use Zend\ServiceManager\Exception\RuntimeException as ZendServiceException;
+use Zend\ServiceManager\Exception\InvalidServiceException as ZendServiceException;
 
 /**
  * @covers \Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send

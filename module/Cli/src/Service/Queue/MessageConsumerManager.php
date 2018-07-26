@@ -8,11 +8,12 @@
  */
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Message Consumer Manager
@@ -32,15 +33,25 @@ class MessageConsumerManager extends AbstractPluginManager
 
     public function initialize($instance)
     {
-        if ($instance instanceof ServiceLocatorAwareInterface) {
-            $instance->setServiceLocator($this->getServiceLocator());
+        if ($instance instanceof ServiceLocatorInterface) {
+            $instance->creationContext = $this->getServiceLocator();
         }
     }
 
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
         if (!$plugin instanceof MessageConsumerInterface) {
-            throw new RuntimeException('Message consumer service does not implement MessageConsumerInterface');
+            throw new InvalidServiceException('Message consumer service does not implement MessageConsumerInterface');
         }
+    }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
+
+    public function setServiceLocator(ContainerInterface $container)
+    {
+        $this->creationContext = $container;
     }
 }

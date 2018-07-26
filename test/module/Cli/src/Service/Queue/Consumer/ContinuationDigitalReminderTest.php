@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder;
+use Interop\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -17,7 +18,8 @@ class ContinuationDigitalReminderTest extends MockeryTestCase
 
     public function testGetCommandData()
     {
-        $sut = new ContinuationDigitalReminder();
+        $ci = m::mock(ContainerInterface::class);
+        $sut = new ContinuationDigitalReminder($ci);
 
         $queue = new Queue();
         $queue->setEntityId(87);
