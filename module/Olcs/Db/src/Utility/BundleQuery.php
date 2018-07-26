@@ -9,17 +9,15 @@
 namespace Olcs\Db\Utility;
 
 use Doctrine\ORM\Query\Expr\Join;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Bundle Query
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class BundleQuery implements ServiceLocatorAwareInterface
+class BundleQuery extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
 
     /**
      * @var \Doctrine\ORM\QueryBuilder

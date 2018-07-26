@@ -8,17 +8,15 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\AbstractPluginManager;
 
 /**
  * Date Service
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class Date implements ServiceLocatorAwareInterface
+class Date extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
 
     public function getDate($format = 'Y-m-d')
     {

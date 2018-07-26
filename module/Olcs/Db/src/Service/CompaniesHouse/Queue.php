@@ -6,18 +6,16 @@
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 namespace Olcs\Db\Service\CompaniesHouse;
+use Zend\ServiceManager\AbstractPluginManager;
 
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
  * Companies House custom queue operations
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class Queue implements ServiceLocatorAwareInterface
+class Queue extends AbstractPluginManager
 {
-    use ServiceLocatorAwareTrait;
 
     /**
      * This custom method will enqueue a message for all active organisations.
