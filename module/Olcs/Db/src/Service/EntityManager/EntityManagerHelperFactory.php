@@ -7,6 +7,7 @@
  */
 namespace Olcs\Db\Service\EntityManager;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,8 +26,13 @@ class EntityManagerHelperFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $service = new EntityManagerHelper();
-        $service->setEntityManager($serviceLocator->get('doctrine.entitymanager.orm_default'));
+        $service->setEntityManager($container->get('doctrine.entitymanager.orm_default'));
 
         return $service;
     }
