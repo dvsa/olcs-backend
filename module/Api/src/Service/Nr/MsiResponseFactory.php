@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr;
 
+use Interop\Container\ContainerInterface;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -23,7 +24,12 @@ class MsiResponseFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (!isset($config['nr']['compliance_episode']['xmlNs'])) {
             throw new \RuntimeException(self::XML_NS_MSG);
