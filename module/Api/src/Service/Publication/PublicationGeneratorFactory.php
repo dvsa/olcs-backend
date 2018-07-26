@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginManager;
@@ -21,10 +22,15 @@ class PublicationGeneratorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new PublicationGenerator(
-            $serviceLocator->get('Config')['publications'],
-            $serviceLocator->get(ContextPluginManager::class),
-            $serviceLocator->get(ProcessPluginManager::class)
+            $container->get('Config')['publications'],
+            $container->get(ContextPluginManager::class),
+            $container->get(ProcessPluginManager::class)
         );
     }
 }
