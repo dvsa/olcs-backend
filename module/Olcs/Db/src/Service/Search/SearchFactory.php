@@ -2,6 +2,7 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
@@ -20,9 +21,14 @@ class SearchFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $service = new Search();
-        $service->setClient($serviceLocator->get('ElasticSearch\Client'));
-        $service->setAuthService($serviceLocator->get(AuthorizationService::class));
+        $service->setClient($container->get('ElasticSearch\Client'));
+        $service->setAuthService($container->get(AuthorizationService::class));
 
         return $service;
     }

@@ -5,9 +5,10 @@
  */
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
+use Interop\Container\ContainerInterface;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
@@ -25,14 +26,19 @@ class ClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (!isset($config['openam']['username'], $config['openam']['password'])) {
-            throw new RuntimeException('Cannot create service, config for open am api credentials is missing');
+            throw new InvalidServiceException('Cannot create service, config for open am api credentials is missing');
         }
 
         if (!isset($config['openam']['uri'])) {
-            throw new RuntimeException('Cannot create service, config for open am api uri is missing');
+            throw new InvalidServiceException('Cannot create service, config for open am api uri is missing');
         }
 
         $options = [];

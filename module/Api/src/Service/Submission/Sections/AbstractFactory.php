@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -22,11 +23,15 @@ class AbstractFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        $mainSl = $serviceLocator->getServiceLocator();
-        $config = $mainSl->get('Config')['submissions']['sections']['aliases'];
-        $className = $config[$requestedName];
-        $viewRenderer = $mainSl->get('viewrenderer');
+        return $this($serviceLocator, self::class);
+    }
 
-        return new $className($mainSl->get('QueryHandlerManager'), $viewRenderer);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config')['submissions']['sections']['aliases'];
+        $className = $config[$requestedName];
+        $viewRenderer = $container->get('viewrenderer');
+
+        return new $className($container->get('QueryHandlerManager'), $viewRenderer);
     }
 }

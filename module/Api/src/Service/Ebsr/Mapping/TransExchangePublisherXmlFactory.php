@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Mapping;
 
+use Interop\Container\ContainerInterface;
 use Olcs\XmlTools\Xml\Specification\MultiNodeValue;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
@@ -21,6 +22,11 @@ class TransExchangePublisherXmlFactory implements FactoryInterface
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $publisherResponse = [
             'BadRequest' => new NodeValue('error'),

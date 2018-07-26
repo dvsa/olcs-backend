@@ -7,6 +7,7 @@
  */
 namespace Olcs\Db\Service;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -17,11 +18,16 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class Factory implements FactoryInterface
 {
-    private $serviceLocator;
+    private $container;
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceLocator = $serviceLocator;
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->container = $container;
 
         return $this;
     }
@@ -40,14 +46,14 @@ class Factory implements FactoryInterface
 
         $service = new $className();
 
-        $namespaces = $this->serviceLocator->get('Config')['entity_namespaces'];
+        $namespaces = $this->container->get('Config')['entity_namespaces'];
 
         if ($setEntityName) {
             $service->setEntityName('\Dvsa\Olcs\Api\Entity\\' . $namespaces[$name] . '\\' . $name);
         }
 
-        $service->setEntityManager($this->serviceLocator->get('doctrine.entitymanager.orm_default'));
-        $service->setServiceLocator($this->serviceLocator);
+        $service->setEntityManager($this->container->get('doctrine.entitymanager.orm_default'));
+        $service->setServiceLocator($this->container);
 
         return $service;
     }

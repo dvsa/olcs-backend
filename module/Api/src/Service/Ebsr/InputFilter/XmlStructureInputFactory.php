@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Olcs\XmlTools\Validator\Xsd;
@@ -33,12 +34,17 @@ class XmlStructureInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $inputName = 'xml_structure';
         $service = new Input($inputName);
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($serviceLocator->get('FilterManager')->get(ParseXml::class));
+        $filterChain->attach($container->get('FilterManager')->get(ParseXml::class));
 
         $validatorchain = $service->getValidatorChain();
 
@@ -57,7 +63,7 @@ class XmlStructureInputFactory implements FactoryInterface
             }
 
             /** @var ServiceLocatorInterface $validatorManager */
-            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorManager = $container->get('ValidatorManager');
 
             /** @var Xsd $xsdValidator */
             $xsdValidator = $validatorManager->get(Xsd::class);

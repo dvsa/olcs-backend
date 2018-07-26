@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
+use Interop\Container\ContainerInterface;
 use Zend\Filter\FilterPluginManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -28,7 +29,12 @@ class TransExchangeClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
@@ -47,14 +53,14 @@ class TransExchangeClientFactory implements FactoryInterface
          * @var ParseXmlString $xmlParser
          * @var Xsd $xsdValidator
          */
-        $filterManager = $serviceLocator->get('FilterManager');
+        $filterManager = $container->get('FilterManager');
 
         $xmlParser = $filterManager->get(ParseXmlString::class);
 
         $xmlFilter = $filterManager->get(MapXmlFile::class);
-        $xmlFilter->setMapping($serviceLocator->get('TransExchangePublisherXmlMapping'));
+        $xmlFilter->setMapping($container->get('TransExchangePublisherXmlMapping'));
 
-        $xsdValidator = $serviceLocator->get('ValidatorManager')->get(Xsd::class);
+        $xsdValidator = $container->get('ValidatorManager')->get(Xsd::class);
         $xsdValidator->setXsd(self::PUBLISH_XSD);
 
         return new TransExchangeClient($httpClient, $xmlFilter, $xmlParser, $xsdValidator);

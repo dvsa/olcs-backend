@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Faker\Factory;
@@ -20,8 +21,13 @@ class UserFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         return new User(
-            $serviceLocator->get(ClientInterface::class),
+            $container->get(ClientInterface::class),
             Factory::create()
         );
     }

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
+use Interop\Container\ContainerInterface;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -35,16 +36,21 @@ class BusRegistrationInputFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         $inputName = 'bus_registration';
         $service = new Input($inputName);
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         /** @var ServiceLocatorInterface $filterManager */
-        $filterManager = $serviceLocator->get('FilterManager');
+        $filterManager = $container->get('FilterManager');
 
         /** @var MapXmlFile $mapXmlFile */
         $mapXmlFile = $filterManager->get(MapXmlFile::class);
-        $mapXmlFile->setMapping($serviceLocator->get('TransExchangeXmlMapping'));
+        $mapXmlFile->setMapping($container->get('TransExchangeXmlMapping'));
 
         $filterChain = $service->getFilterChain();
         $filterChain->attach($mapXmlFile);
@@ -62,7 +68,7 @@ class BusRegistrationInputFactory implements FactoryInterface
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
             /** @var ServiceLocatorInterface $validatorManager */
-            $validatorManager = $serviceLocator->get('ValidatorManager');
+            $validatorManager = $container->get('ValidatorManager');
             $validatorChain->attach($validatorManager->get(EffectiveDate::class));
             $validatorChain->attach($validatorManager->get(ApplicationType::class));
             $validatorChain->attach($validatorManager->get(Licence::class));
