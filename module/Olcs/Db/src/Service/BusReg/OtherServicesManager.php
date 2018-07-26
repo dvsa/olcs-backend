@@ -4,6 +4,7 @@ namespace Olcs\Db\Service\BusReg;
 
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -42,7 +43,12 @@ class OtherServicesManager implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $service = $serviceLocator->get('ServiceFactory')->getService('BusRegOtherService');
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $service = $container->get('ServiceFactory')->getService('BusRegOtherService');
         $this->setDataService($service);
 
         return $this;
