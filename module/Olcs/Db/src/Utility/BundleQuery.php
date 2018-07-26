@@ -16,6 +16,8 @@ use Zend\ServiceManager\AbstractPluginManager;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
+// TODO: Refactored only to avoid Fatal Error, but needs proper refactory to work
 class BundleQuery extends AbstractPluginManager
 {
 
@@ -57,7 +59,7 @@ class BundleQuery extends AbstractPluginManager
      * @param string $parent Class name of the parent
      * @param array $stack The stack of nodes from the parents
      */
-    public function build($config, $alias = 'm', $parent = null, $stack = [], $checkIsRefdata = true)
+    public function buildBundle($config, $alias = 'm', $parent = null, $stack = [], $checkIsRefdata = true)
     {
         $this->addSelect($alias);
 
@@ -131,7 +133,7 @@ class BundleQuery extends AbstractPluginManager
 
             $this->addJoin($alias, $childName, $childAlias, $childConfig, $joinType);
 
-            $this->build($childConfig, $childAlias, $entityClass, $childStack, $newCheckIsRefdata);
+            $this->buildBundle($childConfig, $childAlias, $entityClass, $childStack, $newCheckIsRefdata);
         }
     }
 
