@@ -3,6 +3,7 @@
 namespace Olcs\Db\Controller;
 
 use Olcs\Db\Exceptions\SearchDateFilterParseException;
+use \Olcs\Db\Service\Search\Search;
 use Zend\Http\PhpEnvironment\Response;
 
 /**
@@ -12,6 +13,14 @@ use Zend\Http\PhpEnvironment\Response;
  */
 class SearchController extends AbstractController
 {
+    /** @var Search $search */
+    private $search;
+
+    public function __construct(Search $search)
+    {
+        $this->search = $search;
+    }
+
     /**
      * Get list from search
      *
@@ -23,8 +32,8 @@ class SearchController extends AbstractController
 
         $indices = explode('|', $params['index']);
 
-        /** @var \Olcs\Db\Service\Search\Search $elastic */
-        $elastic = $this->getServiceLocator()->get('ElasticSearch\Search');
+        /** @var Search $elastic */
+        $elastic = $this->search;
         if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
             $elastic->setFilters($params['filters']);
         }

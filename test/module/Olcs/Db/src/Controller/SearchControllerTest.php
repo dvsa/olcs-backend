@@ -15,7 +15,7 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
     {
         $mockPluginManager = $this->getMockPluginManager(['params' => 'Params']);
 
-        $mockParams = $mockPluginManager->get('params', '');
+        $mockParams = $mockPluginManager->get('params', null);
         $mockParams->shouldReceive('fromRoute')->andReturn([]);
         $mockParams->shouldReceive('fromQuery')->andReturn(
             [
@@ -36,9 +36,8 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('ElasticSearch\Search')->andReturn($mockElastic);
 
-        $sut = new SearchController();
+        $sut = new SearchController($mockElastic);
         $sut->setPluginManager($mockPluginManager);
-        $sut->setServiceLocator($mockSl);
 
         $this->assertEquals(
             '{"Response":{"Code":200,"Message":"OK","Summary":"Results found","Data":"resultSet"}}',
@@ -72,7 +71,7 @@ class SearchControllerTest extends \PHPUnit_Framework_TestCase
 
         foreach ($plugins as $name => $class) {
             $mockPlugin = $this->getMockPlugin($class);
-            $mockPluginManager->shouldReceive('get')->with($name, '')->andReturn($mockPlugin);
+            $mockPluginManager->shouldReceive('get')->with($name, null)->andReturn($mockPlugin);
         }
 
         return $mockPluginManager;
