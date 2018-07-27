@@ -6,7 +6,9 @@ use Doctrine\ORM\OptimisticLockException;
 use Dvsa\Olcs\Api\Controller\GenericController;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
@@ -39,7 +41,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -64,7 +66,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -89,7 +91,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -115,7 +117,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -142,7 +144,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -168,7 +170,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -194,7 +196,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->get(25);
 
@@ -231,7 +233,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->getList();
 
@@ -258,7 +260,7 @@ class GenericControllerTest extends TestCase
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
         //  call & check
-        $actual = $this->setupSut($mockSl)->getList();
+        $actual = $this->setupSut($mockSl, $mockQueryHandler, null)->getList();
 
         static::assertSame('EXPECT', $actual);
     }
@@ -290,7 +292,7 @@ class GenericControllerTest extends TestCase
             ->getMock();
 
         //  call & check
-        $actual = $this->setupSut($mockSl)->getList();
+        $actual = $this->setupSut($mockSl, $mockQueryHandler, null)->getList();
 
         static::assertSame($singleData, $actual);
     }
@@ -313,7 +315,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->getList();
 
@@ -339,7 +341,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->getList();
 
@@ -366,7 +368,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->getList();
 
@@ -392,7 +394,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->getList();
 
@@ -419,7 +421,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockQueryHandler, 'QueryHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockQueryHandler, null);
 
         $response = $sut->getList();
 
@@ -445,7 +447,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -470,7 +472,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -496,7 +498,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -526,7 +528,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -554,7 +556,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -581,7 +583,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -608,7 +610,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -635,7 +637,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->update(25, []);
 
@@ -661,7 +663,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->replaceList(25);
 
@@ -686,7 +688,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->replaceList(25);
 
@@ -712,7 +714,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->replaceList(25);
 
@@ -742,7 +744,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->replaceList(25);
 
@@ -769,7 +771,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->replaceList(25);
 
@@ -795,7 +797,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->create([]);
 
@@ -821,7 +823,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->create([]);
 
@@ -848,7 +850,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->create([]);
 
@@ -875,7 +877,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->create([]);
 
@@ -902,7 +904,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->create([]);
 
@@ -928,7 +930,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->delete(25);
 
@@ -953,7 +955,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->delete(25);
 
@@ -979,7 +981,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->delete(25);
 
@@ -1006,7 +1008,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->delete(25);
 
@@ -1033,7 +1035,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->delete(25);
 
@@ -1059,7 +1061,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->deleteList();
 
@@ -1084,7 +1086,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->deleteList();
 
@@ -1110,7 +1112,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->deleteList();
 
@@ -1137,7 +1139,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->deleteList();
 
@@ -1164,7 +1166,7 @@ class GenericControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler, 'CommandHandlerManager');
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, null, $mockCommandHandler);
 
         $response = $sut->deleteList();
 
@@ -1175,11 +1177,14 @@ class GenericControllerTest extends TestCase
      * @param $mockSl
      * @return GenericController
      */
-    protected function setupSut($mockSl)
+    protected function setupSut($mockSl, $mockQueryHandler, $mockCommandHandler)
     {
-        $sut = new GenericController();
+//        $mockQh = m::mock(QueryHandlerManager::class);
+//        $mockQh->shouldReceive('handleQuery')->andReturn(new Response());
+//        $mockCh = m::mock(CommandHandlerManager::class);
+//        $mockCh->shouldReceive('handleCommand')->andReturn(new Result());
+        $sut = new GenericController($mockQueryHandler, $mockCommandHandler);
         $sut->setPluginManager($mockSl);
-        $sut->setServiceLocator($mockSl);
         return $sut;
     }
 
