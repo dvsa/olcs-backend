@@ -14,6 +14,9 @@ return [
   CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
   CommandHandler\Permits\CancelEcmtPermitApplication::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateInternationalJourney::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateEcmtCabotage::class => NoValidationRequired::class,CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
 ];

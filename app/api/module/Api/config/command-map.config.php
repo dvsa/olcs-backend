@@ -1036,5 +1036,6 @@ return [
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
+    TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
     TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
 ];
