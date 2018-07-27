@@ -35,6 +35,27 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
     use ProcessDateTrait;
 
     /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     inversedBy="ecmtPermits",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_permit_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $countrys;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -209,7 +230,71 @@ abstract class AbstractEcmtPermits implements BundleSerializableInterface, JsonS
      */
     public function initCollections()
     {
+        $this->countrys = new ArrayCollection();
         $this->sectors = new ArrayCollection();
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return EcmtPermits
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return EcmtPermits
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return EcmtPermits
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
     }
 
     /**
