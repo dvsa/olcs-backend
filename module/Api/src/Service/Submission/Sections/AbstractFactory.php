@@ -23,7 +23,7 @@ class AbstractFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
-        return $this($serviceLocator, self::class);
+        return $this($serviceLocator, $name, $requestedName);
     }
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
