@@ -31,13 +31,13 @@ class ServiceAbstractTest extends MockeryTestCase
 
     protected function setUp()
     {
+        $this->sm = Bootstrap::getServiceManager();
         $this->sut = $this->getMockForAbstractClass(
             '\Olcs\Db\Service\ServiceAbstract',
-            array(),
+            [$this->sm],
             'Foo'
         );
 
-        $this->sm = Bootstrap::getServiceManager();
         $this->em = $this->createPartialMock(
             '\Doctrine\ORM\EntityManager',
             [
@@ -53,7 +53,6 @@ class ServiceAbstractTest extends MockeryTestCase
             ]
         );
 
-        $this->sut->setServiceLocator($this->sm);
         $this->sut->setEntityManager($this->em);
     }
 

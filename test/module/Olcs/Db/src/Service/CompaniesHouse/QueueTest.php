@@ -21,8 +21,7 @@ class QueueTest extends MockeryTestCase
 
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new Service();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new Service($this->sm);
     }
 
     public function testEnqueueActiveOrganisations()
