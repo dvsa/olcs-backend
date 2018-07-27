@@ -825,4 +825,9 @@ abstract class ServiceAbstract extends AbstractPluginManager
 
         return $cascadeEntity;
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }
