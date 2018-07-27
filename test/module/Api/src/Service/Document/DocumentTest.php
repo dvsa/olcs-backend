@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 use Dvsa\Olcs\Api\Service\Document\Document;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery as m;
+use OlcsTest\Bootstrap;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
@@ -14,10 +15,12 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  Document */
     private $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new Document();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new Document($this->sm);
     }
 
     public function testGetBookmarkQueriesForNoBookmarks()
@@ -169,9 +172,8 @@ TXT;
             ->with('DateService')
             ->willReturn($helperMock);
 
-        $this->sut->setServiceLocator($serviceLocator);
-
-        $this->sut->populateBookmarks(
+        $sut = new Document($serviceLocator);
+        $sut->populateBookmarks(
             $file,
             []
         );
@@ -193,9 +195,8 @@ TXT;
             ->with('ContentStore')
             ->willReturn($helperMock);
 
-        $this->sut->setServiceLocator($serviceLocator);
-
-        $this->sut->populateBookmarks(
+        $sut = new Document($serviceLocator);
+        $sut->populateBookmarks(
             $file,
             []
         );

@@ -159,4 +159,9 @@ class Document extends AbstractPluginManager
 
         return $bookmarks;
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }

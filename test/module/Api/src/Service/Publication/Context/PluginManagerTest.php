@@ -19,11 +19,18 @@ class PluginManagerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $mockCfg = m::mock(ConfigInterface::class)
-            ->shouldReceive('configureServiceManager')
+        /** @var  \Zend\ServiceManager\ServiceLocatorInterface $mockSl */
+        $mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+            ->shouldReceive('get')
+            ->with('Config')
+            ->andReturn(
+                [
+                    'publication_context' => [],
+                ]
+            )
             ->getMock();
 
-        $this->sut = new PluginManager($mockCfg);
+        $this->sut = new PluginManager($mockSl);
     }
 
     public function testValidatePluginFail()
@@ -31,19 +38,16 @@ class PluginManagerTest extends MockeryTestCase
         $invalidPlugin = new \stdClass();
 
         //  expect
-        $this->setExpectedException(
-            \Zend\ServiceManager\Exception\RuntimeException::class,
-            'stdClass should implement: ' . ContextInterface::class
-        );
+        $this->expectException(\Zend\ServiceManager\Exception\InvalidServiceException::class);
 
         //  call
-        $this->sut->validatePlugin($invalidPlugin);
+        $this->sut->validate($invalidPlugin);
     }
 
     public function testValidatePluginOk()
     {
         $plugin = m::mock(ContextInterface::class);
-        $this->sut->validatePlugin($plugin);
+        $this->sut->validate($plugin);
     }
 
     public function testInjectAddressFormatter()

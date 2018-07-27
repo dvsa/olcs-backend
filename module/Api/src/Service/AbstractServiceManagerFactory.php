@@ -30,8 +30,8 @@ abstract class AbstractServiceManagerFactory extends AbstractPluginManagerFactor
 
         $class = $this->serviceManagerClass;
 
-        $plugins = new $class($configObject);
-        $plugins->setServiceLocator($serviceLocator);
+        $plugins = new $class($serviceLocator);
+        $plugins->configure($configObject->toArray());
 
         return $plugins;
     }

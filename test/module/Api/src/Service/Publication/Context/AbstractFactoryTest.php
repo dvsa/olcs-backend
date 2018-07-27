@@ -14,16 +14,11 @@ class AbstractFactoryTest extends MockeryTestCase
 {
     /** @var  \Zend\ServiceManager\ServiceLocatorInterface | m\MockInterface */
     private $mockSl;
-    /** @var  \Zend\ServiceManager\ServiceManager | m\MockInterface */
-    private $mockSm;
 
     public function setUp()
     {
         $this->mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
 
-        $this->mockSm = m::mock(\Zend\ServiceManager\ServiceManager::class)
-            ->shouldReceive('getServiceLocator')->andReturn($this->mockSl)
-            ->getMock();
     }
 
     public function testCanCreateServiceWithName()
@@ -44,13 +39,12 @@ class AbstractFactoryTest extends MockeryTestCase
             ->andReturn(
                 m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class)
             );
-
         $name = 'unit_Name';
         $reqName = AbstractContextStub::class;
 
         static::assertInstanceOf(
             AbstractContextStub::class,
-            (new AbstractFactory())->createServiceWithName($this->mockSm, $name, $reqName)
+            (new AbstractFactory())->createServiceWithName($this->mockSl, $name, $reqName)
         );
     }
 }
