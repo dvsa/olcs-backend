@@ -81,17 +81,17 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $createdOn;
 
     /**
-     * Ecmt application
+     * Ecmt permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermits",
      *     mappedBy="countrys",
      *     fetch="LAZY"
      * )
      */
-    protected $ecmtApplications;
+    protected $ecmtPermits;
 
     /**
      * Ecmt permit
@@ -195,7 +195,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function initCollections()
     {
         $this->constraints = new ArrayCollection();
-        $this->ecmtApplications = new ArrayCollection();
+        $this->ecmtPermits = new ArrayCollection();
         $this->ecmtPermits = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
     }
@@ -342,63 +342,63 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     }
 
     /**
-     * Set the ecmt application
+     * Set the ecmt permit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being set as the value
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
      *
      * @return Country
      */
-    public function setEcmtApplications($ecmtApplications)
+    public function setEcmtPermits($ecmtPermits)
     {
-        $this->ecmtApplications = $ecmtApplications;
+        $this->ecmtPermits = $ecmtPermits;
 
         return $this;
     }
 
     /**
-     * Get the ecmt applications
+     * Get the ecmt permits
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getEcmtApplications()
+    public function getEcmtPermits()
     {
-        return $this->ecmtApplications;
+        return $this->ecmtPermits;
     }
 
     /**
-     * Add a ecmt applications
+     * Add a ecmt permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being added
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
      *
      * @return Country
      */
-    public function addEcmtApplications($ecmtApplications)
+    public function addEcmtPermits($ecmtPermits)
     {
-        if ($ecmtApplications instanceof ArrayCollection) {
-            $this->ecmtApplications = new ArrayCollection(
+        if ($ecmtPermits instanceof ArrayCollection) {
+            $this->ecmtPermits = new ArrayCollection(
                 array_merge(
-                    $this->ecmtApplications->toArray(),
-                    $ecmtApplications->toArray()
+                    $this->ecmtPermits->toArray(),
+                    $ecmtPermits->toArray()
                 )
             );
-        } elseif (!$this->ecmtApplications->contains($ecmtApplications)) {
-            $this->ecmtApplications->add($ecmtApplications);
+        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->add($ecmtPermits);
         }
 
         return $this;
     }
 
     /**
-     * Remove a ecmt applications
+     * Remove a ecmt permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being removed
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
      *
      * @return Country
      */
-    public function removeEcmtApplications($ecmtApplications)
+    public function removeEcmtPermits($ecmtPermits)
     {
-        if ($this->ecmtApplications->contains($ecmtApplications)) {
-            $this->ecmtApplications->removeElement($ecmtApplications);
+        if ($this->ecmtPermits->contains($ecmtPermits)) {
+            $this->ecmtPermits->removeElement($ecmtPermits);
         }
 
         return $this;
