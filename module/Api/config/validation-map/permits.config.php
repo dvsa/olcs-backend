@@ -18,4 +18,5 @@ return [
   CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateEcmtCabotage::class => NoValidationRequired::class,CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateEcmtPermitsRequired::class => NoValidationRequired::class,
 ];
