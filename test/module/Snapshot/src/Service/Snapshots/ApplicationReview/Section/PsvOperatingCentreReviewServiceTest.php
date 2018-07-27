@@ -8,6 +8,7 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use OlcsTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PsvOperatingCentreReviewService;
 
@@ -20,10 +21,12 @@ class PsvOperatingCentreReviewServiceTest extends PHPUnit_Framework_TestCase
 {
 
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new PsvOperatingCentreReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new PsvOperatingCentreReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

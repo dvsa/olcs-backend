@@ -27,8 +27,7 @@ class LicenceConditionsUndertakingsReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new LicenceConditionsUndertakingsReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new LicenceConditionsUndertakingsReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationVehiclesReviewService;
+use OlcsTest\Bootstrap;
 
 /**
  * Variation Vehicles Review Service Test
@@ -18,10 +19,12 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\VariationVehi
 class VariationVehiclesReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new VariationVehiclesReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new VariationVehiclesReviewService($this->sm);
     }
 
     /**

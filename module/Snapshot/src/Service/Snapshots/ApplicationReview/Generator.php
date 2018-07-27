@@ -212,7 +212,7 @@ class Generator extends AbstractGenerator
 
     protected $lva;
 
-    public function __construct()
+    public function __construct($container)
     {
         $notRemovedCriteria = Criteria::create();
         $notRemovedCriteria->andWhere(
@@ -221,6 +221,7 @@ class Generator extends AbstractGenerator
 
         $this->sharedBundles['vehicles']['licenceVehicles']['criteria'] = $notRemovedCriteria;
         $this->sharedBundles['vehicles_psv']['licenceVehicles']['criteria'] = $notRemovedCriteria;
+        parent::__construct($container);
     }
 
     public function generate(Application $application, $isInternal = true)

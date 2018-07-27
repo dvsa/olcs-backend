@@ -8,6 +8,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use OlcsTest\Bootstrap;
 use Zend\Form\Element\DateTime;
 
 /**
@@ -19,10 +20,13 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
 {
     /** @var TransportManagersReviewService review service */
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new TransportManagersReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new TransportManagersReviewService($this->sm);
+
     }
 
     public function testGetConfigFromData()

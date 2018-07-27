@@ -57,4 +57,10 @@ SQL;
         $stmt->execute($params);
         return $stmt->rowCount();
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
+
 }

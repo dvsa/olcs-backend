@@ -48,8 +48,7 @@ class GeneratorTest extends MockeryTestCase
             }
         );
 
-        $this->sut = new Generator();
-        $this->sut->setServiceLocator($sm);
+        $this->sut = new Generator($sm);
     }
 
     public function testGenerate()

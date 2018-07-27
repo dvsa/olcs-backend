@@ -45,8 +45,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
         )->getMock();
         $serviceManager->setService('translator', $mockTranslator);
 
-        $this->sut = new DeclarationReviewService();
-        $this->sut->setServiceLocator($serviceManager);
+        $this->sut = new DeclarationReviewService($serviceManager);
     }
 
     public function testGetConfigFromDataNullSignature()

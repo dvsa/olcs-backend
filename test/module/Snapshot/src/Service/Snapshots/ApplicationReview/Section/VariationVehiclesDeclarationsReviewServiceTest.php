@@ -24,10 +24,8 @@ class VariationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new VariationVehiclesDeclarationsReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationVehiclesDeclarationsReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

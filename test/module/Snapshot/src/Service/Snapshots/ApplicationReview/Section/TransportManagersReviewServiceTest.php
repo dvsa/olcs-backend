@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TransportManagersReviewService;
+use OlcsTest\Bootstrap;
 
 /**
  * Transport Managers Review Service Test
@@ -19,10 +20,12 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TransportMana
 class TransportManagersReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new TransportManagersReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new TransportManagersReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

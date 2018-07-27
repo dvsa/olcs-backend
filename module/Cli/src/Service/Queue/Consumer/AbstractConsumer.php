@@ -17,6 +17,11 @@ use Zend\ServiceManager\AbstractPluginManager;
 abstract class AbstractConsumer extends AbstractPluginManager implements MessageConsumerInterface
 {
 
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
+
     /**
      * Called when processing the message was successful
      *

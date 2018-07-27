@@ -26,10 +26,8 @@ class ApplicationAddressesReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new ApplicationAddressesReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationAddressesReviewService($this->sm);
     }
 
     /**

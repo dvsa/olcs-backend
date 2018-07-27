@@ -39,9 +39,9 @@ class BusRegTest extends TestCase
 
     protected function setUp()
     {
-        $this->sut = new BusReg();
-
         $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new BusReg($this->sm);
+
         $this->em = $this->createPartialMock(
             '\Doctrine\ORM\EntityManager',
             [
@@ -57,7 +57,6 @@ class BusRegTest extends TestCase
             ]
         );
 
-        $this->sut->setServiceLocator($this->sm);
         $this->sut->setEntityManager($this->em);
 
         $this->sm

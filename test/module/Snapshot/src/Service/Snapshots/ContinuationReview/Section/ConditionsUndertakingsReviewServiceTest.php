@@ -7,6 +7,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use OlcsTest\Bootstrap;
 
 /**
  * Conditions & undertakings review service test
@@ -17,10 +18,12 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
 {
     /** @var VehiclesReviewService review service */
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new ConditionsUndertakingsReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new ConditionsUndertakingsReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

@@ -22,4 +22,9 @@ abstract class AbstractGenerator extends AbstractPluginManager
         $renderer = $this->getServiceLocator()->get('ViewRenderer');
         return $renderer->render($model);
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }

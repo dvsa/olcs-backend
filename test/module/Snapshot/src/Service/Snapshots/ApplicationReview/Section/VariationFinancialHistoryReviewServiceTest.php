@@ -24,10 +24,9 @@ class VariationFinancialHistoryReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new VariationFinancialHistoryReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationFinancialHistoryReviewService($this->sm);
+
     }
 
     public function testGetConfigFromData()

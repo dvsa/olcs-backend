@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use OlcsTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ConditionsUndertakingsReviewService;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Condition;
@@ -19,10 +20,12 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Condition;
 class ConditionsUndertakingsReviewServiceTest extends PHPUnit_Framework_TestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new ConditionsUndertakingsReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new ConditionsUndertakingsReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

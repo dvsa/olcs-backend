@@ -143,4 +143,9 @@ abstract class AbstractReviewService extends AbstractPluginManager implements Re
         ];
         return $this->translateReplace(self::SIGNATURE, $additionalParts);
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }

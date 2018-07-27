@@ -26,8 +26,7 @@ class ApplicationTransportManagersReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new ApplicationTransportManagersReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationTransportManagersReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

@@ -18,8 +18,7 @@ class AbstractReviewServiceTest extends MockeryTestCase
     public function setUp()
     {
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut = new AbstractReviewServiceStub();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new AbstractReviewServiceStub($this->sm);
     }
 
     public function testTranslate()

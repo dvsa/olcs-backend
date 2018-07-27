@@ -24,10 +24,8 @@ class VariationLicenceHistoryReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new VariationLicenceHistoryReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationLicenceHistoryReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

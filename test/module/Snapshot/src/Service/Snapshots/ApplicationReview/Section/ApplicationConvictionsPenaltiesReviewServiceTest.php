@@ -11,6 +11,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationConvictionsPenaltiesReviewService;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use OlcsTest\Bootstrap;
 
 /**
  * Application Convictions Penalties Review Service Test
@@ -20,10 +21,12 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 class ApplicationConvictionsPenaltiesReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new ApplicationConvictionsPenaltiesReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new ApplicationConvictionsPenaltiesReviewService($this->sm);
     }
 
     /**

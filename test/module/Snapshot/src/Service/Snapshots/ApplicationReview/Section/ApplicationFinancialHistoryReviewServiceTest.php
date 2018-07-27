@@ -26,10 +26,8 @@ class ApplicationFinancialHistoryReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new ApplicationFinancialHistoryReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationFinancialHistoryReviewService($this->sm);
     }
 
     /**

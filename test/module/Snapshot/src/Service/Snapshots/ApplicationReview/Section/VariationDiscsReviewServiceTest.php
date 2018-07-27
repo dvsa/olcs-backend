@@ -26,8 +26,7 @@ class VariationDiscsReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new VariationDiscsReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationDiscsReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

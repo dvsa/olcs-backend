@@ -48,4 +48,9 @@ abstract class AbstractReviewService extends AbstractPluginManager implements Re
     {
         return date($format, strtotime($date));
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }

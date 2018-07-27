@@ -26,8 +26,7 @@ class VariationTransportManagersReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new VariationTransportManagersReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationTransportManagersReviewService($this->sm);
     }
 
     public function testGetConfigFromDataOneOfEach()

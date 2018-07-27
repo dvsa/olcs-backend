@@ -27,8 +27,7 @@ class ApplicationOperatingCentresReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new ApplicationOperatingCentresReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationOperatingCentresReviewService($this->sm);
     }
 
     /**

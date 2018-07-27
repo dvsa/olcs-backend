@@ -35,8 +35,7 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
         $this->sm->setService('QueryHandlerManager', $this->qhm);
 
         $consumerClass = $this->consumerClass;
-        $this->sut = new $consumerClass();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new $consumerClass($this->sm);
     }
 
     /**

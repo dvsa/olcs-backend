@@ -154,6 +154,7 @@ return [
             'serviceFactory' => '\Olcs\Db\Service\Factory',
             'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
             'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
+            \Olcs\Db\Service\Search\Search::class => \Olcs\Db\Service\Search\SearchFactory::class,
             'Olcs\Db\Service\BusReg\OtherServicesManager' =>
                 'Olcs\Db\Service\BusReg\OtherServicesManager',
             'Olcs\Db\Service\ContactDetails\PhoneContactsManager' =>

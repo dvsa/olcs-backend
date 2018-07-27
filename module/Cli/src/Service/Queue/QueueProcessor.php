@@ -93,4 +93,9 @@ class QueueProcessor extends AbstractPluginManager
         return $this->getServiceLocator()->get('MessageConsumerManager')
             ->get($item->getType()->getId());
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }
