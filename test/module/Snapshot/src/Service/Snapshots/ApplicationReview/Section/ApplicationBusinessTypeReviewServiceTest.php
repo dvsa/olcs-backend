@@ -24,9 +24,7 @@ class ApplicationBusinessTypeReviewServiceTest extends MockeryTestCase
     public function setUp()
     {
         $this->sm = Bootstrap::getServiceManager();
-
-        $this->sut = new ApplicationBusinessTypeReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationBusinessTypeReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

@@ -23,7 +23,8 @@ class PeopleReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new PeopleReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new PeopleReviewService($this->sm);
 
         $this->mockTranslator = m::mock(Translate::class)
             ->shouldReceive('translate')
@@ -34,8 +35,6 @@ class PeopleReviewServiceTest extends MockeryTestCase
             )
             ->getMock();
 
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
         $this->sm->setService('translator', $this->mockTranslator);
     }
 

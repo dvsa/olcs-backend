@@ -24,10 +24,8 @@ class ApplicationPeopleReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new ApplicationPeopleReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationPeopleReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

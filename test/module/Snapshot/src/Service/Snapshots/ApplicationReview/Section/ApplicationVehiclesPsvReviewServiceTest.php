@@ -26,10 +26,8 @@ class ApplicationVehiclesPsvReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new ApplicationVehiclesPsvReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationVehiclesPsvReviewService($this->sm);
     }
 
     /**

@@ -28,10 +28,8 @@ class TransportManagerPreviousConvictionReviewServiceTest extends MockeryTestCas
 
     public function setUp()
     {
-        $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousConvictionReviewService($this->sm);
     }
 
     /**

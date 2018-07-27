@@ -48,8 +48,7 @@ class FinanceReviewServiceTest extends MockeryTestCase
         );
         $this->serviceManager->setService('translator', $mockTranslator);
 
-        $this->sut = new FinanceReviewService();
-        $this->sut->setServiceLocator($this->serviceManager);
+        $this->sut = new FinanceReviewService($this->serviceManager);
     }
 
     public function testGetConfigFrom()

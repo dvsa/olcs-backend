@@ -23,9 +23,7 @@ class TransportManagerResponsibilityReviewServiceTest extends MockeryTestCase
     public function setUp()
     {
         $this->sm = Bootstrap::getServiceManager();
-
-        $this->sut = new TransportManagerApplication\Section\TransportManagerResponsibilityReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new TransportManagerApplication\Section\TransportManagerResponsibilityReviewService($this->sm);
     }
 
     /**

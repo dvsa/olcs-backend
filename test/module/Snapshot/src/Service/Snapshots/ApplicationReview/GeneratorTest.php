@@ -50,10 +50,9 @@ class GeneratorTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new Generator();
-        $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
 
+        $this->sm = Bootstrap::getServiceManager($this->sm);
+        $this->sut = new Generator($this->sm);
         $this->niTranslation = m::mock();
 
         $this->sectionAccessService = m::mock(SectionAccessService::class);

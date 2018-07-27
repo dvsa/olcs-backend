@@ -2,75 +2,75 @@
 
 <phpunit bootstrap="test_bootstrap.php" colors="true" stopOnError="false">
     <testsuites>
-        <testsuite name="Address">
-            <directory>./module/Address</directory>
-        </testsuite>
-        <testsuite name="Cli">
-            <directory>./module/Cli</directory>
-        </testsuite>
-        <testsuite name="DocumentShare">
-            <directory>./module/DocumentShare</directory>
-        </testsuite>
-        <testsuite name="Companies House">
-            <directory>./module/CompaniesHouse</directory>
-        </testsuite>
-        <testsuite name="Email">
-            <directory>./module/Email</directory>
-        </testsuite>
+        <!--<testsuite name="Address">-->
+            <!--<directory>./module/Address</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Cli">-->
+            <!--<directory>./module/Cli/src/Service/Queue</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="DocumentShare">-->
+            <!--<directory>./module/DocumentShare</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Companies House">-->
+            <!--<directory>./module/CompaniesHouse</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Email">-->
+            <!--<directory>./module/Email</directory>-->
+        <!--</testsuite>-->
         <testsuite name="Snapshot">
             <directory>./module/Snapshot</directory>
         </testsuite>
-        <testsuite name="Api Domain">
-            <directory>./module/Api/src/Domain</directory>
-        </testsuite>
-        <testsuite name="Api Entity">
-            <directory>./module/Api/src/Entity</directory>
-        </testsuite>
-        <testsuite name="Api Service">
-            <directory>./module/Api/src/Service</directory>
-        </testsuite>
-        <testsuite name="Api Misc">
-            <directory>./module/Api/src</directory>
-        </testsuite>
-        <testsuite name="Api Listener">
-            <directory>./module/Api/src/Listener</directory>
-        </testsuite>
-        <testsuite name="OLD Olcs">
-            <directory>./module/Olcs</directory>
-        </testsuite>
-        <testsuite name="OLD Scanning">
-            <directory>./module/Scanning</directory>./Re
-        </testsuite>
-        <testsuite name="GdsVerify">
-            <directory>./module/GdsVerify</directory>./Re
-        </testsuite>
+        <!--<testsuite name="Api Domain">-->
+            <!--<directory>./module/Api/src/Domain</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Api Entity">-->
+            <!--<directory>./module/Api/src/Entity</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Api Service">-->
+            <!--<directory>./module/Api/src/Service</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Api Misc">-->
+            <!--<directory>./module/Api/src</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="Api Listener">-->
+            <!--<directory>./module/Api/src/Listener</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="OLD Olcs">-->
+            <!--<directory>./module/Olcs</directory>-->
+        <!--</testsuite>-->
+        <!--<testsuite name="OLD Scanning">-->
+            <!--<directory>./module/Scanning</directory>./Re-->
+        <!--</testsuite>-->
+        <!--<testsuite name="GdsVerify">-->
+            <!--<directory>./module/GdsVerify</directory>./Re-->
+        <!--</testsuite>-->
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../module</directory>
-            <exclude>
-                <file>../module/Olcs/Db/Module.php</file>
-                <file>../module/Cli/src/Module.php</file>
-                <file>../module/DocumentShare/src/Module.php</file>
-                <file>../module/Email/src/Module.php</file>
-                <file>../module/CompaniesHouse/src/Module.php</file>
-                <file>../module/Scanning/src/Module.php</file>
-                <file>../module/Snapshot/src/Module.php</file>
-                <file>../module/Address/src/Module.php</file>
-                <file>../module/GdsVerify/src/Module.php</file>
-                <directory>../module/GdsVerify/config</directory>
-                <directory>../module/Email/config</directory>
-                <directory>../module/Cli/config</directory>
-                <directory>../module/Cli/src/Session/NullSaveHandler.php</directory>
-                <directory>../module/DocumentShare/config</directory>
-                <directory>../module/CompaniesHouse/config</directory>
-                <directory>../module/Scanning/config</directory>
-                <directory>../module/Snapshot/config</directory>
-                <directory>../module/Address/config</directory>
-                <directory>../module/Olcs/Db/config</directory>
-                <directory>../module/Api/config</directory>
-                <directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+    <!--<filter>-->
+        <!--<whitelist processUncoveredFilesFromWhitelist="true">-->
+            <!--<directory suffix=".php">../module</directory>-->
+            <!--<exclude>-->
+                <!--<file>../module/Olcs/Db/Module.php</file>-->
+                <!--<file>../module/Cli/src/Module.php</file>-->
+                <!--<file>../module/DocumentShare/src/Module.php</file>-->
+                <!--<file>../module/Email/src/Module.php</file>-->
+                <!--<file>../module/CompaniesHouse/src/Module.php</file>-->
+                <!--<file>../module/Scanning/src/Module.php</file>-->
+                <!--<file>../module/Snapshot/src/Module.php</file>-->
+                <!--<file>../module/Address/src/Module.php</file>-->
+                <!--<file>../module/GdsVerify/src/Module.php</file>-->
+                <!--<directory>../module/GdsVerify/config</directory>-->
+                <!--<directory>../module/Email/config</directory>-->
+                <!--<directory>../module/Cli/config</directory>-->
+                <!--<directory>../module/Cli/src/Session/NullSaveHandler.php</directory>-->
+                <!--<directory>../module/DocumentShare/config</directory>-->
+                <!--<directory>../module/CompaniesHouse/config</directory>-->
+                <!--<directory>../module/Scanning/config</directory>-->
+                <!--<directory>../module/Snapshot/config</directory>-->
+                <!--<directory>../module/Address/config</directory>-->
+                <!--<directory>../module/Olcs/Db/config</directory>-->
+                <!--<directory>../module/Api/config</directory>-->
+                <!--<directory>../module/Olcs/Db/src/Service/CHXmlGateway</directory>-->
+            <!--</exclude>-->
+        <!--</whitelist>-->
+    <!--</filter>-->
 </phpunit>

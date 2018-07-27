@@ -26,10 +26,8 @@ class ApplicationUndertakingsReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new ApplicationUndertakingsReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationUndertakingsReviewService($this->sm);
     }
 
     /**

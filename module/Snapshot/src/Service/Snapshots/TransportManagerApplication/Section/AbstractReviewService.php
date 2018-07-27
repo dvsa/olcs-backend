@@ -132,4 +132,9 @@ abstract class AbstractReviewService extends AbstractPluginManager implements Re
     {
         return $value === 'Y' ? 'Yes' : 'No';
     }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
 }

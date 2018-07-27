@@ -27,8 +27,7 @@ class VariationOperatingCentresReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new VariationOperatingCentresReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationOperatingCentresReviewService($this->sm);
     }
 
     /**

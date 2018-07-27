@@ -29,8 +29,7 @@ class ApplicationSafetyReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new ApplicationSafetyReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new ApplicationSafetyReviewService($this->sm);
     }
 
     /**

@@ -34,9 +34,8 @@ class SafetyReviewServiceTest extends MockeryTestCase
             )
             ->getMock();
 
-        $this->sut = new SafetyReviewService();
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new SafetyReviewService($this->sm);
         $this->sm->setService('translator', $this->mockTranslator);
     }
 

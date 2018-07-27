@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use OlcsTest\Bootstrap;
 use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TrafficAreaReviewService;
 
@@ -18,10 +19,12 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TrafficAreaRe
 class TrafficAreaReviewServiceTest extends PHPUnit_Framework_TestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new TrafficAreaReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new TrafficAreaReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

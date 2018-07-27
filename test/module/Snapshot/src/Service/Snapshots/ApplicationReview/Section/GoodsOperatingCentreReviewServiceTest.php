@@ -20,10 +20,8 @@ class GoodsOperatingCentreReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new GoodsOperatingCentreReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new GoodsOperatingCentreReviewService($this->sm);
     }
 
     /**

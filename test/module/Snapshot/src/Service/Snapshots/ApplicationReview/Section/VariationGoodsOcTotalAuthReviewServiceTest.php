@@ -29,8 +29,7 @@ class VariationGoodsOcTotalAuthReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new VariationGoodsOcTotalAuthReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationGoodsOcTotalAuthReviewService($this->sm);
     }
 
     public function testGetConfigFromDataWithoutChanges()

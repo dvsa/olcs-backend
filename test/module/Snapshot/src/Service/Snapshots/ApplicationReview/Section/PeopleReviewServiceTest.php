@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PeopleReviewService;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use OlcsTest\Bootstrap;
 
 /**
  * People Review Service Test
@@ -19,10 +20,12 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 class PeopleReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new PeopleReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new PeopleReviewService($this->sm);
     }
 
     /**

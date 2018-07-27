@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationLicenceHistoryReviewService;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
+use OlcsTest\Bootstrap;
 
 /**
  * Application LicenceHistory Review Service Test
@@ -19,10 +20,12 @@ use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence;
 class ApplicationLicenceHistoryReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
+    protected $sm;
 
     public function setUp()
     {
-        $this->sut = new ApplicationLicenceHistoryReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new ApplicationLicenceHistoryReviewService($this->sm);
     }
 
     /**

@@ -27,8 +27,7 @@ class VariationConditionsUndertakingsReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new VariationConditionsUndertakingsReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationConditionsUndertakingsReviewService($this->sm);
     }
 
     public function testGetConfigFromDataWithNoneAdded()

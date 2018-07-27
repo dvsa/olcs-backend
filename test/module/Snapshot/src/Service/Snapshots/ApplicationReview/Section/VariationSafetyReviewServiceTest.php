@@ -26,8 +26,7 @@ class VariationSafetyReviewServiceTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = new VariationSafetyReviewService();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new VariationSafetyReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use OlcsTest\Bootstrap;
 
 /**
  * Business details review service test
@@ -22,7 +23,8 @@ class AddressesReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new AddressesReviewService();
+        $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new AddressesReviewService($this->sm);
     }
 
     public function testGetConfigFromData()

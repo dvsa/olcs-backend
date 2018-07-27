@@ -27,10 +27,8 @@ class TransportManagerPreviousLicenceReviewServiceTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousLicenceReviewService();
-
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut->setServiceLocator($this->sm);
+        $this->sut = new TransportManagerApplication\Section\TransportManagerPreviousLicenceReviewService($this->sm);
     }
 
     /**
