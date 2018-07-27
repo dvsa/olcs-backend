@@ -178,6 +178,6 @@ return [
     'EcmtCountriesConstraints' => 'Permits',
     'EcmtPermitApplication' => 'Permits',
     'EcmtPermits' => 'Permits',
+    'EcmtApplicationRestrictedCountries' => 'Permits',
     'Sectors' => 'Permits',
-
 ];
