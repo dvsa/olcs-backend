@@ -38,9 +38,9 @@ final class UpdateDeclaration extends AbstractCommandHandler
 
         /** @var EcmtPermitApplication $application */
         // $application->setDeclaration(1);
-         $application->setDeclaration($command->getDeclaration());
+        $application->setDeclaration($command->getDeclaration());
 
-         $this->getRepo()->save($application);
+        $this->getRepo()->save($application);
 
         $result->addId('ecmtPermitApplication', $application->getId());
 
