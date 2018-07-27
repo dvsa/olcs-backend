@@ -45,5 +45,4 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler
 
         return $result;
     }
-
 }

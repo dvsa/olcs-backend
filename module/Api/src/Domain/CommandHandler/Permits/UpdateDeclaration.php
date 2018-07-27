@@ -46,5 +46,4 @@ final class UpdateDeclaration extends AbstractCommandHandler
 
         return $result;
     }
-
 }

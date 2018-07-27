@@ -9,14 +9,12 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
 
-use Olcs\Logging\Log\Logger;
-
 /**
- * Update ECMT Euro 6
+ * Update ECMT Trips
  *
- * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
+ * @author Andy Newton <andrew.newton@capgemini.com>
  */
-final class UpdateEcmtEmissions extends AbstractCommandHandler
+final class UpdateEcmtTrips extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
 
@@ -28,11 +26,11 @@ final class UpdateEcmtEmissions extends AbstractCommandHandler
         /* @var $ecmtApplication EcmtApplication */
         $ecmtApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $ecmtApplication->setEmissions($command->getEmissions());
+        $ecmtApplication->setTrips($command->getTrips());
 
         $this->getRepo()->save($ecmtApplication);
-        $result->addId('ecmtEuro6', $ecmtApplication->getId());
-        $result->addMessage('ECMT Permit Application Euro6 updated');
+        $result->addId('ecmtTrips', $ecmtApplication->getId());
+        $result->addMessage('ECMT Permit Application Trips updated');
         return $result;
     }
 }
