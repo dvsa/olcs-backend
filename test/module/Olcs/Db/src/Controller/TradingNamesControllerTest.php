@@ -9,6 +9,7 @@ namespace OlcsTest\Db\Controller;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Db\Controller\TradingNamesController;
 use OlcsTest\Bootstrap;
 
 /**
@@ -25,11 +26,9 @@ class TradingNamesControllerTest extends MockeryTestCase
     {
         $this->sm = Bootstrap::getServiceManager();
 
-        $this->sut = m::mock('\Olcs\Db\Controller\TradingNamesController')
+        $this->sut = m::mock(TradingNamesController::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
-
-        $this->sut->setServiceLocator($this->sm);
     }
 
     /**
