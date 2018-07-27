@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Jason de Jonge
  */
-final class UpdateDeclaration extends AbstractCommandHandler
+final class UpdateInternationalJourney extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
 
@@ -37,8 +37,7 @@ final class UpdateDeclaration extends AbstractCommandHandler
         }
 
         /** @var EcmtPermitApplication $application */
-        // $application->setDeclaration(1);
-        $application->setDeclaration($command->getDeclaration());
+        $application->setInternationalJourneys($command->getInternationalJourney());
 
         $this->getRepo()->save($application);
 

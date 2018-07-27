@@ -16,4 +16,7 @@ return [
   CommandHandler\Permits\CancelEcmtPermitApplication::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
   CommandHandler\Permits\UpdateEcmtPermitsRequired::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateInternationalJourney::class => NoValidationRequired::class,
+  CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
 ];
