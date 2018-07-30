@@ -96,18 +96,6 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     protected $result;
 
-    /**
-     * Creates the service, including the various input filters/validators
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this($serviceLocator, self::class);
-    }
-
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->xmlStructureInput = $container->get(XmlStructureInputFactory::class);

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Generator;
 
@@ -26,20 +27,10 @@ final class CreateSnapshot extends AbstractCommandHandler
      */
     protected $reviewSnapshotService;
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->reviewSnapshotService = $mainServiceLocator->get('ContinuationReview');
-
-        return parent::createService($serviceLocator);
+        $this->reviewSnapshotService = $container->get('ContinuationReview');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

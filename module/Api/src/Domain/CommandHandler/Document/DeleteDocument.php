@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
@@ -30,21 +31,10 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
      */
     private $fileUploader;
 
-    /**
-     * Creates service (needs instance of file uploader)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var ServiceLocatorInterface $mainServiceLocator  */
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->fileUploader = $mainServiceLocator->get('FileUploader');
-
-        return parent::createService($serviceLocator);
+        $this->fileUploader = $container->get('FileUploader');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**
