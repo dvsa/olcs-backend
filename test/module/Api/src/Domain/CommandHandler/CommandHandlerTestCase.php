@@ -86,17 +86,19 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $this->pidIdentityProvider = m::mock(PidIdentityProvider::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
-        $sm = m::mock(ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
-        $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
-        $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-        $sm->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
-        $sm->shouldReceive('getServiceLocator')->andReturn($sm);
+
+        $this->commandHandler = m::mock(CommandHandlerManager::class);
+        $this->commandHandler->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
+        $this->commandHandler->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
+        $this->commandHandler->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
+        $this->commandHandler->shouldReceive('get')->with(PidIdentityProvider::class)->andReturn($this->pidIdentityProvider);
+        
         if (property_exists($this, 'submissionConfig')) {
-            $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
+            $this->commandHandler->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
         }
+
         foreach ($this->mockedSmServices as $serviceName => $service) {
-            $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
+            $this->commandHandler->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
         if (array_key_exists(AuthorizationService::class, $this->mockedSmServices)) {
             $this->repoManager
@@ -111,7 +113,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->getMock();
         }
 
-        $this->sut->createService($sm);
+        $this->sut->createService($this->commandHandler);
 
         $this->sideEffects = [];
         $this->commands = [];
