@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Get a list of Constrained Countrys
+ * Get a list of Constrained Countries
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
