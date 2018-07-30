@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
+use Interop\Container\ContainerInterface;
 use Zend\I18n\Translator\TranslatorInterface;
 use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -61,11 +62,9 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      */
     private $emailService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $config = $mainServiceLocator->get('Config');
+        $config = $container->get('Config');
 
         if (isset($config['email']['from_name'])) {
             $this->setFromName($config['email']['from_name']);
@@ -87,11 +86,11 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
             $this->setInternalUri($config['email']['internal_uri']);
         }
 
-        $this->setTranslator($mainServiceLocator->get('translator'));
+        $this->setTranslator($container->get('translator'));
 
-        $this->setEmailService($mainServiceLocator->get('EmailService'));
+        $this->setEmailService($container->get('EmailService'));
 
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

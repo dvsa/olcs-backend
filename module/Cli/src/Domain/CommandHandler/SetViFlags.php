@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -18,19 +19,10 @@ final class SetViFlags extends AbstractCommandHandler
      */
     private $dbConnection;
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->setDbConnection($mainServiceLocator->get('doctrine.connection.ormdefault'));
-
-        return parent::createService($serviceLocator);
+        $this->setDbConnection($container->get('doctrine.connection.ormdefault'));
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

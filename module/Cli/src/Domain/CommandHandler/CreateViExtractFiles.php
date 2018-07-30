@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -65,24 +66,14 @@ final class CreateViExtractFiles extends AbstractCommandHandler
         ],
     ];
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return CreateViExtractFiles
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $config = $mainServiceLocator->get('Config');
+        $config = $container->get('Config');
 
         if (isset($config['vi_extract_files']['export_path'])) {
             $this->exportPath = $config['vi_extract_files']['export_path'];
         }
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

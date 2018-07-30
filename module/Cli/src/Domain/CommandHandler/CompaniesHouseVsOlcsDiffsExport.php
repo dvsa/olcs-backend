@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -137,25 +138,15 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
         fclose($fh);
     }
 
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Handler Manager
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $sm)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
-        $config = $sl->get('Config');
+        $config = $container->get('Config');
 
         $exportCfg = (!empty($config['ch-vs-olcs-export']) ? $config['ch-vs-olcs-export'] : []);
 
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-
-        return parent::createService($sm);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

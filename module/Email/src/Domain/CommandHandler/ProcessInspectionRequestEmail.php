@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest as UpdateInspectionRequestCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Email\Service\Imap as Mailbox;
@@ -46,13 +47,10 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
         $this->mailbox = $mailbox;
     }
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->setMailbox($mainServiceLocator->get('ImapService'));
-
-        return parent::createService($serviceLocator);
+        $this->setMailbox($container->get('ImapService'));
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

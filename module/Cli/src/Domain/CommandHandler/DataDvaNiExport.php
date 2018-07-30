@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -78,27 +79,15 @@ final class DataDvaNiExport extends AbstractDataExport
         $this->singleCsvFromStatement($stmt, 'NiGvLicences', '-');
     }
 
-
-
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Service Manager
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $sm)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
-        $config = $sl->get('Config');
+        $config = $container->get('Config');
 
         $exportCfg = (!empty($config['data-dva-ni-export']) ? $config['data-dva-ni-export'] : []);
 
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-
-        return parent::createService($sm);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

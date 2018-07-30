@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ReadAudit\ReadAuditRepositoryInterface;
 
@@ -30,17 +31,15 @@ final class RemoveReadAudit extends AbstractCommandHandler
 
     protected $maxAge = '1 year';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $config = $mainServiceLocator->get('Config');
+        $config = $container->get('Config');
 
         if (isset($config['batch_config']['remove-read-audit']['max-age'])) {
             $this->maxAge = $config['batch_config']['remove-read-audit']['max-age'];
         }
 
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendIntlGoodsEm
 use Dvsa\Olcs\Cli\Domain\CommandHandler\AbstractDataExport;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Cli\Service\Utils\ExportToCsv;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
@@ -254,25 +255,15 @@ final class DataGovUkExport extends AbstractDataExport
         $this->makeCsvsFromStatement($stmt, 'Current Traffic Area', 'Bus_Variation');
     }
 
-    /**
-     * Create service
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $sm Service Manager
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(ServiceLocatorInterface $sm)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var ServiceLocatorInterface $sl */
-        $sl = $sm->getServiceLocator();
-        $config = $sl->get('Config');
+        $config = $container->get('Config');
 
         $exportCfg = (!empty($config['data-gov-uk-export']) ? $config['data-gov-uk-export'] : []);
 
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];
         }
-
-        return parent::createService($sm);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }
