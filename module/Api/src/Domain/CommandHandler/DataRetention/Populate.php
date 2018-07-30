@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Doctrine\ORM\EntityManager;
@@ -24,17 +25,11 @@ final class Populate extends AbstractCommandHandler implements AuthAwareInterfac
     /** @var Connection */
     private $connection;
 
-    /**
-     * @param ServiceLocatorInterface|QueryHandlerManager $serviceLocator
-     *
-     * @return AbstractCommandHandler|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');
+        $entityManager = $container->get('DoctrineOrmEntityManager');
         $this->connection = $entityManager->getConnection();
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     protected $repoServiceName = 'DataRetentionRule';

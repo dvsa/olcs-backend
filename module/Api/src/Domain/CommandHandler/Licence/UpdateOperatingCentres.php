@@ -16,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 
@@ -37,11 +38,10 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
      */
     private $updateHelper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

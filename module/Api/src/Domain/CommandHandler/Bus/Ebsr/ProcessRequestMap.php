@@ -27,6 +27,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Interop\Container\ContainerInterface;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
@@ -76,20 +77,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      */
     protected $templateBuilder;
 
-    /**
-     * Creates the service (injects template builder)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->templateBuilder = $mainServiceLocator->get(TemplateBuilder::class);
-
-        return parent::createService($serviceLocator);
+        $this->templateBuilder = $container->get(TemplateBuilder::class);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

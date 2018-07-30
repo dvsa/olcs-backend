@@ -42,6 +42,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 
@@ -140,23 +141,13 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      */
     protected $result;
 
-    /**
-     * create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->xmlStructureInput = $mainServiceLocator->get('ComplianceXmlStructure');
-        $this->complianceEpisodeInput = $mainServiceLocator->get('ComplianceEpisodeInput');
-        $this->seriousInfringementInput = $mainServiceLocator->get('SeriousInfringementInput');
-        $this->xmlMapping = $mainServiceLocator->get('ComplianceEpisodeXmlMapping');
-
-        return parent::createService($serviceLocator);
+        $this->xmlStructureInput = $container->get('ComplianceXmlStructure');
+        $this->complianceEpisodeInput = $container->get('ComplianceEpisodeInput');
+        $this->seriousInfringementInput = $container->get('SeriousInfringementInput');
+        $this->xmlMapping = $container->get('ComplianceEpisodeXmlMapping');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

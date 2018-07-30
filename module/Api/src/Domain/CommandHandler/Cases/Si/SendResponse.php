@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
@@ -37,19 +38,10 @@ final class SendResponse extends AbstractCommandHandler implements UploaderAware
      */
     protected $inrClient;
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->inrClient = $mainServiceLocator->get(InrClientInterface::class);
-
-        return parent::createService($serviceLocator);
+        $this->inrClient = $container->get(InrClientInterface::class);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

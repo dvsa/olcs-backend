@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter as PrintLetterCmd;
+use Interop\Container\ContainerInterface;
 
 /**
  * Print Letter
@@ -128,20 +129,9 @@ final class PrintLetter extends AbstractCommandHandler implements TransactionedI
         );
     }
 
-    /**
-     * Create Command handler
-     *
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandlerManager $serviceLocator Service Manager
-     *
-     * @return AbstractCommandHandler
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $sm  */
-        $sm = $serviceLocator->getServiceLocator();
-
-        $this->srvPrintLetter = $sm->get(Service\Document\PrintLetter::class);
-
-        return parent::createService($serviceLocator);
+        $this->srvPrintLetter = $container->get(Service\Document\PrintLetter::class);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

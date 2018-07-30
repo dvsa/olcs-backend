@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\DocumentToDelete;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 
@@ -29,20 +30,10 @@ final class RemoveDeletedDocuments extends AbstractCommandHandler implements Tra
      */
     private $contentStoreService;
 
-    /**
-     * Creates service (needs instance of contentFileStore service)
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return RemoveDeletedDocuments
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        /** @var ServiceLocatorInterface $mainServiceLocator  */
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->setContentStoreService($mainServiceLocator->get('FileUploader'));
-
-        return parent::createService($serviceLocator);
+        $this->setContentStoreService($container->get('FileUploader'));
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

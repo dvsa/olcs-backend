@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\LicenceOperatingCentre\Update as Cmd;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -37,13 +38,10 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      */
     protected $helper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->helper = $mainServiceLocator->get('OperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        $this->helper = $container->get('OperatingCentreHelper');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

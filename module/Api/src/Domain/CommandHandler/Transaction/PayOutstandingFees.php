@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
@@ -418,17 +419,10 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
         return $response;
     }
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->feesHelper = $serviceLocator->getServiceLocator()->get('FeesHelperService');
-        return parent::createService($serviceLocator);
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($container, $requestedName, $options); 
     }
 
     /**
