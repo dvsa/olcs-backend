@@ -47,6 +47,7 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult as SubmissionResultFilter;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
@@ -104,16 +105,18 @@ final class ProcessPack extends AbstractCommandHandler implements
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $this->xmlStructureInput = $mainServiceLocator->get(XmlStructureInputFactory::class);
-        $this->busRegInput = $mainServiceLocator->get(BusRegistrationInputFactory::class);
-        $this->processedDataInput = $mainServiceLocator->get(ProcessedDataInputFactory::class);
-        $this->shortNoticeInput = $mainServiceLocator->get(ShortNoticeInputFactory::class);
-        $this->submissionResultFilter = $mainServiceLocator->get('FilterManager')->get(SubmissionResultFilter::class);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->xmlStructureInput = $container->get(XmlStructureInputFactory::class);
+        $this->busRegInput = $container->get(BusRegistrationInputFactory::class);
+        $this->processedDataInput = $container->get(ProcessedDataInputFactory::class);
+        $this->shortNoticeInput = $container->get(ShortNoticeInputFactory::class);
+        $this->submissionResultFilter = $container->get('FilterManager')->get(SubmissionResultFilter::class);
         $this->result = new Result();
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**
