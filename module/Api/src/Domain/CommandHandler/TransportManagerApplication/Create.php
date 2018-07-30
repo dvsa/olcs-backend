@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -43,21 +44,13 @@ final class Create extends AbstractCommandHandler implements
      */
     protected $tmRepo;
 
-    /**
-     * Creates service
-     *
-     * @param ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return TransactioningCommandHandler
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->userRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->userRepo = $container->get('RepositoryServiceManager')
             ->get('User');
-        $this->tmRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->tmRepo = $container->get('RepositoryServiceManager')
             ->get('TransportManager');
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

@@ -422,7 +422,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->feesHelper = $container->get('FeesHelperService');
-        return parent::__invoke($container, $requestedName, $options); 
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**
