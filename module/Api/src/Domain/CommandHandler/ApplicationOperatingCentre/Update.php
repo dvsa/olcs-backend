@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\ApplicationOperatingCentre\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -38,13 +39,10 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
      */
     protected $helper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->helper = $mainServiceLocator->get('OperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        $this->helper = $container->get('OperatingCentreHelper');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**
