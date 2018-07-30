@@ -4,8 +4,8 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\Exception\InvalidServiceException;
+use Interop\Container\ContainerInterface;
 
 /**
  * Class PluginManager
@@ -13,7 +13,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SectionGeneratorPluginManager extends AbstractPluginManager
 {
-    public function __construct(ConfigInterface $configuration = null)
+    public function __construct(ContainerInterface $configuration = null)
     {
         parent::__construct($configuration);
     }
@@ -26,13 +26,13 @@ class SectionGeneratorPluginManager extends AbstractPluginManager
      *
      * @param  mixed $plugin
      * @return void
-     * @throws Exception\RuntimeException if invalid
+     * @throws InvalidServiceException if invalid
      */
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
-        if (!($plugin instanceof SectionGeneratorInterface)) {
-            throw new Exception\RuntimeException(
-                get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class
+        if (!($plugin instanceof ContainerInterface)) {
+            throw new InvalidServiceException(
+                get_class($plugin) . ' should implement: ' . ContainerInterface::class
             );
         }
     }
