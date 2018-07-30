@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 
 /**
  * Update a Vehicle Section 26 status
@@ -20,11 +21,10 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
      */
     private $searchService;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->searchService = $serviceLocator->getServiceLocator()->get('ElasticSearch\Search');
-
-        return parent::createService($serviceLocator);
+        $this->searchService = $container->get('ElasticSearch\Search');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

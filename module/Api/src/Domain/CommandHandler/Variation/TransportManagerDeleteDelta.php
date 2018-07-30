@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
@@ -32,15 +33,14 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
      */
     protected $tmlRepo;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->tmaRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->tmaRepo = $container->get('RepositoryServiceManager')
             ->get('TransportManagerApplication');
 
-        $this->tmlRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->tmlRepo = $container->get('RepositoryServiceManager')
             ->get('TransportManagerLicence');
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)
