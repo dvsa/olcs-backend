@@ -17,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as GrantGoodsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as GrantPsvCmd;
+use Interop\Container\ContainerInterface;
 
 /**
  * Grant
@@ -34,20 +35,10 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      */
     private $grantValidationService;
 
-    /**
-     * Create service
-     *
-     * @param \Zend\ServiceManager\ServiceLocatorInterface $serviceLocator service locator
-     *
-     * @return $this|\Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler|mixed
-     */
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->grantValidationService = $mainServiceLocator->get('ApplicationGrantValidationService');
-
-        return parent::createService($serviceLocator);
+        $this->grantValidationService = $container->get('ApplicationGrantValidationService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

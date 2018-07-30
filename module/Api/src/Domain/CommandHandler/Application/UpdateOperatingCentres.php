@@ -13,6 +13,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 
@@ -47,13 +48,12 @@ final class UpdateOperatingCentres extends AbstractCommandHandler implements Tra
 
     private $totals;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
-        $this->updateHelper = $serviceLocator->getServiceLocator()->get('UpdateOperatingCentreHelper');
-        $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
-
-        return parent::createService($serviceLocator);
+        $this->variationHelper = $container->get('VariationOperatingCentreHelper');
+        $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
+        $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Interop\Container\ContainerInterface;
 use Zend\Filter\Word\CamelCaseToUnderscore;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -125,13 +126,12 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      */
     private $variationHelper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->updateHelper = $mainServiceLocator->get('UpdateOperatingCentreHelper');
-        $this->variationHelper = $mainServiceLocator->get('VariationOperatingCentreHelper');
+        $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
+        $this->variationHelper = $container->get('VariationOperatingCentreHelper');
 
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

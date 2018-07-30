@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTaxiPhv as Command;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -25,11 +26,10 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
      */
     private $trafficAreaValidator;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->trafficAreaValidator = $serviceLocator->getServiceLocator()->get('TrafficAreaValidator');
-
-        return parent::createService($serviceLocator);
+        $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

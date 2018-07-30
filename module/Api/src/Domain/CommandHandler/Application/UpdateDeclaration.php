@@ -15,6 +15,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees as CancelAllInterimFeesCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateFee as CreateFeeCommand;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCommand;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
@@ -34,12 +35,11 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
      */
     protected $feeRepo;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->feeRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->feeRepo = $container->get('RepositoryServiceManager')
             ->get('Fee');
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

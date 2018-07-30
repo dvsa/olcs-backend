@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as CreateApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -36,12 +37,11 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
 
     protected $repoServiceName = 'Application';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->licenceRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->licenceRepo = $container->get('RepositoryServiceManager')
             ->get('Licence');
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

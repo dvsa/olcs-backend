@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -27,12 +28,11 @@ final class GenerateLicenceNumber extends AbstractCommandHandler
 
     protected $repoServiceName = 'Application';
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->licNoGenRepo = $serviceLocator->getServiceLocator()->get('RepositoryServiceManager')
+        $this->licNoGenRepo = $container->get('RepositoryServiceManager')
             ->get('LicenceNoGen');
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

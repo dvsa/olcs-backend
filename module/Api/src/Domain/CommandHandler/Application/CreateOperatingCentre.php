@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateOperatingCentre as Cmd;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -39,13 +40,10 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
      */
     protected $helper;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->helper = $mainServiceLocator->get('OperatingCentreHelper');
-
-        return parent::createService($serviceLocator);
+        $this->helper = $container->get('OperatingCentreHelper');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

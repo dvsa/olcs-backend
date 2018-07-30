@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Interop\Container\ContainerInterface;
 
 /**
  * Publish an application
@@ -28,13 +29,11 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
      */
     private $variationValidationService;
 
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->applicationValidationService = $mainServiceLocator->get('ApplicationPublishValidationService');
-        $this->variationValidationService = $mainServiceLocator->get('VariationPublishValidationService');
-
-        return parent::createService($serviceLocator);
+        $this->applicationValidationService = $container->get('ApplicationPublishValidationService');
+        $this->variationValidationService = $container->get('VariationPublishValidationService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)

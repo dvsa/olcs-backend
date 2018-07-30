@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
@@ -40,13 +41,10 @@ final class CreateSnapshot extends AbstractCommandHandler
      */
     protected $reviewSnapshotService;
 
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-
-        $this->reviewSnapshotService = $mainServiceLocator->get('ReviewSnapshot');
-
-        return parent::createService($serviceLocator);
+        $this->reviewSnapshotService = $container->get('ReviewSnapshot');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleCommand(CommandInterface $command)
