@@ -19,12 +19,12 @@ use Doctrine\ORM\Mapping as ORM;
 class EcmtApplicationRestrictedCountries extends AbstractEcmtApplicationRestrictedCountries
 {
     public static function createNew(
-        Application $application,
-        $countryId
+        RefData $application,
+        RefData $country
       ) {
           $ecmtRestrictedCountries = new self();
-          $ecmtRestrictedCountries->setApplicationId($application);
-          $ecmtRestrictedCountries->setCountryId($countryId);
+          $ecmtRestrictedCountries->setEcmtApplication($application);
+          $ecmtRestrictedCountries->setCountry($country);
 
           return $ecmtRestrictedCountries;
       }
