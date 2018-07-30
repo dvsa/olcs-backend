@@ -333,7 +333,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         $pdfFileName = str_replace('.rtf', '.pdf', $fileName);
         if ($this->useWebService()) {
             /** @var \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient $convertToPdfService */
-            $convertToPdfService = $this->getCommandHandler()->getServiceLocator()->get('ConvertToPdf');
+            $convertToPdfService = $this->getCommandHandler()->get('ConvertToPdf');
             try {
                 $convertToPdfService->convert($fileName, $pdfFileName);
             } catch (\Exception $e) {
