@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\TransportManagerSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -19,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 final class Submit extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
     use EmailAwareTrait;
+    use TransportManagerSnapshot;
 
     protected $repoServiceName = 'TransportManagerApplication';
 
@@ -44,6 +46,9 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         // next status depends on whether TM is the owner
         $nextStatus = ($tma->getIsOwner() === 'Y') ? TransportManagerApplication::STATUS_OPERATOR_SIGNED :
             TransportManagerApplication::STATUS_TM_SIGNED;
+
+
+
         $tma->setTmApplicationStatus($this->getRepo()->getRefdataReference($nextStatus));
         $this->getRepo()->save($tma);
 
@@ -54,6 +59,10 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $this->result->addMessage("Transport Manager Application ID {$tma->getId()} submitted");
+
+        if ($this->shouldCreateSnapshot($nextStatus)) {
+            $this->result->merge($this->createSnapshot($tma->getId(), $tma->getTransportManager()->getId()));
+        }
 
         return $this->result;
     }
@@ -136,5 +145,10 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     {
         $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
         $this->getRepo('TransportManager')->save($tm);
+    }
+
+    private function shouldCreateSnapshot($status): bool
+    {
+        return $status === TransportManagerApplication::STATUS_OPERATOR_SIGNED;
     }
 }
