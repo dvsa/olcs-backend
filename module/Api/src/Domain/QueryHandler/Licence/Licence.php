@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity;
 
@@ -39,11 +40,13 @@ class Licence extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
-
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

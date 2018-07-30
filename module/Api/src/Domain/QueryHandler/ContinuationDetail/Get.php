@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -42,10 +43,14 @@ class Get extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->financialStandingHelper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-        $this->reviewService = $serviceLocator->getServiceLocator()->get('ContinuationReview\Declaration');
+        return $this($serviceLocator, self::class);
+    }
 
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->financialStandingHelper = $container->get('FinancialStandingHelperService');
+        $this->reviewService = $container->get('ContinuationReview\Declaration');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

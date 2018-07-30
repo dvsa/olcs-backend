@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -27,14 +28,16 @@ class Publish extends AbstractQueryHandler
      */
     private $variationValidationService;
 
-
-    public function createService(\Zend\ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->applicationValidationService = $mainServiceLocator->get('ApplicationPublishValidationService');
-        $this->variationValidationService = $mainServiceLocator->get('VariationPublishValidationService');
+        return $this($serviceLocator, self::class);
+    }
 
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->applicationValidationService = $container->get('ApplicationPublishValidationService');
+        $this->variationValidationService = $container->get('VariationPublishValidationService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleQuery(QueryInterface $query)

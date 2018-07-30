@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Utils\Helper\FileHelper;
+use Interop\Container\ContainerInterface;
 use Zend\Http\Response;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -35,9 +36,13 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->config = (array)$serviceLocator->getServiceLocator()->get('config');
+        return $this($serviceLocator, self::class);
+    }
 
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->config = (array)$container->get('config');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

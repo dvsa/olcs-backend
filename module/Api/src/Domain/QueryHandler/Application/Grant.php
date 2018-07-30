@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
@@ -24,11 +25,13 @@ class Grant extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $this->grantValidationService = $mainServiceLocator->get('ApplicationGrantValidationService');
-
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->grantValidationService = $container->get('ApplicationGrantValidationService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleQuery(QueryInterface $query)

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 
@@ -32,12 +33,15 @@ class Application extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $this->sectionAccessService = $mainServiceLocator->get('SectionAccessService');
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->sectionAccessService = $container->get('SectionAccessService');
+        $this->feesHelper = $container->get('FeesHelperService');
 
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleQuery(QueryInterface $query)

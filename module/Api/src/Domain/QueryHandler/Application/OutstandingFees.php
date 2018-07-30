@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -29,10 +30,13 @@ class OutstandingFees extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
-        $this->feesHelper = $mainServiceLocator->get('FeesHelperService');
+        return $this($serviceLocator, self::class);
+    }
 
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->feesHelper = $container->get('FeesHelperService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleQuery(QueryInterface $query)

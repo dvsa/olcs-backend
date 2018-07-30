@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Query\Diagnostics\GenerateCheckFkIntegritySql as Genera
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use PDO;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -22,10 +23,15 @@ final class CheckFkIntegrity extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
         /** @var EntityManager $entityManager */
-        $entityManager = $serviceLocator->getServiceLocator()->get('DoctrineOrmEntityManager');
+        $entityManager = $container->get('DoctrineOrmEntityManager');
         $this->pdo = $entityManager->getConnection()->getWrappedConnection();
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleQuery(QueryInterface $query)

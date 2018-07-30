@@ -76,25 +76,23 @@ class QueryHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
-        $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
-        $sm->shouldReceive('getServiceLocator')->andReturn($sm);
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
+        $this->queryHandler->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
+        $this->queryHandler->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         foreach ($this->mockedSmServices as $serviceName => $service) {
-            $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
+            $this->queryHandler->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
 
         // if not already mocked AuthorizationService then do it
         if (!isset($this->mockedSmServices[AuthorizationService::class])) {
-            $sm->shouldReceive('get')->with(AuthorizationService::class)
+            $this->queryHandler->shouldReceive('get')->with(AuthorizationService::class)
                 ->andReturn(
                     m::mock(AuthorizationService::class)->shouldReceive('isGranted')->andReturn(false)->getMock()
                 );
         }
-
         $this->initReferences();
 
-        $this->sut = $this->sut->createService($sm);
+        $this->sut = $this->sut->createService($this->queryHandler);
     }
 
     protected function initReferences()

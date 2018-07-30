@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -30,9 +31,13 @@ class Review extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->reviewSnapshotService = $serviceLocator->getServiceLocator()->get('TmReviewSnapshot');
+        return $this($serviceLocator, self::class);
+    }
 
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->reviewSnapshotService = $container->get('TmReviewSnapshot');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     public function handleQuery(QueryInterface $query)

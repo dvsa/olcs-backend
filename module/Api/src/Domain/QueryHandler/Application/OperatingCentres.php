@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Application\OperatingCentres as OperatingCentresQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Service\VariationOperatingCentreHelper;
 
@@ -47,9 +48,13 @@ class OperatingCentres extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->variationHelper = $serviceLocator->getServiceLocator()->get('VariationOperatingCentreHelper');
+        return $this($serviceLocator, self::class);
+    }
 
-        return parent::createService($serviceLocator);
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->variationHelper = $container->get('VariationOperatingCentreHelper');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

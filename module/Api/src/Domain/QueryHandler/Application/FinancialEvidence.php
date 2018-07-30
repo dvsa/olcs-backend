@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -69,9 +70,13 @@ class FinancialEvidence extends AbstractQueryHandler
 
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        parent::createService($serviceLocator);
-        $this->helper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-        return $this;
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->helper = $container->get('FinancialStandingHelperService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     protected function getRequiredFinance($application)

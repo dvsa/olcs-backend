@@ -9,6 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -36,9 +37,13 @@ class FStandingCapitalReserves extends AbstractQueryHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        parent::createService($serviceLocator);
-        $this->helper = $serviceLocator->getServiceLocator()->get('FinancialStandingHelperService');
-        return $this;
+        return $this($serviceLocator, self::class);
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $this->helper = $container->get('FinancialStandingHelperService');
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**
