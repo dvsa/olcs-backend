@@ -1346,6 +1346,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         $address = new Address();
         $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
+        $customerReference = 99;
+        if (array_key_exists('customer_reference', $miscParams)) {
+            $customerReference = $miscParams['customer_reference'];
+        }
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft])
@@ -1390,7 +1394,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ->shouldReceive('getLicNo')
                 ->andReturn('OB1234567')
                 ->getMock()
-            );
+            )
+            ->shouldReceive('getCustomerReference')
+            ->andReturn($customerReference);
 
         $fee->shouldReceive('getFeeType->getDescription')->andReturn('TEST_FEE_TYPE');
         $fee->shouldReceive('getFeeType->getVatCode')->andReturn('VAT_CODE');
@@ -1532,13 +1538,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft])
             ->shouldReceive('getOrganisation')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(99)
-                ->once()
-                ->getMock()
-            )
             ->shouldReceive('getId')
             ->andReturn(101)
             ->shouldReceive('isBalancingFee')
@@ -1576,7 +1575,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             )
             ->shouldReceive('getFeeType')
             ->andReturn($mockFeeType)
-            ->getMock();
+            ->getMock()
+            ->shouldReceive('getCustomerReference')
+            ->andReturn(99);
 
         $ft->shouldReceive('getFee')->andReturn($fee);
 
@@ -1670,7 +1671,10 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ->twice()
                 ->getMock();
         }
-
+        $customerReference = 99;
+        if (array_key_exists('customer_reference', $miscParams)) {
+            $customerReference = $miscParams['customer_reference'];
+        }
         $fee
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([$ft, $ft2])
@@ -1718,6 +1722,8 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             )
             ->shouldReceive('getFeeType')
             ->andReturn($mockFeeType)
+            ->shouldReceive('getCustomerReference')
+            ->andReturn($customerReference)
             ->getMock();
 
         $ft->shouldReceive('getFee')->andReturn($fee);
@@ -1810,8 +1816,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testBatchRefundWithInvalidResponse()
     {
-        $this->setExpectedException(CpmsResponseException::class, 'Invalid refund response', 401);
-
+        $this->expectException(CpmsResponseException::class);
         $this->mockSchemaIdChange();
 
         $fee = m::mock(FeeEntity::class);
@@ -1819,13 +1824,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
             ->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn([])
             ->shouldReceive('getOrganisation')
-            ->andReturn(
-                m::mock()
-                ->shouldReceive('getId')
-                ->andReturn(99)
-                ->once()
-                ->getMock()
-            )
             ->shouldReceive('getCustomerNameForInvoice')
             ->andReturn('foo')
             ->twice()
@@ -1853,7 +1851,9 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
                 ->getMock()
             )
             ->twice()
-            ->getMock();
+            ->getMock()
+            ->shouldReceive('getCustomerReference')
+            ->andReturn(99);
 
         $this->cpmsClient
             ->shouldReceive('post')

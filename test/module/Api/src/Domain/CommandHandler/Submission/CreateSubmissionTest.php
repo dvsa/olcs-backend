@@ -13,17 +13,13 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
-use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
-use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
-use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
-use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
 /**
  * Create Submission Test
@@ -48,9 +44,10 @@ class CreateSubmissionTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        // @todo the code is probably copy/pasted from CommandHandlerTestCase. need refactoring?
         $this->sut = new CreateSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);
+        $this->mockRepo('TransportManagerApplication', TmApplicationRepo::class);
+        $this->mockRepo('TransportManagerLicence', TmLicenceRepo::class);
         $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);
 
         $this->mockedSmServices = [
@@ -58,37 +55,6 @@ class CreateSubmissionTest extends CommandHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
             PidIdentityProvider::class => m::mock(\Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class)
         ];
-
-        // copied from parent,
-        $this->repoManager = m::mock(RepositoryServiceManager::class);
-        $this->queryHandler = m::mock(QueryHandlerManager::class);
-
-        foreach ($this->repoMap as $alias => $service) {
-            $this->repoManager
-                ->shouldReceive('get')
-                ->with($alias)
-                ->andReturn($service);
-        }
-
-        $sm = m::mock(ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
-        $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
-        $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-        $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
-
-        foreach ($this->mockedSmServices as $serviceName => $service) {
-            $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
-        }
-
-        $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->commandHandler
-            ->shouldReceive('getServiceLocator')
-            ->andReturn($sm);
-
-        $this->sut->createService($this->commandHandler);
-
-        $this->sideEffects = [];
-        $this->commands = [];
 
         /** @var UserEntity $mockUser */
         $mockUser = m::mock(UserEntity::class)
@@ -100,7 +66,7 @@ class CreateSubmissionTest extends CommandHandlerTestCase
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
-        $this->initReferences();
+        parent::setUp();
     }
 
     protected function initReferences()

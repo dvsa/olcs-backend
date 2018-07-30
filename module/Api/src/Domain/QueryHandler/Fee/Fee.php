@@ -61,7 +61,7 @@ class Fee extends AbstractQueryHandler
         return [
             'allowEdit' => $fee->allowEdit(),
             'outstanding' => $fee->getOutstandingAmount(),
-
+            'customerReference' => $fee->getCustomerReference(),
             // fields that the frontend may expect as they were previously
             // on the fee table
             'receiptNo' => $fee->getLatestPaymentRef(),
@@ -71,8 +71,6 @@ class Fee extends AbstractQueryHandler
             'slipNo' => $fee->getSlipNo(),
             'chequePoNumber' => $fee->getChequePoNumber(),
             'waiveReason' => $fee->getWaiveReason(),
-            //////////
-
             'hasOutstandingWaiveTransaction' => !empty($fee->getOutstandingWaiveTransaction()),
             'canRefund' => $fee->canRefund(),
             'displayTransactions' => $this->getDisplayTransactions($fee),

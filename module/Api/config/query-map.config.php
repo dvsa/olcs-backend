@@ -137,6 +137,8 @@ return [
     TransferQuery\Organisation\CpidOrganisation::class
         => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
+    TransferQuery\Organisation\EligibleForPermits::class => QueryHandler\Organisation\EligibleForPermits::class,
+    TransferQuery\Organisation\EligibleForPermitsById::class => QueryHandler\Organisation\EligibleForPermits::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -568,4 +570,11 @@ return [
     // Diagnostics
     Query\Diagnostics\CheckFkIntegrity::class => QueryHandler\Diagnostics\CheckFkIntegrity::class,
     Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
+
+    // Permits
+    TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
+    TransferQuery\Permits\ConstrainedCountries::class => QueryHandler\Permits\ConstrainedCountries::class,
+    TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
+    TransferQuery\Permits\EcmtPermits::class => QueryHandler\Permits\EcmtPermits::class,
+    TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
 ];

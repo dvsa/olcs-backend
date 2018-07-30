@@ -54,19 +54,9 @@ class CommandHandlerManager extends AbstractPluginManager
             ['data' => ['commandData' => $data]]
         );
 
-        if (!$validateCommandHandler->isEnabled()) {
-            $exception = new DisabledHandlerException(get_class($commandHandler));
-            Logger::warn(get_class($this) . ': ' . $exception->getMessage());
-            throw $exception;
-        }
-
         $commandHandlerFqcn = get_class($validateCommandHandler);
 
-        if (!$validateCommandHandler->isEnabled()) {
-            $exception = new DisabledHandlerException($commandHandlerFqcn);
-            Logger::warn(get_class($this) . ': ' . $exception->getMessage());
-            throw $exception;
-        }
+        $validateCommandHandler->checkEnabled();
 
         if ($validate) {
             $this->validateDto($command, $commandHandlerFqcn);
@@ -120,17 +110,5 @@ class CommandHandlerManager extends AbstractPluginManager
             );
             throw new ForbiddenException('You do not have access to this resource');
         }
-    }
-    /**
-     * We want to log some exceptions (right now we only log an attempt to call a disabled handler)
-     *
-     * @param \Exception $e exception
-     *
-     * @return void
-     * @throws \Exception rethrows original Exception
-     */
-    private function logException(DisabledHandlerException $e)
-    {
-        Logger::warn(get_class($this) . ': ' . $e->getMessage());
     }
 }

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Organisation Entity
@@ -86,10 +87,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($adminUsers as $orgUser) {
             try {
                 $user = $orgUser->getUser();
-                if (
-                    $user instanceof UserEntity
-                    && $user->getAccountDisabled() !== 'Y'
-                ) {
+                if ($user instanceof UserEntity
+                    && $user->getAccountDisabled() !== 'Y') {
                     $enabledOrgUsers->add($orgUser);
                 }
             } catch (EntityNotFoundException $ex) {
@@ -101,6 +100,27 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $enabledOrgUsers;
     }
 
+    /**
+     * Whether a user can access permits
+     */
+    public function isEligibleForPermits()
+    {
+        $licences = $this->getLicences();
+
+        /**
+         * Iterate through the licences, looking for a (valid) standard international goods licence
+         * Stop as soon as we find one
+         *
+         * @var LicenceEntity $licence
+         */
+        foreach ($licences as $licence) {
+            if ($licence->isValidSiGoods()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Has even one Operator-admin users a corrent email address
@@ -115,10 +135,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($this->getAdminOrganisationUsers() as $orgUser) {
             $email = $orgUser->getUser()->getContactDetails()->getEmailAddress();
 
-            if (
-                !empty($email)
-                && $emailValidator->isValid($email)
-            ) {
+            if (!empty($email)
+                && $emailValidator->isValid($email)) {
                 return true;
             }
         }
@@ -572,4 +590,58 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         return !empty($this->getLicences()->matching($criteria)->toArray());
     }
+
+    /**
+     * Get standard international licences
+     **
+     * @return ArrayCollection LicenceEntity[]
+     */
+    public function getStandardInternationalLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+          $criteria->expr()->in(
+            'status',
+            [
+                LicenceEntity::LICENCE_STATUS_VALID,
+                LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                LicenceEntity::LICENCE_STATUS_CURTAILED
+            ]
+          )
+        );
+        $criteria->andWhere(
+          $criteria->expr()->in(
+            'goodsOrPsv',
+            [
+                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+            ]
+          )
+        );
+        $criteria->andWhere(
+          $criteria->expr()->in(
+            'licenceType',
+            [
+                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            ]
+          )
+        );
+
+        $licences = $this->getLicences()->matching($criteria);
+
+        $licencesArr = array();
+        if ($licences) {
+            foreach ($licences as $licence)
+            {
+                $licencesArr[] = [
+                  'id' => $licence->getId(),
+                  'licNo' => $licence->getLicNo(),
+                  'trafficArea' => $licence->getTrafficArea()->getName(),
+                  'totAuthVehicles' => $licence->getTotAuthVehicles()
+                ];
+            }
+        }
+
+        return $licencesArr;
+    }
 }
+

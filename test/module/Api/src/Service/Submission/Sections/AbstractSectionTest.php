@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Service\Submission\Sections\Stub\AbstractSectionStub;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection
@@ -127,5 +128,27 @@ class AbstractSectionTest extends MockeryTestCase
     public function testGetViewRenderer()
     {
         static::assertSame($this->mockViewRenderer, $this->sut->getViewRenderer());
+    }
+
+    public function testGetRepos()
+    {
+        $repos = ['a' => 'aRepo','b' => 'bRepo'];
+        $this->sut->setRepos($repos);
+        $this->assertEquals($repos, $this->sut->getRepos());
+    }
+
+    public function testGetRepo()
+    {
+        $repos = ['a' => 'aRepo','b' => 'bRepo'];
+        $this->sut->setRepos($repos);
+        $this->assertEquals($repos['a'], $this->sut->getRepo('a'));
+    }
+
+    public function testGetRepoException()
+    {
+        $this->expectException(RuntimeException::class);
+        $repos = ['a' => 'aRepo','b' => 'bRepo'];
+        $this->sut->setRepos($repos);
+        $this->sut->getRepo('c');
     }
 }

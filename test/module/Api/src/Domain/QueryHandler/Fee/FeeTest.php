@@ -73,6 +73,9 @@ class FeeTest extends QueryHandlerTestCase
             ->shouldReceive('getOutstandingAmount')
             ->once()
             ->andReturn('TestOutstanding')
+            ->shouldReceive('getCustomerReference')
+            ->once()
+            ->andReturn(111)
             ->shouldReceive('getOutstandingWaiveTransaction')
             ->andReturn(null)
             ->shouldReceive('canRefund')
@@ -196,6 +199,7 @@ class FeeTest extends QueryHandlerTestCase
             ],
             'vatInfo' => '20% (S)',
             'licenceExpiryDate' => '2017-01-01',
+            'customerReference' => 111,
         ];
 
         $this->assertEquals($expected, $result->serialize());

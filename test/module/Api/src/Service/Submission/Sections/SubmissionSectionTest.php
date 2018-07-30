@@ -67,7 +67,10 @@ class SubmissionSectionTest extends MockeryTestCase
             $mockViewRenderer = m::mock(PhpRenderer::class);
             $sut = new $this->submissionSection($mockQueryHandler, $mockViewRenderer);
 
-            $this->assertEquals($expectedResult, $sut->generateSection($input));
+            $this->mockSetRepos($sut);
+
+            $section = $sut->generateSection($input);
+            $this->assertEquals($expectedResult, $section);
         } else {
             $this->markTestSkipped('Skipping, no input');
         }
@@ -85,7 +88,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     /**
      * Return a case attached to an application
-     * 
+     *
      * @return CasesEntity
      */
     protected function getApplicationCase()
@@ -150,7 +153,14 @@ class SubmissionSectionTest extends MockeryTestCase
         $transportManager->setPreviousConvictions($this->generateArrayCollection('PreviousConviction'));
 
         $case = new CasesEntity(
-            $openDate, $caseType, $categorys, $outcomes, $application, $licence, $transportManager, $ecmsNo,
+            $openDate,
+            $caseType,
+            $categorys,
+            $outcomes,
+            $application,
+            $licence,
+            $transportManager,
+            $ecmsNo,
             $description
         );
 
@@ -431,13 +441,11 @@ class SubmissionSectionTest extends MockeryTestCase
         if ($parentEntity instanceof Licence) {
             $addedViaByParent = ConditionUndertaking::ADDED_VIA_LICENCE;
             $attachToByParent = ConditionUndertaking::ATTACHED_TO_LICENCE;
-
         } elseif ($parentEntity instanceof Application) {
             $addedViaByParent = ConditionUndertaking::ADDED_VIA_APPLICATION;
             $attachToByParent = ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE;
 
             $cu->setOperatingCentre($this->generateOperatingCentre());
-
         } elseif ($parentEntity instanceof CasesEntity) {
             $addedViaByParent = ConditionUndertaking::ADDED_VIA_CASE;
             $attachToByParent = ConditionUndertaking::ATTACHED_TO_LICENCE;
@@ -1012,5 +1020,10 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setContactDetails($this->generateContactDetails(54));
 
         return $entity;
+    }
+
+    protected function mockSetRepos($sut): void
+    {
+        $sut->setRepos([]);
     }
 }
