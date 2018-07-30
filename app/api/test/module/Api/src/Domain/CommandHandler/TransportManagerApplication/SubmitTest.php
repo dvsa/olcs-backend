@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Submit as CommandHandler;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -63,6 +64,7 @@ class SubmitTest extends CommandHandlerTestCase
         $organisation = new Organisation();
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
+
         $tma->setIsOwner('N');
         $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
             ->andReturn($organisation);
@@ -87,8 +89,19 @@ class SubmitTest extends CommandHandlerTestCase
 
         $tma = new TransportManagerApplication();
         $tma->setIsOwner('Y');
+        $tma->setId(1);
         $tma->setTmType(TransportManagerApplication::TYPE_EXTERNAL);
-        $tma->setTransportManager(new TransportManager());
+        $tma->setTransportManager(
+            m::mock(TransportManager::class)->makePartial()->shouldReceive('getId')->once()->andReturn(1)->getMock()
+        );
+
+        $data = [
+            'id' => 1,
+            'user' => 1
+        ];
+
+        $result = new Result();
+        $this->expectedSideEffect(Snapshot::class, $data, $result);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
