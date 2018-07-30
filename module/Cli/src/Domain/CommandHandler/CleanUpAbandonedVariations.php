@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -33,15 +34,17 @@ final class CleanUpAbandonedVariations extends AbstractCommandHandler
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mainServiceLocator = $serviceLocator->getServiceLocator();
+        return $this($serviceLocator, self::class);
+    }
 
-        $config = $mainServiceLocator->get('Config');
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        $config = $container->get('Config');
 
         if (isset($config['batch_config']['clean-abandoned-variations']['older-than'])) {
             $this->olderThan = $config['batch_config']['clean-abandoned-variations']['older-than'];
         }
-
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**
