@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\TransportManagerSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -11,12 +12,11 @@ use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Olcs\Logging\Log\Logger;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
 
 final class OperatorApprove extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
     use EmailAwareTrait;
+    use TransportManagerSnapshot;
 
     protected $repoServiceName = 'TransportManagerApplication';
 
@@ -106,23 +106,5 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
     {
         $tm->setTmType($this->getRepo()->getRefdataReference($tmType));
         $this->getRepo('TransportManager')->save($tm);
-    }
-
-    /**
-     * Create snapshot
-     *
-     * @param int $tmaId tma id
-     * @param int $user  transport manager id
-     *
-     * @return Result
-     */
-    private function createSnapshot($tmaId, $user)
-    {
-        $data = [
-            'id' => $tmaId,
-            'user' => $user
-        ];
-
-        return $this->handleSideEffect(Snapshot::create($data));
     }
 }
