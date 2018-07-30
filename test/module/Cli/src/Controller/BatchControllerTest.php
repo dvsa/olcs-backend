@@ -6,12 +6,14 @@ use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Controller\BatchController;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
+use Dvsa\Olcs\Transfer\Query\FeatureToggle\GetList;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Console\Adapter\AdapterInterface;
@@ -1078,5 +1080,14 @@ class BatchControllerTest extends MockeryTestCase
             ->andReturn(new Command\Result());
 
         $this->sut->lastTmLetterAction();
+    }
+
+    public function testListTogglesAction()
+    {
+        $this->pm->shouldReceive('get')->with('params', null)->andReturn(false);
+        $this->mockQueryHandler
+            ->shouldReceive('handleQuery')
+            ->with(m::type(GetList::class));
+        $this->sut->listTogglesAction();
     }
 }

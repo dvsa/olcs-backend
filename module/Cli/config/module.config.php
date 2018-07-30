@@ -273,6 +273,15 @@ return [
                         ],
                     ],
                 ],
+                'list-toggles' =>[
+                    'options' => [
+                        'route' => 'list-toggles [ --verbose | -v]',
+                        'defaults' =>[
+                            'controller'=>Cli\Controller\BatchController::class,
+                            'action'=>'listToggles'
+                        ]
+                    ]
+                ]
             ]
         ]
     ],

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command as TransferCommand;
+use Dvsa\Olcs\Transfer\Query\FeatureToggle\GetList;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Response;
@@ -199,7 +200,7 @@ class BatchController extends AbstractConsoleController
     public function companiesHouseVsOlcsDiffsExportAction()
     {
         $params = [
-            'path' =>  $this->params('path'),
+            'path' => $this->params('path'),
         ];
 
         return $this->handleExitStatus(
@@ -445,8 +446,8 @@ class BatchController extends AbstractConsoleController
     public function dataGovUkExportAction()
     {
         $params = [
-            'reportName' =>  $this->params('report-name'),
-            'path' =>  $this->params('path'),
+            'reportName' => $this->params('report-name'),
+            'path' => $this->params('path'),
         ];
 
         return $this->handleExitStatus(
@@ -462,8 +463,8 @@ class BatchController extends AbstractConsoleController
     public function dataDvaNiExportAction()
     {
         $params = [
-            'reportName' =>  $this->params('report-name'),
-            'path' =>  $this->params('path'),
+            'reportName' => $this->params('report-name'),
+            'path' => $this->params('path'),
         ];
 
         return $this->handleExitStatus(
@@ -479,8 +480,8 @@ class BatchController extends AbstractConsoleController
     public function importUsersFromCsvAction()
     {
         $params = [
-            'csvPath' =>  $this->params('csv-path'),
-            'resultCsvPath' =>  $this->params('result-csv-path'),
+            'csvPath' => $this->params('csv-path'),
+            'resultCsvPath' => $this->params('result-csv-path'),
         ];
 
         return $this->handleExitStatus(
@@ -536,7 +537,7 @@ class BatchController extends AbstractConsoleController
             $count = 0;
             foreach ($dto as $dtoCommand) {
                 $count++;
-                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
+                $this->writeVerboseMessages("Handle command " . $count . ' ' . get_class($dtoCommand));
 
                 /** @var \Dvsa\Olcs\Api\Domain\Command\Result $result */
                 $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
@@ -567,7 +568,7 @@ class BatchController extends AbstractConsoleController
     protected function handleQuery(QueryInterface $dto)
     {
         try {
-            $this->writeVerboseMessages("Handle query ". get_class($dto));
+            $this->writeVerboseMessages("Handle query " . get_class($dto));
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
@@ -612,7 +613,7 @@ class BatchController extends AbstractConsoleController
     protected function writeMessages($messages)
     {
         foreach ($messages as $message) {
-            $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
+            $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) . ' ' . $message);
         }
     }
 
@@ -629,11 +630,12 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+
      * updateToggleAction
      *
      * @return ConsoleModel
      */
-    public function updateToggleAction()
+    public function updateToggleAction(): ConsoleModel
     {
         $params = [
             'friendlyName'=>$this->params('friendlyName'),
@@ -644,5 +646,19 @@ class BatchController extends AbstractConsoleController
             $this->handleCommand([CliCommand\UpdateFeatureToggle::create($params)])
         );
     }
+
+     /*
+     *  ListTogglesAction
+     *
+     * @return ConsoleModel
+     */
+    public function listTogglesAction(): ConsoleModel
+    {
+        return $this->handleExitStatus(
+            $this->handleQuery(new GetList())
+        );
+    }
+
+
 }
 
