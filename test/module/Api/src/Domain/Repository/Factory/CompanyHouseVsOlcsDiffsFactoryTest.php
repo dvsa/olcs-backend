@@ -27,16 +27,9 @@ class CompanyHouseVsOlcsDiffsFactoryTest extends MockeryTestCase
             ->andReturn($mockConn)
             ->getMock();
 
-        /** @var ServiceManager $mockSm */
-        $mockSm = m::mock(ServiceManager::class)
-            ->shouldReceive('getServiceLocator')
-            ->once()
-            ->andReturn($mockSl)
-            ->getMock();
-
         static::assertInstanceOf(
             CompaniesHouseVsOlcsDiffs::class,
-            (new CompaniesHouseVsOlcsDiffsFactory())->createService($mockSm)
+            (new CompaniesHouseVsOlcsDiffsFactory())->createService($mockSl)
         );
     }
 }
