@@ -28,23 +28,21 @@ abstract class AbstractEcmtApplicationRestrictedCountries implements BundleSeria
     use ProcessDateTrait;
 
     /**
-     * Identifier - Country
+     * Country
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
      * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=false)
      */
     protected $country;
 
     /**
-     * Identifier - Ecmt application
+     * Ecmt application
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
      * @ORM\JoinColumn(name="ecmt_application_id", referencedColumnName="id", nullable=false)
      */
     protected $ecmtApplication;
@@ -56,6 +54,7 @@ abstract class AbstractEcmtApplicationRestrictedCountries implements BundleSeria
      *
      * @ORM\Id
      * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
 
