@@ -29,16 +29,14 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
     {
         $result = new Result();
 
-        $countryRepo = $this->getRepo('Country');
-        $applicationRepo = $this->getRepo('EcmtPermitApplication');
-
+        $countrys = [];
         foreach ($command->getCountryIds() as $countryId) {
-            $restrictedCountriesObject = EcmtApplicationRestrictedCountries::createNew();
-            $restrictedCountriesObject->setEcmtApplication($applicationRepo->getRefdataReference($command->getEcmtApplicationId()));
-            $restrictedCountriesObject->setCountry($countryRepo->getRefdataReference($countryId));
-
-            $this->getRepo()->save($restrictedCountriesObject);
+            $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
+        $application = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId());
+        $application->setCountrys($countrys);
+
+        $this->getRepo('EcmtPermitApplication')->save($application);
 
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
 
