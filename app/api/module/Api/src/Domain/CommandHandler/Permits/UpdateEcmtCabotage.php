@@ -7,8 +7,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtCabotage as UpdateEcmtCabotageCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -23,12 +23,14 @@ final class UpdateEcmtCabotage extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
 
-
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        /* @var $ecmtApplication EcmtApplication */
+        /**
+         * @var $ecmtApplication EcmtPermitApplication
+         * @var $command UpdateEcmtCabotageCmd
+         */
         $ecmtApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $ecmtApplication->setCabotage($command->getCabotage());
@@ -38,5 +40,4 @@ final class UpdateEcmtCabotage extends AbstractCommandHandler
         $result->addMessage('ECMT Permit Application cabotage updated');
         return $result;
     }
-
 }
