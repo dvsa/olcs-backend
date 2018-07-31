@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\ServiceManager;
 
 /**
@@ -105,7 +105,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
     public function testHandleQueryInvalid()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(InvalidServiceException::class);
 
         $query = m::mock(QueryInterface::class)->makePartial();
 

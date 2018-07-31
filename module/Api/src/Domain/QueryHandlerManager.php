@@ -76,7 +76,7 @@ class QueryHandlerManager extends AbstractPluginManager
         return $response;
     }
 
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
         if (!($plugin instanceof QueryHandlerInterface)) {
             throw new InvalidServiceException('Query handler does not implement QueryHandlerInterface');
