@@ -12,5 +12,5 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtApplicationRestrictedCountries as Entity;
  */
 class EcmtApplicationRestrictedCountries extends AbstractRepository
 {
-    protected $countries = Entity::class;
+    protected $entity = Entity::class;
 }
