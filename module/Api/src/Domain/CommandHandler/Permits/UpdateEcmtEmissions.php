@@ -2,14 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtEmissions as UpdateEcmtEmissionsCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
-
-use Olcs\Logging\Log\Logger;
 
 /**
  * Update ECMT Euro 6
@@ -20,12 +18,14 @@ final class UpdateEcmtEmissions extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
 
-
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
 
-        /* @var $ecmtApplication EcmtApplication */
+        /**
+         * @var $ecmtApplication EcmtPermitApplication
+         * @var $command UpdateEcmtEmissionsCmd
+         */
         $ecmtApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $ecmtApplication->setEmissions($command->getEmissions());
@@ -35,5 +35,4 @@ final class UpdateEcmtEmissions extends AbstractCommandHandler
         $result->addMessage('ECMT Permit Application Euro6 updated');
         return $result;
     }
-
 }
