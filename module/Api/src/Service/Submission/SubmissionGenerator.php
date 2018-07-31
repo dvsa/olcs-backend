@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Submission;
 
+use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 
@@ -41,7 +42,7 @@ class SubmissionGenerator
      * @return SubmissionEntity
      * @throws \Exception
      */
-    public function generateSubmission(SubmissionEntity $submissionEntity, $sections)
+    public function generateSubmission(SubmissionEntity $submissionEntity, $sections, $repos = [])
     {
         $isTm = $submissionEntity->getCase()->isTm();
 
@@ -64,7 +65,7 @@ class SubmissionGenerator
             if (isset($snapshot[$sectionId])) {
                 $data = $snapshot[$sectionId];
             } else {
-                $data = $this->generateSubmissionSectionData($submissionEntity, $sectionId);
+                $data = $this->generateSubmissionSectionData($submissionEntity, $sectionId, null, $repos);
             }
 
             $submissionEntity->setSectionData($sectionId, $data);
@@ -87,13 +88,13 @@ class SubmissionGenerator
      *
      * @return mixed
      */
-    public function generateSubmissionSectionData(SubmissionEntity $submissionEntity, $sectionId, $subSection = null)
+    public function generateSubmissionSectionData(SubmissionEntity $submissionEntity, $sectionId, $subSection = null, $repos = [])
     {
-        $data = $this->sectionGeneratorPluginManager
-            ->get($sectionId)
-            ->generateSection(
-                $submissionEntity->getCase()
-            );
+        /** @var AbstractSection $section */
+        $section = $this->sectionGeneratorPluginManager->get($sectionId);
+        $section->setRepos($repos);
+
+        $data = $section->generateSection($submissionEntity->getCase());
 
         if (!empty($subSection) && isset($data[$subSection])) {
             return $data[$subSection];

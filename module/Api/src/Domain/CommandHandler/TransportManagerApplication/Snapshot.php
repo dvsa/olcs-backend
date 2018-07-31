@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -40,6 +41,8 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
 
     /**
      * @param Cmd $command
+     *
+     * @return Result
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -58,9 +61,10 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
     protected function generateDocument($content, TransportManagerApplication $tma, $user)
     {
         $fileName = sprintf(
-            'TM%s snapshot for application %s (at grant).html',
+            'TM%s snapshot for application %s (%s).html',
             $tma->getTransportManager()->getId(),
-            $tma->getApplication()->getId()
+            $tma->getApplication()->getId(),
+            $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_OPERATOR_SIGNED ? "at submission" : "at grant"
         );
 
         $data = [
