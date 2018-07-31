@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository;
 
 use Olcs\Logging\Log\Logger;
 
@@ -28,33 +29,16 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
     {
         $result = new Result();
 
-        /*$countryRepo = $this->getRepo('Country');
+        $countryRepo = $this->getRepo('Country');
         $applicationRepo = $this->getRepo('EcmtPermitApplication');
-
-        $applicationRef = $applicationRepo->getRefdataReference($command->getEcmtApplicationId());
-        $applicationRef = $applicationRepo->getReference(EcmtPermitApplication::class, $command->getEcmtApplicationId());
 
         foreach ($command->getCountryIds() as $countryId) {
-            //Logger::crit(print_r($this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId())), true);
-            $countryRef = $countryRepo->getRefdataReference($countryId);
-            $ecmtRestrictedCountries = $this->createRestrictedCountriesObject($applicationRef, $countryRef);
-            $this->getRepo()->save($ecmtRestrictedCountries);
+            $restrictedCountriesObject = EcmtApplicationRestrictedCountries::createNew();
+            $restrictedCountriesObject->setEcmtApplication($applicationRepo->getRefdataReference($command->getEcmtApplicationId()));
+            $restrictedCountriesObject->setCountry($countryRepo->getRefdataReference($countryId));
 
-        }*/
-
-        $applicationRepo = $this->getRepo('EcmtPermitApplication');
-        $countryRepo = $this->getRepo('Country');
-
-        $countryRef = $countryRepo->getRefdataReference('AG');
-        $applicationRef = $applicationRepo->getRefdataReference($command->getEcmtApplicationId());
-
-        $restrictedCountry = $this->getRepo()->fetchById(1);
-
-        $restrictedCountry->setEcmtPermitApplication($applicationRef);
-        $restrictedCountry->setCountry($countryRef);
-
-        $this->getRepo()->save($restrictedCountry);
-
+            $this->getRepo()->save($restrictedCountriesObject);
+        }
 
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
 
@@ -71,15 +55,9 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
    */
     private function createRestrictedCountriesObject($applicationRef, $countryRef)
     {
-       /*return EcmtApplicationRestrictedCountries::createNew(
-            $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId()),
-            $countryId
-        );*/
-           return EcmtApplicationRestrictedCountries::createNew(
-               $applicationRef,
-               $countryRef
-           );
-
+        return EcmtApplicationRestrictedCountries::createNew(
+            $applicationRef,
+            $countryRef
+        );
     }
-
 }
