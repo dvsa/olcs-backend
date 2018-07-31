@@ -37,7 +37,7 @@ class CanAccessTxcInboxRecordWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn($id);
 
-        $this->setIsValid('CanAccessTxcInbox', [$id], $canAccess);
+        $this->setIsValid('canAccessTxcInbox', [$id], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }

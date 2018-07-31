@@ -45,7 +45,7 @@ trait ValidationHelperTestCaseTrait
         $this->validatorManager = m::mock(ValidatorManager::class)->makePartial();
 
         $sm = m::mock(ServiceManager::class)->makePartial();
-        $sm->shouldReceive('getServiceLocator')->andReturnSelf();
+        $sm->shouldReceive('get')->with('DomainValidatorManager')->andReturn($this->validatorManager);
         $sm->setService('RepositoryServiceManager', $this->repoManager);
         $sm->setService(AuthorizationService::class, $this->auth);
         $sm->setService('DomainValidatorManager', $this->validatorManager);

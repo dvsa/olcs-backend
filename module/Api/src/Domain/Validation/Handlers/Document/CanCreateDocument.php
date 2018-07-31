@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentDto;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadDto;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -26,23 +27,15 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 
     private $allowedExtensions = [];
 
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator Service locator
-     *
-     * @return $this
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $mainServiceManager = $serviceLocator->getServiceLocator();
 
-        $config = $mainServiceManager->get('config');
+        $config = $container->get('config');
         if (isset($config['allow_file_upload']['extensions'])) {
             $this->setAllowedExtensions($config['allow_file_upload']['extensions']);
         }
 
-        return parent::createService($serviceLocator);
+        return parent::__invoke($container, $requestedName, $options);
     }
 
     /**

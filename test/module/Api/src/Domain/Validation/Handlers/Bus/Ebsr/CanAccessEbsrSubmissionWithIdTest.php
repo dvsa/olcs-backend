@@ -37,7 +37,7 @@ class CanAccessEbsrSubmissionWithIdTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getId')->andReturn($id);
 
-        $this->setIsValid('CanAccessEbsrSubmission', [$id], $canAccess);
+        $this->setIsValid('canAccessEbsrSubmission', [$id], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
