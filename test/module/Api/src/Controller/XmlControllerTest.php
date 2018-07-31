@@ -24,11 +24,10 @@ class XmlControllerTest extends TestCase
      * @param $mockSl
      * @return XmlController
      */
-    protected function setupSut($mockSl)
+    protected function setupSut($mockSl, $mockCommandHandler)
     {
-        $sut = new XmlController();
+        $sut = new XmlController($mockCommandHandler);
         $sut->setPluginManager($mockSl);
-        $sut->setServiceLocator($mockSl);
         return $sut;
     }
 
@@ -53,7 +52,7 @@ class XmlControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler);
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockCommandHandler);
 
         $controllerResponse = $sut->create([]);
 
@@ -82,7 +81,7 @@ class XmlControllerTest extends TestCase
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams, $mockCommandHandler);
 
-        $sut = $this->setupSut($mockSl);
+        $sut = $this->setupSut($mockSl, $mockCommandHandler);
 
         $controllerResponse = $sut->create([]);
 

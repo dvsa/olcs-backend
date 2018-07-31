@@ -1179,10 +1179,6 @@ class GenericControllerTest extends TestCase
      */
     protected function setupSut($mockSl, $mockQueryHandler, $mockCommandHandler)
     {
-//        $mockQh = m::mock(QueryHandlerManager::class);
-//        $mockQh->shouldReceive('handleQuery')->andReturn(new Response());
-//        $mockCh = m::mock(CommandHandlerManager::class);
-//        $mockCh->shouldReceive('handleCommand')->andReturn(new Result());
         $sut = new GenericController($mockQueryHandler, $mockCommandHandler);
         $sut->setPluginManager($mockSl);
         return $sut;

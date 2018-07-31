@@ -30,9 +30,9 @@ class SectionGeneratorPluginManager extends AbstractPluginManager
      */
     public function validate($plugin)
     {
-        if (!($plugin instanceof ContainerInterface)) {
+        if (!($plugin instanceof SectionGeneratorInterface)) {
             throw new InvalidServiceException(
-                get_class($plugin) . ' should implement: ' . ContainerInterface::class
+                get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class
             );
         }
     }

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Scanning\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -39,11 +40,11 @@ class DocumentControllerTest extends MockeryTestCase
             ->shouldReceive('getRequest')
             ->andReturn($this->request);
 
-        $this->mockCommandHandlerManager = m::mock();
-        $this->sm->setService('CommandHandlerManager', $this->mockCommandHandlerManager);
+        $this->mockCommandHandlerManager = m::mock(CommandHandlerManager::class);
 
-        $this->sut->setServiceLocator($this->sm);
-    }
+        $this->sut
+            ->shouldReceive('getCommandHandlerManager')
+            ->andReturn($this->mockCommandHandlerManager);}
 
     public function testMissingDescription()
     {

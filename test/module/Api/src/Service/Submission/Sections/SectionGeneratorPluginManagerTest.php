@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
+use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ConfigInterface;
@@ -18,9 +19,7 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $mockCfg = m::mock(ConfigInterface::class)
-            ->shouldReceive('configureServiceManager')
-            ->getMock();
+        $mockCfg = m::mock(ContainerInterface::class);
 
         $this->sut = new SectionGeneratorPluginManager($mockCfg);
     }
@@ -30,18 +29,15 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
         $invalidPlugin = new \stdClass();
 
         //  expect
-        $this->setExpectedException(
-            \Zend\ServiceManager\Exception\RuntimeException::class,
-            'stdClass should implement: ' . SectionGeneratorInterface::class
-        );
+        $this->expectException(\Zend\ServiceManager\Exception\InvalidServiceException::class);
 
         //  call
-        $this->sut->validatePlugin($invalidPlugin);
+        $this->sut->validate($invalidPlugin);
     }
 
     public function testValidatePluginOk()
     {
         $plugin = m::mock(SectionGeneratorInterface::class);
-        $this->sut->validatePlugin($plugin);
+        $this->sut->validate($plugin);
     }
 }

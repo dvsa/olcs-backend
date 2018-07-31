@@ -2,11 +2,22 @@
 
 namespace Dvsa\Olcs\Scanning\Controller;
 
+use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+
 /**
  * Document controller
  */
 class DocumentController extends AbstractController
 {
+    /** @var CommandHandlerManager */
+    protected $commandHandlerManager;
+
+    public function __construct(CommandHandlerManager $commandHandlerManager = null)
+    {
+        $this->commandHandlerManager = $commandHandlerManager;
+    }
+
+
     /**
      * Create action
      *
@@ -90,7 +101,12 @@ class DocumentController extends AbstractController
      */
     private function handleCommand($dto)
     {
-        return $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dto);
+        return $this->getCommandHandlerManager()->handleCommand($dto);
+    }
+
+    protected function getCommandHandlerManager()
+    {
+        return $this->commandHandlerManager;
     }
 
     /**
