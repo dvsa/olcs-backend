@@ -5,12 +5,13 @@ namespace Dvsa\Olcs\Api\Domain;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 
 /**
  * Command Handler Manager
@@ -21,7 +22,7 @@ class CommandHandlerManager extends AbstractPluginManager
 {
     public function __construct(ConfigInterface $config = null)
     {
-        $this->setShareByDefault(false);
+        $this->configure(['shareByDefault' => false]);
 
         if ($config) {
             $config->configureServiceManager($this);
@@ -74,10 +75,10 @@ class CommandHandlerManager extends AbstractPluginManager
         return $response;
     }
 
-    public function validatePlugin($plugin)
+    public function validate($plugin)
     {
         if (!($plugin instanceof CommandHandlerInterface)) {
-            throw new RuntimeException('Command handler does not implement CommandHandlerInterface');
+            throw new InvalidServiceException('Command handler does not implement CommandHandlerInterface');
         }
     }
 
@@ -106,5 +107,15 @@ class CommandHandlerManager extends AbstractPluginManager
             );
             throw new ForbiddenException('You do not have access to this resource');
         }
+    }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
+
+    public function setServiceLocator(ContainerInterface $sl)
+    {
+        $this->creationContext = $sl;
     }
 }

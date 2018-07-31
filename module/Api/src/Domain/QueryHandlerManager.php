@@ -9,12 +9,13 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Transfer\Query\LoggerOmitResponseInterface;
+use Interop\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
 use Zend\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 use Dvsa\Olcs\Api\Domain\ValidationHandler\ValidationHandlerInterface;
 
 /**
@@ -26,7 +27,7 @@ class QueryHandlerManager extends AbstractPluginManager
 {
     public function __construct(ConfigInterface $config = null)
     {
-        $this->setShareByDefault(false);
+        $this->configure(['sharedByDefault' => false]);
 
         if ($config) {
             $config->configureServiceManager($this);
@@ -78,7 +79,7 @@ class QueryHandlerManager extends AbstractPluginManager
     public function validatePlugin($plugin)
     {
         if (!($plugin instanceof QueryHandlerInterface)) {
-            throw new RuntimeException('Query handler does not implement QueryHandlerInterface');
+            throw new InvalidServiceException('Query handler does not implement QueryHandlerInterface');
         }
     }
 
@@ -99,5 +100,15 @@ class QueryHandlerManager extends AbstractPluginManager
             );
             throw new ForbiddenException('You do not have access to this resource');
         }
+    }
+
+    public function getServiceLocator()
+    {
+        return $this->creationContext;
+    }
+
+    public function setServiceLocator(ContainerInterface $sl)
+    {
+        $this->creationContext = $sl;
     }
 }

@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\ServiceManager\ConfigInterface;
-use Zend\ServiceManager\Exception\RuntimeException;
+use Zend\ServiceManager\Exception\InvalidServiceException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
@@ -88,7 +88,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
     public function testHandleCommandFailedValidator()
     {
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $command = m::mock(CommandInterface::class)->makePartial();
         $command->shouldReceive('getArrayCopy')->twice()->andReturn(['foo' => 'bar']);
@@ -107,10 +107,9 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
     public function testHandleCommandInvalid()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(InvalidServiceException::class);
 
         $command = m::mock(CommandInterface::class)->makePartial();
-
         $mockService = m::mock();
         $mockService->shouldReceive('handleCommand')->with($command)->andReturn(['response']);
 
