@@ -1,9 +1,18 @@
 AlignEntitiesToSchema.php
 
-Is used to generate Doctrine Entities from the current database schema. Therefore it requires access to MySQL, so you probably want to run it from your Vagrant olcs_v1.
+Is used to generate Doctrine Entities from the current database schema. Therefore it requires access to MySQL, so you probably want to run it from your Vagrant olcs_v2.
 
-It takes a large amount of parameters, but 99% of the time the defaults can be used. To see the defaults, run
+It takes a large amount of parameters, but 99% of the time the defaults can be used.
 
+If you just want to execute the task using the default parameters run
+```
+$ php AlignEntitiesToSchema.php --default
+```
+
+Note: when using `--default` any other parameter will be ignored
+
+To see the defaults, run
+```
 $ php AlignEntitiesToSchema.php --help
-
-Tip: Copy and paste the suggested usage from the above command to run the task with the default parameters
+```
+this will display a usage suggestion with the default parameters. You can copy-paste the suggested usage and modify as needed

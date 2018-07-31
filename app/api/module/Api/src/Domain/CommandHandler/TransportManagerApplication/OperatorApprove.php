@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\TransportManagerSnapshot;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -15,6 +16,7 @@ use Olcs\Logging\Log\Logger;
 final class OperatorApprove extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
     use EmailAwareTrait;
+    use TransportManagerSnapshot;
 
     protected $repoServiceName = 'TransportManagerApplication';
 
@@ -54,6 +56,8 @@ final class OperatorApprove extends AbstractCommandHandler implements Transactio
             Logger::warn('Empty email address for TM ' . $tma->getTransportManager()->getId());
             $this->result->addMessage('Email is not sent.');
         }
+
+        $this->result->merge($this->createSnapshot($tma->getId(), $tma->getTransportManager()->getId()));
 
         return $this->result;
     }
