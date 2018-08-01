@@ -40,7 +40,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @param RefData               $permitType       Permit type
      * @param Licence               $licence          Licence
      *
-     * @return BusReg
+     * @return EcmtPermitApplication
      */
     public static function createNew(
       RefData $status,
