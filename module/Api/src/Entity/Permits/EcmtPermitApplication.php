@@ -24,6 +24,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class EcmtPermitApplication extends AbstractEcmtPermitApplication
 {
+    const STATUS_CANCELLED = 'ecmt_permit_cancelled';
+    const STATUS_NOT_YET_SUBMITTED = 'ecmt_permit_nys';
+    const STATUS_UNDER_CONSIDERATION = 'ecmt_permit_uc';
+    const STATUS_WITHDRAWN = 'ecmt_permit_withdrawn';
+    const STATUS_AWAITING_FEE = 'ecmt_permit_awaiting';
+    const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
+    const STATUS_ISSUED = 'ecmt_permit_issued';
 
     /**
      * Create new EcmtPermitApplication
