@@ -1016,15 +1016,21 @@ return [
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
+
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
     TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
     TransferCommand\DataRetention\UpdateRule::class => CommandHandler\DataRetention\UpdateRule::class,
 
-    // Permits
+    // Permits Create
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
+
+    // Permits Cancel
+    TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
+
+    // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
 ];
