@@ -305,4 +305,29 @@ class FeeType extends AbstractRepository
 
         return $feeType;
     }
+
+    /**
+     * Get the fee type based on ProductReference
+     *
+     * @param ProductReference $productReference
+     * @return Entity
+     * @throws Exception\NotFoundException
+     */
+    public function getLatestForEcmtPermit($productReference)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.productReference', ':productReference'));
+
+        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('productReference', $productReference)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+
+        return $results[0];
+    }
 }
