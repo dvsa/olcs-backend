@@ -81,9 +81,9 @@ class FeeType extends AbstractRepository
                     $qb->expr()->isNull('ft.trafficArea')
                 )
             )
-            // Send the NULL values to the bottom
-            ->orderBy('ft.trafficArea', 'DESC')
-            ->setParameter('trafficArea', $trafficArea);
+                // Send the NULL values to the bottom
+                ->orderBy('ft.trafficArea', 'DESC')
+                ->setParameter('trafficArea', $trafficArea);
 
         } else {
             $qb->andWhere($qb->expr()->isNull('ft.trafficArea'));
@@ -305,4 +305,30 @@ class FeeType extends AbstractRepository
 
         return $feeType;
     }
+
+    /**
+     * Get the fee type based on ProductReference
+     *
+     * @param ProductReference $productReference
+     * @return Entity
+     * @throws Exception\NotFoundException
+     */
+    public function getLatestForEcmtPermit($productReference)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.productReference', ':productReference'));
+
+        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('productReference', $productReference)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+
+        return $results[0];
+    }
 }
+
