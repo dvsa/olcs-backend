@@ -2,17 +2,19 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\ORM\Query;
+
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtApplicationRestrictedCountries;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Doctrine\ORM\Query;
+
 use Dvsa\Olcs\Api\Domain\Repository;
 
-use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtApplicationRestrictedCountries;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update ECMT Restricted Countries

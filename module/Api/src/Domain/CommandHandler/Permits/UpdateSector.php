@@ -5,11 +5,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Domain\Repository;
+
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 
 /**
@@ -41,6 +43,7 @@ final class UpdateSector extends AbstractCommandHandler
 
         if (empty($application)) {
             $result->addMessage('No permit application to update');
+
             return $result;
         }
 
@@ -53,5 +56,4 @@ final class UpdateSector extends AbstractCommandHandler
 
         return $result;
     }
-
 }
