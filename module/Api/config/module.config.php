@@ -339,7 +339,6 @@ return [
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
-            'EcmtApplicationRestrictedCountries' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
