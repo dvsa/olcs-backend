@@ -1016,15 +1016,28 @@ return [
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
+
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
     TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
     TransferCommand\DataRetention\UpdateRule::class => CommandHandler\DataRetention\UpdateRule::class,
 
-    // Permits
+    // Permits Create
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
+
+    // Permits Cancel
+    TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
+    TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
+    TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
+
+
+    // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
+    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
+    TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
+    TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,
+    TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
 ];

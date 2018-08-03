@@ -179,5 +179,4 @@ return [
     'EcmtPermitApplication' => 'Permits',
     'EcmtPermits' => 'Permits',
     'Sectors' => 'Permits',
-
 ];
