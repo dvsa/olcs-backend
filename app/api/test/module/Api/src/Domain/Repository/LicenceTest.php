@@ -882,6 +882,7 @@ class LicenceTest extends RepositoryTestCase
             'SELECT IDENTITY(a.licence) ' .
             'AND a.status = [[apsts_consideration]] ' .
             'INNER JOIN Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication tma WITH a.id = tma.application ' .
+            'AND tma.action != [[D]] ' .
             'AND m.id NOT IN  ' .
             'SELECT IDENTITY(gp.licence) ' .
             'AND (gp.startDate <= [[' . $today . ']] ' .
