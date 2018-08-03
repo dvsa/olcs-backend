@@ -577,4 +577,5 @@ return [
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\EcmtPermits::class => QueryHandler\Permits\EcmtPermits::class,
     TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
+    TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
 ];
