@@ -28,16 +28,16 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
         $countrys = [];
+
         foreach ($command->getCountryIds() as $countryId) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
+
         $application = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId());
         $application->setCountrys($countrys);
 
         $this->getRepo('EcmtPermitApplication')->save($application);
-
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
 
         return $result;
