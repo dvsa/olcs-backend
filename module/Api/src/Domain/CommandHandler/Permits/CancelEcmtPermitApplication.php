@@ -5,8 +5,10 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -33,6 +35,7 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler
 
         if (empty($application)) {
             $result->addMessage('No permit application to cancel');
+
             return $result;
         }
 
@@ -45,5 +48,4 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler
 
         return $result;
     }
-
 }
