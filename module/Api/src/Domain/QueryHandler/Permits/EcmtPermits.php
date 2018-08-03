@@ -18,22 +18,18 @@ class EcmtPermits extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-
         $repo = $this->getRepo();
         $ecmtPermits = $repo->fetchList($query, Query::HYDRATE_OBJECT);
 
         $data = array();
-        foreach ($ecmtPermits as $permit)
-        {
+        foreach ($ecmtPermits as $permit) {
             $countries = $permit->getCountrys();
             $status = $permit->getStatus()->getId();
             $constrainedCountries = $this->getRepo('Country')->getConstrainedEcmtCountries(true)[1];
 
             $restrictions = false;
-            foreach ($countries as $country)
-            {
-                if (in_array($country->getId(), $constrainedCountries))
-                {
+            foreach ($countries as $country) {
+                if (in_array($country->getId(), $constrainedCountries)) {
                     $restrictions = true;
                     break;
                 }
