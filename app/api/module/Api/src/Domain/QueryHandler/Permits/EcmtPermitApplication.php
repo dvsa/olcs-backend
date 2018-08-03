@@ -23,8 +23,8 @@ class EcmtPermitApplication extends AbstractQueryHandler
 
         return [
           'result' => $this->resultList(
-            $repo->fetchList($query, Query::HYDRATE_OBJECT),
-            ['licence']
+              $repo->fetchList($query, Query::HYDRATE_OBJECT),
+              ['licence']
           ),
           'count' => $count,
         ];

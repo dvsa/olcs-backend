@@ -802,50 +802,50 @@ class OrganisationEntityTest extends EntityTester
         /** @var Entity | m\MockInterface $organisation */
         $organisation = m::mock(Entity::class)->makePartial();
         $organisation->shouldReceive('getLicences->matching')
-          ->with(m::type(Criteria::class))
-          ->andReturnUsing(
-            function (Criteria $criteria) {
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
 
-                /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
-                $expr = $criteria->getWhereExpression();
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
 
-                $this->assertEquals('status', $expr->getExpressionList()[0]->getExpressionList()[0]->getField());
-                $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[0]->getOperator());
-                $this->assertEquals(
-                  [
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED,
-                  ],
-                  $expr->getExpressionList()[0]->getExpressionList()[0]->getValue()->getValue()
-                );
+                    $this->assertEquals('status', $expr->getExpressionList()[0]->getExpressionList()[0]->getField());
+                    $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[0]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_STATUS_VALID,
+                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                            LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        ],
+                        $expr->getExpressionList()[0]->getExpressionList()[0]->getValue()->getValue()
+                    );
 
-                $this->assertEquals('goodsOrPsv', $expr->getExpressionList()[0]->getExpressionList()[1]->getField());
-                $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[1]->getOperator());
-                $this->assertEquals(
-                  [
-                    LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
-                  ],
-                  $expr->getExpressionList()[0]->getExpressionList()[1]->getValue()->getValue()
-                );
+                    $this->assertEquals('goodsOrPsv', $expr->getExpressionList()[0]->getExpressionList()[1]->getField());
+                    $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[1]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+                        ],
+                        $expr->getExpressionList()[0]->getExpressionList()[1]->getValue()->getValue()
+                    );
 
-                $this->assertEquals('licenceType', $expr->getExpressionList()[1]->getField());
-                $this->assertEquals('IN', $expr->getExpressionList()[1]->getOperator());
-                $this->assertEquals(
-                  [
-                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
-                  ],
-                  $expr->getExpressionList()[1]->getValue()->getValue()
-                );
+                    $this->assertEquals('licenceType', $expr->getExpressionList()[1]->getField());
+                    $this->assertEquals('IN', $expr->getExpressionList()[1]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                        ],
+                        $expr->getExpressionList()[1]->getValue()->getValue()
+                    );
 
-                $collection = m::mock();
-                $licencesArr = array();
-                $collection->shouldReceive('toArray')
-                  ->andReturn($licencesArr);
+                    $collection = m::mock();
+                    $licencesArr = array();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn($licencesArr);
 
-                return $collection;
-            }
-          );
+                    return $collection;
+                }
+            );
 
         $this->assertInternalType('array', $organisation->getStandardInternationalLicences());
     }
