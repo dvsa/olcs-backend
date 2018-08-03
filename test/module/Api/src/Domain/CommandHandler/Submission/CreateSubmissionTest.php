@@ -48,7 +48,6 @@ class CreateSubmissionTest extends CommandHandlerTestCase
 
     public function setUp()
     {
-        // @todo the code is probably copy/pasted from CommandHandlerTestCase. need refactoring?
         $this->sut = new CreateSubmission();
         $this->mockRepo('Submission', SubmissionRepo::class);
         $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);

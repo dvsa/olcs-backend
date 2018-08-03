@@ -5,8 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits;
+
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 

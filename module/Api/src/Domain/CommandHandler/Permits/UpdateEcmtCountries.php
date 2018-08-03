@@ -2,17 +2,19 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\ORM\Query;
+
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtApplicationRestrictedCountries;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Doctrine\ORM\Query;
+
 use Dvsa\Olcs\Api\Domain\Repository;
 
-use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtApplicationRestrictedCountries;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Update ECMT Restricted Countries
@@ -28,16 +30,16 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-
         $countrys = [];
+
         foreach ($command->getCountryIds() as $countryId) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
+
         $application = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId());
         $application->setCountrys($countrys);
 
         $this->getRepo('EcmtPermitApplication')->save($application);
-
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
 
         return $result;
