@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-
 /**
  * Create an ECMT Permit application
  *

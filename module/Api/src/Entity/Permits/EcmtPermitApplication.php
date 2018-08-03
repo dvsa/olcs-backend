@@ -43,10 +43,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @return EcmtPermitApplication
      */
     public static function createNew(
-      RefData $status,
-      RefData $paymentStatus,
-      RefData $permitType,
-      Licence $licence
+        RefData $status,
+        RefData $paymentStatus,
+        RefData $permitType,
+        Licence $licence
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->setStatus($status);

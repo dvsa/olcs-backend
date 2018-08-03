@@ -600,38 +600,37 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     {
         $criteria = Criteria::create();
         $criteria->where(
-          $criteria->expr()->in(
-            'status',
-            [
-                LicenceEntity::LICENCE_STATUS_VALID,
-                LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                LicenceEntity::LICENCE_STATUS_CURTAILED
-            ]
-          )
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED
+                ]
+            )
         );
         $criteria->andWhere(
-          $criteria->expr()->in(
-            'goodsOrPsv',
-            [
-                LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
-            ]
-          )
+            $criteria->expr()->in(
+                'goodsOrPsv',
+                [
+                    LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+                ]
+            )
         );
         $criteria->andWhere(
-          $criteria->expr()->in(
-            'licenceType',
-            [
-                LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
-            ]
-          )
+            $criteria->expr()->in(
+                'licenceType',
+                [
+                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                ]
+            )
         );
 
         $licences = $this->getLicences()->matching($criteria);
 
         $licencesArr = array();
         if ($licences) {
-            foreach ($licences as $licence)
-            {
+            foreach ($licences as $licence) {
                 $licencesArr[] = [
                   'id' => $licence->getId(),
                   'licNo' => $licence->getLicNo(),
@@ -644,4 +643,3 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $licencesArr;
     }
 }
-
