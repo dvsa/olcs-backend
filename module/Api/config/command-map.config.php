@@ -1028,10 +1028,6 @@ return [
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
-    TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
-    TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
-    TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
-
 
     // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
@@ -1040,4 +1036,7 @@ return [
     TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
     TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,
     TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
+    TransferCommand\Permits\UpdateEcmtTrips::class => CommandHandler\Permits\UpdateEcmtTrips::class,
+    TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
+    TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
 ];
