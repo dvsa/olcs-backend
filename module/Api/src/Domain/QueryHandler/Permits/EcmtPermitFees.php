@@ -19,11 +19,13 @@ class EcmtPermitFees extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();
-        $latestEcmtPermitFee = $repo->getLatestForEcmtPermit('IRHP_GV_APP_ECMT');
 
+        $result = [];
+        foreach($query->getProductReferences() as $feeProductReference)
+        {
+            $result['fee'][$feeProductReference] = $repo->getLatestForEcmtPermit($feeProductReference);
+        }
 
-        return [
-            'fee' => $latestEcmtPermitFee,
-        ];
+        return $result;
     }
 }
