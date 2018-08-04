@@ -32,13 +32,15 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
     const STATUS_ISSUED = 'ecmt_permit_issued';
 
+    const PERMIT_TYPE = 'permit_ecmt';
+
     /**
      * Create new EcmtPermitApplication
      *
-     * @param RefData               $status           Status
-     * @param RefData               $paymentStatus    Payment status
-     * @param RefData               $permitType       Permit type
-     * @param Licence               $licence          Licence
+     * @param RefData $status        Status
+     * @param RefData $paymentStatus Payment status
+     * @param RefData $permitType    Permit type
+     * @param Licence $licence       Licence
      *
      * @return EcmtPermitApplication
      */
@@ -50,10 +52,43 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->setStatus($status);
-        $ecmtPermitApplication->setPaymentStatus($paymentStatus);
+        $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
         $ecmtPermitApplication->setPermitType($permitType);
         $ecmtPermitApplication->setLicence($licence);
 
         return $ecmtPermitApplication;
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'applicationRef' => $this->getApplicationRef(),
+            'canBeCancelled' => $this->canBeCancelled(),
+        ];
+    }
+
+    /**
+     * Get the application reference
+     *
+     * @return string
+     */
+    public function getApplicationRef()
+    {
+        return $this->licence->getLicNo() . ' / ' . $this->id;
+    }
+
+    /**
+     * Whether the permit application can be cancelled
+     *
+     * @return bool
+     */
+    private function canBeCancelled()
+    {
+        return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
     }
 }
