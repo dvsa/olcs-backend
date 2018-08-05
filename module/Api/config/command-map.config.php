@@ -1037,6 +1037,7 @@ return [
     TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
     TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,
     TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
+    TransferCommand\Permits\UpdateEcmtLicence::class => CommandHandler\Permits\UpdateEcmtLicence::class,
     TransferCommand\Permits\UpdateEcmtTrips::class => CommandHandler\Permits\UpdateEcmtTrips::class,
     TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
     TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
