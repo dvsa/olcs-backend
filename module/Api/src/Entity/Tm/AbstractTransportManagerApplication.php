@@ -30,7 +30,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_transport_manager_application_tm_type", columns={"tm_type"}),
  *        @ORM\Index(name="ix_transport_manager_application_tm_application_status",
-     *     columns={"tm_application_status"})
+     *     columns={"tm_application_status"}),
+ *        @ORM\Index(name="ix_tm_application_digital_signature_id", columns={"digital_signature_id"}),
+ *        @ORM\Index(name="ix_tm_application_signature_type", columns={"signature_type"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_transport_manager_application_olbs_key", columns={"olbs_key"})
@@ -114,6 +116,16 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
      */
     protected $deletedDate;
+
+    /**
+     * Digital signature
+     *
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
+     * @ORM\JoinColumn(name="digital_signature_id", referencedColumnName="id", nullable=true)
+     */
+    protected $digitalSignature;
 
     /**
      * Hours fri
@@ -226,6 +238,16 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      * @ORM\Column(type="integer", name="olbs_key", nullable=true)
      */
     protected $olbsKey;
+
+    /**
+     * Signature type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="signature_type", referencedColumnName="id", nullable=true)
+     */
+    protected $signatureType;
 
     /**
      * Tm application status
@@ -481,6 +503,30 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
         }
 
         return $this->deletedDate;
+    }
+
+    /**
+     * Set the digital signature
+     *
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature entity being set as the value
+     *
+     * @return TransportManagerApplication
+     */
+    public function setDigitalSignature($digitalSignature)
+    {
+        $this->digitalSignature = $digitalSignature;
+
+        return $this;
+    }
+
+    /**
+     * Get the digital signature
+     *
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     */
+    public function getDigitalSignature()
+    {
+        return $this->digitalSignature;
     }
 
     /**
@@ -775,6 +821,30 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     public function getOlbsKey()
     {
         return $this->olbsKey;
+    }
+
+    /**
+     * Set the signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
+     *
+     * @return TransportManagerApplication
+     */
+    public function setSignatureType($signatureType)
+    {
+        $this->signatureType = $signatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSignatureType()
+    {
+        return $this->signatureType;
     }
 
     /**
