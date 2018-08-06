@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
@@ -83,6 +84,22 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->setLicence($licence);
 
         return $ecmtPermitApplication;
+    }
+
+    /**
+     * Submit the app
+     *
+     * @param RefData $submitStatus
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    public function submit(RefData $submitStatus) {
+        if (!$this->canBeSubmitted()) {
+            throw new ForbiddenException('This application is not allowed to be submitted');
+        }
+
+        $this->status = $submitStatus;
     }
 
     /**

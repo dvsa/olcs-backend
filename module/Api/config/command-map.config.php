@@ -1041,4 +1041,5 @@ return [
     TransferCommand\Permits\UpdateEcmtCheckAnswers::class => CommandHandler\Permits\UpdateEcmtCheckAnswers::class,
     TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
     TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
+    TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
 ];
