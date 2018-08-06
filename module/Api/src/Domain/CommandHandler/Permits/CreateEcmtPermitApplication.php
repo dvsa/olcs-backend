@@ -4,8 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
+
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -13,10 +16,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-final class CreateEcmtPermitApplication extends AbstractCommandHandler implements TransactionedInterface
+final class CreateEcmtPermitApplication extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $extraRepos = ['Licence'];
 
     /**
      * Handle command
@@ -25,14 +27,15 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
      *
      * @return Result
      */
-
     public function handleCommand(CommandInterface $command)
     {
+        /** @var CreateEcmtPermitApplicationCmd $ecmtPermitApplication */
         $ecmtPermitApplication = $this->createPermitApplicationObject($command);
 
         $this->getRepo()->save($ecmtPermitApplication);
 
         $result = new Result();
+
         $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $result->addMessage('EcmtPermitApplication created successfully');
 
@@ -42,17 +45,17 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     /**
      * Create EcmtPermitApplication object
      *
-     * @param Cmd $command Command
+     * @param CreateEcmtPermitApplicationCmd $command Command
      *
      * @return EcmtPermitApplication
      */
-    private function createPermitApplicationObject($command)
+    private function createPermitApplicationObject(CreateEcmtPermitApplicationCmd $command): EcmtPermitApplication
     {
         return EcmtPermitApplication::createNew(
-            $this->getRepo()->getRefdataReference($command->getStatus()),
-            $this->getRepo()->getRefdataReference($command->getPaymentStatus()),
-            $this->getRepo()->getRefdataReference($command->getPermitType()),
-            $this->getRepo('Licence')->fetchById($command->getLicence())
+            $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+            $this->getRepo()->getRefdataReference('lfs_ot'), //@todo drop payment status column
+            $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
+            $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence())
         );
     }
 }

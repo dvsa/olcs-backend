@@ -5,24 +5,21 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\Sectors;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-
 /**
- * Create an ECMT Permit application
+ * Update ECMT Application Licence
  *
- * @author Jason de Jonge
+ * @author Andy Newton
  */
-final class UpdateSector extends AbstractCommandHandler
+final class UpdateEcmtLicence extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['Sectors'];
+    protected $extraRepos = ['Licence'];
 
     /**
      * Handle command
@@ -37,21 +34,19 @@ final class UpdateSector extends AbstractCommandHandler
 
         $application = $this->getRepo()->fetchById($command->getId());
 
-        /** @var Repository\Sectors $repo */
-        $sectorRepo = $this->getRepo('Sectors');
+
+        $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
+
 
         if (empty($application)) {
             $result->addMessage('No permit application to update');
-
             return $result;
         }
 
-        /** @var EcmtPermitApplication $application */
-        $application->setSectors($sectorRepo->getRefdataReference($command->getSector()));
-
+        $application->setLicence($licence);
         $this->getRepo()->save($application);
-
         $result->addId('ecmtPermitApplication', $application->getId());
+        $result->addMessage('EcmtPermitApplication Licence Updated successfully');
 
         return $result;
     }

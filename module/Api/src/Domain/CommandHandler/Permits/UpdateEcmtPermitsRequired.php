@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
 
-
 /**
  * Update ECMT Euro 6
  *
@@ -18,7 +17,6 @@ use Doctrine\ORM\Query;
 final class UpdateEcmtPermitsRequired extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
-
 
     public function handleCommand(CommandInterface $command)
     {
@@ -30,9 +28,10 @@ final class UpdateEcmtPermitsRequired extends AbstractCommandHandler
         $ecmtApplication->setPermitsRequired($command->getPermitsRequired());
 
         $this->getRepo()->save($ecmtApplication);
+
         $result->addId('ecmtPermitsRequired', $ecmtApplication->getId());
         $result->addMessage('ECMT Permit Application Permits Required updated');
+
         return $result;
     }
-
 }

@@ -18,8 +18,11 @@ return [
     CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtCabotage::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtPermitsRequired::class => NoValidationRequired::class,
+    CommandHandler\Permits\UpdateEcmtCheckAnswers::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateInternationalJourney::class => NoValidationRequired::class,
+    CommandHandler\Permits\UpdateEcmtTrips::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateSector::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
+    CommandHandler\Permits\UpdateEcmtLicence::class => NoValidationRequired::class,
 ];

@@ -23,7 +23,6 @@ final class UpdateSubmission extends AbstractCommandHandler implements Submissio
 
     /**
      * Handle
-     * 
      * @param TransferCmd\Submission\UpdateSubmission $command Command
      *
      * @return Result

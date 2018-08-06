@@ -516,22 +516,21 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             }
         }
 
-        if (
-            isset($licenceConditionsUndertakings['conditions'])
-            && count($licenceConditionsUndertakings['conditions']) > 0
-        ) {
+        if (isset($licenceConditionsUndertakings['conditions'])
+            && count($licenceConditionsUndertakings['conditions']) > 0) {
             $this->sortConditionsUndertakings($licenceConditionsUndertakings['conditions']);
         }
-        if (
-            isset($licenceConditionsUndertakings['undertakings'])
-            && count($licenceConditionsUndertakings['undertakings']) > 0
-        ) {
+
+        if (isset($licenceConditionsUndertakings['undertakings'])
+            && count($licenceConditionsUndertakings['undertakings']) > 0) {
             $this->sortConditionsUndertakings($licenceConditionsUndertakings['undertakings']);
         }
+
         foreach ($ocConditionsUndertakings as &$oc) {
             if (isset($oc['conditions']) && count($oc['conditions']) > 0) {
                 $this->sortConditionsUndertakings($oc['conditions']);
             }
+
             if (isset($oc['undertakings']) && count($oc['undertakings']) > 0) {
                 $this->sortConditionsUndertakings($oc['undertakings']);
             }
@@ -552,14 +551,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     private function sortConditionsUndertakings(&$conditionsUndertakings)
     {
-        usort(
-            $conditionsUndertakings, function ($a, $b) {
-                if ($a['createdOn'] == $b['createdOn']) {
-                    return 0;
-                }
-                return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
+        usort($conditionsUndertakings, function ($a, $b) {
+            if ($a['createdOn'] == $b['createdOn']) {
+                return 0;
             }
-        );
+
+            return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
+        });
     }
 
     /**
