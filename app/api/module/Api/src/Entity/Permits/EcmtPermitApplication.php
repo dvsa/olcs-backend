@@ -34,6 +34,32 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
 
     const PERMIT_TYPE = 'permit_ecmt';
 
+    const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
+    const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
+    const SECTION_COMPLETION_COMPLETED = 'ecmt_section_sts_com';
+
+    /**
+     * @todo this needs to be much more robust, not least because how we store certain data is going to change
+     */
+    const SECTIONS = [
+        'licence' => 'fieldIsNotNull',
+        'emissions' => 'fieldIsAgreed',
+        'cabotage' => 'fieldIsAgreed',
+        'internationalJourneys' => 'fieldIsNotNull',
+        'trips' => 'fieldIsInt',
+        'permitsRequired' => 'fieldIsInt',
+        'sectors' => 'fieldIsNotNull',
+        'countrys' => 'collectionHasRecord',
+    ];
+
+    /**
+     * @todo this needs to be much more robust, not least because how we store certain data is going to change
+     */
+    const CONFIRMATION_SECTIONS = [
+        'checkedAnswers' => 'fieldIsAgreed',
+        'declaration' => 'fieldIsAgreed',
+    ];
+
     /**
      * Create new EcmtPermitApplication
      *
@@ -69,7 +95,83 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
+            'canBeSubmitted' => $this->canBeSubmitted(),
+            'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
+            'sectionCompletion' => $this->getSectionCompletion(self::SECTIONS),
         ];
+    }
+
+    /**
+     * @todo this needs to be much more robust, not least because how we store certain data is going to change
+     */
+    private function getSectionCompletion($sections)
+    {
+        $sectionCompletion = [];
+        $totalCompleted = 0;
+        $totalSections = count($sections);
+
+        foreach ($sections as $field => $validator) {
+            //default field to not started
+            $status = self::SECTION_COMPLETION_NOT_STARTED;
+            $fieldCompleted = $this->$validator($field);
+
+            //if field completed, increment the completed number, and set the status
+            if ($fieldCompleted) {
+                $totalCompleted++;
+                $status = self::SECTION_COMPLETION_COMPLETED;
+            }
+
+            $sectionCompletion[$field] = $status;
+        }
+
+        $sectionCompletion['totalSections'] = $totalSections;
+        $sectionCompletion['totalCompleted'] = $totalCompleted;
+        $sectionCompletion['allCompleted'] = ($totalSections === $totalCompleted);
+
+        return $sectionCompletion;
+    }
+
+    /**
+     * Checks an array collection has records
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function collectionHasRecord($field)
+    {
+        return (bool)$this->$field->count();
+    }
+
+    /**
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function fieldIsAgreed($field)
+    {
+        return $this->$field == true;
+    }
+
+    /**
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function fieldIsNotNull($field)
+    {
+        return $this->$field !== null;
+    }
+
+    /**
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function fieldIsInt($field)
+    {
+        return is_int($this->$field);
     }
 
     /**
@@ -80,6 +182,34 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function getApplicationRef()
     {
         return $this->licence->getLicNo() . ' / ' . $this->id;
+    }
+
+    public function isNotYetSubmitted()
+    {
+        return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
+    }
+
+    /**
+     * Whether the permit application can be cancelled
+     * @todo this currently reruns the section completion checks, should store the value instead for speed
+     *
+     * @return bool
+     */
+    private function canBeSubmitted()
+    {
+        if (!$this->isNotYetSubmitted()) {
+            return false;
+        }
+
+        $sections = $this->getSectionCompletion(self::CONFIRMATION_SECTIONS);
+
+        if (!$sections['allCompleted']) {
+            return false;
+        }
+
+        $sections = $this->getSectionCompletion(self::SECTIONS);
+
+        return $sections['allCompleted'];
     }
 
     /**
