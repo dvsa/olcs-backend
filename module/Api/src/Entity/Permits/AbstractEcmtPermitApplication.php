@@ -45,6 +45,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $cabotage;
 
     /**
+     * Checked answers
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="checked_answers", nullable=true)
+     */
+    protected $checkedAnswers;
+
+    /**
      * Country
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -272,6 +281,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getCabotage()
     {
         return $this->cabotage;
+    }
+
+    /**
+     * Set the checked answers
+     *
+     * @param boolean $checkedAnswers new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setCheckedAnswers($checkedAnswers)
+    {
+        $this->checkedAnswers = $checkedAnswers;
+
+        return $this;
+    }
+
+    /**
+     * Get the checked answers
+     *
+     * @return boolean
+     */
+    public function getCheckedAnswers()
+    {
+        return $this->checkedAnswers;
     }
 
     /**
