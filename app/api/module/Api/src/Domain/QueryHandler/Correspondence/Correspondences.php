@@ -28,7 +28,8 @@ class Correspondences extends AbstractQueryHandler
         /** @var Repository\Correspondence $repo */
         $repo = $this->getRepo();
 
-        return [
+
+        $data = [
             'result' => $this->resultList(
                 $repo->fetchList($query, Query::HYDRATE_OBJECT),
                 [
@@ -39,6 +40,7 @@ class Correspondences extends AbstractQueryHandler
             'count' => $repo->fetchCount($query),
             'feeCount' => $this->getFeeCount($query->getOrganisation()),
         ];
+        return $data;
     }
 
     /**
