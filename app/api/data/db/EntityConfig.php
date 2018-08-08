@@ -2121,4 +2121,12 @@ return array(
             'type' => 'encrypted_string'
         ),
     ),
+    'ecmt_permit_application' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'ecmtApplication'
+            )
+        ),
+    ),
 );
