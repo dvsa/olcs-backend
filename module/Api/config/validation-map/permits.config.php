@@ -11,6 +11,7 @@ return [
     QueryHandler\Permits\EcmtPermitApplication::class => NoValidationRequired::class,
     QueryHandler\Permits\ById::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtPermitFees::class => NoValidationRequired::class,
+    QueryHandler\Permits\GetEcmtPermitApplicationList::class => NoValidationRequired::class,
     CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
