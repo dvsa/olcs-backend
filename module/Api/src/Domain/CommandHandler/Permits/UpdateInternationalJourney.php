@@ -20,6 +20,8 @@ final class UpdateInternationalJourney extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
 
+    protected $extraRepos = ['RefData'];
+
     /**
      * Handle command
      *
@@ -40,7 +42,8 @@ final class UpdateInternationalJourney extends AbstractCommandHandler
         }
 
         /** @var EcmtPermitApplication $application */
-        $application->setInternationalJourneys($command->getInternationalJourney());
+        $application->setInternationalJourneys($this->getRepo('RefData')
+            ->getRefdataReference($command->getInternationalJourney()));
 
         $this->getRepo()->save($application);
 
