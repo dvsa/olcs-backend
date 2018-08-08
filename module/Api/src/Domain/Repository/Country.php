@@ -3,66 +3,38 @@
 /**
  * Country
  *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>, Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
-
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 /**
  * Country
  *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
+ * @author Alex Peshkov <alex.peshkov@valtech.co.uk>, Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
 class Country extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-/**
- * Get all countries that are part of ECMT
- *
- * @return array
- *
- */
-    public function getEcmtCountries()
-    {
-        $qb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
-        $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
-        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
-
-        return array(count($results),$results);
-    }
 
     /**
-     * Get all ECMT countries that have constraints
+     * Applies filters to list queries. Note we always ignore newly uploaded files until they've been fully submitted
      *
-     * @return array
+     * @param QueryBuilder   $qb    doctrine query builder
+     * @param QueryInterface $query the query
      *
+     * @return void
      */
-    public function getConstrainedEcmtCountries($array = false)
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
-        $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
-        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
 
-        $data = array();
-
-        foreach ($results as $row) {
-            if ($row->getConstraints() && $row->getConstraints()->count() > 0) {
-                if ($array) {
-                    $data[] = $row->getId();
-                } else {
-                    $data[] = array(
-                      'id' => $row->getId(),
-                      'description' => $row->getCountryDesc()
-                    );
-                }
-            }
+        if (method_exists($query, 'getIsEcmtState') && !empty($query->getIsEcmtState())) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.isEcmtState', ':isEcmtState'))
+              ->setParameter('isEcmtState', $query->getIsEcmtState());
         }
 
-        return array(count($data),$data);
     }
 }
