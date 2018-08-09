@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest;
 use Mockery as m;
@@ -36,6 +37,14 @@ class InspectionRequestTest extends RepositoryTestCase
 
         $qb->shouldReceive('getQuery->getSingleResult')
             ->andReturn('RESULT');
+
+        $qb = $this->createMockQb('[QUERY]');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->andReturn(false);
+        $qb->shouldReceive('getDQL')->times(3);
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
+
 
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
@@ -113,6 +122,10 @@ class InspectionRequestTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once();
 
+        $qb->shouldReceive('expr->neq')->with('l_ea.id', ':enforcementArea')->once()->andReturn('l_ea.id');
+        //$qb->shouldReceive('andWhere')->with()->once()->andReturnSelf();
+        $qb->shouldReceive('setParameter')->with('enforcementArea', EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE)->once()->andReturnSelf();
+
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
@@ -128,7 +141,9 @@ class InspectionRequestTest extends RepositoryTestCase
 
     public function testFetchLicenceOperatingCentreCount()
     {
+
         $inspectionRequestId = 1;
+
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
