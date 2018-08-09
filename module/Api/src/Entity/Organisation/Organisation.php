@@ -14,6 +14,8 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
+use Olcs\Logging\Log\Logger;
+
 /**
  * Organisation Entity
  *
@@ -632,16 +634,38 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-            if (!$licence->getEcmtApplications()->isEmpty()){
-                continue;
-            }
+            if ($licence->getEcmtApplications()->isEmpty()) {
+                $licencesArr[] = [
+                    'id' => $licence->getId(),
+                    'licNo' => $licence->getLicNo(),
+                    'trafficArea' => $licence->getTrafficArea()->getName(),
+                    'totAuthVehicles' => $licence->getTotAuthVehicles()
+                ];
+            } else {
+                // Track if there are any active ECMT applications
+                $hasActive = false;
 
-            $licencesArr[] = [
-              'id' => $licence->getId(),
-              'licNo' => $licence->getLicNo(),
-              'trafficArea' => $licence->getTrafficArea()->getName(),
-              'totAuthVehicles' => $licence->getTotAuthVehicles()
-            ];
+                // Check to see if there are any ECMT applications with the
+                // "Under Consideration" or "Not Yet Submitted" status.
+                foreach ($licence->getEcmtApplications() as $ecmtApplication) {
+                    if (
+                        (strcmp($ecmtApplication->getStatus(), "ecmt_permit_nys") == 0) ||
+                        (strcmp($ecmtApplication->getStatus(), "ecmt_permit_uc") == 0)
+                    ) {
+                        $hasActive = true;
+                        break;
+                    }
+                }
+
+                if (!$hasActive) {
+                    $licencesArr[] = [
+                        'id' => $licence->getId(),
+                        'licNo' => $licence->getLicNo(),
+                        'trafficArea' => $licence->getTrafficArea()->getName(),
+                        'totAuthVehicles' => $licence->getTotAuthVehicles()
+                    ];
+                }
+            }
         }
 
         return $licencesArr;
