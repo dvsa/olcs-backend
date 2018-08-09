@@ -5,6 +5,9 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use \Doctrine\ORM\QueryBuilder;
+use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 
 /**
@@ -13,4 +16,15 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 class EcmtPermitApplication extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getSort')) {
+            $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
+        }
+    }
 }
