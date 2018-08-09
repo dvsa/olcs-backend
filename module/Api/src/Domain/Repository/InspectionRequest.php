@@ -8,7 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Licence\EnforcementArea;
+use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
