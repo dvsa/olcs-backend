@@ -23,8 +23,6 @@ class EcmtPermitApplication extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if (method_exists($query, 'getSort')) {
-            $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
-        }
+        $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
     }
 }
