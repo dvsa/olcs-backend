@@ -628,16 +628,20 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         $licences = $this->getLicences()->matching($criteria);
 
-        $licencesArr = array();
-        if ($licences) {
-            foreach ($licences as $licence) {
-                $licencesArr[] = [
-                  'id' => $licence->getId(),
-                  'licNo' => $licence->getLicNo(),
-                  'trafficArea' => $licence->getTrafficArea()->getName(),
-                  'totAuthVehicles' => $licence->getTotAuthVehicles()
-                ];
+        $licencesArr = [];
+
+        /** @var LicenceEntity $licence */
+        foreach ($licences as $licence) {
+            if (!$licence->getEcmtApplications()->isEmpty()){
+                continue;
             }
+
+            $licencesArr[] = [
+              'id' => $licence->getId(),
+              'licNo' => $licence->getLicNo(),
+              'trafficArea' => $licence->getTrafficArea()->getName(),
+              'totAuthVehicles' => $licence->getTotAuthVehicles()
+            ];
         }
 
         return $licencesArr;
