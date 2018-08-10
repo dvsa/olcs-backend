@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+
 /**
  * Country
  *
@@ -30,11 +31,9 @@ class Country extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-
         if (method_exists($query, 'getIsEcmtState') && !empty($query->getIsEcmtState())) {
             $qb->andWhere($qb->expr()->in($this->alias . '.isEcmtState', ':isEcmtState'))
               ->setParameter('isEcmtState', $query->getIsEcmtState());
         }
-
     }
 }
