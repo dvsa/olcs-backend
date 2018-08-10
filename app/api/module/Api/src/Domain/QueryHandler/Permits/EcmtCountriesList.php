@@ -7,7 +7,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\Permits\EcmtCountriesList as ListDto;
 
-
 /**
  * Get a list of ECMT Countries
  *
@@ -31,7 +30,7 @@ class EcmtCountriesList extends AbstractQueryHandler
 
         return [
           'results' => $this->resultList(
-            $results
+              $results
           ),
           'count' => $repo->fetchCount($this->listDto)
         ];
