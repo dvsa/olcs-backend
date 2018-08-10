@@ -34,6 +34,8 @@ class Country extends AbstractRepository
         if (method_exists($query, 'getIsEcmtState') && !empty($query->getIsEcmtState())) {
             $qb->andWhere($qb->expr()->in($this->alias . '.isEcmtState', ':isEcmtState'))
               ->setParameter('isEcmtState', $query->getIsEcmtState());
+            $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
         }
+
     }
 }
