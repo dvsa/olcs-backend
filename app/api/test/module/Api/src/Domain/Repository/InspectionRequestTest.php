@@ -8,9 +8,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest;
+use Dvsa\Olcs\Transfer\Query\InspectionRequest as Qry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
 use Doctrine\ORM\EntityRepository;
@@ -28,24 +28,16 @@ class InspectionRequestTest extends RepositoryTestCase
         $this->setUpSut(InspectionRequestRepo::class, true);
     }
 
+    /**
+     * testFetchForInspectionRequest
+     */
     public function testFetchForInspectionRequest()
     {
+
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(1);
+
         $inspectionRequestId = 1;
-
-        /** @var QueryBuilder $qb */
-        $qb = m::mock(QueryBuilder::class);
-
-        $qb->shouldReceive('getQuery->getSingleResult')
-            ->andReturn('RESULT');
-
-        $qb = $this->createMockQb('[QUERY]');
-        $this->mockCreateQueryBuilder($qb);
-
-        $this->em->shouldReceive('getFilters->isEnabled')->with('soft-deleteable')->andReturn(false);
-        $qb->shouldReceive('getDQL')->times(3);
-        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
-
-
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
             ->with($qb)
@@ -122,28 +114,20 @@ class InspectionRequestTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once();
 
-        $qb->shouldReceive('expr->neq')->with('l_ea.id', ':enforcementArea')->once()->andReturn('l_ea.id');
-        //$qb->shouldReceive('andWhere')->with()->once()->andReturnSelf();
-        $qb->shouldReceive('setParameter')->with('enforcementArea', EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE)->once()->andReturnSelf();
+        $this->mockCreateQueryBuilder($qb);
 
-        /** @var EntityRepository $repo */
-        $repo = m::mock(EntityRepository::class);
-        $repo->shouldReceive('createQueryBuilder')
-            ->andReturn($qb);
+        $this->sut->fetchForInspectionRequest($inspectionRequestId, Query::HYDRATE_OBJECT);
 
-        $this->em->shouldReceive('getRepository')
-            ->with(InspectionRequest::class)
-            ->andReturn($repo);
+        //  check query
+        $expect = 'QUERY ' .
+            'AND l_ea.id != [[EA-N]]';
 
-        $result = $this->sut->fetchForInspectionRequest($inspectionRequestId);
-        $this->assertEquals('RESULT', $result);
+        static::assertEquals($expect, $this->query);
     }
 
     public function testFetchLicenceOperatingCentreCount()
     {
-
         $inspectionRequestId = 1;
-
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
