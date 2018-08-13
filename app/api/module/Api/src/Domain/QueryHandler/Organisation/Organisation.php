@@ -28,13 +28,10 @@ class Organisation extends AbstractQueryHandler
         $allowedOperatorLocation = $organisation->getAllowedOperatorLocation();
         $relevantLicences = $organisation->getStandardInternationalLicences();
 
-        //var_dump($relevantLicences);die();
-
         return $this->result(
             $organisation,
             [
                 'disqualifications',
-                //'licences' => ['trafficArea','licenceType','status']
             ],
             [
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
