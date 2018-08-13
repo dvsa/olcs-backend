@@ -58,16 +58,11 @@ class Country extends AbstractRepository
 
         $data = array();
 
-        foreach ($results as $row)
-        {
-            if ($row->getConstraints() && $row->getConstraints()->count() > 0)
-            {
-                if ($array)
-                {
+        foreach ($results as $row) {
+            if ($row->getConstraints() && $row->getConstraints()->count() > 0) {
+                if ($array) {
                     $data[] = $row->getId();
-                }
-                else
-                {
+                } else {
                     $data[] = array(
                         'id' => $row->getId(),
                         'description' => $row->getCountryDesc()
