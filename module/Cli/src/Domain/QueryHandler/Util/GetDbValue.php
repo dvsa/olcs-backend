@@ -40,6 +40,10 @@ class getDbValue extends AbstractQueryHandler
         }
     }
 
+    private function getEntityNameFromTableName(string $tableName) {
+
+
+    }
 
     private function isValidEntity(): bool
     {
@@ -57,7 +61,7 @@ class getDbValue extends AbstractQueryHandler
         }
     }
 
-    protected function getEntityFromName(string $tableName = null): Entity
+    protected function getEntityFromName(string $tableName = null)
     {
         $fqdn = [];
         $Directory = new RecursiveDirectoryIterator(__DIR__ . '/../../../../../Api/src/Entity');
@@ -73,9 +77,9 @@ class getDbValue extends AbstractQueryHandler
                 );
         }
 
-//        if (count($fqdn) <= 1 && class_exists($fqdn[0])) {
-//            return new $fqdn[0];
-//        } else {
+        if (count($fqdn) <= 1 && class_exists($fqdn[0])) {
+            return new $fqdn[0];
+        } else {
             foreach ($fqdn as $entityClass) {
                 //check for table_name in docComment
                 $class = new ReflectionClass($entityClass);
@@ -83,11 +87,13 @@ class getDbValue extends AbstractQueryHandler
                 $this->tableNames [] ['class'] = $entityClass;
                 $matches = [];
                 if (preg_match_all('/@ORM\\Table\(name=\"(.*)\"/', $comment, $matches)) {
-
+                    if ($matches[1] === $tableName) {
+                        return new $entityClass;
+                    }
                 };
 
 
-            //}
+            }
         }
     }
 
