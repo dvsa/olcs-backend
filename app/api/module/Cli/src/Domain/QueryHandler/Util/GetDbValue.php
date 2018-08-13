@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Domain\QueryHandler\Util;
 
+use Doctrine\ORM\Mapping\Entity;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -9,12 +10,15 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
+use ReflectionClass;
 use RegexIterator;
 
 class getDbValue extends AbstractQueryHandler
 {
 
     private $entity = null;
+
+    private $tableNames = [];
 
     protected $repoServiceName;
 
@@ -45,7 +49,6 @@ class getDbValue extends AbstractQueryHandler
 
     private function isValidProperty(QueryInterface $query, $property): bool
     {
-
         try {
             $entity = $this->getRepo($this->repoServiceName)->fetchList()[0];
             return property_exists($entity, $property);
@@ -54,7 +57,7 @@ class getDbValue extends AbstractQueryHandler
         }
     }
 
-    protected function getEntityFromName(string $tableName)
+    protected function getEntityFromName(string $tableName = null): Entity
     {
         $fqdn = [];
         $Directory = new RecursiveDirectoryIterator(__DIR__ . '/../../../../../Api/src/Entity');
@@ -70,8 +73,21 @@ class getDbValue extends AbstractQueryHandler
                 );
         }
 
-        if (count($fqdn) <= 1 && class_exists($fqdn[0])) {
-            return new $fqdn[0];
+//        if (count($fqdn) <= 1 && class_exists($fqdn[0])) {
+//            return new $fqdn[0];
+//        } else {
+            foreach ($fqdn as $entityClass) {
+                //check for table_name in docComment
+                $class = new ReflectionClass($entityClass);
+                $comment = $class->getDocComment();
+                $this->tableNames [] ['class'] = $entityClass;
+                $matches = [];
+                if (preg_match_all('/@ORM\\Table\(name=\"(.*)\"/', $comment, $matches)) {
+
+                };
+
+
+            //}
         }
     }
 
