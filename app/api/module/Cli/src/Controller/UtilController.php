@@ -20,7 +20,7 @@ class UtilController extends AbstractConsoleController
     public function getDbValueAction()
     {
         $params = [
-            'columnName' =>  $this->params('column-name'),
+            'columnName' => $this->params('column-name'),
             'tableName' => $this->params('table-name'),
             'filterName' => $this->params('filter-name'),
             'filterValue' => $this->params('filter-value'),
@@ -59,7 +59,7 @@ class UtilController extends AbstractConsoleController
     protected function handleQuery(QueryInterface $dto)
     {
         try {
-            $this->writeVerboseMessages("Handle query ". get_class($dto));
+            $this->writeVerboseMessages("Handle query " . get_class($dto));
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
