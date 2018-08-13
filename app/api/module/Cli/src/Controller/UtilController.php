@@ -72,4 +72,50 @@ class UtilController extends AbstractConsoleController
         return false;
     }
 
+    /**
+     * Write verbose messages, ie only if verbose flag is set
+     *
+     * @param array|string $messages    Message to write
+     * @param int          $logPriority One of \Zend\Log\Logger::*
+     *
+     * @return void
+     */
+    protected function writeVerboseMessages($messages, $logPriority = \Zend\Log\Logger::DEBUG)
+    {
+        if (!is_array($messages)) {
+            $messages = [$messages];
+        }
+        if ($this->isVerbose()) {
+            $this->writeMessages($messages);
+        }
+        Logger::log(
+            $logPriority,
+            json_encode($messages)
+        );
+    }
+
+    /**
+     * Is verbose
+     *
+     * @return boolean
+     */
+    private function isVerbose()
+    {
+        return $this->params('verbose') || $this->params('v');
+    }
+
+    /**
+     * Write messages to the console
+     *
+     * @param array $messages Message to write
+     *
+     * @return void
+     */
+    protected function writeMessages($messages)
+    {
+        foreach ($messages as $message) {
+            $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
+        }
+    }
+
 }
