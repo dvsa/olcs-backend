@@ -621,7 +621,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $criteria->expr()->in(
                 'licenceType',
                 [
-                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    LicenceEntity::LICENCE_TYPE_RESTRICTED
                 ]
             )
         );
@@ -635,7 +636,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                   'id' => $licence->getId(),
                   'licNo' => $licence->getLicNo(),
                   'trafficArea' => $licence->getTrafficArea()->getName(),
-                  'totAuthVehicles' => $licence->getTotAuthVehicles()
+                  'totAuthVehicles' => $licence->getTotAuthVehicles(),
+                  'licenceType' => $licence->getLicenceType()
                 ];
             }
         }
