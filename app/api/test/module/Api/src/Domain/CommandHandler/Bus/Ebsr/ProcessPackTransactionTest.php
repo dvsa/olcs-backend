@@ -19,8 +19,8 @@ use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPack;
-use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPack as ProcessPackCmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPackTransaction;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPackTransaction as ProcessPackTransactionCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -47,15 +47,11 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use org\bovigo\vfs\vfsStream;
 
-/**
- * ProcessPack Test
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- */
-class ProcessPackTest extends CommandHandlerTestCase
+class ProcessPackTransactionTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new ProcessPack();
+        $this->sut = new ProcessPackTransaction();
 
         $this->mockRepo('Bus', BusRepo::class);
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
@@ -206,7 +202,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
@@ -444,7 +440,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
@@ -639,7 +635,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
@@ -781,7 +777,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
         $ebsrSubmission->shouldReceive('beginValidating')
@@ -812,7 +808,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
 
@@ -852,7 +848,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
@@ -890,7 +886,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
@@ -951,7 +947,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
@@ -1066,7 +1062,7 @@ class ProcessPackTest extends CommandHandlerTestCase
             'id' => $ebsrSubId
         ];
 
-        $command = ProcessPackCmd::create($cmdData);
+        $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $xmlName];
 
