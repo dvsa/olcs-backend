@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Cli\Domain\QueryHandler\Util;
 
 use Doctrine\ORM\Mapping\Entity;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -14,13 +15,11 @@ use ReflectionClass;
 use RegexIterator;
 use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
 
-
-class getDbValue extends AbstractQueryHandler
+class GetDbValue extends AbstractQueryHandler
 {
 
     private $entity = null;
 
-    private $tableNames = [];
 
     protected $repoServiceName = 'GetDbValue';
 
@@ -37,29 +36,24 @@ class getDbValue extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-
+        $result = new Result();
 
         $this->entityName = $query->getTableName();
         if ($this->isValidEntity() && $this->isValidProperty($query, $query->getColumnName())) {
 
             /** @var GetDbValueRepo $repo */
-            $repo = $this->getRepo();
-            $repo->setEntity($this->entity::class);
+            $repo = $this->setEntityOnRepo();
 
-            $entity = $repo->fetchOneEntityByX($query->getFilterName(),$query->getFilterValue());
+            try {
+                $data = $repo->fetchOneEntityByX($query->getFilterName(), $query->getFilterValue());
+                $result->serialize($data);
+            } catch (NotFoundException $notFoundException) {
+                $result->setValue("error", "Not found");
+            }
 
-
-
-            $value = call_user_func(['get' . $query->getColumnName(), $entity]);
-
-            return $value;
+            return $result;
         }
-
-
-
-
     }
-
 
 
     private function isValidEntity(): bool
@@ -71,7 +65,7 @@ class getDbValue extends AbstractQueryHandler
     private function isValidProperty(QueryInterface $query, $property): bool
     {
         try {
-            $entity = $this->getRepo($this->repoServiceName)->fetchList()[0];
+            $entity = $this->setEntityOnRepo()->fetchList($query)[0];
             return property_exists($entity, $property);
         } catch (RuntimeException $runtimeException) {
             throw $runtimeException;
@@ -83,29 +77,28 @@ class getDbValue extends AbstractQueryHandler
         $fqdn = [];
         $Directory = new RecursiveDirectoryIterator(__DIR__ . '/../../../../../Api/src/Entity');
         $Iterator = new RecursiveIteratorIterator($Directory);
-        $regex = '/^(.+\/' . preg_quote($this->repoServiceName) . '\.php)$/m';
+        $regex = '/^(.+\/' . preg_quote($this->entityName) . '\.php)$/m';
         $matches = new RegexIterator($Iterator, $regex);
 
         foreach ($matches as $file) {
             $fileContents = file_get_contents($file);
             $fqdn [] = $this->getFqdn($fileContents) . '\\' . filter_var(
-                    $this->repoServiceName,
+                    $this->entityName,
                     FILTER_SANITIZE_STRING
                 );
         }
 
-        if (count($fqdn) <= 1 && class_exists($fqdn[0])) {
-            return new $fqdn[0];
+        if (count($fqdn) === 1 && class_exists($fqdn[0])) {
+            return $fqdn[0];
         } else {
             foreach ($fqdn as $entityClass) {
                 //check for table_name in docComment
                 $class = new ReflectionClass($entityClass);
                 $comment = $class->getDocComment();
-                $this->tableNames [] ['class'] = $entityClass;
                 $matches = [];
                 if (preg_match_all('/@ORM\\Table\(name=\"(.*)\"/', $comment, $matches)) {
                     if ($matches[1] === $tableName) {
-                        return new $entityClass;
+                        return $entityClass;
                     }
                 };
 
@@ -134,6 +127,19 @@ class getDbValue extends AbstractQueryHandler
             }
         }
         return $namespace;
+    }
+
+    /**
+     * setEntityOnRepo
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface
+     * @throws RuntimeException
+     */
+    private function setEntityOnRepo(): \Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface
+    {
+        $repo = $this->getRepo();
+        $repo->setEntity($this->entity);
+        return $repo;
     }
 }
 

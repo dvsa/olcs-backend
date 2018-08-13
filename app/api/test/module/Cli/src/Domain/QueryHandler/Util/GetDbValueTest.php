@@ -12,7 +12,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
  * Class GetDbValueTest
  *
  * @package Dvsa\OlcsTest\Cli\Domain\QueryHandler\
- * use Dvsa\Olcs\Cli\Domain\QueryHandler\Util\getDbValue
+ * use Dvsa\Olcs\Cli\Domain\QueryHandler\Util\GetDbValue
  */
 class GetDbValueTest extends QueryHandlerTestCase
 {
@@ -24,21 +24,24 @@ class GetDbValueTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new GetDbValue();
+        $this->mockRepo('GetDbValue', \Dvsa\Olcs\Api\Domain\Repository\GetDbValue::class);
         parent::setup();
     }
 
     public function testHandleQuery()
     {
 
-        $this->mockRepo('AbstractApplication', pplication::class);
+        $this->mockRepo('Application', Application::class);
+
         $query = Qry::create(
             [
-                'tableName' => 'Trailer',
+                'tableName' => 'Application',
                 'columnName' => 'id',
-                'filterName' => '',
-                'filterValue' => ''
+                'filterName' => 'id',
+                'filterValue' => '1'
             ]
         );
+
 
         $this->assertInstanceOf(Result::class, $this->sut->handleQuery($query));
     }
