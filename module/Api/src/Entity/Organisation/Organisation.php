@@ -114,7 +114,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
          * @var LicenceEntity $licence
          */
         foreach ($licences as $licence) {
-            if ($licence->isValidSiGoods()) {
+            if ($licence->isEligibleForPermits()) {
                 return true;
             }
         }

@@ -764,11 +764,11 @@ class OrganisationEntityTest extends EntityTester
     public function testIsEligibleForPermitsWhenTrue()
     {
         $mockLicence1 = m::mock(LicenceEntity::class);
-        $mockLicence1->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence1->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
         $mockLicence2 = m::mock(LicenceEntity::class);
-        $mockLicence2->shouldReceive('isValidSiGoods')->once()->andReturn(true);
+        $mockLicence2->shouldReceive('isEligibleForPermits')->once()->andReturn(true);
         $mockLicence3 = m::mock(LicenceEntity::class);
-        $mockLicence3->shouldReceive('isValidSiGoods')->never();
+        $mockLicence3->shouldReceive('isEligibleForPermits')->never();
 
         $licences = new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3]);
 
@@ -784,11 +784,11 @@ class OrganisationEntityTest extends EntityTester
     public function testIsEligibleForPermitsWhenFalse()
     {
         $mockLicence1 = m::mock(LicenceEntity::class);
-        $mockLicence1->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence1->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
         $mockLicence2 = m::mock(LicenceEntity::class);
-        $mockLicence2->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence2->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
         $mockLicence3 = m::mock(LicenceEntity::class);
-        $mockLicence3->shouldReceive('isValidSiGoods')->once()->andReturn(false);
+        $mockLicence3->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
 
         $licences = new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3]);
 

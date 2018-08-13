@@ -382,6 +382,34 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
+     * Note: We've already tested the isValid, isGoods and isRestricted in our other tests - so we can safely assume these
+     * parts are valid and only check they work together against a list of licence types
+     *
+     * @dataProvider dpEligibleForPermits
+     */
+    public function testisEligibleForPermits($licenceType, $expectedResult)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
+        $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $licence->setLicenceType(new RefData(Entity::LICENCE_TYPE_RESTRICTED));
+        $licence->setLicenceType(new RefData($licenceType));
+
+        $this->assertEquals($expectedResult, $licence->isEligibleForPermits());
+    }
+
+    public function dpEligibleForPermits()
+    {
+        return [
+            [Entity::LICENCE_TYPE_RESTRICTED, true],
+            [Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+        ];
+    }
+
+    /**
      * Note: We've already tested the isValid and isGoods in our other tests - so we can safely assume these
      * parts are valid and only check they work together against a list of licence types
      *
@@ -397,6 +425,10 @@ class LicenceEntityTest extends EntityTester
 
         $this->assertEquals($expectedResult, $licence->isValidSiGoods());
     }
+
+
+
+
 
     public function dpValidSiGoods()
     {
