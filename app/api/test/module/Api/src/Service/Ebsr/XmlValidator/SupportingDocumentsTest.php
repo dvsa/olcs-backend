@@ -35,10 +35,12 @@ class SupportingDocumentsTest extends TestCase
     public function isValidProvider()
     {
         return [
+            ['<DocumentUri></DocumentUri>', false],
             ['<DocumentUri>notexisting</DocumentUri>', false],
-            ['<SchematicMap>notexisting</SchematicMap>', false],
             ['<DocumentUri>existing</DocumentUri>', true],
+            ['<SchematicMap>notexisting</SchematicMap>', false],
             ['<SchematicMap>existing</SchematicMap>', true],
+            ['<SchematicMap></SchematicMap>', false],
         ];
     }
 }
