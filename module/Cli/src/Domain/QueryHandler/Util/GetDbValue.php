@@ -5,13 +5,14 @@ namespace Dvsa\Olcs\Cli\Domain\QueryHandler\Util;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
 
 class getDbValue extends AbstractQueryHandler
 {
 
     private $fqdn = 'Dvsa\\Olcs\\Api\Entity\\';
 
-    protected $repoServiceName;
+    protected $repoServiceName = 'GetDbValue';
 
     /**
      * Handle query
@@ -23,12 +24,19 @@ class getDbValue extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        $result = new Result();
 
-        $this->repoServiceName = $query->getTableName();
-        if ($this->isValidEntity() && $this->isValidProperty($query->getColumnName())) {
-            return $result;
-        }
+        /** @var GetDbValueRepo $repo */
+        $repo = $this->getRepo();
+        $repo->setEntity('Dvsa\\Olcs\\Api\\Entity\\Licence\\Licence');
+
+        $entity = $repo->fetchOneEntityByX($query->getFilterName(),$query->getFilterValue());
+
+
+
+        $value = call_user_func(['get' . $query->getColumnName(), $entity]);
+
+        return $value;
+
     }
 
 
