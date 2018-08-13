@@ -12,6 +12,8 @@ use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use ReflectionClass;
 use RegexIterator;
+use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
+
 
 class getDbValue extends AbstractQueryHandler
 {
@@ -20,7 +22,10 @@ class getDbValue extends AbstractQueryHandler
 
     private $tableNames = [];
 
-    protected $repoServiceName;
+    protected $repoServiceName = 'GetDbValue';
+
+    private $entityName;
+
 
     /**
      * Handle query
@@ -32,22 +37,34 @@ class getDbValue extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        $result = new Result();
 
-        $this->repoServiceName = $query->getTableName();
+
+        $this->entityName = $query->getTableName();
         if ($this->isValidEntity() && $this->isValidProperty($query, $query->getColumnName())) {
-            return $result;
+
+            /** @var GetDbValueRepo $repo */
+            $repo = $this->getRepo();
+            $repo->setEntity($this->entity::class);
+
+            $entity = $repo->fetchOneEntityByX($query->getFilterName(),$query->getFilterValue());
+
+
+
+            $value = call_user_func(['get' . $query->getColumnName(), $entity]);
+
+            return $value;
         }
+
+
+
+
     }
 
-    private function getEntityNameFromTableName(string $tableName) {
 
-
-    }
 
     private function isValidEntity(): bool
     {
-        $this->entity = $this->getEntityFromName($this->repoServiceName);
+        $this->entity = $this->getEntityFromName($this->entityName);
         return !empty($this->entity);
     }
 
