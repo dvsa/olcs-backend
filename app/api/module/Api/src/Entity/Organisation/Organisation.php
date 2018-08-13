@@ -648,10 +648,10 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 // Check to see if there are any ECMT applications with the
                 // "Under Consideration" or "Not Yet Submitted" status.
                 foreach ($licence->getEcmtApplications() as $ecmtApplication) {
-                    if (
-                        (strcmp($ecmtApplication->getStatus(), "ecmt_permit_nys") == 0) ||
-                        (strcmp($ecmtApplication->getStatus(), "ecmt_permit_uc") == 0)
-                    ) {
+                    if ((
+                        strcmp($ecmtApplication->getStatus(), "ecmt_permit_nys") == 0) ||
+                        (strcmp($ecmtApplication->getStatus(), "ecmt_permit_uc") == 0
+                    )) {
                         $hasActive = true;
                         break;
                     }
