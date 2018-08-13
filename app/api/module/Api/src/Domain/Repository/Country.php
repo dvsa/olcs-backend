@@ -38,4 +38,40 @@ class Country extends AbstractRepository
         }
 
     }
+
+
+    /**
+     * Get all ECMT countries that have constraints
+     *
+     * @return array
+     *
+     */
+    public function getConstrainedEcmtCountries($array = false)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
+        $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        $data = array();
+
+        foreach ($results as $row)
+        {
+            if ($row->getConstraints() && $row->getConstraints()->count() > 0)
+            {
+                if ($array)
+                {
+                    $data[] = $row->getId();
+                }
+                else
+                {
+                    $data[] = array(
+                        'id' => $row->getId(),
+                        'description' => $row->getCountryDesc()
+                    );
+                }
+            }
+        }
+        return array(count($data),$data);
+    }
 }
