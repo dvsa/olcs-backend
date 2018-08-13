@@ -21,7 +21,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="country",
  *    indexes={
  *        @ORM\Index(name="ix_country_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_country_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_country_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_ecmt_constraint_country_constraint_ref_data_id",
+     *     columns={"ecmt_constraint"})
  *    }
  * )
  */
@@ -29,27 +31,6 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-
-    /**
-     * Constraint
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtCountriesConstraints",
-     *     inversedBy="countrys",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="constraint_link",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="constraint_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $constraints;
 
     /**
      * Country desc
@@ -92,6 +73,16 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * )
      */
     protected $ecmtApplications;
+
+    /**
+     * Ecmt constraint
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="ecmt_constraint", referencedColumnName="id", nullable=true)
+     */
+    protected $ecmtConstraint;
 
     /**
      * Ecmt permit
@@ -194,73 +185,9 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      */
     public function initCollections()
     {
-        $this->constraints = new ArrayCollection();
         $this->ecmtApplications = new ArrayCollection();
         $this->ecmtPermits = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
-    }
-
-    /**
-     * Set the constraint
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being set as the value
-     *
-     * @return Country
-     */
-    public function setConstraints($constraints)
-    {
-        $this->constraints = $constraints;
-
-        return $this;
-    }
-
-    /**
-     * Get the constraints
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getConstraints()
-    {
-        return $this->constraints;
-    }
-
-    /**
-     * Add a constraints
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being added
-     *
-     * @return Country
-     */
-    public function addConstraints($constraints)
-    {
-        if ($constraints instanceof ArrayCollection) {
-            $this->constraints = new ArrayCollection(
-                array_merge(
-                    $this->constraints->toArray(),
-                    $constraints->toArray()
-                )
-            );
-        } elseif (!$this->constraints->contains($constraints)) {
-            $this->constraints->add($constraints);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a constraints
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being removed
-     *
-     * @return Country
-     */
-    public function removeConstraints($constraints)
-    {
-        if ($this->constraints->contains($constraints)) {
-            $this->constraints->removeElement($constraints);
-        }
-
-        return $this;
     }
 
     /**
@@ -402,6 +329,30 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
         }
 
         return $this;
+    }
+
+    /**
+     * Set the ecmt constraint
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $ecmtConstraint entity being set as the value
+     *
+     * @return Country
+     */
+    public function setEcmtConstraint($ecmtConstraint)
+    {
+        $this->ecmtConstraint = $ecmtConstraint;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt constraint
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getEcmtConstraint()
+    {
+        return $this->ecmtConstraint;
     }
 
     /**
