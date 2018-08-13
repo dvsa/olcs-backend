@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 /**
  * Country
@@ -52,7 +53,7 @@ class Country extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
         $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
         $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
-
+        
         $data = array();
 
         foreach ($results as $row)
