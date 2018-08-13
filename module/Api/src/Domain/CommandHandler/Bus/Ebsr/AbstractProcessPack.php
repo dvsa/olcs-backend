@@ -521,7 +521,8 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
         $ebsrData['trafficAreas'] = $this->processTrafficAreas($ebsrData['trafficAreas'], $ebsrData['localAuthoritys']);
         $ebsrData['busServiceTypes'] = $this->processServiceTypes($ebsrData['serviceClassifications']);
         $ebsrData['busNoticePeriod'] = $this->getRepo()->getReference(
-            BusNoticePeriodEntity::class, $ebsrData['busNoticePeriod']
+            BusNoticePeriodEntity::class,
+            $ebsrData['busNoticePeriod']
         );
 
         return $ebsrData;
@@ -660,5 +661,4 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
 
         return $collection;
     }
-
 }
