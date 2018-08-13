@@ -26,8 +26,7 @@ class InspectionRequest extends AbstractRepository
     public function fetchForInspectionRequest($id)
     {
         $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
+          $this->getQueryBuilder()->modifyQuery($qb)
             ->with('licence', 'l')
             ->with('l.licenceType', 'lt')
             ->with('l.organisation', 'l_o')
@@ -47,7 +46,7 @@ class InspectionRequest extends AbstractRepository
             ->withRefData()
             ->byId($id);
 
-        $this->filterByEnforcementArea($qb, EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE);
+        $this->excludeEnforcementArea($qb, EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE);
 
 
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
@@ -83,7 +82,7 @@ class InspectionRequest extends AbstractRepository
         $qb->setParameter('licence', $query->getLicence());
     }
 
-    protected function filterByEnforcementArea(QueryBuilder $qb, $enforcementArea)
+    protected function excludeEnforcementArea(QueryBuilder $qb, $enforcementArea)
     {
 
         $qb->andWhere($qb->expr()->neq('l_ea.id', ':enforcementArea'));

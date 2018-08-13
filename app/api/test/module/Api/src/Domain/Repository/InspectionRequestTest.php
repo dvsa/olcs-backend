@@ -36,7 +36,7 @@ class InspectionRequestTest extends RepositoryTestCase
 
         $qb = $this->createMockQb('QUERY');
         $qb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(1);
-
+        $this->mockCreateQueryBuilder($qb);
         $inspectionRequestId = 1;
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
@@ -114,7 +114,7 @@ class InspectionRequestTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once();
 
-        $this->mockCreateQueryBuilder($qb);
+
 
         $this->sut->fetchForInspectionRequest($inspectionRequestId, Query::HYDRATE_OBJECT);
 
