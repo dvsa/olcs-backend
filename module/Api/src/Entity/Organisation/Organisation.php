@@ -14,8 +14,6 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
-use Olcs\Logging\Log\Logger;
-
 /**
  * Organisation Entity
  *
@@ -623,7 +621,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             $criteria->expr()->in(
                 'licenceType',
                 [
-                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    LicenceEntity::LICENCE_TYPE_RESTRICTED
                 ]
             )
         );
@@ -639,7 +638,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                     'id' => $licence->getId(),
                     'licNo' => $licence->getLicNo(),
                     'trafficArea' => $licence->getTrafficArea()->getName(),
-                    'totAuthVehicles' => $licence->getTotAuthVehicles()
+                    'totAuthVehicles' => $licence->getTotAuthVehicles(),
+                  'licenceType' => $licence->getLicenceType()
                 ];
             } else {
                 // Track if there are any active ECMT applications
