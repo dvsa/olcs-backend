@@ -663,6 +663,16 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Is this licence eligible for permits
+     *
+     * @return bool
+     */
+    public function isEligibleForPermits()
+    {
+        return $this->isValidGoods() && ($this->isStandardInternational() || $this->isRestricted());
+    }
+
+    /**
      * Helper method to get the first trading name from a licence
      * (Sorts trading names by createdOn date then alphabetically)
      *
