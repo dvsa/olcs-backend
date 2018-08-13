@@ -11,18 +11,11 @@ class ProcessPackTransaction extends AbstractIdOnlyCommand
 {
     protected $organisation;
 
-    protected $ebsrSub;
-
     /**
      * @return int
      */
     public function getOrganisation()
     {
         return $this->organisation;
-    }
-
-    public function getEbsrSub()
-    {
-        return $this->ebsrSub;
     }
 }
