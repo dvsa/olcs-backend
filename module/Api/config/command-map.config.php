@@ -753,6 +753,7 @@ return [
     Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
     Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
+    Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
