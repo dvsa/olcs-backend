@@ -567,7 +567,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function isValidSiGoods()
     {
-        return $this->isValidGoods() && $this->isStandardInternational();
+        return $this->isValidGoods() && ($this->isStandardInternational() || $this->isRestricted());
     }
 
     /**
