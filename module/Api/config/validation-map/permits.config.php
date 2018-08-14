@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 return [
     QueryHandler\Permits\SectorsList::class => NoValidationRequired::class,
     QueryHandler\Permits\ConstrainedCountries::class => NoValidationRequired::class,
+    QueryHandler\Permits\EcmtCountriesList::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtPermits::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtPermitApplication::class => NoValidationRequired::class,
     QueryHandler\Permits\ById::class => NoValidationRequired::class,
