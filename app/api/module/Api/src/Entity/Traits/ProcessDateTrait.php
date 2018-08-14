@@ -16,7 +16,7 @@ trait ProcessDateTrait
      *
      * @return \DateTime|null
      */
-    public function processDate($date, $format = 'Y-m-d', $zeroTime = true)
+    public static function processDate($date, $format = 'Y-m-d', $zeroTime = true)
     {
         $dateTime = \DateTime::createFromFormat($format, $date);
 
