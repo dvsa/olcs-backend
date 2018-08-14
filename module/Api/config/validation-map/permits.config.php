@@ -28,5 +28,6 @@ return [
     CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtLicence::class => NoValidationRequired::class,
     CommandHandler\Permits\EcmtSubmitApplication::class => NoValidationRequired::class,
+    CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
 
 ];

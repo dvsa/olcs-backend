@@ -4,8 +4,12 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
+use Olcs\Logging\Log\Logger;
 
 /**
  * EcmtPermitApplication Entity
@@ -86,6 +90,44 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         return $ecmtPermitApplication;
     }
 
+
+    /**
+     * Create new EcmtPermitApplication
+     *
+     * @param RefData $status        Status
+     * @param RefData $paymentStatus Payment status
+     * @param RefData $permitType    Permit type
+     * @param Licence $licence       Licence
+     * @param Sectors $sectors       Sectors
+     *
+     * @return EcmtPermitApplication
+     */
+    public static function createNewInternal(
+        RefData $status,
+        RefData $paymentStatus,
+        RefData $permitType,
+        Licence $licence,
+        Sectors $sectors = null,
+        CreateEcmtPermitApplication $command
+    ) {
+
+        $ecmtPermitApplication = new self();
+        $ecmtPermitApplication->setStatus($status);
+        $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
+        $ecmtPermitApplication->setPermitType($permitType);
+        $ecmtPermitApplication->setLicence($licence);
+        $ecmtPermitApplication->setSectors($sectors);
+        $ecmtPermitApplication->setCabotage($command->getCabotage());
+        $ecmtPermitApplication->setDeclaration($command->getDeclaration());
+        $ecmtPermitApplication->setEmissions($command->getEmissions());
+        $ecmtPermitApplication->setNoOfPermits($command->getNoOfPermits());
+        $ecmtPermitApplication->setTrips($command->getTrips());
+        $ecmtPermitApplication->setInternationalJourneys($command->getInternationalJourneys());
+        $ecmtPermitApplication->setDateReceived(static::processDate($command->getDateReceived()));
+
+        return $ecmtPermitApplication;
+    }
+
     /**
      * Submit the app
      *
@@ -94,7 +136,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @return void
      * @throws ForbiddenException
      */
-    public function submit(RefData $submitStatus) {
+    public function submit(RefData $submitStatus)
+    {
         if (!$this->canBeSubmitted()) {
             throw new ForbiddenException('This application is not allowed to be submitted');
         }
