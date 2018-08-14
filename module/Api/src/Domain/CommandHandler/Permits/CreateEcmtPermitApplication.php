@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -51,11 +52,23 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler
      */
     private function createPermitApplicationObject(CreateEcmtPermitApplicationCmd $command): EcmtPermitApplication
     {
-        return EcmtPermitApplication::createNew(
-            $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
-            $this->getRepo()->getRefdataReference('lfs_ot'), //@todo drop payment status column
-            $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
-            $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence())
-        );
+        if ($command->getFromInternal()) {
+            return EcmtPermitApplication::createNewInternal(
+                $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+                $this->getRepo()->getRefdataReference('lfs_ot'),
+                $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
+                $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
+                $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
+                $command
+            );
+        } else {
+
+            return EcmtPermitApplication::createNew(
+                $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+                $this->getRepo()->getRefdataReference('lfs_ot'), //@todo drop payment status column
+                $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
+                $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence())
+            );
+        }
     }
 }
