@@ -40,8 +40,9 @@ class PublicationLink extends AbstractRepository
 
     /**
      * Applies filters
-     * @param QueryBuilder $qb
+     * @param QueryBuilder   $qb
      * @param QueryInterface $query
+     * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
@@ -164,12 +165,10 @@ class PublicationLink extends AbstractRepository
      * @param PublicationEntity $publication
      * @return array
      */
-    public function fetchIneligiblePiPublicationLinks($publication)
+    public function fetchIneligiblePublicationLinks($publication)
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->isNotNull($this->alias . '.pi'));
-        $qb->andWhere($qb->expr()->isNull($this->alias . '.transportManager'));
         $qb->andWhere($qb->expr()->eq($this->alias .'.publication', ':publicationId'))
             ->setParameter('publicationId', $publication->getId());
         $qb->andWhere($qb->expr()->isNotNull($this->alias . '.publishAfterDate'));

@@ -867,8 +867,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $reference = null;
 
         foreach ($fees as $fee) {
-            if (!empty($fee->getOrganisation())) {
-                $reference = $fee->getOrganisation()->getId();
+            if (!empty($fee->getCustomerReference())) {
+                $reference = $fee->getCustomerReference();
                 break;
             }
         }

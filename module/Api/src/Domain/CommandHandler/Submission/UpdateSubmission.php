@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
 /**
  * Update Submission
@@ -21,8 +23,11 @@ final class UpdateSubmission extends AbstractCommandHandler implements Submissio
 
     protected $repoServiceName = 'Submission';
 
+    protected $extraRepos = ['TransportManagerApplication','TransportManagerLicence'];
+
     /**
      * Handle
+     *
      * @param TransferCmd\Submission\UpdateSubmission $command Command
      *
      * @return Result
@@ -32,10 +37,14 @@ final class UpdateSubmission extends AbstractCommandHandler implements Submissio
     public function handleCommand(CommandInterface $command)
     {
         $submissionEntity = $this->updateSubmission($command);
-
+        $repos = [
+            TmLicenceRepo::class => $this->getRepo('TransportManagerLicence'),
+            TmApplicationRepo::class => $this->getRepo('TransportManagerApplication')
+        ];
         $submissionEntity = $this->getSubmissionGenerator()->generateSubmission(
             $submissionEntity,
-            $command->getSections()
+            $command->getSections(),
+            $repos
         );
 
         $this->getRepo()->save($submissionEntity);

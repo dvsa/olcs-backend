@@ -67,7 +67,10 @@ class SubmissionSectionTest extends MockeryTestCase
             $mockViewRenderer = m::mock(PhpRenderer::class);
             $sut = new $this->submissionSection($mockQueryHandler, $mockViewRenderer);
 
-            $this->assertEquals($expectedResult, $sut->generateSection($input));
+            $this->mockSetRepos($sut);
+
+            $section = $sut->generateSection($input);
+            $this->assertEquals($expectedResult, $section);
         } else {
             $this->markTestSkipped('Skipping, no input');
         }
@@ -85,6 +88,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
     /**
      * Return a case attached to an application
+     *
      * @return CasesEntity
      */
     protected function getApplicationCase()
@@ -1017,5 +1021,10 @@ class SubmissionSectionTest extends MockeryTestCase
         $entity->setContactDetails($this->generateContactDetails(54));
 
         return $entity;
+    }
+
+    protected function mockSetRepos($sut): void
+    {
+        $sut->setRepos([]);
     }
 }

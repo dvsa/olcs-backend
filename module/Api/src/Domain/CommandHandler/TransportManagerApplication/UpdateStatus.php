@@ -34,7 +34,10 @@ final class UpdateStatus extends AbstractCommandHandler implements
         } else {
             $tma = $this->getRepo()->fetchUsingId($command);
         }
-        $tma->setTmApplicationStatus($this->getRepo()->getRefdataReference($command->getStatus()));
+        $status = $this->getRepo()->getRefdataReference($command->getStatus());
+
+
+        $tma->setTmApplicationStatus($status);
         $this->getRepo()->save($tma);
 
         $result->addMessage("Transport Manager ID {$tma->getId()} updated");

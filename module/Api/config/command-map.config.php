@@ -185,6 +185,8 @@ return [
     Command\Bus\Ebsr\CreateTxcInbox::class => CommandHandler\Bus\Ebsr\CreateTxcInbox::class,
     Command\Bus\Ebsr\UpdateTxcInboxPdf::class => CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf::class,
     Command\Bus\Ebsr\ProcessPack::class => CommandHandler\Bus\Ebsr\ProcessPack::class,
+    Command\Bus\Ebsr\ProcessPackTransaction::class => CommandHandler\Bus\Ebsr\ProcessPackTransaction::class,
+    Command\Bus\Ebsr\ProcessPackFailed::class => CommandHandler\Bus\Ebsr\ProcessPackFailed::class,
     TransferCommand\Bus\Ebsr\RequestMap::class => CommandHandler\Bus\Ebsr\RequestMapQueue::class,
     TransferCommand\Bus\Ebsr\QueuePacks::class => CommandHandler\Bus\Ebsr\QueuePacks::class,
     Command\Bus\Ebsr\ProcessRequestMap::class => CommandHandler\Bus\Ebsr\ProcessRequestMap::class,
