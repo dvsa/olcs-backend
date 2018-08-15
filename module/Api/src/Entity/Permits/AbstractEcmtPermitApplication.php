@@ -230,15 +230,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $trips;
 
     /**
-     * Date received
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="date_received", nullable=true)
-     */
-    protected $dateReceived;
-
-    /**
      * Version
      *
      * @var int
@@ -773,36 +764,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getTrips()
     {
         return $this->trips;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $dateReceived new value being set
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setDateReceived($dateReceived)
-    {
-        $this->dateReceived = $dateReceived;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDateReceived($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->dateReceived);
-        }
-
-        return $this->dateReceived;
     }
 
     /**
