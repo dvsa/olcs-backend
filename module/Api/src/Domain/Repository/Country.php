@@ -37,9 +37,11 @@ class Country extends AbstractRepository
               ->setParameter('isEcmtState', $query->getIsEcmtState());
             $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
         }
-
     }
 
+
+
+    //TODO remove following method once OLCS-21033 is merged
 
     /**
      * Get all ECMT countries that have constraints
@@ -53,19 +55,14 @@ class Country extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)->withRefdata();
         $qb->andWhere($qb->expr()->eq($this->alias . '.isEcmtState', ':isEcmtState'))->setParameter('isEcmtState', 1);
         $results = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
-        
+
         $data = array();
 
-        foreach ($results as $row)
-        {
-            if ($row->getConstraints() && $row->getConstraints()->count() > 0)
-            {
-                if ($array)
-                {
+        foreach ($results as $row) {
+            if ($row->getConstraints() && $row->getConstraints()->count() > 0) {
+                if ($array) {
                     $data[] = $row->getId();
-                }
-                else
-                {
+                } else {
                     $data[] = array(
                         'id' => $row->getId(),
                         'description' => $row->getCountryDesc()

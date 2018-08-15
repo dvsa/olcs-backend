@@ -157,7 +157,11 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="ecmtApplications"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
