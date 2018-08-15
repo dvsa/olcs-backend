@@ -43,7 +43,16 @@ final class UpdateEcmtLicence extends AbstractCommandHandler
             return $result;
         }
 
+        // Update the licence but reset the previously answers questions to NULL
         $application->setLicence($licence);
+        $application->setPermitsRequired(null);
+        $application->setEmissions(null);
+        $application->setCabotage(null);
+        $application->setTrips(null);
+        $application->setInternationalJourneys(null);
+        $application->setSectors(null);
+        $application->setDeclaration(null);
+
         $this->getRepo()->save($application);
         $result->addId('ecmtPermitApplication', $application->getId());
         $result->addMessage('EcmtPermitApplication Licence Updated successfully');
