@@ -10,7 +10,7 @@
 
 <p>Within the next 30 days you will receive an email informing if your application was successful, partially successful or unsuccessful.</p>
 
-<p>By signing into your <a href="<?php echo $this->escapeUrl($this->url); ?>">vehicle operator licence account</a> you can:</p>
+<p>By signing into your <a href="<?php echo $this->url; //@to-do check escaping ?>">vehicle operator licence account</a> you can:</p>
 
 <ul>
     <li>Check your application status</li>
@@ -18,4 +18,4 @@
     <li>Cancel your application</li>
 </ul>
 
-<button href="<?php echo $this->escapeUrl($this->url); ?>">View your application</button>
+<a class="action--primary" href="<?php echo $this->url; //@to-do check escaping ?>">View your application</a>
