@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -123,6 +124,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
             && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActiveEcmtApplication()
+    {
+        if ($this->ecmtApplications === null) {
+            return false;
+        }
+
+        /** @var EcmtPermitApplication $application */
+        foreach ($this->ecmtApplications as $application) {
+            if ($application->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

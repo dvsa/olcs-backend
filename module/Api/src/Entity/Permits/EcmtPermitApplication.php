@@ -156,6 +156,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'isUnderConsideration' => $this->isUnderConsideration(),
+            'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $this->getSectionCompletion(self::SECTIONS),
         ];
@@ -243,9 +245,28 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         return $this->licence->getLicNo() . ' / ' . $this->id;
     }
 
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
+    }
+
+    /**
+     * @return bool
+     */
     public function isNotYetSubmitted()
     {
         return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnderConsideration()
+    {
+        return $this->status->getId() === self::STATUS_UNDER_CONSIDERATION;
     }
 
     /**
