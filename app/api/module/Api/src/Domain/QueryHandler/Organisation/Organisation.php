@@ -26,7 +26,6 @@ class Organisation extends AbstractQueryHandler
         /* @var $organisation \Dvsa\Olcs\Api\Entity\Organisation\Organisation */
         $organisation = $this->getRepo()->fetchUsingId($query);
         $allowedOperatorLocation = $organisation->getAllowedOperatorLocation();
-        $relevantLicences = $organisation->getStandardInternationalLicences();
 
         return $this->result(
             $organisation,
@@ -37,7 +36,6 @@ class Organisation extends AbstractQueryHandler
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
                 'taValueOptions' => $this->getTrafficAreaValueOptions($allowedOperatorLocation),
                 'allowedOperatorLocation' => $allowedOperatorLocation,
-                'relevantLicences' => $relevantLicences
             ]
         );
     }
