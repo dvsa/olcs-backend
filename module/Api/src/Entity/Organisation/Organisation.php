@@ -633,7 +633,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-
             if ($licence->getEcmtApplications()->isEmpty()) {
                 $licencesArr[] = [
                     'id' => $licence->getId(),
