@@ -12,6 +12,7 @@ return [
     QueryHandler\Permits\EcmtPermitApplication::class => NoValidationRequired::class,
     QueryHandler\Permits\ById::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtPermitFees::class => NoValidationRequired::class,
+    QueryHandler\Permits\EcmtApplicationByLicence::class => NoValidationRequired::class,
     CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
@@ -27,4 +28,6 @@ return [
     CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtLicence::class => NoValidationRequired::class,
     CommandHandler\Permits\EcmtSubmitApplication::class => NoValidationRequired::class,
+    CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
+
 ];
