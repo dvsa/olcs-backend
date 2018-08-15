@@ -42,6 +42,13 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class);
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('setLicence')->with($licence)->once();
+        $application->shouldReceive('setPermitsRequired')->with(null)->once();
+        $application->shouldReceive('setEmissions')->with(null)->once();
+        $application->shouldReceive('setCabotage')->with(null)->once();
+        $application->shouldReceive('setTrips')->with(null)->once();
+        $application->shouldReceive('setInternationalJourneys')->with(null)->once();
+        $application->shouldReceive('setSectors')->with(null)->once();
+        $application->shouldReceive('setDeclaration')->with(null)->once();
         $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(5);
 
 
