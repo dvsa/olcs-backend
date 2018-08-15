@@ -39,7 +39,6 @@ class OrganisationTest extends QueryHandlerTestCase
         $mockOrganisation->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockOrganisation->shouldReceive('getDisqualifications->count')->andReturn(2);
         $mockOrganisation->shouldReceive('getAllowedOperatorLocation')->andReturn('GB')->once();
-        $mockOrganisation->shouldReceive('getStandardInternationalLicences')->andReturn(['foo' => 'bar'])->once();
 
         $mockTa = m::mock()
             ->shouldReceive('getId')
@@ -65,7 +64,6 @@ class OrganisationTest extends QueryHandlerTestCase
             'isDisqualified' => true,
             'allowedOperatorLocation' => 'GB',
             'taValueOptions' => [1 => 'foo'],
-            'relevantLicences' => ['foo' => 'bar']
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
@@ -79,7 +77,6 @@ class OrganisationTest extends QueryHandlerTestCase
         $mockOrganisation->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockOrganisation->shouldReceive('getDisqualifications->count')->andReturn(0);
         $mockOrganisation->shouldReceive('getAllowedOperatorLocation')->andReturn('GB')->once();
-        $mockOrganisation->shouldReceive('getStandardInternationalLicences')->andReturn(['foo' => 'bar'])->once();
 
         $mockTa = m::mock()
             ->shouldReceive('getId')
@@ -105,7 +102,6 @@ class OrganisationTest extends QueryHandlerTestCase
             'isDisqualified' => false,
             'allowedOperatorLocation' => 'GB',
             'taValueOptions' => [1 => 'foo'],
-            'relevantLicences' => ['foo' => 'bar']
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());

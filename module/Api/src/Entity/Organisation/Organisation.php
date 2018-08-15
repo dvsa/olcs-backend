@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
@@ -196,6 +197,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     {
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
+            'eligibleEcmtLicences' => $this->getEligibleEcmtLicences()
         ];
     }
 
@@ -592,11 +594,11 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
-     * Get standard international licences
+     * Get eligible ECMT licences
      **
-     * @return ArrayCollection LicenceEntity[]
+     * @return array
      */
-    public function getStandardInternationalLicences()
+    public function getEligibleEcmtLicences()
     {
         $criteria = Criteria::create();
         $criteria->where(
@@ -633,39 +635,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
-            if ($licence->getEcmtApplications()->isEmpty()) {
-                $licencesArr[] = [
-                    'id' => $licence->getId(),
-                    'licNo' => $licence->getLicNo(),
-                    'trafficArea' => $licence->getTrafficArea()->getName(),
-                    'totAuthVehicles' => $licence->getTotAuthVehicles(),
-                  'licenceType' => $licence->getLicenceType()
-                ];
-            } else {
-                // Track if there are any active ECMT applications
-                $hasActive = false;
-
-                // Check to see if there are any ECMT applications with the
-                // "Under Consideration" or "Not Yet Submitted" status.
-                foreach ($licence->getEcmtApplications() as $ecmtApplication) {
-                    if ((
-                            strcmp($ecmtApplication->getStatus(), "ecmt_permit_nys") == 0) ||
-                        (strcmp($ecmtApplication->getStatus(), "ecmt_permit_uc") == 0
-                        )) {
-                        $hasActive = true;
-                        break;
-                    }
-                }
-
-                if (!$hasActive) {
-                    $licencesArr[] = [
-                        'id' => $licence->getId(),
-                        'licNo' => $licence->getLicNo(),
-                        'trafficArea' => $licence->getTrafficArea()->getName(),
-                        'totAuthVehicles' => $licence->getTotAuthVehicles()
-                    ];
-                }
+            if ($licence->hasActiveEcmtApplication()) {
+                continue;
             }
+
+            $licencesArr[] = [
+                'id' => $licence->getId(),
+                'licNo' => $licence->getLicNo(),
+                'trafficArea' => $licence->getTrafficArea()->getName(),
+                'totAuthVehicles' => $licence->getTotAuthVehicles()
+
+            ];
         }
 
         return $licencesArr;
