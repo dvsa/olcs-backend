@@ -50,7 +50,7 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
             ->once();
         $application->shouldReceive('setDeclaration')
             ->once();
-        $application->shouldReceive('setNoOfPermits')
+        $application->shouldReceive('setPermitsRequired')
             ->once();
         $application->shouldReceive('setTrips')
             ->once();

@@ -28,7 +28,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler
         $sectorRepo = $this->getRepo('Sectors');
 
         /**
-         * @var $ecmtApplication EcmtPermitApplication
+         * @var $ecmtPermitApplication EcmtPermitApplication
          * @var $command UpdateEcmtPermitApplicationCmd
          */
         $ecmtPermitApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
@@ -37,7 +37,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler
         $ecmtPermitApplication->setCabotage($command->getCabotage());
         $ecmtPermitApplication->setDeclaration($command->getDeclaration());
         $ecmtPermitApplication->setEmissions($command->getEmissions());
-        $ecmtPermitApplication->setNoOfPermits($command->getNoOfPermits());
+        $ecmtPermitApplication->setPermitsRequired($command->getPermitsRequired());
         $ecmtPermitApplication->setTrips($command->getTrips());
         $ecmtPermitApplication->setInternationalJourneys($command->getInternationalJourneys());
         $ecmtPermitApplication->setDateReceived(new DateTime($command->getDateReceived()));

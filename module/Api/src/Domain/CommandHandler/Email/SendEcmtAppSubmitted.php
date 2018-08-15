@@ -50,8 +50,10 @@ class SendEcmtAppSubmitted extends AbstractCommandHandler implements EmailAwareI
         $repo = $this->getRepo();
         $application = $repo->fetchUsingId($command);
 
-        $userEmail = $application->getCreatedBy()->getContactDetails()->getEmailAddress();
-        $orgEmailAddresses = $application->getLicence()->getOrganisation()->getAdminEmailAddresses();
+        //$userEmail = $application->getCreatedBy()->getContactDetails()->getEmailAddress();
+        //$orgEmailAddresses = $application->getLicence()->getOrganisation()->getAdminEmailAddresses();
+        $orgEmailAddresses = [];
+        $userEmail = 'terry.valtech@gmail.com';
 
         $templateVariables = [
             // http://selfserve is replaced based on the environment
