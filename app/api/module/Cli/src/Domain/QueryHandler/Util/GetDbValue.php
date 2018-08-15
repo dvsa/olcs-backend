@@ -14,9 +14,13 @@ use RecursiveRegexIterator;
 use ReflectionClass;
 use RegexIterator;
 use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Olcs\Db\Traits\EntityManagerAwareTrait;
 
 class GetDbValue extends AbstractQueryHandler
 {
+    use ServiceLocatorAwareTrait;
 
     private $entity = null;
 
@@ -50,7 +54,6 @@ class GetDbValue extends AbstractQueryHandler
             } catch (NotFoundException $notFoundException) {
                 $result->setValue("error", "Not found");
             }
-
             return $result;
         }
     }
@@ -137,6 +140,7 @@ class GetDbValue extends AbstractQueryHandler
      */
     private function setEntityOnRepo(): \Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface
     {
+        $this->getServiceLocator()->get('ExpressionBuilder');
         $repo = $this->getRepo();
         $repo->setEntity($this->entity);
         return $repo;
