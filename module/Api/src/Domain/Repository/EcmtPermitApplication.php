@@ -24,11 +24,6 @@ class EcmtPermitApplication extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
-        $qb->andWhere($qb->expr()->in($this->alias . '.status',
-            [
-                Entity::STATUS_NOT_YET_SUBMITTED,
-                Entity::STATUS_UNDER_CONSIDERATION,
-                Entity::STATUS_AWAITING_FEE
-            ]));
+        $qb->andWhere($qb->expr()->in($this->alias . '.status', [Entity::STATUS_NOT_YET_SUBMITTED, Entity::STATUS_UNDER_CONSIDERATION, Entity::STATUS_AWAITING_FEE]));
     }
 }
