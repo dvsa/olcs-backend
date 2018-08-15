@@ -110,7 +110,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         Sectors $sectors = null,
         CreateEcmtPermitApplication $command
     ) {
-
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->setStatus($status);
         $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
@@ -120,7 +119,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->setCabotage($command->getCabotage());
         $ecmtPermitApplication->setDeclaration($command->getDeclaration());
         $ecmtPermitApplication->setEmissions($command->getEmissions());
-        $ecmtPermitApplication->setNoOfPermits($command->getNoOfPermits());
+        $ecmtPermitApplication->setPermitsRequired($command->getPermitsRequired());
         $ecmtPermitApplication->setTrips($command->getTrips());
         $ecmtPermitApplication->setInternationalJourneys($command->getInternationalJourneys());
         $ecmtPermitApplication->setDateReceived(static::processDate($command->getDateReceived()));
