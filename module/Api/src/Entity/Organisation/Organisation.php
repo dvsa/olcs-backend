@@ -633,6 +633,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var LicenceEntity $licence */
         foreach ($licences as $licence) {
+
             if ($licence->getEcmtApplications()->isEmpty()) {
                 $licencesArr[] = [
                     'id' => $licence->getId(),
@@ -649,9 +650,9 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 // "Under Consideration" or "Not Yet Submitted" status.
                 foreach ($licence->getEcmtApplications() as $ecmtApplication) {
                     if ((
-                        strcmp($ecmtApplication->getStatus(), "ecmt_permit_nys") == 0) ||
+                            strcmp($ecmtApplication->getStatus(), "ecmt_permit_nys") == 0) ||
                         (strcmp($ecmtApplication->getStatus(), "ecmt_permit_uc") == 0
-                    )) {
+                        )) {
                         $hasActive = true;
                         break;
                     }
