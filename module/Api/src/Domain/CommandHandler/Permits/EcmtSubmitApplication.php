@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
@@ -16,6 +18,8 @@ use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplic
  */
 final class EcmtSubmitApplication extends AbstractCommandHandler
 {
+    use QueueAwareTrait;
+
     protected $repoServiceName = 'EcmtPermitApplication';
 
     /**
@@ -33,15 +37,23 @@ final class EcmtSubmitApplication extends AbstractCommandHandler
          * @var EcmtPermitApplication       $application
          * @var EcmtSubmitApplicationCmd    $command
          */
+        $id = $command->getId();
         $newStatus = $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_UNDER_CONSIDERATION);
-        $application = $this->getRepo()->fetchById($command->getId());
+        $application = $this->getRepo()->fetchById($id);
         $application->submit($newStatus);
 
         $this->getRepo()->save($application);
 
         $result = new Result();
-        $result->addId('ecmtPermitApplication', $application->getId());
+        $result->addId('ecmtPermitApplication', $id);
         $result->addMessage('Permit application updated');
+
+        $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
+
+        //queue the email confirming submission
+        $result->merge(
+            $this->handleSideEffect($emailCmd)
+        );
 
         return $result;
     }

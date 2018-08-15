@@ -250,7 +250,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     }
 
     /**
-     * Whether the permit application can be cancelled
+     * Whether the permit application can be submitted
      * @todo this currently reruns the section completion checks, should store the value instead for speed
      *
      * @return bool

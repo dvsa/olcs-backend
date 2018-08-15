@@ -61,6 +61,7 @@ return [
     CommandHandler\Email\SendEbsrRefreshed::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrErrors::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrRequestMap::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Email\SendPublication::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
