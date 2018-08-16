@@ -170,11 +170,11 @@ return [
         // CPMS client ID *Environment specific*
         'client_id' => 'OLCS',
         // CPMS Client secret *Environment specific*
-        'client_secret' => 'f7c3cd7d55c0dc0f3bcadc68d2867beedc28b463',
+        'client_secret' => 'CMPS CLIENTID',
         // CPMS NI client ID *Environment specific*
-        'client_id_ni' => 'OLNI',
+        'client_id_ni' => 'CMPS CLIENTID',
         // CPMS NI Client secret *Environment specific*
-        'client_secret_ni' => '7EF04CBD6E682AE9E110BB31F4CE9C9A7EF04CBD',
+        'client_secret_ni' => 'CPMS SECRET',
     ],
 
     'cpms' => [

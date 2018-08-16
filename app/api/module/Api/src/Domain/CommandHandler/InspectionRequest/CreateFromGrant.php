@@ -65,7 +65,7 @@ final class CreateFromGrant extends AbstractCommandHandler implements Transactio
     }
 
     /**
-     * Only create inspection request if the
+     * Only create inspection request if the EA is not NI (EA-N)
      *
      * @param Cmd $command
      *
