@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * Date: 26/07/2018
- * Time: 12:02
- */
 
 /**
- * Update ECMT EURO6 Emissions Test
+ * Withdraw ECMT Permit Application Test
  *
- * @author ONE
+ * @author Scott Callaway
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
