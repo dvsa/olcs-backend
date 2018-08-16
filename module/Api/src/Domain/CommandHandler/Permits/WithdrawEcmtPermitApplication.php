@@ -34,9 +34,9 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler
         $application = $this->getRepo()->fetchById($command->getId());
 
         if (empty($application)) {
-          $result->addMessage('No permit application to withdraw');
+            $result->addMessage('No permit application to withdraw');
 
-          return $result;
+            return $result;
         }
 
         /** @var EcmtPermitApplication $application */
