@@ -1438,7 +1438,6 @@ class ProcessPackTest extends CommandHandlerTestCase
         ];
 
         $this->expectedSideEffect(UploadCmd::class, $documentData, new Result());
-
     }
 
     /**

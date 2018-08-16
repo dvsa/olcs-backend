@@ -30,7 +30,7 @@ class ApplicationTest extends RepositoryTestCase
     const APP_ID = 8001;
     const ORG_ID = 7001;
 
-    /** @var Repository\Application | m\MockInterface  */
+    /** @var Repository\Application | m\MockInterface */
     protected $sut;
 
     public function setUp()
@@ -610,6 +610,5 @@ class ApplicationTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
         $this->assertEquals(['RESULT'], $this->sut->fetchAbandonedVariations($olderThanDate));
-
     }
 }

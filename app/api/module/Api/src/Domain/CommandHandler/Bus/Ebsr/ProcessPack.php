@@ -3,6 +3,7 @@
 /**
  * Process Ebsr pack
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -185,9 +186,9 @@ final class ProcessPack extends AbstractCommandHandler implements
         $ebsrData = $this->getDoctrineInformation($ebsrData);
 
         /**
-         * @var LicenceRepo $repo
+         * @var LicenceRepo   $repo
          * @var LicenceEntity $licence
-         * @var BusRegEntity $previousBusReg
+         * @var BusRegEntity  $previousBusReg
          */
         $repo = $this->getRepo('Licence');
         $licence = $repo->fetchByLicNoWithoutAdditionalData($ebsrData['licNo']);
@@ -666,7 +667,8 @@ final class ProcessPack extends AbstractCommandHandler implements
         $ebsrData['trafficAreas'] = $this->processTrafficAreas($ebsrData['trafficAreas'], $ebsrData['localAuthoritys']);
         $ebsrData['busServiceTypes'] = $this->processServiceTypes($ebsrData['serviceClassifications']);
         $ebsrData['busNoticePeriod'] = $this->getRepo()->getReference(
-            BusNoticePeriodEntity::class, $ebsrData['busNoticePeriod']
+            BusNoticePeriodEntity::class,
+            $ebsrData['busNoticePeriod']
         );
 
         return $ebsrData;

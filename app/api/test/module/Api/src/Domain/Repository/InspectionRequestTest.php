@@ -261,6 +261,4 @@ class InspectionRequestTest extends RepositoryTestCase
 
         $this->assertNull($this->sut->applyListJoins($qb));
     }
-
-
 }
