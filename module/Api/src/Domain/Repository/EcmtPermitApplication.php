@@ -26,11 +26,10 @@ class EcmtPermitApplication extends AbstractRepository
         $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
         $qb->andWhere($qb->expr()->in($this->alias . '.status', [Entity::STATUS_NOT_YET_SUBMITTED, Entity::STATUS_UNDER_CONSIDERATION, Entity::STATUS_AWAITING_FEE]));
 
-        if($query->getOrganisationId()) {
+        if ($query->getOrganisationId()) {
             $licences = $this->fetchLicenceByOrganisation($query->getOrganisationId());
             $qb->andWhere($qb->expr()->in($this->alias . '.licence', $licences));
         }
-
     }
 
     /**
@@ -40,17 +39,17 @@ class EcmtPermitApplication extends AbstractRepository
      *
      * @return array
      */
-   public function fetchLicenceByOrganisation($organisationId){
-       $qbs = $this->getEntityManager()->createQueryBuilder()
+    public function fetchLicenceByOrganisation($organisationId)
+    {
+        $qbs = $this->getEntityManager()->createQueryBuilder()
             ->select('l.id')
-            ->from(LicenceEntity::class,'l')
+            ->from(LicenceEntity::class, 'l')
             ->where('l.organisation = ' . $organisationId);
 
-       $licenceIds = [];
-       foreach ($qbs->getQuery()->execute() as $licence) {
-           $licenceIds[] = $licence['id'];
-       }
-
-       return $licenceIds;
+        $licenceIds = [];
+        foreach ($qbs->getQuery()->execute() as $licence) {
+            $licenceIds[] = $licence['id'];
+        }
+        return $licenceIds;
     }
 }
