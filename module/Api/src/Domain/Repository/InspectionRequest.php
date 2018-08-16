@@ -46,9 +46,6 @@ class InspectionRequest extends AbstractRepository
             ->withRefData()
             ->byId($id);
 
-        $this->excludeEnforcementArea($qb, EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE);
-
-
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
     }
 
@@ -82,12 +79,7 @@ class InspectionRequest extends AbstractRepository
         $qb->setParameter('licence', $query->getLicence());
     }
 
-    protected function excludeEnforcementArea(QueryBuilder $qb, $enforcementArea)
-    {
 
-        $qb->andWhere($qb->expr()->neq('l_ea.id', ':enforcementArea'));
-        $qb->setParameter('enforcementArea', $enforcementArea);
-    }
 
     protected function applyListJoins(QueryBuilder $qb)
     {
