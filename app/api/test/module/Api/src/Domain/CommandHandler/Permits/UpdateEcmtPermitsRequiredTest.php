@@ -41,16 +41,20 @@ class UpdateEcmtPermitsRequiredTest extends CommandHandlerTestCase
 
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);
-        $application->shouldReceive('setPermitsRequired')
+        $application->shouldReceive('updatePermitsRequired')
             ->once()
-            ->with(3);
+            ->with(3)
+            ->ordered()
+            ->globally();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($application)
             ->shouldReceive('save')
             ->once()
-            ->with($application);
+            ->with($application)
+            ->ordered()
+            ->globally();
 
         $result = $this->sut->handleCommand($command);
 

@@ -41,16 +41,20 @@ class UpdateEcmtEmissionsTest extends CommandHandlerTestCase
 
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);
-        $application->shouldReceive('setEmissions')
+        $application->shouldReceive('updateEmissions')
             ->once()
-            ->with(0);
+            ->with(0)
+            ->ordered()
+            ->globally();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($application)
             ->shouldReceive('save')
             ->once()
-            ->with($application);
+            ->with($application)
+            ->ordered()
+            ->globally();
 
         $result = $this->sut->handleCommand($command);
 

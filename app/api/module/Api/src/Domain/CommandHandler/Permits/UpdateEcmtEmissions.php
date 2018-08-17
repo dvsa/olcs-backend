@@ -30,7 +30,7 @@ final class UpdateEcmtEmissions extends AbstractCommandHandler
          */
         $ecmtApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $ecmtApplication->setEmissions($command->getEmissions());
+        $ecmtApplication->updateEmissions($command->getEmissions());
 
         $this->getRepo()->save($ecmtApplication);
 

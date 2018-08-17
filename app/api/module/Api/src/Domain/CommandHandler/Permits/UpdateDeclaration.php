@@ -33,12 +33,6 @@ final class UpdateDeclaration extends AbstractCommandHandler
 
         $application = $this->getRepo()->fetchById($command->getId());
 
-        if (empty($application)) {
-            $result->addMessage('No permit application to update');
-
-            return $result;
-        }
-
         /** @var EcmtPermitApplication $application */
         // $application->setDeclaration(1);
         $application->setDeclaration($command->getDeclaration());

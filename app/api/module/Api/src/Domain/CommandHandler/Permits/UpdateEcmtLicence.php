@@ -37,12 +37,6 @@ final class UpdateEcmtLicence extends AbstractCommandHandler
 
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
-
-        if (empty($application)) {
-            $result->addMessage('No permit application to update');
-            return $result;
-        }
-
         // Update the licence but reset the previously answers questions to NULL
         $application->setLicence($licence);
         $application->setPermitsRequired(null);

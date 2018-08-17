@@ -33,14 +33,8 @@ final class UpdateInternationalJourney extends AbstractCommandHandler
 
         $application = $this->getRepo()->fetchById($command->getId());
 
-        if (empty($application)) {
-            $result->addMessage('No permit application to update');
-
-            return $result;
-        }
-
         /** @var EcmtPermitApplication $application */
-        $application->setInternationalJourneys($command->getInternationalJourney());
+        $application->updateInternationalJourneys($command->getInternationalJourney());
 
         $this->getRepo()->save($application);
 

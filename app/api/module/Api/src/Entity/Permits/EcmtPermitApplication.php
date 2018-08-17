@@ -164,6 +164,95 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     }
 
     /**
+     * Updates the application to reflect whether or not cabotage will be carried out. A value of true indicates that
+     * cabotage will NOT be carried out on the permit
+     *
+     * @param bool $cabotage
+     */
+    public function updateCabotage($cabotage)
+    {
+        $this->cabotage = $cabotage;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates the application to reflect whether or not the permit will be used only by vehicles compliant with
+     * Euro 6 standards. A value of true indicates that the permit will only be used by compliant vehicles
+     *
+     * @param bool $emissions
+     */
+    public function updateEmissions($emissions)
+    {
+        $this->emissions = $emissions;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates the application to indicate the intended use of the permit in any countries that have imposed limits
+     * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects
+     *
+     * @param array $countrys
+     */
+    public function updateCountrys(array $countrys)
+    {
+        $this->countrys = $countrys;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates the application to indicate the number of required permits
+     *
+     * @param int $permitsRequired
+     */
+    public function updatePermitsRequired($permitsRequired)
+    {
+        $this->permitsRequired = $permitsRequired;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates the application to indicate the number of trips made in the last 12 months using this licence
+     *
+     * @param int $trips
+     */
+    public function updateTrips($trips)
+    {
+        $this->trips = $trips;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates the application to indicate a sector in which the haulier specialises
+     *
+     * @param int $internationalJourneys
+     */
+    public function updateInternationalJourneys($internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates the application to indicate a sector in which the haulier specialises
+     *
+     * @param mixed $sectors
+     */
+    public function updateSectors($sectors)
+    {
+        $this->sectors = $sectors;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Reset the checked answers and declaration sections to a value representing 'not completed'
+     */
+    private function resetCheckAnswersAndDeclaration()
+    {
+        $this->declaration = false;
+        $this->checkedAnswers = false;
+    }
+
+    /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
      */
     private function getSectionCompletion($sections)
