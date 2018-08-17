@@ -181,6 +181,15 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $this->status = $submitStatus;
     }
 
+    public function withdraw(RefData $withdrawStatus)
+    {
+        if (!$this->canBeWithdrawn()) {
+            throw new ForbiddenException('This application is not allowed to be withdrawn');
+        }
+
+        $this->status = $withdrawStatus;
+    }
+
     /**
      * Gets calculated values
      *
@@ -192,6 +201,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
+            'canBeWithdrawn' => $this->canBeWithdrawn(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isActive' => $this->isActive(),
@@ -416,6 +426,20 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $sections = $this->getSectionCompletion(self::SECTIONS);
 
         return $sections['allCompleted'];
+    }
+
+    /**
+     * Whether the permit application can be withdrawn
+     *
+     * @return bool
+     */
+    private function canBeWithdrawn()
+    {
+        if ($this->isUnderConsideration()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
