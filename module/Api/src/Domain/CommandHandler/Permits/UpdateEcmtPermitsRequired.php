@@ -25,7 +25,7 @@ final class UpdateEcmtPermitsRequired extends AbstractCommandHandler
         /* @var $ecmtApplication EcmtApplication */
         $ecmtApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $ecmtApplication->setPermitsRequired($command->getPermitsRequired());
+        $ecmtApplication->updatePermitsRequired($command->getPermitsRequired());
 
         $this->getRepo()->save($ecmtApplication);
 

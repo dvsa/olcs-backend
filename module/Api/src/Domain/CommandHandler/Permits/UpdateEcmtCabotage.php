@@ -30,7 +30,7 @@ final class UpdateEcmtCabotage extends AbstractCommandHandler
          */
         $ecmtApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $ecmtApplication->setCabotage($command->getCabotage());
+        $ecmtApplication->updateCabotage($command->getCabotage());
 
         $this->getRepo()->save($ecmtApplication);
 

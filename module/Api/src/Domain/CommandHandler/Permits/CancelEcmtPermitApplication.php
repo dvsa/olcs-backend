@@ -33,12 +33,6 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler
 
         $application = $this->getRepo()->fetchById($command->getId());
 
-        if (empty($application)) {
-            $result->addMessage('No permit application to cancel');
-
-            return $result;
-        }
-
         /** @var EcmtPermitApplication $application */
         $application->setStatus($this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_CANCELLED));
 
