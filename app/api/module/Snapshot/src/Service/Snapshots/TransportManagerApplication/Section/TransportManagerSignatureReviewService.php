@@ -12,6 +12,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class TransportManagerSignatureReviewService extends AbstractReviewService
 {
+
+    const SIGNATURE         = 'markup-tma-declaration-signature';
+    const SIGNATURE_DIGITAL = 'markup-tma-declaration-signature-digital';
+    const ADDRESS           = 'tm-review-return-address';
+
     /**
      * Format the readonly config from the given data
      *
@@ -19,14 +24,51 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfig(TransportManagerApplication $tma)
+    public function getConfig(TransportManagerApplication $tma) : array
     {
+        $partial = $this->getPartial($tma);
+
+        $replaceData = $this->getReplaceData($tma);
+
+        $markup = $this->translateReplace(
+            $partial,
+            $replaceData
+        );
+
         return [
-            'markup' => $this->translateReplace(
-                'markup-tma-declaration-signature',
-                [$this->getOwnerLabel($tma), $this->translate('tm-review-return-address')]
-            )
+            'markup' => $markup
         ];
+    }
+
+    private function getPartial(TransportManagerApplication $tma) : string
+    {
+        return $tma->getDigitalSignature() ? self::SIGNATURE_DIGITAL : self::SIGNATURE;
+    }
+
+    private function getReplaceData(TransportManagerApplication $tma) : array
+    {
+        $replaceData = [
+            $this->getOwnerLabel($tma),
+            $this->translate(self::ADDRESS)
+        ];
+
+        if ($tma->getDigitalSignature()) {
+            $tm = $tma->getTransportManager();
+            $contactDetails = $tm->getHomeCd();
+            $person = $contactDetails->getPerson();
+            $tmFullName = $this->formatPersonFullName($person);
+            $tmDateOfBirth = $this->formatDate($person->getBirthDate(true), "d-m-Y");
+            $signatureDate = $this->formatDate($tma->getDigitalSignature()->getCreatedOn(true), "d-m-Y");
+
+            array_unshift(
+                $replaceData,
+                $tmFullName,
+                $tmDateOfBirth,
+                $signatureDate
+            );
+        }
+
+        return $replaceData;
     }
 
     /**

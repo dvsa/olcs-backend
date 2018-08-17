@@ -2,12 +2,17 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\TransportManagerApplication\Section;
 
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
+use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section\TransportManagerSignatureReviewService;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * TransportManagerSignatureReviewServiceTest
@@ -16,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 {
+    /** @var TransportManagerSignatureReviewService */
     protected $sut;
 
     protected $sm;
@@ -29,37 +35,124 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider provider
+     * @dataProvider getConfigProvider
      */
-    public function testGetConfig($organistionTypeId, $label)
+    public function testGetConfig($data, $expected)
     {
         $mockTranslator = m::mock();
         $this->sm->setService('translator', $mockTranslator);
 
-        $mockTranslator->shouldReceive('translate')->with('markup-tma-declaration-signature', 'snapshot')->once()
-            ->andReturn('%s_%s');
-        $mockTranslator->shouldReceive('translate')->with('tm-review-return-address', 'snapshot')->once()
+        if (!$data['digitalSignature']) {
+            $mockTranslator->shouldReceive('translate')->with($expected['signatureBoxPartial'], 'snapshot')->once()
+                ->andReturn('%s_%s');
+        }
+
+        $mockTranslator->shouldReceive('translate')->with(TransportManagerSignatureReviewService::ADDRESS, 'snapshot')->once()
             ->andReturn('ADDRESS');
 
-        $mockTranslator->shouldReceive('translate')->with($label, 'snapshot')->once()
-            ->andReturn($label .'translated');
+        $mockTranslator->shouldReceive('translate')->with($expected['label'], 'snapshot')->once()
+            ->andReturn($expected['label'] .'translated');
 
         $tma = m::mock(TransportManagerApplication::class);
-        $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
-            ->andReturn($organistionTypeId);
+        $tma->shouldReceive('getDigitalSignature')->andReturn($data['digitalSignature']);
 
-        $expected = $label .'translated_ADDRESS';
-        $this->assertEquals(['markup' => $expected], $this->sut->getConfig($tma));
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
+            ->andReturn($data['organisationType']);
+
+        $expectedMarkup = $expected['label'] .'translated_ADDRESS';
+
+        if ($data['digitalSignature']) {
+            $digitalSignatureDate = new DateTime('2018-01-01');
+            $data['digitalSignature']
+                ->shouldReceive('getCreatedOn')
+                ->with(true)
+                ->andReturn($digitalSignatureDate);
+            $name = 'Name';
+            $familyName = 'FamilyName';
+            $birthDate = new DateTime('1980-01-01');
+            $tm = m::mock(TransportManager::class);
+            $contactDetails = m::mock(ContactDetails::class);
+            $person = m::mock(Person::class);
+            $tm->shouldReceive('getHomeCd')->andReturn($contactDetails);
+            $contactDetails->shouldReceive('getPerson')->andReturn($person);
+            $person->shouldReceive('getBirthDate')->with(true)->andReturn($birthDate);
+            $person->shouldReceive('getTitle')->andReturn(null);
+            $person->shouldReceive('getForename')->andReturn($name);
+            $person->shouldReceive('getFamilyName')->andReturn($familyName);
+            $tma->shouldReceive('getTransportManager')->andReturn($tm);
+            $mockTranslator->shouldReceive('translate')->with($expected['signatureBoxPartial'], 'snapshot')->once()
+                ->andReturn('%s_%s_%s_%s_%s');
+            $expectedMarkup = $name .
+                ' ' . $familyName .
+                '_' . $birthDate->format('d-m-Y') .
+                '_' . $digitalSignatureDate->format('d-m-Y') .
+                '_' . $expectedMarkup;
+        }
+
+
+        $this->assertEquals(['markup' => $expectedMarkup], $this->sut->getConfig($tma));
     }
 
-    public function provider()
+    public function getConfigProvider()
     {
+
+        $digitalSignature = m::mock(DigitalSignature::class);
+
         return [
-            ['foobar', 'responsible-person-signature'],
-            [Organisation::ORG_TYPE_LLP, 'directors-signature'],
-            [Organisation::ORG_TYPE_REGISTERED_COMPANY, 'directors-signature'],
-            [Organisation::ORG_TYPE_PARTNERSHIP, 'partners-signature'],
-            [Organisation::ORG_TYPE_SOLE_TRADER, 'owners-signature'],
+            'case_01' => [
+                [
+                    'organisationType' => 'unknown',
+                    'digitalSignature' => null
+                ],
+                [
+                    'label' => 'responsible-person-signature',
+                ]
+            ],
+            'case_02' => [
+                [
+                    'organisationType' => Organisation::ORG_TYPE_LLP,
+                    'digitalSignature' => null
+                ],
+                [
+                    'label' => 'directors-signature',
+                ]
+            ],
+            'case_03' => [
+                [
+                    'organisationType' => Organisation::ORG_TYPE_REGISTERED_COMPANY,
+                    'digitalSignature' => null
+                ],
+                [
+                    'label' => 'directors-signature',
+                ]
+            ],
+            'case_04' => [
+                [
+                    'organisationType' => Organisation::ORG_TYPE_PARTNERSHIP,
+                    'digitalSignature' => null
+                ],
+                [
+                    'label' => 'partners-signature',
+                ]
+            ],
+            'case_05' => [
+                [
+                    'organisationType' => Organisation::ORG_TYPE_SOLE_TRADER,
+                    'digitalSignature' => null
+                ],
+                [
+                    'label' => 'owners-signature',
+                ]
+            ],
+            'case_06' => [
+                [
+                    'organisationType' => 'unknown',
+                    'digitalSignature' => $digitalSignature
+                ],
+                [
+                    'label' => 'responsible-person-signature',
+                ]
+            ],
         ];
     }
 }
