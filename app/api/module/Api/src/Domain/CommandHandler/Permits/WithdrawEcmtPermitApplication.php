@@ -29,22 +29,18 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
+        $application = $this->getRepo()
+                        ->fetchById($command->getId());
+        $newStatus = $this->getRepo()
+                        ->getRefdataReference(EcmtPermitApplication::STATUS_WITHDRAWN);
+        $application->withdraw($newStatus);
+
+        $this->getRepo()
+            ->save($application);
+
         $result = new Result();
-
-        $application = $this->getRepo()->fetchById($command->getId());
-
-        if (empty($application)) {
-            $result->addMessage('No permit application to withdraw');
-
-            return $result;
-        }
-
-        /** @var EcmtPermitApplication $application */
-        $application->setStatus($this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_WITHDRAWN));
-
-        $this->getRepo()->save($application);
-
-        $result->addId('ecmtPermitApplication', $application->getId());
+        $result->addId('ecmtPermitApplication', $id);
+        $result->addMessage('Permit application withdrawn');
 
         return $result;
     }
