@@ -37,27 +37,11 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
         }
 
         $application = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId());
-        $application->setCountrys($countrys);
+        $application->updateCountrys($countrys);
 
         $this->getRepo('EcmtPermitApplication')->save($application);
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
 
         return $result;
-    }
-
-  /**
-   * Create EcmtRestritedCountries object
-   *
-   * @param Cmd $command Command
-   * @param int $countryId Country Id
-   *
-   * @return EcmtApplicationRestrictedCountries
-   */
-    private function createRestrictedCountriesObject($applicationRef, $countryRef)
-    {
-        return EcmtApplicationRestrictedCountries::createNew(
-            $applicationRef,
-            $countryRef
-        );
     }
 }
