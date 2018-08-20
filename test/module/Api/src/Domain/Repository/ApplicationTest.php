@@ -284,7 +284,7 @@ class ApplicationTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once()
             ->shouldReceive('with')
-            ->with("l.enforcement_area", "l_ea")
+            ->with("l.enforcementArea", "l_ea")
             ->andReturnSelf()
             ->once()
             ->shouldReceive('byId')
