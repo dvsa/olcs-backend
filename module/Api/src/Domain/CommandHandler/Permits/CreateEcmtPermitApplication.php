@@ -59,7 +59,13 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler
                 $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
                 $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
                 $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
-                $command
+                $command->getCabotage(),
+                $command->getDeclaration(),
+                $command->getEmissions(),
+                $command->getPermitsRequired(),
+                $command->getTrips(),
+                $command->getInternationalJourneys(),
+                $command->getDateReceived()
             );
         } else {
             return EcmtPermitApplication::createNew(
