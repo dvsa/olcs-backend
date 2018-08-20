@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Ecmt Permit Applications by licence
@@ -30,11 +31,12 @@ class EcmtApplicationByLicence extends AbstractQueryHandler implements ToggleReq
     public function handleQuery(QueryInterface $query)
     {
         $repo = $this->getRepo();
-
         $licence = $this->getRepo('Licence')->fetchById($query->getLicence());
 
         return [
-            'result' => $this->resultList($repo->fetchList($query, Query::HYDRATE_OBJECT)),
+            'result' => $this->resultList(
+                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+            ),
             'count' => $repo->fetchCount($query),
             'licence' => $licence->serialize(),
             'organisation' => $licence->getOrganisation()->serialize(),
