@@ -648,6 +648,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             ];
         }
 
-        return $licencesArr;
+        return ['result' => $licencesArr, 'uneligibleLicenceCount' => count($licences)];
     }
 }
