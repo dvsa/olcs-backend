@@ -94,12 +94,18 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * Create new EcmtPermitApplication
      *
-     * @param RefData $status        Status
+     * @param RefData $status Status
      * @param RefData $paymentStatus Payment status
-     * @param RefData $permitType    Permit type
-     * @param Licence $licence       Licence
-     * @param Sectors $sectors       Sectors
-     *
+     * @param RefData $permitType Permit type
+     * @param Licence $licence Licence
+     * @param Sectors|null $sectors
+     * @param int|null $cabotage
+     * @param int|null $declaration
+     * @param int|null $emissions
+     * @param int|null $permitsRequired
+     * @param int|null $trips
+     * @param int|null $internationalJourneys
+     * @param string|null $dateReceived
      * @return EcmtPermitApplication
      */
     public static function createNewInternal(
@@ -108,21 +114,27 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         RefData $permitType,
         Licence $licence,
         Sectors $sectors = null,
-        CreateEcmtPermitApplication $command
+        int $cabotage = null,
+        int $declaration = null,
+        int $emissions = null,
+        int $permitsRequired = null,
+        int $trips = null,
+        int $internationalJourneys = null,
+        string $dateReceived = null
     ) {
         $ecmtPermitApplication = new self();
-        $ecmtPermitApplication->setStatus($status);
-        $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
-        $ecmtPermitApplication->setPermitType($permitType);
-        $ecmtPermitApplication->setLicence($licence);
-        $ecmtPermitApplication->setSectors($sectors);
-        $ecmtPermitApplication->setCabotage($command->getCabotage());
-        $ecmtPermitApplication->setDeclaration($command->getDeclaration());
-        $ecmtPermitApplication->setEmissions($command->getEmissions());
-        $ecmtPermitApplication->setPermitsRequired($command->getPermitsRequired());
-        $ecmtPermitApplication->setTrips($command->getTrips());
-        $ecmtPermitApplication->setInternationalJourneys($command->getInternationalJourneys());
-        $ecmtPermitApplication->setDateReceived(static::processDate($command->getDateReceived()));
+        $ecmtPermitApplication->status = $status;
+        $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
+        $ecmtPermitApplication->permitType = $permitType;
+        $ecmtPermitApplication->licence = $licence;
+        $ecmtPermitApplication->sectors = $sectors;
+        $ecmtPermitApplication->cabotage = $cabotage;
+        $ecmtPermitApplication->declaration = $declaration;
+        $ecmtPermitApplication->emissions = $emissions;
+        $ecmtPermitApplication->permitsRequired = $permitsRequired;
+        $ecmtPermitApplication->trips = $trips;
+        $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
+        $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
 
         return $ecmtPermitApplication;
     }
