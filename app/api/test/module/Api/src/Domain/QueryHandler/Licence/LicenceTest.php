@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -66,7 +67,9 @@ class LicenceTest extends QueryHandlerTestCase
             )
             ->shouldReceive('isSpecialRestricted')
             ->andReturn(false)
-            ->once();
+            ->once()
+            ->shouldReceive('getStatus->getId')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
 
         $mockContinuationDetail = m::mock(\Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail::class)
             ->shouldReceive('serialize')->with(['continuation', 'licence'])->once()->andReturn(['CD'])
@@ -127,7 +130,9 @@ class LicenceTest extends QueryHandlerTestCase
             )
             ->shouldReceive('isSpecialRestricted')
             ->andReturn(true)
-            ->once();
+            ->once()
+            ->shouldReceive('getStatus->getId')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(111)
             ->andReturn([]);
@@ -190,7 +195,9 @@ class LicenceTest extends QueryHandlerTestCase
                     ->getMock()
             )
             ->shouldReceive('isSpecialRestricted')->andReturn(true)->once()
-            ->shouldReceive('isExpiring')->with()->once()->andReturn($isExpiring);
+            ->shouldReceive('isExpiring')->with()->once()->andReturn($isExpiring)
+            ->shouldReceive('getStatus->getId')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(111)
             ->andReturn([$continuationDetail]);
@@ -241,7 +248,9 @@ class LicenceTest extends QueryHandlerTestCase
                     ->andReturn(true)
                     ->getMock()
             )
-            ->shouldReceive('isSpecialRestricted')->andReturn(true)->once();
+            ->shouldReceive('isSpecialRestricted')->andReturn(true)->once()
+            ->shouldReceive('getStatus->getId')
+            ->andReturn(LicenceEntity::LICENCE_STATUS_VALID);
 
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(111)
             ->andReturn([]);

@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * Licence
@@ -57,6 +58,8 @@ class Licence extends AbstractQueryHandler
     {
         /** @var Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
+
+        $this->guardAgainstLackOfPermission($licence);
 
         $this->auditRead($licence);
 
@@ -130,5 +133,20 @@ class Licence extends AbstractQueryHandler
         }
 
         return null;
+    }
+
+    private function guardAgainstLackOfPermission(Entity\Licence\Licence $licence) : void
+    {
+        $allowedStatusesForExternalUser = [
+            Entity\Licence\Licence::LICENCE_STATUS_VALID,
+            Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED,
+            Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
+        ];
+
+        $licenceStatus = $licence->getStatus()->getId();
+
+        if ($this->isExternalUser() && !in_array($licenceStatus, $allowedStatusesForExternalUser)) {
+            throw new ForbiddenException('You do not have permission to access this record');
+        }
     }
 }

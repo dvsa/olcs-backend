@@ -8,6 +8,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\InspectionRequest;
 
 use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\CreateFromGrant;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use PHPUnit_Framework_TestCase;
 
 /**
