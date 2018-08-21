@@ -99,12 +99,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
      * @param Sectors|null $sectors
+     * @param $countrys
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
      * @param int|null $permitsRequired
      * @param int|null $trips
-     * @param int|null $internationalJourneys
+     * @param string|null $internationalJourneys
      * @param string|null $dateReceived
      * @return EcmtPermitApplication
      */
@@ -114,12 +115,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         RefData $permitType,
         Licence $licence,
         Sectors $sectors = null,
+        $countrys = null,
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
         int $permitsRequired = null,
         int $trips = null,
-        int $internationalJourneys = null,
+        RefData $internationalJourneys = null,
         string $dateReceived = null
     ) {
         $ecmtPermitApplication = new self();
@@ -128,6 +130,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->sectors = $sectors;
+        $ecmtPermitApplication->countrys = $countrys;
         $ecmtPermitApplication->cabotage = $cabotage;
         $ecmtPermitApplication->declaration = $declaration;
         $ecmtPermitApplication->emissions = $emissions;
