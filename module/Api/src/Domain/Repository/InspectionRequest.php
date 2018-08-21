@@ -5,8 +5,10 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -24,8 +26,7 @@ class InspectionRequest extends AbstractRepository
     public function fetchForInspectionRequest($id)
     {
         $qb = $this->createQueryBuilder();
-
-        $this->getQueryBuilder()->modifyQuery($qb)
+          $this->getQueryBuilder()->modifyQuery($qb)
             ->with('licence', 'l')
             ->with('l.licenceType', 'lt')
             ->with('l.organisation', 'l_o')
@@ -44,6 +45,7 @@ class InspectionRequest extends AbstractRepository
             ->with('a.licenceType', 'a_lt')
             ->withRefData()
             ->byId($id);
+
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
     }
 
@@ -62,13 +64,13 @@ class InspectionRequest extends AbstractRepository
             ->with('l.operatingCentres', 'l_oc')
             ->with('l_oc.operatingCentre', 'l_oc_oc')
             ->byId($inspectionRequestId);
-        $qb->select('COUNT('. $this->alias .')');
+        $qb->select('COUNT(' . $this->alias . ')');
 
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
     }
 
     /**
-     * @param QueryBuilder $qb
+     * @param QueryBuilder             $qb
      * @param InspectionRequestListDTO $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
@@ -76,6 +78,8 @@ class InspectionRequest extends AbstractRepository
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'));
         $qb->setParameter('licence', $query->getLicence());
     }
+
+
 
     protected function applyListJoins(QueryBuilder $qb)
     {
@@ -97,7 +101,7 @@ class InspectionRequest extends AbstractRepository
 
         return [
             'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
-            'count'  => $this->fetchPaginatedCount($qb)
+            'count' => $this->fetchPaginatedCount($qb)
         ];
     }
 }
