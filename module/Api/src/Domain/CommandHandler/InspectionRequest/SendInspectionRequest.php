@@ -67,30 +67,31 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
          */
 
         $inspectionRequest = $this->getRepo()->fetchForInspectionRequest($command->getId());
-
-        $message = new Message(
-            $inspectionRequest['licence']['enforcementArea']['emailAddress'],
-            sprintf(self::SUBJECT_LINE, $inspectionRequest['id'])
-        );
-        $translateToWelsh = 'N';
-        if (isset($inspectionRequest['application']['licence']['translateToWelsh'])) {
-            $translateToWelsh = $inspectionRequest['application']['licence']['translateToWelsh'];
-        } elseif (isset($inspectionRequest['licence']['translateToWelsh'])) {
-            $translateToWelsh = $inspectionRequest['licence']['translateToWelsh'];
-        }
-        $message->setTranslateToWelsh($translateToWelsh);
-        $message->setHasHtml(false);
-
-        $variables = $this->populateInspectionRequestVariables($inspectionRequest, $message->getLocale());
-        $this->sendEmailTemplate(
-            $message,
-            'inspection-request',
-            $variables,
-            'blank'
-        );
-
         $result = new Result();
-        $result->addMessage('Inspection request email sent');
+        if(!empty($inspectionRequest)) {
+            $message = new Message(
+                $inspectionRequest['licence']['enforcementArea']['emailAddress'],
+                sprintf(self::SUBJECT_LINE, $inspectionRequest['id'])
+            );
+            $translateToWelsh = 'N';
+            if (isset($inspectionRequest['application']['licence']['translateToWelsh'])) {
+                $translateToWelsh = $inspectionRequest['application']['licence']['translateToWelsh'];
+            } elseif (isset($inspectionRequest['licence']['translateToWelsh'])) {
+                $translateToWelsh = $inspectionRequest['licence']['translateToWelsh'];
+            }
+            $message->setTranslateToWelsh($translateToWelsh);
+            $message->setHasHtml(false);
+
+            $variables = $this->populateInspectionRequestVariables($inspectionRequest, $message->getLocale());
+            $this->sendEmailTemplate(
+                $message,
+                'inspection-request',
+                $variables,
+                'blank'
+            );
+            $result->addMessage('Inspection request email sent');
+        }
+        $result->addMessage("No inspection request");
         return $result;
     }
 

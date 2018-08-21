@@ -8,6 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Doctrine\ORM\Query;
@@ -25,8 +26,10 @@ class InspectionRequest extends AbstractRepository
 
     public function fetchForInspectionRequest($id)
     {
+        $result = [];
+
         $qb = $this->createQueryBuilder();
-          $this->getQueryBuilder()->modifyQuery($qb)
+        $this->getQueryBuilder()->modifyQuery($qb)
             ->with('licence', 'l')
             ->with('l.licenceType', 'lt')
             ->with('l.organisation', 'l_o')
@@ -46,7 +49,15 @@ class InspectionRequest extends AbstractRepository
             ->withRefData()
             ->byId($id);
 
-        return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+        $this->filterByEnforcementArea($qb, EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE);
+
+        try {
+            $result = $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+        } catch (NoResultException $noResultException) {
+            //expected no result if NI enforcement area so catch exception and continue.
+            return $result;
+        }
+        return $result;
     }
 
     /**
@@ -80,6 +91,11 @@ class InspectionRequest extends AbstractRepository
     }
 
 
+    protected function filterByEnforcementArea(QueryBuilder $qb, $enforcementArea)
+    {
+        $qb->andWhere($qb->expr()->neq('l_ea.id', ':enforcementArea'));
+        $qb->setParameter('enforcementArea', $enforcementArea);
+    }
 
     protected function applyListJoins(QueryBuilder $qb)
     {
