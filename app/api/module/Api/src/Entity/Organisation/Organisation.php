@@ -631,6 +631,14 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         $licences = $this->getLicences()->matching($criteria);
 
+        if (empty($licences)) {
+            return [
+                'result' => [],
+                'multipleWithApplications' => false,
+                'singleWithApplication' => false
+            ];
+        }
+
         $licencesArr = [];
 
         /** @var LicenceEntity $licence */
@@ -648,6 +656,10 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
             ];
         }
 
-        return ['result' => $licencesArr, 'validLicenceCount' => count($licences)];
+        return [
+            'result' => $licencesArr,
+            'multipleWithApplications' => count($licences) > 1 && empty($licencesArr),
+            'singleWithApplication' => count($licences) === 1 && empty($licencesArr)
+        ];
     }
 }
