@@ -9,7 +9,6 @@ use \Doctrine\ORM\QueryBuilder;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Permit Application

@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitApplication as UpdateEcmtPermitApplicationCmd;
@@ -26,27 +28,33 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        $sectorRepo = $this->getRepo('Sectors');
 
         /**
          * @var $ecmtPermitApplication EcmtPermitApplication
          * @var $command UpdateEcmtPermitApplicationCmd
          */
 
+        $countrys = [];
         foreach ($command->getCountryIds() as $countryId) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
 
         $ecmtPermitApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $ecmtPermitApplication->setSectors($sectorRepo->getRefdataReference($command->getSectors()));
-        $ecmtPermitApplication->setCabotage($command->getCabotage());
-        $ecmtPermitApplication->setDeclaration($command->getDeclaration());
-        $ecmtPermitApplication->setEmissions($command->getEmissions());
-        $ecmtPermitApplication->setPermitsRequired($command->getPermitsRequired());
-        $ecmtPermitApplication->setTrips($command->getTrips());
-        $ecmtPermitApplication->setInternationalJourneys($this->getRepo()->getRefdataReference($command->getInternationalJourneys()));
-        $ecmtPermitApplication->setDateReceived(new DateTime($command->getDateReceived()));
+        $ecmtPermitApplication = EcmtPermitApplication::update(
+            $ecmtPermitApplication,
+            $this->getRepo()->getRefdataReference($command->getPermitType()),
+            $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
+            $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
+            $countrys,
+            $command->getCabotage(),
+            $command->getDeclaration(),
+            $command->getEmissions(),
+            $command->getPermitsRequired(),
+            $command->getTrips(),
+            $this->getRepo()->getRefdataReference($command->getInternationalJourneys()),
+            $command->getDateReceived()
+        );
 
         $this->getRepo()->save($ecmtPermitApplication);
 
@@ -55,4 +63,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler
 
         return $result;
     }
+
+
+
 }

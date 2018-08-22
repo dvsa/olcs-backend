@@ -52,28 +52,11 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler
      */
     private function createPermitApplicationObject(CreateEcmtPermitApplicationCmd $command): EcmtPermitApplication
     {
-        if ($command->getFromInternal()) {
-            return EcmtPermitApplication::createNewInternal(
-                $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
-                $this->getRepo()->getRefdataReference('lfs_ot'),
-                $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
-                $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
-                $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
-                $command->getCabotage(),
-                $command->getDeclaration(),
-                $command->getEmissions(),
-                $command->getPermitsRequired(),
-                $command->getTrips(),
-                $command->getInternationalJourneys(),
-                $command->getDateReceived()
-            );
-        } else {
             return EcmtPermitApplication::createNew(
                 $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
                 $this->getRepo()->getRefdataReference('lfs_ot'), //@todo drop payment status column
                 $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
                 $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence())
             );
-        }
     }
 }
