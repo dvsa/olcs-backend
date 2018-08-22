@@ -7,6 +7,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -22,8 +24,10 @@ use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateSnapshot extends AbstractCommandHandler
+final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     const CODE_GV_APP             = 'GV79';
     const CODE_GV_VAR_UPGRADE     = 'GV80A';
     const CODE_GV_VAR_NO_UPGRADE  = 'GV81';
@@ -54,7 +58,7 @@ final class CreateSnapshot extends AbstractCommandHandler
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
 
-        $markup = $this->reviewSnapshotService->generate($application);
+        $markup = $this->reviewSnapshotService->generate($application, $this->isInternalUser());
         $this->result->addMessage('Snapshot generated');
 
         $this->result->merge($this->generateDocument($markup, $application, $command->getEvent()));
@@ -108,14 +112,12 @@ final class CreateSnapshot extends AbstractCommandHandler
         $isUpgrade = $application->isRealUpgrade();
 
         if ($application->isGoods()) {
-
             if ($isUpgrade) {
                 return self::CODE_GV_VAR_UPGRADE;
             }
 
             return self::CODE_GV_VAR_NO_UPGRADE;
         } else {
-
             if ($isUpgrade) {
                 return self::CODE_PSV_VAR_UPGRADE;
             }
