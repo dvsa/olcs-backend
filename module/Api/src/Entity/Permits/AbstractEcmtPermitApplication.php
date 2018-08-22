@@ -95,6 +95,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $createdOn;
 
     /**
+     * Date received
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="date_received", nullable=true)
+     */
+    protected $dateReceived;
+
+    /**
      * Declaration
      *
      * @var boolean
@@ -232,15 +241,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="integer", name="trips", nullable=true)
      */
     protected $trips;
-
-    /**
-     * Date received
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="date_received", nullable=true)
-     */
-    protected $dateReceived;
 
     /**
      * Version
@@ -435,6 +435,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
         }
 
         return $this->createdOn;
+    }
+
+    /**
+     * Set the date received
+     *
+     * @param \DateTime $dateReceived new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setDateReceived($dateReceived)
+    {
+        $this->dateReceived = $dateReceived;
+
+        return $this;
+    }
+
+    /**
+     * Get the date received
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getDateReceived($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->dateReceived);
+        }
+
+        return $this->dateReceived;
     }
 
     /**
@@ -777,36 +807,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getTrips()
     {
         return $this->trips;
-    }
-
-    /**
-     * Set the received date
-     *
-     * @param \DateTime $dateReceived new value being set
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setDateReceived($dateReceived)
-    {
-        $this->dateReceived = $dateReceived;
-
-        return $this;
-    }
-
-    /**
-     * Get the received date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDateReceived($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->dateReceived);
-        }
-
-        return $this->dateReceived;
     }
 
     /**
