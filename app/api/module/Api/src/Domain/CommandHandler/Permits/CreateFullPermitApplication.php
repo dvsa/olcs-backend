@@ -37,12 +37,8 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-
-
         /** @var CreateFullPermitApplicationCmd $ecmtPermitApplication */
         $ecmtPermitApplication = $this->createPermitApplicationObject($command);
-
-        Logger::crit(print_r("KAHOONAS", true));
         $this->getRepo()->save($ecmtPermitApplication);
 
         $result = new Result();
@@ -62,14 +58,12 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
      */
     private function createPermitApplicationObject(CreateFullPermitApplicationCmd $command): EcmtPermitApplication
     {
-
-
+        $countrys = [];
         foreach ($command->getCountryIds() as $countryId) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
 
-
-        return EcmtPermitApplication::createNewInternal(
+        return EcmtPermitApplication::createNew(
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference('lfs_ot'),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
