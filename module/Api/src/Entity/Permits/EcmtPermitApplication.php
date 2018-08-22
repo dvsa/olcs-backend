@@ -68,32 +68,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * Create new EcmtPermitApplication
      *
-     * @param RefData $status        Status
-     * @param RefData $paymentStatus Payment status
-     * @param RefData $permitType    Permit type
-     * @param Licence $licence       Licence
-     *
-     * @return EcmtPermitApplication
-     */
-    public static function createNew(
-        RefData $status,
-        RefData $paymentStatus,
-        RefData $permitType,
-        Licence $licence
-    ) {
-        $ecmtPermitApplication = new self();
-        $ecmtPermitApplication->setStatus($status);
-        $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
-        $ecmtPermitApplication->setPermitType($permitType);
-        $ecmtPermitApplication->setLicence($licence);
-
-        return $ecmtPermitApplication;
-    }
-
-
-    /**
-     * Create new EcmtPermitApplication
-     *
      * @param RefData $status Status
      * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
@@ -109,7 +83,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @param string|null $dateReceived
      * @return EcmtPermitApplication
      */
-    public static function createNewInternal(
+    public static function createNew(
         RefData $status,
         RefData $paymentStatus,
         RefData $permitType,
@@ -128,6 +102,55 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->status = $status;
         $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
         $ecmtPermitApplication->permitType = $permitType;
+        $ecmtPermitApplication->licence = $licence;
+        $ecmtPermitApplication->sectors = $sectors;
+        $ecmtPermitApplication->countrys = $countrys;
+        $ecmtPermitApplication->cabotage = $cabotage;
+        $ecmtPermitApplication->declaration = $declaration;
+        $ecmtPermitApplication->emissions = $emissions;
+        $ecmtPermitApplication->permitsRequired = $permitsRequired;
+        $ecmtPermitApplication->trips = $trips;
+        $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
+        $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
+
+        return $ecmtPermitApplication;
+    }
+
+
+    /**
+     * Create new EcmtPermitApplication
+     *
+     * @param EcmtPermitApplication $ecmtPermitApplication
+     * @param RefData $status Status
+     * @param RefData $paymentStatus Payment status
+     * @param RefData $permitType Permit type
+     * @param Licence $licence Licence
+     * @param Sectors|null $sectors
+     * @param $countrys
+     * @param int|null $cabotage
+     * @param int|null $declaration
+     * @param int|null $emissions
+     * @param int|null $permitsRequired
+     * @param int|null $trips
+     * @param RefData $internationalJourneys
+     * @param string|null $dateReceived
+     * @return EcmtPermitApplication
+     */
+    public static function update(
+        $ecmtPermitApplication,
+        ?RefData $permitType,
+        Licence $licence,
+        ?Sectors $sectors = null,
+        $countrys = null,
+        int $cabotage = null,
+        int $declaration = null,
+        int $emissions = null,
+        int $permitsRequired = null,
+        int $trips = null,
+        RefData $internationalJourneys = null,
+        string $dateReceived = null
+    ) {
+        $ecmtPermitApplication->permitType = $permitType ?? $ecmtPermitApplication->permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->sectors = $sectors;
         $ecmtPermitApplication->countrys = $countrys;
