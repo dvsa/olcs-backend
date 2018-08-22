@@ -97,7 +97,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isStandard ? $this->translate(self::GV79_STANDARD) : '',
             $isInternal ? $this->translate(self::GV79_DECLARE) : '',
-            $isInternal ? $this->getSignature($data) : ''
+            $this->getSignature($data)
         ];
 
         return $this->translateReplace(self::GV79, $additionalParts);
@@ -111,7 +111,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isStandard ? $this->translate(self::GV79NI_STANDARD) : '',
             $isInternal ? $this->translate(self::GV79NI_DECLARE) : '',
-            $isInternal ? $this->getSignature($data) : ''
+            $this->getSignature($data)
         ];
 
         return $this->translateReplace(self::GV79NI, $additionalParts);
@@ -125,7 +125,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
         $additionalParts = [
             $isStandard ? $this->translate(self::PSV421_STANDARD) : '',
             $isInternal ? $this->translate(self::PSV421_DECLARE) : '',
-            $isInternal ? $this->getSignature($data) : ''
+            $this->getSignature($data)
         ];
 
         return $this->translateReplace(self::PSV421, $additionalParts);
@@ -133,10 +133,8 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
 
     private function getPsv356(array $data)
     {
-        $isInternal = $this->isInternal($data);
-
         $additionalParts = [
-            $isInternal ? $this->getSignature($data) : ''
+            $this->getSignature($data)
         ];
 
         return $this->translateReplace(self::PSV356, $additionalParts);
