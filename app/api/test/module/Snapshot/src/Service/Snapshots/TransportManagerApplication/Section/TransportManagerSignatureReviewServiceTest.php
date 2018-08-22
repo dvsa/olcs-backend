@@ -43,11 +43,17 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $this->sm->setService('translator', $mockTranslator);
 
         if (!$data['digitalSignature']) {
-            $mockTranslator->shouldReceive('translate')->with($expected['signatureBoxPartial'], 'snapshot')->once()
+            $mockTranslator
+                ->shouldReceive('translate')
+                ->with(TransportManagerSignatureReviewService::SIGNATURE, 'snapshot')
+                ->once()
                 ->andReturn('%s_%s');
         }
 
-        $mockTranslator->shouldReceive('translate')->with(TransportManagerSignatureReviewService::ADDRESS, 'snapshot')->once()
+        $mockTranslator
+            ->shouldReceive('translate')
+            ->with(TransportManagerSignatureReviewService::ADDRESS, 'snapshot')
+            ->once()
             ->andReturn('ADDRESS');
 
         $mockTranslator->shouldReceive('translate')->with($expected['label'], 'snapshot')->once()
@@ -80,7 +86,10 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
             $person->shouldReceive('getForename')->andReturn($name);
             $person->shouldReceive('getFamilyName')->andReturn($familyName);
             $tma->shouldReceive('getTransportManager')->andReturn($tm);
-            $mockTranslator->shouldReceive('translate')->with($expected['signatureBoxPartial'], 'snapshot')->once()
+            $mockTranslator
+                ->shouldReceive('translate')
+                ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL, 'snapshot')
+                ->once()
                 ->andReturn('%s_%s_%s_%s_%s');
             $expectedMarkup = $name .
                 ' ' . $familyName .
@@ -88,7 +97,6 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
                 '_' . $digitalSignatureDate->format('d-m-Y') .
                 '_' . $expectedMarkup;
         }
-
 
         $this->assertEquals(['markup' => $expectedMarkup], $this->sut->getConfig($tma));
     }
