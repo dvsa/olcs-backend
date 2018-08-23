@@ -2,15 +2,10 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
-use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Domain\Query;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
-use Dvsa\Olcs\Transfer\Command as TransferCommand;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
-use Zend\Http\Response;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Zend\View\Model\ConsoleModel;
@@ -20,18 +15,16 @@ class UtilController extends AbstractConsoleController
     public function getDbValueAction()
     {
         $params = [
-            'columnName' => $this->params('column-name'),
-            'tableName' => $this->params('table-name'),
-            'filterName' => $this->params('filter-name'),
+            'propertyName' => $this->params('property-name'),
+            'entityName' => $this->params('entity-name'),
+            'filterProperty' => $this->params('filter-property'),
             'filterValue' => $this->params('filter-value'),
         ];
 
-        $dto = CliQuery\Util\getDbValue::create($params);
+        $dto = CliQuery\Util\GetDbValue::create($params);
 
-        $result = $this->handleQuery($dto);
-
-        return $this->handleExitStatus($result);
-
+        $result = $this->handleQuery($dto, true);
+        return (string)$result[$params['propertyName']];
     }
 
     /**
@@ -56,17 +49,26 @@ class UtilController extends AbstractConsoleController
      *
      * @return mixed $result|false
      */
-    protected function handleQuery(QueryInterface $dto)
+    protected function handleQuery(QueryInterface $dto, $propagateException = false)
     {
         try {
             $this->writeVerboseMessages("Handle query " . get_class($dto));
             return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
+            if ($propagateException) {
+                throw $e;
+            }
         } catch (Exception\Exception $e) {
             $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
+            if ($propagateException) {
+                throw $e;
+            }
         } catch (\Exception $e) {
             $this->writeVerboseMessages([$e->getMessage()], \Zend\Log\Logger::ERR);
+            if ($propagateException) {
+                throw $e;
+            }
         }
 
         return false;

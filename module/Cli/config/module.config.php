@@ -103,7 +103,7 @@ return [
                 ],
                 'get-db-value' => [
                     'options' => [
-                        'route' => 'get-db-value [--column-name=] [--table-name=] [--filter-name=] [--filter-value=] [--verbose|-v]',
+                        'route' => 'get-db-value [--property-name=] [--entity-name=] [--filter-property=] [--filter-value=] [--verbose|-v]',
                         'defaults' => [
                             'controller' => Cli\Controller\UtilController::class,
                             'action' => 'getDbValue'

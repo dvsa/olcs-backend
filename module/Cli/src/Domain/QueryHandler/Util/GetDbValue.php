@@ -2,148 +2,123 @@
 
 namespace Dvsa\Olcs\Cli\Domain\QueryHandler\Util;
 
-use Doctrine\ORM\Mapping\Entity;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Cli\Domain\Query\Util\GetDbValue as GetDbValueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use RecursiveRegexIterator;
-use ReflectionClass;
-use RegexIterator;
 use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Olcs\Db\Traits\EntityManagerAwareTrait;
 
 class GetDbValue extends AbstractQueryHandler
 {
-    use ServiceLocatorAwareTrait;
-
-    private $entity = null;
-
-
-    protected $repoServiceName = 'GetDbValue';
+    const ENTITIES_NAMESPACE = '\Dvsa\Olcs\Api\Entity\\';
 
     private $entityName;
 
+    protected $repoServiceName = 'GetDbValue';
+
+    private $requiredParameters = ['property-name', 'entity-name' , 'filter-property', 'filter-value',];
+
+    /**
+     * @param GetDbValueQuery $query
+     */
+    private function setEntityNameFromQuery(QueryInterface $query): void
+    {
+        $this->entityName = self::ENTITIES_NAMESPACE . $query->getEntityName();
+    }
 
     /**
      * Handle query
      *
-     * @param \Dvsa\Olcs\Cli\Domain\Query\Util\getDbValue $query query
+     * @param GetDbValueQuery $query query
      *
-     * @return Result
+     * @return Result|false
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
-        $result = new Result();
 
-        $this->entityName = $query->getTableName();
-        if ($this->isValidEntity() && $this->isValidProperty($query, $query->getColumnName())) {
+        $this->checkRequiredParameters($query);
 
-            /** @var GetDbValueRepo $repo */
-            $repo = $this->setEntityOnRepo();
+        $this->setEntityNameFromQuery($query);
 
-            try {
-                $data = $repo->fetchOneEntityByX($query->getFilterName(), $query->getFilterValue());
-                $result->serialize($data);
-            } catch (NotFoundException $notFoundException) {
-                $result->setValue("error", "Not found");
-            }
-            return $result;
-        }
-    }
+        $this->validate($query);
 
+        /** @var GetDbValueRepo $repo */
+        $repo = $this->getRepo();
+        $repo->setEntity($this->entityName);
 
-    private function isValidEntity(): bool
-    {
-        $this->entity = $this->getEntityFromName($this->entityName);
-        return !empty($this->entity);
-    }
+        $result = $repo->fetchOneEntityByX(
+            $query->getFilterProperty(),
+            [$query->getFilterValue(), Query::HYDRATE_ARRAY]
+        );
 
-    private function isValidProperty(QueryInterface $query, $property): bool
-    {
-        try {
-            $entity = $this->setEntityOnRepo()->fetchList($query)[0];
-            return property_exists($entity, $property);
-        } catch (RuntimeException $runtimeException) {
-            throw $runtimeException;
-        }
-    }
-
-    protected function getEntityFromName(string $tableName = null)
-    {
-        $fqdn = [];
-        $Directory = new RecursiveDirectoryIterator(__DIR__ . '/../../../../../Api/src/Entity');
-        $Iterator = new RecursiveIteratorIterator($Directory);
-        $regex = '/^(.+\/' . preg_quote($this->entityName) . '\.php)$/m';
-        $matches = new RegexIterator($Iterator, $regex);
-
-        foreach ($matches as $file) {
-            $fileContents = file_get_contents($file);
-            $fqdn [] = $this->getFqdn($fileContents) . '\\' . filter_var(
-                    $this->entityName,
-                    FILTER_SANITIZE_STRING
-                );
-        }
-
-        if (count($fqdn) === 1 && class_exists($fqdn[0])) {
-            return $fqdn[0];
-        } else {
-            foreach ($fqdn as $entityClass) {
-                //check for table_name in docComment
-                $class = new ReflectionClass($entityClass);
-                $comment = $class->getDocComment();
-                $matches = [];
-                if (preg_match_all('/@ORM\\Table\(name=\"(.*)\"/', $comment, $matches)) {
-                    if ($matches[1] === $tableName) {
-                        return $entityClass;
-                    }
-                };
-
-
-            }
-        }
-    }
-
-    protected function getFqdn(string $contents)
-    {
-        $namespace = '';
-        $isNamespace = false;
-        //Go through each token and evaluate it as necessary
-        foreach (token_get_all($contents) as $token) {
-            if (is_array($token) && $token[0] == T_NAMESPACE) {
-                $isNamespace = true;
-            }
-            if ($isNamespace) {
-                if (is_array($token) && in_array($token[0], [T_STRING, T_NS_SEPARATOR])) {
-                    $namespace .= $token[1];
-                } else {
-                    if ($token === ';') {
-                        break;
-                    }
-                }
-            }
-        }
-        return $namespace;
+        return $result;
     }
 
     /**
-     * setEntityOnRepo
-     *
-     * @return \Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface
-     * @throws RuntimeException
+     * @param GetDbValueQuery $query
+     * @throws \Exception
      */
-    private function setEntityOnRepo(): \Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface
+    private function checkRequiredParameters(QueryInterface $query): void
     {
-        $this->getServiceLocator()->get('ExpressionBuilder');
-        $repo = $this->getRepo();
-        $repo->setEntity($this->entity);
-        return $repo;
+        $missing = [];
+
+        foreach ($this->requiredParameters as $parameter) {
+            $getter = $this->cliParamNameToGetter($parameter);
+            $value = $query->$getter();
+
+            if (!$value || $value == '') {
+                $missing[] = $parameter;
+            }
+        }
+
+        if (count($missing)) {
+            throw new \Exception('The following required parameters are empty: ' . implode(', ', $missing));
+        }
+    }
+
+    private function cliParamNameToGetter(string $parameter): string
+    {
+        $noDash = str_replace('-', ' ', $parameter);
+        $upperCase = ucwords($noDash);
+        $getter = 'get' . str_replace(' ', '', $upperCase);
+        return $getter;
+    }
+
+    private function isValidEntity(): bool
+    {
+        return class_exists($this->entityName);
+    }
+
+    private function isValidProperty(string $property): bool
+    {
+        return property_exists($this->entityName, $property);
+    }
+
+    /**
+     * @param GetDbValueQuery $query
+     * @throws \Exception
+     */
+    private function validate(GetDbValueQuery $query): void
+    {
+        if (!$this->isValidEntity()) {
+            throw new \Exception(
+                '"' . $query->getEntityName() . '" is not a valid entity'
+            );
+        }
+
+        if (!$this->isValidProperty($query->getPropertyName())) {
+            throw new \Exception(
+                '"' . $query->getPropertyName() . '" is not a valid property of "' . $query->getEntityName() . '"'
+            );
+        }
+
+        if (!$this->isValidProperty($query->getFilterProperty())) {
+            throw new \Exception(
+                '"' . $query->getFilterProperty() . '" is not a valid property of "' . $query->getEntityName() . '"'
+            );
+        }
     }
 }
 
