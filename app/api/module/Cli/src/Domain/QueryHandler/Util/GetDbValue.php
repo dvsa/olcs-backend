@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Cli\Domain\QueryHandler\Util;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Cli\Domain\Query\Util\GetDbValue as GetDbValueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -32,10 +31,9 @@ class GetDbValue extends AbstractQueryHandler
      *
      * @param GetDbValueQuery $query query
      *
-     * @return Result|false
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return Result
      */
-    public function handleQuery(QueryInterface $query)
+    public function handleQuery(QueryInterface $query): Result
     {
 
         $this->checkRequiredParameters($query);
@@ -50,10 +48,10 @@ class GetDbValue extends AbstractQueryHandler
 
         $result = $repo->fetchOneEntityByX(
             $query->getFilterProperty(),
-            [$query->getFilterValue(), Query::HYDRATE_ARRAY]
+            $query->getFilterValue()
         );
 
-        return $result;
+        return $this->result($result);
     }
 
     /**
@@ -121,5 +119,3 @@ class GetDbValue extends AbstractQueryHandler
         }
     }
 }
-
-

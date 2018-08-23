@@ -26,8 +26,8 @@ class GetDbValue extends AbstractReadonlyRepository
         return parent::fetchOneByX($fetchBy, $args);
     }
 
-    public function setEntity($entity) {
+    public function setEntity($entity)
+    {
         $this->entity = $entity;
     }
-
 }

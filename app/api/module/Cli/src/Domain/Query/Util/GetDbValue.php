@@ -95,7 +95,4 @@ class GetDbValue extends AbstractQuery
     {
         $this->filterValue = $filterValue;
     }
-
-
-
 }

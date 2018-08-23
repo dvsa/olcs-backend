@@ -24,7 +24,8 @@ class UtilController extends AbstractConsoleController
         $dto = CliQuery\Util\GetDbValue::create($params);
 
         $result = $this->handleQuery($dto, true);
-        return (string)$result[$params['propertyName']];
+        $data = $result->serialize();
+        return (string)$data[$params['propertyName']];
     }
 
     /**
@@ -119,5 +120,4 @@ class UtilController extends AbstractConsoleController
             $this->getConsole()->writeLine((new \DateTime())->format(\DateTime::W3C) .' '. $message);
         }
     }
-
 }
