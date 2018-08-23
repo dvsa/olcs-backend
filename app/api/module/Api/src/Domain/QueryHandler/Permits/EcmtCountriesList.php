@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\Permits\EcmtCountriesList as ListDto;
@@ -12,8 +15,11 @@ use Dvsa\Olcs\Transfer\Query\Permits\EcmtCountriesList as ListDto;
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-class EcmtCountriesList extends AbstractQueryHandler
+class EcmtCountriesList extends AbstractQueryHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'Country';
 
     /**

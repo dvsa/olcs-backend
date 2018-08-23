@@ -6,8 +6,11 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
@@ -17,10 +20,12 @@ use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendEcmtAppSubmitted extends AbstractCommandHandler implements EmailAwareInterface
+class SendEcmtAppSubmitted extends AbstractCommandHandler implements EmailAwareInterface, ToggleRequiredInterface
 {
     use EmailAwareTrait;
+    use ToggleAwareTrait;
 
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     private $template = 'ecmt-app-submitted';

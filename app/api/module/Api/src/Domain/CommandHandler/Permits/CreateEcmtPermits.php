@@ -5,19 +5,24 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits;
-
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
+ * @todo is this even used at present?
  * Create an ECMT Permit application
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-final class CreateEcmtPermits extends AbstractCommandHandler implements TransactionedInterface
+final class CreateEcmtPermits extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermits';
     protected $extraRepos = ['EcmtPermitApplication'];
 

@@ -3,14 +3,20 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
  * Ecmt Permit Applications by licence
  */
-class EcmtApplicationByLicence extends AbstractQueryHandler
+class EcmtApplicationByLicence extends AbstractQueryHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $extraRepos = ['Licence'];
 
