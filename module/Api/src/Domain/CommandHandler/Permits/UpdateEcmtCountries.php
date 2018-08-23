@@ -2,18 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-
-use Dvsa\Olcs\Api\Domain\Repository;
-
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtApplicationRestrictedCountries;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -21,12 +16,22 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Scott Callaway
  */
-final class UpdateEcmtCountries extends AbstractCommandHandler
+final class UpdateEcmtCountries extends AbstractCommandHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtApplicationRestrictedCountries';
 
     protected $extraRepos = ['Country', 'EcmtPermitApplication'];
 
+    /**
+     * Update the ECMT countries
+     *
+     * @param CommandInterface $command command to update countries
+     *
+     * @return Result
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -36,6 +41,7 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
 
+        /** @var EcmtPermitApplication $application */
         $application = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId());
         $application->setCountrys($countrys);
 
@@ -43,21 +49,5 @@ final class UpdateEcmtCountries extends AbstractCommandHandler
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
 
         return $result;
-    }
-
-  /**
-   * Create EcmtRestritedCountries object
-   *
-   * @param Cmd $command Command
-   * @param int $countryId Country Id
-   *
-   * @return EcmtApplicationRestrictedCountries
-   */
-    private function createRestrictedCountriesObject($applicationRef, $countryRef)
-    {
-        return EcmtApplicationRestrictedCountries::createNew(
-            $applicationRef,
-            $countryRef
-        );
     }
 }
