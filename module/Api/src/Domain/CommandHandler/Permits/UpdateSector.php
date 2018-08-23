@@ -40,14 +40,8 @@ final class UpdateSector extends AbstractCommandHandler
         /** @var Repository\Sectors $repo */
         $sectorRepo = $this->getRepo('Sectors');
 
-        if (empty($application)) {
-            $result->addMessage('No permit application to update');
-
-            return $result;
-        }
-
         /** @var EcmtPermitApplication $application */
-        $application->setSectors($sectorRepo->getRefdataReference($command->getSector()));
+        $application->updateSectors($sectorRepo->getRefdataReference($command->getSector()));
 
         $this->getRepo()->save($application);
 

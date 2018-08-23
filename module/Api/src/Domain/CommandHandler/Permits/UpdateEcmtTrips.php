@@ -32,7 +32,7 @@ final class UpdateEcmtTrips extends AbstractCommandHandler
          * @var UpdateEcmtTripsCmd    $command
          */
         $application = $this->getRepo()->fetchById($command->getId());
-        $application->setTrips($command->getEcmtTrips());
+        $application->updateTrips($command->getEcmtTrips());
 
         $this->getRepo()->save($application);
 
