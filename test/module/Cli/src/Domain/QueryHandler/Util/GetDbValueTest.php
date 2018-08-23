@@ -3,10 +3,13 @@
 namespace Dvsa\OlcsTest\Cli\Domain\QueryHandler\GetDbValue;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Cli\Domain\QueryHandler\Util\GetDbValue;
 use Dvsa\Olcs\Cli\Domain\Query\Util\GetDbValue as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Mockery as m;
 
 /**
  * Class GetDbValueTest
@@ -16,6 +19,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
  */
 class GetDbValueTest extends QueryHandlerTestCase
 {
+    /** @var GetDbValue */
     protected $sut;
 
     /**
@@ -25,23 +29,36 @@ class GetDbValueTest extends QueryHandlerTestCase
     {
         $this->sut = new GetDbValue();
         $this->mockRepo('GetDbValue', \Dvsa\Olcs\Api\Domain\Repository\GetDbValue::class);
-        parent::setup();
+        parent::setUp();
     }
 
     public function testHandleQuery()
     {
+        /** @var Licence $licence */
+        $licence = m::mock(Licence::class);
+        /** @var RefData $refData */
+        $refData = m::mock(new RefData('apsts_not_submitted'))->makePartial();
+        $application = new Application($licence, $refData, false);
 
-        $this->mockRepo('Application', Application::class);
+        $parameters = [
+            'entityName' => 'Application\Application',
+            'propertyName' => 'status',
+            'filterProperty' => 'id',
+            'filterValue' => '1'
+        ];
 
-        $query = Qry::create(
-            [
-                'tableName' => 'Application',
-                'columnName' => 'id',
-                'filterName' => 'id',
-                'filterValue' => '1'
-            ]
-        );
+        $query = Qry::create($parameters);
 
+        $fullEntityName = $this->sut::ENTITIES_NAMESPACE . $parameters['entityName'];
+
+        $this->repoMap['GetDbValue']
+            ->shouldReceive('setEntity')
+            ->with($fullEntityName);
+
+        $this->repoMap['GetDbValue']
+            ->shouldReceive('fetchOneEntityByX')
+            ->with($parameters['filterProperty'], $parameters['filterValue'])
+            ->andReturn($application);
 
         $this->assertInstanceOf(Result::class, $this->sut->handleQuery($query));
     }

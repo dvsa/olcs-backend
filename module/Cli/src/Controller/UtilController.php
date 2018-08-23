@@ -24,8 +24,14 @@ class UtilController extends AbstractConsoleController
         $dto = CliQuery\Util\GetDbValue::create($params);
 
         $result = $this->handleQuery($dto, true);
-        $data = $result->serialize();
-        return (string)$data[$params['propertyName']];
+
+        $entity = $result->getObject();
+        $getter = 'get' . ucwords($params['propertyName']);
+        $output = $entity->$getter();
+        if (is_object($output)) {
+            $output = $output->getId();
+        }
+        return (string) $output;
     }
 
     /**
