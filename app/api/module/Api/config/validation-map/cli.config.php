@@ -52,6 +52,8 @@ return [
     CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class => IsSystemUser::class,
     CommandHandler\Discs\PrintDiscs::class => IsSystemUser::class,
     CommandHandler\Bus\Ebsr\ProcessPack::class => IsSystemUser::class,
+    CommandHandler\Bus\Ebsr\ProcessPackTransaction::class => IsSystemUser::class,
+    CommandHandler\Bus\Ebsr\ProcessPackFailed::class => IsSystemUser::class,
     CommandHandler\Bus\Ebsr\ProcessRequestMap::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrWithdrawn::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrRefused::class => IsSystemUser::class,

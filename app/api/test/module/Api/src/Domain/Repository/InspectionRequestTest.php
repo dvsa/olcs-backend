@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest;
+use Dvsa\Olcs\Transfer\Query\InspectionRequest as Qry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
 use Doctrine\ORM\EntityRepository;
@@ -27,16 +28,16 @@ class InspectionRequestTest extends RepositoryTestCase
         $this->setUpSut(InspectionRequestRepo::class, true);
     }
 
+    /**
+     * testFetchForInspectionRequest
+     */
     public function testFetchForInspectionRequest()
     {
+
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getSingleResult')->once()->andReturn(1);
+        $this->mockCreateQueryBuilder($qb);
         $inspectionRequestId = 1;
-
-        /** @var QueryBuilder $qb */
-        $qb = m::mock(QueryBuilder::class);
-
-        $qb->shouldReceive('getQuery->getSingleResult')
-            ->andReturn('RESULT');
-
         $this->queryBuilder->shouldReceive('modifyQuery')
             ->once()
             ->with($qb)
@@ -113,17 +114,14 @@ class InspectionRequestTest extends RepositoryTestCase
             ->andReturnSelf()
             ->once();
 
-        /** @var EntityRepository $repo */
-        $repo = m::mock(EntityRepository::class);
-        $repo->shouldReceive('createQueryBuilder')
-            ->andReturn($qb);
 
-        $this->em->shouldReceive('getRepository')
-            ->with(InspectionRequest::class)
-            ->andReturn($repo);
 
-        $result = $this->sut->fetchForInspectionRequest($inspectionRequestId);
-        $this->assertEquals('RESULT', $result);
+        $this->sut->fetchForInspectionRequest($inspectionRequestId, Query::HYDRATE_OBJECT);
+
+        //  check query
+        $expect = 'QUERY';
+
+        static::assertEquals($expect, $this->query);
     }
 
     public function testFetchLicenceOperatingCentreCount()

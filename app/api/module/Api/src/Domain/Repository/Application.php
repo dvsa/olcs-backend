@@ -142,6 +142,7 @@ class Application extends AbstractRepository
             ->with('operatingCentres', 'a_oc')
             ->with('a_oc.operatingCentre', 'a_oc_oc')
             ->with('a_oc_oc.address', 'a_oc_oc_a')
+            ->with('l.enforcementArea', 'l_ea')
             ->byId($applicationId);
 
         return $qb->getQuery()->getSingleResult();
