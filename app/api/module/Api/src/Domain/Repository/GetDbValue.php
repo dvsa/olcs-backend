@@ -10,6 +10,9 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 class GetDbValue extends AbstractReadonlyRepository
 {
+
+    protected $entity;
+
     /**
      * fetchOneEntityByX
      * @param $fetchBy
@@ -21,6 +24,10 @@ class GetDbValue extends AbstractReadonlyRepository
     public function fetchOneEntityByX($fetchBy, $args)
     {
         return parent::fetchOneByX($fetchBy, $args);
+    }
+
+    public function setEntity($entity) {
+        $this->entity = $entity;
     }
 
 }
