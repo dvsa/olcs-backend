@@ -4,19 +4,22 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
  * Update ECMT Application Licence
  *
  * @author Andy Newton
  */
-final class UpdateEcmtLicence extends AbstractCommandHandler
+final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['Licence'];
@@ -32,6 +35,7 @@ final class UpdateEcmtLicence extends AbstractCommandHandler
     {
         $result = new Result();
 
+        /** @var EcmtPermitApplication $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
 
