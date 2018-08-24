@@ -25,7 +25,6 @@ class UtilController extends AbstractConsoleController
 
         try {
             $result = $this->handleQuery($dto, true);
-
             $entity = $result->getObject();
             $getter = 'get' . ucwords($params['propertyName']);
             $output = $entity->$getter();
