@@ -3,6 +3,8 @@
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command;
+use Dvsa\Olcs\Cli\Domain\Query;
+use Dvsa\Olcs\Cli\Domain\QueryHandler;
 use Dvsa\Olcs\Cli;
 
 return [
@@ -96,6 +98,15 @@ return [
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'cleanUpVariations'
+                        ],
+                    ],
+                ],
+                'get-db-value' => [
+                    'options' => [
+                        'route' => 'get-db-value [--property-name=] [--entity-name=] [--filter-property=] [--filter-value=] [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\UtilController::class,
+                            'action' => 'getDbValue'
                         ],
                     ],
                 ],
@@ -281,6 +292,7 @@ return [
             Cli\Controller\BatchController::class => Cli\Controller\BatchController::class,
             Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
             Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticController::class,
+            Cli\Controller\UtilController::class => Cli\Controller\UtilController::class,
         ]
     ],
     'cache' => [
@@ -375,6 +387,13 @@ return [
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
         ],
     ],
+
+    \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
+        'factories' => [
+            Query\Util\GetDbValue::class => QueryHandler\Util\GetDbValue::class
+        ]
+    ],
+
     'batch_config' => [
         'remove-read-audit' => [
             'max-age' => '1 year'

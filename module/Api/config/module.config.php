@@ -332,6 +332,7 @@ return [
             'DataService' => RepositoryFactory::class,
             'DocumentToDelete' => RepositoryFactory::class,
             'Hearing' => RepositoryFactory::class,
+            'GetDbValue' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
