@@ -23,15 +23,22 @@ class UtilController extends AbstractConsoleController
 
         $dto = CliQuery\Util\GetDbValue::create($params);
 
-        $result = $this->handleQuery($dto, true);
+        try {
+            $result = $this->handleQuery($dto, true);
 
-        $entity = $result->getObject();
-        $getter = 'get' . ucwords($params['propertyName']);
-        $output = $entity->$getter();
-        if (is_object($output)) {
-            $output = $output->getId();
+            $entity = $result->getObject();
+            $getter = 'get' . ucwords($params['propertyName']);
+            $output = $entity->$getter();
+            if (is_object($output)) {
+                $output = $output->getId();
+            }
+            $exitCode = 0;
+        } catch (\Exception $e) {
+            $exitCode = 1;
+            $output = $e->getMessage();
         }
-        return (string) $output;
+
+        return $this->handleExitStatus($exitCode, (string) $output);
     }
 
     /**
@@ -42,10 +49,11 @@ class UtilController extends AbstractConsoleController
      *
      * @return \Zend\View\Model\ConsoleModel
      */
-    private function handleExitStatus($result)
+    private function handleExitStatus($exitCode, $resultText = '')
     {
         $model = new ConsoleModel();
-        $model->setErrorLevel($result);
+        $model->setErrorLevel($exitCode);
+        $model->setResult($resultText);
         return $model;
     }
 

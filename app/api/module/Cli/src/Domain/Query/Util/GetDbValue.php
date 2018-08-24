@@ -41,27 +41,11 @@ class GetDbValue extends AbstractQuery
     }
 
     /**
-     * @param string $propertyName
-     */
-    public function setPropertyName(string $propertyName): void
-    {
-        $this->propertyName = $propertyName;
-    }
-
-    /**
      * @return string
      */
     public function getEntityName(): ?string
     {
         return $this->entityName;
-    }
-
-    /**
-     * @param string $entityName
-     */
-    public function setEntityName(string $entityName): void
-    {
-        $this->entityName = $entityName;
     }
 
     /**
@@ -73,26 +57,10 @@ class GetDbValue extends AbstractQuery
     }
 
     /**
-     * @param string $filterProperty
-     */
-    public function setFilterProperty(string $filterProperty): void
-    {
-        $this->filterProperty = $filterProperty;
-    }
-
-    /**
      * @return mixed
      */
     public function getFilterValue()
     {
         return $this->filterValue;
-    }
-
-    /**
-     * @param mixed $filterValue
-     */
-    public function setFilterValue($filterValue): void
-    {
-        $this->filterValue = $filterValue;
     }
 }
