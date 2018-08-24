@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -22,6 +23,51 @@ class EcmtPermitApplicationEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testUpdate()
+    {
+        $application = $this->createApplication();
+        $permitType = Entity::PERMIT_TYPE;
+        $permitTypeRefData = new RefData($permitType);
+        $licence = m::mock(Licence::class)->makePartial(); //make partial allows to differ from what's there already
+        $sectors = m::mock(Sectors::class);
+        $countries = ['countries'];
+        $cabotage = 1;
+        $declaration = 0;
+        $emissions = 1;
+        $permitsRequired = 999;
+        $trips = 666;
+        $internationalJourneys = 'inter_journey_60_90';
+        $internationalJourneyRefData = new RefData($internationalJourneys);
+        $dateReceived = '2017-12-25';
+
+        $application->update(
+            $permitTypeRefData,
+            $licence,
+            $sectors,
+            $countries,
+            $cabotage,
+            $declaration,
+            $emissions,
+            $permitsRequired,
+            $trips,
+            $internationalJourneyRefData,
+            $dateReceived
+        );
+
+        $this->assertEquals($permitType, $application->getPermitType()->getId());
+        $this->assertEquals($licence, $application->getLicence());
+        $this->assertEquals($sectors, $application->getSectors());
+        $this->assertEquals($countries, $application->getCountrys());
+        $this->assertEquals($cabotage, $application->getCabotage());
+        $this->assertEquals($declaration, $application->getCheckedAnswers()); //auto updated on internal updates
+        $this->assertEquals($declaration, $application->getDeclaration());
+        $this->assertEquals($emissions, $application->getEmissions());
+        $this->assertEquals($permitsRequired, $application->getPermitsRequired());
+        $this->assertEquals($trips, $application->getTrips());
+        $this->assertEquals($internationalJourneys, $application->getInternationalJourneys()->getId());
+        $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
+    }
 
     /**
      * @dataProvider trueFalseProvider
@@ -119,7 +165,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertFalse($entity->getDeclaration());
     }
 
-    private function createApplicationWithCompletedDeclaration()
+    private function createApplication()
     {
         $entity = Entity::createNew(
             m::mock(RefData::class),
@@ -127,6 +173,13 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             m::mock(RefData::class),
             m::mock(Licence::class)
         );
+
+        return $entity;
+    }
+
+    private function createApplicationWithCompletedDeclaration()
+    {
+        $entity = $this->createApplication();
 
         $entity->setCheckedAnswers(true);
         $entity->setDeclaration(true);
