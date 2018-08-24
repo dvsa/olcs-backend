@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
@@ -23,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *    }
  * )
  */
-class EcmtPermitApplication extends AbstractEcmtPermitApplication
+class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface
 {
     const STATUS_CANCELLED = 'ecmt_permit_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'ecmt_permit_nys';
@@ -548,5 +550,15 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function canBeCancelled()
     {
         return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
+    }
+
+    /**
+     * Get the organisation
+     *
+     * @return OrganisationEntity
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
     }
 }
