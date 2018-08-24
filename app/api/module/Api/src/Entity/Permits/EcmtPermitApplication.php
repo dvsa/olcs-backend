@@ -4,12 +4,8 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
-use Olcs\Logging\Log\Logger;
 
 /**
  * EcmtPermitApplication Entity
@@ -120,7 +116,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * Create new EcmtPermitApplication
      *
-     * @param EcmtPermitApplication $ecmtPermitApplication
      * @param RefData $status Status
      * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
@@ -136,8 +131,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      * @param string|null $dateReceived
      * @return EcmtPermitApplication
      */
-    public static function update(
-        $ecmtPermitApplication,
+    public function update(
         ?RefData $permitType,
         Licence $licence,
         ?Sectors $sectors = null,
@@ -150,19 +144,20 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         RefData $internationalJourneys = null,
         string $dateReceived = null
     ) {
-        $ecmtPermitApplication->permitType = $permitType ?? $ecmtPermitApplication->permitType;
-        $ecmtPermitApplication->licence = $licence;
-        $ecmtPermitApplication->sectors = $sectors;
-        $ecmtPermitApplication->countrys = $countrys;
-        $ecmtPermitApplication->cabotage = $cabotage;
-        $ecmtPermitApplication->declaration = $declaration;
-        $ecmtPermitApplication->emissions = $emissions;
-        $ecmtPermitApplication->permitsRequired = $permitsRequired;
-        $ecmtPermitApplication->trips = $trips;
-        $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
-        $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
+        $this->permitType = $permitType ?? $this->permitType;
+        $this->licence = $licence;
+        $this->sectors = $sectors;
+        $this->countrys = $countrys;
+        $this->cabotage = $cabotage;
+        $this->checkedAnswers = $declaration; //auto updated alongside declaration for internal apps
+        $this->declaration = $declaration;
+        $this->emissions = $emissions;
+        $this->permitsRequired = $permitsRequired;
+        $this->trips = $trips;
+        $this->internationalJourneys = $internationalJourneys;
+        $this->dateReceived = $this->processDate($dateReceived);
 
-        return $ecmtPermitApplication;
+        return $this;
     }
 
     /**
