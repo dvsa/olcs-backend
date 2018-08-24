@@ -65,9 +65,11 @@ class UtilController extends AbstractConsoleController
      */
     protected function handleQuery(QueryInterface $dto, $propagateException = false)
     {
+        $result = false;
+        
         try {
             $this->writeVerboseMessages("Handle query " . get_class($dto));
-            return $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
+            $result = $this->getServiceLocator()->get('QueryHandlerManager')->handleQuery($dto);
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
             if ($propagateException) {
@@ -85,7 +87,7 @@ class UtilController extends AbstractConsoleController
             }
         }
 
-        return false;
+        return $result;
     }
 
     /**
