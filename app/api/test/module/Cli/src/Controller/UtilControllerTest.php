@@ -160,7 +160,6 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
 
-
         $this->console->shouldReceive('writeLine');
 
         $this->assertSame('Exception Message', $this->sut->getDbValueAction()->getResult());
