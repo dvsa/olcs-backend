@@ -6,15 +6,17 @@
  */
 
 /**
- * Update ECMT EURO6 Emissions Test
+ * Update ECMT
  *
  * @author ONE
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use DoctrineORMModuleTest\Assets\Entity\Country;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtEmissions;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitApplication as Cmd;
@@ -24,46 +26,59 @@ use Mockery as m;
 
 class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
 {
+
+    /** @var Licence */
+    private $licenceReference7;
+
+
     public function setUp()
     {
         $this->sut = new UpdateEcmtPermitApplication();
         $this->mockRepo('EcmtPermitApplication', Repository\EcmtPermitApplication::class);
         $this->mockRepo('Sectors', Repository\Licence::class);
+        $this->mockRepo('Country', Repository\Country::class);
         parent::setUp();
+    }
+
+    public function initReferences()
+    {
+        $this->licenceReference7 = m::mock(Licence::class);
+
+        $this->references = [
+            Licence::class => [
+                7 => $this->licenceReference7
+            ]
+        ];
+
+        parent::initReferences();
     }
 
     public function testHandleCommand()
     {
         $data = [
+            'licence' => 7,
             'id' => 4,
             'emissions' => 1,
             'cabotage' => 1,
-            'sectors' => 7
+            'sectors' => 7,
+            'countryIds' => ['AT', 'GR']
         ];
 
         $command = Cmd::create($data);
         $sectors = m::mock(Sectors::class);
-
         $application = m::mock(EcmtPermitApplication::class);
+        $country = m::mock(Country::class);
+        $licence = m::mock(Licence::class);
+
+        $this->repoMap['Country']->shouldReceive('getReference')
+            ->andReturn($country);
+
+
         $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);
-        $application->shouldReceive('setSectors')
-            ->once();
-        $application->shouldReceive('setDeclaration')
-            ->once();
-        $application->shouldReceive('setPermitsRequired')
-            ->once();
-        $application->shouldReceive('setTrips')
-            ->once();
-        $application->shouldReceive('setInternationalJourneys')
-            ->once();
-        $application->shouldReceive('setDateReceived')
-            ->once();
-        $application->shouldReceive('setEmissions')
-            ->once()
-            ->with(1);
-        $application->shouldReceive('setCabotage')
-            ->once()
-            ->with(1);
+
+        $application->shouldReceive('update')
+            ->andReturn($application);
+
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
@@ -75,9 +90,6 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $this->repoMap['Sectors']->shouldReceive('fetchById')
             ->with(7)
             ->andReturn($sectors);
-
-
-
 
 
         $result = $this->sut->handleCommand($command);

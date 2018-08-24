@@ -33,7 +33,6 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        $sectorRepo = $this->getRepo('Sectors');
 
         /**
          * @var $ecmtPermitApplication EcmtPermitApplication
@@ -47,7 +46,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
 
         $ecmtPermitApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-        $ecmtPermitApplication = EcmtPermitApplication::update(
+        $ecmtPermitApplication->update(
             $ecmtPermitApplication,
             $this->getRepo()->getRefdataReference($command->getPermitType()),
             $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
