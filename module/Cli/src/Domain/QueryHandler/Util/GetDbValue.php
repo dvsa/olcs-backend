@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Domain\QueryHandler\Util;
 
+use Dvsa\Olcs\Cli\Domain\Exception;
 use Dvsa\Olcs\Cli\Domain\Query\Util\GetDbValue as GetDbValueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -72,7 +73,7 @@ class GetDbValue extends AbstractQueryHandler
         }
 
         if (count($missing)) {
-            throw new \Exception('The following required parameters are empty: ' . implode(', ', $missing));
+            throw new Exception\MissingParameterException('The following required parameters are empty: ' . implode(', ', $missing));
         }
     }
 
@@ -101,19 +102,19 @@ class GetDbValue extends AbstractQueryHandler
     private function validate(GetDbValueQuery $query): void
     {
         if (!$this->isValidEntity()) {
-            throw new \Exception(
+            throw new Exception\InvalidEntityException(
                 '"' . $query->getEntityName() . '" is not a valid entity'
             );
         }
 
         if (!$this->isValidProperty($query->getPropertyName())) {
-            throw new \Exception(
+            throw new Exception\InvalidPropertyException(
                 '"' . $query->getPropertyName() . '" is not a valid property of "' . $query->getEntityName() . '"'
             );
         }
 
         if (!$this->isValidProperty($query->getFilterProperty())) {
-            throw new \Exception(
+            throw new Exception\InvalidPropertyException(
                 '"' . $query->getFilterProperty() . '" is not a valid property of "' . $query->getEntityName() . '"'
             );
         }
