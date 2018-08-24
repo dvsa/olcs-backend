@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateSnapshot;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use \ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create Snapshot Test
@@ -31,7 +33,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
         $this->mockRepo('Application', Application::class);
 
         $this->mockedSmServices['ReviewSnapshot'] = m::mock();
-
+        $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
         parent::setUp();
     }
 
@@ -49,8 +51,12 @@ class CreateSnapshotTest extends CommandHandlerTestCase
         $subCategory,
         $isExternal
     ) {
+        $isInternal = !$isExternal;
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn($isInternal);
         $command = Cmd::create(['id' => 111, 'event' => $event]);
-
         /** @var Licence $licence */
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setId(222);
@@ -72,7 +78,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->mockedSmServices['ReviewSnapshot']->shouldReceive('generate')
-            ->with($application)
+            ->with($application, $isInternal)
             ->andReturn('<markup>');
 
         $expectedData = [
@@ -115,7 +121,11 @@ class CreateSnapshotTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithoutEvent()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->andReturn(false);
+        $this->expectException(ValidationException::class);
 
         $command = Cmd::create(['id' => 111, 'event' => 'FOO']);
 
@@ -140,7 +150,7 @@ class CreateSnapshotTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->mockedSmServices['ReviewSnapshot']->shouldReceive('generate')
-            ->with($application)
+            ->with($application, false)
             ->andReturn('<markup>');
 
         $this->sut->handleCommand($command);
