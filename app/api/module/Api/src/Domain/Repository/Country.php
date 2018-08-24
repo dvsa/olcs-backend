@@ -41,7 +41,8 @@ class Country extends AbstractRepository
 
 
 
-    //TODO remove following method once OLCS-21033 is merged
+
+    //TODO review following - couldnt get bundles or applyListJoins to work as replacement
 
     /**
      * Get all ECMT countries that have constraints
@@ -65,6 +66,7 @@ class Country extends AbstractRepository
                 } else {
                     $data[] = array(
                         'id' => $row->getId(),
+                        'countryDesc' => $row->getCountryDesc(),
                         'description' => $row->getCountryDesc()
                     );
                 }
