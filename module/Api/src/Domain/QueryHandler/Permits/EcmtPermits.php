@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
+ * @todo doesn't seem to be used (and doesn't appear to work), probably needs deleting until we need it
  * Get ECMT Permit Applications
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
@@ -25,7 +26,7 @@ class EcmtPermits extends AbstractQueryHandler
         foreach ($ecmtPermits as $permit) {
             $countries = $permit->getCountrys();
             $status = $permit->getStatus()->getId();
-            $constrainedCountries = $this->getRepo('Country')->getConstrainedEcmtCountries(true)[1];
+            $constrainedCountries = [];
 
             $restrictions = false;
             foreach ($countries as $country) {

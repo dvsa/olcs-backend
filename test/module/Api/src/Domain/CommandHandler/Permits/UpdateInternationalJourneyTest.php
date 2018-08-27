@@ -8,9 +8,14 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
+/**
+ * Class UpdateInternationalJourneyTest
+ */
 class UpdateInternationalJourneyTest extends CommandHandlerTestCase
 {
-    const FROM_60_TO_90_PERCENT = 2;
+    protected $refData = [
+        EcmtPermitApplication::INTER_JOURNEY_60_90
+    ];
 
     public function setUp()
     {
@@ -23,13 +28,13 @@ class UpdateInternationalJourneyTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $ecmtPermitApplicationId = 22;
-        $internationalJourney = self::FROM_60_TO_90_PERCENT;
+        $internationalJourney = EcmtPermitApplication::INTER_JOURNEY_60_90;
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
         $ecmtPermitApplication->shouldReceive('updateInternationalJourneys')
-            ->with($internationalJourney)
+            ->with($this->refData[$internationalJourney])
             ->once()
             ->ordered()
             ->globally();
@@ -47,7 +52,7 @@ class UpdateInternationalJourneyTest extends CommandHandlerTestCase
         $command->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
         $command->shouldReceive('getInternationalJourney')
-            ->andReturn($internationalJourney);
+            ->andReturn(EcmtPermitApplication::INTER_JOURNEY_60_90);
 
         $result = $this->sut->handleCommand($command);
 
