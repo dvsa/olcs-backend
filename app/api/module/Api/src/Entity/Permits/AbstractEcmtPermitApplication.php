@@ -26,7 +26,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_permit_type", columns={"permit_type"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"}),
+ *        @ORM\Index(name="fk_ecmt_permit_application_international_jouneys",
+     *     columns={"international_journeys"})
  *    }
  * )
  */
@@ -135,9 +137,10 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     /**
      * International journeys
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="string", name="international_journeys", length=32, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="international_journeys", referencedColumnName="id", nullable=true)
      */
     protected $internationalJourneys;
 
@@ -542,7 +545,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     /**
      * Set the international journeys
      *
-     * @param string $internationalJourneys new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $internationalJourneys entity being set as the value
      *
      * @return EcmtPermitApplication
      */
@@ -556,7 +559,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     /**
      * Get the international journeys
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getInternationalJourneys()
     {
