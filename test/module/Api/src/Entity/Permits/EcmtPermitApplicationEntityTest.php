@@ -70,6 +70,43 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
+     * Tests withdrawing an application
+     */
+    public function testWithdraw()
+    {
+        $entity = $this->createApplicationUnderConsideration();
+        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
+        $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+    }
+
+    /**
+     * @dataProvider dpWithdrawException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testWithdrawException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
+    }
+
+    /**
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpWithdrawException()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+        ];
+    }
+
+    /**
      * @dataProvider trueFalseProvider
      */
     public function testUpdateCabotage($cabotage)
@@ -165,10 +202,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertFalse($entity->getDeclaration());
     }
 
-    private function createApplication()
+    private function createApplicationUnderConsideration()
+    {
+        return $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+    }
+
+    private function createApplication($status = Entity::STATUS_NOT_YET_SUBMITTED)
     {
         $entity = Entity::createNew(
-            m::mock(RefData::class),
+            new RefData($status),
             m::mock(RefData::class),
             m::mock(RefData::class),
             m::mock(Licence::class)
