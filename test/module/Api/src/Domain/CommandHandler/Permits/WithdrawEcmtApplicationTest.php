@@ -1,33 +1,30 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * Date: 26/07/2018
- * Time: 12:02
- */
 
 /**
- * Update ECMT EURO6 Emissions Test
+ * Withdraw ECMT Permit Application Test
  *
- * @author ONE
+ * @author Scott Callaway
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CancelEcmtPermitApplication;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\WithdrawEcmtPermitApplication;
 
 use Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Transfer\Command\Permits\CancelEcmtPermitApplication as Cmd;
+use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication as Cmd;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Doctrine\ORM\Query;
 use Mockery as m;
 
-class CancelEcmtApplicationTest extends CommandHandlerTestCase
+/**
+ * Class WithdrawEcmtApplicationTest
+ */
+class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new CancelEcmtPermitApplication();
+        $this->sut = new WithdrawEcmtPermitApplication();
         $this->mockRepo('EcmtPermitApplication', Repository\EcmtPermitApplication::class);
 
         parent::setUp();
@@ -36,7 +33,7 @@ class CancelEcmtApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-          EcmtPermitApplication::STATUS_CANCELLED
+          EcmtPermitApplication::STATUS_WITHDRAWN
         ];
 
         parent::initReferences();
@@ -48,9 +45,7 @@ class CancelEcmtApplicationTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => $applicationId]);
 
         $application = m::mock(EcmtPermitApplication::class);
-        $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(1);
-
-        $application->shouldReceive('setStatus')->with($this->refData[EcmtPermitApplication::STATUS_CANCELLED])->once();
+        $application->shouldReceive('withdraw')->with($this->refData[EcmtPermitApplication::STATUS_WITHDRAWN])->once();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($applicationId)
@@ -65,7 +60,7 @@ class CancelEcmtApplicationTest extends CommandHandlerTestCase
             'id' => [
               'ecmtPermitApplication' => $applicationId
             ],
-            'messages' => []
+            'messages' => ['Permit application withdrawn']
         ];
 
         $this->assertEquals($expected, $result->toArray());
