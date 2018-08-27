@@ -1029,6 +1029,7 @@ return [
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
+    TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
 
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,

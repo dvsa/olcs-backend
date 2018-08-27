@@ -4,12 +4,8 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
-use Olcs\Logging\Log\Logger;
 
 /**
  * EcmtPermitApplication Entity
@@ -68,24 +64,50 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * Create new EcmtPermitApplication
      *
-     * @param RefData $status        Status
+     * @param RefData $status Status
      * @param RefData $paymentStatus Payment status
-     * @param RefData $permitType    Permit type
-     * @param Licence $licence       Licence
-     *
+     * @param RefData $permitType Permit type
+     * @param Licence $licence Licence
+     * @param Sectors|null $sectors
+     * @param $countrys
+     * @param int|null $cabotage
+     * @param int|null $declaration
+     * @param int|null $emissions
+     * @param int|null $permitsRequired
+     * @param int|null $trips
+     * @param string|null $internationalJourneys
+     * @param string|null $dateReceived
      * @return EcmtPermitApplication
      */
     public static function createNew(
         RefData $status,
         RefData $paymentStatus,
         RefData $permitType,
-        Licence $licence
+        Licence $licence,
+        Sectors $sectors = null,
+        $countrys = null,
+        int $cabotage = null,
+        int $declaration = null,
+        int $emissions = null,
+        int $permitsRequired = null,
+        int $trips = null,
+        RefData $internationalJourneys = null,
+        string $dateReceived = null
     ) {
         $ecmtPermitApplication = new self();
-        $ecmtPermitApplication->setStatus($status);
-        $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
-        $ecmtPermitApplication->setPermitType($permitType);
-        $ecmtPermitApplication->setLicence($licence);
+        $ecmtPermitApplication->status = $status;
+        $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
+        $ecmtPermitApplication->permitType = $permitType;
+        $ecmtPermitApplication->licence = $licence;
+        $ecmtPermitApplication->sectors = $sectors;
+        $ecmtPermitApplication->countrys = $countrys;
+        $ecmtPermitApplication->cabotage = $cabotage;
+        $ecmtPermitApplication->declaration = $declaration;
+        $ecmtPermitApplication->emissions = $emissions;
+        $ecmtPermitApplication->permitsRequired = $permitsRequired;
+        $ecmtPermitApplication->trips = $trips;
+        $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
+        $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
 
         return $ecmtPermitApplication;
     }
@@ -94,37 +116,48 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * Create new EcmtPermitApplication
      *
-     * @param RefData $status        Status
+     * @param RefData $status Status
      * @param RefData $paymentStatus Payment status
-     * @param RefData $permitType    Permit type
-     * @param Licence $licence       Licence
-     * @param Sectors $sectors       Sectors
-     *
+     * @param RefData $permitType Permit type
+     * @param Licence $licence Licence
+     * @param Sectors|null $sectors
+     * @param $countrys
+     * @param int|null $cabotage
+     * @param int|null $declaration
+     * @param int|null $emissions
+     * @param int|null $permitsRequired
+     * @param int|null $trips
+     * @param RefData $internationalJourneys
+     * @param string|null $dateReceived
      * @return EcmtPermitApplication
      */
-    public static function createNewInternal(
-        RefData $status,
-        RefData $paymentStatus,
-        RefData $permitType,
+    public function update(
+        ?RefData $permitType,
         Licence $licence,
-        Sectors $sectors = null,
-        CreateEcmtPermitApplication $command
+        ?Sectors $sectors = null,
+        $countrys = null,
+        int $cabotage = null,
+        int $declaration = null,
+        int $emissions = null,
+        int $permitsRequired = null,
+        int $trips = null,
+        RefData $internationalJourneys = null,
+        string $dateReceived = null
     ) {
-        $ecmtPermitApplication = new self();
-        $ecmtPermitApplication->setStatus($status);
-        $ecmtPermitApplication->setPaymentStatus($paymentStatus); //@todo drop payment status column
-        $ecmtPermitApplication->setPermitType($permitType);
-        $ecmtPermitApplication->setLicence($licence);
-        $ecmtPermitApplication->setSectors($sectors);
-        $ecmtPermitApplication->setCabotage($command->getCabotage());
-        $ecmtPermitApplication->setDeclaration($command->getDeclaration());
-        $ecmtPermitApplication->setEmissions($command->getEmissions());
-        $ecmtPermitApplication->setPermitsRequired($command->getPermitsRequired());
-        $ecmtPermitApplication->setTrips($command->getTrips());
-        $ecmtPermitApplication->setInternationalJourneys($command->getInternationalJourneys());
-        $ecmtPermitApplication->setDateReceived(static::processDate($command->getDateReceived()));
+        $this->permitType = $permitType ?? $this->permitType;
+        $this->licence = $licence;
+        $this->sectors = $sectors;
+        $this->countrys = $countrys;
+        $this->cabotage = $cabotage;
+        $this->checkedAnswers = $declaration; //auto updated alongside declaration for internal apps
+        $this->declaration = $declaration;
+        $this->emissions = $emissions;
+        $this->permitsRequired = $permitsRequired;
+        $this->trips = $trips;
+        $this->internationalJourneys = $internationalJourneys;
+        $this->dateReceived = $this->processDate($dateReceived);
 
-        return $ecmtPermitApplication;
+        return $this;
     }
 
     /**

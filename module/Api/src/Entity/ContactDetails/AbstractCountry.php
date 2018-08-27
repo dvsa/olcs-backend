@@ -36,11 +36,11 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtCountriesConstraints",
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
      *     inversedBy="countrys",
      *     fetch="LAZY"
      * )
-     * @ORM\JoinTable(name="constraint_link",
+     * @ORM\JoinTable(name="ecmt_countries_constraints_link",
      *     joinColumns={
      *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      *     },
@@ -194,8 +194,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      */
     public function initCollections()
     {
-        $this->constraints = new ArrayCollection();
         $this->ecmtApplications = new ArrayCollection();
+        $this->constraints = new ArrayCollection();
         $this->ecmtPermits = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
     }
