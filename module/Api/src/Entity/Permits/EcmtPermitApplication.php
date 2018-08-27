@@ -39,6 +39,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
     const SECTION_COMPLETION_COMPLETED = 'ecmt_section_sts_com';
 
+    const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
+    const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
+    const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
+
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
      */
@@ -257,9 +261,9 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * Updates the application to indicate a sector in which the haulier specialises
      *
-     * @param int $internationalJourneys
+     * @param RefData $internationalJourneys
      */
-    public function updateInternationalJourneys($internationalJourneys)
+    public function updateInternationalJourneys(RefData $internationalJourneys)
     {
         $this->internationalJourneys = $internationalJourneys;
         $this->resetCheckAnswersAndDeclaration();
