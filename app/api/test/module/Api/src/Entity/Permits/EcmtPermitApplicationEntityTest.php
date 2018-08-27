@@ -37,7 +37,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $emissions = 1;
         $permitsRequired = 999;
         $trips = 666;
-        $internationalJourneys = 'inter_journey_60_90';
+        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
         $dateReceived = '2017-12-25';
 
@@ -141,13 +141,13 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testUpdateInternationalJourneys()
     {
-        $internationalJourneys = 2;
+        $internationalJourneys = new RefData(Entity::INTER_JOURNEY_60_90);
 
         $entity = $this->createApplicationWithCompletedDeclaration();
 
         $entity->updateInternationalJourneys($internationalJourneys);
 
-        $this->assertEquals($internationalJourneys, $entity->getInternationalJourneys());
+        $this->assertEquals(Entity::INTER_JOURNEY_60_90, $entity->getInternationalJourneys()->getId());
         $this->assertFalse($entity->getCheckedAnswers());
         $this->assertFalse($entity->getDeclaration());
     }

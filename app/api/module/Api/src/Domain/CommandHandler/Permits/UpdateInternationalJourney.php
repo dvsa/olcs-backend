@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Permits\UpdateInternationalJourney as UpdateInternationalJourneyCmd;
 
 /**
  * Create an ECMT Permit application
@@ -33,10 +34,14 @@ final class UpdateInternationalJourney extends AbstractCommandHandler implements
     {
         $result = new Result();
 
+        /**
+         * @var EcmtPermitApplication         $application
+         * @var UpdateInternationalJourneyCmd $command
+         */
         $application = $this->getRepo()->fetchById($command->getId());
 
-        /** @var EcmtPermitApplication $application */
-        $application->updateInternationalJourneys($command->getInternationalJourney());
+        $internationalJourneyRefData = $this->refData($command->getInternationalJourney());
+        $application->updateInternationalJourneys($internationalJourneyRefData);
 
         $this->getRepo()->save($application);
 
