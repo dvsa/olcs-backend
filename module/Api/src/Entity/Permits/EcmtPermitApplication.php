@@ -54,8 +54,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         'trips' => 'fieldIsInt',
         'permitsRequired' => 'fieldIsInt',
         'sectors' => 'fieldIsNotNull',
-        'countrys' => 'collectionHasRecord',
-        'isRestrictedCountries' => 'fieldIsNotNull',
+        'countrys' => 'countrysPopulated',
     ];
 
     /**
@@ -64,10 +63,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     const CONFIRMATION_SECTIONS = [
         'checkedAnswers' => 'fieldIsAgreed',
         'declaration' => 'fieldIsAgreed',
-    ];
-
-    const MULTI_FIELD_VALIDATORS = [
-        'collectionHasRecord'
     ];
 
     /**
@@ -316,7 +311,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         foreach ($sections as $field => $validator) {
             //default field to not started
             $status = self::SECTION_COMPLETION_NOT_STARTED;
-
             $fieldCompleted = $this->$validator($field);
 
             //if field completed, increment the completed number, and set the status
@@ -325,12 +319,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
                 $status = self::SECTION_COMPLETION_COMPLETED;
             }
 
-            if ($field == 'isRestrictedCountries') {
-                $sectionCompletion['countrys'] = $status;
-            } else {
-                $sectionCompletion[$field] = $status;
-            }
-
+            $sectionCompletion[$field] = $status;
         }
 
         $sectionCompletion['totalSections'] = $totalSections;
@@ -380,6 +369,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     private function fieldIsInt($field)
     {
         return is_int($this->$field);
+    }
+
+    /**
+     * This is a custom validator for the countrys field
+     * It isn't completely dynamic because it's assumed that
+     * this won't be needed in the future
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function countrysPopulated($field)
+    {
+        if($this->isRestrictedCountries === false) {
+            return true;
+        }
+
+        return $this->collectionHasRecord($field);
     }
 
     /**
