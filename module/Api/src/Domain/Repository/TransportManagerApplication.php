@@ -66,6 +66,7 @@ class TransportManagerApplication extends AbstractRepository
             ->byId($tmaId);
 
         $this->joinTmContactDetails();
+        $this->joinDigitalSignature();
 
         $results = $dqb->getQuery()->getResult();
 
@@ -91,6 +92,16 @@ class TransportManagerApplication extends AbstractRepository
             ->with('tm.workCd', 'wcd')
             ->with('wcd.address', 'wadd')
             ->with('wadd.countryCode');
+    }
+
+    /**
+     * Join DigitalSignature entity
+     *
+     * @return void
+     */
+    protected function joinDigitalSignature()
+    {
+        $this->getQueryBuilder()->with($this->alias .'.digitalSignature', 'ds');
     }
 
     /**
