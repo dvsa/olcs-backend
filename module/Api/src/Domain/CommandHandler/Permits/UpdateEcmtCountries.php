@@ -44,6 +44,8 @@ final class UpdateEcmtCountries extends AbstractCommandHandler implements Toggle
         /** @var EcmtPermitApplication $application */
         $application = $this->getRepo('EcmtPermitApplication')->fetchById($command->getEcmtApplicationId());
         $application->updateCountrys($countrys);
+        $application->updateIsRestrictedCountries(count($command->getCountryIds()) == 0 ? 0 : 1);
+
 
         $this->getRepo('EcmtPermitApplication')->save($application);
         $result->addMessage('ECMT Permit Application Restricted Countries updated');
