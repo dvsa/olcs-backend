@@ -382,7 +382,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      */
     private function countrysPopulated($field)
     {
-        if($this->isRestrictedCountries === false) {
+        if($this->hasRestrictedCountries === false) {
             return true;
         }
 
