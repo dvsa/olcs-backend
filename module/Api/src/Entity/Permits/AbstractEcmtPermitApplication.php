@@ -145,6 +145,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $internationalJourneys;
 
     /**
+     * Is restricted countries
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_restricted_countries", nullable=true)
+     */
+    protected $isRestrictedCountries;
+
+    /**
      * Last modified by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -564,6 +573,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getInternationalJourneys()
     {
         return $this->internationalJourneys;
+    }
+
+    /**
+     * Set the is restricted countries
+     *
+     * @param boolean $isRestrictedCountries new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setIsRestrictedCountries($isRestrictedCountries)
+    {
+        $this->isRestrictedCountries = $isRestrictedCountries;
+
+        return $this;
+    }
+
+    /**
+     * Get the is restricted countries
+     *
+     * @return boolean
+     */
+    public function getIsRestrictedCountries()
+    {
+        return $this->isRestrictedCountries;
     }
 
     /**
