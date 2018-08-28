@@ -55,6 +55,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         'permitsRequired' => 'fieldIsInt',
         'sectors' => 'fieldIsNotNull',
         'countrys' => 'collectionHasRecord',
+        'isRestrictedCountries' => 'fieldIsNotNull',
     ];
 
     /**
@@ -63,6 +64,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     const CONFIRMATION_SECTIONS = [
         'checkedAnswers' => 'fieldIsAgreed',
         'declaration' => 'fieldIsAgreed',
+    ];
+
+    const MULTI_FIELD_VALIDATORS = [
+        'collectionHasRecord'
     ];
 
     /**
@@ -311,6 +316,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         foreach ($sections as $field => $validator) {
             //default field to not started
             $status = self::SECTION_COMPLETION_NOT_STARTED;
+
             $fieldCompleted = $this->$validator($field);
 
             //if field completed, increment the completed number, and set the status
@@ -319,7 +325,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
                 $status = self::SECTION_COMPLETION_COMPLETED;
             }
 
-            $sectionCompletion[$field] = $status;
+            if ($field == 'isRestrictedCountries') {
+                $sectionCompletion['countrys'] = $status;
+            } else {
+                $sectionCompletion[$field] = $status;
+            }
+
         }
 
         $sectionCompletion['totalSections'] = $totalSections;
