@@ -1030,8 +1030,9 @@ return [
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
 
-    // Permits Cancel
+    // Permits Cancel/Withdraw
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
+    TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
 
     // Permits Withdraw
     TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
