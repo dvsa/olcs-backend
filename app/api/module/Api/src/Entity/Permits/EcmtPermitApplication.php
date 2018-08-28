@@ -88,6 +88,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         RefData $paymentStatus,
         RefData $permitType,
         Licence $licence,
+        string $dateReceived = null,
         Sectors $sectors = null,
         $countrys = null,
         int $cabotage = null,
@@ -95,8 +96,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         int $emissions = null,
         int $permitsRequired = null,
         int $trips = null,
-        RefData $internationalJourneys = null,
-        string $dateReceived = null
+        RefData $internationalJourneys = null
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->status = $status;
