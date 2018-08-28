@@ -78,4 +78,9 @@ class Result
     {
         return $this->object === null;
     }
+
+    public function getObject()
+    {
+        return $this->object;
+    }
 }
