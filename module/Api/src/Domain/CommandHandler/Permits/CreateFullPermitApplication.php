@@ -68,6 +68,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
             $this->getRepo()->getRefdataReference('lfs_ot'),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
             $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
+            $command->getDateReceived(),
             $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
             $countrys,
             $command->getCabotage(),
@@ -75,8 +76,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
             $command->getEmissions(),
             $command->getPermitsRequired(),
             $command->getTrips(),
-            $this->getRepo()->getRefdataReference($command->getInternationalJourneys()),
-            $command->getDateReceived()
+            $this->getRepo()->getRefdataReference($command->getInternationalJourneys())
         );
     }
 }
