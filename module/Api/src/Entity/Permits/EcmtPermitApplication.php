@@ -65,10 +65,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         'declaration' => 'fieldIsAgreed',
     ];
 
-    const MULTI_FIELD_VALIDATORS = [
-        'collectionHasRecord'
-    ];
-
     /**
      * Create new EcmtPermitApplication
      *
@@ -247,7 +243,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function updateCountrys(array $countrys)
     {
         $this->countrys = $countrys;
-        $this->hasRestrictedCountries = count($countrys) == 0 ? 0 : 1;
+        $this->hasRestrictedCountries = (bool)count($countrys);
         $this->resetCheckAnswersAndDeclaration();
     }
 
@@ -325,12 +321,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
                 $status = self::SECTION_COMPLETION_COMPLETED;
             }
 
-            if ($field == 'isRestrictedCountries') {
-                $sectionCompletion['countrys'] = $status;
-            } else {
-                $sectionCompletion[$field] = $status;
-            }
-
+            $sectionCompletion[$field] = $status;
         }
 
         $sectionCompletion['totalSections'] = $totalSections;
