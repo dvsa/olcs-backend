@@ -124,6 +124,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $emissions;
 
     /**
+     * Has restricted countries
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_restricted_countries", nullable=true)
+     */
+    protected $hasRestrictedCountries;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -516,6 +525,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getEmissions()
     {
         return $this->emissions;
+    }
+
+    /**
+     * Set the has restricted countries
+     *
+     * @param boolean $hasRestrictedCountries new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setHasRestrictedCountries($hasRestrictedCountries)
+    {
+        $this->hasRestrictedCountries = $hasRestrictedCountries;
+
+        return $this;
+    }
+
+    /**
+     * Get the has restricted countries
+     *
+     * @return boolean
+     */
+    public function getHasRestrictedCountries()
+    {
+        return $this->hasRestrictedCountries;
     }
 
     /**
