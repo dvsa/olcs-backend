@@ -90,7 +90,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         Licence $licence,
         string $dateReceived = null,
         Sectors $sectors = null,
-        $countrys = null,
+        $countrys = [],
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
@@ -104,7 +104,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->sectors = $sectors;
-        $ecmtPermitApplication->countrys = $countrys;
+        $ecmtPermitApplication->updateCountrys($countrys);
         $ecmtPermitApplication->cabotage = $cabotage;
         $ecmtPermitApplication->declaration = $declaration;
         $ecmtPermitApplication->emissions = $emissions;
@@ -151,7 +151,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $this->permitType = $permitType ?? $this->permitType;
         $this->licence = $licence;
         $this->sectors = $sectors;
-        $this->countrys = $countrys;
+        $this->updateCountrys($countrys);
         $this->cabotage = $cabotage;
         $this->checkedAnswers = $declaration; //auto updated alongside declaration for internal apps
         $this->declaration = $declaration;
