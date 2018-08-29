@@ -385,7 +385,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     /**
      * This is a custom validator for the countrys field
      * It isn't completely dynamic because it's assumed that
-     * this won't be needed in the future
+     * this won't be needed in the futuree
      *
      * @param string $field field being checked
      *
