@@ -240,10 +240,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      *
      * @param array $countrys
      */
-    public function updateCountrys(array $countrys, int $hasRestrictedCountries)
+    public function updateCountrys(array $countrys)
     {
         $this->countrys = $countrys;
-        $this->hasRestrictedCountries = $hasRestrictedCountries;
+        $this->hasRestrictedCountries = count($countrys) == 0 ? 0 : 1;
         $this->resetCheckAnswersAndDeclaration();
     }
 
