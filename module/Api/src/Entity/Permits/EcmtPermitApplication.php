@@ -54,7 +54,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         'trips' => 'fieldIsInt',
         'permitsRequired' => 'fieldIsInt',
         'sectors' => 'fieldIsNotNull',
-        'countrys' => 'collectionHasRecord',
+        'countrys' => 'countrysPopulated',
     ];
 
     /**
@@ -243,6 +243,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function updateCountrys(array $countrys)
     {
         $this->countrys = $countrys;
+        $this->hasRestrictedCountries = (bool)count($countrys);
         $this->resetCheckAnswersAndDeclaration();
     }
 
@@ -369,6 +370,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     private function fieldIsInt($field)
     {
         return is_int($this->$field);
+    }
+
+    /**
+     * This is a custom validator for the countrys field
+     * It isn't completely dynamic because it's assumed that
+     * this won't be needed in the futuree
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function countrysPopulated($field)
+    {
+        if ($this->hasRestrictedCountries === false) {
+            return true;
+        }
+
+        return $this->collectionHasRecord($field);
     }
 
     /**
