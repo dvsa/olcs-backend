@@ -120,6 +120,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ],
         ],
         'enforcementArea' => [
+            'id' => 'TEST',
             'emailAddress' => 'foo@bar.com'
         ],
         'workshops' => [
