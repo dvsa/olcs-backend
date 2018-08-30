@@ -192,7 +192,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
-    public function cancel(RefData $cancelStatus) {
+    public function cancel(RefData $cancelStatus)
+    {
         if (!$this->canBeCancelled()) {
             throw new ForbiddenException('This application is not allowed to be cancelled');
         }
