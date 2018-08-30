@@ -31,12 +31,15 @@ class UtilController extends AbstractConsoleController
             if (is_object($output)) {
                 $output = $output->getId();
             }
+            $output = ["value"=>$output];
             $exitCode = 0;
         } catch (\Exception $e) {
             $exitCode = 1;
-            $output = $e->getMessage();
+            $output = ["error" =>$e->getMessage()];
         }
-
+        $output = json_encode($output);
+        $this->writeMessages([PHP_EOL.'*** OUTPUT ***']);
+        $output .= PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
         return $this->handleExitStatus($exitCode, (string) $output);
     }
 
