@@ -90,6 +90,26 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
+     * Tests cancelling an application
+     */
+    public function testCancel()
+    {
+        $entity = $this->createApplication();
+        $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
+        $this->assertEquals(Entity::STATUS_CANCELLED, $entity->getStatus()->getId());
+    }
+
+    /**
+     * @dataProvider dpCancelException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testCancelException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
+    }
+
+    /**
      * Pass array of app statuses to make sure an exception is thrown
      *
      * @return array
@@ -99,6 +119,22 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return [
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+        ];
+    }
+
+    /**
+     * Pass array of app status to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpCancelException()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
             [Entity::STATUS_AWAITING_FEE],
             [Entity::STATUS_WITHDRAWN],
             [Entity::STATUS_UNSUCCESSFUL],
