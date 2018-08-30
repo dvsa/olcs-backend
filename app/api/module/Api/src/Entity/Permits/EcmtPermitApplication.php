@@ -192,6 +192,14 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
+    public function cancel(RefData $cancelStatus) {
+        if (!$this->canBeCancelled()) {
+            throw new ForbiddenException('This application is not allowed to be cancelled');
+        }
+
+        $this->status = $cancelStatus;
+    }
+
     /**
      * Gets calculated values
      *
@@ -535,11 +543,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeWithdrawn()
     {
-        if ($this->isUnderConsideration()) {
-            return true;
-        }
-
-        return false;
+        return $this->isUnderConsideration();
     }
 
     /**
@@ -549,7 +553,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeCancelled()
     {
-        return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
+        return $this->isNotYetSubmitted();
     }
 
     /**

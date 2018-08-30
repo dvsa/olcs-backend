@@ -32,16 +32,16 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler implement
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
-        $application = $this->getRepo()->fetchById($command->getId());
-
-        /** @var EcmtPermitApplication $application */
-        $application->setStatus($this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_CANCELLED));
+        $id = $command->getId();
+        $application = $this->getRepo()->fetchById($id);
+        $newStatus = $this->refData(EcmtPermitApplication::STATUS_CANCELLED);
+        $application->cancel($newStatus);
 
         $this->getRepo()->save($application);
 
-        $result->addId('ecmtPermitApplication', $application->getId());
+        $result = new Result();
+        $result->addId('ecmtPermitApplication', $id);
+        $result->addMessage('Permit application cancelled');
 
         return $result;
     }
