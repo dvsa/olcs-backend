@@ -54,7 +54,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         'trips' => 'fieldIsInt',
         'permitsRequired' => 'fieldIsInt',
         'sectors' => 'fieldIsNotNull',
-        'countrys' => 'collectionHasRecord',
+        'countrys' => 'countrysPopulated',
     ];
 
     /**
@@ -90,7 +90,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         Licence $licence,
         string $dateReceived = null,
         Sectors $sectors = null,
-        $countrys = null,
+        $countrys = [],
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
@@ -104,7 +104,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->sectors = $sectors;
-        $ecmtPermitApplication->countrys = $countrys;
+        $ecmtPermitApplication->updateCountrys($countrys);
         $ecmtPermitApplication->cabotage = $cabotage;
         $ecmtPermitApplication->declaration = $declaration;
         $ecmtPermitApplication->emissions = $emissions;
@@ -151,7 +151,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $this->permitType = $permitType ?? $this->permitType;
         $this->licence = $licence;
         $this->sectors = $sectors;
-        $this->countrys = $countrys;
+        $this->updateCountrys($countrys);
         $this->cabotage = $cabotage;
         $this->checkedAnswers = $declaration; //auto updated alongside declaration for internal apps
         $this->declaration = $declaration;
@@ -243,6 +243,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function updateCountrys(array $countrys)
     {
         $this->countrys = $countrys;
+        $this->hasRestrictedCountries = (bool)count($countrys);
         $this->resetCheckAnswersAndDeclaration();
     }
 
@@ -369,6 +370,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     private function fieldIsInt($field)
     {
         return is_int($this->$field);
+    }
+
+    /**
+     * This is a custom validator for the countrys field
+     * It isn't completely dynamic because it's assumed that
+     * this won't be needed in the futuree
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function countrysPopulated($field)
+    {
+        if ($this->hasRestrictedCountries === false) {
+            return true;
+        }
+
+        return $this->collectionHasRecord($field);
     }
 
     /**
