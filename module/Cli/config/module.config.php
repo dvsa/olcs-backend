@@ -3,6 +3,8 @@
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command;
+use Dvsa\Olcs\Cli\Domain\Query;
+use Dvsa\Olcs\Cli\Domain\QueryHandler;
 use Dvsa\Olcs\Cli;
 
 return [
@@ -96,6 +98,15 @@ return [
                         'defaults' => [
                             'controller' => Cli\Controller\BatchController::class,
                             'action' => 'cleanUpVariations'
+                        ],
+                    ],
+                ],
+                'get-db-value' => [
+                    'options' => [
+                        'route' => 'get-db-value [--property-name=] [--entity-name=] [--filter-property=] [--filter-value=] [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\UtilController::class,
+                            'action' => 'getDbValue'
                         ],
                     ],
                 ],
@@ -273,15 +284,24 @@ return [
                         ],
                     ],
                 ],
-                'list-toggles' =>[
+                'list-toggles' => [
                     'options' => [
                         'route' => 'list-toggles [ --verbose | -v]',
-                        'defaults' =>[
-                            'controller'=>Cli\Controller\BatchController::class,
-                            'action'=>'listToggles'
+                        'defaults' => [
+                            'controller' => Cli\Controller\UtilController::class,
+                            'action' => 'listToggles'
                         ]
                     ]
-                ]
+                ],
+                'set-toggle' => [
+                    'options' => [
+                        'route' => 'update-toggles [ --verbose | -v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\UtilController::class,
+                            'action' => 'updateToggles'
+                        ]
+                    ]
+                ],
             ]
         ]
     ],
@@ -290,6 +310,7 @@ return [
             Cli\Controller\BatchController::class => Cli\Controller\BatchController::class,
             Cli\Controller\QueueController::class => Cli\Controller\QueueController::class,
             Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticController::class,
+            Cli\Controller\UtilController::class => Cli\Controller\UtilController::class,
         ]
     ],
     'cache' => [
@@ -313,49 +334,51 @@ return [
     'message_consumer_manager' => [
         'invokables' => [
             Queue::TYPE_COMPANIES_HOUSE_INITIAL
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\InitialDataLoad::class,
             Queue::TYPE_COMPANIES_HOUSE_COMPARE
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\CompaniesHouse\Compare::class,
             Queue::TYPE_CONT_CHECKLIST
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklist::class,
             Queue::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationChecklistReminderGenerateLetter::class,
             Queue::TYPE_TM_SNAPSHOT
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\Snapshot::class,
             Queue::TYPE_CPMS_REPORT_DOWNLOAD
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms\ReportDownload::class,
             Queue::TYPE_EBSR_REQUEST_MAP
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\RequestMap::class,
             Queue::TYPE_EBSR_PACK
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\ProcessPack::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\ProcessPack::class,
+            Queue::TYPE_EBSR_PACK_FAILED
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Ebsr\ProcessPackFailed::class,
             Queue::TYPE_EMAIL
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Email\Send::class,
             Queue::TYPE_PRINT
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
             Queue::TYPE_DISC_PRINTING_PRINT
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
             Queue::TYPE_DISC_PRINTING
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\PrintDiscs::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\PrintDiscs::class,
             Queue::TYPE_CREATE_GOODS_VEHICLE_LIST
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreateGoodsVehicleList::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreateGoodsVehicleList::class,
             Queue::TYPE_CREATE_PSV_VEHICLE_LIST
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting\CreatePsvVehicleList::class,
             Queue::TYPE_SEND_MSI_RESPONSE
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Nr\SendMsiResponse::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Nr\SendMsiResponse::class,
             Queue::TYPE_UPDATE_NYSIIS_TM_NAME
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Tm\UpdateTmNysiisName::class,
             Queue::TYPE_CNS
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\ProcessContinuationNotSought::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\ProcessContinuationNotSought::class,
             Queue::TYPE_CNS_EMAIL
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\SendContinuationNotSought::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Licence\SendContinuationNotSought::class,
             Queue::TYPE_CREATE_COM_LIC
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\CreateForLicence::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\CreateForLicence::class,
             Queue::TYPE_REMOVE_DELETED_DOCUMENTS
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\RemoveDeleteDocuments::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\RemoveDeleteDocuments::class,
             Queue::TYPE_CREATE_CONTINUATION_SNAPSHOT
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationSnapshot::class,
             Queue::TYPE_CONT_DIGITAL_REMINDER
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
@@ -382,6 +405,15 @@ return [
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
         ],
     ],
+
+    \Dvsa\Olcs\Api\Domain\QueryHandlerManagerFactory::CONFIG_KEY => [
+        'factories' => [
+            Query\Util\GetDbValue::class => QueryHandler\Util\GetDbValue::class,
+            'FTFetchList' => Query\Util\FeatureToggles\FetchList::class
+
+        ]
+    ],
+
     'batch_config' => [
         'remove-read-audit' => [
             'max-age' => '1 year'

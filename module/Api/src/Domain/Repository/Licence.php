@@ -737,6 +737,15 @@ class Licence extends AbstractRepository
             Join::WITH,
             $appQb->expr()->eq('a.id', 'tma.application')
         );
+        $appQb->andWhere(
+            $appQb->expr()
+                ->neq(
+                    'tma.action',
+                    ':tmApplicationAction'
+                )
+        );
+        $qb->setParameter('tmApplicationAction', TMApplicationEntity::ACTION_DELETE);
+
         $qb->andWhere(
             $qb->expr()
                 ->notIn(

@@ -338,7 +338,7 @@ return [
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
-
+            'GetDbValue' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

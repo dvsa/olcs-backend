@@ -35,7 +35,9 @@ class UpdateFeatureToggle extends AbstractCommandHandler
     {
         $result = new Result();
         if ($this->isValidUser()) {
-            $result = $this->proxyCommandAsSystemUser($command, UpdateToggleCmd::class
+            $result = $this->proxyCommandAsSystemUser(
+                $command,
+                UpdateToggleCmd::class
             );
         }
 

@@ -66,7 +66,7 @@ class SupportingDocuments extends AbstractValidator
         foreach ($domDocument->getElementsByTagName($tagName) as $document) {
             //validate exists
             $fileName = $document->nodeValue;
-            if (!file_exists($dir . $fileName)) {
+            if (!is_file($dir . $fileName)) {
                 $message = sprintf(self::DOC_IN_TAG, $fileName, $tagName);
                 $this->abstractOptions['messages'][] = $this->createMessage(self::MISSING_DOCUMENT_ERROR, $message);
             }

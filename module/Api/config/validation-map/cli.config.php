@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
+use Dvsa\Olcs\Cli\Domain\QueryHandler as CliQueryHandler;
 
 return [
     //  cli commands
@@ -19,6 +20,8 @@ return [
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
     CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
     CliCommandHandler\LastTmLetter::class => IsSystemUser::class,
+    CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
+
     //  api commands
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
     CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,
@@ -49,6 +52,8 @@ return [
     CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs::class => IsSystemUser::class,
     CommandHandler\Discs\PrintDiscs::class => IsSystemUser::class,
     CommandHandler\Bus\Ebsr\ProcessPack::class => IsSystemUser::class,
+    CommandHandler\Bus\Ebsr\ProcessPackTransaction::class => IsSystemUser::class,
+    CommandHandler\Bus\Ebsr\ProcessPackFailed::class => IsSystemUser::class,
     CommandHandler\Bus\Ebsr\ProcessRequestMap::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrWithdrawn::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrRefused::class => IsSystemUser::class,

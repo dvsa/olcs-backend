@@ -5,8 +5,11 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
+use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as Entity;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -23,8 +26,9 @@ class InspectionRequest extends AbstractRepository
 
     public function fetchForInspectionRequest($id)
     {
-        $qb = $this->createQueryBuilder();
+        $result = [];
 
+        $qb = $this->createQueryBuilder();
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('licence', 'l')
             ->with('l.licenceType', 'lt')
@@ -44,7 +48,16 @@ class InspectionRequest extends AbstractRepository
             ->with('a.licenceType', 'a_lt')
             ->withRefData()
             ->byId($id);
-        return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+
+        $this->filterByEnforcementArea($qb, EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE);
+
+        try {
+            $result = $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
+        } catch (NoResultException $noResultException) {
+            //expected no result if NI enforcement area so catch exception and continue.
+            return $result;
+        }
+        return $result;
     }
 
     /**
@@ -62,19 +75,26 @@ class InspectionRequest extends AbstractRepository
             ->with('l.operatingCentres', 'l_oc')
             ->with('l_oc.operatingCentre', 'l_oc_oc')
             ->byId($inspectionRequestId);
-        $qb->select('COUNT('. $this->alias .')');
+        $qb->select('COUNT(' . $this->alias . ')');
 
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
     }
 
     /**
-     * @param QueryBuilder $qb
+     * @param QueryBuilder             $qb
      * @param InspectionRequestListDTO $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'));
         $qb->setParameter('licence', $query->getLicence());
+    }
+
+
+    protected function filterByEnforcementArea(QueryBuilder $qb, $enforcementArea)
+    {
+        $qb->andWhere($qb->expr()->neq('l_ea.id', ':enforcementArea'));
+        $qb->setParameter('enforcementArea', $enforcementArea);
     }
 
     protected function applyListJoins(QueryBuilder $qb)
@@ -97,7 +117,7 @@ class InspectionRequest extends AbstractRepository
 
         return [
             'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
-            'count'  => $this->fetchPaginatedCount($qb)
+            'count' => $this->fetchPaginatedCount($qb)
         ];
     }
 }

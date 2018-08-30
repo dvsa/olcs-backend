@@ -44,6 +44,7 @@ class Queue extends AbstractQueue
     const TYPE_CPMS_REPORT_DOWNLOAD = 'que_typ_cpms_report_download';
     const TYPE_EBSR_REQUEST_MAP = 'que_typ_ebsr_request_map';
     const TYPE_EBSR_PACK = 'que_typ_ebsr_pack';
+    const TYPE_EBSR_PACK_FAILED = 'que_typ_ebsr_pack_failed';
     const TYPE_SEND_MSI_RESPONSE = 'que_typ_msi_response';
     const TYPE_EMAIL = 'que_typ_email';
     const TYPE_PRINT = 'que_typ_print';
@@ -69,6 +70,7 @@ class Queue extends AbstractQueue
         self::TYPE_CPMS_REPORT_DOWNLOAD,
         self::TYPE_EBSR_REQUEST_MAP,
         self::TYPE_EBSR_PACK,
+        self::TYPE_EBSR_PACK_FAILED,
         self::TYPE_SEND_MSI_RESPONSE,
         self::TYPE_EMAIL,
         self::TYPE_PRINT,
