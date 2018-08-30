@@ -47,7 +47,7 @@ class UtilControllerTest extends MockeryTestCase
         $licence = m::mock(Licence::class);
         /** @var RefData $refData */
         $statusId = 'apsts_not_submitted';
-        $isVariation = '1';
+        $isVariation = "1";
         $refData = m::mock(new RefData($statusId))->makePartial();
         $application = new Application($licence, $refData, $isVariation);
 
@@ -68,8 +68,9 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('property-name', $parameters['propertyName']);
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
-
-        $this->assertSame($isVariation, $this->sut->getDbValueAction()->getResult());
+        $expected= json_encode(["value"=>$isVariation]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $this->console->shouldReceive('writeLine');
+        $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(0, $this->sut->getDbValueAction()->getErrorLevel());
     }
 
@@ -82,7 +83,7 @@ class UtilControllerTest extends MockeryTestCase
         $isVariation = '1';
         $refData = m::mock(new RefData($statusId))->makePartial();
         $application = new Application($licence, $refData, $isVariation);
-
+        $this->console->shouldReceive('writeLine');
         $queryHandler = m::mock(QueryHandlerManager::class);
         $result = new Result($application);
 
@@ -100,8 +101,8 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('property-name', $parameters['propertyName']);
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
-
-        $this->assertSame($statusId, $this->sut->getDbValueAction()->getResult());
+        $expected= json_encode(["value"=>$statusId]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(0, $this->sut->getDbValueAction()->getErrorLevel());
     }
 
@@ -126,8 +127,9 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('property-name', $parameters['propertyName']);
         $this->routeMatch->setParam('filter-property', $parameters['filterProperty']);
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
-
-        $this->assertSame($message, $this->sut->getDbValueAction()->getResult());
+        $this->console->shouldReceive('writeLine');
+        $expected= json_encode(["error"=>$message]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(1, $this->sut->getDbValueAction()->getErrorLevel());
     }
 
@@ -161,8 +163,9 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch->setParam('filter-value', $parameters['filterValue']);
 
         $this->console->shouldReceive('writeLine');
-
-        $this->assertSame('Exception Message', $this->sut->getDbValueAction()->getResult());
+        $this->console->shouldReceive('writeLine')->with('*** OUTPUT ***');
+        $expected= json_encode(["error"=>"Exception Message"]).PHP_EOL. '*** END OF OUTPUT ***'.PHP_EOL;
+        $this->assertSame($expected, $this->sut->getDbValueAction()->getResult());
         $this->assertSame(1, $this->sut->getDbValueAction()->getErrorLevel());
     }
 }
