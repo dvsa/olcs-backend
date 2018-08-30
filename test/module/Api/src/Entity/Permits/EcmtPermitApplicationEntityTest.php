@@ -139,6 +139,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_WITHDRAWN],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
+            [Entity::STATUS_UNDER_CONSIDERATION]
         ];
     }
 
