@@ -96,7 +96,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         int $emissions = null,
         int $permitsRequired = null,
         int $trips = null,
-        RefData $internationalJourneys = null
+        RefData $internationalJourneys = null,
+        int $hasRestrictedCountries = null
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->status = $status;
@@ -112,6 +113,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $ecmtPermitApplication->trips = $trips;
         $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
         $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
+        $ecmtPermitApplication->hasRestrictedCountries = $hasRestrictedCountries;
 
         return $ecmtPermitApplication;
     }
