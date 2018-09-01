@@ -197,16 +197,19 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      */
     public function getCalculatedBundleValues()
     {
+        $sectionCompletion = $this->getSectionCompletion(self::SECTIONS);
+
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
+            'canCheckAnswers' => $sectionCompletion['allCompleted'],
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
-            'sectionCompletion' => $this->getSectionCompletion(self::SECTIONS),
+            'sectionCompletion' => $sectionCompletion,
         ];
     }
 
