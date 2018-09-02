@@ -208,6 +208,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
             'canCheckAnswers' => $this->canBeUpdated() && $sectionCompletion['allCompleted'],
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
+            'isCancelled' => $this->isCancelled(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
@@ -426,6 +427,14 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function isUnderConsideration()
     {
         return $this->status->getId() === self::STATUS_UNDER_CONSIDERATION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return $this->status->getId() === self::STATUS_CANCELLED;
     }
 
     /**
