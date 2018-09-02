@@ -204,7 +204,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
-            'canCheckAnswers' => $sectionCompletion['allCompleted'],
+            'canBeUpdated' => $this->canBeUpdated(),
+            'canCheckAnswers' => $this->canBeUpdated() && $sectionCompletion['allCompleted'],
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isActive' => $this->isActive(),
@@ -448,6 +449,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         $sections = $this->getSectionCompletion(self::SECTIONS);
 
         return $sections['allCompleted'];
+    }
+
+    /**
+     * Whether the permit application can be updated
+     *
+     * @return bool
+     */
+    private function canBeUpdated()
+    {
+        return $this->isNotYetSubmitted();
     }
 
     /**
