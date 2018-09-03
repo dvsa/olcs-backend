@@ -205,8 +205,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeUpdated' => $this->canBeUpdated(),
-            'canCheckAnswers' => $this->canBeUpdated() && $sectionCompletion['allCompleted'],
+            'canCheckAnswers' => $this->canCheckAnswers(),
+            'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
+            'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isCancelled' => $this->isCancelled(),
@@ -482,12 +484,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
 
     /**
      * Whether a declaration can be made
+     * @todo currently reruns section checks, these should be stored for speed reasons
+     *
+     * @return bool
+     */
+    public function canCheckAnswers()
+    {
+        $sections = $this->getSectionCompletion(self::SECTIONS);
+
+        return $sections['allCompleted'] && $this->canBeUpdated();
+    }
+
+    /**
+     * Whether a declaration can be made
+     * @todo currently reruns section checks through canCheckAnswers(), these should be stored for speed reasons
      *
      * @return bool
      */
     public function canMakeDeclaration()
     {
-        return $this->canBeUpdated() && $this->hasCheckedAnswers();
+        return $this->hasCheckedAnswers() && $this->canCheckAnswers();
     }
 
     /**
@@ -498,6 +514,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function hasCheckedAnswers()
     {
         return $this->fieldIsAgreed('checkedAnswers');
+    }
+
+    /**
+     * have the answers been checked
+     *
+     * @return bool
+     */
+    public function hasMadeDeclaration()
+    {
+        return $this->fieldIsAgreed('declaration');
     }
 
     /**
