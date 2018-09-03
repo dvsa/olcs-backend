@@ -197,16 +197,25 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      */
     public function getCalculatedBundleValues()
     {
+        $sectionCompletion = $this->getSectionCompletion(self::SECTIONS);
+
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
+            'canBeUpdated' => $this->canBeUpdated(),
+            'canCheckAnswers' => $this->canCheckAnswers(),
+            'hasCheckedAnswers' => $this->hasCheckedAnswers(),
+            'canMakeDeclaration' => $this->canMakeDeclaration(),
+            'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
+            'isCancelled' => $this->isCancelled(),
+            'isWithdrawn' => $this->isWithdrawn(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
-            'sectionCompletion' => $this->getSectionCompletion(self::SECTIONS),
+            'sectionCompletion' => $sectionCompletion,
         ];
     }
 
@@ -425,12 +434,28 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     }
 
     /**
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return $this->status->getId() === self::STATUS_CANCELLED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithdrawn()
+    {
+        return $this->status->getId() === self::STATUS_WITHDRAWN;
+    }
+
+    /**
      * Whether the permit application can be submitted
      * @todo this currently reruns the section completion checks, should store the value instead for speed
      *
      * @return bool
      */
-    private function canBeSubmitted()
+    public function canBeSubmitted()
     {
         if (!$this->isNotYetSubmitted()) {
             return false;
@@ -448,11 +473,65 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     }
 
     /**
+     * Whether the permit application can be updated
+     *
+     * @return bool
+     */
+    public function canBeUpdated()
+    {
+        return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether a declaration can be made
+     * @todo currently reruns section checks, these should be stored for speed reasons
+     *
+     * @return bool
+     */
+    public function canCheckAnswers()
+    {
+        $sections = $this->getSectionCompletion(self::SECTIONS);
+
+        return $sections['allCompleted'] && $this->canBeUpdated();
+    }
+
+    /**
+     * Whether a declaration can be made
+     * @todo currently reruns section checks through canCheckAnswers(), these should be stored for speed reasons
+     *
+     * @return bool
+     */
+    public function canMakeDeclaration()
+    {
+        return $this->hasCheckedAnswers() && $this->canCheckAnswers();
+    }
+
+    /**
+     * have the answers been checked
+     *
+     * @return bool
+     */
+    public function hasCheckedAnswers()
+    {
+        return $this->fieldIsAgreed('checkedAnswers');
+    }
+
+    /**
+     * have the answers been checked
+     *
+     * @return bool
+     */
+    public function hasMadeDeclaration()
+    {
+        return $this->fieldIsAgreed('declaration');
+    }
+
+    /**
      * Whether the permit application can be withdrawn
      *
      * @return bool
      */
-    private function canBeWithdrawn()
+    public function canBeWithdrawn()
     {
         if ($this->isUnderConsideration()) {
             return true;
@@ -466,7 +545,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      *
      * @return bool
      */
-    private function canBeCancelled()
+    public function canBeCancelled()
     {
         return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
     }
