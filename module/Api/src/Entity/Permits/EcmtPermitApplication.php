@@ -206,9 +206,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeUpdated' => $this->canBeUpdated(),
             'canCheckAnswers' => $this->canBeUpdated() && $sectionCompletion['allCompleted'],
+            'canMakeDeclaration' => $this->canMakeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isCancelled' => $this->isCancelled(),
+            'isWithdrawn' => $this->isWithdrawn(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
@@ -438,12 +440,20 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     }
 
     /**
+     * @return bool
+     */
+    public function isWithdrawn()
+    {
+        return $this->status->getId() === self::STATUS_WITHDRAWN;
+    }
+
+    /**
      * Whether the permit application can be submitted
      * @todo this currently reruns the section completion checks, should store the value instead for speed
      *
      * @return bool
      */
-    private function canBeSubmitted()
+    public function canBeSubmitted()
     {
         if (!$this->isNotYetSubmitted()) {
             return false;
@@ -465,9 +475,29 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      *
      * @return bool
      */
-    private function canBeUpdated()
+    public function canBeUpdated()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether a declaration can be made
+     *
+     * @return bool
+     */
+    public function canMakeDeclaration()
+    {
+        return $this->canBeUpdated() && $this->hasCheckedAnswers();
+    }
+
+    /**
+     * have the answers been checked
+     *
+     * @return bool
+     */
+    public function hasCheckedAnswers()
+    {
+        return $this->fieldIsAgreed('checkedAnswers');
     }
 
     /**
@@ -475,7 +505,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      *
      * @return bool
      */
-    private function canBeWithdrawn()
+    public function canBeWithdrawn()
     {
         if ($this->isUnderConsideration()) {
             return true;
@@ -489,7 +519,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
      *
      * @return bool
      */
-    private function canBeCancelled()
+    public function canBeCancelled()
     {
         return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
     }
