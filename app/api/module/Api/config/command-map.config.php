@@ -976,6 +976,14 @@ return [
     TransferCommand\FeatureToggle\Delete::class =>
         CommandHandler\FeatureToggle\Delete::class,
 
+    // Transfer - IRHP Permit Stock
+    TransferCommand\IrhpPermitStock\Create::class =>
+        CommandHandler\IrhpPermitStock\Create::class,
+    TransferCommand\IrhpPermitStock\Update::class =>
+        CommandHandler\IrhpPermitStock\Update::class,
+    TransferCommand\IrhpPermitStock\Delete::class =>
+        CommandHandler\IrhpPermitStock\Delete::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
