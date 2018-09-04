@@ -523,6 +523,9 @@ return [
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 
+    // IRHP Permits
+    TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
+
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,

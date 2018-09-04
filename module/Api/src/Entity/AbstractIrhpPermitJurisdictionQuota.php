@@ -21,7 +21,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_jurisdiction_quotas_irhp_jurisdictions1_idx",
      *     columns={"irhp_jurisdiction_id"}),
  *        @ORM\Index(name="fk_irhp_jurisdiction_quotas_irhp_permit_stocks1_idx",
-     *     columns={"irhp_permit_stock_id"})
+     *     columns={"irhp_permit_stock_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_jurisdiction_quota_created_by_user_id",
+     *     columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_jurisdiction_quota_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -33,9 +37,10 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -73,9 +78,9 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Irhp permit stock
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitStock
+     * @var \Dvsa\Olcs\Api\Entity\System\IrhpPermitStock
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitStock", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\IrhpPermitStock", fetch="LAZY")
      * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitStock;
@@ -83,9 +88,10 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -121,7 +127,7 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return IrhpPermitJurisdictionQuota
      */
@@ -135,7 +141,7 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -223,7 +229,7 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Set the irhp permit stock
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitStock $irhpPermitStock entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\System\IrhpPermitStock $irhpPermitStock entity being set as the value
      *
      * @return IrhpPermitJurisdictionQuota
      */
@@ -237,7 +243,7 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Get the irhp permit stock
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitStock
+     * @return \Dvsa\Olcs\Api\Entity\System\IrhpPermitStock
      */
     public function getIrhpPermitStock()
     {
@@ -247,7 +253,7 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return IrhpPermitJurisdictionQuota
      */
@@ -261,7 +267,7 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {

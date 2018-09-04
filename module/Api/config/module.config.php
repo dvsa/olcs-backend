@@ -227,6 +227,7 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'FeatureToggle' => RepositoryFactory::class,
+            'IrhpPermitStock' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,

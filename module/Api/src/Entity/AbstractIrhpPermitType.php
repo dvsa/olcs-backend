@@ -16,7 +16,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_permit_type")
+ * @ORM\Table(name="irhp_permit_type",
+ *    indexes={
+ *        @ORM\Index(name="irhp_permit_type_ref_data_id_fk", columns={"name"}),
+ *        @ORM\Index(name="fk_irhp_permit_type_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_type_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
+ *    }
+ * )
  */
 abstract class AbstractIrhpPermitType implements BundleSerializableInterface, JsonSerializable
 {
@@ -26,9 +33,10 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -65,9 +73,10 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -84,9 +93,10 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Name
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="string", name="name", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
      */
     protected $name;
 
@@ -112,7 +122,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return IrhpPermitType
      */
@@ -126,7 +136,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -214,7 +224,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return IrhpPermitType
      */
@@ -228,7 +238,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -268,7 +278,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the name
      *
-     * @param string $name new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $name entity being set as the value
      *
      * @return IrhpPermitType
      */
@@ -282,7 +292,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the name
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getName()
     {

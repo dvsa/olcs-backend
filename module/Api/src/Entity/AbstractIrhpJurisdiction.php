@@ -16,7 +16,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_jurisdiction")
+ * @ORM\Table(name="irhp_jurisdiction",
+ *    indexes={
+ *        @ORM\Index(name="fk_irhp_jurisdiction_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_jurisdiction_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
+ *    }
+ * )
  */
 abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, JsonSerializable
 {
@@ -26,9 +32,10 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -56,9 +63,10 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -94,7 +102,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return IrhpJurisdiction
      */
@@ -108,7 +116,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -172,7 +180,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return IrhpJurisdiction
      */
@@ -186,7 +194,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
