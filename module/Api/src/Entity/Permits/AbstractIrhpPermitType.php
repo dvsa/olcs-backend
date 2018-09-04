@@ -96,7 +96,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=false)
      */
     protected $name;
 
@@ -114,10 +114,10 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true)
+     * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
      * @ORM\Version
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * Set the created by
