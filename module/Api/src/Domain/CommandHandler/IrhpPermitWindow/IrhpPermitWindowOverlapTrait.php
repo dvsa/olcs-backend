@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow;
 trait IrhpPermitWindowOverlapTrait
 {
     /**
-     * Detects overlapping windows for a given stock ID, and new start/end window dates.
+     * Returns the number of Windows that overlap with the provided period.
      *
      * @param $irhpPermitStock
      * @param $proposedStartDate
@@ -17,7 +17,7 @@ trait IrhpPermitWindowOverlapTrait
      * @param null $irhpPermitWindow
      * @return int
      */
-    public function overlapsExistingWindow($irhpPermitStock, $proposedStartDate, $proposedEndDate, $irhpPermitWindow = null)
+    public function numberOfOverlappingWindows($irhpPermitStock, $proposedStartDate, $proposedEndDate, $irhpPermitWindow = null)
     {
         $windowsOverlapping = $this->getRepo()->findOverlappingWindowsByType($irhpPermitStock, $proposedStartDate, $proposedEndDate, $irhpPermitWindow);
         return count($windowsOverlapping);

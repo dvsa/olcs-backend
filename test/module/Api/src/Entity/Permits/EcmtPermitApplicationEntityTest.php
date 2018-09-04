@@ -12,17 +12,17 @@ use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * EcmtPermitApplication Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
- */
+* EcmtPermitApplication Entity Unit Tests
+*
+* Initially auto-generated but won't be overridden
+*/
 class EcmtPermitApplicationEntityTest extends EntityTester
 {
     /**
-     * Define the entity to test
-     *
-     * @var string
-     */
+    * Define the entity to test
+    *
+    * @var string
+    */
     protected $entityClass = Entity::class;
 
     /**
@@ -103,8 +103,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpProvideUpdateCountrys
-     */
+    * @dataProvider dpProvideUpdateCountrys
+    */
     public function testUpdate($countrys, $expectedHasRestrictedCountries)
     {
         $application = $this->createApplication();
@@ -152,8 +152,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
 
     /**
-     * Tests withdrawing an application
-     */
+    * Tests withdrawing an application
+    */
     public function testWithdraw()
     {
         $entity = $this->createApplicationUnderConsideration();
@@ -162,9 +162,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpWithdrawException
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
+    * @dataProvider dpWithdrawException
+    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+    */
     public function testWithdrawException($status)
     {
         $entity = $this->createApplication($status);
@@ -223,9 +223,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCancelException
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
+    * @dataProvider dpCancelException
+    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+    */
     public function testCancelException($status)
     {
         $entity = $this->createApplication($status);
@@ -233,10 +233,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * Pass array of app statuses to make sure an exception is thrown
-     *
-     * @return array
-     */
+    * Pass array of app statuses to make sure an exception is thrown
+    *
+    * @return array
+    */
     public function dpWithdrawException()
     {
         return [
@@ -284,8 +284,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider trueFalseProvider
-     */
+    * @dataProvider trueFalseProvider
+    */
     public function testUpdateCabotage($cabotage)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
@@ -298,8 +298,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider trueFalseProvider
-     */
+    * @dataProvider trueFalseProvider
+    */
     public function testUpdateEmissions($emissions)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
@@ -311,8 +311,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpProvideUpdateCountrys
-     */
+    * @dataProvider dpProvideUpdateCountrys
+    */
     public function testUpdateCountrys($countrys, $expectedHasRestrictedCountries)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
