@@ -1066,4 +1066,12 @@ return [
     // Permits - internal backend
 
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
+
+    // Cli - Permits
+    CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
+        CommandHandlerCli\Permits\MarkSuccessfulDaPermitApplications::class,
+    CommandCli\Permits\MarkSuccessfulRemainingPermitApplications::class =>
+        CommandHandlerCli\Permits\MarkSuccessfulRemainingPermitApplications::class,
+    CommandCli\Permits\MarkSuccessfulSectorPermitApplications::class =>
+        CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
 ];

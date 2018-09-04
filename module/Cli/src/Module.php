@@ -103,6 +103,7 @@ class Module implements ConsoleUsageProviderInterface
             'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]' =>
                 'Create tasks to surrender PSV licences that have expired',
             'database-maintenance [--verbose|-v]' => 'Perform database management tasks, eg changing is_irfo flags',
+            'identify-successful-permit-applications <stock-id> [--verbose|-v]' => 'Identify successful permit applications'
         ];
     }
 
