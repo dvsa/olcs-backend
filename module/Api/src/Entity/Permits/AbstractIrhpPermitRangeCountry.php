@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,39 +10,46 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpCandidatePermit Abstract Entity
+ * IrhpPermitRangeCountry Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_candidate_permit",
+ * @ORM\Table(name="irhp_permit_range_country",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_candidate_permits_irhp_permit_applications1_idx",
-     *     columns={"irhp_permit_application_id"})
+ *        @ORM\Index(name="fk_irhp_restricted_countries_irhp_permit_stock_ranges1_idx",
+     *     columns={"irhp_permit_stock_range_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_restricted_countries_restricted_coun_idx",
+     *     columns={"country_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_country_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_country_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
 
     /**
-     * Application score
+     * Country
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
-     * @ORM\Column(type="string", name="application_score", length=45, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=false)
      */
-    protected $applicationScore;
+    protected $country;
 
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -68,30 +75,22 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $id;
 
     /**
-     * Intensity of use
+     * Irhp permit stock range
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange
      *
-     * @ORM\Column(type="string", name="intensity_of_use", length=45, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_stock_range_id", referencedColumnName="id", nullable=false)
      */
-    protected $intensityOfUse;
-
-    /**
-     * Irhp permit application
-     *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitApplication
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitApplication", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irhpPermitApplication;
+    protected $irhpPermitStockRange;
 
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -106,15 +105,6 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $lastModifiedOn;
 
     /**
-     * Randomized score
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="randomized_score", length=45, nullable=true)
-     */
-    protected $randomizedScore;
-
-    /**
      * Version
      *
      * @var int
@@ -125,35 +115,35 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $version;
 
     /**
-     * Set the application score
+     * Set the country
      *
-     * @param string $applicationScore new value being set
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $country entity being set as the value
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
-    public function setApplicationScore($applicationScore)
+    public function setCountry($country)
     {
-        $this->applicationScore = $applicationScore;
+        $this->country = $country;
 
         return $this;
     }
 
     /**
-     * Get the application score
+     * Get the country
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      */
-    public function getApplicationScore()
+    public function getCountry()
     {
-        return $this->applicationScore;
+        return $this->country;
     }
 
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
     public function setCreatedBy($createdBy)
     {
@@ -165,7 +155,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -177,7 +167,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
     public function setCreatedOn($createdOn)
     {
@@ -207,7 +197,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      *
      * @param int $id new value being set
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
     public function setId($id)
     {
@@ -227,59 +217,35 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     }
 
     /**
-     * Set the intensity of use
+     * Set the irhp permit stock range
      *
-     * @param string $intensityOfUse new value being set
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange $irhpPermitStockRange entity being set as the value
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
-    public function setIntensityOfUse($intensityOfUse)
+    public function setIrhpPermitStockRange($irhpPermitStockRange)
     {
-        $this->intensityOfUse = $intensityOfUse;
+        $this->irhpPermitStockRange = $irhpPermitStockRange;
 
         return $this;
     }
 
     /**
-     * Get the intensity of use
+     * Get the irhp permit stock range
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange
      */
-    public function getIntensityOfUse()
+    public function getIrhpPermitStockRange()
     {
-        return $this->intensityOfUse;
-    }
-
-    /**
-     * Set the irhp permit application
-     *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitApplication $irhpPermitApplication entity being set as the value
-     *
-     * @return IrhpCandidatePermit
-     */
-    public function setIrhpPermitApplication($irhpPermitApplication)
-    {
-        $this->irhpPermitApplication = $irhpPermitApplication;
-
-        return $this;
-    }
-
-    /**
-     * Get the irhp permit application
-     *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitApplication
-     */
-    public function getIrhpPermitApplication()
-    {
-        return $this->irhpPermitApplication;
+        return $this->irhpPermitStockRange;
     }
 
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -291,7 +257,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -303,7 +269,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -329,35 +295,11 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     }
 
     /**
-     * Set the randomized score
-     *
-     * @param string $randomizedScore new value being set
-     *
-     * @return IrhpCandidatePermit
-     */
-    public function setRandomizedScore($randomizedScore)
-    {
-        $this->randomizedScore = $randomizedScore;
-
-        return $this;
-    }
-
-    /**
-     * Get the randomized score
-     *
-     * @return string
-     */
-    public function getRandomizedScore()
-    {
-        return $this->randomizedScore;
-    }
-
-    /**
      * Set the version
      *
      * @param int $version new value being set
      *
-     * @return IrhpCandidatePermit
+     * @return IrhpPermitRangeCountry
      */
     public function setVersion($version)
     {

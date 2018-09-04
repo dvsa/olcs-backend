@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,15 +10,23 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpPermitType Abstract Entity
+ * IrhpPermitWindow Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_permit_type")
+ * @ORM\Table(name="irhp_permit_window",
+ *    indexes={
+ *        @ORM\Index(name="fk_irhp_permit_windows_irhp_permit_stocks1_idx",
+     *     columns={"irhp_permit_stock_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_window_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_window_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
+ *    }
+ * )
  */
-abstract class AbstractIrhpPermitType implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -26,9 +34,10 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -43,13 +52,22 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $createdOn;
 
     /**
-     * Description
+     * Days for payment
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="text", name="description", length=65535, nullable=true)
+     * @ORM\Column(type="integer", name="days_for_payment", nullable=true)
      */
-    protected $description;
+    protected $daysForPayment;
+
+    /**
+     * End date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="end_date", nullable=true)
+     */
+    protected $endDate;
 
     /**
      * Identifier - Id
@@ -63,11 +81,22 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $id;
 
     /**
+     * Irhp permit stock
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irhpPermitStock;
+
+    /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -82,22 +111,13 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $lastModifiedOn;
 
     /**
-     * Name
+     * Start date
      *
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(type="string", name="name", length=255, nullable=true)
+     * @ORM\Column(type="datetime", name="start_date", nullable=true)
      */
-    protected $name;
-
-    /**
-     * Permit type properties
-     *
-     * @var unknown
-     *
-     * @ORM\Column(type="json", name="permit_type_properties", nullable=true)
-     */
-    protected $permitTypeProperties;
+    protected $startDate;
 
     /**
      * Version
@@ -112,9 +132,9 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
     public function setCreatedBy($createdBy)
     {
@@ -126,7 +146,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -138,7 +158,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
     public function setCreatedOn($createdOn)
     {
@@ -164,27 +184,57 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     }
 
     /**
-     * Set the description
+     * Set the days for payment
      *
-     * @param string $description new value being set
+     * @param int $daysForPayment new value being set
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
-    public function setDescription($description)
+    public function setDaysForPayment($daysForPayment)
     {
-        $this->description = $description;
+        $this->daysForPayment = $daysForPayment;
 
         return $this;
     }
 
     /**
-     * Get the description
+     * Get the days for payment
      *
-     * @return string
+     * @return int
      */
-    public function getDescription()
+    public function getDaysForPayment()
     {
-        return $this->description;
+        return $this->daysForPayment;
+    }
+
+    /**
+     * Set the end date
+     *
+     * @param \DateTime $endDate new value being set
+     *
+     * @return IrhpPermitWindow
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the end date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getEndDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->endDate);
+        }
+
+        return $this->endDate;
     }
 
     /**
@@ -192,7 +242,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      *
      * @param int $id new value being set
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
     public function setId($id)
     {
@@ -212,11 +262,35 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     }
 
     /**
+     * Set the irhp permit stock
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock $irhpPermitStock entity being set as the value
+     *
+     * @return IrhpPermitWindow
+     */
+    public function setIrhpPermitStock($irhpPermitStock)
+    {
+        $this->irhpPermitStock = $irhpPermitStock;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit stock
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
+     */
+    public function getIrhpPermitStock()
+    {
+        return $this->irhpPermitStock;
+    }
+
+    /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -228,7 +302,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -240,7 +314,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -266,51 +340,33 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     }
 
     /**
-     * Set the name
+     * Set the start date
      *
-     * @param string $name new value being set
+     * @param \DateTime $startDate new value being set
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
-    public function setName($name)
+    public function setStartDate($startDate)
     {
-        $this->name = $name;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
     /**
-     * Get the name
+     * Get the start date
      *
-     * @return string
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
      */
-    public function getName()
+    public function getStartDate($asDateTime = false)
     {
-        return $this->name;
-    }
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->startDate);
+        }
 
-    /**
-     * Set the permit type properties
-     *
-     * @param unknown $permitTypeProperties new value being set
-     *
-     * @return IrhpPermitType
-     */
-    public function setPermitTypeProperties($permitTypeProperties)
-    {
-        $this->permitTypeProperties = $permitTypeProperties;
-
-        return $this;
-    }
-
-    /**
-     * Get the permit type properties
-     *
-     * @return unknown
-     */
-    public function getPermitTypeProperties()
-    {
-        return $this->permitTypeProperties;
+        return $this->startDate;
     }
 
     /**
@@ -318,7 +374,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      *
      * @param int $version new value being set
      *
-     * @return IrhpPermitType
+     * @return IrhpPermitWindow
      */
     public function setVersion($version)
     {

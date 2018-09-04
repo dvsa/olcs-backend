@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,42 +10,34 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpPermitRangeCountry Abstract Entity
+ * IrhpPermitStock Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_permit_range_country",
+ * @ORM\Table(name="irhp_permit_stock",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_restricted_countries_irhp_permit_stock_ranges1_idx",
-     *     columns={"irhp_permit_stock_range_id"}),
- *        @ORM\Index(name="fk_irhp_permit_range_restricted_countries_restricted_coun_idx",
-     *     columns={"country_id"})
+ *        @ORM\Index(name="fk_irhp_permit_stock_irhp_permit_types1_idx",
+     *     columns={"irhp_permit_type_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
 
     /**
-     * Country
-     *
-     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
-     * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=false)
-     */
-    protected $country;
-
-    /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -71,21 +63,31 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     protected $id;
 
     /**
-     * Irhp permit stock range
+     * Initial stock
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitRange
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitRange", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_permit_stock_range_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="integer", name="initial_stock", nullable=true)
      */
-    protected $irhpPermitStockRange;
+    protected $initialStock;
+
+    /**
+     * Irhp permit type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_type_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irhpPermitType;
 
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -100,6 +102,24 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     protected $lastModifiedOn;
 
     /**
+     * Valid from
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
+     */
+    protected $validFrom;
+
+    /**
+     * Valid to
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="valid_to", nullable=true)
+     */
+    protected $validTo;
+
+    /**
      * Version
      *
      * @var int
@@ -110,35 +130,11 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     protected $version;
 
     /**
-     * Set the country
-     *
-     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $country entity being set as the value
-     *
-     * @return IrhpPermitRangeCountry
-     */
-    public function setCountry($country)
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    /**
-     * Get the country
-     *
-     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
-     */
-    public function getCountry()
-    {
-        return $this->country;
-    }
-
-    /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
     public function setCreatedBy($createdBy)
     {
@@ -150,7 +146,7 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -162,7 +158,7 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
     public function setCreatedOn($createdOn)
     {
@@ -192,7 +188,7 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
      *
      * @param int $id new value being set
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
     public function setId($id)
     {
@@ -212,35 +208,59 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     }
 
     /**
-     * Set the irhp permit stock range
+     * Set the initial stock
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitRange $irhpPermitStockRange entity being set as the value
+     * @param int $initialStock new value being set
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
-    public function setIrhpPermitStockRange($irhpPermitStockRange)
+    public function setInitialStock($initialStock)
     {
-        $this->irhpPermitStockRange = $irhpPermitStockRange;
+        $this->initialStock = $initialStock;
 
         return $this;
     }
 
     /**
-     * Get the irhp permit stock range
+     * Get the initial stock
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitRange
+     * @return int
      */
-    public function getIrhpPermitStockRange()
+    public function getInitialStock()
     {
-        return $this->irhpPermitStockRange;
+        return $this->initialStock;
+    }
+
+    /**
+     * Set the irhp permit type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType $irhpPermitType entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitType($irhpPermitType)
+    {
+        $this->irhpPermitType = $irhpPermitType;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType
+     */
+    public function getIrhpPermitType()
+    {
+        return $this->irhpPermitType;
     }
 
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -252,7 +272,7 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -264,7 +284,7 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -290,11 +310,71 @@ abstract class AbstractIrhpPermitRangeCountry implements BundleSerializableInter
     }
 
     /**
+     * Set the valid from
+     *
+     * @param \DateTime $validFrom new value being set
+     *
+     * @return IrhpPermitStock
+     */
+    public function setValidFrom($validFrom)
+    {
+        $this->validFrom = $validFrom;
+
+        return $this;
+    }
+
+    /**
+     * Get the valid from
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getValidFrom($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->validFrom);
+        }
+
+        return $this->validFrom;
+    }
+
+    /**
+     * Set the valid to
+     *
+     * @param \DateTime $validTo new value being set
+     *
+     * @return IrhpPermitStock
+     */
+    public function setValidTo($validTo)
+    {
+        $this->validTo = $validTo;
+
+        return $this;
+    }
+
+    /**
+     * Get the valid to
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getValidTo($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->validTo);
+        }
+
+        return $this->validTo;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version new value being set
      *
-     * @return IrhpPermitRangeCountry
+     * @return IrhpPermitStock
      */
     public function setVersion($version)
     {

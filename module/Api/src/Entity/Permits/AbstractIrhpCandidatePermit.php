@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,31 +10,43 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpPermitSectorQuota Abstract Entity
+ * IrhpCandidatePermit Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_permit_sector_quota",
+ * @ORM\Table(name="irhp_candidate_permit",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_permit_quotas_irhp_sectors1_idx", columns={"sector_id"}),
- *        @ORM\Index(name="fk_irhp_permit_quotas_irhp_permit_stocks1_idx",
-     *     columns={"irhp_permit_stock_id"})
+ *        @ORM\Index(name="fk_irhp_candidate_permits_irhp_permit_applications1_idx",
+     *     columns={"irhp_permit_application_id"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
 
     /**
+     * Application score
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="application_score", length=45, nullable=true)
+     */
+    protected $applicationScore;
+
+    /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -60,21 +72,31 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     protected $id;
 
     /**
-     * Irhp permit stock
+     * Intensity of use
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitStock
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitStock", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
+     * @ORM\Column(type="string", name="intensity_of_use", length=45, nullable=true)
      */
-    protected $irhpPermitStock;
+    protected $intensityOfUse;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irhpPermitApplication;
 
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -89,23 +111,13 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     protected $lastModifiedOn;
 
     /**
-     * Quota number
+     * Randomized score
      *
-     * @var int
+     * @var string
      *
-     * @ORM\Column(type="integer", name="quota_number", nullable=true)
+     * @ORM\Column(type="string", name="randomized_score", length=45, nullable=true)
      */
-    protected $quotaNumber;
-
-    /**
-     * Sector
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors", fetch="LAZY")
-     * @ORM\JoinColumn(name="sector_id", referencedColumnName="id", nullable=false)
-     */
-    protected $sector;
+    protected $randomizedScore;
 
     /**
      * Version
@@ -118,11 +130,35 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     protected $version;
 
     /**
+     * Set the application score
+     *
+     * @param string $applicationScore new value being set
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setApplicationScore($applicationScore)
+    {
+        $this->applicationScore = $applicationScore;
+
+        return $this;
+    }
+
+    /**
+     * Get the application score
+     *
+     * @return string
+     */
+    public function getApplicationScore()
+    {
+        return $this->applicationScore;
+    }
+
+    /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
     public function setCreatedBy($createdBy)
     {
@@ -134,7 +170,7 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -146,7 +182,7 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
     public function setCreatedOn($createdOn)
     {
@@ -176,7 +212,7 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
      *
      * @param int $id new value being set
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
     public function setId($id)
     {
@@ -196,35 +232,59 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     }
 
     /**
-     * Set the irhp permit stock
+     * Set the intensity of use
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitStock $irhpPermitStock entity being set as the value
+     * @param string $intensityOfUse new value being set
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
-    public function setIrhpPermitStock($irhpPermitStock)
+    public function setIntensityOfUse($intensityOfUse)
     {
-        $this->irhpPermitStock = $irhpPermitStock;
+        $this->intensityOfUse = $intensityOfUse;
 
         return $this;
     }
 
     /**
-     * Get the irhp permit stock
+     * Get the intensity of use
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitStock
+     * @return string
      */
-    public function getIrhpPermitStock()
+    public function getIntensityOfUse()
     {
-        return $this->irhpPermitStock;
+        return $this->intensityOfUse;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication $irhpPermitApplication entity being set as the value
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setIrhpPermitApplication($irhpPermitApplication)
+    {
+        $this->irhpPermitApplication = $irhpPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     */
+    public function getIrhpPermitApplication()
+    {
+        return $this->irhpPermitApplication;
     }
 
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -236,7 +296,7 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -248,7 +308,7 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -274,51 +334,27 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
     }
 
     /**
-     * Set the quota number
+     * Set the randomized score
      *
-     * @param int $quotaNumber new value being set
+     * @param string $randomizedScore new value being set
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
-    public function setQuotaNumber($quotaNumber)
+    public function setRandomizedScore($randomizedScore)
     {
-        $this->quotaNumber = $quotaNumber;
+        $this->randomizedScore = $randomizedScore;
 
         return $this;
     }
 
     /**
-     * Get the quota number
+     * Get the randomized score
      *
-     * @return int
+     * @return string
      */
-    public function getQuotaNumber()
+    public function getRandomizedScore()
     {
-        return $this->quotaNumber;
-    }
-
-    /**
-     * Set the sector
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Permits\Sectors $sector entity being set as the value
-     *
-     * @return IrhpPermitSectorQuota
-     */
-    public function setSector($sector)
-    {
-        $this->sector = $sector;
-
-        return $this;
-    }
-
-    /**
-     * Get the sector
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Permits\Sectors
-     */
-    public function getSector()
-    {
-        return $this->sector;
+        return $this->randomizedScore;
     }
 
     /**
@@ -326,7 +362,7 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
      *
      * @param int $version new value being set
      *
-     * @return IrhpPermitSectorQuota
+     * @return IrhpCandidatePermit
      */
     public function setVersion($version)
     {

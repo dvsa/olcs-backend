@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,20 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpPermitWindow Abstract Entity
+ * IrhpJurisdiction Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_permit_window",
+ * @ORM\Table(name="irhp_jurisdiction",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_permit_windows_irhp_permit_stocks1_idx",
-     *     columns={"irhp_permit_stock_id"})
+ *        @ORM\Index(name="fk_irhp_jurisdiction_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_jurisdiction_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -31,9 +32,10 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -48,15 +50,6 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     protected $createdOn;
 
     /**
-     * End date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="end_date", nullable=true)
-     */
-    protected $endDate;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -68,21 +61,12 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     protected $id;
 
     /**
-     * Irhp permit stock
-     *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitStock
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitStock", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irhpPermitStock;
-
-    /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -97,13 +81,13 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     protected $lastModifiedOn;
 
     /**
-     * Start date
+     * Name
      *
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(type="datetime", name="start_date", nullable=true)
+     * @ORM\Column(type="string", name="name", length=255, nullable=true)
      */
-    protected $startDate;
+    protected $name;
 
     /**
      * Version
@@ -118,9 +102,9 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
     public function setCreatedBy($createdBy)
     {
@@ -132,7 +116,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -144,7 +128,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
     public function setCreatedOn($createdOn)
     {
@@ -170,41 +154,11 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the end date
-     *
-     * @param \DateTime $endDate new value being set
-     *
-     * @return IrhpPermitWindow
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the end date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getEndDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->endDate);
-        }
-
-        return $this->endDate;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id new value being set
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
     public function setId($id)
     {
@@ -224,35 +178,11 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the irhp permit stock
-     *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitStock $irhpPermitStock entity being set as the value
-     *
-     * @return IrhpPermitWindow
-     */
-    public function setIrhpPermitStock($irhpPermitStock)
-    {
-        $this->irhpPermitStock = $irhpPermitStock;
-
-        return $this;
-    }
-
-    /**
-     * Get the irhp permit stock
-     *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitStock
-     */
-    public function getIrhpPermitStock()
-    {
-        return $this->irhpPermitStock;
-    }
-
-    /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -264,7 +194,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -276,7 +206,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -302,33 +232,27 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the start date
+     * Set the name
      *
-     * @param \DateTime $startDate new value being set
+     * @param string $name new value being set
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
-    public function setStartDate($startDate)
+    public function setName($name)
     {
-        $this->startDate = $startDate;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get the start date
+     * Get the name
      *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
+     * @return string
      */
-    public function getStartDate($asDateTime = false)
+    public function getName()
     {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->startDate);
-        }
-
-        return $this->startDate;
+        return $this->name;
     }
 
     /**
@@ -336,7 +260,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      *
      * @param int $version new value being set
      *
-     * @return IrhpPermitWindow
+     * @return IrhpJurisdiction
      */
     public function setVersion($version)
     {

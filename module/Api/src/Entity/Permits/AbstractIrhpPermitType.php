@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,15 +10,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpJurisdiction Abstract Entity
+ * IrhpPermitType Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_jurisdiction")
+ * @ORM\Table(name="irhp_permit_type",
+ *    indexes={
+ *        @ORM\Index(name="irhp_permit_type_ref_data_id_fk", columns={"name"}),
+ *        @ORM\Index(name="fk_irhp_permit_type_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_type_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
+ *    }
+ * )
  */
-abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpPermitType implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -26,9 +33,10 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -41,6 +49,15 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="description", length=65535, nullable=true)
+     */
+    protected $description;
 
     /**
      * Identifier - Id
@@ -56,9 +73,10 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -75,11 +93,21 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Name
      *
-     * @var string
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\Column(type="string", name="name", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
      */
     protected $name;
+
+    /**
+     * Permit type properties
+     *
+     * @var unknown
+     *
+     * @ORM\Column(type="json", name="permit_type_properties", nullable=true)
+     */
+    protected $permitTypeProperties;
 
     /**
      * Version
@@ -94,9 +122,9 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setCreatedBy($createdBy)
     {
@@ -108,7 +136,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -120,7 +148,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setCreatedOn($createdOn)
     {
@@ -146,11 +174,35 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     }
 
     /**
+     * Set the description
+     *
+     * @param string $description new value being set
+     *
+     * @return IrhpPermitType
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setId($id)
     {
@@ -172,9 +224,9 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -186,7 +238,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -198,7 +250,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -226,9 +278,9 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Set the name
      *
-     * @param string $name new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $name entity being set as the value
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setName($name)
     {
@@ -240,7 +292,7 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     /**
      * Get the name
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getName()
     {
@@ -248,11 +300,35 @@ abstract class AbstractIrhpJurisdiction implements BundleSerializableInterface, 
     }
 
     /**
+     * Set the permit type properties
+     *
+     * @param unknown $permitTypeProperties new value being set
+     *
+     * @return IrhpPermitType
+     */
+    public function setPermitTypeProperties($permitTypeProperties)
+    {
+        $this->permitTypeProperties = $permitTypeProperties;
+
+        return $this;
+    }
+
+    /**
+     * Get the permit type properties
+     *
+     * @return unknown
+     */
+    public function getPermitTypeProperties()
+    {
+        return $this->permitTypeProperties;
+    }
+
+    /**
      * Set the version
      *
      * @param int $version new value being set
      *
-     * @return IrhpJurisdiction
+     * @return IrhpPermitType
      */
     public function setVersion($version)
     {

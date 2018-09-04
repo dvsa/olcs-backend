@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -10,20 +10,24 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * IrhpPermitStock Abstract Entity
+ * IrhpPermitSectorQuota Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="irhp_permit_stock",
+ * @ORM\Table(name="irhp_permit_sector_quota",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_permit_stock_irhp_permit_types1_idx",
-     *     columns={"irhp_permit_type_id"})
+ *        @ORM\Index(name="fk_irhp_permit_quotas_irhp_sectors1_idx", columns={"sector_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_quotas_irhp_permit_stocks1_idx",
+     *     columns={"irhp_permit_stock_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_sector_quota_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_sector_quota_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
-abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
@@ -31,9 +35,10 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -59,30 +64,22 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $id;
 
     /**
-     * Initial stock
+     * Irhp permit stock
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
      *
-     * @ORM\Column(type="integer", name="initial_stock", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
      */
-    protected $initialStock;
-
-    /**
-     * Irhp permit type
-     *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitType
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitType", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_permit_type_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irhpPermitType;
+    protected $irhpPermitStock;
 
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -97,22 +94,23 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $lastModifiedOn;
 
     /**
-     * Valid from
+     * Quota number
      *
-     * @var \DateTime
+     * @var int
      *
-     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
+     * @ORM\Column(type="integer", name="quota_number", nullable=true)
      */
-    protected $validFrom;
+    protected $quotaNumber;
 
     /**
-     * Valid to
+     * Sector
      *
-     * @var \DateTime
+     * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
      *
-     * @ORM\Column(type="datetime", name="valid_to", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors", fetch="LAZY")
+     * @ORM\JoinColumn(name="sector_id", referencedColumnName="id", nullable=false)
      */
-    protected $validTo;
+    protected $sector;
 
     /**
      * Version
@@ -127,9 +125,9 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
     public function setCreatedBy($createdBy)
     {
@@ -141,7 +139,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -153,7 +151,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @param \DateTime $createdOn new value being set
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
     public function setCreatedOn($createdOn)
     {
@@ -183,7 +181,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @param int $id new value being set
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
     public function setId($id)
     {
@@ -203,59 +201,35 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the initial stock
+     * Set the irhp permit stock
      *
-     * @param int $initialStock new value being set
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock $irhpPermitStock entity being set as the value
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
-    public function setInitialStock($initialStock)
+    public function setIrhpPermitStock($irhpPermitStock)
     {
-        $this->initialStock = $initialStock;
+        $this->irhpPermitStock = $irhpPermitStock;
 
         return $this;
     }
 
     /**
-     * Get the initial stock
+     * Get the irhp permit stock
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
      */
-    public function getInitialStock()
+    public function getIrhpPermitStock()
     {
-        return $this->initialStock;
-    }
-
-    /**
-     * Set the irhp permit type
-     *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitType $irhpPermitType entity being set as the value
-     *
-     * @return IrhpPermitStock
-     */
-    public function setIrhpPermitType($irhpPermitType)
-    {
-        $this->irhpPermitType = $irhpPermitType;
-
-        return $this;
-    }
-
-    /**
-     * Get the irhp permit type
-     *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitType
-     */
-    public function getIrhpPermitType()
-    {
-        return $this->irhpPermitType;
+        return $this->irhpPermitStock;
     }
 
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -267,7 +241,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
@@ -279,7 +253,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @param \DateTime $lastModifiedOn new value being set
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
     public function setLastModifiedOn($lastModifiedOn)
     {
@@ -305,63 +279,51 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the valid from
+     * Set the quota number
      *
-     * @param \DateTime $validFrom new value being set
+     * @param int $quotaNumber new value being set
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
-    public function setValidFrom($validFrom)
+    public function setQuotaNumber($quotaNumber)
     {
-        $this->validFrom = $validFrom;
+        $this->quotaNumber = $quotaNumber;
 
         return $this;
     }
 
     /**
-     * Get the valid from
+     * Get the quota number
      *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
+     * @return int
      */
-    public function getValidFrom($asDateTime = false)
+    public function getQuotaNumber()
     {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->validFrom);
-        }
-
-        return $this->validFrom;
+        return $this->quotaNumber;
     }
 
     /**
-     * Set the valid to
+     * Set the sector
      *
-     * @param \DateTime $validTo new value being set
+     * @param \Dvsa\Olcs\Api\Entity\Permits\Sectors $sector entity being set as the value
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
-    public function setValidTo($validTo)
+    public function setSector($sector)
     {
-        $this->validTo = $validTo;
+        $this->sector = $sector;
 
         return $this;
     }
 
     /**
-     * Get the valid to
+     * Get the sector
      *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
+     * @return \Dvsa\Olcs\Api\Entity\Permits\Sectors
      */
-    public function getValidTo($asDateTime = false)
+    public function getSector()
     {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->validTo);
-        }
-
-        return $this->validTo;
+        return $this->sector;
     }
 
     /**
@@ -369,7 +331,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @param int $version new value being set
      *
-     * @return IrhpPermitStock
+     * @return IrhpPermitSectorQuota
      */
     public function setVersion($version)
     {

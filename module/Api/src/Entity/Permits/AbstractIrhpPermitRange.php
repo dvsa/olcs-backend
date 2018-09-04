@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -19,7 +19,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="irhp_permit_range",
  *    indexes={
  *        @ORM\Index(name="fk_irhp_permit_stock_ranges_irhp_permit_stocks1_idx",
-     *     columns={"irhp_permit_stock_id"})
+     *     columns={"irhp_permit_stock_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_range_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -31,9 +34,10 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -70,9 +74,9 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Irhp permit stock
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitStock
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitStock", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock", fetch="LAZY")
      * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitStock;
@@ -80,9 +84,10 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -145,7 +150,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -159,7 +164,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -247,7 +252,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the irhp permit stock
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitStock $irhpPermitStock entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock $irhpPermitStock entity being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -261,7 +266,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the irhp permit stock
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitStock
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
      */
     public function getIrhpPermitStock()
     {
@@ -271,7 +276,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -285,7 +290,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {

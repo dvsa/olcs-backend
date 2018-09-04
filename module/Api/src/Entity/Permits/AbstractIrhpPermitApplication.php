@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -24,7 +24,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_application_ecmt_permit_application1_idx",
      *     columns={"ecmt_permit_application_id"}),
  *        @ORM\Index(name="fk_irhp_permit_application_irhp_jurisdiction1_idx",
-     *     columns={"irhp_jurisdiction_id"})
+     *     columns={"irhp_jurisdiction_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -36,9 +39,10 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -76,9 +80,9 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Irhp jurisdiction
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpJurisdiction
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpJurisdiction", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction", fetch="LAZY")
      * @ORM\JoinColumn(name="irhp_jurisdiction_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpJurisdiction;
@@ -86,9 +90,9 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Irhp permit window
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitWindow
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitWindow", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow", fetch="LAZY")
      * @ORM\JoinColumn(name="irhp_permit_window_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitWindow;
@@ -96,9 +100,10 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -171,7 +176,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -185,7 +190,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -273,7 +278,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the irhp jurisdiction
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpJurisdiction $irhpJurisdiction entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction $irhpJurisdiction entity being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -287,7 +292,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the irhp jurisdiction
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpJurisdiction
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction
      */
     public function getIrhpJurisdiction()
     {
@@ -297,7 +302,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the irhp permit window
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitWindow $irhpPermitWindow entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $irhpPermitWindow entity being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -311,7 +316,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the irhp permit window
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitWindow
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow
      */
     public function getIrhpPermitWindow()
     {
@@ -321,7 +326,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -335,7 +340,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
