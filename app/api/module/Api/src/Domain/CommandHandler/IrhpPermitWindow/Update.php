@@ -43,7 +43,7 @@ final class Update extends AbstractCommandHandler
             }
         }
 
-        if ($this->overlapsExistingWindow($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate(), $command->getId()) === 0) {
+        if ($this->numberOfOverlappingWindows($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate(), $command->getId()) === 0) {
             $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
             $window->update(
                 $permitStock,

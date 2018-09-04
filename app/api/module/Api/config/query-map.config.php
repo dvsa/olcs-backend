@@ -535,6 +535,10 @@ return [
     TransferQuery\IrhpPermitWindow\ById::class => QueryHandler\IrhpPermitWindow\ById::class,
     TransferQuery\IrhpPermitWindow\GetList::class => QueryHandler\IrhpPermitWindow\GetList::class,
 
+    // IRHP Permit Range
+    TransferQuery\IrhpPermitRange\ById::class => QueryHandler\IrhpPermitRange\ById::class,
+    TransferQuery\IrhpPermitRange\GetList::class => QueryHandler\IrhpPermitRange\GetList::class,
+
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,

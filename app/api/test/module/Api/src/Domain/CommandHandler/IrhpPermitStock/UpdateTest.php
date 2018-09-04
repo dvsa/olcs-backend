@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as PermitTypeRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Update as UpdateCmd;
 use Dvsa\Olcs\Api\Entity\System\IrhpPermitStock as PermitStockEntity;
-use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
  * Update IrhpPermitStock Test
@@ -18,8 +17,6 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    use ProcessDateTrait;
-
     public function setUp()
     {
         $this->sut = new UpdateHandler();
@@ -69,7 +66,7 @@ class UpdateTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('save')
             ->once()
-            ->with(m::type(PermitStockEntity::class));
+            ->with($entity);
 
         $result = $this->sut->handleCommand($command);
 
