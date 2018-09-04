@@ -1019,13 +1019,14 @@ return [
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
+
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
     TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
     TransferCommand\DataRetention\UpdateRule::class => CommandHandler\DataRetention\UpdateRule::class,
 
-    // Permits
+    // Permits Create
     TransferCommand\Permits\CreateEcmtPermits::class => CommandHandler\Permits\CreateEcmtPermits::class,
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,

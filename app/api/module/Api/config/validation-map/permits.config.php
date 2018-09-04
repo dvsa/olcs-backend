@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 
 return [
     QueryHandler\Permits\SectorsList::class => NoValidationRequired::class,
-    QueryHandler\Permits\ConstrainedCountries::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtCountriesList::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtPermits::class => NoValidationRequired::class,
     QueryHandler\Permits\EcmtPermitApplication::class => NoValidationRequired::class,
@@ -16,7 +15,7 @@ return [
     CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
-    CommandHandler\Permits\CancelEcmtPermitApplication::class => NoValidationRequired::class,CommandHandler\Permits\CancelEcmtPermitApplication::class => NoValidationRequired::class,
+    CommandHandler\Permits\CancelEcmtPermitApplication::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtCabotage::class => NoValidationRequired::class,
     CommandHandler\Permits\UpdateEcmtPermitsRequired::class => NoValidationRequired::class,
@@ -31,5 +30,4 @@ return [
     CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
     CommandHandler\Permits\WithdrawEcmtPermitApplication::class => NoValidationRequired::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => NoValidationRequired::class,
-
 ];
