@@ -284,6 +284,15 @@ return [
                         ],
                     ],
                 ],
+                'identify-successful-permit-applications' => [
+                    'options' => [
+                        'route' => 'identify-successful-permit-applications <stock-id> [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'identifySuccessfulPermitApplications',
+                        ]
+                    ]
+                ],
             ]
         ]
     ],
