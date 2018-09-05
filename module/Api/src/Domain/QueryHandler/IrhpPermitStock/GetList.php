@@ -12,4 +12,5 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 class GetList extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitStock';
+    protected $bundle = ['irhpPermitType' => ['name']];
 }
