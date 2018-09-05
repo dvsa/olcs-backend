@@ -524,6 +524,7 @@ return [
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 
     // IRHP Permits
+    TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
 
     // Admin :: Data Retention
