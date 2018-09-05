@@ -651,8 +651,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 'id' => $licence->getId(),
                 'licNo' => $licence->getLicNo(),
                 'trafficArea' => $licence->getTrafficArea()->getName(),
-                'totAuthVehicles' => $licence->getTotAuthVehicles()
-
+                'totAuthVehicles' => $licence->getTotAuthVehicles(),
+                'licenceType' => $licence->getLicenceType(),
             ];
         }
 
