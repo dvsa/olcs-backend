@@ -20,6 +20,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_irhp_candidate_permits_irhp_permit_applications1_idx",
      *     columns={"irhp_permit_application_id"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_irhp_permit_range",
+     *     columns={"irhp_permit_range_id"}),
  *        @ORM\Index(name="fk_irhp_candidate_permit_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_candidate_permit_last_modified_by_user_id",
      *     columns={"last_modified_by"})
@@ -34,9 +36,9 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Application score
      *
-     * @var string
+     * @var unknown
      *
-     * @ORM\Column(type="string", name="application_score", length=45, nullable=true)
+     * @ORM\Column(type="float", name="application_score", precision=10, scale=0, nullable=true)
      */
     protected $applicationScore;
 
@@ -74,9 +76,9 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Intensity of use
      *
-     * @var string
+     * @var unknown
      *
-     * @ORM\Column(type="string", name="intensity_of_use", length=45, nullable=true)
+     * @ORM\Column(type="float", name="intensity_of_use", precision=10, scale=0, nullable=true)
      */
     protected $intensityOfUse;
 
@@ -89,6 +91,16 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitApplication;
+
+    /**
+     * Irhp permit range
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_range_id", referencedColumnName="id", nullable=false)
+     */
+    protected $irhpPermitRange;
 
     /**
      * Last modified by
@@ -113,11 +125,20 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Randomized score
      *
-     * @var string
+     * @var unknown
      *
-     * @ORM\Column(type="string", name="randomized_score", length=45, nullable=true)
+     * @ORM\Column(type="float", name="randomized_score", precision=10, scale=0, nullable=true)
      */
     protected $randomizedScore;
+
+    /**
+     * Successful
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="successful", nullable=true, options={"default": 0})
+     */
+    protected $successful = 0;
 
     /**
      * Version
@@ -132,7 +153,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the application score
      *
-     * @param string $applicationScore new value being set
+     * @param unknown $applicationScore new value being set
      *
      * @return IrhpCandidatePermit
      */
@@ -146,7 +167,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the application score
      *
-     * @return string
+     * @return unknown
      */
     public function getApplicationScore()
     {
@@ -234,7 +255,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the intensity of use
      *
-     * @param string $intensityOfUse new value being set
+     * @param unknown $intensityOfUse new value being set
      *
      * @return IrhpCandidatePermit
      */
@@ -248,7 +269,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the intensity of use
      *
-     * @return string
+     * @return unknown
      */
     public function getIntensityOfUse()
     {
@@ -277,6 +298,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     public function getIrhpPermitApplication()
     {
         return $this->irhpPermitApplication;
+    }
+
+    /**
+     * Set the irhp permit range
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange $irhpPermitRange entity being set as the value
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setIrhpPermitRange($irhpPermitRange)
+    {
+        $this->irhpPermitRange = $irhpPermitRange;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit range
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange
+     */
+    public function getIrhpPermitRange()
+    {
+        return $this->irhpPermitRange;
     }
 
     /**
@@ -336,7 +381,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the randomized score
      *
-     * @param string $randomizedScore new value being set
+     * @param unknown $randomizedScore new value being set
      *
      * @return IrhpCandidatePermit
      */
@@ -350,11 +395,35 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the randomized score
      *
-     * @return string
+     * @return unknown
      */
     public function getRandomizedScore()
     {
         return $this->randomizedScore;
+    }
+
+    /**
+     * Set the successful
+     *
+     * @param boolean $successful new value being set
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setSuccessful($successful)
+    {
+        $this->successful = $successful;
+
+        return $this;
+    }
+
+    /**
+     * Get the successful
+     *
+     * @return boolean
+     */
+    public function getSuccessful()
+    {
+        return $this->successful;
     }
 
     /**
