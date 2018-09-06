@@ -265,6 +265,27 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $version = 1;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="ecmtPermitApplication")
+     */
+    protected $fees;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
+     *     mappedBy="ecmtPermitApplication"
+     * )
+     */
+    protected $irhpPermitApplications;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -282,6 +303,8 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function initCollections()
     {
         $this->countrys = new ArrayCollection();
+        $this->fees = new ArrayCollection();
+        $this->irhpPermitApplications = new ArrayCollection();
     }
 
     /**
@@ -867,6 +890,132 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     *
+     * @return EcmtPermitApplication
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setIrhpPermitApplications($irhpPermitApplications)
+    {
+        $this->irhpPermitApplications = $irhpPermitApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitApplications()
+    {
+        return $this->irhpPermitApplications;
+    }
+
+    /**
+     * Add a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being added
+     *
+     * @return EcmtPermitApplication
+     */
+    public function addIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($irhpPermitApplications instanceof ArrayCollection) {
+            $this->irhpPermitApplications = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitApplications->toArray(),
+                    $irhpPermitApplications->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->add($irhpPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->removeElement($irhpPermitApplications);
+        }
+
+        return $this;
     }
 
     /**
