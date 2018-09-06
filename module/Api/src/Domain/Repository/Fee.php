@@ -748,4 +748,20 @@ class Fee extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch fee by status and ecmt_application id
+     *
+     * @param $ecmtPermitAplicationId
+     * @return array
+     */
+    public function fetchFeeByEcmtPermitApplicationId($ecmtPermitAplicationId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.ecmtPermitApplication', ':ecmtPermitApplication'))
+            ->setParameter('ecmtPermitApplication', $ecmtPermitAplicationId);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }
