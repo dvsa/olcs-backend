@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -61,7 +63,11 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermitApplications"
+     * )
      * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=false)
      */
     protected $ecmtPermitApplication;
@@ -173,6 +179,38 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Version
      */
     protected $version;
+
+    /**
+     * Irhp candidate permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit",
+     *     mappedBy="irhpPermitApplication"
+     * )
+     */
+    protected $irhpCandidatePermits;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->irhpCandidatePermits = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -529,6 +567,69 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the irhp candidate permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setIrhpCandidatePermits($irhpCandidatePermits)
+    {
+        $this->irhpCandidatePermits = $irhpCandidatePermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp candidate permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpCandidatePermits()
+    {
+        return $this->irhpCandidatePermits;
+    }
+
+    /**
+     * Add a irhp candidate permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addIrhpCandidatePermits($irhpCandidatePermits)
+    {
+        if ($irhpCandidatePermits instanceof ArrayCollection) {
+            $this->irhpCandidatePermits = new ArrayCollection(
+                array_merge(
+                    $this->irhpCandidatePermits->toArray(),
+                    $irhpCandidatePermits->toArray()
+                )
+            );
+        } elseif (!$this->irhpCandidatePermits->contains($irhpCandidatePermits)) {
+            $this->irhpCandidatePermits->add($irhpCandidatePermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp candidate permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeIrhpCandidatePermits($irhpCandidatePermits)
+    {
+        if ($this->irhpCandidatePermits->contains($irhpCandidatePermits)) {
+            $this->irhpCandidatePermits->removeElement($irhpCandidatePermits);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
@@ -563,7 +664,11 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }

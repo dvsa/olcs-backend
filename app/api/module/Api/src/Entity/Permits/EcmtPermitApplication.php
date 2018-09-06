@@ -36,6 +36,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_ISSUED = 'ecmt_permit_issued';
 
     const PERMIT_TYPE = 'permit_ecmt';
+    const PERMIT_VALID = 'permit_valid';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
@@ -226,6 +227,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
+    public function decline(RefData $declineStatus)
+    {
+        $this->status = $declineStatus;
+    }
+
+    public function accept(RefData $acceptStatus)
+    {
+        $this->status = $acceptStatus;
+    }
+
     public function cancel(RefData $cancelStatus)
     {
         if (!$this->canBeCancelled()) {
@@ -258,6 +269,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
+            'isAwaitingFee' => $this->isAwaitingFee(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
@@ -492,6 +504,14 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function isWithdrawn()
     {
         return $this->status->getId() === self::STATUS_WITHDRAWN;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAwaitingFee()
+    {
+        return $this->status->getId() === self::STATUS_AWAITING_FEE;
     }
 
     /**

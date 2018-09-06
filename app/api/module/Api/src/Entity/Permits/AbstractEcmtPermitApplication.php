@@ -265,13 +265,25 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $version = 1;
 
     /**
-     * Ecmt permit application
+     * Fee
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="ecmtPermitApplication")
      */
-    protected $ecmtPermitApplications;
+    protected $fees;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
+     *     mappedBy="ecmtPermitApplication"
+     * )
+     */
+    protected $irhpPermitApplications;
 
     /**
      * Initialise the collections
@@ -291,7 +303,8 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function initCollections()
     {
         $this->countrys = new ArrayCollection();
-        $this->ecmtPermitApplications = new ArrayCollection();
+        $this->fees = new ArrayCollection();
+        $this->irhpPermitApplications = new ArrayCollection();
     }
 
     /**
@@ -880,63 +893,126 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the ecmt permit application
+     * Set the fee
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermitApplications collection being set as the value
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
      *
      * @return EcmtPermitApplication
      */
-    public function setEcmtPermitApplications($ecmtPermitApplications)
+    public function setFees($fees)
     {
-        $this->ecmtPermitApplications = $ecmtPermitApplications;
+        $this->fees = $fees;
 
         return $this;
     }
 
     /**
-     * Get the ecmt permit applications
+     * Get the fees
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getEcmtPermitApplications()
+    public function getFees()
     {
-        return $this->ecmtPermitApplications;
+        return $this->fees;
     }
 
     /**
-     * Add a ecmt permit applications
+     * Add a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermitApplications collection being added
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
      *
      * @return EcmtPermitApplication
      */
-    public function addEcmtPermitApplications($ecmtPermitApplications)
+    public function addFees($fees)
     {
-        if ($ecmtPermitApplications instanceof ArrayCollection) {
-            $this->ecmtPermitApplications = new ArrayCollection(
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
                 array_merge(
-                    $this->ecmtPermitApplications->toArray(),
-                    $ecmtPermitApplications->toArray()
+                    $this->fees->toArray(),
+                    $fees->toArray()
                 )
             );
-        } elseif (!$this->ecmtPermitApplications->contains($ecmtPermitApplications)) {
-            $this->ecmtPermitApplications->add($ecmtPermitApplications);
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
         }
 
         return $this;
     }
 
     /**
-     * Remove a ecmt permit applications
+     * Remove a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermitApplications collection being removed
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
      *
      * @return EcmtPermitApplication
      */
-    public function removeEcmtPermitApplications($ecmtPermitApplications)
+    public function removeFees($fees)
     {
-        if ($this->ecmtPermitApplications->contains($ecmtPermitApplications)) {
-            $this->ecmtPermitApplications->removeElement($ecmtPermitApplications);
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setIrhpPermitApplications($irhpPermitApplications)
+    {
+        $this->irhpPermitApplications = $irhpPermitApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitApplications()
+    {
+        return $this->irhpPermitApplications;
+    }
+
+    /**
+     * Add a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being added
+     *
+     * @return EcmtPermitApplication
+     */
+    public function addIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($irhpPermitApplications instanceof ArrayCollection) {
+            $this->irhpPermitApplications = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitApplications->toArray(),
+                    $irhpPermitApplications->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->add($irhpPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->removeElement($irhpPermitApplications);
         }
 
         return $this;
