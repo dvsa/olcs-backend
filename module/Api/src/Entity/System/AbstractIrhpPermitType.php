@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Entity;
+namespace Dvsa\Olcs\Api\Entity\System;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
@@ -18,7 +18,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irhp_permit_type",
  *    indexes={
- *        @ORM\Index(name="irhp_permit_type_ref_data_id_fk", columns={"name"}),
  *        @ORM\Index(name="fk_irhp_permit_type_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_type_last_modified_by_user_id",
      *     columns={"last_modified_by"})
@@ -62,11 +61,11 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Identifier - Id
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="id", referencedColumnName="id", nullable=false)
      */
     protected $id;
 
@@ -89,16 +88,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
      */
     protected $lastModifiedOn;
-
-    /**
-     * Name
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="name", referencedColumnName="id", nullable=true)
-     */
-    protected $name;
 
     /**
      * Permit type properties
@@ -200,7 +189,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the id
      *
-     * @param int $id new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $id entity being set as the value
      *
      * @return IrhpPermitType
      */
@@ -214,7 +203,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the id
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getId()
     {
@@ -273,30 +262,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
         }
 
         return $this->lastModifiedOn;
-    }
-
-    /**
-     * Set the name
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $name entity being set as the value
-     *
-     * @return IrhpPermitType
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get the name
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**

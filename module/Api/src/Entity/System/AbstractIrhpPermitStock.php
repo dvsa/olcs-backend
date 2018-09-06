@@ -74,9 +74,9 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Irhp permit type
      *
-     * @var \Dvsa\Olcs\Api\Entity\IrhpPermitType
+     * @var \Dvsa\Olcs\Api\Entity\System\IrhpPermitType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\IrhpPermitType", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\IrhpPermitType", fetch="LAZY")
      * @ORM\JoinColumn(name="irhp_permit_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitType;
@@ -234,7 +234,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irhp permit type
      *
-     * @param \Dvsa\Olcs\Api\Entity\IrhpPermitType $irhpPermitType entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\System\IrhpPermitType $irhpPermitType entity being set as the value
      *
      * @return IrhpPermitStock
      */
@@ -248,7 +248,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the irhp permit type
      *
-     * @return \Dvsa\Olcs\Api\Entity\IrhpPermitType
+     * @return \Dvsa\Olcs\Api\Entity\System\IrhpPermitType
      */
     public function getIrhpPermitType()
     {

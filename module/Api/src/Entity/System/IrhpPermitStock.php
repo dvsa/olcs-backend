@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\System;
 
 use Doctrine\ORM\Mapping as ORM;
+use Olcs\Logging\Log\Logger;
 
 /**
  * IrhpPermitStock Entity
@@ -17,5 +18,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpPermitStock extends AbstractIrhpPermitStock
 {
+    public function create($type, $validFrom, $validTo, $quota) {
+        $instance = new self;
+        $instance->irhpPermitType = $type;
+        $instance->validFrom = static::processDate($validFrom);
+        $instance->validTo = static::processDate($validTo);
+        $instance->initialStock = $quota;
 
+        return $instance;
+    }
 }
