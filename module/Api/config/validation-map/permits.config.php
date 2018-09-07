@@ -2,32 +2,34 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Permits;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrganisation;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 
 return [
-    QueryHandler\Permits\SectorsList::class => NoValidationRequired::class,
-    QueryHandler\Permits\EcmtCountriesList::class => NoValidationRequired::class,
-    QueryHandler\Permits\EcmtPermits::class => NoValidationRequired::class,
-    QueryHandler\Permits\EcmtPermitApplication::class => NoValidationRequired::class,
-    QueryHandler\Permits\ById::class => NoValidationRequired::class,
-    QueryHandler\Permits\EcmtPermitFees::class => NoValidationRequired::class,
-    QueryHandler\Permits\EcmtApplicationByLicence::class => NoValidationRequired::class,
-    CommandHandler\Permits\CreateEcmtPermits::class => NoValidationRequired::class,
-    CommandHandler\Permits\CreateEcmtPermitApplication::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtEmissions::class => NoValidationRequired::class,
-    CommandHandler\Permits\CancelEcmtPermitApplication::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtCabotage::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtPermitsRequired::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtCheckAnswers::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateDeclaration::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateInternationalJourney::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtTrips::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateSector::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtCountries::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtLicence::class => NoValidationRequired::class,
-    CommandHandler\Permits\EcmtSubmitApplication::class => NoValidationRequired::class,
-    CommandHandler\Permits\UpdateEcmtPermitApplication::class => NoValidationRequired::class,
-    CommandHandler\Permits\WithdrawEcmtPermitApplication::class => NoValidationRequired::class,
-    CommandHandler\Permits\CreateFullPermitApplication::class => NoValidationRequired::class,
+    QueryHandler\Permits\SectorsList::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
+    QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
+    QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\EcmtApplicationByLicence::class => CanAccessLicenceWithLicence::class,
+    CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
+    CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateDeclaration::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtCabotage::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtPermitsRequired::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtCheckAnswers::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateDeclaration::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateInternationalJourney::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtTrips::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateSector::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtCountries::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtLicence::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\EcmtSubmitApplication::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\UpdateEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\WithdrawEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
 ];
