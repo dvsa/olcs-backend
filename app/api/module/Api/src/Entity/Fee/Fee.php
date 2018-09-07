@@ -96,8 +96,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             $maxPendingDate = $transactionDate->add($interval);
             if ($transaction->isOutstanding()
                 && $transaction->getType()->getId() !== Transaction::TYPE_WAIVE
-                && $maxPendingDate > (new DateTime('now'))
-            ) {
+                && $maxPendingDate > (new DateTime('now'))) {
                 return true;
             }
         }
@@ -565,8 +564,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         foreach ($this->getFeeTransactions() as $ft) {
             if ($ft->getTransaction()->isCompletePaymentOrAdjustment()
                 && !$ft->isRefundedOrReversed()
-                && empty($ft->getReversedFeeTransaction())
-            ) {
+                && empty($ft->getReversedFeeTransaction())) {
                 $feeTransactions[] = $ft;
             }
         }

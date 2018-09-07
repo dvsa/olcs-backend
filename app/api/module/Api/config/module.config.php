@@ -111,6 +111,8 @@ return [
             ApiSrv\Nysiis\NysiisRestClient::class => ApiSrv\Nysiis\NysiisRestClientFactory::class,
 
             ApiSrv\Document\PrintLetter::class => ApiSrv\Document\PrintLetter::class,
+            \Dvsa\Olcs\Api\Service\Toggle\ToggleService::class =>
+                \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::class
         ],
     ],
     'view_manager' => [
@@ -224,6 +226,7 @@ return [
             'Document' => RepositoryFactory::class,
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
+            'FeatureToggle' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
@@ -333,6 +336,9 @@ return [
             'DocumentToDelete' => RepositoryFactory::class,
             'Hearing' => RepositoryFactory::class,
             'GetDbValue' => RepositoryFactory::class,
+            'Sectors' => RepositoryFactory::class,
+            'EcmtPermits' => RepositoryFactory::class,
+            'EcmtPermitApplication' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
