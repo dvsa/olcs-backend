@@ -18,8 +18,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="irhp_permit_jurisdiction_quota",
  *    indexes={
- *        @ORM\Index(name="fk_irhp_jurisdiction_quotas_irhp_jurisdictions1_idx",
-     *     columns={"irhp_jurisdiction_id"}),
+ *        @ORM\Index(name="fk_irhp_jurisdiction_quotas_irhp_traffic_area1_idx",
+     *     columns={"traffic_area_id"}),
  *        @ORM\Index(name="fk_irhp_jurisdiction_quotas_irhp_permit_stocks1_idx",
      *     columns={"irhp_permit_stock_id"}),
  *        @ORM\Index(name="fk_irhp_permit_jurisdiction_quota_created_by_user_id",
@@ -66,16 +66,6 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     protected $id;
 
     /**
-     * Irhp jurisdiction
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_jurisdiction_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irhpJurisdiction;
-
-    /**
      * Irhp permit stock
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
@@ -113,6 +103,16 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
      * @ORM\Column(type="integer", name="quota_number", nullable=true)
      */
     protected $quotaNumber;
+
+    /**
+     * Traffic area
+     *
+     * @var \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea", fetch="LAZY")
+     * @ORM\JoinColumn(name="traffic_area_id", referencedColumnName="id", nullable=false)
+     */
+    protected $trafficArea;
 
     /**
      * Version
@@ -200,30 +200,6 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the irhp jurisdiction
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction $irhpJurisdiction entity being set as the value
-     *
-     * @return IrhpPermitJurisdictionQuota
-     */
-    public function setIrhpJurisdiction($irhpJurisdiction)
-    {
-        $this->irhpJurisdiction = $irhpJurisdiction;
-
-        return $this;
-    }
-
-    /**
-     * Get the irhp jurisdiction
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction
-     */
-    public function getIrhpJurisdiction()
-    {
-        return $this->irhpJurisdiction;
     }
 
     /**
@@ -326,6 +302,30 @@ abstract class AbstractIrhpPermitJurisdictionQuota implements BundleSerializable
     public function getQuotaNumber()
     {
         return $this->quotaNumber;
+    }
+
+    /**
+     * Set the traffic area
+     *
+     * @param \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea $trafficArea entity being set as the value
+     *
+     * @return IrhpPermitJurisdictionQuota
+     */
+    public function setTrafficArea($trafficArea)
+    {
+        $this->trafficArea = $trafficArea;
+
+        return $this;
+    }
+
+    /**
+     * Get the traffic area
+     *
+     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
+     */
+    public function getTrafficArea()
+    {
+        return $this->trafficArea;
     }
 
     /**

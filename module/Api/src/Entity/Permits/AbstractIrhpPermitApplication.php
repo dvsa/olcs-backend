@@ -23,8 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_applications_licence1_idx", columns={"licence_id"}),
  *        @ORM\Index(name="fk_irhp_permit_application_ecmt_permit_application1_idx",
      *     columns={"ecmt_permit_application_id"}),
- *        @ORM\Index(name="fk_irhp_permit_application_irhp_jurisdiction1_idx",
-     *     columns={"irhp_jurisdiction_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_sectors_id1_idx", columns={"sectors_id"}),
  *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_application_last_modified_by_user_id",
@@ -77,16 +76,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-
-    /**
-     * Irhp jurisdiction
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction", fetch="LAZY")
-     * @ORM\JoinColumn(name="irhp_jurisdiction_id", referencedColumnName="id", nullable=false)
-     */
-    protected $irhpJurisdiction;
 
     /**
      * Irhp permit window
@@ -145,6 +134,16 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="json", name="properties", nullable=true)
      */
     protected $properties;
+
+    /**
+     * Sectors
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors", fetch="LAZY")
+     * @ORM\JoinColumn(name="sectors_id", referencedColumnName="id", nullable=true)
+     */
+    protected $sectors;
 
     /**
      * Start date
@@ -275,30 +274,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the irhp jurisdiction
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction $irhpJurisdiction entity being set as the value
-     *
-     * @return IrhpPermitApplication
-     */
-    public function setIrhpJurisdiction($irhpJurisdiction)
-    {
-        $this->irhpJurisdiction = $irhpJurisdiction;
-
-        return $this;
-    }
-
-    /**
-     * Get the irhp jurisdiction
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpJurisdiction
-     */
-    public function getIrhpJurisdiction()
-    {
-        return $this->irhpJurisdiction;
     }
 
     /**
@@ -449,6 +424,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * Set the sectors
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\Sectors $sectors entity being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setSectors($sectors)
+    {
+        $this->sectors = $sectors;
+
+        return $this;
+    }
+
+    /**
+     * Get the sectors
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     */
+    public function getSectors()
+    {
+        return $this->sectors;
     }
 
     /**
