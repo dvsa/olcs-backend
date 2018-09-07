@@ -38,26 +38,27 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             'ltyp_cbp' => 'Community',
             'ltyp_dbp' => 'Designated Body/Local Authority',
             'ltyp_lbp' => 'Large',
-            'ltyp_r'   => 'Restricted',
+            'ltyp_r' => 'Restricted',
             'ltyp_sbp' => 'Small',
-            'ltyp_si'  => 'Standard International',
-            'ltyp_sn'  => 'Standard National',
-            'ltyp_sr'  => 'Special Restricted'
+            'ltyp_si' => 'Standard International',
+            'ltyp_sn' => 'Standard National',
+            'ltyp_sr' => 'Special Restricted'
         ],
         'cy_GB' => [
             'ltyp_cbp' => 'W Community',
             'ltyp_dbp' => 'W Designated Body/Local Authority',
             'ltyp_lbp' => 'W Large',
-            'ltyp_r'   => 'W Restricted',
+            'ltyp_r' => 'W Restricted',
             'ltyp_sbp' => 'W Small',
-            'ltyp_si'  => 'W Standard International',
-            'ltyp_sn'  => 'W Standard National',
-            'ltyp_sr'  => 'W Special Restricted',
+            'ltyp_si' => 'W Standard International',
+            'ltyp_sn' => 'W Standard National',
+            'ltyp_sr' => 'W Special Restricted',
         ]
     ];
 
     /**
      * @param CommandInterface $command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -67,30 +68,32 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
          */
 
         $inspectionRequest = $this->getRepo()->fetchForInspectionRequest($command->getId());
-
-        $message = new Message(
-            $inspectionRequest['licence']['enforcementArea']['emailAddress'],
-            sprintf(self::SUBJECT_LINE, $inspectionRequest['id'])
-        );
-        $translateToWelsh = 'N';
-        if (isset($inspectionRequest['application']['licence']['translateToWelsh'])) {
-            $translateToWelsh = $inspectionRequest['application']['licence']['translateToWelsh'];
-        } elseif (isset($inspectionRequest['licence']['translateToWelsh'])) {
-            $translateToWelsh = $inspectionRequest['licence']['translateToWelsh'];
-        }
-        $message->setTranslateToWelsh($translateToWelsh);
-        $message->setHasHtml(false);
-
-        $variables = $this->populateInspectionRequestVariables($inspectionRequest, $message->getLocale());
-        $this->sendEmailTemplate(
-            $message,
-            'inspection-request',
-            $variables,
-            'blank'
-        );
-
         $result = new Result();
-        $result->addMessage('Inspection request email sent');
+        if (!empty($inspectionRequest)) {
+            $message = new Message(
+                $inspectionRequest['licence']['enforcementArea']['emailAddress'],
+                sprintf(self::SUBJECT_LINE, $inspectionRequest['id'])
+            );
+            $translateToWelsh = 'N';
+            if (isset($inspectionRequest['application']['licence']['translateToWelsh'])) {
+                $translateToWelsh = $inspectionRequest['application']['licence']['translateToWelsh'];
+            } elseif (isset($inspectionRequest['licence']['translateToWelsh'])) {
+                $translateToWelsh = $inspectionRequest['licence']['translateToWelsh'];
+            }
+            $message->setTranslateToWelsh($translateToWelsh);
+            $message->setHasHtml(false);
+
+            $variables = $this->populateInspectionRequestVariables($inspectionRequest, $message->getLocale());
+            $this->sendEmailTemplate(
+                $message,
+                'inspection-request',
+                $variables,
+                'blank'
+            );
+            $result->addMessage('Inspection request email sent');
+            return $result;
+        }
+        $result->addMessage("No inspection request");
         return $result;
     }
 
@@ -180,9 +183,9 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
         $licenceType = '';
         if (!empty($inspectionRequest['application']) &&
             isset($inspectionRequest['application']['licenceType']['id'])) {
-            $licenceType =  $this->licenceTypes[$locale][$inspectionRequest['application']['licenceType']['id']];
+            $licenceType = $this->licenceTypes[$locale][$inspectionRequest['application']['licenceType']['id']];
         } elseif (isset($inspectionRequest['licence']['licenceType']['id'])) {
-            $licenceType =  $this->licenceTypes[$locale][$inspectionRequest['licence']['licenceType']['id']];
+            $licenceType = $this->licenceTypes[$locale][$inspectionRequest['licence']['licenceType']['id']];
         }
         return $licenceType;
     }
@@ -249,7 +252,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
         return array_map(
             function ($tmLicence) {
-                return $tmLicence['forename'].' '.$tmLicence['familyName'];
+                return $tmLicence['forename'] . ' ' . $tmLicence['familyName'];
             },
             $inspectionRequest['licence']['tmLicences']
         );

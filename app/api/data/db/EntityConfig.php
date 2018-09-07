@@ -9,11 +9,11 @@ return array(
                 'skipManyToMany' => true
             ]
         ],
-        'Dvsa\Olcs\Api\Entity\Country' => [
+        /*'Dvsa\Olcs\Api\Entity\Country' => [
             'metadata' => [
                 'skipManyToMany' => true
             ]
-        ],
+        ],*/
         'classNameForTable' => [
            'txn' => 'Transaction',
            'fee_txn' => 'FeeTransaction'
@@ -2119,6 +2119,14 @@ return array(
     'digital_signature' => array(
         'attributes' => array(
             'type' => 'encrypted_string'
+        ),
+    ),
+    'ecmt_permit_application' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'ecmtApplication'
+            )
         ),
     ),
 );

@@ -12,6 +12,7 @@ return array(
     'email.ebsr-withdrawn.subject' => 'EBSR Application Withdrawn - %s - EBSR ID: %s',
     'email.ebsr-failed.subject' => 'EBSR Application Failed - %s - EBSR ID: %s',
     'email.ebsr-failed-no-bus-reg.subject' => 'EBSR Application Failed - EBSR ID: %s',
+    'email.ecmt.submitted.subject' => 'ECMT permit application reference %s',
     'email.erru-errors.subject' => '(ON ERRU %s) INR notification of MSI submission negative acknowledgement [%s]',
     'email.send-publication' => '%s issue number %s for the %s traffic area',
     'email.send-publication-police' => '%s issue number %s for the %s traffic area - POLICE COPY',
