@@ -33,8 +33,8 @@ class EcmtPermitApplication extends AbstractRepository
             $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
             $qb->andWhere($qb->expr()->in($this->alias . '.status', $query->getStatusIds()));
 
-            if (method_exists($query, 'getOrganisationId')) {
-                $licences = $this->fetchLicenceByOrganisation($query->getOrganisationId());
+            if (method_exists($query, 'getOrganisation')) {
+                $licences = $this->fetchLicenceByOrganisation($query->getOrganisation());
                 $qb->andWhere($qb->expr()->in($this->alias . '.licence', $licences));
             }
         }
