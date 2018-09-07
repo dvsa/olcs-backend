@@ -29,9 +29,8 @@ final class Create extends AbstractCommandHandler
         /**
          * @var CreateStockCmd $command
          */
-        $stock = new StockEntity();
-        $stock->create(
-            $permitType->getId()->getId(),
+        $stock = StockEntity::create(
+            $permitType,
             $command->getValidFrom(),
             $command->getValidTo(),
             $command->getQuota()

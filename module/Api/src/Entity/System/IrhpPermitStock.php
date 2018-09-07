@@ -20,11 +20,19 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
 {
     public function create($type, $validFrom, $validTo, $quota) {
         $instance = new self;
+
+        $formatFrom = $instance->formatDate($validFrom);
+        $formatTo = $instance->formatDate($validTo);
+
         $instance->irhpPermitType = $type;
-        $instance->validFrom = static::processDate($validFrom);
-        $instance->validTo = static::processDate($validTo);
-        $instance->initialStock = $quota;
+        $instance->validFrom = static::processDate($formatFrom, 'd-m-Y');
+        $instance->validTo = static::processDate($formatTo, 'd-m-Y');
+        $instance->initialStock = intval($quota) > 0 ? $quota : 0;
 
         return $instance;
+    }
+
+    private function formatDate($date) {
+        return $date['day'] . '-' . $date['month'] . '-' . $date['year'];
     }
 }
