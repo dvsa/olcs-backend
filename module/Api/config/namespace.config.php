@@ -53,6 +53,7 @@ return [
     'PostcodeEnforcementArea' => 'EnforcementArea',
     'EventHistory' => 'EventHistory',
     'EventHistoryType' => 'EventHistory',
+    'FeatureToggle' => 'System',
     'Fee' => 'Fee',
     'FeeManualAlteration' => 'Fee',
     'FeeTransaction' => 'Fee',
@@ -174,4 +175,8 @@ return [
     'BusRegReadAudit' => 'Bus',
     'TransportManagerReadAudit' => 'Tm',
     'DataRetention' => 'DataRetention',
+    'EcmtCountriesConstraints' => 'Permits',
+    'EcmtPermitApplication' => 'Permits',
+    'EcmtPermits' => 'Permits',
+    'Sectors' => 'Permits',
 ];
