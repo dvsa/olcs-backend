@@ -271,6 +271,37 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertFalse($entity->getDeclaration());
     }
 
+    /**
+     * @todo: check this actually works
+     */
+    public function testCalculatePermitIntensityOfUse()
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->setTrips(10);
+        $entity->setPermitsRequired(4);
+
+        $intensity = $entity->getPermitIntensityOfUse();
+
+        $this->assertEquals($intensity, 2.5);
+    }
+
+    /**
+     * @todo: check this actually works
+     */
+    public function testCalculatePermitApplicationScore()
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+        $internationalJourneys = new RefData(Entity::INTER_JOURNEY_60_90);
+
+        $entity->setTrips(10);
+        $entity->setPermitsRequired(4);
+
+        $entity->updateInternationalJourneys($internationalJourneys);
+
+        $this->assertEquals($entity->calculatePermitApplicationScore(), 8.33);
+    }
+
     private function createApplicationUnderConsideration()
     {
         return $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);

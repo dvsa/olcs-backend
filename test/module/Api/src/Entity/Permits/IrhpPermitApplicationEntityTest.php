@@ -18,4 +18,5 @@ class IrhpPermitApplicationEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
 }

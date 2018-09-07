@@ -25,5 +25,30 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpPermitApplication extends AbstractIrhpPermitApplication
 {
+    public static function createNew(
+        IrhpPermitWindow $IrhpPermitWindow,
+        Licence $licence,
+        EcmtPermitApplication $ecmtPermitApplication,
+        IrhpJurisdiction $irhpJurisdiction
+    ) {
+        $IrhpPermitApplication = new self();
+
+        $IrhpPermitApplication->irhpPermitWindow = $IrhpPermitWindow;
+        $IrhpPermitApplication->licence = $licence;
+        $IrhpPermitApplication->ecmtPermitApplication = $ecmtPermitApplication;
+        $IrhpPermitApplication->irhpJurisdiction = $irhpJurisdiction;
+
+        return $IrhpPermitApplication;
+    }
+
+    public function getPermitIntensityOfUse()
+    {
+        return $this->ecmtPermitApplication->getPermitIntensityOfUse();
+    }
+
+    public function getPermitApplicationScore()
+    {
+        return $this->ecmtPermitApplication->getPermitApplicationScore();
+    }
 
 }

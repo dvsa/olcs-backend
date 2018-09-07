@@ -65,6 +65,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
         'declaration' => 'fieldIsAgreed',
     ];
 
+    const INTERNATIONAL_JOURNEYS_DECIMAL_MAP = [
+        self::INTER_JOURNEY_LESS_60 => 0.3,
+        self::INTER_JOURNEY_60_90 => 0.75,
+        self::INTER_JOURNEY_MORE_90 => 1
+    ];
+
     /**
      * Create new EcmtPermitApplication
      *
