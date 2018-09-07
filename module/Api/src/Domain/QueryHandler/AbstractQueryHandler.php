@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -11,9 +12,14 @@ use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\Audit as AuditCommand;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Olcs\Logging\Log\Logger;
+use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 
 /**
  * Abstract Query Handler
@@ -23,6 +29,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
+    use HandlerEnabledTrait;
 
     /**
      * The name of the default repo
@@ -64,32 +71,10 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        if ($this instanceof AuthAwareInterface) {
-            $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
-        }
-
-        if ($this instanceof UploaderAwareInterface) {
-            $this->setUploader($mainServiceLocator->get('FileUploader'));
-        }
-
-        if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
-            $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
-        }
-
-        if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
-            $this->setCompaniesHouseService($mainServiceLocator->get('CompaniesHouseService'));
-        }
-
-        if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
-            $this->setAddressService($mainServiceLocator->get('AddressService'));
-        }
-
-        if ($this instanceof NationalRegisterAwareInterface) {
-            $this->setNationalRegisterConfig($mainServiceLocator->get('Config')['nr']);
-        }
-
-        if ($this instanceof OpenAmUserAwareInterface) {
-            $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
+        try {
+            $this->applyInterfaces($mainServiceLocator);
+        } catch (ZendServiceException $e) {
+            $this->logServiceExceptions($e);
         }
 
         $this->repoManager = $mainServiceLocator->get('RepositoryServiceManager');
@@ -208,5 +193,73 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     protected function getCommandHandler()
     {
         return $this->commandHandler;
+    }
+
+    /**
+     * Warnings suppressed as by design this is just a series of 'if' conditions
+     *
+     * @param ServiceLocatorInterface $mainServiceLocator service locator
+     *
+     * @return void
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function applyInterfaces($mainServiceLocator)
+    {
+        if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
+            $toggleService = $mainServiceLocator->get(ToggleService::class);
+            $this->setToggleService($toggleService);
+        }
+
+        if ($this instanceof AuthAwareInterface) {
+            $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
+        }
+
+        if ($this instanceof UploaderAwareInterface) {
+            $this->setUploader($mainServiceLocator->get('FileUploader'));
+        }
+
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
+            $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
+        }
+
+        if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
+            $this->setCompaniesHouseService($mainServiceLocator->get('CompaniesHouseService'));
+        }
+
+        if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
+            $this->setAddressService($mainServiceLocator->get('AddressService'));
+        }
+
+        if ($this instanceof NationalRegisterAwareInterface) {
+            $this->setNationalRegisterConfig($mainServiceLocator->get('Config')['nr']);
+        }
+
+        if ($this instanceof OpenAmUserAwareInterface) {
+            $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
+        }
+    }
+
+    /**
+     * Zend ServiceManager masks exceptions beind a simple 'service not created'
+     * message so here we inspect the 'previous exception' chain and log out
+     * what the actual errors were, before rethrowing the original execption.
+     *
+     * @param \Exception $e exception
+     *
+     * @return void
+     * @throws \Exception rethrows original Exception
+     */
+    private function logServiceExceptions(\Exception $e)
+    {
+        $rethrow = $e;
+
+        do {
+            Logger::warn(get_class($this) . ': ' . $e->getMessage());
+            $e = $e->getPrevious();
+        } while ($e);
+
+        throw $rethrow;
     }
 }

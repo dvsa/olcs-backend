@@ -7,6 +7,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -17,4 +18,10 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 interface QueryHandlerInterface
 {
     public function handleQuery(QueryInterface $query);
+
+    /**
+     * @return bool
+     * @throws DisabledHandlerException
+     */
+    public function checkEnabled(): bool;
 }

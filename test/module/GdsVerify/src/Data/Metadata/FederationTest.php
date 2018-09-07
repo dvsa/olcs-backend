@@ -53,7 +53,7 @@ class FederationTest extends \PHPUnit_Framework_TestCase
     public function testGetSigningCertificateMissing()
     {
         $federationMetadata = $this->getSut('missing-cert-federation.xml');
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Federation signing certificate not found');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Federation signing certificate not found');
         $federationMetadata->getSigningCertificate();
     }
 

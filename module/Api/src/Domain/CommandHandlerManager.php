@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\AbstractPluginManager;
@@ -55,6 +56,8 @@ class CommandHandlerManager extends AbstractPluginManager
 
         $commandHandlerFqcn = get_class($validateCommandHandler);
 
+        $validateCommandHandler->checkEnabled();
+
         if ($validate) {
             $this->validateDto($command, $commandHandlerFqcn);
         }
@@ -83,10 +86,11 @@ class CommandHandlerManager extends AbstractPluginManager
 
     /**
      * Validate command data
-     * 
+     *
      * @param CommandInterface $dto
      * @param string           $queryHandlerFqcl
-     * 
+     *
+     * @return void
      * @throws ForbiddenException
      */
     protected function validateDto($dto, $queryHandlerFqcl)

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CliCommandHandler;
+use Dvsa\Olcs\Cli\Domain\QueryHandler as CliQueryHandler;
 
 return [
     //  cli commands
@@ -19,6 +20,8 @@ return [
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
     CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
     CliCommandHandler\LastTmLetter::class => IsSystemUser::class,
+    CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
+
     //  api commands
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
     CommandHandler\Email\SendErruErrors::class => IsSystemUser::class,
@@ -61,6 +64,7 @@ return [
     CommandHandler\Email\SendEbsrRefreshed::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrErrors::class => IsSystemUser::class,
     CommandHandler\Email\SendEbsrRequestMap::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Email\SendPublication::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,

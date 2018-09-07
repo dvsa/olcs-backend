@@ -119,7 +119,7 @@ class InspectionRequestTest extends RepositoryTestCase
         $this->sut->fetchForInspectionRequest($inspectionRequestId, Query::HYDRATE_OBJECT);
 
         //  check query
-        $expect = 'QUERY';
+        $expect = 'QUERY AND l_ea.id != [[EA-N]]';
 
         static::assertEquals($expect, $this->query);
     }
