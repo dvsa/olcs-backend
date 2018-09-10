@@ -28,15 +28,13 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
         Licence $licence,
-        EcmtPermitApplication $ecmtPermitApplication,
-        IrhpJurisdiction $irhpJurisdiction
+        EcmtPermitApplication $ecmtPermitApplication
     ) {
         $IrhpPermitApplication = new self();
 
         $IrhpPermitApplication->irhpPermitWindow = $IrhpPermitWindow;
         $IrhpPermitApplication->licence = $licence;
         $IrhpPermitApplication->ecmtPermitApplication = $ecmtPermitApplication;
-        $IrhpPermitApplication->irhpJurisdiction = $irhpJurisdiction;
 
         return $IrhpPermitApplication;
     }
