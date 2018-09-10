@@ -29,6 +29,12 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             EcmtPermitApplication::STATUS_UNDER_CONSIDERATION
         ];
 
+        $this->references = [
+            IrhpPermitWindow::class => [
+                1 => m::mock(IrhpPermitWindow::class),
+            ]
+        ];
+
         parent::initReferences();
     }
 
@@ -63,9 +69,9 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('getReference')
+        /*$this->repoMap['EcmtPermitApplication']->shouldReceive('getReference')
             ->with(IrhpPermitWindow::class, 1)
-            ->andReturn(m::mock(IrhpPermitWindow::class));
+            ->andReturn(m::mock(IrhpPermitWindow::class));*/
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtAppSubmitted::class,
