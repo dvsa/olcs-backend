@@ -53,5 +53,4 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     {
         return $this->ecmtPermitApplication->getPermitApplicationScore();
     }
-
 }

@@ -20,9 +20,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
 
-
-
-
 /**
  * Submit the ECMT application
  *
@@ -68,7 +65,7 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
         $result = new Result();
         $result->addId('ecmtPermitApplication', $id);
-        $result->addMessage('Permit application updated');
+        $result->addMessage('Permit application updated:');
 
         $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
 
@@ -102,7 +99,6 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $randomizedScore = null;
 
         for ($i = 0; $i < $permitsRequired; $i++) {
-
             $candidatePermit = IrhpCandidatePermitEntity::createNew(
                 $irhpPermitApplication,
                 $this->getRepo()->getReference(IrhpPermitRangeEntity::class, 2),

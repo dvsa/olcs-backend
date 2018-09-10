@@ -572,6 +572,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     public function getPermitApplicationScore()
     {
         $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
-        return $this->getPermitIntensityOfUse() / $interJourneysDecValue;
+        return $this->getPermitIntensityOfUse() * $interJourneysDecValue;
     }
 }
