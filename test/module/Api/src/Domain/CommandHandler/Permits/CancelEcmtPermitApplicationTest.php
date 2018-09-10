@@ -14,7 +14,7 @@ class CancelEcmtPermitApplicationTest extends CommandHandlerTestCase
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
         $this->sut = new CancelEcmtPermitApplication();
-     
+
         parent::setUp();
     }
 
@@ -29,11 +29,11 @@ class CancelEcmtPermitApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $commandId = 129;
+        $commandId = 4096;
         $applicationId = 4096;
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication->shouldReceive('setStatus')
+        $ecmtPermitApplication->shouldReceive('cancel')
             ->with($this->mapRefData(EcmtPermitApplication::STATUS_CANCELLED))
             ->once()
             ->globally()
@@ -59,6 +59,6 @@ class CancelEcmtPermitApplicationTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals($applicationId, $result->getId('ecmtPermitApplication'));
-        $this->assertEquals([], $result->getMessages());
+        $this->assertEquals(['Permit application cancelled'], $result->getMessages());
     }
 }
