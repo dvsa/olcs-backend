@@ -65,7 +65,7 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
         $result = new Result();
         $result->addId('ecmtPermitApplication', $id);
-        $result->addMessage('Permit application updated:');
+        $result->addMessage('Permit application updated');
 
         $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
 
