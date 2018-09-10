@@ -34,7 +34,7 @@ final class Update extends AbstractCommandHandler
             $permitType,
             $command->getValidFrom(),
             $command->getValidTo(),
-            $command->getQuota()
+            $command->getInitialStock()
         );
 
         $this->getRepo()->save($stock);
