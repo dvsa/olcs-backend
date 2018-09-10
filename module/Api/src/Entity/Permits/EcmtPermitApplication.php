@@ -67,6 +67,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         'declaration' => 'fieldIsAgreed',
     ];
 
+    const INTERNATIONAL_JOURNEYS_DECIMAL_MAP = [
+        self::INTER_JOURNEY_LESS_60 => 0.3,
+        self::INTER_JOURNEY_60_90 => 0.75,
+        self::INTER_JOURNEY_MORE_90 => 1
+    ];
+
+
     /**
      * Create new EcmtPermitApplication
      *
@@ -565,5 +572,28 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * Calculates the intensity_of_use value for
+     * permits requested by an ecmtPermitApplication
+     */
+    public function getPermitIntensityOfUse()
+    {
+        if (!$this->permitsRequired > 0) {
+            return 0;
+        }
+
+        return $this->trips / $this->permitsRequired;
+    }
+
+    /**
+     * Calculates the application_score value for
+     * permits requested by an ecmtPermitApplication
+     */
+    public function getPermitApplicationScore()
+    {
+        $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
+        return $this->getPermitIntensityOfUse() * $interJourneysDecValue;
     }
 }
