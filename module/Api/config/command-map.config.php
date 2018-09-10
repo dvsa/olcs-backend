@@ -981,6 +981,8 @@ return [
         CommandHandler\IrhpPermitStock\Create::class,
     TransferCommand\IrhpPermitStock\Update::class =>
         CommandHandler\IrhpPermitStock\Update::class,
+    TransferCommand\IrhpPermitStock\Delete::class =>
+        CommandHandler\IrhpPermitStock\Delete::class,
 
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
