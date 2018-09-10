@@ -2,6 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

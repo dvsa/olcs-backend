@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -13,8 +13,14 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
-use Dvsa\Olcs\Transfer\Command\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
-use Dvsa\Olcs\Transfer\Command\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
+
+
 
 
 /**
@@ -29,6 +35,9 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
+
+    protected $extraRepos = ['IrhpPermitApplication', 'IrhpCandidatePermit'];
+
 
     /**
      * Submit the ECMT application
@@ -51,6 +60,11 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $application->submit($newStatus);
 
         $this->getRepo()->save($application);
+
+        $irhpApplication = $this->createIrhpPermitApplication($application);
+        $this->getRepo('IrhpPermitApplication')->save($irhpApplication);
+
+        $this->createIrhpCandidatePermitRecords($application->getPermitsRequired(), $irhpApplication);
 
         $result = new Result();
         $result->addId('ecmtPermitApplication', $id);
