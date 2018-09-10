@@ -7,6 +7,9 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtSubmitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
@@ -16,7 +19,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
         $this->sut = new EcmtSubmitApplication();
-     
+
         parent::setUp();
     }
 
@@ -40,6 +43,9 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
+        $ecmtPermitApplication->shouldReceive('getLicence')
+            ->andReturn(m::mock(Licence::class));
+
         $ecmtPermitApplication->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
 
@@ -56,6 +62,10 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->globally()
             ->ordered();
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('getReference')
+            ->with(IrhpPermitWindow::class, 1)
+            ->andReturn(m::mock(IrhpPermitWindow::class));
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtAppSubmitted::class,

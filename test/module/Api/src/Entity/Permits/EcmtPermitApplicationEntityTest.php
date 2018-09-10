@@ -299,7 +299,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
         $entity->updateInternationalJourneys($internationalJourneys);
 
-        $this->assertEquals($entity->calculatePermitApplicationScore(), 8.33);
+        $this->assertEquals($entity->getPermitApplicationScore(), 1.875);
     }
 
     private function createApplicationUnderConsideration()
