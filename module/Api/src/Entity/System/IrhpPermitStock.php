@@ -36,8 +36,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
         $formatFrom = $this->formatDate($validFrom);
         $formatTo = $this->formatDate($validTo);
 
-        Logger::err(print_r($type, true));
-
         $this->irhpPermitType = $type;
         $this->validFrom = static::processDate($formatFrom, 'd-m-Y');
         $this->validTo = static::processDate($formatTo, 'd-m-Y');

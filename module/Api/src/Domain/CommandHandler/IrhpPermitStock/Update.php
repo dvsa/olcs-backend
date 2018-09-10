@@ -7,7 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\IrhpPermitStock as StockEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Update as UpdateStockCmd;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Olcs\Logging\Log\Logger;
 
 /**
@@ -23,16 +23,13 @@ final class Update extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command): Result
     {
         /**
-         * @var UpdateStockCmd $command
+         * @var IrhpPermitStock $command
          * @var StockEntity $stock
          * @var PermitStockRepo $repo
          */
-        $repo = $this->getRepo();
-        $stock = $repo->fetchUsingId($command);
-        Logger::err(print_r($stock, true));
+        $stock = $this->getRepo()->fetchUsingId($command);
+
         $permitType = $this->getRepo('IrhpPermitType')->fetchById($command->getPermitType());
-
-
         $stock->update(
             $permitType,
             $command->getValidFrom(),
@@ -40,10 +37,12 @@ final class Update extends AbstractCommandHandler
             $command->getQuota()
         );
 
-        $repo->save($stock);
+        $this->getRepo()->save($stock);
 
         $this->result->addId('Irhp Permit Stock', $stock->getId());
         $this->result->addMessage("Irhp Permit Stock '{$stock->getId()}' updated");
+
+        Logger::crit(print_r($this->result, true));
 
         return $this->result;
     }

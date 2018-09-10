@@ -1,16 +1,15 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitStock;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitType;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 
 /**
- * IRHP Stock
+ * IRHP Type
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
 class GetList extends AbstractListQueryHandler
 {
-    protected $repoServiceName = 'IrhpPermitStock';
-    protected $bundle = ['irhpPermitType'=> ['name']];
+    protected $repoServiceName = 'IrhpPermitType';
 }
