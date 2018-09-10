@@ -26,9 +26,9 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     public static function createNew(
         IrhpPermitApplication $irhpPermitApplication,
         IrhpPermitRange $IrhpPermitRange,
-        decimal $intensityOfUse = null,
-        decimal $randomizedScore = null,
-        decimal $applicationScore = null
+        float $intensityOfUse = null,
+        float $randomizedScore = null,
+        float $applicationScore = null
     ) {
         $IrhpCandidatePermit = new self();
         $IrhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;

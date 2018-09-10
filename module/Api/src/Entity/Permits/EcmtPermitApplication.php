@@ -555,4 +555,23 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication
     {
         return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
     }
+
+    /**
+     * Calculates the intensity_of_use value for
+     * permits requested by an ecmtPermitApplication
+     */
+    public function getPermitIntensityOfUse()
+    {
+        return $this->trips / $this->permitsRequired;
+    }
+
+    /**
+     * Calculates the application_score value for
+     * permits requested by an ecmtPermitApplication
+     */
+    public function getPermitApplicationScore()
+    {
+        $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
+        return $this->getPermitIntensityOfUse() / $interJourneysDecValue;
+    }
 }
