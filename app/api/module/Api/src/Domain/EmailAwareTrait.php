@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -98,9 +99,13 @@ trait EmailAwareTrait
         $toEmail = '';
         $orgEmailAddresses = $organisation->getAdminEmailAddresses();
 
-        //on rare occasions a user may have been soft deleted
+        //on rare occasions a user may have been soft deleted, or may not have contact details
         if ($user instanceof User) {
-            $toEmail = $user->getContactDetails()->getEmailAddress();
+            $contactDetails = $user->getContactDetails();
+
+            if ($contactDetails instanceof ContactDetails) {
+                $toEmail = $contactDetails->getEmailAddress();
+            }
         }
 
         if (empty($toEmail) && !empty($orgEmailAddresses)) {
