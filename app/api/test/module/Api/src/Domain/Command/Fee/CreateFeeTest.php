@@ -34,7 +34,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
             'irfoPsvAuth' => 2,
             'irfoFeeExempt' => 'Y',
             'waiveReason' => 'testing',
-            'quantity' => 2
+            'quantity' => 2,
+            'ecmtPermitApplication' => null
         ];
 
         $command = CreateFee::create($data);
@@ -53,6 +54,7 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('Y', $command->getIrfoFeeExempt());
         $this->assertEquals('testing', $command->getWaiveReason());
         $this->assertEquals(2, $command->getQuantity());
+        $this->assertEquals(null, $command->getEcmtPermitApplication());
 
         $this->assertEquals(
             [
@@ -69,7 +71,8 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
                 'irfoPsvAuth' => 2,
                 'irfoFeeExempt' => 'Y',
                 'waiveReason' => 'testing',
-                'quantity' => 2
+                'quantity' => 2,
+                'ecmtPermitApplication' => null
             ],
             $command->getArrayCopy()
         );
