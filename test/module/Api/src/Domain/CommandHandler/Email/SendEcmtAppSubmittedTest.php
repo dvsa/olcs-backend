@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as PermitApplicationRepo;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -58,8 +59,11 @@ class SendEcmtAppSubmittedTest extends CommandHandlerTestCase
             'applicationRef' => $applicationRef,
         ];
 
+        $contactDetails = m::mock(ContactDetails::class);
+        $contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($userEmail);
+
         $userEntity = m::mock(User::class);
-        $userEntity->shouldReceive('getContactDetails->getEmailAddress')->once()->withNoArgs()->andReturn($userEmail);
+        $userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($contactDetails);
 
         $organisation = m::mock(Organisation::class);
         $organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($orgEmails);
@@ -80,7 +84,7 @@ class SendEcmtAppSubmittedTest extends CommandHandlerTestCase
             ->andReturn($applicationEntity);
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
-            m::type(\Dvsa\Olcs\Email\Data\Message::class),
+            m::type(Message::class),
             SendEcmtAppSubmitted::TEMPLATE,
             $templateVars,
             'default'
@@ -106,6 +110,9 @@ class SendEcmtAppSubmittedTest extends CommandHandlerTestCase
         $this->assertSame(SendEcmtAppSubmitted::SUBJECT, $message->getSubject());
     }
 
+    /**
+     * test the exception is dealt with when there are no email addresses
+     */
     public function testHandleCommandException()
     {
         $permitAppId = 1234;
