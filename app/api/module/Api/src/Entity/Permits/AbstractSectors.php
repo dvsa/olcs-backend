@@ -70,6 +70,15 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     protected $description;
 
     /**
+     * Display order
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="display_order", nullable=true)
+     */
+    protected $displayOrder;
+
+    /**
      * Ecmt permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -275,6 +284,30 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the display order
+     *
+     * @param int $displayOrder new value being set
+     *
+     * @return Sectors
+     */
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+
+        return $this;
+    }
+
+    /**
+     * Get the display order
+     *
+     * @return int
+     */
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
     }
 
     /**
