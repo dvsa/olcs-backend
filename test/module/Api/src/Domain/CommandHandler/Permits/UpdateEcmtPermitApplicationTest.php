@@ -8,7 +8,7 @@
 /**
  * Update ECMT
  *
- * @author ONE
+ * @author Andy Newton <andy@vitri.ltd>
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
@@ -79,9 +79,6 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $application->shouldReceive('getLicence->getId')->with();
 
         $application->shouldReceive('getPermitsRequired')->withNoArgs()->once()->andReturn(5);
-
-       /* $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);*/
-
 
         $application->shouldReceive('update')
             ->andReturn($application);
