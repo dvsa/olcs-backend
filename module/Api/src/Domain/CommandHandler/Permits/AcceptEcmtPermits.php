@@ -4,11 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Permits\DeclineEcmtPermits as DeclineEcmtPermitsCmd;
+use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits as AcceptEcmtPermitsCmd;
 
 /**
  * Withdraw an ECMT Permit application
@@ -30,12 +28,11 @@ final class AcceptEcmtPermits extends AbstractCommandHandler
     {
         /**
          * @var EcmtPermitApplication            $application
-         * @var DeclineEcmtPermitsCmd $command
+         * @var AcceptEcmtPermitsCmd $command
          */
         $id = $command->getId();
         $application = $this->getRepo()->fetchById($id);
 
-        //@todo this needs a new status 'declined'
         $newStatus = $this->refData(EcmtPermitApplication::PERMIT_VALID);
         $application->decline($newStatus);
 

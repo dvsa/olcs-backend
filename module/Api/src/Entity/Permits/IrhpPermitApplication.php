@@ -29,7 +29,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     /**
      * getCalculatedBundleValues
      *
-     * @return array hasInforceLicences
+     * @return array
      */
     protected function getCalculatedBundleValues()
     {
@@ -37,7 +37,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
             'successfulPermitApplications' => $this->countSuccessfulPermitApplications()
         ];
     }
-
 
     /**
      * Get num of successful permit applications
@@ -51,7 +50,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
             $criteria->expr()->eq('successful', true)
         );
         $applications = $this->getIrhpCandidatePermits()->matching($criteria);
-
 
         return count($applications);
     }
