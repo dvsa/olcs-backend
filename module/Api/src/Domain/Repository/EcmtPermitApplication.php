@@ -60,4 +60,9 @@ class EcmtPermitApplication extends AbstractRepository
         }
         return $licenceIds;
     }
+
+    public function fetchByLicenceId($licenceId)
+    {
+        return parent::fetchByX('licenceId', $licenceId);
+    }
 }
