@@ -1,9 +1,10 @@
 <?php
 
 /**
- * CancelFeeTestt
+ * UpdatePermitFeeTest
  *
- * @author Mat Evans <mat.evans@valtech.co.uk>
+ * @author Andy Newton <andy@vitri.ltd>
+ *
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
@@ -19,11 +20,6 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
-/**
- * UpdatePermitFeeTest
- *
- * @author Andy Newton <andy@vitri.ltd>
- */
 class UpdatePermitFeeTest extends CommandHandlerTestCase
 {
     public function setUp()
