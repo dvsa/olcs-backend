@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,4 +22,87 @@ use Doctrine\ORM\Mapping as ORM;
 class IrhpPermitWindow extends AbstractIrhpPermitWindow
 {
 
+    /**
+     * @param $irhpPermitStock
+     * @param $startDate
+     * @param $endDate
+     * @param $daysForPayment
+     * @return IrhpPermitWindow
+     */
+    public static function create($irhpPermitStock, $startDate, $endDate, $daysForPayment)
+    {
+        $instance = new self;
+
+        $instance->irhpPermitStock = $irhpPermitStock;
+        $instance->startDate = static::processDate($startDate);
+        $instance->endDate = static::processDate($endDate);
+        $instance->daysForPayment = intval($daysForPayment) > 0 ? $daysForPayment : 0;
+
+        // UI Date input granularity is days, but these times are important for later comparisons - could be removed if UI ever accepts times
+        $instance->startDate->setTime(0, 0, 0, 0);
+        $instance->endDate->setTime(23, 59, 59, 0);
+
+        return $instance;
+    }
+
+    /**
+     * @param $irhpPermitStock
+     * @param $startDate
+     * @param $endDate
+     * @param $daysForPayment
+     * @return $this
+     */
+    public function update($irhpPermitStock, $startDate, $endDate, $daysForPayment)
+    {
+        $this->irhpPermitStock = $irhpPermitStock;
+        $this->startDate = static::processDate($startDate);
+        $this->endDate = static::processDate($endDate);
+        $this->daysForPayment = intval($daysForPayment) > 0 ? $daysForPayment : 0;
+
+        // UI Date input granularity is days, but these times are important for later comparisons - could be removed if UI ever accepts times
+        $this->startDate->setTime(0, 0, 0, 0);
+        $this->endDate->setTime(23, 59, 59, 0);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEnded()
+    {
+        $today = new DateTime();
+        $endDate = new DateTime($this->endDate);
+        return($today->getTimestamp() > $endDate->getTimestamp());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInFuture()
+    {
+        $today = new DateTime();
+        $startDate = new DateTime($this->startDate);
+        return($startDate->getTimestamp() > $today->getTimestamp());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        $today = new DateTime();
+        $startDate = new DateTime($this->startDate);
+        $endDate = new DateTime($this->endDate);
+        return($today->getTimestamp() >= $startDate->getTimestamp()
+            && $today->getTimestamp() <= $endDate->getTimeStamp());
+    }
+
+    /**
+     * @return bool
+     */
+    public function canBeDeleted()
+    {
+        return !($this->hasEnded() || $this->isActive());
+    }
 }

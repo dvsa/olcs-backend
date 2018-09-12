@@ -60,4 +60,49 @@ class IrhpPermitWindow extends AbstractRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    /**
+     * Fetch Windows by Permit Stock ID
+     *
+     * @param $irhpPermitStockId
+     * @return array
+     */
+    public function fetchByIrhpPermitStockId($irhpPermitStockId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
+            ->setParameter('irhpPermitStock', $irhpPermitStockId);
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+
+    /**
+     * Fetch Overlapping Windows by Permit Stock ID, proposed startDate and proposed End Date
+     *
+     * @param $irhpPermitStock
+     * @param $proposedStartDate
+     * @param $proposedEndDate
+     * @param null $irhpPermitWindow
+     * @return array
+     */
+    public function findOverlappingWindowsByType($irhpPermitStock, $proposedStartDate, $proposedEndDate, $irhpPermitWindow = null)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+        $doctrineQb
+            ->orWhere($doctrineQb->expr()->between($this->alias . '.startDate', ':proposedStartDate', ':proposedEndDate'))
+            ->orWhere($doctrineQb->expr()->between($this->alias . '.endDate', ':proposedStartDate', ':proposedEndDate'))
+            ->orWhere($doctrineQb->expr()->between(':proposedStartDate', $this->alias . '.startDate', $this->alias . '.endDate'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
+            ->setParameter('irhpPermitStock', $irhpPermitStock)
+            ->setParameter('proposedStartDate', $proposedStartDate)
+            ->setParameter('proposedEndDate', $proposedEndDate);
+        if ($irhpPermitWindow !== null) {
+            $doctrineQb
+                ->andWhere($doctrineQb->expr()->neq($this->alias . '.id', ':irhpPermitWindow'))
+                ->setParameter('irhpPermitWindow', $irhpPermitWindow);
+        }
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }
