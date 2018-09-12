@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Fee\CreateFee as Cmd;
@@ -90,6 +91,7 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
 
         $this->handleTaskLink($command, $fee);
         $this->handleLicenceLink($command, $fee);
+        $this->handleEcmtPermitApplicationLink($command, $fee);
         $this->handleIrfoGvPermitLink($command, $fee);
         $this->handleIrfoPsvAuthLink($command, $fee);
         $this->handleApplicationLink($command, $fee);
@@ -138,6 +140,18 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
     {
         if ($command->getLicence() !== null) {
             $fee->setLicence($this->getRepo()->getReference(Licence::class, $command->getLicence()));
+        }
+    }
+
+    /**
+     * @param Cmd $command
+     * @param Fee $fee
+     * @return null
+     */
+    private function handleEcmtPermitApplicationLink($command, $fee)
+    {
+        if ($command->getLicence() !== null) {
+            $fee->setEcmtPermitApplication($this->getRepo()->getReference(EcmtPermitApplication::class, $command->getEcmtPermitApplication()));
         }
     }
 

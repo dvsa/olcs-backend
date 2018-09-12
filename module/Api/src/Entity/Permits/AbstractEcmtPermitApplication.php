@@ -265,6 +265,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $version = 1;
 
     /**
+     * Ecmt permit application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="ecmtPermitApplication")
+     */
+    protected $ecmtPermitApplications;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -282,6 +291,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function initCollections()
     {
         $this->countrys = new ArrayCollection();
+        $this->ecmtPermitApplications = new ArrayCollection();
     }
 
     /**
@@ -867,6 +877,69 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the ecmt permit application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermitApplications collection being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setEcmtPermitApplications($ecmtPermitApplications)
+    {
+        $this->ecmtPermitApplications = $ecmtPermitApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permit applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEcmtPermitApplications()
+    {
+        return $this->ecmtPermitApplications;
+    }
+
+    /**
+     * Add a ecmt permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermitApplications collection being added
+     *
+     * @return EcmtPermitApplication
+     */
+    public function addEcmtPermitApplications($ecmtPermitApplications)
+    {
+        if ($ecmtPermitApplications instanceof ArrayCollection) {
+            $this->ecmtPermitApplications = new ArrayCollection(
+                array_merge(
+                    $this->ecmtPermitApplications->toArray(),
+                    $ecmtPermitApplications->toArray()
+                )
+            );
+        } elseif (!$this->ecmtPermitApplications->contains($ecmtPermitApplications)) {
+            $this->ecmtPermitApplications->add($ecmtPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ecmt permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermitApplications collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeEcmtPermitApplications($ecmtPermitApplications)
+    {
+        if ($this->ecmtPermitApplications->contains($ecmtPermitApplications)) {
+            $this->ecmtPermitApplications->removeElement($ecmtPermitApplications);
+        }
+
+        return $this;
     }
 
     /**

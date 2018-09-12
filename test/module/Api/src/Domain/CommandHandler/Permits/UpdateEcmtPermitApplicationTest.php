@@ -8,7 +8,7 @@
 /**
  * Update ECMT
  *
- * @author ONE
+ * @author Andy Newton <andy@vitri.ltd>
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
@@ -37,6 +37,7 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('EcmtPermitApplication', Repository\EcmtPermitApplication::class);
         $this->mockRepo('Sectors', Repository\Licence::class);
         $this->mockRepo('Country', Repository\Country::class);
+        $this->mockRepo('Licence', Repository\Country::class);
         parent::setUp();
     }
 
@@ -59,6 +60,7 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
             'licence' => 7,
             'id' => 4,
             'emissions' => 1,
+            'permitsRequired' => 5,
             'cabotage' => 1,
             'sectors' => 7,
             'countryIds' => ['AT', 'GR']
@@ -68,17 +70,18 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $sectors = m::mock(Sectors::class);
         $application = m::mock(EcmtPermitApplication::class);
         $country = m::mock(Country::class);
-        $licence = m::mock(Licence::class);
 
         $this->repoMap['Country']->shouldReceive('getReference')
             ->andReturn($country);
 
+        $application->shouldReceive('getLicence')->with();
+        $application->shouldReceive('getDateReceived')->with();
+        $application->shouldReceive('getLicence->getId')->with();
 
-        $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);
+        $application->shouldReceive('getPermitsRequired')->withNoArgs()->once()->andReturn(5);
 
         $application->shouldReceive('update')
             ->andReturn($application);
-
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')
             ->with($command, Query::HYDRATE_OBJECT)
@@ -94,13 +97,10 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $expected = [
-            'id' => ['ecmtPermitApplication'=>4],
-            'messages' => [
-                'ECMT Permit Application updated'
-            ]
-        ];
 
-        $this->assertEquals($expected, $result->toArray());
+        $arrayResult = $result->toArray();
+
+        $this->assertArrayHasKey('id', $arrayResult);
+        $this->assertArrayHasKey('ecmtPermitApplication', $arrayResult['id']);
     }
 }
