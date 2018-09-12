@@ -81,18 +81,18 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
+     * @param string|null $dateReceived
      * @param Sectors|null $sectors
-     * @param $countrys
+     * @param array $countrys
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
      * @param int|null $permitsRequired
      * @param int|null $trips
-     * @param string|null $internationalJourneys
-     * @param string|null $dateReceived
+     * @param RefData $internationalJourneys
      * @return EcmtPermitApplication
      */
-    public static function createNew(
+    public static function createNewInternal(
         RefData $status,
         RefData $paymentStatus,
         RefData $permitType,
@@ -122,6 +122,33 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
         $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
 
+        return $ecmtPermitApplication;
+    }
+
+
+    /**
+     * Create new EcmtPermitApplication
+     *
+     * @param RefData $status Status
+     * @param RefData $paymentStatus Payment status
+     * @param RefData $permitType Permit type
+     * @param Licence $licence Licence
+     * @param string|null $dateReceived
+     * @return EcmtPermitApplication
+     */
+    public static function createNew(
+        RefData $status,
+        RefData $paymentStatus,
+        RefData $permitType,
+        Licence $licence,
+        string $dateReceived = null
+    ) {
+        $ecmtPermitApplication = new self();
+        $ecmtPermitApplication->status = $status;
+        $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
+        $ecmtPermitApplication->permitType = $permitType;
+        $ecmtPermitApplication->licence = $licence;
+        $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
         return $ecmtPermitApplication;
     }
 

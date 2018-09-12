@@ -81,7 +81,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
 
 
 
-        return EcmtPermitApplication::createNew(
+        return EcmtPermitApplication::createNewInternal(
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference('lfs_ot'),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
