@@ -1245,6 +1245,12 @@ return array(
                 'property' => 'fee',
             ),
         ),
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'ecmtPermitApplication'
+            )
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(

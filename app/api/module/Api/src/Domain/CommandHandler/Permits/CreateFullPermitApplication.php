@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateFullPermitApplication as CreateFullPermitApplicationCmd;
+use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
@@ -43,6 +44,21 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
 
         $result = new Result();
 
+
+        if ($command->getPermitsRequired() > 0 && $ecmtPermitApplication->getId()) {
+            $this->result->merge($this->handleSideEffect(
+                UpdatePermitFee::create(
+                    [
+                        'ecmtPermitApplicationId' => $ecmtPermitApplication->getId(),
+                        'licenceId' => $command->getLicence(),
+                        'permitsRequired' => $command->getPermitsRequired(),
+                        'permitType' =>  $ecmtPermitApplication::PERMIT_TYPE,
+                        'receivedDate' =>  $ecmtPermitApplication->getDateReceived()
+                    ]
+                )
+            ));
+        }
+
         $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $result->addMessage('EcmtPermitApplication created successfully');
 
@@ -62,6 +78,8 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
         foreach ($command->getCountryIds() as $countryId) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
         }
+
+
 
         return EcmtPermitApplication::createNew(
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),

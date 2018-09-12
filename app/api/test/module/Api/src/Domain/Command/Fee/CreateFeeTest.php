@@ -55,7 +55,6 @@ class CreateFeeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('testing', $command->getWaiveReason());
         $this->assertEquals(2, $command->getQuantity());
         $this->assertEquals(null, $command->getEcmtPermitApplication());
-
         $this->assertEquals(
             [
                 'application' => 111,
