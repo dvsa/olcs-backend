@@ -198,6 +198,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $declineStatus;
     }
 
+    public function accept(RefData $acceptStatus)
+    {
+        $this->status = $acceptStatus;
+    }
+
     public function cancel(RefData $cancelStatus)
     {
         if (!$this->canBeCancelled()) {

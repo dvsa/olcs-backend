@@ -9,7 +9,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits as AcceptEcmtPermitsCmd;
 
 /**
- * Withdraw an ECMT Permit application
+ * Accept an awarded ECMT Permit application
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
@@ -34,7 +34,7 @@ final class AcceptEcmtPermits extends AbstractCommandHandler
         $application = $this->getRepo()->fetchById($id);
 
         $newStatus = $this->refData(EcmtPermitApplication::PERMIT_VALID);
-        $application->decline($newStatus);
+        $application->accept($newStatus);
 
         $this->getRepo()->save($application);
 

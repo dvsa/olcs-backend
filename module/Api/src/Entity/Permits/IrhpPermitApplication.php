@@ -31,7 +31,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
      *
      * @return array
      */
-    protected function getCalculatedBundleValues()
+    public function getCalculatedBundleValues()
     {
         return [
             'successfulPermitApplications' => $this->countSuccessfulPermitApplications()
