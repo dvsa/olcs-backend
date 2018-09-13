@@ -580,11 +580,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function getPermitIntensityOfUse()
     {
-        if (!$this->permitsRequired > 0) {
-            return 0;
-        }
-
-        return $this->trips / $this->permitsRequired;
+        return $this->permitsRequired > 0 ? $this->trips / $this->permitsRequired : 0;
     }
 
     /**

@@ -51,7 +51,6 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $ecmtPermitApplicationId = 129;
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpCandidatePermit = m::mock(IrhpCandidatePermit ::class);
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('submit')
