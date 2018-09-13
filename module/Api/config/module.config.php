@@ -339,6 +339,8 @@ return [
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
+            'IrhpPermitApplication' => RepositoryFactory::class,
+            'IrhpCandidatePermit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
