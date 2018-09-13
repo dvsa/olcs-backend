@@ -227,11 +227,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
+    // @TODO: add check for the status. This was removed as a temporary bug fix
     public function decline(RefData $declineStatus)
     {
-        if ($this->isAwaitingFee()) {
-            $this->status = $declineStatus;
-        }
+        $this->status = $declineStatus;
     }
 
     public function accept(RefData $acceptStatus)
