@@ -33,6 +33,11 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     }
     public function testGetCalculatedBundleValues()
     {
-        $this->assertGreaterThanOrEqual(0, $this->sut->getCalculatedBundleValues());
+        $this->assertSame(
+            [
+                'permitsAwarded' => 0
+            ],
+            $this->sut->getCalculatedBundleValues()
+        );
     }
 }

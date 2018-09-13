@@ -59,7 +59,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public function getCalculatedBundleValues()
     {
         return [
-            'successfulPermitApplications' => $this->countSuccessfulPermitApplications()
+            'permitsAwarded' => $this->countPermitsAwarded()
         ];
     }
 
@@ -68,7 +68,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
      **
      * @return int
      */
-    public function countSuccessfulPermitApplications()
+    public function countPermitsAwarded()
     {
         $criteria = Criteria::create();
         $criteria->where(

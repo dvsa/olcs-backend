@@ -229,12 +229,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
 
     public function decline(RefData $declineStatus)
     {
-        $this->status = $declineStatus;
+        if ($this->isAwaitingFee()) {
+            $this->status = $declineStatus;
+        }
     }
 
     public function accept(RefData $acceptStatus)
     {
-        $this->status = $acceptStatus;
+        if ($this->isAwaitingFee()) {
+            $this->status = $acceptStatus;
+        }
     }
 
     public function cancel(RefData $cancelStatus)
@@ -513,6 +517,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     {
         return $this->status->getId() === self::STATUS_AWAITING_FEE;
     }
+
 
     /**
      * Whether the permit application can be submitted
