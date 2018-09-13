@@ -3,7 +3,11 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
+
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * IRHP Candidate Permit
@@ -154,5 +158,19 @@ class IrhpCandidatePermit extends AbstractRepository
             ->getQuery();
 
         $query->execute();
+    }
+
+    public function fetchByIrhpPermitApplication(IrhpPermitApplicationEntity $application)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->andWhere(
+            $qb->expr()->eq('m.irhpPermitApplication', $application->getId())
+        );
+
+        $query = $qb->getQuery();
+        $query->execute();
+
+        return $query->getResult();
     }
 }

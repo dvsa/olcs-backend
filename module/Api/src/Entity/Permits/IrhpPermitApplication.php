@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 
@@ -77,5 +79,38 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         $applications = $this->getIrhpCandidatePermits()->matching($criteria);
 
         return count($applications);
+    }
+
+    /**
+     * Method that collects data from given applications
+     * for use in deviation calculations
+     *
+     * @param irhpPermitApplications list of irhp permit applications to collate information from
+     *
+     * @return array containing data relevant to Deviation calculations as well as the Mean Deviation
+     */
+    public static function getDeviationData(array $irhpPermitApplications)
+    {
+        $licence = [];
+        $totalPermitsCount = 0;
+        $i = 0;
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
+            $totalPermitsCount += $irhpPermitApplication->getPermitsRequired();
+            $licence[$irhpPermitApplication->getLicence()->getLicNo()][$i] = $irhpPermitApplication->getPermitsRequired();
+            $i++;
+        }
+
+        return [
+                'licenceData' => $licence,
+                'meanDeviation' => count($licence) / $totalPermitsCount,
+            ];
+    }
+
+
+    public function calculateRandomisedScore(array $deviationData)
+    {
+        $standardDeviation = count($deviationData['licenceData'][$this->getLicence()->getLicNo()]);
+        //$randomisedScore = stats_rand_gen_normal($meanDeviation, $standardDeviation);
+        return $deviationData['meanDeviation'] + $standardDeviation; //placeholder until PACL extension installed
     }
 }
