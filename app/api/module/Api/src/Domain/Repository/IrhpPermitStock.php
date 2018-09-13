@@ -1,11 +1,19 @@
 <?php
 
+/**
+ * IrhpPermitStock
+ */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
+use Dvsa\Olcs\Api\Domain\Exception;
+use Zend\Stdlib\ArraySerializableInterface as QryCmd;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Feature toggle
+ * IrhpPermitStock
  */
 class IrhpPermitStock extends AbstractRepository
 {
