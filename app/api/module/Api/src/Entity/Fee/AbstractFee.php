@@ -101,7 +101,7 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
      *     fetch="LAZY",
-     *     inversedBy="ecmtPermitApplications"
+     *     inversedBy="fees"
      * )
      * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
      */

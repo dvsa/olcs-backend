@@ -2135,4 +2135,20 @@ return array(
             )
         ),
     ),
+    'irhp_candidate_permit' => array(
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'irhpCandidatePermit'
+            )
+        ),
+    ),
+    'irhp_permit_application' => array(
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'irhpPermitApplication'
+            )
+        ),
+    ),
 );
