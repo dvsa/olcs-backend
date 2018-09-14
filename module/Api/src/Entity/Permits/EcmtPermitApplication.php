@@ -271,6 +271,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeUpdated' => $this->canBeUpdated(),
+            'canBeAccepted' => $this->canBeAccepted(),
+            'canBeDeclined' => $this->canBeDeclined(),
             'canCheckAnswers' => $this->canCheckAnswers(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
