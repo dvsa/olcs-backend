@@ -212,7 +212,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testAcceptException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->accept(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->accept(new RefData(Entity::STATUS_VALID));
     }
 
     /**
