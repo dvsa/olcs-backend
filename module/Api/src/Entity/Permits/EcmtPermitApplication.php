@@ -34,6 +34,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_AWAITING_FEE = 'ecmt_permit_awaiting';
     const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
     const STATUS_ISSUED = 'ecmt_permit_issued';
+    const STATUS_VALID = 'ecmt_permit_valid';
+
 
     const PERMIT_TYPE = 'permit_ecmt';
     const PERMIT_VALID = 'permit_valid';
@@ -229,16 +231,20 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
 
     public function decline(RefData $declineStatus)
     {
-        if ($this->canBeDeclined()) {
-            $this->status = $declineStatus;
+        if (!$this->canBeDeclined()) {
+            throw new ForbiddenException('This application is not allowed to be declined');
         }
+
+        $this->status = $declineStatus;
     }
 
     public function accept(RefData $acceptStatus)
     {
-        if ($this->canBeAccepted()) {
-            $this->status = $acceptStatus;
+        if (!$this->canBeAccepted()) {
+            throw new ForbiddenException('This application is not allowed to be accepted');
         }
+
+        $this->status = $acceptStatus;
     }
 
     public function cancel(RefData $cancelStatus)
