@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_permit_type", columns={"permit_type"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"})
  *    }
  * )
@@ -81,7 +80,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * Create new EcmtPermitApplication
      *
      * @param RefData $status Status
-     * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
      * @param string|null $dateReceived
@@ -97,7 +95,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public static function createNewInternal(
         RefData $status,
-        RefData $paymentStatus,
         RefData $permitType,
         Licence $licence,
         string $dateReceived = null,
@@ -112,7 +109,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->status = $status;
-        $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->sectors = $sectors;
@@ -133,7 +129,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * Create new EcmtPermitApplication
      *
      * @param RefData $status Status
-     * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
      * @param string|null $dateReceived
@@ -141,14 +136,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public static function createNew(
         RefData $status,
-        RefData $paymentStatus,
         RefData $permitType,
         Licence $licence,
         string $dateReceived = null
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->status = $status;
-        $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
@@ -159,8 +152,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     /**
      * Create new EcmtPermitApplication
      *
-     * @param RefData $status Status
-     * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
      * @param Sectors|null $sectors

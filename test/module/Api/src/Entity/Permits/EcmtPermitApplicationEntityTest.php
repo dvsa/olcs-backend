@@ -39,7 +39,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
          $application = Entity::createNew(
              $statusRefData,
-             m::mock(RefData::class),
              $permitTypeRefData,
              $licence,
              $dateReceived
@@ -60,7 +59,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     {
         $status = Entity::STATUS_NOT_YET_SUBMITTED;
         $statusRefData = new RefData($status);
-
         $permitType = Entity::PERMIT_TYPE;
         $permitTypeRefData = new RefData($permitType);
         $licence = m::mock(Licence::class)->makePartial(); //make partial allows to differ from what's there already
@@ -76,7 +74,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
         $application = Entity::createNewInternal(
             $statusRefData,
-            m::mock(RefData::class),
             $permitTypeRefData,
             $licence,
             $dateReceived,
@@ -433,7 +430,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     {
         $entity = Entity::createNew(
             new RefData($status),
-            m::mock(RefData::class),
             m::mock(RefData::class),
             m::mock(Licence::class)
         );

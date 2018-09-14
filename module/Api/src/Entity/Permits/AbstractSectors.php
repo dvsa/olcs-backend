@@ -7,8 +7,6 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -79,27 +77,6 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     protected $displayOrder;
 
     /**
-     * Ecmt permit
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermits",
-     *     inversedBy="sectors",
-     *     fetch="LAZY"
-     * )
-     * @ORM\JoinTable(name="ecmt_permit_sector_link",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="sector_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="ecmt_permit_id", referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $ecmtPermits;
-
-    /**
      * Identifier - Id
      *
      * @var int
@@ -142,9 +119,9 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     /**
      * Sifting percentage
      *
-     * @var unknown
+     * @var float
      *
-     * @ORM\Column(type="float", name="sifting_percentage", precision=6, scale=4, nullable=true)
+     * @ORM\Column(type="decimal", name="sifting_percentage", precision=18, scale=9, nullable=true)
      */
     protected $siftingPercentage;
 
@@ -157,26 +134,6 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
      * @ORM\Version
      */
     protected $version;
-
-    /**
-     * Initialise the collections
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->initCollections();
-    }
-
-    /**
-     * Initialise the collections
-     *
-     * @return void
-     */
-    public function initCollections()
-    {
-        $this->ecmtPermits = new ArrayCollection();
-    }
 
     /**
      * Set the created by
@@ -311,69 +268,6 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     }
 
     /**
-     * Set the ecmt permit
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
-     *
-     * @return Sectors
-     */
-    public function setEcmtPermits($ecmtPermits)
-    {
-        $this->ecmtPermits = $ecmtPermits;
-
-        return $this;
-    }
-
-    /**
-     * Get the ecmt permits
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getEcmtPermits()
-    {
-        return $this->ecmtPermits;
-    }
-
-    /**
-     * Add a ecmt permits
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
-     *
-     * @return Sectors
-     */
-    public function addEcmtPermits($ecmtPermits)
-    {
-        if ($ecmtPermits instanceof ArrayCollection) {
-            $this->ecmtPermits = new ArrayCollection(
-                array_merge(
-                    $this->ecmtPermits->toArray(),
-                    $ecmtPermits->toArray()
-                )
-            );
-        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
-            $this->ecmtPermits->add($ecmtPermits);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a ecmt permits
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
-     *
-     * @return Sectors
-     */
-    public function removeEcmtPermits($ecmtPermits)
-    {
-        if ($this->ecmtPermits->contains($ecmtPermits)) {
-            $this->ecmtPermits->removeElement($ecmtPermits);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -478,7 +372,7 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     /**
      * Set the sifting percentage
      *
-     * @param unknown $siftingPercentage new value being set
+     * @param float $siftingPercentage new value being set
      *
      * @return Sectors
      */
@@ -492,7 +386,7 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     /**
      * Get the sifting percentage
      *
-     * @return unknown
+     * @return float
      */
     public function getSiftingPercentage()
     {
@@ -558,11 +452,7 @@ abstract class AbstractSectors implements BundleSerializableInterface, JsonSeria
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
+                $this->$property = null;
             }
         }
     }

@@ -36,9 +36,9 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Application score
      *
-     * @var unknown
+     * @var float
      *
-     * @ORM\Column(type="float", name="application_score", precision=10, scale=0, nullable=true)
+     * @ORM\Column(type="decimal", name="application_score", precision=18, scale=9, nullable=true)
      */
     protected $applicationScore;
 
@@ -76,9 +76,9 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Intensity of use
      *
-     * @var unknown
+     * @var float
      *
-     * @ORM\Column(type="float", name="intensity_of_use", precision=10, scale=0, nullable=true)
+     * @ORM\Column(type="decimal", name="intensity_of_use", precision=18, scale=9, nullable=true)
      */
     protected $intensityOfUse;
 
@@ -129,9 +129,9 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Randomized score
      *
-     * @var unknown
+     * @var float
      *
-     * @ORM\Column(type="float", name="randomized_score", precision=10, scale=0, nullable=true)
+     * @ORM\Column(type="decimal", name="randomized_score", precision=18, scale=9, nullable=true)
      */
     protected $randomizedScore;
 
@@ -157,7 +157,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the application score
      *
-     * @param unknown $applicationScore new value being set
+     * @param float $applicationScore new value being set
      *
      * @return IrhpCandidatePermit
      */
@@ -171,7 +171,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the application score
      *
-     * @return unknown
+     * @return float
      */
     public function getApplicationScore()
     {
@@ -259,7 +259,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the intensity of use
      *
-     * @param unknown $intensityOfUse new value being set
+     * @param float $intensityOfUse new value being set
      *
      * @return IrhpCandidatePermit
      */
@@ -273,7 +273,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the intensity of use
      *
-     * @return unknown
+     * @return float
      */
     public function getIntensityOfUse()
     {
@@ -385,7 +385,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the randomized score
      *
-     * @param unknown $randomizedScore new value being set
+     * @param float $randomizedScore new value being set
      *
      * @return IrhpCandidatePermit
      */
@@ -399,7 +399,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the randomized score
      *
-     * @return unknown
+     * @return float
      */
     public function getRandomizedScore()
     {

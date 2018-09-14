@@ -59,7 +59,6 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     {
             return EcmtPermitApplication::createNew(
                 $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
-                $this->getRepo()->getRefdataReference('lfs_ot'), //@todo drop payment status column
                 $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
                 $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
                 date('Y-m-d')
