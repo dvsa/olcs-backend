@@ -34,8 +34,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_AWAITING_FEE = 'ecmt_permit_awaiting';
     const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
     const STATUS_ISSUED = 'ecmt_permit_issued';
+    const STATUS_VALID = 'ecmt_permit_valid';
+
 
     const PERMIT_TYPE = 'permit_ecmt';
+    const PERMIT_VALID = 'permit_valid';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
@@ -226,6 +229,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
+    public function decline(RefData $declineStatus)
+    {
+        if (!$this->canBeDeclined()) {
+            throw new ForbiddenException('This application is not allowed to be declined');
+        }
+
+        $this->status = $declineStatus;
+    }
+
+    public function accept(RefData $acceptStatus)
+    {
+        if (!$this->canBeAccepted()) {
+            throw new ForbiddenException('This application is not allowed to be accepted');
+        }
+
+        $this->status = $acceptStatus;
+    }
+
     public function cancel(RefData $cancelStatus)
     {
         if (!$this->canBeCancelled()) {
@@ -250,6 +271,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeUpdated' => $this->canBeUpdated(),
+            'canBeAccepted' => $this->canBeAccepted(),
+            'canBeDeclined' => $this->canBeDeclined(),
             'canCheckAnswers' => $this->canCheckAnswers(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
@@ -258,6 +281,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
+            'isAwaitingFee' => $this->isAwaitingFee(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
@@ -495,6 +519,15 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * @return bool
+     */
+    public function isAwaitingFee()
+    {
+        return $this->status->getId() === self::STATUS_AWAITING_FEE;
+    }
+
+
+    /**
      * Whether the permit application can be submitted
      * @todo this currently reruns the section completion checks, should store the value instead for speed
      *
@@ -579,6 +612,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function canBeWithdrawn()
     {
         return $this->isUnderConsideration();
+    }
+
+    /**
+     * Whether the permit application can be declined
+     *
+     * @return bool
+     */
+    public function canBeDeclined()
+    {
+        return $this->isAwaitingFee();
+    }
+
+    /**
+     * Whether the permit application can be accepted
+     *
+     * @return bool
+     */
+    public function canBeAccepted()
+    {
+        return $this->isAwaitingFee();
     }
 
     /**

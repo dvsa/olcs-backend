@@ -176,6 +176,46 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
+     * Tests declining an application
+     */
+    public function testDecline()
+    {
+        $entity = $this->createApplicationAwaitingFee();
+        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
+        $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+    }
+
+    /**
+     * @dataProvider dpDeclineAcceptException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testDeclineException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
+    }
+
+    /**
+     * Tests accepting an application
+     */
+    public function testAccept()
+    {
+        $entity = $this->createApplicationAwaitingFee();
+        $entity->accept(new RefData(Entity::STATUS_VALID));
+        $this->assertEquals(Entity::STATUS_VALID, $entity->getStatus()->getId());
+    }
+
+    /**
+     * @dataProvider dpDeclineAcceptException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testAcceptException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->accept(new RefData(Entity::STATUS_VALID));
+    }
+
+    /**
      * Tests cancelling an application
      */
     public function testCancel()
@@ -206,6 +246,23 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
             [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+        ];
+    }
+
+    /**
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpDeclineAcceptException()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_UNDER_CONSIDERATION],
             [Entity::STATUS_WITHDRAWN],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
@@ -365,6 +422,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     private function createApplicationUnderConsideration()
     {
         return $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+    }
+
+    private function createApplicationAwaitingFee()
+    {
+        return $this->createApplication(Entity::STATUS_AWAITING_FEE);
     }
 
     private function createApplication($status = Entity::STATUS_NOT_YET_SUBMITTED)

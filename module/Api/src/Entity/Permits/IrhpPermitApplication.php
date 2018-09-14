@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * IrhpPermitApplication Entity
@@ -48,5 +49,33 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public function getPermitApplicationScore()
     {
         return $this->ecmtPermitApplication->getPermitApplicationScore();
+    }
+
+    /**
+     * getCalculatedBundleValues
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'permitsAwarded' => $this->countPermitsAwarded()
+        ];
+    }
+
+    /**
+     * Get num of successful permit applications
+     **
+     * @return int
+     */
+    public function countPermitsAwarded()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->eq('successful', true)
+        );
+        $applications = $this->getIrhpCandidatePermits()->matching($criteria);
+
+        return count($applications);
     }
 }
