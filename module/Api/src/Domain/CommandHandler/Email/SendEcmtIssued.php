@@ -8,17 +8,17 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * Send ECMT app submitted email
+ * Send confirmation of ECMT permits being issued
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendEcmtAppSubmitted extends AbstractEmailHandler implements ToggleRequiredInterface
+class SendEcmtIssued extends AbstractEmailHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
     use PermitEmailTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $template = 'ecmt-app-submitted';
-    protected $subject = 'email.ecmt.default.subject';
+    protected $template = 'ecmt-app-issued';
+    protected $subject = 'email.ecmt.issued.subject';
 }

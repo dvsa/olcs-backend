@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Email\Data\Message;
@@ -69,22 +68,6 @@ trait EmailAwareTrait
     }
 
     /**
-     * Returns a list of recipient addresses for an ecmt permit application email
-     *
-     * @param EcmtPermitApplication $application the permit application
-     *
-     * @return array
-     * @throws MissingEmailException
-     */
-    public function recipientsForPermitApplication(EcmtPermitApplication $application): array
-    {
-        return $this->organisationRecipients(
-            $application->getLicence()->getOrganisation(),
-            $application->getCreatedBy()
-        );
-    }
-
-    /**
      * In theory (although probably not in practice) both the user and the organisation emails could be empty
      * Need to decide what to do in those situations (throw an exception here?)
      *
@@ -119,7 +102,8 @@ trait EmailAwareTrait
 
         return [
             'to' => $toEmail,
-            'cc' => $orgEmailAddresses
+            'cc' => $orgEmailAddresses,
+            'bcc' => []
         ];
     }
 }
