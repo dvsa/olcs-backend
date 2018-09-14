@@ -1248,7 +1248,7 @@ return array(
         'ecmt_permit_application_id' => array(
             'inversedBy' => array(
                 'entity' => 'EcmtPermitApplication',
-                'property' => 'ecmtPermitApplication'
+                'property' => 'fee'
             )
         ),
     ),

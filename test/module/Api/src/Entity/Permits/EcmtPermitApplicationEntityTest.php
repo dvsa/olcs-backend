@@ -25,9 +25,38 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
- * @dataProvider dpProvideUpdateCountrys
- */
+     * @dataProvider dpProvideUpdateCountrys
+     */
     public function testCreateNew($countrys, $expectedHasRestrictedCountries)
+    {
+         $status = Entity::STATUS_NOT_YET_SUBMITTED;
+         $statusRefData = new RefData($status);
+
+         $permitType = Entity::PERMIT_TYPE;
+         $permitTypeRefData = new RefData($permitType);
+         $licence = m::mock(Licence::class)->makePartial(); //make partial allows to differ from what's there already
+         $dateReceived = '2017-12-25';
+
+         $application = Entity::createNew(
+             $statusRefData,
+             m::mock(RefData::class),
+             $permitTypeRefData,
+             $licence,
+             $dateReceived
+         );
+
+         $this->assertEquals($status, $application->getStatus());
+         $this->assertEquals($permitType, $application->getPermitType()->getId());
+         $this->assertEquals($licence, $application->getLicence());
+         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
+    }
+
+
+
+    /**
+     * @dataProvider dpProvideUpdateCountrys
+     */
+    public function testCreateNewInternal($countrys, $expectedHasRestrictedCountries)
     {
         $status = Entity::STATUS_NOT_YET_SUBMITTED;
         $statusRefData = new RefData($status);
@@ -45,7 +74,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $internationalJourneyRefData = new RefData($internationalJourneys);
         $dateReceived = '2017-12-25';
 
-        $application = Entity::createNew(
+        $application = Entity::createNewInternal(
             $statusRefData,
             m::mock(RefData::class),
             $permitTypeRefData,

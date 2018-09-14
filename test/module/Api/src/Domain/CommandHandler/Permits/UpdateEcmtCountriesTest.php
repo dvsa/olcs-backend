@@ -26,7 +26,7 @@ class UpdateEcmtCountriesTest extends CommandHandlerTestCase
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
         $this->mockRepo('Country', Country::class);
         $this->sut = new UpdateEcmtCountries();
-     
+
         parent::setUp();
     }
 
@@ -62,7 +62,7 @@ class UpdateEcmtCountriesTest extends CommandHandlerTestCase
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getCountryIds')
             ->andReturn($countryIds);
-        $command->shouldReceive('getEcmtApplicationId')
+        $command->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
