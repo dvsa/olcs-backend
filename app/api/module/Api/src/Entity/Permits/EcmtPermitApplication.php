@@ -227,15 +227,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
-    // @TODO: add check for the status. This was removed as a temporary bug fix
     public function decline(RefData $declineStatus)
     {
-        $this->status = $declineStatus;
+        if ($this->canBeDeclined()) {
+            $this->status = $declineStatus;
+        }
     }
 
     public function accept(RefData $acceptStatus)
     {
-        if ($this->isAwaitingFee()) {
+        if ($this->canBeAccepted()) {
             $this->status = $acceptStatus;
         }
     }
@@ -603,6 +604,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function canBeWithdrawn()
     {
         return $this->isUnderConsideration();
+    }
+
+    /**
+     * Whether the permit application can be declined
+     *
+     * @return bool
+     */
+    public function canBeDeclined()
+    {
+        return $this->isAwaitingFee();
+    }
+
+    /**
+     * Whether the permit application can be accepted
+     *
+     * @return bool
+     */
+    public function canBeAccepted()
+    {
+        return $this->isAwaitingFee();
     }
 
     /**

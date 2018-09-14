@@ -35,6 +35,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
         $IrhpCandidatePermit->intensityOfUse = $intensityOfUse;
         $IrhpCandidatePermit->randomizedScore = $randomizedScore;
         $IrhpCandidatePermit->applicationScore = $applicationScore;
+        $IrhpCandidatePermit->successful = 1; //temporary default for demonstration purposes
 
         return $IrhpCandidatePermit;
     }
