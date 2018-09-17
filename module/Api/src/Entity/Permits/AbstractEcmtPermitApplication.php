@@ -25,7 +25,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_permit_type", columns={"permit_type"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"}),
  *        @ORM\Index(name="fk_ecmt_permit_application_international_jouneys",
      *     columns={"international_journeys"})
@@ -197,16 +196,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $noOfPermits;
 
     /**
-     * Payment status
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="payment_status", referencedColumnName="id", nullable=false)
-     */
-    protected $paymentStatus;
-
-    /**
      * Permit type
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -274,18 +263,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $fees;
 
     /**
-     * Irhp permit application
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
-     *     mappedBy="ecmtPermitApplication"
-     * )
-     */
-    protected $irhpPermitApplications;
-
-    /**
      * Initialise the collections
      *
      * @return void
@@ -304,7 +281,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     {
         $this->countrys = new ArrayCollection();
         $this->fees = new ArrayCollection();
-        $this->irhpPermitApplications = new ArrayCollection();
     }
 
     /**
@@ -725,30 +701,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the payment status
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $paymentStatus entity being set as the value
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setPaymentStatus($paymentStatus)
-    {
-        $this->paymentStatus = $paymentStatus;
-
-        return $this;
-    }
-
-    /**
-     * Get the payment status
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getPaymentStatus()
-    {
-        return $this->paymentStatus;
-    }
-
-    /**
      * Set the permit type
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $permitType entity being set as the value
@@ -950,69 +902,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     {
         if ($this->fees->contains($fees)) {
             $this->fees->removeElement($fees);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the irhp permit application
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being set as the value
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setIrhpPermitApplications($irhpPermitApplications)
-    {
-        $this->irhpPermitApplications = $irhpPermitApplications;
-
-        return $this;
-    }
-
-    /**
-     * Get the irhp permit applications
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getIrhpPermitApplications()
-    {
-        return $this->irhpPermitApplications;
-    }
-
-    /**
-     * Add a irhp permit applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being added
-     *
-     * @return EcmtPermitApplication
-     */
-    public function addIrhpPermitApplications($irhpPermitApplications)
-    {
-        if ($irhpPermitApplications instanceof ArrayCollection) {
-            $this->irhpPermitApplications = new ArrayCollection(
-                array_merge(
-                    $this->irhpPermitApplications->toArray(),
-                    $irhpPermitApplications->toArray()
-                )
-            );
-        } elseif (!$this->irhpPermitApplications->contains($irhpPermitApplications)) {
-            $this->irhpPermitApplications->add($irhpPermitApplications);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a irhp permit applications
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being removed
-     *
-     * @return EcmtPermitApplication
-     */
-    public function removeIrhpPermitApplications($irhpPermitApplications)
-    {
-        if ($this->irhpPermitApplications->contains($irhpPermitApplications)) {
-            $this->irhpPermitApplications->removeElement($irhpPermitApplications);
         }
 
         return $this;
