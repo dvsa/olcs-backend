@@ -94,19 +94,6 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $ecmtApplications;
 
     /**
-     * Ecmt permit
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermits",
-     *     mappedBy="countrys",
-     *     fetch="LAZY"
-     * )
-     */
-    protected $ecmtPermits;
-
-    /**
      * Identifier - Id
      *
      * @var string
@@ -128,6 +115,19 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * )
      */
     protected $irfoPsvAuths;
+
+    /**
+     * Irhp permit stock range
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $irhpPermitStockRanges;
 
     /**
      * Is ecmt state
@@ -196,8 +196,8 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     {
         $this->ecmtApplications = new ArrayCollection();
         $this->constraints = new ArrayCollection();
-        $this->ecmtPermits = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
+        $this->irhpPermitStockRanges = new ArrayCollection();
     }
 
     /**
@@ -405,69 +405,6 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     }
 
     /**
-     * Set the ecmt permit
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being set as the value
-     *
-     * @return Country
-     */
-    public function setEcmtPermits($ecmtPermits)
-    {
-        $this->ecmtPermits = $ecmtPermits;
-
-        return $this;
-    }
-
-    /**
-     * Get the ecmt permits
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getEcmtPermits()
-    {
-        return $this->ecmtPermits;
-    }
-
-    /**
-     * Add a ecmt permits
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being added
-     *
-     * @return Country
-     */
-    public function addEcmtPermits($ecmtPermits)
-    {
-        if ($ecmtPermits instanceof ArrayCollection) {
-            $this->ecmtPermits = new ArrayCollection(
-                array_merge(
-                    $this->ecmtPermits->toArray(),
-                    $ecmtPermits->toArray()
-                )
-            );
-        } elseif (!$this->ecmtPermits->contains($ecmtPermits)) {
-            $this->ecmtPermits->add($ecmtPermits);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a ecmt permits
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtPermits collection being removed
-     *
-     * @return Country
-     */
-    public function removeEcmtPermits($ecmtPermits)
-    {
-        if ($this->ecmtPermits->contains($ecmtPermits)) {
-            $this->ecmtPermits->removeElement($ecmtPermits);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the id
      *
      * @param string $id new value being set
@@ -549,6 +486,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     {
         if ($this->irfoPsvAuths->contains($irfoPsvAuths)) {
             $this->irfoPsvAuths->removeElement($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit stock range
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrhpPermitStockRanges($irhpPermitStockRanges)
+    {
+        $this->irhpPermitStockRanges = $irhpPermitStockRanges;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit stock ranges
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitStockRanges()
+    {
+        return $this->irhpPermitStockRanges;
+    }
+
+    /**
+     * Add a irhp permit stock ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being added
+     *
+     * @return Country
+     */
+    public function addIrhpPermitStockRanges($irhpPermitStockRanges)
+    {
+        if ($irhpPermitStockRanges instanceof ArrayCollection) {
+            $this->irhpPermitStockRanges = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitStockRanges->toArray(),
+                    $irhpPermitStockRanges->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitStockRanges->contains($irhpPermitStockRanges)) {
+            $this->irhpPermitStockRanges->add($irhpPermitStockRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit stock ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrhpPermitStockRanges($irhpPermitStockRanges)
+    {
+        if ($this->irhpPermitStockRanges->contains($irhpPermitStockRanges)) {
+            $this->irhpPermitStockRanges->removeElement($irhpPermitStockRanges);
         }
 
         return $this;
