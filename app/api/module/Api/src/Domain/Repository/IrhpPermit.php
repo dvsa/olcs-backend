@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
+use Doctrine\ORM\Query;
 
 /**
  * IRHP Permit
@@ -31,4 +32,30 @@ class IrhpPermit extends AbstractRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Get permits by ECMT application id
+     *
+     * @param \Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits $query Query
+     *
+     * @return array
+     */
+    public function fetchByEcmtApplicationPaginated($query)
+    {
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->withRefdata()
+            ->with('irhpPermitApplication', 'ipa')
+            ->with('ipa.ecmtPermitApplication', 'epa')
+            ->paginate($query->getPage(), $query->getLimit());
+
+        $qb->andWhere($qb->expr()->eq('epa.id', ':ecmtId'))
+            ->setParameter('ecmtId', $query->getId());
+
+        return [
+            'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
+            'count' => $this->fetchPaginatedCount($qb)
+        ];
+    }
+
 }
