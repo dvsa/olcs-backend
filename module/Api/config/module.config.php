@@ -227,6 +227,8 @@ return [
             'Correspondence' => RepositoryFactory::class,
             'SystemParameter' => RepositoryFactory::class,
             'FeatureToggle' => RepositoryFactory::class,
+            'IrhpPermitStock' => RepositoryFactory::class,
+            'IrhpPermitType' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
@@ -339,6 +341,8 @@ return [
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
+            'IrhpPermitApplication' => RepositoryFactory::class,
+            'IrhpCandidatePermit' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

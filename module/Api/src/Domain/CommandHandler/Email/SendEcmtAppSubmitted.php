@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
@@ -28,8 +29,8 @@ class SendEcmtAppSubmitted extends AbstractCommandHandler implements EmailAwareI
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    private $template = 'ecmt-app-submitted';
-    private $subject = 'email.ecmt.submitted.subject';
+    const TEMPLATE = 'ecmt-app-submitted';
+    const SUBJECT = 'email.ecmt.submitted.subject';
 
     /**
      * @var Message
@@ -37,7 +38,7 @@ class SendEcmtAppSubmitted extends AbstractCommandHandler implements EmailAwareI
     private $message;
 
     /**
-     * Sends email comfirming ecmt application has been submitted
+     * Sends email confirming ecmt application has been submitted
      *
      * @param CommandInterface $command
      *
@@ -54,30 +55,35 @@ class SendEcmtAppSubmitted extends AbstractCommandHandler implements EmailAwareI
          */
         $repo = $this->getRepo();
         $application = $repo->fetchUsingId($command);
+        $result = new Result();
+        $result->addId('ecmtPermitApplication', $application->getId());
 
-        //$userEmail = $application->getCreatedBy()->getContactDetails()->getEmailAddress();
-        //$orgEmailAddresses = $application->getLicence()->getOrganisation()->getAdminEmailAddresses();
-        $orgEmailAddresses = [];
-        $userEmail = 'terry.valtech@gmail.com';
+        try {
+            $recipients = $this->recipientsForPermitApplication($application);
+        } catch (MissingEmailException $e) {
+            /** @todo check behaviour on this for future - inform someone, create task perhaps? */
+            $result->addMessage($e->getMessage());
+            return $result;
+        }
+
+        $applicationRef = $application->getApplicationRef();
 
         $templateVariables = [
             // http://selfserve is replaced based on the environment
             'url' => 'http://selfserve/',
-            'applicationRef' => $application->getApplicationRef(),
+            'applicationRef' => $applicationRef,
         ];
 
         $subjectVariables = [
-            'applicationRef' => $application->getApplicationRef(),
+            'applicationRef' => $applicationRef,
         ];
 
-        $message = new Message($userEmail, $this->subject);
-        $message->setSubjectVariables($subjectVariables);
-        $message->setCc($orgEmailAddresses);
+        $this->message = new Message($recipients['to'], self::SUBJECT);
+        $this->message->setSubjectVariables($subjectVariables);
+        $this->message->setCc($recipients['cc']);
 
-        $this->sendEmailTemplate($message, $this->template, $templateVariables);
+        $this->sendEmailTemplate($this->message, self::TEMPLATE, $templateVariables);
 
-        $result = new Result();
-        $result->addId('ecmtPermitApplication', $application->getId());
         $result->addMessage('Email sent');
 
         return $result;

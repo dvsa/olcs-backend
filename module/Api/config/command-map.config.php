@@ -976,6 +976,14 @@ return [
     TransferCommand\FeatureToggle\Delete::class =>
         CommandHandler\FeatureToggle\Delete::class,
 
+    // Transfer - IRHP Permit Stock
+    TransferCommand\IrhpPermitStock\Create::class =>
+        CommandHandler\IrhpPermitStock\Create::class,
+    TransferCommand\IrhpPermitStock\Update::class =>
+        CommandHandler\IrhpPermitStock\Update::class,
+    TransferCommand\IrhpPermitStock\Delete::class =>
+        CommandHandler\IrhpPermitStock\Delete::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
@@ -1036,6 +1044,10 @@ return [
     // Permits Withdraw
     TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
 
+    // Permits Decline
+    TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,
+    TransferCommand\Permits\AcceptEcmtPermits::class => CommandHandler\Permits\AcceptEcmtPermits::class,
+
     // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
@@ -1050,4 +1062,8 @@ return [
     TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
     TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
+
+    // Permits - internal backend
+
+    Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
 ];

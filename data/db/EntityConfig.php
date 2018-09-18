@@ -1245,6 +1245,12 @@ return array(
                 'property' => 'fee',
             ),
         ),
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'fee'
+            )
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
@@ -2126,6 +2132,22 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Licence',
                 'property' => 'ecmtApplication'
+            )
+        ),
+    ),
+    'irhp_candidate_permit' => array(
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'irhpCandidatePermit'
+            )
+        ),
+    ),
+    'irhp_permit_application' => array(
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'irhpPermitApplication'
             )
         ),
     ),

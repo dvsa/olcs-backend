@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "277c457d0e28775c75903d1ad9b30e30",
-    "content-hash": "be53f1be74f09365a99656e959427fe8",
+    "hash": "9dead55d58bf63d5afbb3a4b8607fd7e",
+    "content-hash": "b8c18a991597acd4f621f4a61e7dc356",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1238,11 +1238,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.188",
+            "version": "dev-release/4.189",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "5756d3a5ff4e973cd4206dbb4189c05be9e301f0"
+                "reference": "0cd7c070388647b9889ef8641156df79e7194e41"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1254,15 +1254,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2018-09-07 11:59:55"
+            "time": "2018-09-17 16:34:56"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.188",
+            "version": "dev-release/4.189",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "29a5cf3aee59ec90c31a677ca5007fb62b8a9f8f"
+                "reference": "0a9f4fb167a872a7a391a5ccf0fee37a3f4c5d66"
             },
             "require": {
                 "php": ">=5.4",
@@ -1306,15 +1306,15 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2018-09-07 11:59:48"
+            "time": "2018-09-17 16:34:51"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.188",
+            "version": "dev-release/4.189",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "c4698cb825c35e001d7d84eb4789b52e2db5d85f"
+                "reference": "aa3b9713a901d15667afb3337edb83cef380c500"
             },
             "require": {
                 "php": ">=5.4",
@@ -1352,15 +1352,15 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2018-09-07 12:03:29"
+            "time": "2018-09-17 16:37:01"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.188",
+            "version": "dev-release/4.189",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "e64875aca6387cc7a83bf156ea17e5005c24d848"
+                "reference": "4b98dbd8883687dd90d11a9f6eb499143637f231"
             },
             "require": {
                 "php": ">=5.4",
@@ -1369,7 +1369,7 @@
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
                 "olcs/olcs-devtools": "dev-master",
-                "olcs/olcs-logging": "dev-release/4.188"
+                "olcs/olcs-logging": "dev-release/4.189"
             },
             "type": "library",
             "autoload": {
@@ -1398,15 +1398,15 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2018-09-07 12:05:08"
+            "time": "2018-09-17 16:37:50"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.188",
+            "version": "dev-release/4.189",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "b0ec720f4fc6f8e3d747cc98785cbf71671c5b34"
+                "reference": "f105177d6bb3403013a37e1bfce2a6e4fbae50ae"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1447,7 +1447,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2018-09-07 11:58:24"
+            "time": "2018-09-17 16:34:04"
         },
         {
             "name": "oro/doctrine-extensions",
