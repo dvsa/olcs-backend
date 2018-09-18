@@ -2151,4 +2151,20 @@ return array(
             )
         ),
     ),
+    'irhp_permit' => array(
+        'irhp_candidate_permit_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpCandidatePermit',
+                'property' => 'irhpPermit'
+            )
+        ),
+    ),
+    'irhp_permit_range_country' => [
+        'irhp_permit_stock_range_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitRange',
+                'property' => 'restrictedCountrie'
+            )
+        ),
+    ]
 );

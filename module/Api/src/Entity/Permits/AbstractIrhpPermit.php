@@ -79,7 +79,11 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermits"
+     * )
      * @ORM\JoinColumn(name="irhp_candidate_permit_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpCandidatePermit;
