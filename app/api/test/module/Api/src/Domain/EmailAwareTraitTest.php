@@ -35,6 +35,7 @@ class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
         $expected = [
             'to' => $userEmail,
             'cc' => $orgEmails,
+            'bcc' => [],
         ];
 
         $sut = new EmailAwareTraitTestStub();
@@ -62,6 +63,7 @@ class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
         $expected = [
             'to' => $orgEmail1,
             'cc' => [1 => $orgEmail2],
+            'bcc' => []
         ];
 
         $sut = new EmailAwareTraitTestStub();

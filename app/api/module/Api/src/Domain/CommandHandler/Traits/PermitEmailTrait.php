@@ -17,7 +17,7 @@ trait PermitEmailTrait
      *
      * @return array
      */
-    public function getRecipients($recordObject): array
+    protected function getRecipients($recordObject): array
     {
         return $this->organisationRecipients(
             $recordObject->getLicence()->getOrganisation(),
@@ -28,32 +28,32 @@ trait PermitEmailTrait
     /**
      * Get template variables
      *
-     * @param EcmtPermitApplication $application
+     * @param EcmtPermitApplication $recordObject
      *
      * @return array
      */
-    protected function getTemplateVariables(EcmtPermitApplication $application): array
+    protected function getTemplateVariables($recordObject): array
     {
         return [
             // http://selfserve is replaced based on the environment
-            'appUrl' => 'http://selfserve',
+            'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
-            'applicationRef' => $application->getApplicationRef(),
+            'applicationRef' => $recordObject->getApplicationRef(),
         ];
     }
 
     /**
      * Get subject variables
      *
-     * @param EcmtPermitApplication $application
+     * @param EcmtPermitApplication $recordObject
      *
      * @return array
      */
-    protected function getSubjectVariables(EcmtPermitApplication $application): array
+    protected function getSubjectVariables($recordObject): array
     {
         return [
-            'applicationRef' => $application->getApplicationRef(),
+            'applicationRef' => $recordObject->getApplicationRef(),
         ];
     }
 }

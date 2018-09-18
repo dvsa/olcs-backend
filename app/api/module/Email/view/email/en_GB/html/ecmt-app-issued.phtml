@@ -6,4 +6,4 @@
 
 <p>You can check <a href="<?php echo $this->escapeHtml($this->guidanceUrl); ?>">ECMT guidance notes</a> on how to instruct your drivers, manage your paper permit and logbook and be fully compliant before going abroad.</p>
 
-<a class="action--primary" href="<?php echo $this->escapeHtml($this->permitsUrl) ?>">View your application</a>
+<a class="action--primary" href="<?php echo $this->permitsUrl; //replaced based on the env, so can't escape ?>">View your application</a>
