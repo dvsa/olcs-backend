@@ -18,7 +18,7 @@ class IrhpPermitWindow extends AbstractRepository
      *
      * Filtered for windows linked to ECMT permits.
      */
-    public function getCurrentIrhpPermitWindow($hydrateMode = Query::HYDRATE_OBJECT)
+    public function getCurrentIrhpPermitWindow($permitType, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         return $this->getEntityManager()->createQueryBuilder()
                 ->select('ipw, ips')
@@ -26,11 +26,10 @@ class IrhpPermitWindow extends AbstractRepository
                 ->innerJoin('ipw.irhpPermitStock', 'ips')
                 ->innerJoin('ips.irhpPermitType', 'ipt')
                 ->where('ipw.endDate > ?1') //window is currently open
-                ->andWhere('ipt.name = \'permit_ecmt\'') //Permit Type ECMT
+                ->andWhere('ipt.name = ?2') //Permit Type ECMT
                 ->setParameter(1, date("Y-m-d"))
+                ->setParameter(2, $permitType)
                 ->getQuery()
                 ->getResult($hydrateMode);
-
-
     }
 }

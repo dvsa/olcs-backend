@@ -28,10 +28,6 @@ class IrhpPermitWindow extends AbstractListQueryHandler implements ToggleRequire
      */
     public function handleQuery(QueryInterface $query)
     {
-        $window = $this->getRepo()->getCurrentIrhpPermitWindow();
-        //$this->result($window);
-        //return $this->result($window);
-        return $window;
-
+        return $this->getRepo()->getCurrentIrhpPermitWindow($query->getPermitType());
     }
 }
