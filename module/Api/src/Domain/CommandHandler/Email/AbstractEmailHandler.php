@@ -71,7 +71,7 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
         try {
             $recipients = $this->getRecipients($recordObject);
         } catch (MissingEmailException $e) {
-            /** @todo check behaviour on this for future - inform someone, create task perhaps? */
+            /** @todo create a task in these situations OLCS-21735 */
             $result->addMessage($e->getMessage());
             return $result;
         }
@@ -94,6 +94,8 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
     /**
      * Override this method to get the template variables required
      *
+     * @param object $recordObject record will be a doctrine entity
+     *
      * @return array
      */
     protected function getTemplateVariables($recordObject)
@@ -103,6 +105,8 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
 
     /**
      * Override this method to get the subject line variables required
+     *
+     * @param object $recordObject record will be a doctrine entity
      *
      * @return array
      */
@@ -120,7 +124,7 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
      * @return array
      * @throws MissingEmailException
      */
-    abstract function getRecipients($recordObject): array;
+    abstract protected function getRecipients($recordObject): array;
 
     /**
      * Returns the message object, used to assist with UT
