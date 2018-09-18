@@ -36,8 +36,8 @@ final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleR
     {
         $result = $this->getRepo()->fetchByEcmtApplicationPaginated($query);
         return [
-            'results' => $this->resultList($result['result'], $this->bundle),
-            'count' => $result['count']
+            'results' => $this->resultList($result, $this->bundle),
+            'count' => $this->getRepo()->fetchCount($query)
         ];
     }
 }
