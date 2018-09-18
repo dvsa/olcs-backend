@@ -343,6 +343,7 @@ return [
             'EcmtPermitApplication' => RepositoryFactory::class,
             'IrhpPermitApplication' => RepositoryFactory::class,
             'IrhpCandidatePermit' => RepositoryFactory::class,
+            'IrhpPermitWindow' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
