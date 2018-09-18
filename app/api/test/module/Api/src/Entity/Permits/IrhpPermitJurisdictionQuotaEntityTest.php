@@ -3,14 +3,14 @@
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermits as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota as Entity;
 
 /**
- * EcmtPermits Entity Unit Tests
+ * IrhpPermitJurisdictionQuota Entity Unit Tests
  *
  * Initially auto-generated but won't be overridden
  */
-class EcmtPermitsEntityTest extends EntityTester
+class IrhpPermitJurisdictionQuotaEntityTest extends EntityTester
 {
     /**
      * Define the entity to test

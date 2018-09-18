@@ -14,6 +14,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtPermitsRequired;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitsRequired as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -40,6 +41,9 @@ class UpdateEcmtPermitsRequiredTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
 
         $application = m::mock(EcmtPermitApplication::class);
+        $licence = m::mock(Licence::class);
+        $application->shouldReceive('getPermitsRequired')->withNoArgs()->once()->andReturn(3);
+        $application->shouldReceive('getLicence')->withNoArgs()->once()->andReturn($licence);
         $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);
         $application->shouldReceive('updatePermitsRequired')
             ->once()

@@ -20,5 +20,5 @@ class EcmtPermitApplication extends AbstractListQueryHandler implements ToggleRe
 
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $bundle = ['licence'];
+    protected $bundle = ['licence', 'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock']]];
 }

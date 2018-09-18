@@ -20,7 +20,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *        @ORM\Index(name="ix_ecmt_permit_application_licence_id", columns={"licence_id"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_permit_type", columns={"permit_type"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_payment_status", columns={"payment_status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"})
  *    }
  * )
@@ -34,8 +33,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_AWAITING_FEE = 'ecmt_permit_awaiting';
     const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
     const STATUS_ISSUED = 'ecmt_permit_issued';
+    const STATUS_VALID = 'ecmt_permit_valid';
+
 
     const PERMIT_TYPE = 'permit_ecmt';
+    const PERMIT_VALID = 'permit_valid';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
@@ -67,27 +69,32 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         'declaration' => 'fieldIsAgreed',
     ];
 
+    const INTERNATIONAL_JOURNEYS_DECIMAL_MAP = [
+        self::INTER_JOURNEY_LESS_60 => 0.3,
+        self::INTER_JOURNEY_60_90 => 0.75,
+        self::INTER_JOURNEY_MORE_90 => 1
+    ];
+
+
     /**
      * Create new EcmtPermitApplication
      *
      * @param RefData $status Status
-     * @param RefData $paymentStatus Payment status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
+     * @param string|null $dateReceived
      * @param Sectors|null $sectors
-     * @param $countrys
+     * @param array $countrys
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
      * @param int|null $permitsRequired
      * @param int|null $trips
-     * @param string|null $internationalJourneys
-     * @param string|null $dateReceived
+     * @param RefData $internationalJourneys
      * @return EcmtPermitApplication
      */
-    public static function createNew(
+    public static function createNewInternal(
         RefData $status,
-        RefData $paymentStatus,
         RefData $permitType,
         Licence $licence,
         string $dateReceived = null,
@@ -102,7 +109,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     ) {
         $ecmtPermitApplication = new self();
         $ecmtPermitApplication->status = $status;
-        $ecmtPermitApplication->paymentStatus = $paymentStatus; //@todo drop payment status column
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
         $ecmtPermitApplication->sectors = $sectors;
@@ -123,7 +129,29 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * Create new EcmtPermitApplication
      *
      * @param RefData $status Status
-     * @param RefData $paymentStatus Payment status
+     * @param RefData $permitType Permit type
+     * @param Licence $licence Licence
+     * @param string|null $dateReceived
+     * @return EcmtPermitApplication
+     */
+    public static function createNew(
+        RefData $status,
+        RefData $permitType,
+        Licence $licence,
+        string $dateReceived = null
+    ) {
+        $ecmtPermitApplication = new self();
+        $ecmtPermitApplication->status = $status;
+        $ecmtPermitApplication->permitType = $permitType;
+        $ecmtPermitApplication->licence = $licence;
+        $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
+        return $ecmtPermitApplication;
+    }
+
+
+    /**
+     * Create new EcmtPermitApplication
+     *
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
      * @param Sectors|null $sectors
@@ -192,6 +220,33 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $withdrawStatus;
     }
 
+    public function decline(RefData $declineStatus)
+    {
+        if (!$this->canBeDeclined()) {
+            throw new ForbiddenException('This application is not allowed to be declined');
+        }
+
+        $this->status = $declineStatus;
+    }
+
+    public function accept(RefData $acceptStatus)
+    {
+        if (!$this->canBeAccepted()) {
+            throw new ForbiddenException('This application is not allowed to be accepted');
+        }
+
+        $this->status = $acceptStatus;
+    }
+
+    public function cancel(RefData $cancelStatus)
+    {
+        if (!$this->canBeCancelled()) {
+            throw new ForbiddenException('This application is not allowed to be cancelled');
+        }
+
+        $this->status = $cancelStatus;
+    }
+
     /**
      * Gets calculated values
      *
@@ -207,6 +262,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeUpdated' => $this->canBeUpdated(),
+            'canBeAccepted' => $this->canBeAccepted(),
+            'canBeDeclined' => $this->canBeDeclined(),
             'canCheckAnswers' => $this->canCheckAnswers(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
@@ -215,6 +272,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
+            'isAwaitingFee' => $this->isAwaitingFee(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
@@ -452,6 +510,15 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * @return bool
+     */
+    public function isAwaitingFee()
+    {
+        return $this->status->getId() === self::STATUS_AWAITING_FEE;
+    }
+
+
+    /**
      * Whether the permit application can be submitted
      * @todo this currently reruns the section completion checks, should store the value instead for speed
      *
@@ -535,11 +602,27 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeWithdrawn()
     {
-        if ($this->isUnderConsideration()) {
-            return true;
-        }
+        return $this->isUnderConsideration();
+    }
 
-        return false;
+    /**
+     * Whether the permit application can be declined
+     *
+     * @return bool
+     */
+    public function canBeDeclined()
+    {
+        return $this->isAwaitingFee();
+    }
+
+    /**
+     * Whether the permit application can be accepted
+     *
+     * @return bool
+     */
+    public function canBeAccepted()
+    {
+        return $this->isAwaitingFee();
     }
 
     /**
@@ -549,7 +632,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeCancelled()
     {
-        return $this->status->getId() === self::STATUS_NOT_YET_SUBMITTED;
+        return $this->isNotYetSubmitted();
     }
 
     /**
@@ -560,5 +643,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * Calculates the intensity_of_use value for
+     * permits requested by an ecmtPermitApplication
+     */
+    public function getPermitIntensityOfUse()
+    {
+        return $this->permitsRequired > 0 ? $this->trips / $this->permitsRequired : 0;
+    }
+
+    /**
+     * Calculates the application_score value for
+     * permits requested by an ecmtPermitApplication
+     */
+    public function getPermitApplicationScore()
+    {
+        $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
+        return $this->getPermitIntensityOfUse() * $interJourneysDecValue;
     }
 }
