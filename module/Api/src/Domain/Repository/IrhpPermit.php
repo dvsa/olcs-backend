@@ -52,10 +52,7 @@ class IrhpPermit extends AbstractRepository
         $qb->andWhere($qb->expr()->eq('epa.id', ':ecmtId'))
             ->setParameter('ecmtId', $query->getId());
 
-        return [
-            'result' => $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT),
-            'count' => $this->fetchPaginatedCount($qb)
-        ];
+        return $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT);
     }
 
 }
