@@ -7,17 +7,17 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 
 /**
- * Get currently open Irhp Permit Window
+ * Get the Irhp Permit Stock record that will be valid
+ * for the given permit type on the given date
  */
-class IrhpPermitWindow extends AbstractListQueryHandler implements ToggleRequiredInterface
+class NextIrhpPermitStock extends AbstractListQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
-    protected $repoServiceName = 'IrhpPermitWindow';
+    protected $repoServiceName = 'IrhpPermitStock';
 
      /**
      * Handle query
@@ -28,6 +28,11 @@ class IrhpPermitWindow extends AbstractListQueryHandler implements ToggleRequire
      */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->getCurrentIrhpPermitWindow($query->getPermitType());
+        $date = $query->getDate();
+        if (is_null($date)) {
+            $date = date("Y-m-d");
+        }
+
+        return $this->getRepo()->getNextIrhpPermitStockByPermitType($query->getPermitType(), $date);
     }
 }

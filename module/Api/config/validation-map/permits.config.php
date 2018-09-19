@@ -16,7 +16,7 @@ return [
     QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtApplicationByLicence::class => CanAccessLicenceWithLicence::class,
-    QueryHandler\Permits\IrhpPermitWindow::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
