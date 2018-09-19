@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
