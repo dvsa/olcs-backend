@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Doctrine\ORM\Query;
 
-
 /**
  * Feature toggle
  */
