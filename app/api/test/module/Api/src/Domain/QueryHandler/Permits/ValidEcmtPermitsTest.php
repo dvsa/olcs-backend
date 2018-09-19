@@ -14,7 +14,6 @@ use Mockery as m;
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
 class ValidEcmtPermitsTest extends QueryHandlerTestCase
-
 {
     public function setUp()
     {

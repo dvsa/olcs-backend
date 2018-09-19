@@ -61,7 +61,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public function getCalculatedBundleValues()
     {
         return [
-            'permitsAwarded' => $this->countPermitsAwarded()
+            'permitsAwarded' => $this->countPermitsAwarded(),
+            'validPermits' => $this->countValidPermits()
         ];
     }
 
@@ -79,5 +80,25 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         $applications = $this->getIrhpCandidatePermits()->matching($criteria);
 
         return count($applications);
+    }
+
+    /**
+     * Get num of valid permits
+     **
+     * @return int
+     */
+    public function countValidPermits()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->eq('successful', true)
+        );
+        $permits = $this->getIrhpCandidatePermits()->matching($criteria);
+
+        $irhpPermits = 0;
+        foreach ($permits as $permit) {
+            $irhpPermits += $permit->getIrhpPermits()->count();
+        }
+        return $irhpPermits;
     }
 }
