@@ -19,7 +19,7 @@ class IrhpPermitStock extends AbstractRepository
      *
      * Filtered for a given permit type
      */
-    public function getNextIrhpPermitStockByPermitType($permitType, $date, $hydrateMode = Query::HYDRATE_OBJECT)
+    public function getNextIrhpPermitStockByPermitType($permitType, $date)
     {
         return $this->getEntityManager()->createQueryBuilder()
                 ->select('ips')
@@ -33,6 +33,6 @@ class IrhpPermitStock extends AbstractRepository
                 ->setParameter(2, $permitType)
                 ->setMaxResults(1) //There should only ever be one, take the most recent
                 ->getQuery()
-                ->getResult($hydrateMode);
+                ->getResult();
     }
 }
