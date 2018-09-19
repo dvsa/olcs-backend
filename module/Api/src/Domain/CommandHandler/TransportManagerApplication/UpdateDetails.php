@@ -6,6 +6,9 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\PreviousConviction as PreviousConvictionRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TmEmployment as TmEmploymentRepo;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -24,7 +27,13 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
 {
     protected $repoServiceName = 'TransportManagerApplication';
 
-    protected $extraRepos = ['ContactDetails', 'Address'];
+    protected $extraRepos = [
+        'ContactDetails',
+        'Address',
+        'TmEmployment',
+        'OtherLicence',
+        'PreviousConviction',
+    ];
 
     /**
      * Handle query
@@ -48,6 +57,7 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
 
         if ($command->getSubmit() === 'Y') {
             $this->validateDob($command->getDob());
+            $this->maybeDeleteAssociatedData($tma, $command);
             // could validate the TMA here?
             $tma->setDeclarationConfirmation('Y');
         }
@@ -58,6 +68,62 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         $this->getRepo()->save($tma);
 
         return $this->result->addMessage("Transport Manager Application ID {$tma->getId()} updated");
+    }
+
+    private function maybeDeleteAssociatedData(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
+    {
+        $this->maybeDeleteOtherLicences($tma, $command);
+        $this->maybeDeletePreviousLicences($tma, $command);
+        $this->maybeDeleteOtherEmployment($tma, $command);
+        $this->maybeDeletePreviousConvictions($tma, $command);
+    }
+
+    private function maybeDeleteOtherLicences(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
+    {
+        if ($command->getHasOtherLicences() === 'N' && $command->getSubmit() === 'Y') {
+            /** @var OtherLicenceRepo $repo */
+            $repo = $this->getRepo('OtherLicence');
+            $otherLicences = $repo->fetchForTransportManagerApplication($tma->getId());
+            foreach ($otherLicences as $otherLicence) {
+                $repo->delete($otherLicence);
+            }
+        }
+    }
+
+    private function maybeDeletePreviousLicences(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
+    {
+        if ($command->getHasPreviousLicences() === 'N' && $command->getSubmit() === 'Y') {
+            /** @var OtherLicenceRepo $repo */
+            $repo = $this->getRepo('OtherLicence');
+            $otherLicences = $repo->fetchByTransportManager($tma->getTransportManager()->getId());
+            foreach ($otherLicences as $otherLicence) {
+                $repo->delete($otherLicence);
+            }
+        }
+    }
+
+    private function maybeDeleteOtherEmployment(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
+    {
+        if ($command->getHasOtherEmployment() === 'N' && $command->getSubmit() === 'Y') {
+            /** @var TmEmploymentRepo $repo */
+            $repo = $this->getRepo('TmEmployment');
+            $otherEmployments = $repo->fetchByTransportManager($tma->getTransportManager()->getId());
+            foreach ($otherEmployments as $otherEmployment) {
+                $repo->delete($otherEmployment);
+            }
+        }
+    }
+
+    private function maybeDeletePreviousConvictions(TransportManagerApplication $tma, UpdateDetailsCommand $command): void
+    {
+        if ($command->getHasConvictions() === 'N' && $command->getSubmit() === 'Y') {
+            /** @var PreviousConvictionRepo $repo */
+            $repo = $this->getRepo('PreviousConviction');
+            $otherEmployments = $repo->fetchByTransportManager($tma->getTransportManager()->getId());
+            foreach ($otherEmployments as $otherEmployment) {
+                $repo->delete($otherEmployment);
+            }
+        }
     }
 
     /**
@@ -84,18 +150,10 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         if ($command->getIsOwner()) {
             $tma->setIsOwner($command->getIsOwner());
         }
-        $tma->setHasOtherLicences($this->yesNoToBool($command->getHasOtherLicences()));
-        $tma->setHasOtherEmployment($this->yesNoToBool($command->getHasOtherEmployment()));
-        $tma->setHasConvictions($this->yesNoToBool($command->getHasConvictions()));
-        $tma->setHasPreviousLicences($this->yesNoToBool($command->getHasPreviousLicences()));
-    }
-
-    private function yesNoToBool($value)
-    {
-        if ($value === null || ($value !== 'Y' && $value !== 'N')) {
-            return null;
-        }
-        return $value === 'Y' ? true : false;
+        $tma->setHasOtherLicences($this->yesNoToBoolOrNull($command->getHasOtherLicences()));
+        $tma->setHasOtherEmployment($this->yesNoToBoolOrNull($command->getHasOtherEmployment()));
+        $tma->setHasConvictions($this->yesNoToBoolOrNull($command->getHasConvictions()));
+        $tma->setHasPreviousLicences($this->yesNoToBoolOrNull($command->getHasPreviousLicences()));
     }
 
     /**
