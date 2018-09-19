@@ -2159,12 +2159,4 @@ return array(
             )
         ),
     ),
-    'irhp_permit_range_country' => array(
-        'irhp_permit_stock_range_id' => array(
-            'inversedBy' => array(
-                'entity' => 'IrhpPermitRange',
-                'property' => 'restrictedCountrie'
-            )
-        ),
-    )
 );
