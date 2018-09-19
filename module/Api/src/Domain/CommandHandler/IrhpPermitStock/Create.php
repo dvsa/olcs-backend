@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Create as CreateStockCmd;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Create an IRHP Permit Stock
@@ -34,10 +35,13 @@ final class Create extends AbstractCommandHandler
             $command->getInitialStock()
         );
 
-        $this->getRepo()->save($stock);
-
-        $result->addId('IrhpPermitStock', $stock->getId());
-        $result->addMessage("IRHP Permit Stock '{$stock->getId()}' created");
+        try {
+            $this->getRepo()->save($stock);
+            $result->addId('IrhpPermitStock', $stock->getId());
+            $result->addMessage("IRHP Permit Stock '{$stock->getId()}' created");
+        } catch (\Exception $e) {
+            throw new ValidationException(['You cannot create a duplicate stock']);
+        }
 
         return $result;
     }
