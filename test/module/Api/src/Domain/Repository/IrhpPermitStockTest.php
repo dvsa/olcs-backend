@@ -27,7 +27,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function getNextIrhpPermitStockByPermitType()
+    public function testGetNextIrhpPermitStockByPermitType()
     {
 
     }
