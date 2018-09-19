@@ -84,10 +84,18 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         if ($command->getIsOwner()) {
             $tma->setIsOwner($command->getIsOwner());
         }
-        $tma->setHasOtherLicences($command->getHasOtherLicences() === 'Y' ? true : false);
-        $tma->setHasOtherEmployment($command->getHasOtherEmployment() === 'Y' ? true : false);
-        $tma->setHasConvictions($command->getHasConvictions() === 'Y' ? true : false);
-        $tma->setHasPreviousLicences($command->getHasPreviousLicences() === 'Y' ? true : false);
+        $tma->setHasOtherLicences($this->yesNoToBool($command->getHasOtherLicences()));
+        $tma->setHasOtherEmployment($this->yesNoToBool($command->getHasOtherEmployment()));
+        $tma->setHasConvictions($this->yesNoToBool($command->getHasConvictions()));
+        $tma->setHasPreviousLicences($this->yesNoToBool($command->getHasPreviousLicences()));
+    }
+
+    private function yesNoToBool($value)
+    {
+        if ($value === null || ($value !== 'Y' && $value !== 'N')) {
+            return null;
+        }
+        return $value === 'Y' ? true : false;
     }
 
     /**
