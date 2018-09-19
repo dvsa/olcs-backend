@@ -28,11 +28,6 @@ class NextIrhpPermitStock extends AbstractListQueryHandler implements ToggleRequ
      */
     public function handleQuery(QueryInterface $query)
     {
-        $date = $query->getDate();
-        if (is_null($date)) {
-            $date = date("Y-m-d");
-        }
-
-        return $this->getRepo()->getNextIrhpPermitStockByPermitType($query->getPermitType(), $date);
+        return $this->getRepo()->getNextIrhpPermitStockByPermitType($query->getPermitType(), date("Y-m-d"));
     }
 }
