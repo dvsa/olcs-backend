@@ -14,6 +14,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * IrhpPermitApplication
+ *
+ * @TODO: Replace this query with the bundle & listFilter design pattern.
  */
 class IrhpPermitApplication extends AbstractRepository
 {
