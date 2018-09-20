@@ -245,9 +245,9 @@ class AlignEntitiesToSchema
 
             $this->generateNewMappingFiles();
 
-            $this->removeOldEntities();
-
             $this->findMappingFiles();
+
+            $this->removeOldEntities();
 
             $this->compileEntityConfig();
 
@@ -284,7 +284,7 @@ class AlignEntitiesToSchema
      */
     private function createDatabaseConnection()
     {
-        $this->respond('Connecting to databse...', 'info');
+        $this->respond('Connecting to database...', 'info');
 
         try {
             $this->pdo = new Pdo(
@@ -432,12 +432,16 @@ class AlignEntitiesToSchema
      */
     private function generateNewMappingFiles()
     {
-        $this->respond('Generating new mapping files...', 'info');
+        $this->respond('Generating new mapping files from: ' . $this->entityConfig['mappingConfig'], 'info');
 
         // Setup the custom mapping object
         $command = new ConvertMappingCommand($this->entityConfig['mappingConfig']);
 
-        // Grab the doctrine cli runner
+        /**
+         * Grab the doctrine cli runner
+         *
+         * @var \Symfony\Component\Console\Application $cli
+         */
         $cli = $this->application->getServiceManager()->get('doctrine.cli');
         // Prevent auto exit
         $cli->setAutoExit(false);
@@ -510,7 +514,6 @@ class AlignEntitiesToSchema
     private function compileEntityConfig()
     {
         $this->respond('Compiling entity configuration...', 'info');
-
         foreach ($this->mappingFiles as $className => $fileName) {
 
             $config = $this->getConfigFromMappingFile($fileName);
@@ -1468,6 +1471,8 @@ class AlignEntitiesToSchema
      */
     private function findMappingFiles()
     {
+        $this->respond('Iterating through mapping files in: ' . $this->options['mapping-files'], 'info');
+
         foreach (new DirectoryIterator($this->options['mapping-files']) as $fileInfo) {
             if ($fileInfo->isDot()) {
                 continue;
@@ -1478,6 +1483,10 @@ class AlignEntitiesToSchema
             $key = '\\' . str_replace('.', '\\', str_replace('.dcm.xml', '', $fileName));
 
             $this->mappingFiles[$key] = $fileName;
+        }
+
+        if (empty($this->mappingFiles)) {
+            $this->exitResponse('Error: mapping files were not created');
         }
 
         // @Note Sort the mapping files by key, as the OS may read them in a different order which will cause

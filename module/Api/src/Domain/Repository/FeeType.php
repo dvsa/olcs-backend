@@ -81,10 +81,9 @@ class FeeType extends AbstractRepository
                     $qb->expr()->isNull('ft.trafficArea')
                 )
             )
-            // Send the NULL values to the bottom
-            ->orderBy('ft.trafficArea', 'DESC')
-            ->setParameter('trafficArea', $trafficArea);
-
+                // Send the NULL values to the bottom
+                ->orderBy('ft.trafficArea', 'DESC')
+                ->setParameter('trafficArea', $trafficArea);
         } else {
             $qb->andWhere($qb->expr()->isNull('ft.trafficArea'));
         }
@@ -211,7 +210,6 @@ class FeeType extends AbstractRepository
                 Entity::FEE_TYPE_IRFOPSVCOPY
             ];
             $this->addFeeTypeClause($qb, $feeTypes);
-
         } elseif ($query->getLicence() !== null) {
             $licence = $this->getReference(LicenceEntity::class, $query->getLicence());
 
@@ -220,7 +218,6 @@ class FeeType extends AbstractRepository
 
             // fee_type.licence_type = <current licence type> AND
             $this->addLicenceTypeClause($qb, $licence->getLicenceType());
-
         } elseif ($query->getApplication()) {
             $application = $this->getReference(ApplicationEntity::class, $query->getApplication());
 
@@ -289,7 +286,7 @@ class FeeType extends AbstractRepository
      */
     public function getLatestIrfoFeeType($irfoEntity, RefDataEntity $feeTypeFeeType)
     {
-        if ($irfoEntity instanceOf IrfoPsvAuthEntity) {
+        if ($irfoEntity instanceof IrfoPsvAuthEntity) {
             $irfoFeeType = $irfoEntity->getIrfoPsvAuthType()->getIrfoFeeType();
         } elseif ($irfoEntity instanceof IrfoGvPermitEntity) {
             $irfoFeeType = $irfoEntity->getIrfoGvPermitType()->getIrfoFeeType();
@@ -304,5 +301,57 @@ class FeeType extends AbstractRepository
         );
 
         return $feeType;
+    }
+
+    /**
+     * Get the fee type based on ProductReference
+     *
+     * @param ProductReference $productReference
+     * @return Entity
+     * @throws Exception\NotFoundException
+     */
+    public function getLatestForEcmtPermit($productReference)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.productReference', ':productReference'));
+
+        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('productReference', $productReference)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+        return $results[0];
+    }
+
+
+    /**
+     * Get the fee type based on ProductReference and Received Date of the application
+     *
+     * @param ProductReference $productReference
+     * @param $receivedDate
+     * @return Entity
+     * @throws NotFoundException
+     */
+    public function getSpecificDateEcmtPermit($productReference, $receivedDate)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq('ft.productReference', ':productReference'));
+        $qb->andWhere($qb->expr()->lt('ft.effectiveFrom', ':receivedDate'));
+
+        $qb->addOrderBy('ft.effectiveFrom', 'DESC')
+            ->setParameter('productReference', $productReference)
+            ->setParameter('receivedDate', $receivedDate)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->execute();
+
+        if (empty($results)) {
+            throw new Exception\NotFoundException('FeeType not found');
+        }
+        return $results[0];
     }
 }

@@ -30,12 +30,12 @@ class Organisation extends AbstractQueryHandler
         return $this->result(
             $organisation,
             [
-                'disqualifications'
+                'disqualifications',
             ],
             [
                 'isDisqualified' => $organisation->getDisqualifications()->count() > 0,
                 'taValueOptions' => $this->getTrafficAreaValueOptions($allowedOperatorLocation),
-                'allowedOperatorLocation' => $allowedOperatorLocation
+                'allowedOperatorLocation' => $allowedOperatorLocation,
             ]
         );
     }
