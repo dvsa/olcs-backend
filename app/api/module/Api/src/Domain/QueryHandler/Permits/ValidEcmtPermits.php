@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Get all valid ECMT permits by application
@@ -31,13 +30,4 @@ final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleR
         ],
         'status'
     ];
-
-    public function handleQuery(QueryInterface $query)
-    {
-        $result = $this->getRepo()->fetchByEcmtApplicationPaginated($query);
-        return [
-            'results' => $this->resultList($result, $this->bundle),
-            'count' => $this->getRepo()->fetchCount($query)
-        ];
-    }
 }
