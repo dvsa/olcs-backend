@@ -580,12 +580,15 @@ return [
     Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
 
     // Permits
+    TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
     TransferQuery\Permits\EcmtCountriesList::class => QueryHandler\Permits\EcmtCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\Permits\EcmtApplicationByLicence::class => QueryHandler\Permits\EcmtApplicationByLicence::class,
+    TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
+    TransferQuery\Permits\LastOpenWindow::class => QueryHandler\Permits\LastOpenWindow::class,
 
     // Cli - Permits
     QueryCli\Permits\StockAvailability::class => QueryHandlerCli\Permits\StockAvailability::class,
