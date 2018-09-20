@@ -30,7 +30,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_fee_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
  *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
- *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"})
+ *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
+ *        @ORM\Index(name="fk_fee_ecmt_permit_application_id", columns={"ecmt_permit_application_id"})
  *    }
  * )
  */
@@ -91,6 +92,20 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\Column(type="string", name="description", length=255, nullable=true)
      */
     protected $description;
+
+    /**
+     * Ecmt permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
+     *     fetch="LAZY",
+     *     inversedBy="fees"
+     * )
+     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $ecmtPermitApplication;
 
     /**
      * Fee status
@@ -423,6 +438,30 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the ecmt permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtPermitApplication entity being set as the value
+     *
+     * @return Fee
+     */
+    public function setEcmtPermitApplication($ecmtPermitApplication)
+    {
+        $this->ecmtPermitApplication = $ecmtPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
+     */
+    public function getEcmtPermitApplication()
+    {
+        return $this->ecmtPermitApplication;
     }
 
     /**

@@ -475,7 +475,6 @@ class OrganisationEntityTest extends EntityTester
 
                     /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
                     $expr = $criteria->getWhereExpression();
-
                     $this->assertEquals('status', $expr->getField());
                     $this->assertEquals('NIN', $expr->getOperator());
                     $this->assertTrue(is_array($expr->getValue()->getValue()));
@@ -753,5 +752,107 @@ class OrganisationEntityTest extends EntityTester
             ->getMock();
 
         $this->assertTrue($organisation->hasUnlicencedLicences());
+    }
+
+    /**
+     * Test whether the organisation is eligible for permits.
+     * Use 3 mock licences
+     * The first one will not meet the criteria and be skipped
+     * The second one will meet the criteria
+     * The third licence won't need to be checked at all
+     */
+    public function testIsEligibleForPermitsWhenTrue()
+    {
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->shouldReceive('isEligibleForPermits')->once()->andReturn(true);
+        $mockLicence3 = m::mock(LicenceEntity::class);
+        $mockLicence3->shouldReceive('isEligibleForPermits')->never();
+
+        $licences = new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3]);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicences($licences);
+        $this->assertEquals(true, $entity->isEligibleForPermits());
+    }
+
+    /**
+     * Test whether the organisation is eligible for permits.
+     * Use 3 mock licences, all 3 won't meet the criteria hence we return false
+     */
+    public function testIsEligibleForPermitsWhenFalse()
+    {
+        $mockLicence1 = m::mock(LicenceEntity::class);
+        $mockLicence1->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
+        $mockLicence2 = m::mock(LicenceEntity::class);
+        $mockLicence2->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
+        $mockLicence3 = m::mock(LicenceEntity::class);
+        $mockLicence3->shouldReceive('isEligibleForPermits')->once()->andReturn(false);
+
+        $licences = new ArrayCollection([$mockLicence1, $mockLicence2, $mockLicence3]);
+
+        $entity = $this->instantiate(Entity::class);
+        $entity->setLicences($licences);
+        $this->assertEquals(false, $entity->isEligibleForPermits());
+    }
+
+    /**
+     * @todo have marked this test as skipped, we need to fix it first, then make sure it asserts something meaningful
+     */
+    public function testGetStandardInternationalLicences()
+    {
+        $this->markTestSkipped();
+
+        /** @var Entity | m\MockInterface $organisation */
+        $organisation = m::mock(Entity::class)->makePartial();
+        $organisation->shouldReceive('getLicences->matching')
+            ->with(m::type(Criteria::class))
+            ->andReturnUsing(
+                function (Criteria $criteria) {
+
+                    /** @var \Doctrine\Common\Collections\Expr\Comparison $expr */
+                    $expr = $criteria->getWhereExpression();
+
+                    $this->assertEquals('status', $expr->getExpressionList()[0]->getExpressionList()[0]->getField());
+                    $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[0]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_STATUS_VALID,
+                            LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                            LicenceEntity::LICENCE_STATUS_CURTAILED,
+                        ],
+                        $expr->getExpressionList()[0]->getExpressionList()[0]->getValue()->getValue()
+                    );
+
+                    $this->assertEquals('goodsOrPsv', $expr->getExpressionList()[0]->getExpressionList()[1]->getField());
+                    $this->assertEquals('IN', $expr->getExpressionList()[0]->getExpressionList()[1]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+                        ],
+                        $expr->getExpressionList()[0]->getExpressionList()[1]->getValue()->getValue()
+                    );
+
+                    $this->assertEquals('licenceType', $expr->getExpressionList()[1]->getField());
+                    $this->assertEquals('IN', $expr->getExpressionList()[1]->getOperator());
+                    $this->assertEquals(
+                        [
+                            LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                            LicenceEntity::LICENCE_TYPE_RESTRICTED
+                        ],
+                        $expr->getExpressionList()[1]->getValue()->getValue()
+                    );
+
+                    $collection = m::mock();
+                    $licencesArr = array();
+                    $collection->shouldReceive('toArray')
+                        ->andReturn($licencesArr);
+
+                    return $collection;
+                }
+            );
+
+        $this->assertInternalType('array', $organisation->getStandardInternationalLicences());
     }
 }
