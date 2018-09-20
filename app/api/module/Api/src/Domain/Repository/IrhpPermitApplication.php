@@ -19,7 +19,7 @@ class IrhpPermitApplication extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function getIrhpPermitApplicationsByStockId(int $irhpPermitStockId, $hydrateMode = Query::HYDRATE_OBJECT)
+    public function getIrhpPermitApplicationsForScoring(int $irhpPermitStockId, $hydrateMode = Query::HYDRATE_OBJECT)
     {
         return $this->getEntityManager()->createQueryBuilder()
                 ->select('ipa')
