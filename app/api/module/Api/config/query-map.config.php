@@ -137,6 +137,8 @@ return [
     TransferQuery\Organisation\CpidOrganisation::class
         => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
+    TransferQuery\Organisation\EligibleForPermits::class => QueryHandler\Organisation\EligibleForPermits::class,
+    TransferQuery\Organisation\EligibleForPermitsById::class => QueryHandler\Organisation\EligibleForPermits::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -516,6 +518,18 @@ return [
     TransferQuery\SystemParameter\SystemParameter::class => QueryHandler\SystemParameter\SystemParameter::class,
     TransferQuery\SystemParameter\SystemParameterList::class => QueryHandler\SystemParameter\SystemParameterList::class,
 
+    // FeatureToggle
+    TransferQuery\FeatureToggle\ById::class => QueryHandler\FeatureToggle\ById::class,
+    TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
+    TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
+
+    // IRHP Permits
+    TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
+    TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
+
+    // IRHP Permit Type
+    TransferQuery\IrhpPermitType\GetList::class => QueryHandler\IrhpPermitType\GetList::class,
+
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,
@@ -563,4 +577,12 @@ return [
     // Diagnostics
     Query\Diagnostics\CheckFkIntegrity::class => QueryHandler\Diagnostics\CheckFkIntegrity::class,
     Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
+
+    // Permits
+    TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
+    TransferQuery\Permits\EcmtCountriesList::class => QueryHandler\Permits\EcmtCountriesList::class,
+    TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
+    TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
+    TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
+    TransferQuery\Permits\EcmtApplicationByLicence::class => QueryHandler\Permits\EcmtApplicationByLicence::class,
 ];

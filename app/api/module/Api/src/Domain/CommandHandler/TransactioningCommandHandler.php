@@ -28,7 +28,7 @@ class TransactioningCommandHandler implements CommandHandlerInterface
     private $wrapped;
 
     /**
-     * @param CommandHandlerInterface $wrapped
+     * @param CommandHandlerInterface     $wrapped
      * @param TransactionManagerInterface $repo
      */
     public function __construct(CommandHandlerInterface $wrapped, TransactionManagerInterface $repo)
@@ -50,12 +50,10 @@ class TransactioningCommandHandler implements CommandHandlerInterface
     public function handleCommand(CommandInterface $command)
     {
         try {
-
             $this->repo->beginTransaction();
             $result = $this->wrapped->handleCommand($command);
             $this->repo->commit();
             return $result;
-
         } catch (\Exception $e) {
             if (method_exists($this->wrapped, 'rollbackCommand')) {
                 // wrapped command rollback
@@ -64,5 +62,14 @@ class TransactioningCommandHandler implements CommandHandlerInterface
             $this->repo->rollback();
             throw $e;
         }
+    }
+
+    /**
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException
+     */
+    public function checkEnabled(): bool
+    {
+        return $this->wrapped->checkEnabled();
     }
 }
