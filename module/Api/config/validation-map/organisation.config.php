@@ -11,6 +11,7 @@ return [
     QueryHandler\Organisation\OutstandingFees::class => Misc\CanAccessOrganisationWithId::class,
     QueryHandler\Organisation\BusinessDetails::class => Misc\IsInternalUser::class,
     QueryHandler\Organisation\CpidOrganisation::class => Misc\IsInternalUser::class,
+    QueryHandler\Organisation\EligibleForPermits::class => Misc\IsExternalUser::class,
 
     // Commands
     CommandHandler\Organisation\UpdateBusinessType::class => Misc\CanAccessOrganisationWithId::class,
