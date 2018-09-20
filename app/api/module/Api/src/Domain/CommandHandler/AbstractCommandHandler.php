@@ -7,11 +7,15 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\SubmissionGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
@@ -21,6 +25,7 @@ use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
@@ -29,6 +34,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use ZfcRbac\Service\AuthorizationService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * Abstract Command Handler
@@ -37,6 +43,8 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
  */
 abstract class AbstractCommandHandler implements CommandHandlerInterface, FactoryInterface
 {
+    use HandlerEnabledTrait;
+
     /**
      * The name of the default repo
      */
@@ -70,6 +78,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * @var Result
      */
     protected $result;
+
+    /**
+     * @var array
+     */
+    protected $toggleConfig = [];
 
     /**
      * create service
@@ -142,6 +155,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     private function applyInterfaces($mainServiceLocator)
     {
+        if ($this instanceof ToggleRequiredInterface || $this instanceof ToggleAwareInterface) {
+            $toggleService = $mainServiceLocator->get(ToggleService::class);
+            $this->setToggleService($toggleService);
+        }
+
         if ($this instanceof AuthAwareInterface) {
             $this->setAuthService($mainServiceLocator->get(AuthorizationService::class));
             $this->setUserRepository($mainServiceLocator->get('RepositoryServiceManager')->get('User'));
@@ -264,7 +282,14 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected function handleSideEffect(CommandInterface $command)
     {
-        return $this->getCommandHandler()->handleCommand($command, false);
+        try {
+            $result = $this->getCommandHandler()->handleCommand($command, false);
+        } catch (DisabledHandlerException $e) {
+            $result = new Result();
+            $result->addMessage($e->getMessage());
+        }
+
+        return $result;
     }
 
     /**
@@ -407,8 +432,19 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return null;
         }
 
-        $repo = $this->getRepo();
-        return $repo->getRefdataReference($refDataKey);
+        return $this->refData($refDataKey);
+    }
+
+    /**
+     * For required fields we can skip the null refdata check
+     *
+     * @param string $refDataKey
+     *
+     * @return RefDataEntity
+     */
+    protected function refData(string $refDataKey): RefDataEntity
+    {
+        return $this->getRepo()->getRefdataReference($refDataKey);
     }
 
     /**

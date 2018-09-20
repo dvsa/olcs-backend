@@ -9,11 +9,11 @@ return array(
                 'skipManyToMany' => true
             ]
         ],
-        'Dvsa\Olcs\Api\Entity\Country' => [
+        /*'Dvsa\Olcs\Api\Entity\Country' => [
             'metadata' => [
                 'skipManyToMany' => true
             ]
-        ],
+        ],*/
         'classNameForTable' => [
            'txn' => 'Transaction',
            'fee_txn' => 'FeeTransaction'
@@ -1245,6 +1245,12 @@ return array(
                 'property' => 'fee',
             ),
         ),
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'fee'
+            )
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
@@ -2119,6 +2125,30 @@ return array(
     'digital_signature' => array(
         'attributes' => array(
             'type' => 'encrypted_string'
+        ),
+    ),
+    'ecmt_permit_application' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'ecmtApplication'
+            )
+        ),
+    ),
+    'irhp_candidate_permit' => array(
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'irhpCandidatePermit'
+            )
+        ),
+    ),
+    'irhp_permit_application' => array(
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'irhpPermitApplication'
+            )
         ),
     ),
 );

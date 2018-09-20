@@ -753,6 +753,7 @@ return [
     Command\Email\SendEbsrRegistered::class => CommandHandler\Email\SendEbsrRegistered::class,
     Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
+    Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
@@ -967,6 +968,22 @@ return [
     TransferCommand\SystemParameter\DeleteSystemParameter::class =>
         CommandHandler\SystemParameter\Delete::class,
 
+    // Transfer - FeatureToggle
+    TransferCommand\FeatureToggle\Create::class =>
+        CommandHandler\FeatureToggle\Create::class,
+    TransferCommand\FeatureToggle\Update::class =>
+        CommandHandler\FeatureToggle\Update::class,
+    TransferCommand\FeatureToggle\Delete::class =>
+        CommandHandler\FeatureToggle\Delete::class,
+
+    // Transfer - IRHP Permit Stock
+    TransferCommand\IrhpPermitStock\Create::class =>
+        CommandHandler\IrhpPermitStock\Create::class,
+    TransferCommand\IrhpPermitStock\Update::class =>
+        CommandHandler\IrhpPermitStock\Update::class,
+    TransferCommand\IrhpPermitStock\Delete::class =>
+        CommandHandler\IrhpPermitStock\Delete::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
@@ -1010,9 +1027,43 @@ return [
     // DataRetention
     Command\DataRetention\Populate::class => CommandHandler\DataRetention\Populate::class,
     Command\DataRetention\DeleteEntities::class => CommandHandler\DataRetention\DeleteEntities::class,
+
     TransferCommand\DataRetention\MarkForDelete::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\MarkForReview::class => CommandHandler\DataRetention\UpdateActionConfirmation::class,
     TransferCommand\DataRetention\DelayItems::class => CommandHandler\DataRetention\DelayItems::class,
     TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
     TransferCommand\DataRetention\UpdateRule::class => CommandHandler\DataRetention\UpdateRule::class,
+
+    // Permits Create
+    TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
+    TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
+
+    // Permits Cancel
+    TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
+
+    // Permits Withdraw
+    TransferCommand\Permits\WithdrawEcmtPermitApplication::class => CommandHandler\Permits\WithdrawEcmtPermitApplication::class,
+
+    // Permits Decline
+    TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,
+    TransferCommand\Permits\AcceptEcmtPermits::class => CommandHandler\Permits\AcceptEcmtPermits::class,
+
+    // Permits Update
+    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
+    TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
+    TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
+    TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
+    TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,
+    TransferCommand\Permits\UpdateEcmtCountries::class => CommandHandler\Permits\UpdateEcmtCountries::class,
+    TransferCommand\Permits\UpdateEcmtLicence::class => CommandHandler\Permits\UpdateEcmtLicence::class,
+    TransferCommand\Permits\UpdateEcmtTrips::class => CommandHandler\Permits\UpdateEcmtTrips::class,
+    TransferCommand\Permits\UpdateEcmtCheckAnswers::class => CommandHandler\Permits\UpdateEcmtCheckAnswers::class,
+    TransferCommand\Permits\UpdateDeclaration::class => CommandHandler\Permits\UpdateDeclaration::class,
+    TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
+    TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
+    TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
+
+    // Permits - internal backend
+
+    Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
 ];

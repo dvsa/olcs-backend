@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\Organisation as Qry;
 use Mockery as m;
+use SAML2\Utilities\ArrayCollection;
 
 /**
  * Organisation Test
@@ -62,7 +63,7 @@ class OrganisationTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'isDisqualified' => true,
             'allowedOperatorLocation' => 'GB',
-            'taValueOptions' => [1 => 'foo']
+            'taValueOptions' => [1 => 'foo'],
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());
@@ -100,7 +101,7 @@ class OrganisationTest extends QueryHandlerTestCase
             'foo' => 'bar',
             'isDisqualified' => false,
             'allowedOperatorLocation' => 'GB',
-            'taValueOptions' => [1 => 'foo']
+            'taValueOptions' => [1 => 'foo'],
         ];
 
         $this->assertEquals($expected, $this->sut->handleQuery($query)->serialize());

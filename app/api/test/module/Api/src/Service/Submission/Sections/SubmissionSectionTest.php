@@ -438,6 +438,7 @@ class SubmissionSectionTest extends MockeryTestCase
 
         $addedViaByParent = null;
         $attachToByParent = null;
+
         if ($parentEntity instanceof Licence) {
             $addedViaByParent = ConditionUndertaking::ADDED_VIA_LICENCE;
             $attachToByParent = ConditionUndertaking::ATTACHED_TO_LICENCE;
