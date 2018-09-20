@@ -36,7 +36,7 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
     */
     public function handleCommand(CommandInterface $command)
     {
-        $irhpPermitApplications = $this->getRepo('IrhpPermitApplication')->getIrhpPermitApplicationsByStockId($command->getId());
+        $irhpPermitApplications = $this->getRepo('IrhpPermitApplication')->getIrhpPermitApplicationsForScoring($command->getId());
 
         $deviationData = IrhpPermitApplication::getDeviationData($irhpPermitApplications);
 

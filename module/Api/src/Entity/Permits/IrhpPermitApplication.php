@@ -110,7 +110,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public function calculateRandomisedScore(array $deviationData)
     {
         $standardDeviation = count($deviationData['licenceData'][$this->getLicence()->getLicNo()]);
-        //$randomisedScore = stats_rand_gen_normal($meanDeviation, $standardDeviation);
-        return $deviationData['meanDeviation'] + $standardDeviation; //placeholder until PACL extension installed
+        return stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
     }
 }
