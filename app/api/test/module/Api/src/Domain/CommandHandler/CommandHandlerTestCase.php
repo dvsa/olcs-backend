@@ -8,12 +8,15 @@ use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -107,6 +110,17 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                     ->getMock()
                 )
                 ->getMock();
+        }
+
+        /**
+         * If the handler is toggle aware, provide this for free. For more more complex testing use
+         * $this->mockedSmServices in the extending class
+         */
+        if ($this->sut instanceof ToggleRequiredInterface || $this->sut instanceof ToggleAwareInterface
+            && !array_key_exists(ToggleService::class, $this->mockedSmServices)
+        ) {
+            $toggleService = m::mock(ToggleService::class);
+            $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
         }
 
         $this->commandHandler = m::mock(CommandHandlerManager::class);

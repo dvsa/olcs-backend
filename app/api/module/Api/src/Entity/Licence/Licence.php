@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -123,6 +124,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         return ($this->getGoodsOrPsv()->getId() === self::LICENCE_CATEGORY_PSV
             && $this->getLicenceType()->getId() === self::LICENCE_TYPE_SPECIAL_RESTRICTED
         );
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActiveEcmtApplication()
+    {
+        if ($this->ecmtApplications === null) {
+            return false;
+        }
+
+        /** @var EcmtPermitApplication $application */
+        foreach ($this->ecmtApplications as $application) {
+            if ($application->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -516,22 +536,21 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             }
         }
 
-        if (
-            isset($licenceConditionsUndertakings['conditions'])
-            && count($licenceConditionsUndertakings['conditions']) > 0
-        ) {
+        if (isset($licenceConditionsUndertakings['conditions'])
+            && count($licenceConditionsUndertakings['conditions']) > 0) {
             $this->sortConditionsUndertakings($licenceConditionsUndertakings['conditions']);
         }
-        if (
-            isset($licenceConditionsUndertakings['undertakings'])
-            && count($licenceConditionsUndertakings['undertakings']) > 0
-        ) {
+
+        if (isset($licenceConditionsUndertakings['undertakings'])
+            && count($licenceConditionsUndertakings['undertakings']) > 0) {
             $this->sortConditionsUndertakings($licenceConditionsUndertakings['undertakings']);
         }
+
         foreach ($ocConditionsUndertakings as &$oc) {
             if (isset($oc['conditions']) && count($oc['conditions']) > 0) {
                 $this->sortConditionsUndertakings($oc['conditions']);
             }
+
             if (isset($oc['undertakings']) && count($oc['undertakings']) > 0) {
                 $this->sortConditionsUndertakings($oc['undertakings']);
             }
@@ -552,14 +571,43 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     private function sortConditionsUndertakings(&$conditionsUndertakings)
     {
-        usort(
-            $conditionsUndertakings, function ($a, $b) {
-                if ($a['createdOn'] == $b['createdOn']) {
-                    return 0;
-                }
-                return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
+        usort($conditionsUndertakings, function ($a, $b) {
+            if ($a['createdOn'] == $b['createdOn']) {
+                return 0;
             }
-        );
+
+            return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
+        });
+    }
+
+    /**
+     * Is this a valid standard international goods licence
+     *
+     * @return bool
+     */
+    public function isValidSiGoods()
+    {
+        return $this->isValidGoods() && $this->isStandardInternational();
+    }
+
+    /**
+     * Whether the licence is active goods (sometimes also described as valid)
+     *
+     * @return bool
+     */
+    public function isValidGoods()
+    {
+        return $this->isValid() && $this->isGoods();
+    }
+
+    /**
+     * Whether the licence is active (sometimes also described as valid)
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return in_array($this->status->getId(), self::ACTIVE_STATUSES);
     }
 
     /**
@@ -632,6 +680,16 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         if (!empty($this->getLicenceType())) {
             return $this->getLicenceType()->getId() === self::LICENCE_TYPE_STANDARD_NATIONAL;
         }
+    }
+
+    /**
+     * Is this licence eligible for permits
+     *
+     * @return bool
+     */
+    public function isEligibleForPermits()
+    {
+        return $this->isValidGoods() && ($this->isStandardInternational() || $this->isRestricted());
     }
 
     /**
