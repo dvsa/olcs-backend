@@ -4,12 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -28,7 +25,7 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
 
 
     /**
-     * Handle command
+    * Handle command
     *
     * @param CommandInterface $command command
     *
@@ -45,7 +42,7 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
 
             $randomisedScore = $irhpPermitApplication->calculateRandomisedScore($deviationData);
             foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-                $irhpCandidatePermit->setRandomizedScore(floatval($randomisedScore) * $irhpCandidatePermit->getApplicationScore());
+                $irhpCandidatePermit->setRandomizedScore($randomisedScore * $irhpCandidatePermit->getApplicationScore());
                 $this->getRepo('IrhpCandidatePermit')->save($irhpCandidatePermit);
             }
         }
