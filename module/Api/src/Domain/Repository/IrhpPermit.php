@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * IRHP Permit
@@ -34,25 +35,31 @@ class IrhpPermit extends AbstractRepository
     }
 
     /**
-     * Get permits by ECMT application id
+     * Apply List Filters
      *
-     * @param \Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits $query Query
+     * @param QueryBuilder   $qb    Doctrine Query Builder
+     * @param QueryInterface $query Http Query
      *
-     * @return array
+     * @return void
      */
-    public function fetchByEcmtApplicationPaginated($query)
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb = $this->createQueryBuilder();
-        $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('irhpPermitApplication', 'ipa')
-            ->with('ipa.ecmtPermitApplication', 'epa')
-            ->paginate($query->getPage(), $query->getLimit());
-
-        $qb->andWhere($qb->expr()->eq('epa.id', ':ecmtId'))
-            ->setParameter('ecmtId', $query->getId());
-
-        return $this->fetchPaginatedList($qb, Query::HYDRATE_OBJECT);
+        if (method_exists($query, 'getEcmtPermitApplication') && $query->getEcmtPermitApplication()) {
+            $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
+                ->setParameter('ecmtId', $query->getEcmtPermitApplication());
+        }
     }
 
+    /**
+     * Add List Joins
+     *
+     * @param QueryBuilder $qb Doctrine Query Builder
+     *
+     * @return void
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('irhpPermitApplication', 'ipa');
+    }
 }
