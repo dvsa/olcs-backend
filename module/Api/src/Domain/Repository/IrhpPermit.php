@@ -48,6 +48,7 @@ class IrhpPermit extends AbstractRepository
         if ($query instanceof ValidEcmtPermits) {
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getId());
+            $qb->orderBy($this->alias . '.permitNumber', 'DESC');
         }
     }
 
