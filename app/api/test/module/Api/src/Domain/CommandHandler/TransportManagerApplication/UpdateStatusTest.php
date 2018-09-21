@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateStatus
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TmaEntity;
 use Mockery as m;
 
 /**
@@ -32,7 +33,7 @@ class UpdateStatusTest extends CommandHandlerTestCase
 
     protected function initReferences()
     {
-        $this->refData = ['status1'];
+        $this->refData = ['status1',TmaEntity::STATUS_INCOMPLETE];
 
         parent::initReferences();
     }
@@ -41,12 +42,12 @@ class UpdateStatusTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863, 'version' => 234, 'status' => 'status1']);
 
-        $tma = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication();
+        $tma = new TmaEntity();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication $tma) {
+            function (TmaEntity $tma) {
                 $this->assertSame($this->refData['status1'], $tma->getTmApplicationStatus());
             }
         );
@@ -58,15 +59,44 @@ class UpdateStatusTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863, 'status' => 'status1']);
 
-        $tma = new \Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication();
+        $tma = new TmaEntity();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication $tma) {
+            function (TmaEntity $tma) {
                 $this->assertSame($this->refData['status1'], $tma->getTmApplicationStatus());
             }
         );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandStatusIncomplete()
+    {
+        $command = Command::create(
+            [
+                'id' => 863,
+                'status' => TmaEntity::STATUS_INCOMPLETE
+            ]
+        );
+
+        $tma = m::mock(TmaEntity::class);
+        $tma->shouldReceive('getId')->once();
+        $tma->shouldReceive('setTmApplicationStatus')->with($this->refData[TmaEntity::STATUS_INCOMPLETE])->once();
+        $tma->shouldReceive('setDigitalSignature')->with(null)->once();
+        $tma->shouldReceive('setSignatureType')->with(null)->once();
+
+        $this->repoMap['TransportManagerApplication']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($tma);
+
+        $this->repoMap['TransportManagerApplication']
+            ->shouldReceive('save')
+            ->once()
+            ->with($tma);
 
         $this->sut->handleCommand($command);
     }
