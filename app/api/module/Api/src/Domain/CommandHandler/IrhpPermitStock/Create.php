@@ -37,11 +37,12 @@ final class Create extends AbstractCommandHandler
 
         try {
             $this->getRepo()->save($stock);
-            $result->addId('IrhpPermitStock', $stock->getId());
-            $result->addMessage("IRHP Permit Stock '{$stock->getId()}' created");
         } catch (\Exception $e) {
             throw new ValidationException(['You cannot create a duplicate stock']);
         }
+
+        $result->addId('IrhpPermitStock', $stock->getId());
+        $result->addMessage("IRHP Permit Stock '{$stock->getId()}' created");
 
         return $result;
     }
