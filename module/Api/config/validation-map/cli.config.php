@@ -20,7 +20,12 @@ return [
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
     CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
     CliCommandHandler\LastTmLetter::class => IsSystemUser::class,
+    CliCommandHandler\Permits\MarkSuccessfulDaPermitApplications::class => IsSystemUser::class,
+    CliCommandHandler\Permits\MarkSuccessfulRemainingPermitApplications::class => IsSystemUser::class,
+    CliCommandHandler\Permits\MarkSuccessfulSectorPermitApplications::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
+    CliQueryHandler\Permits\StockAvailability::class => IsSystemUser::class,
+    CliQueryHandler\Permits\StockLackingRandomisedScore::class => IsSystemUser::class,
 
     //  api commands
     Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail::class => IsSystemUser::class,
