@@ -80,36 +80,4 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
         return count($applications);
     }
-
-    /**
-     * Method that collects data from given applications
-     * for use in deviation calculations
-     *
-     * @param irhpPermitApplications list of irhp permit applications to collate information from
-     *
-     * @return array containing data relevant to Deviation calculations as well as the Mean Deviation
-     */
-    public static function getDeviationData(array $irhpPermitApplications)
-    {
-        $licence = [];
-        $totalPermitsCount = 0;
-        $i = 0;
-        foreach ($irhpPermitApplications as $irhpPermitApplication) {
-            $totalPermitsCount += $irhpPermitApplication->getPermitsRequired();
-            $licence[$irhpPermitApplication->getLicence()->getLicNo()][$i] = $irhpPermitApplication->getPermitsRequired();
-            $i++;
-        }
-
-        return [
-                'licenceData' => $licence,
-                'meanDeviation' => count($licence) / $totalPermitsCount,
-            ];
-    }
-
-
-    public function calculateRandomisedScore(array $deviationData)
-    {
-        $standardDeviation = count($deviationData['licenceData'][$this->getLicence()->getLicNo()]);
-        return stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
-    }
 }
