@@ -446,4 +446,16 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     {
         return $this->getRepo()->getRefdataReference($refDataKey);
     }
+
+    /**
+     * @param string|null $value ('Y' or 'N')
+     * @return bool|null
+     */
+    protected function yesNoToBoolOrNull(?string $value): ?bool
+    {
+        if ($value === null || ($value !== 'Y' && $value !== 'N')) {
+            return null;
+        }
+        return $value === 'Y' ? true : false;
+    }
 }

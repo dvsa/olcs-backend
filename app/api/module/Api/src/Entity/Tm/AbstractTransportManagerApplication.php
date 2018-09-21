@@ -128,6 +128,42 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     protected $digitalSignature;
 
     /**
+     * Has convictions
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_convictions", nullable=true)
+     */
+    protected $hasConvictions;
+
+    /**
+     * Has other employment
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_other_employment", nullable=true)
+     */
+    protected $hasOtherEmployment;
+
+    /**
+     * Has other licences
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_other_licences", nullable=true)
+     */
+    protected $hasOtherLicences;
+
+    /**
+     * Has previous licences
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_previous_licences", nullable=true)
+     */
+    protected $hasPreviousLicences;
+
+    /**
      * Hours fri
      *
      * @var float
@@ -527,6 +563,102 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     public function getDigitalSignature()
     {
         return $this->digitalSignature;
+    }
+
+    /**
+     * Set the has convictions
+     *
+     * @param boolean $hasConvictions new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasConvictions($hasConvictions)
+    {
+        $this->hasConvictions = $hasConvictions;
+
+        return $this;
+    }
+
+    /**
+     * Get the has convictions
+     *
+     * @return boolean
+     */
+    public function getHasConvictions()
+    {
+        return $this->hasConvictions;
+    }
+
+    /**
+     * Set the has other employment
+     *
+     * @param boolean $hasOtherEmployment new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasOtherEmployment($hasOtherEmployment)
+    {
+        $this->hasOtherEmployment = $hasOtherEmployment;
+
+        return $this;
+    }
+
+    /**
+     * Get the has other employment
+     *
+     * @return boolean
+     */
+    public function getHasOtherEmployment()
+    {
+        return $this->hasOtherEmployment;
+    }
+
+    /**
+     * Set the has other licences
+     *
+     * @param boolean $hasOtherLicences new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasOtherLicences($hasOtherLicences)
+    {
+        $this->hasOtherLicences = $hasOtherLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the has other licences
+     *
+     * @return boolean
+     */
+    public function getHasOtherLicences()
+    {
+        return $this->hasOtherLicences;
+    }
+
+    /**
+     * Set the has previous licences
+     *
+     * @param boolean $hasPreviousLicences new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasPreviousLicences($hasPreviousLicences)
+    {
+        $this->hasPreviousLicences = $hasPreviousLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the has previous licences
+     *
+     * @return boolean
+     */
+    public function getHasPreviousLicences()
+    {
+        return $this->hasPreviousLicences;
     }
 
     /**
