@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -33,22 +33,20 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
     */
     public function handleCommand(CommandInterface $command)
     {
-        $irhpPermitApplications = $this->getRepo('IrhpPermitApplication')->getIrhpPermitApplicationsForScoring($command->getId());
+        $irhpCandidatePermits = $this->getRepo('IrhpCandidatePermit')->getIrhpCandidatePermitsForScoring($command->getId());
 
-        $deviationData = IrhpPermitApplication::getDeviationData($irhpPermitApplications);
+        $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
 
-        foreach ($irhpPermitApplications as $irhpPermitApplication) {
-            $irhpCandidatePermits = $irhpPermitApplication->getIrhpCandidatePermits();
+        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
 
-            $randomisedScore = $irhpPermitApplication->calculateRandomisedScore($deviationData);
-            foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-                $irhpCandidatePermit->setRandomizedScore($randomisedScore * $irhpCandidatePermit->getApplicationScore());
-                $this->getRepo('IrhpCandidatePermit')->save($irhpCandidatePermit);
-            }
+            $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
+
+            $irhpCandidatePermit->setRandomizedScore($randomisedScore * $irhpCandidatePermit->getApplicationScore());
+            $this->getRepo('IrhpCandidatePermit')->save($irhpCandidatePermit);
         }
 
         $result = new Result();
-        $result->addMessage('Candidate Permit Records updated with their randomised scores.');
+        $result->addMessage('Candidate Permit Records updated with their randomised scores.  randomised score: ' . $randomisedScore);
 
         return $result;
     }

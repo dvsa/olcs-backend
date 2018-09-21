@@ -160,17 +160,20 @@ class IrhpCandidatePermit extends AbstractRepository
         $query->execute();
     }
 
-    public function fetchByIrhpPermitApplication(IrhpPermitApplicationEntity $application)
+    public function getIrhpCandidatePermitsForScoring($irhpPermitStockId)
     {
-        $qb = $this->createQueryBuilder();
-
-        $qb->andWhere(
-            $qb->expr()->eq('m.irhpPermitApplication', $application->getId())
-        );
-
-        $query = $qb->getQuery();
-        $query->execute();
-
-        return $query->getResult();
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipw.irhpPermitStock', 'ips')
+            ->innerJoin('ipa.licence', 'l')
+            ->where('ips.id = ?1')
+            ->andWhere('ipa.status = \'ecmt_permit_uc\'')
+            ->andWhere('l.licenceType IN (\'ltyp_r\', \'ltyp_si\')')
+            ->setParameter(1, $irhpPermitStockId)
+            ->getQuery()
+            ->getResult();
     }
 }
