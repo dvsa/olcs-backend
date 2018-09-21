@@ -24,8 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permits_irhp_candidate_permit1_idx",
      *     columns={"irhp_candidate_permit_id"}),
  *        @ORM\Index(name="fk_irhp_permit_created_by_user_id", columns={"created_by"}),
- *        @ORM\Index(name="fk_irhp_permit_last_modified_by_user_id", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_ecmt_permit_status_ref_data_id", columns={"status"})
+ *        @ORM\Index(name="fk_irhp_permit_last_modified_by_user_id", columns={"last_modified_by"})
  *    }
  * )
  */
@@ -154,10 +153,9 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Status
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="string", name="status", length=32, nullable=true)
      */
     protected $status;
 
@@ -486,7 +484,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Set the status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     * @param string $status new value being set
      *
      * @return IrhpPermit
      */
@@ -500,7 +498,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Get the status
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     * @return string
      */
     public function getStatus()
     {
