@@ -589,4 +589,5 @@ return [
     // Cli - Permits
     QueryCli\Permits\StockAvailability::class => QueryHandlerCli\Permits\StockAvailability::class,
     QueryCli\Permits\StockLackingRandomisedScore::class => QueryHandlerCli\Permits\StockLackingRandomisedScore::class,
+    TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
 ];
