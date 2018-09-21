@@ -20,20 +20,4 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class IrhpPermitApplication extends AbstractRepository
 {
     protected $entity = Entity::class;
-
-    public function getIrhpPermitApplicationsForScoring(int $irhpPermitStockId, $hydrateMode = Query::HYDRATE_OBJECT)
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-                ->select('ipa')
-                ->from(Entity::class, 'ipa')
-                ->innerJoin('ipa.irhpPermitWindow', 'ipw')
-                ->innerJoin('ipw.irhpPermitStock', 'ips')
-                ->innerJoin('ipa.licence', 'l')
-                ->where('ips.id = ?1')
-                ->andWhere('ipa.status = \'ecmt_permit_uc\'')
-                ->andWhere('l.licenceType IN (\'ltyp_r\', \'ltyp_si\')')
-                ->setParameter(1, $irhpPermitStockId)
-                ->getQuery()
-                ->getResult($hydrateMode);
-    }
 }

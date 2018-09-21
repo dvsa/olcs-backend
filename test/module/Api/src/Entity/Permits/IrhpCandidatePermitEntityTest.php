@@ -53,24 +53,11 @@ class IrhpCandidatePermitEntityTest extends EntityTester
 
         $deviationData = Entity::getDeviationData([$irhpCandidatePerm1, $irhpCandidatePerm2, $irhpCandidatePerm3]);
 
-        $this->assertEquals($deviationData['meanDeviation'], 0.6666666666666666);
+        $this->assertEquals($deviationData['meanDeviation'], 1.5);
         $this->assertEquals(count($deviationData['licenceData']), 2); //2 licences
         $this->assertEquals(count($deviationData['licenceData']['OB1234568']), 2); //first licence 2 apps
         $this->assertEquals(count($deviationData['licenceData']['OB1111111']), 1); //second licence 1 apps
         $this->assertEquals($deviationData['licenceData']['OB1234568'][2], 2); //second app for first licence had 2 permitsRequired
-
-        $expectedFormat = [
-            'licenceData' => [
-                'OB1234568' => [
-                    0 => 5,
-                    1 => 2
-                ],
-                'OB1111111' => [
-                    0 => 4
-                ]
-            ],
-            'meanDeviation' => 0.18181818181818
-        ];
     }
 
     private function createCandidatePermit()

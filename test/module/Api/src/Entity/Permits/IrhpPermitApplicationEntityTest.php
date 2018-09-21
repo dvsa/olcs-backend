@@ -6,7 +6,6 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 
 
@@ -44,16 +43,5 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ],
             $this->sut->getCalculatedBundleValues()
         );
-    }
-
-    private function createApplication($licence)
-    {
-        $entity = Entity::createNew(
-            m::mock(IrhpPermitWindow::class),
-            $licence,
-            m::mock(EcmtPermitApplication::class)
-        );
-
-        return $entity;
     }
 }
