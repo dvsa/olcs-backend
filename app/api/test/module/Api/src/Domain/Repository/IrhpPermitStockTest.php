@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Mockery as m;
@@ -21,8 +22,9 @@ class IrhpPermitStockTest extends RepositoryTestCase
 
     public function testGetNextIrhpPermitStockByPermitType()
     {
-        $date = '2010-01-01';
+        $date = new DateTime('2010-01-01');
         $permitType = 'permit_ecmt';
+        $expectedResult = [0 => 'result'];
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
@@ -37,10 +39,6 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('innerJoin')
             ->with('ips.irhpPermitType', 'ipt')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('where')
-            ->with('ips.validTo >= ?1')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('where')
@@ -68,10 +66,10 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('getQuery->getResult')
             ->once()
-            ->andReturn(null);
+            ->andReturn($expectedResult);
 
             $this->assertEquals(
-                null,
+                $expectedResult,
                 $this->sut->getNextIrhpPermitStockByPermitType($permitType, $date)
             );
     }
