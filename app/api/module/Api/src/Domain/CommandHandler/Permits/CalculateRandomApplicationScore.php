@@ -42,7 +42,7 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
             $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
 
             //$irhpCandidatePermit->setRandomizedScore($randomisedScore);
-            $irhpCandidatePermit->setRandomizedScore($randomisedScore * $irhpCandidatePermit->getApplicationScore());
+            $irhpCandidatePermit->setRandomizedScore(abs($randomisedScore * $irhpCandidatePermit->getApplicationScore()));
             $this->getRepo('IrhpCandidatePermit')->save($irhpCandidatePermit);
         }
 
