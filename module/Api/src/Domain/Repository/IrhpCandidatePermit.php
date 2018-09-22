@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
