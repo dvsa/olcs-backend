@@ -6,7 +6,6 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
 use Mockery as m;
 
-
 /**
  * IrhpPermitApplication Entity Unit Tests
  *
