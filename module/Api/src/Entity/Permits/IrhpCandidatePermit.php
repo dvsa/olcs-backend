@@ -41,7 +41,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     }
 
     /**
-     * Method that collects data from given candidate permits
+     * Collects data from given candidate permits
      * for use in deviation calculations
      *
      * @param irhpCandidatePermits list of irhp candidate permits to collate information from
