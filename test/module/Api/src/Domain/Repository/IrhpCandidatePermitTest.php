@@ -6,6 +6,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Mockery as m;
 
 /**
@@ -309,5 +310,68 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->andReturn($query);
 
         $this->sut->markAsSuccessful($candidatePermitIds);
+    }
+
+    public function testGetIrhpCandidatePermitsForScoring()
+    {
+        $irhpPermitStockId = 1;
+        $licenceTypes = ['ltyp_r', 'ltyp_si'];
+
+        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('select')
+            ->with('icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipw.irhpPermitStock', 'ips')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.licence', 'l')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ips.id = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipa.status = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('l.licenceType IN (?3)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $irhpPermitStockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(3, $licenceTypes)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn(null);
+
+
+        $this->assertEquals(null, $this->sut->getIrhpCandidatePermitsForScoring($irhpPermitStockId));
     }
 }
