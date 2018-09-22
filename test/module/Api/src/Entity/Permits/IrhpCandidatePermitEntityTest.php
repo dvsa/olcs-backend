@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 
-
 /**
  * IrhpCandidatePermit Entity Unit Tests
  *
