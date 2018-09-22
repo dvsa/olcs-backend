@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -70,12 +69,10 @@ class IrhpCandidatePermitEntityTest extends EntityTester
 
     private function createApplication($licence)
     {
-        $entity = IrhpPermitApplication::createNew(
+        return IrhpPermitApplication::createNew(
             m::mock(IrhpPermitWindow::class),
             $licence,
             m::mock(EcmtPermitApplication::class)
         );
-
-        return $entity;
     }
 }

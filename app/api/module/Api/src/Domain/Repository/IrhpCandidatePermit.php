@@ -170,6 +170,8 @@ class IrhpCandidatePermit extends AbstractRepository
      */
     public function getIrhpCandidatePermitsForScoring($irhpPermitStockId)
     {
+        $licenceTypes = [Licence::LICENCE_TYPE_RESTRICTED,  Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL];
+
         return $this->getEntityManager()->createQueryBuilder()
             ->select('icp')
             ->from(Entity::class, 'icp')
@@ -179,11 +181,10 @@ class IrhpCandidatePermit extends AbstractRepository
             ->innerJoin('ipa.licence', 'l')
             ->where('ips.id = ?1')
             ->andWhere('ipa.status = ?2')
-            ->andWhere('l.licenceType IN (?3, ?4)')
+            ->andWhere('l.licenceType IN (?3)')
             ->setParameter(1, $irhpPermitStockId)
             ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
-            ->setParameter(3, Licence::LICENCE_TYPE_RESTRICTED)
-            ->setParameter(4, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL)
+            ->setParameter(3, $licenceTypes)
             ->getQuery()
             ->getResult();
     }

@@ -19,10 +19,7 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
-    protected $repoServiceName = 'IrhpPermitApplication';
-
-    protected $extraRepos = ['IrhpCandidatePermit'];
-
+    protected $repoServiceName = 'IrhpCandidatePermit';
 
     /**
     * Handle command
@@ -33,7 +30,7 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
     */
     public function handleCommand(CommandInterface $command)
     {
-        $irhpCandidatePermits = $this->getRepo('IrhpCandidatePermit')->getIrhpCandidatePermitsForScoring($command->getId());
+        $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getId());
 
         $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
 
@@ -41,9 +38,8 @@ final class CalculateRandomApplicationScore extends AbstractCommandHandler imple
 
             $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
 
-            //$irhpCandidatePermit->setRandomizedScore($randomisedScore);
             $irhpCandidatePermit->setRandomizedScore(abs($randomisedScore * $irhpCandidatePermit->getApplicationScore()));
-            $this->getRepo('IrhpCandidatePermit')->save($irhpCandidatePermit);
+            $this->getRepo()->save($irhpCandidatePermit);
         }
 
         $result = new Result();

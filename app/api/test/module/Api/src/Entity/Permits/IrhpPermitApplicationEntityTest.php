@@ -4,8 +4,6 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Mockery as m;
 
 
