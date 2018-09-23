@@ -229,6 +229,7 @@ return [
             'FeatureToggle' => RepositoryFactory::class,
             'IrhpPermitStock' => RepositoryFactory::class,
             'IrhpPermitType' => RepositoryFactory::class,
+            'IrhpPermitWindow' => RepositoryFactory::class,
             'Stay' => RepositoryFactory::class,
             'Submission ' => RepositoryFactory::class,
             'TaskAllocationRule' => RepositoryFactory::class,
