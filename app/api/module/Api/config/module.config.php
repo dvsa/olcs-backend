@@ -347,6 +347,7 @@ return [
             'IrhpPermitJurisdictionQuota' => RepositoryFactory::class,
             'IrhpPermitRange' => RepositoryFactory::class,
             'IrhpPermitSectorQuota' => RepositoryFactory::class,
+            'IrhpPermitWindow' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),
