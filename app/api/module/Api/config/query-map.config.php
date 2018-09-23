@@ -523,13 +523,17 @@ return [
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 
-    // IRHP Permits
+    // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
 
     // IRHP Permit Type
     TransferQuery\IrhpPermitType\GetList::class => QueryHandler\IrhpPermitType\GetList::class,
+
+    // IRHP Permit Window
+    TransferQuery\IrhpPermitWindow\ById::class => QueryHandler\IrhpPermitWindow\ById::class,
+    TransferQuery\IrhpPermitWindow\GetList::class => QueryHandler\IrhpPermitWindow\GetList::class,
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
