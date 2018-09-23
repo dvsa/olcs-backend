@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
@@ -92,6 +93,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $fees = $this->getOutstandingFeesForOrganisation($command);
         } elseif (!empty($command->getApplicationId())) {
             $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
+        } elseif (!empty($command->getEcmtPermitApplicationId())) {
+            $fees = $this->feesHelper->getOutstandingFeesForEcmtApplication($command->getEcmtPermitApplicationId());
         } else {
             $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
         }
@@ -188,6 +191,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function cardPayment($command, $feesToPay, $extraParams = [])
     {
+
+
         // fire off to CPMS
         if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
             $response = $this->getCpmsService()->initiateCnpRequest(

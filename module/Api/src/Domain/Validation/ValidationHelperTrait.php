@@ -27,6 +27,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool doesOwnPerson($entityId)
  * @method bool canAccessLicence($entityId)
  * @method bool canAccessApplication($entityId)
+ * @method bool canAccessEcmtPermitApplication($entityId)
  * @method bool canAccessApplicationOperatingCentre($entityId)
  * @method bool canAccessLicenceOperatingCentre($entityId)
  * @method bool canAccessCompanySubsidiary($entityId)
