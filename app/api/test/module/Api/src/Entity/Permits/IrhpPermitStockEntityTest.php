@@ -26,16 +26,16 @@ class IrhpPermitStockEntityTest extends EntityTester
     public function testCreateUpdate()
     {
         $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
-        $validFrom = ['day' => '01', 'month' => '01', 'year' => '2019'];
-        $expectedFrom = $this->processDate('01-01-2019', 'd-m-Y');
-        $validTo = ['day' => '01', 'month' => '02', 'year' => '2019'];
-        $expectedTo = $this->processDate('01-02-2019', 'd-m-Y');
+        $validFrom = '2019-01-01';
+        $expectedFrom = $this->processDate($validFrom, 'Y-m-d');
+        $validTo = '2019-02-01';
+        $expectedTo = $this->processDate($validTo, 'Y-m-d');
         $initialStock = 1400;
 
-        $updateValidFrom = ['day' => '01', 'month' => '02', 'year' => '2019'];
-        $updateExpectedFrom = $this->processDate('01-02-2019', 'd-m-Y');
-        $updateValidTo = ['day' => '02', 'month' => '02', 'year' => '2019'];
-        $updateExpectedTo = $this->processDate('02-02-2019', 'd-m-Y');
+        $updateValidFrom = '2019-02-01';
+        $updateExpectedFrom = $this->processDate($updateValidFrom, 'Y-m-d');
+        $updateValidTo = '2019-02-02';
+        $updateExpectedTo = $this->processDate($updateValidTo, 'Y-m-d');
         $updateInitialStock = 1401;
 
         $entity = Entity::create($irhpPermitType, $validFrom, $validTo, $initialStock);
