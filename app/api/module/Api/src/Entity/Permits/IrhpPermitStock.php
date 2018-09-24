@@ -21,12 +21,9 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
     {
         $instance = new self;
 
-        $formatFrom = $instance->formatDate($validFrom);
-        $formatTo = $instance->formatDate($validTo);
-
         $instance->irhpPermitType = $type;
-        $instance->validFrom = static::processDate($formatFrom, 'd-m-Y');
-        $instance->validTo = static::processDate($formatTo, 'd-m-Y');
+        $instance->validFrom = static::processDate($validFrom, 'Y-m-d');
+        $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
 
         return $instance;
@@ -34,19 +31,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
 
     public function update($type, $validFrom, $validTo, $quota)
     {
-        $formatFrom = $this->formatDate($validFrom);
-        $formatTo = $this->formatDate($validTo);
-
         $this->irhpPermitType = $type;
-        $this->validFrom = static::processDate($formatFrom, 'd-m-Y');
-        $this->validTo = static::processDate($formatTo, 'd-m-Y');
+        $this->validFrom = static::processDate($validFrom, 'Y-m-d');
+        $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
 
         return $this;
-    }
-
-    private function formatDate($date)
-    {
-        return $date['day'] . '-' . $date['month'] . '-' . $date['year'];
     }
 }
