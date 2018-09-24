@@ -38,6 +38,10 @@ final class UpdateStatus extends AbstractCommandHandler implements
 
 
         $tma->setTmApplicationStatus($status);
+        if ($command->getStatus() === TransportManagerApplication::STATUS_INCOMPLETE) {
+            $tma->setDigitalSignature(null);
+            $tma->setSignatureType(null);
+        }
         $this->getRepo()->save($tma);
 
         $result->addMessage("Transport Manager ID {$tma->getId()} updated");

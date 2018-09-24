@@ -8,10 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Organisation Entity
@@ -86,10 +88,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($adminUsers as $orgUser) {
             try {
                 $user = $orgUser->getUser();
-                if (
-                    $user instanceof UserEntity
-                    && $user->getAccountDisabled() !== 'Y'
-                ) {
+                if ($user instanceof UserEntity
+                    && $user->getAccountDisabled() !== 'Y') {
                     $enabledOrgUsers->add($orgUser);
                 }
             } catch (EntityNotFoundException $ex) {
@@ -101,6 +101,27 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return $enabledOrgUsers;
     }
 
+    /**
+     * Whether a user can access permits
+     */
+    public function isEligibleForPermits()
+    {
+        $licences = $this->getLicences();
+
+        /**
+         * Iterate through the licences, looking for a (valid) standard international goods licence
+         * Stop as soon as we find one
+         *
+         * @var LicenceEntity $licence
+         */
+        foreach ($licences as $licence) {
+            if ($licence->isEligibleForPermits()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Has even one Operator-admin users a corrent email address
@@ -115,10 +136,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($this->getAdminOrganisationUsers() as $orgUser) {
             $email = $orgUser->getUser()->getContactDetails()->getEmailAddress();
 
-            if (
-                !empty($email)
-                && $emailValidator->isValid($email)
-            ) {
+            if (!empty($email)
+                && $emailValidator->isValid($email)) {
                 return true;
             }
         }
@@ -178,6 +197,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     {
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
+            'eligibleEcmtLicences' => $this->getEligibleEcmtLicences()
         ];
     }
 
@@ -571,5 +591,75 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $criteria->where($criteria->expr()->contains('licNo', 'U'));
 
         return !empty($this->getLicences()->matching($criteria)->toArray());
+    }
+
+    /**
+     * Get eligible ECMT licences
+     **
+     * @return array
+     */
+    public function getEligibleEcmtLicences()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->in(
+                'status',
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED
+                ]
+            )
+        );
+        $criteria->andWhere(
+            $criteria->expr()->in(
+                'goodsOrPsv',
+                [
+                    LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE
+                ]
+            )
+        );
+        $criteria->andWhere(
+            $criteria->expr()->in(
+                'licenceType',
+                [
+                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    LicenceEntity::LICENCE_TYPE_RESTRICTED
+                ]
+            )
+        );
+
+        $licences = $this->getLicences()->matching($criteria);
+
+        if (empty($licences)) {
+            return [
+                'result' => [],
+                'multipleWithApplications' => false,
+                'singleWithApplication' => false
+            ];
+        }
+
+        $licencesArr = [];
+
+        /** @var LicenceEntity $licence */
+        foreach ($licences as $licence) {
+            if ($licence->hasActiveEcmtApplication()) {
+                continue;
+            }
+
+            $licencesArr[] = [
+                'id' => $licence->getId(),
+                'licNo' => $licence->getLicNo(),
+                'trafficArea' => $licence->getTrafficArea()->getName(),
+                'totAuthVehicles' => $licence->getTotAuthVehicles(),
+                'licenceType' => $licence->getLicenceType(),
+            ];
+        }
+
+        return [
+            'result' => $licencesArr,
+            'multipleWithApplications' => count($licences) > 1 && empty($licencesArr),
+            'singleWithApplication' => count($licences) === 1 && empty($licencesArr)
+        ];
     }
 }

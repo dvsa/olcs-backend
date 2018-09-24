@@ -381,6 +381,152 @@ class LicenceEntityTest extends EntityTester
         $this->assertFalse($licence->hasApprovedUnfulfilledConditions());
     }
 
+    /**
+     * Note: We've already tested the isValid, isGoods and isRestricted in our other tests - so we can safely assume these
+     * parts are valid and only check they work together against a list of licence types
+     *
+     * @dataProvider dpEligibleForPermits
+     */
+    public function testisEligibleForPermits($licenceType, $expectedResult)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
+        $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $licence->setLicenceType(new RefData(Entity::LICENCE_TYPE_RESTRICTED));
+        $licence->setLicenceType(new RefData($licenceType));
+
+        $this->assertEquals($expectedResult, $licence->isEligibleForPermits());
+    }
+
+    public function dpEligibleForPermits()
+    {
+        return [
+            [Entity::LICENCE_TYPE_RESTRICTED, true],
+            [Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+        ];
+    }
+
+    /**
+     * Note: We've already tested the isValid and isGoods in our other tests - so we can safely assume these
+     * parts are valid and only check they work together against a list of licence types
+     *
+     * @dataProvider dpValidSiGoods
+     */
+    public function testIsValidSiGoods($licenceType, $expectedResult)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
+        $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
+        $licence->setLicenceType(new RefData($licenceType));
+
+        $this->assertEquals($expectedResult, $licence->isValidSiGoods());
+    }
+
+
+
+
+
+    public function dpValidSiGoods()
+    {
+        return [
+            [Entity::LICENCE_TYPE_RESTRICTED, false],
+            [Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
+            [Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsValid
+     *
+     * @param $status
+     * @param $expectedResult
+     */
+    public function testIsValid($status, $expectedResult)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setStatus(new RefData($status));
+
+        $this->assertEquals($expectedResult, $licence->isValid());
+    }
+
+    public function dpIsValid()
+    {
+        return [
+            [Entity::LICENCE_STATUS_SUSPENDED, true],
+            [Entity::LICENCE_STATUS_VALID, true],
+            [Entity::LICENCE_STATUS_CURTAILED, true],
+            [Entity::LICENCE_STATUS_UNDER_CONSIDERATION, false],
+            [Entity::LICENCE_STATUS_NOT_SUBMITTED, false],
+            [Entity::LICENCE_STATUS_GRANTED, false],
+            [Entity::LICENCE_STATUS_SURRENDERED, false],
+            [Entity::LICENCE_STATUS_WITHDRAWN, false],
+            [Entity::LICENCE_STATUS_REFUSED, false],
+            [Entity::LICENCE_STATUS_REVOKED, false],
+            [Entity::LICENCE_STATUS_NOT_TAKEN_UP, false],
+            [Entity::LICENCE_STATUS_TERMINATED, false],
+            [Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, false],
+            [Entity::LICENCE_STATUS_UNLICENSED, false],
+            [Entity::LICENCE_STATUS_CANCELLED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsValidGoods
+     */
+    public function testIsValidGoods($status, $goodsOrPsv, $expectedResult)
+    {
+        /** @var Entity $licence */
+        $licence = $this->instantiate(Entity::class);
+        $licence->setStatus(new RefData($status));
+        $licence->setGoodsOrPsv(new RefData($goodsOrPsv));
+
+        $this->assertEquals($expectedResult, $licence->isValidGoods());
+    }
+
+    public function dpIsValidGoods()
+    {
+        return [
+            //licence statuses with a GV licence
+            [Entity::LICENCE_STATUS_SUSPENDED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, true],
+            [Entity::LICENCE_STATUS_VALID, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, true],
+            [Entity::LICENCE_STATUS_CURTAILED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, true],
+            [Entity::LICENCE_STATUS_UNDER_CONSIDERATION, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_NOT_SUBMITTED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_GRANTED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_SURRENDERED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_WITHDRAWN, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_REFUSED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_REVOKED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_NOT_TAKEN_UP, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_TERMINATED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_UNLICENSED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            [Entity::LICENCE_STATUS_CANCELLED, Entity::LICENCE_CATEGORY_GOODS_VEHICLE, false],
+            //licence statuses with a psv licence
+            [Entity::LICENCE_STATUS_SUSPENDED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_VALID, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_CURTAILED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_UNDER_CONSIDERATION, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_NOT_SUBMITTED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_GRANTED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_SURRENDERED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_WITHDRAWN, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_REFUSED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_REVOKED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_NOT_TAKEN_UP, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_TERMINATED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_UNLICENSED, Entity::LICENCE_CATEGORY_PSV, false],
+            [Entity::LICENCE_STATUS_CANCELLED, Entity::LICENCE_CATEGORY_PSV, false],
+        ];
+    }
+
     public function testIsGoods()
     {
         $goodsOrPsv = m::mock(RefData::class)->makePartial();
@@ -1034,7 +1180,6 @@ class LicenceEntityTest extends EntityTester
             ->andReturn($outstandingApplications);
 
         $this->assertEquals($outstandingApplications, $licence->getOutstandingApplications(true));
-
     }
 
     /**
@@ -1343,7 +1488,6 @@ class LicenceEntityTest extends EntityTester
         $licence = $this->instantiate(Entity::class);
         $licence->setExpiryDate($expiryDate);
         $this->assertSame($expected, $licence->isExpired());
-
     }
 
     public function testIsExpiredDataProvider()
