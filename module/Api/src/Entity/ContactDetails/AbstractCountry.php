@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -27,6 +29,27 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Constraint
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     inversedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="ecmt_countries_constraints_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="constraint_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $constraints;
 
     /**
      * Country desc
@@ -58,6 +81,19 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $createdOn;
 
     /**
+     * Ecmt application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $ecmtApplications;
+
+    /**
      * Identifier - Id
      *
      * @var string
@@ -66,6 +102,41 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * @ORM\Column(type="string", name="id", length=2)
      */
     protected $id;
+
+    /**
+     * Irfo psv auth
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $irfoPsvAuths;
+
+    /**
+     * Irhp permit stock range
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $irhpPermitStockRanges;
+
+    /**
+     * Is ecmt state
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_ecmt_state", nullable=true, options={"default": 0})
+     */
+    protected $isEcmtState = 0;
 
     /**
      * Is member state
@@ -105,6 +176,92 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->ecmtApplications = new ArrayCollection();
+        $this->constraints = new ArrayCollection();
+        $this->irfoPsvAuths = new ArrayCollection();
+        $this->irhpPermitStockRanges = new ArrayCollection();
+    }
+
+    /**
+     * Set the constraint
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being set as the value
+     *
+     * @return Country
+     */
+    public function setConstraints($constraints)
+    {
+        $this->constraints = $constraints;
+
+        return $this;
+    }
+
+    /**
+     * Get the constraints
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getConstraints()
+    {
+        return $this->constraints;
+    }
+
+    /**
+     * Add a constraints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being added
+     *
+     * @return Country
+     */
+    public function addConstraints($constraints)
+    {
+        if ($constraints instanceof ArrayCollection) {
+            $this->constraints = new ArrayCollection(
+                array_merge(
+                    $this->constraints->toArray(),
+                    $constraints->toArray()
+                )
+            );
+        } elseif (!$this->constraints->contains($constraints)) {
+            $this->constraints->add($constraints);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a constraints
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $constraints collection being removed
+     *
+     * @return Country
+     */
+    public function removeConstraints($constraints)
+    {
+        if ($this->constraints->contains($constraints)) {
+            $this->constraints->removeElement($constraints);
+        }
+
+        return $this;
+    }
 
     /**
      * Set the country desc
@@ -185,6 +342,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     }
 
     /**
+     * Set the ecmt application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being set as the value
+     *
+     * @return Country
+     */
+    public function setEcmtApplications($ecmtApplications)
+    {
+        $this->ecmtApplications = $ecmtApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getEcmtApplications()
+    {
+        return $this->ecmtApplications;
+    }
+
+    /**
+     * Add a ecmt applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being added
+     *
+     * @return Country
+     */
+    public function addEcmtApplications($ecmtApplications)
+    {
+        if ($ecmtApplications instanceof ArrayCollection) {
+            $this->ecmtApplications = new ArrayCollection(
+                array_merge(
+                    $this->ecmtApplications->toArray(),
+                    $ecmtApplications->toArray()
+                )
+            );
+        } elseif (!$this->ecmtApplications->contains($ecmtApplications)) {
+            $this->ecmtApplications->add($ecmtApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a ecmt applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $ecmtApplications collection being removed
+     *
+     * @return Country
+     */
+    public function removeEcmtApplications($ecmtApplications)
+    {
+        if ($this->ecmtApplications->contains($ecmtApplications)) {
+            $this->ecmtApplications->removeElement($ecmtApplications);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the id
      *
      * @param string $id new value being set
@@ -206,6 +426,156 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irfo psv auth
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrfoPsvAuths($irfoPsvAuths)
+    {
+        $this->irfoPsvAuths = $irfoPsvAuths;
+
+        return $this;
+    }
+
+    /**
+     * Get the irfo psv auths
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrfoPsvAuths()
+    {
+        return $this->irfoPsvAuths;
+    }
+
+    /**
+     * Add a irfo psv auths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being added
+     *
+     * @return Country
+     */
+    public function addIrfoPsvAuths($irfoPsvAuths)
+    {
+        if ($irfoPsvAuths instanceof ArrayCollection) {
+            $this->irfoPsvAuths = new ArrayCollection(
+                array_merge(
+                    $this->irfoPsvAuths->toArray(),
+                    $irfoPsvAuths->toArray()
+                )
+            );
+        } elseif (!$this->irfoPsvAuths->contains($irfoPsvAuths)) {
+            $this->irfoPsvAuths->add($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irfo psv auths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrfoPsvAuths($irfoPsvAuths)
+    {
+        if ($this->irfoPsvAuths->contains($irfoPsvAuths)) {
+            $this->irfoPsvAuths->removeElement($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit stock range
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrhpPermitStockRanges($irhpPermitStockRanges)
+    {
+        $this->irhpPermitStockRanges = $irhpPermitStockRanges;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit stock ranges
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitStockRanges()
+    {
+        return $this->irhpPermitStockRanges;
+    }
+
+    /**
+     * Add a irhp permit stock ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being added
+     *
+     * @return Country
+     */
+    public function addIrhpPermitStockRanges($irhpPermitStockRanges)
+    {
+        if ($irhpPermitStockRanges instanceof ArrayCollection) {
+            $this->irhpPermitStockRanges = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitStockRanges->toArray(),
+                    $irhpPermitStockRanges->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitStockRanges->contains($irhpPermitStockRanges)) {
+            $this->irhpPermitStockRanges->add($irhpPermitStockRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit stock ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrhpPermitStockRanges($irhpPermitStockRanges)
+    {
+        if ($this->irhpPermitStockRanges->contains($irhpPermitStockRanges)) {
+            $this->irhpPermitStockRanges->removeElement($irhpPermitStockRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the is ecmt state
+     *
+     * @param boolean $isEcmtState new value being set
+     *
+     * @return Country
+     */
+    public function setIsEcmtState($isEcmtState)
+    {
+        $this->isEcmtState = $isEcmtState;
+
+        return $this;
+    }
+
+    /**
+     * Get the is ecmt state
+     *
+     * @return boolean
+     */
+    public function getIsEcmtState()
+    {
+        return $this->isEcmtState;
     }
 
     /**
@@ -345,7 +715,11 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
