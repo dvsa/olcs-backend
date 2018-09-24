@@ -38,7 +38,5 @@ return [
     CommandHandler\Permits\DeclineEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\AcceptEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
-    CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
-    CommandHandler\Permits\CalculateRandomApplicationScore::class => NotIsAnonymousUser::class,
-
+    CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class
 ];
