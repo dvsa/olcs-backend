@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  * Calculate Random Application Score
  *
  */
-final class CalculateRandomApplicationScore extends AbstractCommandHandler implements ToggleRequiredInterface
+final class CalculateRandomAppScore extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
