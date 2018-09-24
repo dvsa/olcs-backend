@@ -1086,4 +1086,7 @@ return [
         CommandHandlerCli\Permits\MarkSuccessfulRemainingPermitApplications::class,
     CommandCli\Permits\MarkSuccessfulSectorPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
+    CommandCli\Permits\CalculateRandomAppScore::class =>
+        CommandHandlerCli\Permits\CalculateRandomAppScore::class,
+
 ];

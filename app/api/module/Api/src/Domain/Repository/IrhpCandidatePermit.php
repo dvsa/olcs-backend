@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 /**
  * IRHP Candidate Permit
@@ -154,5 +155,34 @@ class IrhpCandidatePermit extends AbstractRepository
             ->getQuery();
 
         $query->execute();
+    }
+
+    /**
+     * Retrieves the IrhpCandidateRecords that need to
+     * have a randomised score set, for a given stock.
+     *
+     * @param int the Id of the IrhpPermitStock that the scoring will be for.
+     * @return array a list of IrhpCandidatePermits
+     * @TODO: Replace this query with the bundle & listFilter design pattern.
+     */
+    public function getIrhpCandidatePermitsForScoring($irhpPermitStockId)
+    {
+        $licenceTypes = [Licence::LICENCE_TYPE_RESTRICTED,  Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL];
+
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipw.irhpPermitStock', 'ips')
+            ->innerJoin('ipa.licence', 'l')
+            ->where('ips.id = ?1')
+            ->andWhere('ipa.status = ?2')
+            ->andWhere('l.licenceType IN (?3)')
+            ->setParameter(1, $irhpPermitStockId)
+            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->setParameter(3, $licenceTypes)
+            ->getQuery()
+            ->getResult();
     }
 }
