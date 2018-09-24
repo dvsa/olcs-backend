@@ -1076,7 +1076,7 @@ return [
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
 
     //Permits Calculate
-    TransferCommand\Permits\CalculateRandomApplicationScore::class => CommandHandler\Permits\CalculateRandomApplicationScore::class,
+    Command\Permits\CalculateRandomApplicationScore::class => CommandHandler\Permits\CalculateRandomApplicationScore::class,
 
     // Permits - internal backend
 
