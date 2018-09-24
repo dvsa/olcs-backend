@@ -1075,9 +1075,6 @@ return [
     TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
 
-    //Permits Calculate
-    Command\Permits\CalculateRandomApplicationScore::class => CommandHandler\Permits\CalculateRandomApplicationScore::class,
-
     // Permits - internal backend
 
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
@@ -1089,4 +1086,7 @@ return [
         CommandHandlerCli\Permits\MarkSuccessfulRemainingPermitApplications::class,
     CommandCli\Permits\MarkSuccessfulSectorPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
+    CommandCli\Permits\CalculateRandomApplicationScore::class =>
+        CommandHandler\Permits\CalculateRandomApplicationScore::class,
+
 ];
