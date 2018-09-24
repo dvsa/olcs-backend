@@ -31,6 +31,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         parent::setUp();
     }
+
     public function testGetCalculatedBundleValues()
     {
         $this->assertSame(
