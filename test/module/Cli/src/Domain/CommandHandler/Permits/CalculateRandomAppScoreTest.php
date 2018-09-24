@@ -33,10 +33,13 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
+        $stockId = 7;
+        $licenceNo = 'OB111111';
+
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getLicence->getLicNo')
             ->with()
-            ->andReturn('OB111111');
+            ->andReturn($licenceNo);
         $irhpPermitApplication->shouldReceive('getId')
             ->with()
             ->andReturn(1);
@@ -46,7 +49,12 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
 
         $irhpCandidatePermit = m::mock(IrhpCandidatePermit::class);
         $irhpCandidatePermit->shouldReceive('calculateRandomisedScore')
-            ->with([])
+            ->with(
+                [
+                    'licenceData' => [$licenceNo => [1 => 12]],
+                    'meanDeviation' => 1
+                ]
+            )
             ->andReturn(10.1);
         $irhpCandidatePermit->shouldReceive('getApplicationScore')
             ->with()
@@ -59,9 +67,12 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplication);
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('getIrhpCandidatePermitsForScoring')
-            ->with(7)
+            ->with($stockId)
             ->andReturn([$irhpCandidatePermit]);
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
             ->with($irhpCandidatePermit);
+
+        $this->sut->handleCommand(
+            CalculateRandomApplicationScoreCommand::create(['stockId' => $stockId]));
     }
 }
