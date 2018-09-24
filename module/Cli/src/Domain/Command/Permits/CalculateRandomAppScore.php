@@ -11,6 +11,6 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
  */
-final class CalculateRandomApplicationScore extends AbstractStockIdCommand
+final class CalculateRandomAppScore extends AbstractStockIdCommand
 {
 }
