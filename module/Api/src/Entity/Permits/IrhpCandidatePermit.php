@@ -72,7 +72,8 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     public function calculateRandomisedScore(array $deviationData)
     {
         $standardDeviation = 0;
-        foreach ($deviationData['licenceData'][$this->getIrhpPermitApplication()->getLicence()->getLicNo()] as $applicationPermitsRequired) {
+        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getLicence()->getLicNo()];
+        foreach ($licenceData as $applicationPermitsRequired) {
             $standardDeviation += $applicationPermitsRequired;
         }
 
