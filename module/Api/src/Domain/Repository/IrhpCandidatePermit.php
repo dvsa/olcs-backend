@@ -163,6 +163,7 @@ class IrhpCandidatePermit extends AbstractRepository
      *
      * @param int the Id of the IrhpPermitStock that the scoring will be for.
      * @return array a list of IrhpCandidatePermits
+     * @TODO: Replace this query with the bundle & listFilter design pattern.
      */
     public function getIrhpCandidatePermitsForScoring($irhpPermitStockId)
     {

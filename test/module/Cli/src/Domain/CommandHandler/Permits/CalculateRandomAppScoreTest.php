@@ -73,6 +73,7 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
             ->with($irhpCandidatePermit);
 
         $this->sut->handleCommand(
-            CalculateRandomApplicationScoreCommand::create(['stockId' => $stockId]));
+            CalculateRandomApplicationScoreCommand::create(['stockId' => $stockId])
+        );
     }
 }
