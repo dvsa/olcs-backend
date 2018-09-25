@@ -92,6 +92,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $fees = $this->getOutstandingFeesForOrganisation($command);
         } elseif (!empty($command->getApplicationId())) {
             $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
+        } elseif (!empty($command->getEcmtPermitApplicationId())) {
+            $fees = $this->feesHelper->getOutstandingFeesForEcmtApplication($command->getEcmtPermitApplicationId());
         } else {
             $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
         }
@@ -586,7 +588,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     private function generateInsufficientFeeRequestLetter(FeeEntity $fee, $allocatedAmount)
     {
-
         // we need to calculate actual outstanding fee, because new transaction is not saved
         // on this step, so $fee->getOutstandingFeeAmount() will return the previous value
         $actualOutstandingAmount = $fee->getOutstandingAmount() - $allocatedAmount;

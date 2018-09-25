@@ -2,12 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * EcmtPermitApplication Entity
@@ -270,6 +273,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
+            'permitIntensityOfUse' => $this->getPermitIntensityOfUse(),
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
             'isAwaitingFee' => $this->isAwaitingFee(),
@@ -662,5 +666,30 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     {
         $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
         return $this->getPermitIntensityOfUse() * $interJourneysDecValue;
+    }
+
+
+    /**
+     * Get Latest Outstanding Ecmt Application Fee
+     *
+     * @return FeeEntity|null
+     */
+    public function getLatestOutstandingEcmtApplicationFee()
+    {
+
+        $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_ECMT_APP;
+
+
+        $criteria = Criteria::create()
+            ->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        foreach ($this->getFees()->matching($criteria) as $fee) {
+            if ($fee->isOutstanding()
+                && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
+                return $fee;
+            }
+        }
+
+        return null;
     }
 }
