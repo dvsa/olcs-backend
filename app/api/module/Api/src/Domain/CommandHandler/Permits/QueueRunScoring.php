@@ -1,0 +1,63 @@
+<?php
+
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
+
+use Dvsa\Olcs\Transfer\Command\Permits\QueueRunScoring as QueueRunScoringCmd;
+use Dvsa\Olcs\Api\Domain\Query\Permits\QueueRunScoringPermitted as QueueRunScoringPermittedQry;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
+
+/**
+ * Queue run scoring
+ *
+ * @author Jonathan Thomas <jonathan@opalise.co.uk>
+ */
+class QueueRunScoring extends AbstractCommandHandler implements ToggleRequiredInterface
+{
+    use QueueAwareTrait;
+
+    use ToggleAwareTrait;
+
+    protected $repoServiceName = 'IrhpPermitStock';
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+
+    /**
+     * Handle command
+     *
+     * @param QueueRunScoringCmd|CommandInterface $command command
+     *
+     * @return Result
+     */
+    public function handleCommand(CommandInterface $command)
+    {
+        $stockId = $command->getId();
+
+        $permittedResult = $this->handleQuery(
+            QueueRunScoringPermittedQry::create(['id' => $stockId])
+        );
+
+        if (!$permittedResult['result']) {
+            $this->result->addMessage('Unable to queue run scoring: ' . $permittedResult['message']);
+            return $this->result;
+        }
+
+        $this->getRepo()->updateStatus($stockId, IrhpPermitStock::STATUS_SCORING_PENDING);
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                $this->createQueue($stockId, Queue::TYPE_RUN_ECMT_SCORING, [])
+            )
+        );
+
+        $this->result->addMessage('Queueing run scoring of ECMT applications');
+        return $this->result;
+    }
+}

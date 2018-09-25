@@ -155,4 +155,19 @@ class IrhpPermitRangeEntityTest extends EntityTester
             ],
         ];
     }
+
+    public function testGetSize()
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $prefix = "UK";
+        $fromNo = "75";
+        $toNo = "150";
+        $isReserve = 0;
+        $isReplacement = 0;
+        $countrys = [];
+
+        $entity = Entity::create($irhpPermitStock, $prefix, $fromNo, $toNo, $isReserve, $isReplacement, $countrys);
+
+        $this->assertEquals(76, $entity->getSize());
+    }
 }

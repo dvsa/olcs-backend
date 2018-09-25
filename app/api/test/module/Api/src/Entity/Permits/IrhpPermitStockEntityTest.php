@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
@@ -37,13 +38,15 @@ class IrhpPermitStockEntityTest extends EntityTester
         $updateValidTo = '2019-02-02';
         $updateExpectedTo = $this->processDate($updateValidTo, 'Y-m-d');
         $updateInitialStock = 1401;
+        $status = m::mock(RefData::class);
 
-        $entity = Entity::create($irhpPermitType, $validFrom, $validTo, $initialStock);
+        $entity = Entity::create($irhpPermitType, $validFrom, $validTo, $initialStock, $status);
 
         $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
         $this->assertEquals($expectedTo, $entity->getValidTo());
         $this->assertEquals($initialStock, $entity->getInitialStock());
+        $this->assertEquals($status, $entity->getStatus());
 
         $entity->update($irhpPermitType, $updateValidFrom, $updateValidTo, $updateInitialStock);
 

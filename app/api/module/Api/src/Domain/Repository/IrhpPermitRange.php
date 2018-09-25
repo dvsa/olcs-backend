@@ -96,4 +96,24 @@ class IrhpPermitRange extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * Returns all non-reserved, non-replacement ranges in the specified stock
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function getByStockId($stockId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('ipr')
+            ->from(Entity::class, 'ipr')
+            ->where('ipr.ssReserve = false')
+            ->andWhere('ipr.lostReplacement = false')
+            ->andWhere('IDENTITY(ipr.irhpPermitStock) = ?1')
+            ->setParameter(1, $stockId)
+            ->getQuery()
+            ->getResult();
+    }
 }

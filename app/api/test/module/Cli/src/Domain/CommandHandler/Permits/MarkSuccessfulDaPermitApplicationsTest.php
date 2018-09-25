@@ -55,10 +55,10 @@ class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
             ->with($stockId, 8)
             ->andReturn(8);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedUnderConsiderationIds')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIds')
             ->with($stockId, 4)
             ->andReturn([4, 5, 6]);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedUnderConsiderationIds')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIds')
             ->with($stockId, 8)
             ->andReturn([12, 14, 20, 25]);
 
