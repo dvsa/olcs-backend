@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
