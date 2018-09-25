@@ -151,10 +151,10 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
+     * @ORM\Column(type="smallint", name="version", nullable=true)
      * @ORM\Version
      */
-    protected $version = 1;
+    protected $version;
 
     /**
      * Irhp permit
