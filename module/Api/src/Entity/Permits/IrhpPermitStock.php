@@ -38,4 +38,21 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
 
         return $this;
     }
+
+    public function canDelete()
+    {
+        return
+            count($this->irhpPermitRanges) === 0 &&
+            count($this->irhpPermitWindows) === 0;
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return ['canDelete' => $this->canDelete()];
+    }
 }
