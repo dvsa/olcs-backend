@@ -463,7 +463,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     /**
      * @dataProvider trueFalseProvider
      */
-    public function testIsValid($cabotage)
+    public function testIsValid()
     {
         $entity = $this->createValidApplication();
         $this->assertTrue($entity->isValid());

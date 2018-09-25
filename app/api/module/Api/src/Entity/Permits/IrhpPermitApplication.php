@@ -95,10 +95,10 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         );
         $permits = $this->getIrhpCandidatePermits()->matching($criteria);
 
-        $irhpPermits = 0;
+        $validPermitCount = 0;
         foreach ($permits as $permit) {
-            $irhpPermits += $permit->getIrhpPermits()->count();
+            $validPermitCount += $permit->getIrhpPermits()->count();
         }
-        return $irhpPermits;
+        return $validPermitCount;
     }
 }
