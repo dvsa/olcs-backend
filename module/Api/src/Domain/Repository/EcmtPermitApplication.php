@@ -9,6 +9,7 @@ use \Doctrine\ORM\QueryBuilder;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 
 /**
  * Permit Application

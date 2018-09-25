@@ -168,6 +168,7 @@ class IrhpCandidatePermit extends AbstractRepository
             ->select('icp')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
             ->andWhere('icp.successful = 1')
@@ -212,7 +213,7 @@ class IrhpCandidatePermit extends AbstractRepository
     }
 
     /**
-     * Retrieves the IrhpCandidateRecords that need to have a randomised score set, for a given stock
+     * Retrieves the IrhpCandidateRecords that need to have a randomised score set, for a given stock.
      *
      * @param int the Id of the IrhpPermitStock that the scoring will be for.
      * @return array a list of IrhpCandidatePermits

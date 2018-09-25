@@ -21,7 +21,7 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
         $this->setUpSut(EcmtPermitApplication::class);
     }
 
-    public function testFetchUnderConsiderationApplicationIds()
+    public function testResetScoring()
     {
         $stockId = 14;
 

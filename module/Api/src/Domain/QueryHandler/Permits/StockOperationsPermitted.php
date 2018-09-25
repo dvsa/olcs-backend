@@ -30,12 +30,10 @@ class StockOperationsPermitted extends AbstractQueryHandler implements ToggleReq
      */
     public function handleQuery(QueryInterface $query)
     {
-        $stockIdParams = ['id' => $query->getId()];
-
         $queryHandler = $this->getQueryHandler();
 
-        $scoringResult = $queryHandler->handleQuery(StockScoringPermittedQuery::create($stockIdParams));
-        $acceptResult = $queryHandler->handleQuery(StockAcceptPermittedQuery::create($stockIdParams));
+        $scoringResult = $queryHandler->handleQuery(StockScoringPermittedQuery::create(['id' => 1]));
+        $acceptResult = $queryHandler->handleQuery(StockAcceptPermittedQuery::create(['id' => 1]));
 
         return [
             'scoringPermitted' => $scoringResult['result'],

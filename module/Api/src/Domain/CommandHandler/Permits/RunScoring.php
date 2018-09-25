@@ -40,12 +40,29 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
         $this->stockId = $command->getId();
         $stockIdParams = ['stockId' => $this->stockId];
 
+<<<<<<< HEAD
+=======
+        // TODO; do we need to reset all candidate permit records in the stock to unsuccessful?
+        $this->result->merge(
+            $this->handleSideEffect(CalculateRandomAppScore::create($stockIdParams))
+        );
+
+>>>>>>> OLCS-21533 identify successful ecmt permit applications part 2
         if (!$this->passesStockAvailabilityPrerequisite($this->stockId)) {
             $this->result->addMessage('Prerequisite failed: no permits remaining within this stock.');
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL);
             return $this->result;
         }
 
+<<<<<<< HEAD
+=======
+        if (!$this->passesRandomisedScorePrerequisite()) {
+            $this->result->addMessage('Prerequisite failed: one or more candidate permits lack a randomised score.');
+            $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL);
+            return $this->result;
+        }
+
+>>>>>>> OLCS-21533 identify successful ecmt permit applications part 2
         try {
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_IN_PROGRESS);
 
@@ -53,7 +70,10 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
                 $this->handleSideEffects(
                     [
                         ResetScoring::create($stockIdParams),
+<<<<<<< HEAD
                         CalculateRandomAppScore::create($stockIdParams),
+=======
+>>>>>>> OLCS-21533 identify successful ecmt permit applications part 2
                         MarkSuccessfulSectorPermitApplications::create($stockIdParams),
                         MarkSuccessfulDaPermitApplications::create($stockIdParams),
                         MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
@@ -77,6 +97,23 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * Checks that there are no candidate permits lacking a randomised score
+     *
+     * @return bool
+     */
+    private function passesRandomisedScorePrerequisite()
+    {
+        $countLackingRandomisedScore = $this->getRepo('IrhpCandidatePermit')->getCountLackingRandomisedScore(
+            $this->stockId
+        );
+
+        return $countLackingRandomisedScore == 0;
+    }
+
+    /**
+>>>>>>> OLCS-21533 identify successful ecmt permit applications part 2
      * Update the status of the stock item
      *
      * @param string $status
