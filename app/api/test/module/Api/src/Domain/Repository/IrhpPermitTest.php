@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Mockery as m;
@@ -55,5 +56,38 @@ class IrhpPermitTest extends RepositoryTestCase
             $permitCount,
             $this->sut->getPermitCount($stockId)
         );
+    }
+
+    public function testApplyListFilters()
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQ = m::mock(QueryInterface::class);
+
+        $mockQb->shouldReceive('expr')
+            ->andReturnSelf()
+            ->shouldReceive('eq')
+            ->with('ipa.ecmtPermitApplication', ':ecmtId')
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('ecmtId', 1)
+            ->andReturnSelf()
+            ->shouldReceive('orderBy')
+            ->with('m.permitNumber', 'DESC')
+            ->andReturnSelf();
+
+        $this->sut->applyListFilters($mockQb, $mockQ);
+    }
+
+    public function testApplyListJoins()
+    {
+        $sut = m::mock(IrhpPermit::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQb->shouldReceive('modifyQuery')->andReturnSelf();
+        $mockQb->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf();
+        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
+        $sut->applyListJoins($mockQb);
     }
 }

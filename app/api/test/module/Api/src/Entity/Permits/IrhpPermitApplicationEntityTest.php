@@ -36,9 +36,21 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $this->assertSame(
             [
-                'permitsAwarded' => 0
+                'permitsAwarded' => 0,
+                'validPermits' => 0
             ],
             $this->sut->getCalculatedBundleValues()
         );
+    }
+
+
+    public function testCountValidPermits()
+    {
+        $this->assertEquals(0, $this->sut->countValidPermits());
+    }
+
+    public function testCountPermitsAwarded()
+    {
+        $this->assertEquals(0, $this->sut->countPermitsAwarded());
     }
 }

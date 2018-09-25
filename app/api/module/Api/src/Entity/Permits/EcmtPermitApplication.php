@@ -277,6 +277,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
             'isAwaitingFee' => $this->isAwaitingFee(),
+            'isValid' => $this->isValid(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
@@ -519,6 +520,14 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function isAwaitingFee()
     {
         return $this->status->getId() === self::STATUS_AWAITING_FEE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid()
+    {
+        return $this->status->getId() === self::PERMIT_VALID;
     }
 
 
