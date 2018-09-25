@@ -25,7 +25,6 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
@@ -191,8 +190,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function cardPayment($command, $feesToPay, $extraParams = [])
     {
-
-
         // fire off to CPMS
         if ($command->getPaymentMethod() === FeeEntity::METHOD_CARD_OFFLINE) {
             $response = $this->getCpmsService()->initiateCnpRequest(
@@ -591,7 +588,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     private function generateInsufficientFeeRequestLetter(FeeEntity $fee, $allocatedAmount)
     {
-
         // we need to calculate actual outstanding fee, because new transaction is not saved
         // on this step, so $fee->getOutstandingFeeAmount() will return the previous value
         $actualOutstandingAmount = $fee->getOutstandingAmount() - $allocatedAmount;
