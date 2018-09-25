@@ -82,7 +82,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('tm.workCd', 'wcd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('wcd.address', 'wadd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('wadd.countryCode')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tma.digitalSignature', 'ds')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
@@ -113,7 +112,6 @@ class TransportManagerApplicationTest extends RepositoryTestCase
         $this->queryBuilder->shouldReceive('with')->with('tm.workCd', 'wcd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('wcd.address', 'wadd')->once()->andReturnSelf();
         $this->queryBuilder->shouldReceive('with')->with('wadd.countryCode')->once()->andReturnSelf();
-        $this->queryBuilder->shouldReceive('with')->with('tma.digitalSignature', 'ds')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn([]);
 
