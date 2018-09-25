@@ -50,9 +50,7 @@ class MarkSuccessfulRemainingPermitApplications extends AbstractCommandHandler i
 
         // TODO: could remainingQuota ever be zero or less?
         if ($remainingQuota > 0) {
-            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedUnderConsiderationIds(
-                $stockId
-            );
+            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIds($stockId);
 
             $truncatedCandidatePermitIds = array_slice($candidatePermitIds, 0, $remainingQuota);
             $this->getRepo()->markAsSuccessful($truncatedCandidatePermitIds);

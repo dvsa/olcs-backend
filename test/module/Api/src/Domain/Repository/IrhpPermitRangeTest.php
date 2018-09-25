@@ -60,4 +60,51 @@ class IrhpPermitRangeTest extends RepositoryTestCase
             $this->sut->getCombinedRangeSize($stockId)
         );
     }
+
+    public function testGetByStockId()
+    {
+        $expectedResult = [
+            IrhpPermitRangeEntity::class,
+            IrhpPermitRangeEntity::class,
+            IrhpPermitRangeEntity::class,
+        ];
+
+        $stockId = 7;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('ipr')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitRangeEntity::class, 'ipr')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ipr.ssReserve = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.lostReplacement = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('IDENTITY(ipr.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $stockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($expectedResult);
+
+        $this->assertEquals(
+            $expectedResult,
+            $this->sut->getByStockId($stockId)
+        );
+    }
 }

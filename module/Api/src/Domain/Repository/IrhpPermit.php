@@ -36,6 +36,24 @@ class IrhpPermit extends AbstractRepository
     }
 
     /**
+     * Returns the count of permits in the specified range
+     *
+     * @param int $rangeId
+     *
+     * @return int
+     */
+    public function getPermitCountByRange($rangeId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(ip.id)')
+            ->from(Entity::class, 'ip')
+            ->where('IDENTITY(ip.irhpPermitRange) = ?1')
+            ->setParameter(1, $rangeId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
      * Apply List Filters
      *
      * @param QueryBuilder   $qb    Doctrine Query Builder

@@ -41,7 +41,7 @@ class MarkSuccessfulSectorPermitApplications extends AbstractCommandHandler impl
 
         $candidatePermitIds = [];
         foreach ($sectorQuotas as $sectorQuota) {
-            $sectorCandidatePermitIds = $this->getRepo('IrhpCandidatePermit')->getScoreOrderedUnderConsiderationIdsBySector(
+            $sectorCandidatePermitIds = $this->getRepo('IrhpCandidatePermit')->getScoreOrderedIdsBySector(
                 $command->getStockId(),
                 $sectorQuota['sectorId']
             );

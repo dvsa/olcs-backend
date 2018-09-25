@@ -53,7 +53,7 @@ class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implemen
             $result->addMessage('      - #DARemainingQuota: ' . $daRemainingQuota);
 
             if ($daRemainingQuota > 0) {
-                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedUnderConsiderationIds(
+                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIds(
                     $stockId,
                     $daQuota['jurisdictionId']
                 );
