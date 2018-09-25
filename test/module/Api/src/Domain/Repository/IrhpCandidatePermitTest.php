@@ -4,8 +4,11 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Mockery as m;
 
@@ -16,15 +19,9 @@ use Mockery as m;
  */
 class IrhpCandidatePermitTest extends RepositoryTestCase
 {
-    /** @var QueryBuilder */
-    protected $queryBuilder;
-
     public function setUp()
     {
         $this->setUpSut(IrhpCandidatePermit::class);
-
-        $this->queryBuilder = m::mock(QueryBuilder::class);
-        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($this->queryBuilder);
     }
 
     public function testGetCountLackingRandomisedScore()
@@ -32,7 +29,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $candidatePermitCount = 35;
         $stockId = 5;
 
-        $this->queryBuilder->shouldReceive('select')
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
             ->with('count(icp.id)')
             ->once()
             ->andReturnSelf()
@@ -80,7 +80,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $sectorsId = 8;
         $expectedResult = [18, 24, 25, 31, 34];
 
-        $this->queryBuilder->shouldReceive('select')
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
             ->with('icp.id')
             ->once()
             ->andReturnSelf()
@@ -136,7 +139,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $stockId = 8;
         $jurisdictionId = 12;
 
-        $this->queryBuilder->shouldReceive('select')
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
             ->with('count(icp.id)')
             ->once()
             ->andReturnSelf()
@@ -191,7 +197,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $candidatePermitIds = [35, 37, 41];
         $stockId = 3;
 
-        $this->queryBuilder->shouldReceive('select')
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
             ->with('icp.id')
             ->once()
             ->andReturnSelf()
@@ -242,7 +251,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $stockId = 7;
         $successfulCount = 15;
 
-        $this->queryBuilder->shouldReceive('select')
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
             ->with('count(icp)')
             ->once()
             ->andReturnSelf()
@@ -283,12 +295,15 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
     {
         $candidatePermitIds = [3, 8, 12, 16];
 
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
         $query = m::mock(AbstractQuery::class);
         $query->shouldReceive('execute')
             ->withNoArgs()
             ->once();
 
-        $this->queryBuilder->shouldReceive('update')
+        $queryBuilder->shouldReceive('update')
             ->with(IrhpCandidatePermitEntity::class, 'icp')
             ->once()
             ->andReturnSelf()
@@ -317,9 +332,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $irhpPermitStockId = 1;
         $licenceTypes = ['ltyp_r', 'ltyp_si'];
 
-        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
-        $this->queryBuilder->shouldReceive('select')
+        $queryBuilder->shouldReceive('select')
             ->with('icp')
             ->once()
             ->andReturnSelf()
@@ -371,7 +387,129 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->once()
             ->andReturn(null);
 
-
         $this->assertEquals(null, $this->sut->getIrhpCandidatePermitsForScoring($irhpPermitStockId));
+    }
+
+    public function testGetSuccessfulScoreOrdered()
+    {
+        $stockId = 7;
+
+        $expectedResult = [
+            m::mock(IrhpCandidatePermitEntity::class),
+            m::mock(IrhpCandidatePermitEntity::class),
+            m::mock(IrhpCandidatePermitEntity::class),
+        ];
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.ecmtPermitApplication', 'epa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('icp.successful = 1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('orderBy')
+            ->with('icp.randomizedScore', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $stockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($expectedResult);
+
+        $this->assertEquals(
+            $expectedResult,
+            $this->sut->getSuccessfulScoreOrdered($stockId)
+        );
+    }
+
+    public function testUpdateRange()
+    {
+        $candidatePermitId = 62;
+        $range = m::mock(IrhpPermitRangeEntity::class);
+
+        $query = m::mock(AbstractQuery::class);
+        $query->shouldReceive('execute')
+            ->withNoArgs()
+            ->once();
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('update')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('set')
+            ->with('icp.irhpPermitRange', $range)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('icp.id = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $candidatePermitId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($query);
+
+        $this->sut->updateRange($candidatePermitId, $range);
+    }
+
+    public function testResetScoring()
+    {
+        $stockId = 7;
+
+        $statement = m::mock(Statement::class);
+        $statement->shouldReceive('execute')
+            ->once();
+
+        $connection = m::mock(Connection::class);
+        $connection->shouldReceive('executeQuery')
+            ->with(
+                'update irhp_candidate_permit ' .
+                'set successful = 0, irhp_permit_range_id = NULL ' .
+                'where irhp_permit_application_id in (' .
+                '    select id from irhp_permit_application where irhp_permit_window_id in (' .
+                '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+                '    )' .
+                ')',
+                ['stockId' => $stockId]
+            )
+            ->once()
+            ->andReturn($statement);
+
+        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
+
+        $this->sut->resetScoring($stockId);
     }
 }

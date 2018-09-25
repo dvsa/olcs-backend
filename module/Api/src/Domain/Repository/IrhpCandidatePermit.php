@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\Permits\UnpaidEcmtPermits;
@@ -144,6 +145,29 @@ class IrhpCandidatePermit extends AbstractRepository
     }
 
     /**
+     * Returns the candidate permits in the specified stock marked as successful
+     *
+     * @param int $stockId
+     *
+     * @return int
+     */
+    public function getSuccessfulScoreOrdered($stockId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->andWhere('icp.successful = 1')
+            ->orderBy('icp.randomizedScore', 'DESC')
+            ->setParameter(1, $stockId)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Marks a set of candidate permit ids as successful
      *
      * @param array $candidatePermitIds
@@ -155,6 +179,23 @@ class IrhpCandidatePermit extends AbstractRepository
             ->set('icp.successful', 1)
             ->where('icp.id in (?1)')
             ->setParameter(1, $candidatePermitIds)
+            ->getQuery();
+
+        $query->execute();
+    }
+
+    /**
+     * Sets the range for a given candidate permit
+     *
+     * @param array $candidatePermitIds
+     */
+    public function updateRange($candidatePermitId, IrhpPermitRangeEntity $range)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->update(Entity::class, 'icp')
+            ->set('icp.irhpPermitRange', $range)
+            ->where('icp.id = ?1')
+            ->setParameter(1, $candidatePermitId)
             ->getQuery();
 
         $query->execute();
@@ -189,6 +230,26 @@ class IrhpCandidatePermit extends AbstractRepository
             ->getResult();
     }
 
+    /**
+     * Resets all candidate permits within a stock to their pre-scoring state
+     *
+     * @param int $stockId
+     */
+    public function resetScoring($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'update irhp_candidate_permit ' .
+            'set successful = 0, irhp_permit_range_id = NULL ' .
+            'where irhp_permit_application_id in (' .
+            '    select id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ')',
+            ['stockId' => $stockId]
+        );
+
+        $statement->execute();
+    }
 
     /**
      * Apply List Filters

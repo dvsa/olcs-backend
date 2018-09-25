@@ -26,6 +26,16 @@ class CreateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+            PermitStockEntity::STATUS_SCORING_NEVER_RUN,
+        ];
+        $this->references = [];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $cmdData = [

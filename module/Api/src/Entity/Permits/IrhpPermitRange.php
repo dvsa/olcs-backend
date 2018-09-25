@@ -73,4 +73,14 @@ class IrhpPermitRange extends AbstractIrhpPermitRange
 
         return $this;
     }
+
+    /**
+     * Get the number of possible permits in this range
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return(($this->toNo - $this->fromNo) + 1);
+    }
 }
