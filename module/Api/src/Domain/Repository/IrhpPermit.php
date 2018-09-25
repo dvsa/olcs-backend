@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * IRHP Permit
@@ -30,5 +33,35 @@ class IrhpPermit extends AbstractRepository
             ->setParameter(1, $stockId)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Apply List Filters
+     *
+     * @param QueryBuilder   $qb    Doctrine Query Builder
+     * @param QueryInterface $query Http Query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if ($query instanceof ValidEcmtPermits) {
+            $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
+                ->setParameter('ecmtId', $query->getId());
+            $qb->orderBy($this->alias . '.permitNumber', 'DESC');
+        }
+    }
+
+    /**
+     * Add List Joins
+     *
+     * @param QueryBuilder $qb Doctrine Query Builder
+     *
+     * @return void
+     */
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('irhpPermitApplication', 'ipa');
     }
 }
