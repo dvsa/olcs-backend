@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Mockery as m;
@@ -60,8 +61,8 @@ class IrhpPermitTest extends RepositoryTestCase
     public function testApplyListFilters()
     {
         $this->setUpSut(IrhpPermit::class, true);
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
-        $mockQ = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
+        $mockQb = m::mock(QueryBuilder::class);
+        $mockQ = m::mock(QueryInterface::class);
 
         $mockQb->shouldReceive('expr')
             ->andReturnSelf()
