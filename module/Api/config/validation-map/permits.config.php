@@ -23,6 +23,14 @@ return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\CheckRunScoringPrerequisites::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\QueueAcceptScoringPermitted::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\CheckAcceptScoringPrerequisites::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\StockScoringPermitted::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
@@ -46,4 +54,7 @@ return [
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\TriggerProcessEcmtApplications::class => IsInternalAdmin::class,
     CommandHandler\Permits\GeneratePermit::class => IsSideEffect::class,
+    // TODO: these will need to be changed to IsInternalAdmin
+    CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
+    CommandHandler\Permits\QueueAcceptScoring::class => NotIsAnonymousUser::class,
 ];

@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
@@ -15,8 +18,12 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulRemainingPermitApplications extends AbstractCommandHandler implements TransactionedInterface
+class MarkSuccessfulRemainingPermitApplications extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+
     protected $repoServiceName = 'IrhpCandidatePermit';
 
     protected $extraRepos = ['IrhpPermit', 'IrhpPermitRange'];
@@ -50,9 +57,7 @@ class MarkSuccessfulRemainingPermitApplications extends AbstractCommandHandler i
 
         // TODO: could remainingQuota ever be zero or less?
         if ($remainingQuota > 0) {
-            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedUnderConsiderationIds(
-                $stockId
-            );
+            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIds($stockId);
 
             $truncatedCandidatePermitIds = array_slice($candidatePermitIds, 0, $remainingQuota);
             $this->getRepo()->markAsSuccessful($truncatedCandidatePermitIds);

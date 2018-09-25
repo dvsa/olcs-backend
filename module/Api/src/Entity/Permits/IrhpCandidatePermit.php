@@ -48,8 +48,8 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     {
         $licence = [];
         foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $irhpPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication();
-            $licence[$irhpPermitApplication->getLicence()->getLicNo()][$irhpPermitApplication->getId()] = $irhpPermitApplication->getPermitsRequired();
+            $ecmtPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication()->getEcmtPermitApplication();
+            $licence[$ecmtPermitApplication->getLicence()->getLicNo()][$ecmtPermitApplication->getId()] = $ecmtPermitApplication->getPermitsRequired();
         }
 
         return [
@@ -68,7 +68,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     public function calculateRandomFactor(array $deviationData)
     {
         $standardDeviation = 0;
-        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getLicence()->getLicNo()];
+        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getEcmtPermitApplication()->getLicence()->getLicNo()];
         foreach ($licenceData as $applicationPermitsRequired) {
             $standardDeviation += $applicationPermitsRequired;
         }

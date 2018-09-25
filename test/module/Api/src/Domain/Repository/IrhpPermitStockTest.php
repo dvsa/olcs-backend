@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
@@ -90,5 +91,45 @@ class IrhpPermitStockTest extends RepositoryTestCase
                 $expectedResult,
                 $this->sut->getNextIrhpPermitStockByPermitType($permitType, $date, Query::HYDRATE_ARRAY)
             );
+    }
+
+    public function testUpdateStatus()
+    {
+        $status = IrhpPermitStockEntity::STATUS_SCORING_PENDING;
+        $irhpPermitStockId = 44;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $query = m::mock(AbstractQuery::class);
+        $query->shouldReceive('execute')
+            ->withNoArgs()
+            ->once();
+
+        $queryBuilder->shouldReceive('update')
+            ->with(IrhpPermitStockEntity::class, 'ips')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('set')
+            ->with('ips.status', '?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ips.id = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $status)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $irhpPermitStockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($query);
+
+        $this->sut->updateStatus($irhpPermitStockId, $status);
     }
 }
