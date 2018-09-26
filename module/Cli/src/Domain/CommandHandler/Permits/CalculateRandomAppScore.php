@@ -36,9 +36,10 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
 
             $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
             foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-                $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
+                $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
 
-                $irhpCandidatePermit->setRandomizedScore(abs($randomisedScore * $irhpCandidatePermit->getApplicationScore()));
+                $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
+                $irhpCandidatePermit->setRandomFactor($randomFactor);
                 $this->getRepo()->save($irhpCandidatePermit);
             }
 
