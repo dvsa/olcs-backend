@@ -31,13 +31,26 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         parent::setUp();
     }
+
     public function testGetCalculatedBundleValues()
     {
         $this->assertSame(
             [
-                'permitsAwarded' => 0
+                'permitsAwarded' => 0,
+                'validPermits' => 0
             ],
             $this->sut->getCalculatedBundleValues()
         );
+    }
+
+
+    public function testCountValidPermits()
+    {
+        $this->assertEquals(0, $this->sut->countValidPermits());
+    }
+
+    public function testCountPermitsAwarded()
+    {
+        $this->assertEquals(0, $this->sut->countPermitsAwarded());
     }
 }

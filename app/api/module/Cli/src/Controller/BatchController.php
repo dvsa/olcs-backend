@@ -489,6 +489,51 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Identify successful permit applications
+     *
+     * @return ConsoleModel
+     */
+    public function identifySuccessfulPermitApplicationsAction()
+    {
+        if (!is_numeric($this->params('stock-id'))) {
+            $this->writeVerboseMessages('The stock-id parameter must be a numeric value');
+            return $this->handleExitStatus(0);
+        }
+        $stockId = intval($this->params('stock-id'));
+        $stockIdParams = ['stockId' => $stockId];
+
+        // TODO; do we need to reset all candidate permit records in the stock to unsuccessful?
+
+        $result = $this->handleQuery(
+            CliQuery\Permits\StockAvailability::create($stockIdParams)
+        );
+        if (!$result['result']) {
+            $this->writeVerboseMessages('Prerequisite failed: ' . $result['message']);
+            return $this->handleExitStatus(0);
+        }
+
+        $result = $this->handleQuery(
+            CliQuery\Permits\StockLackingRandomisedScore::create($stockIdParams)
+        );
+        if ($result['result']) {
+            $this->writeVerboseMessages(
+                'Prerequisite failed: one or more candidate permits within the stock lack a randomised score'
+            );
+            return $this->handleExitStatus(1);
+        }
+
+        $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams),
+                    CliCommand\Permits\MarkSuccessfulDaPermitApplications::create($stockIdParams),
+                    CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
+                ]
+            )
+        );
+    }
+
+    /**
      * Is verbose
      *
      * @return boolean

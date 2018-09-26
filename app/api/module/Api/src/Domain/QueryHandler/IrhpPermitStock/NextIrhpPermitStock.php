@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -28,6 +29,6 @@ class NextIrhpPermitStock extends AbstractListQueryHandler implements ToggleRequ
      */
     public function handleQuery(QueryInterface $query)
     {
-        return $this->getRepo()->getNextIrhpPermitStockByPermitType($query->getPermitType(), date("Y-m-d"));
+        return $this->getRepo()->getNextIrhpPermitStockByPermitType($query->getPermitType(), new DateTime());
     }
 }

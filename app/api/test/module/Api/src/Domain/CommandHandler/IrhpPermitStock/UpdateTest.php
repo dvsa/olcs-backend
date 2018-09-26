@@ -33,8 +33,8 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $id = 1;
         $permitType = '1';
-        $validFrom = ['day' => '01', 'month' => '01', 'year' => '2019'];
-        $validTo = ['day' => '01', 'month' => '01', 'year' => '2019'];
+        $validFrom = '2019-01-01';
+        $validTo = '2019-01-01';
         $initialStock = '1500';
 
         $cmdData = [

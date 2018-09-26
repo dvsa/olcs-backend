@@ -10,13 +10,17 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 
 return [
+    QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\SectorsList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtApplicationByLicence::class => CanAccessLicenceWithLicence::class,
+    QueryHandler\Permits\ValidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
@@ -36,5 +40,5 @@ return [
     CommandHandler\Permits\DeclineEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\AcceptEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
-    CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
+    CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class
 ];

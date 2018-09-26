@@ -28,7 +28,8 @@ final class Submission extends AbstractQueryHandler
         // retrieve reason even if deleted
         $repo->disableSoftDeleteable(
             [
-                \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                \Dvsa\Olcs\Api\Entity\Pi\Reason::class,
+                \Dvsa\Olcs\Api\Entity\User\User::class
             ]
         );
 
