@@ -506,10 +506,6 @@ class BatchController extends AbstractConsoleController
         $result = $this->handleCommand([
             CliCommand\Permits\CalculateRandomAppScore::create($stockIdParams)
         ]);
-        if ($result['message'] == 'ERROR') {
-            $this->writeVerboseMessages('CalculateRandomAppScore: THREW ERROR');
-            return $this->handleExitStatus(0);
-        }
 
         $result = $this->handleQuery(
             CliQuery\Permits\StockAvailability::create($stockIdParams)

@@ -30,23 +30,19 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-        try{
-            $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
+        $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
 
-            $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
-            foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-                $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
+        $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
+        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+            $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
 
-                $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
-                $irhpCandidatePermit->setRandomFactor($randomFactor);
-                $this->getRepo()->save($irhpCandidatePermit);
-            }
-
-            $result->addMessage('Candidate Permit Records updated with their randomised scores.');
-        } catch(Exception $e) {
-            $result->addMessage('ERROR');
+            $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
+            $irhpCandidatePermit->setRandomFactor($randomFactor);
+            $this->getRepo()->save($irhpCandidatePermit);
         }
+
+        $result = new Result();
+        $result->addMessage('Candidate Permit Records updated with their randomised scores.');
 
         return $result;
     }
