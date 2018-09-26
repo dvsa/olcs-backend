@@ -30,18 +30,22 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
     */
     public function handleCommand(CommandInterface $command)
     {
-        $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
-
-        $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
-        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
-
-            $irhpCandidatePermit->setRandomizedScore(abs($randomisedScore * $irhpCandidatePermit->getApplicationScore()));
-            $this->getRepo()->save($irhpCandidatePermit);
-        }
-
         $result = new Result();
-        $result->addMessage('Candidate Permit Records updated with their randomised scores.');
+        try{
+            $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
+
+            $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
+            foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+                $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
+
+                $irhpCandidatePermit->setRandomizedScore(abs($randomisedScore * $irhpCandidatePermit->getApplicationScore()));
+                $this->getRepo()->save($irhpCandidatePermit);
+            }
+
+            $result->addMessage('Candidate Permit Records updated with their randomised scores.');
+        } catch(Exception $e) {
+            $result->addMessage('ERROR');
+        }
 
         return $result;
     }
