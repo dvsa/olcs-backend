@@ -1,11 +1,14 @@
 <?php
 
+/**
+ * IrhpPermitStock
+ */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 
 /**
- * Feature toggle
+ * IrhpPermitStock
  */
 class IrhpPermitStock extends AbstractRepository
 {
@@ -17,6 +20,11 @@ class IrhpPermitStock extends AbstractRepository
      * (after the stock for the given date has expired)
      *
      * Filtered for a given permit type
+     *
+     * @param string $permitType
+     * @param DateTime $date
+     *
+     * @return array
      */
     public function getNextIrhpPermitStockByPermitType($permitType, $date)
     {
@@ -24,7 +32,6 @@ class IrhpPermitStock extends AbstractRepository
                 ->select('ips')
                 ->from(Entity::class, 'ips')
                 ->innerJoin('ips.irhpPermitType', 'ipt')
-                ->where('ips.validTo >= ?1') //stock is valid
                 ->where('ips.validFrom >= ?1') //stock starts in future
                 ->andWhere('ipt.name = ?2') //Permit Type ECMT
                 ->orderBy('ips.validTo', 'ASC')

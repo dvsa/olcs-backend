@@ -754,6 +754,8 @@ return [
     Command\Email\SendEbsrErrors::class => CommandHandler\Email\SendEbsrErrors::class,
     Command\Email\SendEbsrRequestMap::class => CommandHandler\Email\SendEbsrRequestMap::class,
     Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
+    Command\Email\SendEcmtIssued::class => CommandHandler\Email\SendEcmtIssued::class,
+    Command\Email\SendEcmtUnsuccessful::class => CommandHandler\Email\SendEcmtUnsuccessful::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
@@ -984,6 +986,16 @@ return [
     TransferCommand\IrhpPermitStock\Delete::class =>
         CommandHandler\IrhpPermitStock\Delete::class,
 
+
+
+    // Transfer - IRHP Permit Stock
+    TransferCommand\IrhpPermitWindow\Create::class =>
+        CommandHandler\IrhpPermitWindow\Create::class,
+    TransferCommand\IrhpPermitWindow\Update::class =>
+        CommandHandler\IrhpPermitWindow\Update::class,
+    TransferCommand\IrhpPermitWindow\Delete::class =>
+        CommandHandler\IrhpPermitWindow\Delete::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
@@ -1066,4 +1078,15 @@ return [
     // Permits - internal backend
 
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
+
+    // Cli - Permits
+    CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
+        CommandHandlerCli\Permits\MarkSuccessfulDaPermitApplications::class,
+    CommandCli\Permits\MarkSuccessfulRemainingPermitApplications::class =>
+        CommandHandlerCli\Permits\MarkSuccessfulRemainingPermitApplications::class,
+    CommandCli\Permits\MarkSuccessfulSectorPermitApplications::class =>
+        CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
+    CommandCli\Permits\CalculateRandomAppScore::class =>
+        CommandHandlerCli\Permits\CalculateRandomAppScore::class,
+
 ];

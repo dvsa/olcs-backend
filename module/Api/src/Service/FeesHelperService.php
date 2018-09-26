@@ -22,6 +22,11 @@ class FeesHelperService implements FactoryInterface
     protected $applicationRepo;
 
     /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication
+     */
+    protected $ecmtApplicationRepo;
+
+    /**
      * @var \Dvsa\Olcs\Api\Domain\Repository\Fee
      */
     protected $feeRepo;
@@ -44,6 +49,7 @@ class FeesHelperService implements FactoryInterface
 
         // inject required repos
         $this->applicationRepo = $repoManager->get('Application');
+        $this->ecmtApplicationRepo = $repoManager->get('EcmtPermitApplication');
         $this->feeRepo = $repoManager->get('Fee');
         $this->feeTypeRepo = $repoManager->get('FeeType');
 
@@ -79,6 +85,27 @@ class FeesHelperService implements FactoryInterface
             if (!empty($interimFee)) {
                 $outstandingFees[] = $interimFee;
             }
+        }
+
+        return $outstandingFees;
+    }
+
+    /**
+     * Get fees pertaining to an ecmt permit application
+     *
+     * @param $ecmtApplicationId
+     * @return array
+     */
+    public function getOutstandingFeesForEcmtApplication($ecmtApplicationId)
+    {
+        $outstandingFees = [];
+
+        $ecmtApplication = $this->ecmtApplicationRepo->fetchById($ecmtApplicationId);
+
+        // get application fee
+        $ecmtApplicationFee = $ecmtApplication->getLatestOutstandingEcmtApplicationFee();
+        if (!empty($ecmtApplicationFee)) {
+            $outstandingFees[] = $ecmtApplicationFee;
         }
 
         return $outstandingFees;

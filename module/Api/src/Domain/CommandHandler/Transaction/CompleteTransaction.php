@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
+use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -57,6 +58,8 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         // handle application submission
         if ($transaction->isPaid() && $command->getSubmitApplicationId()) {
             $result->merge($this->updateApplication($command));
+        } elseif ($transaction->isPaid() && $command->getSubmitEcmtPermitApplicationId()) {
+            $result->merge($this->updateEcmtPermitApplication($command));
         }
 
         $result->addId('transaction', $transaction->getId());
@@ -76,6 +79,10 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         );
     }
 
+    /**
+     * @param $command
+     * @return Result
+     */
     protected function updateApplication($command)
     {
         return $this->handleSideEffect(
@@ -85,6 +92,21 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
                     // we don't have the application version when we call
                     // this as an internal command - we would have to store
                     // it at the point we initiate the payment flow
+                ]
+            )
+        );
+    }
+
+    /**
+     * @param $command
+     * @return Result
+     */
+    protected function updateEcmtPermitApplication($command)
+    {
+        return $this->handleSideEffect(
+            SubmitEcmtPermitApplicationCmd::create(
+                [
+                    'id' => $command->getSubmitEcmtPermitApplicationId(),
                 ]
             )
         );
