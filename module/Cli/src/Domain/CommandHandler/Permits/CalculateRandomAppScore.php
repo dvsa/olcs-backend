@@ -30,19 +30,23 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
     */
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
         $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
 
-        $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
-        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
+        if (count($irhpCandidatePermits) > 0) {
+            $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
+            foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+                $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
 
-            $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
-            $irhpCandidatePermit->setRandomFactor($randomFactor);
-            $this->getRepo()->save($irhpCandidatePermit);
+                $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
+                $irhpCandidatePermit->setRandomFactor($randomFactor);
+                $this->getRepo()->save($irhpCandidatePermit);
+            }
+
+            $result->addMessage('Candidate Permit Records updated with their randomised scores.');
+        } else {
+            $result->addMessage('No candite permits were found for scoring.');
         }
-
-        $result = new Result();
-        $result->addMessage('Candidate Permit Records updated with their randomised scores.');
 
         return $result;
     }
