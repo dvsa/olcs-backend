@@ -48,6 +48,8 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
             ->andReturn(12);
 
         $irhpCandidatePermit = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit->shouldReceive('getRandomizedScore')
+            ->andReturn(1.1);
         $irhpCandidatePermit->shouldReceive('calculateRandomFactor')
             ->with(
                 [
