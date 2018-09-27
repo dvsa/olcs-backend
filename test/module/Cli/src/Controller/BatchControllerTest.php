@@ -887,6 +887,17 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->mockConsole->shouldReceive('writeLine');
 
+        $this->mockCommandHandler->shouldReceive('handleCommand')
+            ->with(
+                equalTo(
+                    CliCommand\Permits\CalculateRandomAppScore::create(
+                        ['stockId' => $stockId]
+                    )
+                )
+            )
+            ->once()
+            ->andReturn(new Command\Result());
+
         $this->mockQueryHandler->shouldReceive('handleQuery')
             ->with(
                 equalTo(
