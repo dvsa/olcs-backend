@@ -49,7 +49,7 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
 
         $irhpCandidatePermit = m::mock(IrhpCandidatePermit::class);
         $irhpCandidatePermit->shouldReceive('getRandomizedScore')
-            ->andReturn(1.1);
+            ->andReturn(null);
         $irhpCandidatePermit->shouldReceive('calculateRandomFactor')
             ->with(
                 [
@@ -66,10 +66,10 @@ class CalculateRandomAppScoreTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplication);
         $irhpCandidatePermit->shouldReceive('setRandomizedScore')
             ->with(10.1 * 2)
-            ->andReturn(null);
+            ->once();
         $irhpCandidatePermit->shouldReceive('setRandomFactor')
             ->with(10.1)
-            ->andReturn(null);
+            ->once();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('getIrhpCandidatePermitsForScoring')
             ->with($stockId)
