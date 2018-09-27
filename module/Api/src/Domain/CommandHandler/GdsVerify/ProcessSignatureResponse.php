@@ -67,14 +67,19 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
         if ($command->getApplication()) {
             $this->updateApplication($command->getApplication(), $digitalSignature);
-            $this->result->addMessage('Digital signature added to application '. $command->getApplication());
+            $this->result->addMessage('Digital signature added to application ' . $command->getApplication());
         }
 
         if ($command->getContinuationDetail()) {
             $this->updateContinuationDetail($command->getContinuationDetail(), $digitalSignature);
             $this->result->addMessage(
-                'Digital signature added to continuationDetail'. $command->getContinuationDetail()
+                'Digital signature added to continuationDetail' . $command->getContinuationDetail()
             );
+        }
+
+        if ($command->getTransportManagerApplication()) {
+            $this->updateTMApplication($command->getTransportManagerApplication());
+            $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
         return $this->result;
@@ -145,5 +150,16 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             $this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE)
         );
         $this->getRepo('ContinuationDetail')->save($continuationDetail);
+    }
+
+    private function updateTMApplication(
+        int $transportManagerApplicationId,
+        Entity\DigitalSignature $digitalSignature
+    ): void {
+        /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
+        $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
+        $transportManagerApplication->setDigitalSignature($digitalSignature);
+        $transportManagerApplication->setSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
+        $this->getRepo('TransportManagerApplication')->save($transportManagerApplication);
     }
 }
