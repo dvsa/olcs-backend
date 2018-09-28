@@ -29,14 +29,14 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
  */
 class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface
 {
-    const STATUS_CANCELLED = 'ecmt_permit_cancelled';
-    const STATUS_NOT_YET_SUBMITTED = 'ecmt_permit_nys';
-    const STATUS_UNDER_CONSIDERATION = 'ecmt_permit_uc';
-    const STATUS_WITHDRAWN = 'ecmt_permit_withdrawn';
-    const STATUS_AWAITING_FEE = 'ecmt_permit_awaiting';
-    const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
-    const STATUS_ISSUED = 'ecmt_permit_issued';
-    const STATUS_VALID = 'ecmt_permit_valid';
+    const STATUS_CANCELLED = 'permit_app_cancelled';
+    const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
+    const STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
+    const STATUS_WITHDRAWN = 'permit_app_withdrawn';
+    const STATUS_AWAITING_FEE = 'permit_app_awaiting';
+    const STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
+    const STATUS_ISSUED = 'permit_app_issued';
+    const STATUS_VALID = 'permit_app_valid';
 
 
     const PERMIT_TYPE = 'permit_ecmt';
