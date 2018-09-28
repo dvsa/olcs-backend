@@ -36,11 +36,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_AWAITING_FEE = 'permit_app_awaiting';
     const STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
     const STATUS_ISSUED = 'permit_app_issued';
+    const STATUS_ISSUING = 'permit_app_issuing';
     const STATUS_VALID = 'permit_app_valid';
-
+    const STATUS_DECLINED = 'permit_app_declined';
 
     const PERMIT_TYPE = 'permit_ecmt';
-    const PERMIT_VALID = 'permit_valid';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
@@ -527,7 +527,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function isValid()
     {
-        return $this->status->getId() === self::PERMIT_VALID;
+        return $this->status->getId() === self::STATUS_VALID;
     }
 
 
