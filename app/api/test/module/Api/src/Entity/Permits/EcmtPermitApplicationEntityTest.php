@@ -457,7 +457,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     private function createValidApplication()
     {
-        return $this->createApplication(Entity::PERMIT_VALID);
+        return $this->createApplication(Entity::STATUS_VALID);
     }
 
     /**
