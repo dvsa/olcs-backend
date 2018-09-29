@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * IrhpPermit Entity
@@ -22,5 +23,27 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpPermit extends AbstractIrhpPermit
 {
+    /**
+     * Create new IrhpPermit
+     *
+     * @param IrhpCandidatePermit   $irhpCandidatePermit
+     * @param DateTime              $issueDate
+     * @param int                   $permitNumber
+     *
+     * @return IrhpPermit
+     */
+    public static function createNew(
+        IrhpCandidatePermit $irhpCandidatePermit,
+        DateTime $issueDate,
+        $permitNumber
+    ) {
+        $irhpPermit = new self();
+        $irhpPermit->irhpCandidatePermit = $irhpCandidatePermit;
+        $irhpPermit->irhpPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication();
+        $irhpPermit->irhpPermitRange = $irhpCandidatePermit->getIrhpPermitRange();
+        $irhpPermit->issueDate = $issueDate;
+        $irhpPermit->permitNumber = $permitNumber;
 
+        return $irhpPermit;
+    }
 }
