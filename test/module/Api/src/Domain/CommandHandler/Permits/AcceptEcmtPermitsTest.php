@@ -29,7 +29,7 @@ class AcceptEcmtPermitsTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::PERMIT_VALID
+            EcmtPermitApplication::STATUS_VALID
         ];
 
         parent::initReferences();
@@ -41,7 +41,7 @@ class AcceptEcmtPermitsTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => $applicationId]);
 
         $application = m::mock(EcmtPermitApplication::class);
-        $application->shouldReceive('accept')->with($this->refData[EcmtPermitApplication::PERMIT_VALID])->once();
+        $application->shouldReceive('accept')->with($this->refData[EcmtPermitApplication::STATUS_VALID])->once();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($applicationId)

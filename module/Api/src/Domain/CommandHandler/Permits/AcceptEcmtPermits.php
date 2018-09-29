@@ -33,7 +33,7 @@ final class AcceptEcmtPermits extends AbstractCommandHandler
         $id = $command->getId();
         $application = $this->getRepo()->fetchById($id);
 
-        $newStatus = $this->refData(EcmtPermitApplication::PERMIT_VALID);
+        $newStatus = $this->refData(EcmtPermitApplication::STATUS_VALID);
         $application->accept($newStatus);
 
         $this->getRepo()->save($application);
