@@ -459,9 +459,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return $this->createApplication(Entity::STATUS_VALID);
     }
 
-    /**
-     * @dataProvider trueFalseProvider
-     */
     public function testIsValid()
     {
         $entity = $this->createValidApplication();
@@ -521,5 +518,113 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($application->getHasRestrictedCountries(), null);
         $this->assertEquals($application->getCheckedAnswers(), null);
         $this->assertEquals($application->getDeclaration(), null);
+    }
+
+    public function testProceedToIssuing()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $entity->proceedToIssuing($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsReadyForIssuingFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToIssuingException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToIssuing(m::mock(RefData::class));
+    }
+
+    public function testProceedToValid()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $entity->proceedToValid($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsIssueInProgressFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToValidException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToValid(m::mock(RefData::class));
+    }
+
+    public function testIsReadyForIssuingSuccess()
+    {
+        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $this->assertTrue($entity->isReadyForIssuing());
+    }
+
+    /**
+     * @dataProvider dpIsReadyForIssuingFail
+     */
+    public function testIsReadyForIssuingFail($status)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertFalse($entity->isReadyForIssuing());
+    }
+
+    /**
+     * Array of app statuses that don't match ready for issuing
+     *
+     * @return array
+     */
+    public function dpIsReadyForIssuingFail()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_ISSUING],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
+        ];
+    }
+
+    public function testIsIssueInProgressSuccess()
+    {
+        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $this->assertTrue($entity->isIssueInProgress());
+    }
+
+    /**
+     * @dataProvider dpIsIssueInProgressFail
+     */
+    public function testIsIssueInProgressFail($status)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertFalse($entity->isIssueInProgress());
+    }
+
+    /**
+     * Array of app statuses that don't match an issue in progress
+     *
+     * @return array
+     */
+    public function dpIsIssueInProgressFail()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_FEE_PAID],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
+        ];
     }
 }
