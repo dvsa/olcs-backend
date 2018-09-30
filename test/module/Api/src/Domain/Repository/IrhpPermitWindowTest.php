@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use DateTime;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
@@ -64,6 +65,7 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('getQuery->getResult')
             ->once()
+            ->with(Query::HYDRATE_ARRAY)
             ->andReturn($expectedResult);
 
         $this->assertEquals(
