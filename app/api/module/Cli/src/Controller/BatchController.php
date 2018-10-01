@@ -503,6 +503,9 @@ class BatchController extends AbstractConsoleController
         $stockIdParams = ['stockId' => $stockId];
 
         // TODO; do we need to reset all candidate permit records in the stock to unsuccessful?
+        $result = $this->handleCommand([
+            CliCommand\Permits\CalculateRandomAppScore::create($stockIdParams)
+        ]);
 
         $result = $this->handleQuery(
             CliQuery\Permits\StockAvailability::create($stockIdParams)

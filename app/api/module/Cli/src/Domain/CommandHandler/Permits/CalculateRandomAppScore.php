@@ -30,18 +30,28 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
     */
     public function handleCommand(CommandInterface $command)
     {
+        $result = new Result();
         $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
+        $totalPermitCount = count($irhpCandidatePermits);
+        $servicedPermitCount = 0;
 
-        $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
-        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $randomisedScore = $irhpCandidatePermit->calculateRandomisedScore($deviationData);
+        if ($totalPermitCount > 0) {
+            $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
+            foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+                $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
 
-            $irhpCandidatePermit->setRandomizedScore(abs($randomisedScore * $irhpCandidatePermit->getApplicationScore()));
-            $this->getRepo()->save($irhpCandidatePermit);
+                if ($irhpCandidatePermit->getRandomizedScore() === null) {
+                    $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
+                    $irhpCandidatePermit->setRandomFactor($randomFactor);
+                    $this->getRepo()->save($irhpCandidatePermit);
+                    $servicedPermitCount++;
+                }
+            }
         }
 
-        $result = new Result();
-        $result->addMessage('Candidate Permit Records updated with their randomised scores.');
+        $result->addMessage('Updated the Randomised Score of Appropriate Candidate Permits.');
+        $result->addMessage('   - Candidate Permit Count: ' . $totalPermitCount);
+        $result->addMessage('   - Number of Permits Updated: ' . $servicedPermitCount);
 
         return $result;
     }
