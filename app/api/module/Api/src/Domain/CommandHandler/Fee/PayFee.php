@@ -15,8 +15,12 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptEcmtPermits;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
@@ -112,6 +116,63 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         );
     }
 
+
+    /**
+     * Process ecmt permit application fee
+     *
+     * @param Fee $fee fee
+     *
+     * @return void
+     */
+    protected function maybeProcessEcmtPermitApplicationFee(Fee $fee)
+    {
+        $ecmtPermitApplication = $fee->getEcmtPermitApplication();
+
+        if ($ecmtPermitApplication === null
+            || !$ecmtPermitApplication->isUnderConsideration()
+        ) {
+            return;
+        }
+
+        $this->result->merge(
+            $this->handleSideEffectAsSystemUser(SubmitEcmtPermitApplicationCmd::create(
+                ['id' => $ecmtPermitApplication->getId()]
+            ))
+        );
+    }
+
+    /**
+     * Process ecmt permit issue fee
+     *
+     * @param Fee $fee fee
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return void
+     */
+    protected function maybeProcessEcmtPermitIssueFee(Fee $fee)
+    {
+        $ecmtPermitApplication = $fee->getEcmtPermitApplication();
+
+
+        if ($ecmtPermitApplication === null
+            || !$ecmtPermitApplication->isAwaitingFee()
+        ) {
+            return;
+        }
+
+        $this->result->merge(
+            $this->handleSideEffectAsSystemUser(CompleteIssuePayment::create(
+                ['id' => $ecmtPermitApplication->getId()]
+            ))
+        );
+
+        $this->result->merge(
+            $this->handleSideEffectAsSystemUser(AcceptEcmtPermits::create(
+                ['id' => $ecmtPermitApplication->getId()]
+            ))
+        );
+    }
+
     /**
      * If all criteria are true then continue the Licence
      *
@@ -170,8 +231,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $application = $fee->getApplication();
-        if (
-            $application->isGoods() && !$application->isVariation() &&
+        if ($application->isGoods() && !$application->isVariation() &&
             $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
@@ -189,8 +249,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     {
         $application = $fee->getApplication();
 
-        if (
-            $fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT
+        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT
             || $application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED
             ) {
             return;
