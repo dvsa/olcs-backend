@@ -1004,6 +1004,10 @@ return [
     TransferCommand\IrhpPermitRange\Delete::class =>
         CommandHandler\IrhpPermitRange\Delete::class,
 
+    // Transfer - IRHP Permit Sector
+    TransferCommand\IrhpPermitSector\Update::class =>
+        CommandHandler\IrhpPermitSector\Update::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,
