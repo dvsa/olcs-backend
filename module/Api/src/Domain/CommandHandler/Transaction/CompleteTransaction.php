@@ -14,7 +14,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
+use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
+use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -31,7 +34,7 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
 
     protected $repoServiceName = 'Transaction';
 
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = ['Application', 'EcmtPermitApplication'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -103,12 +106,18 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
      */
     protected function updateEcmtPermitApplication($command)
     {
-        return $this->handleSideEffect(
-            SubmitEcmtPermitApplicationCmd::create(
-                [
-                    'id' => $command->getSubmitEcmtPermitApplicationId(),
-                ]
-            )
-        );
+        $ecmtPermitApplication = $this->getRepo('EcmtPermitApplication')->fetchById($command->getSubmitEcmtPermitApplicationId());
+
+        if ($ecmtPermitApplication->isNotYetSubmitted()) {
+            return $this->handleSideEffect(
+                SubmitEcmtPermitApplicationCmd::create(['id' => $command->getSubmitEcmtPermitApplicationId()])
+            );
+        }
+        if ($ecmtPermitApplication->isAwaitingFee()) {
+            return $this->handleSideEffects([
+                CompleteIssuePayment::create(['id' => $command->getSubmitEcmtPermitApplicationId()]),
+                AcceptEcmtPermits::create(['id' => $command->getSubmitEcmtPermitApplicationId()])
+            ]);
+        }
     }
 }

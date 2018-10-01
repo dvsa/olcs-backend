@@ -44,6 +44,7 @@ class FeeType extends AbstractFeeType
     const FEE_TYPE_IRFOGVPERMIT = 'IRFOGVPERMIT';
     const FEE_TYPE_ADJUSTMENT = 'ADJUSTMENT';
     const FEE_TYPE_ECMT_APP = 'IRHPGVAPP';
+    const FEE_TYPE_ECMT_ISSUE = 'IRHPGVISSUE';
 
 
     const FEE_TYPE_ECMT_APP_PRODUCT_REF = 'IRHP_GV_APP_ECMT';
