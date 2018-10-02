@@ -454,4 +454,18 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [false]
         ];
     }
+
+    private function createValidApplication()
+    {
+        return $this->createApplication(Entity::PERMIT_VALID);
+    }
+
+    /**
+     * @dataProvider trueFalseProvider
+     */
+    public function testIsValid()
+    {
+        $entity = $this->createValidApplication();
+        $this->assertTrue($entity->isValid());
+    }
 }

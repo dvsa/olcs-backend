@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9dead55d58bf63d5afbb3a4b8607fd7e",
-    "content-hash": "b8c18a991597acd4f621f4a61e7dc356",
+    "hash": "72e3f7a55b9ad49f0d6769a2a6bf5cba",
+    "content-hash": "5b249cea9d37de4bc8d2b0e96f9de490",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1238,11 +1238,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.189",
+            "version": "dev-release/4.190a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "0cd7c070388647b9889ef8641156df79e7194e41"
+                "reference": "72a55917cd555739a3042bfb30f14ba72035ed51"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1254,15 +1254,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2018-09-17 16:34:56"
+            "time": "2018-09-26 16:27:48"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.189",
+            "version": "dev-release/4.190a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "0a9f4fb167a872a7a391a5ccf0fee37a3f4c5d66"
+                "reference": "87aebc235def79ce599f9e1669bebf1363bba35f"
             },
             "require": {
                 "php": ">=5.4",
@@ -1306,15 +1306,15 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2018-09-17 16:34:51"
+            "time": "2018-09-26 16:27:44"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.189",
+            "version": "dev-release/4.190a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "aa3b9713a901d15667afb3337edb83cef380c500"
+                "reference": "036729eff207a32e830e37c9e42c13d3155417e5"
             },
             "require": {
                 "php": ">=5.4",
@@ -1352,15 +1352,15 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2018-09-17 16:37:01"
+            "time": "2018-09-26 16:29:46"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.189",
+            "version": "dev-release/4.190a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "4b98dbd8883687dd90d11a9f6eb499143637f231"
+                "reference": "9b0fc0dbd0202f470d3874ac6b574ccbaade3bc9"
             },
             "require": {
                 "php": ">=5.4",
@@ -1369,7 +1369,7 @@
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
                 "olcs/olcs-devtools": "dev-master",
-                "olcs/olcs-logging": "dev-release/4.189"
+                "olcs/olcs-logging": "dev-release/4.190a"
             },
             "type": "library",
             "autoload": {
@@ -1398,15 +1398,15 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2018-09-17 16:37:50"
+            "time": "2018-09-26 16:30:33"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.189",
+            "version": "dev-release/4.190a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "f105177d6bb3403013a37e1bfce2a6e4fbae50ae"
+                "reference": "153868393686279e217efbeb17490222064677c7"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1447,7 +1447,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2018-09-17 16:34:04"
+            "time": "2018-09-26 16:26:59"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -2962,10 +2962,10 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-devtools.git",
-                "reference": "891a794a073dd7fd73a6c4e74c78d0b3b525c212"
+                "reference": "5a8fe5c2f1a3d54be241ecd88387c88d8b1809c7"
             },
             "require": {
-                "olcs/coding-standards": "^1.1.0",
+                "olcs/coding-standards": "^1.2.1",
                 "php": ">=5.4",
                 "phpmd/phpmd": "~2.2",
                 "phpunit/phpcov": "~3.0",
@@ -2983,7 +2983,7 @@
                 }
             },
             "description": "Dev tools",
-            "time": "2018-01-26 14:36:55"
+            "time": "2018-09-21 13:05:11"
         },
         {
             "name": "pdepend/pdepend",
@@ -4302,17 +4302,17 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.3.1",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "628a481780561150481a9ec74709092b9759b3ec"
+                "reference": "6ad28354c04b364c3c71a34e4a18b629cc3b231e"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/squizlabs-php_codesniffer-628a481780561150481a9ec74709092b9759b3ec-zip-2aa541.tar",
-                "reference": "628a481780561150481a9ec74709092b9759b3ec",
-                "shasum": "f8bde694909876c8024d69deee2b555d16af2f4b"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/squizlabs-php_codesniffer-6ad28354c04b364c3c71a34e4a18b629cc3b231e-zip-0db50b.tar",
+                "reference": "6ad28354c04b364c3c71a34e4a18b629cc3b231e",
+                "shasum": "c18c2af9c2feb794dcf8fa10a9a2e6c3d9b2270d"
             },
             "require": {
                 "ext-simplexml": "*",
@@ -4349,7 +4349,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-07-26 23:47:18"
+            "time": "2018-09-23 23:08:17"
         },
         {
             "name": "symfony/config",

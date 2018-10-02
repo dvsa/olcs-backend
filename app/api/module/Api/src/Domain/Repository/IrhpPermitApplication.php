@@ -12,9 +12,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/**
- * IrhpPermitApplication
- */
 class IrhpPermitApplication extends AbstractRepository
 {
     protected $entity = Entity::class;

@@ -39,4 +39,44 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
 
         return $IrhpCandidatePermit;
     }
+
+    /**
+     * Collects data from given candidate permits
+     * for use in deviation calculations
+     *
+     * @param irhpCandidatePermits list of irhp candidate permits to collate information from
+     *
+     * @return array containing data relevant to Deviation calculations as well as the Mean Deviation
+     */
+    public static function getDeviationData(array $irhpCandidatePermits)
+    {
+        $licence = [];
+        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
+            $irhpPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication();
+            $licence[$irhpPermitApplication->getLicence()->getLicNo()][$irhpPermitApplication->getId()] = $irhpPermitApplication->getPermitsRequired();
+        }
+
+        return [
+            'licenceData' => $licence,
+            'meanDeviation' => count($irhpCandidatePermits) / count($licence),
+        ];
+    }
+
+    /**
+     * Calculates the randomised score for this candidate permit
+     * using the given deviation data
+     *
+     * @param deviationData a pre-formatted array of data for use in calculations
+     * @return int a randomised statistical value derived from mean deviation and standard deviation
+     */
+    public function calculateRandomisedScore(array $deviationData)
+    {
+        $standardDeviation = 0;
+        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getLicence()->getLicNo()];
+        foreach ($licenceData as $applicationPermitsRequired) {
+            $standardDeviation += $applicationPermitsRequired;
+        }
+
+        return stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
+    }
 }

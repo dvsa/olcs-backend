@@ -38,6 +38,8 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
 
         $this->setIsValid('canAccessOrganisation', [34], $isValid);
 
+        $this->setIsValid('canAccessEcmtPermitApplication', [2], $isValid);
+
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
 
@@ -65,12 +67,32 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
      * @param $expected
      * @param $isValid
      */
+    public function testIsValidEcmtPermitApplication($expected, $isValid)
+    {
+        /** @var CommandInterface $dto */
+        $dto = m::mock(CommandInterface::class);
+        $dto->shouldReceive('getOrganisationId')->andReturn(null);
+        $dto->shouldReceive('getApplicationId')->andReturn(null);
+        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(2);
+
+        $this->setIsValid('canAccessEcmtPermitApplication', [2], $isValid);
+
+        $this->assertSame($expected, $this->sut->isValid($dto));
+    }
+
+    /**
+     * @dataProvider dataProvider
+     *
+     * @param $expected
+     * @param $isValid
+     */
     public function testIsValidFees($expected, $isValid)
     {
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
+        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getFeeIds')->andReturn([34, 56]);
 
         $this->setIsValid('canAccessFee', [34], $isValid);
@@ -85,6 +107,7 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
+        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getFeeIds')->andReturn([34, 56, 76]);
 
         $this->setIsValid('canAccessFee', [34], false);
@@ -100,6 +123,7 @@ class CanPayOutstandingFeesTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $dto->shouldReceive('getOrganisationId')->andReturn(null);
         $dto->shouldReceive('getApplicationId')->andReturn(null);
+        $dto->shouldReceive('getEcmtPermitApplicationId')->andReturn(null);
         $dto->shouldReceive('getFeeIds')->andReturn(null);
 
         $this->assertSame(false, $this->sut->isValid($dto));
