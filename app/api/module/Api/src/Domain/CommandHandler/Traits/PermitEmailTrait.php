@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Permit email trait
@@ -52,7 +51,7 @@ trait PermitEmailTrait
 
             $vars['permitsRequired'] = $recordObject->getPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countValidPermits();
-            $vars['paymentDeadlineNumDays'] = $irhpPermitApplication->getIrhpPermitWindow()->getDaysForPayment();
+            $vars['paymentDeadlineNumDays'] = '10';
 
             $criteria = Criteria::create();
             $criteria->where(
@@ -83,15 +82,7 @@ trait PermitEmailTrait
                 throw new Exception('There should be exactly one issuing fee.');
             }
 
-            $vars['issueFeeDeadlineDate'] = date(
-                \DATE_FORMAT,
-                strtotime(
-                    "+10 days",
-                    strtotime(
-                        $feeTypesAmounts[0]['invoicedDate']
-                    )
-                )
-            );
+            $vars['issueFeeDeadlineDate'] = $this->calculateDueDate($feeTypesAmounts[0]['invoicedDate']);
 
             $vars['issueFeeAmount'] = $feeTypesAmounts[0]['issueFeeAmount'];
             $vars['issueFeeTotal'] = $feeTypesAmounts[0]['issueFeeTotal'];
@@ -110,5 +101,25 @@ trait PermitEmailTrait
         return [
             'applicationRef' => $recordObject->getApplicationRef(),
         ];
+    }
+
+    /**
+     * Calculate due date for payment
+     *
+     * @param string $date
+     *
+     * @return string
+     */
+    protected function calculateDueDate($date)
+    {
+        return date(
+            \DATE_FORMAT,
+            strtotime(
+                "+10 days",
+                strtotime(
+                    $date
+                )
+            )
+        );
     }
 }
