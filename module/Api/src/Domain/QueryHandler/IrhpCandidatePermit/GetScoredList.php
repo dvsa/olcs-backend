@@ -24,7 +24,10 @@ class GetScoredList extends AbstractQueryHandler
                 'internationalJourneys'
             ],
             'irhpPermitWindow',
-            'licence'
+            'licence' => [
+                'trafficArea',
+                'organisation'
+            ]
         ]
     ];
 
