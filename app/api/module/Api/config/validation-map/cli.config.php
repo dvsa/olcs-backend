@@ -73,6 +73,8 @@ return [
     CommandHandler\Email\SendEcmtAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtIssued::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtUnsuccessful::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtSuccessful::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtPartSuccessful::class => IsSystemUser::class,
     CommandHandler\Email\SendPublication::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,

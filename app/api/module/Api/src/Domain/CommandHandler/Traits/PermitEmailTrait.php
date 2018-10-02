@@ -77,7 +77,7 @@ trait PermitEmailTrait
             }
 
             if (count($feeTypesAmounts) !== 1) {
-                throw new Exception('There should be exactly one issuing fee.');
+                throw new \Exception('There should be exactly one issuing fee.');
             }
 
             $vars['issueFeeDeadlineDate'] = $this->calculateDueDate($feeTypesAmounts[0]['invoicedDate']);
@@ -85,6 +85,8 @@ trait PermitEmailTrait
             $vars['issueFeeAmount'] = $feeTypesAmounts[0]['issueFeeAmount'];
             $vars['issueFeeTotal'] = $feeTypesAmounts[0]['issueFeeTotal'];
         }
+
+        return $vars;
     }
 
     /**
