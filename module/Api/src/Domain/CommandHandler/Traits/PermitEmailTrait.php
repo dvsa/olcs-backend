@@ -66,8 +66,7 @@ trait PermitEmailTrait
             $fees = $recordObject->getFees()->matching($criteria);
             $feeTypesAmounts = [];
 
-            foreach ($fees as $fee)
-            {
+            foreach ($fees as $fee) {
                 if ($fee->isEcmtIssuingFee()) {
                     $feeTypesAmounts[] = [
                         'issueFeeAmount' => $fee->getFeeTypeAmount(),
@@ -75,7 +74,6 @@ trait PermitEmailTrait
                         'invoicedDate' => $fee->getInvoicedDateTime()
                     ];
                 }
-
             }
 
             if (count($feeTypesAmounts) !== 1) {
