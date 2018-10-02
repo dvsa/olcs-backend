@@ -35,6 +35,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
     const STATUS_WITHDRAWN = 'permit_app_withdrawn';
     const STATUS_AWAITING_FEE = 'permit_app_awaiting';
+    const STATUS_FEE_PAID = 'permit_app_fee_paid';
     const STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
     const STATUS_ISSUED = 'permit_app_issued';
     const STATUS_ISSUING = 'permit_app_issuing';
@@ -249,6 +250,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         }
 
         $this->status = $cancelStatus;
+    }
+
+    public function proceedToIssuing(RefData $issuingStatus)
+    {
+        if (!$this->isReadyForIssuing()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to issuing');
+        }
+
+        $this->status = $issuingStatus;
+    }
+
+    public function proceedToValid(RefData $issuedStatus)
+    {
+        if (!$this->isIssueInProgress()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+        }
+
+        $this->status = $issuedStatus;
     }
 
     /**
@@ -688,6 +707,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function canBeCancelled()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether the permit application is ready to be issued
+     *
+     * @return bool
+     */
+    public function isReadyForIssuing()
+    {
+        return $this->status->getId() === self::STATUS_FEE_PAID;
+    }
+
+    /**
+     * Whether the permit application is currently being issued
+     *
+     * @return bool
+     */
+    public function isIssueInProgress()
+    {
+        return $this->status->getId() === self::STATUS_ISSUING;
     }
 
     /**

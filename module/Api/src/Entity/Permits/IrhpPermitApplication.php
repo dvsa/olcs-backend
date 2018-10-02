@@ -73,13 +73,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
      */
     public function countPermitsAwarded()
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->eq('successful', true)
-        );
-        $applications = $this->getIrhpCandidatePermits()->matching($criteria);
-
-        return count($applications);
+        return count($this->getSuccessfulIrhpCandidatePermits());
     }
 
     /**
@@ -89,16 +83,27 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
      */
     public function countValidPermits()
     {
-        $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->eq('successful', true)
-        );
-        $permits = $this->getIrhpCandidatePermits()->matching($criteria);
+        $permits = $this->getSuccessfulIrhpCandidatePermits();
 
         $validPermitCount = 0;
         foreach ($permits as $permit) {
             $validPermitCount += is_null($permit->getIrhpPermits()) ? 0 : $permit->getIrhpPermits()->count();
         }
         return $validPermitCount;
+    }
+
+    /**
+     * Get candidate permits marked as successful
+     **
+     * @return array
+     */
+    public function getSuccessfulIrhpCandidatePermits()
+    {
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->eq('successful', true)
+        );
+
+        return $this->getIrhpCandidatePermits()->matching($criteria);
     }
 }
