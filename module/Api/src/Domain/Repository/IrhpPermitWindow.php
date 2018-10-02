@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as Entity;
 use DateTime;
 
@@ -33,7 +34,7 @@ class IrhpPermitWindow extends AbstractRepository
             )
             ->setParameter(1, $currentDateTime)
             ->getQuery()
-            ->getResult();
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
     /**
