@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * EcmtPermitApplication Entity
@@ -285,6 +286,34 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Reset application answers - sets properties to null, or calls individual update methods in more important cases
+     *
+     * @return void
+     */
+    public function clearAnswers()
+    {
+        $this->emissions = null;
+        $this->cabotage = null;
+        $this->trips = null;
+        $this->internationalJourneys = null;
+        $this->sectors = null;
+        $this->updatePermitsRequired(null);
+        $this->resetCountrys();
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * @param Licence $licence
+     *
+     * @return void
+     */
+    public function updateLicence(Licence $licence)
+    {
+        $this->licence = $licence;
+        $this->clearAnswers();
+    }
+
+    /**
      * Updates the application to reflect whether or not cabotage will be carried out. A value of true indicates that
      * cabotage will NOT be carried out on the permit
      *
@@ -310,21 +339,22 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
 
     /**
      * Updates the application to indicate the intended use of the permit in any countries that have imposed limits
-     * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects
+     * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects.
      *
      * @param array $countrys
      */
     public function updateCountrys(array $countrys)
     {
         $this->countrys = $countrys;
-        $this->hasRestrictedCountries = (bool)count($countrys);
+        $this->hasRestrictedCountries = count($countrys) > 0;
+
         $this->resetCheckAnswersAndDeclaration();
     }
 
     /**
      * Updates the application to indicate the number of required permits
      *
-     * @param int $permitsRequired
+     * @param mixed $permitsRequired
      */
     public function updatePermitsRequired($permitsRequired)
     {
@@ -372,6 +402,18 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     {
         $this->declaration = false;
         $this->checkedAnswers = false;
+    }
+
+    /**
+     * Resets the countries that are associated with the ECMT Permit Application.
+     * Also ensures that the hasRestrictedCountries variable is set to null to reset the 'completed' status.
+     *
+     * @return void
+     */
+    public function resetCountrys()
+    {
+        $this->countrys = new ArrayCollection();
+        $this->hasRestrictedCountries = null;
     }
 
     /**
