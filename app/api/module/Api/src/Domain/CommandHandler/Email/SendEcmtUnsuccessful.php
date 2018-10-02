@@ -21,3 +21,4 @@ class SendEcmtUnsuccessful extends AbstractEmailHandler implements ToggleRequire
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-app-unsuccessful';
     protected $subject = 'email.ecmt.response.subject';
+}
