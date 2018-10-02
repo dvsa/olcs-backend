@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 
 /**
  * Update ECMT Application Licence
@@ -42,14 +43,14 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
         // Update the licence but reset the previously answers questions to NULL
-        $application->setLicence($licence);
-        $application->setPermitsRequired(null);
-        $application->setEmissions(null);
-        $application->setCabotage(null);
-        $application->setTrips(null);
-        $application->setInternationalJourneys(null);
-        $application->setSectors(null);
-        $application->setDeclaration(null);
+        $application->updateLicence($licence);
+        $fees = $application->getFees();
+
+        foreach ($fees as $fee) {
+            if ($fee->isOutstanding()) {
+                $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
+            }
+        }
 
         $this->getRepo()->save($application);
         $result->addId('ecmtPermitApplication', $application->getId());
