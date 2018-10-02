@@ -4,6 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Permit email trait
@@ -48,11 +51,50 @@ trait PermitEmailTrait
             $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
 
             $vars['permitsRequired'] = $recordObject->getPermitsRequired();
-            $vars['permitsGranted'] = 10; //testing only
+            $vars['permitsGranted'] = $irhpPermitApplication->countValidPermits();
             $vars['paymentDeadlineNumDays'] = $irhpPermitApplication->getIrhpPermitWindow()->getDaysForPayment();
-            $vars['issueFeeDeadlineDate'] = '13th of December 2018';
-            $vars['issueFeeAmount'] = 123; //testing only - needs to come from DB
-            $vars['issueFeeTotal'] = 1230; //testing only - needs to come from DB
+
+            $criteria = Criteria::create();
+            $criteria->where(
+                $criteria->expr()->in(
+                    'fee_status',
+                    [
+                        FeeEntity::STATUS_OUTSTANDING,
+                    ]
+                )
+            );
+
+            $fees = $recordObject->getFees()->matching($criteria);
+            $feeTypesAmounts = [];
+
+            foreach ($fees as $fee)
+            {
+                if ($fee->isEcmtIssuingFee()) {
+                    $feeTypesAmounts[] = [
+                        'issueFeeAmount' => $fee->getFeeTypeAmount(),
+                        'issueFeeTotal' => $fee->getOutstandingAmount(),
+                        'invoicedDate' => $fee->getInvoicedDateTime()
+                    ];
+                }
+
+            }
+
+            if (count($feeTypesAmounts) !== 1) {
+                throw new Exception('There should be exactly one issuing fee.');
+            }
+
+            $vars['issueFeeDeadlineDate'] = date(
+                \DATE_FORMAT,
+                strtotime(
+                    "+10 days",
+                    strtotime(
+                        $feeTypesAmounts[0]['invoicedDate']
+                    )
+                )
+            );
+
+            $vars['issueFeeAmount'] = $feeTypesAmounts[0]['issueFeeAmount'];
+            $vars['issueFeeTotal'] = $feeTypesAmounts[0]['issueFeeTotal'];
         }
     }
 
