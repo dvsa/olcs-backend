@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
@@ -21,6 +22,11 @@ class FeesHelperServiceTest extends MockeryTestCase
      * @var \Mockery\MockInterface (Dvsa\Olcs\Api\Domain\Repository\Application)
      */
     protected $applicationRepo;
+
+    /**
+     * @var \Mockery\MockInterface (Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication)
+     */
+    protected $ecmtApplicationRepo;
 
     /**
      * @var \Mockery\MockInterface (Dvsa\Olcs\Api\Domain\Repository\Fee
@@ -41,16 +47,17 @@ class FeesHelperServiceTest extends MockeryTestCase
     {
         // Mock the repos
         $this->applicationRepo = m::mock();
+        $this->ecmtApplicationRepo = m::mock();
         $this->feeRepo = m::mock();
         $this->feeTypeRepo = m::mock();
 
         // Create service with mocked dependencies
-        $this->sut = $this->createService($this->applicationRepo, $this->feeRepo, $this->feeTypeRepo);
+        $this->sut = $this->createService($this->applicationRepo, $this->ecmtApplicationRepo, $this->feeRepo, $this->feeTypeRepo);
 
         return parent::setUp();
     }
 
-    private function createService($applicationRepo, $feeRepo, $feeTypeRepo)
+    private function createService($applicationRepo, $ecmtApplicationRepo, $feeRepo, $feeTypeRepo)
     {
         $mockRepoManager = m::mock();
 
@@ -65,6 +72,10 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->with('Application')
             ->once()
             ->andReturn($applicationRepo)
+            ->shouldReceive('get')
+            ->with('EcmtPermitApplication')
+            ->once()
+            ->andReturn($ecmtApplicationRepo)
             ->shouldReceive('get')
             ->with('Fee')
             ->once()
@@ -123,6 +134,34 @@ class FeesHelperServiceTest extends MockeryTestCase
             ->andReturn($interimFee);
 
         $result = $this->sut->getOutstandingFeesForApplication($applicationId);
+
+        $this->assertEquals($fees, $result);
+    }
+
+    public function testGetOutstandingFeesForEcmtApplication()
+    {
+        $ecmtApplicationId = 2;
+
+        $ecmtApplicationFee = $this->getStubFee(99, 99.99);
+        $fees = [$ecmtApplicationFee];
+
+        $ecmtApplication = m::mock(EcmtPermitApplication::class)
+            ->makePartial()
+            ->setId($ecmtApplicationId);
+
+        // expectations
+        $this->ecmtApplicationRepo
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($ecmtApplicationId)
+            ->andReturn($ecmtApplication);
+
+        $ecmtApplication
+            ->shouldReceive('getLatestOutstandingEcmtApplicationFee')
+            ->once()
+            ->andReturn($ecmtApplicationFee);
+
+        $result = $this->sut->getOutstandingFeesForEcmtApplication($ecmtApplicationId);
 
         $this->assertEquals($fees, $result);
     }
@@ -246,9 +285,9 @@ class FeesHelperServiceTest extends MockeryTestCase
          $fees = [
             $this->getStubFee('1', '99.99'),
             $this->getStubFee('1', '99.99'),
-        ];
+         ];
 
-        $this->assertEquals('199.98', $this->sut->getTotalOutstanding($fees));
+         $this->assertEquals('199.98', $this->sut->getTotalOutstanding($fees));
     }
 
     /**

@@ -38,7 +38,8 @@ class SubmissionTest extends QueryHandlerTestCase
             ->shouldReceive('disableSoftDeleteable')
             ->with(
                 [
-                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class
+                    \Dvsa\Olcs\Api\Entity\Pi\Reason::class,
+                    \Dvsa\Olcs\Api\Entity\User\User::class
                 ]
             )
             ->once()
