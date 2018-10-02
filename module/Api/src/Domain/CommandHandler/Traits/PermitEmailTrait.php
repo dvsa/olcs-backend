@@ -45,12 +45,12 @@ trait PermitEmailTrait
             'applicationRef' => $recordObject->getApplicationRef(),
         ];
 
-        if ($recordObject->isValid()) {
+        if ($recordObject->isAwaitingFee()) {
             /** @var IrhpPermitApplication $irhpPermitApplication */
             $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
 
             $vars['permitsRequired'] = $recordObject->getPermitsRequired();
-            $vars['permitsGranted'] = $irhpPermitApplication->countValidPermits();
+            $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
             $vars['paymentDeadlineNumDays'] = '10';
 
             $criteria = Criteria::create();

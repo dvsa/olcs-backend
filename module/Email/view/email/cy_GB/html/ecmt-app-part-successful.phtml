@@ -1,7 +1,7 @@
-<p>Your ECMT permit application <?php echo $this->escapeHtml($this->applicationRef); ?> has now been considered and processed.</p>
+<p>CY - Your ECMT permit application <?php echo $this->escapeHtml($this->applicationRef); ?> has now been considered and processed.</p>
 
-<h3>Application status: Succcessful</h3>
-<p>You have been allocated the full number of permits you applied for.
+<h3>CY - Application status: Partially succcessful</h3>
+<p>You have been allocated a lower number of permits than you applied for due to very high numbers of applications for all available permits.
 <ul>
     <li>Number of permits required: <?php echo $this->escapeHtml($this->permitsRequired); ?></li>
     <li>Number of permits granted: <?php echo $this->escapeHtml($this->permitsGranted); ?></li>
@@ -15,4 +15,4 @@
 <p>You have <?php echo $this->escapeHtml($this->paymentDeadlineNumDays); ?> calendar days to pay for your allocated
     permits. If you do not pay the Permit Issuing fee by <?php echo $this->escapeHtml($this->issueFeeDeadlineDate); ?>
     the permits granted to your business will beautomatically cancelled.</p>
-<a href="<?php echo $this->escapeHtml($this->permitsUrl); ?>">Pay for your permits</a>
+<a href="<?php echo $this->escapeHtml($this->permitsUrl); ?>"></a>Pay for your permits</a>
