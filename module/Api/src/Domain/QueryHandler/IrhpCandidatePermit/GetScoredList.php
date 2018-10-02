@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpCandidatePermit;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\DataRetention;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 
@@ -16,7 +16,17 @@ use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 class GetScoredList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpCandidatePermit';
-    //protected $bundle = ['irhpPermitStock'];
+    protected $bundledRepos = [
+        'irhpPermitApplication' => [
+            'ecmtPermitApplication' => [
+                'countrys',
+                'sectors',
+                'internationalJourneys'
+            ],
+            'irhpPermitWindow',
+            'licence'
+        ]
+    ];
 
     /**
      * Return a list of scored irhp candidate permit records
@@ -29,7 +39,7 @@ class GetScoredList extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         /** @var Query $query */
-        /** @var DataRetention $repo */
+        /** @var IrhpCandidatePermit $repo */
         $repo = $this->getRepo();
 
         $results = $repo->fetchAllScoredForStock(
@@ -37,7 +47,10 @@ class GetScoredList extends AbstractQueryHandler
         );
 
         return [
-            'result' => $results,
+            'result' => $this->resultList(
+                $results,
+                $this->bundledRepos
+            ),
             'count' => 0
         ];
     }
