@@ -1078,6 +1078,10 @@ return [
     // Permits - internal backend
 
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
+    Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
+
+    // Permits - Private beta
+    TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class, 
 
     // Cli - Permits
     CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
