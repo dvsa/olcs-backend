@@ -189,7 +189,6 @@ class IrhpCandidatePermit extends AbstractRepository
             ->getResult();
     }
 
-
     /**
      * Apply List Filters
      *
@@ -222,5 +221,27 @@ class IrhpCandidatePermit extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('irhpPermitApplication', 'ipa')
             ->with('ipa.ecmtPermitApplication', 'epa');
+    }
+
+    /**
+     * Marks a set of candidate permit ids as successful
+     *
+     * @param array $candidatePermitIds
+     */
+    public function fetchAllScoredForStock($irhpPermitStockId)
+    {
+        $qb = $this->createQueryBuilder();
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipw.irhpPermitStock', 'ips')
+            ->where('ips.id = ?1')
+            ->andWhere('ipa.status = ?2')
+            ->setParameter(1, $irhpPermitStockId)
+            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->getQuery()
+            ->getResult();
     }
 }
