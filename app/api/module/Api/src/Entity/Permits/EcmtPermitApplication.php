@@ -415,6 +415,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Updates the application to indicate a sector in which the haulier specialises
+     *
+     * @param mixed $sectors
+     */
+    public function completeIssueFee($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * Reset the checked answers and declaration sections to a value representing 'not completed'
      */
     private function resetCheckAnswersAndDeclaration()
@@ -583,6 +593,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         return $this->status->getId() === self::STATUS_AWAITING_FEE;
     }
 
+
     /**
      * @return bool
      */
@@ -696,7 +707,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeAccepted()
     {
-        return $this->isAwaitingFee();
+        return $this->isReadyForIssuing();
     }
 
     /**
@@ -766,20 +777,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function getLatestOutstandingEcmtApplicationFee()
     {
-
-        $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_ECMT_APP;
-
-
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
         foreach ($this->getFees()->matching($criteria) as $fee) {
             if ($fee->isOutstanding()
-                && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
+                && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
                 return $fee;
             }
         }
-
         return null;
     }
 }

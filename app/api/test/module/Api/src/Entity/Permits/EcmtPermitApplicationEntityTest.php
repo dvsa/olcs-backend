@@ -197,6 +197,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testAccept()
     {
         $entity = $this->createApplicationAwaitingFee();
+        $entity->completeIssueFee(new RefData(Entity::STATUS_FEE_PAID));
         $entity->accept(new RefData(Entity::STATUS_VALID));
         $this->assertEquals(Entity::STATUS_VALID, $entity->getStatus()->getId());
     }
