@@ -20,6 +20,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
+        $this->mockRepo('IrhpPermitWindow', IrhpPermitWindow::class);
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplication::class);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermit::class);
 
@@ -31,7 +32,8 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::STATUS_UNDER_CONSIDERATION
+            EcmtPermitApplication::STATUS_UNDER_CONSIDERATION,
+            EcmtPermitApplication::PERMIT_TYPE
         ];
 
         $this->references = [
@@ -84,6 +86,17 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $command->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
 
+        $irhpPermitWindowId = 1;
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getId')
+            ->once()
+            ->andReturn($irhpPermitWindowId);
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByPermitType')
+            ->with(EcmtPermitApplication::PERMIT_TYPE)
+            ->once()
+            ->andReturn($irhpPermitWindow);
+
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)
             ->andReturn($ecmtPermitApplication);
@@ -99,7 +112,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('save');
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('getReference')
-            ->with(IrhpPermitWindow::class, 1)
+            ->with(IrhpPermitWindow::class, $irhpPermitWindowId)
             ->andReturn(m::mock(IrhpPermitWindow::class));
 
         $this->expectedEmailQueueSideEffect(
