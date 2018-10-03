@@ -225,6 +225,8 @@ class IrhpCandidatePermit extends AbstractRepository
 
     /**
      * Marks a set of candidate permit ids as successful
+     * Retrieves IrhpCandidatePermits that have been scored,
+     * for a given stock.
      *
      * @param array $candidatePermitIds
      */
@@ -239,6 +241,8 @@ class IrhpCandidatePermit extends AbstractRepository
             ->innerJoin('ipw.irhpPermitStock', 'ips')
             ->where('ips.id = ?1')
             ->andWhere('ipa.status = ?2')
+            ->orderBy('icp.successful', 'DESC')
+            ->addOrderBy('icp.randomizedScore', 'DESC')
             ->setParameter(1, $irhpPermitStockId)
             ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
             ->getQuery()
