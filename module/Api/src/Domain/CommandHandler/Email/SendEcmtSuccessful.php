@@ -8,17 +8,17 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * Send confirmation unsuccessful ECMT application
+ * Send confirmation of ECMT app being successful
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendEcmtUnsuccessful extends AbstractEmailHandler implements ToggleRequiredInterface
+class SendEcmtSuccessful extends AbstractEmailHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
     use PermitEmailTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $template = 'ecmt-app-unsuccessful';
+    protected $template = 'ecmt-app-successful';
     protected $subject = 'email.ecmt.response.subject';
 }
