@@ -14,7 +14,7 @@ return array(
     'email.ebsr-failed-no-bus-reg.subject' => 'Cais EBSR Wedi Methu- EBSR ID: %s',
     'email.ecmt.default.subject' => 'CY - ECMT permit application reference %s',
     'email.ecmt.issued.subject' => 'CY -ECMT permit %s has now been processed and issued',
-    'email.ecmt.unsuccessful.subject' => 'CY - ECMT permit application response reference %s',
+    'email.ecmt.response.subject' => 'CY - ECMT permit application response reference %s',
     'email.erru-errors.subject' => '(ON ERRU %s) hysbyseb INR cydnabyddiaeth negyddol o gyflwyniad MSI [%s]',
     'email.send-publication' => '%s rhif cyhoeddiad %s ar gyfer yr ardal drafnidiaeth %s',
     'email.send-publication-police' => '%s rhif cyhoeddiad %s ar gyfer yr ardal drafnidiaeth %s',

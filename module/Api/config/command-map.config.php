@@ -756,6 +756,8 @@ return [
     Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
     Command\Email\SendEcmtIssued::class => CommandHandler\Email\SendEcmtIssued::class,
     Command\Email\SendEcmtUnsuccessful::class => CommandHandler\Email\SendEcmtUnsuccessful::class,
+    Command\Email\SendEcmtPartSuccessful::class => CommandHandler\Email\SendEcmtPartSuccessful::class,
+    Command\Email\SendEcmtSuccessful::class => CommandHandler\Email\SendEcmtSuccessful::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
@@ -1074,10 +1076,16 @@ return [
     TransferCommand\Permits\UpdateEcmtPermitsRequired::class => CommandHandler\Permits\UpdateEcmtPermitsRequired::class,
     TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
+    TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
 
     // Permits - internal backend
 
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
+    Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
+    Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
+
+    // Permits - Private beta
+    TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class,
 
     // Cli - Permits
     CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
