@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\Common\Collections\Criteria;
@@ -55,17 +56,16 @@ trait PermitEmailTrait
 
             $criteria = Criteria::create();
             $criteria->where(
-                $criteria->expr()->in(
-                    'fee_status',
-                    [
-                        FeeEntity::STATUS_OUTSTANDING,
-                    ]
+                $criteria->expr()->eq(
+                    'feeStatus',
+                    $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING)
                 )
             );
 
             $fees = $recordObject->getFees()->matching($criteria);
             $feeTypesAmounts = [];
 
+            /** @var Fee $fee */
             foreach ($fees as $fee) {
                 if ($fee->isEcmtIssuingFee()) {
                     $feeTypesAmounts[] = [
@@ -110,16 +110,9 @@ trait PermitEmailTrait
      *
      * @return string
      */
-    protected function calculateDueDate($date)
+    protected function calculateDueDate(\DateTime $date)
     {
-        return date(
-            \DATE_FORMAT,
-            strtotime(
-                "+10 days",
-                strtotime(
-                    $date
-                )
-            )
-        );
+        $date->add(new \DateInterval('P10D'));
+        return $date->format('d F Y');
     }
 }
