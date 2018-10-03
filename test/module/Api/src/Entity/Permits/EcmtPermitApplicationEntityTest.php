@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * EcmtPermitApplication Entity Unit Tests
@@ -49,8 +50,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
          $this->assertEquals($licence, $application->getLicence());
          $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
     }
-
-
 
     /**
      * @dataProvider dpProvideUpdateCountrys
@@ -457,15 +456,175 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     private function createValidApplication()
     {
-        return $this->createApplication(Entity::PERMIT_VALID);
+        return $this->createApplication(Entity::STATUS_VALID);
     }
 
-    /**
-     * @dataProvider trueFalseProvider
-     */
     public function testIsValid()
     {
         $entity = $this->createValidApplication();
         $this->assertTrue($entity->isValid());
+    }
+
+    /**
+     * Test to ensure the permit is reset when the licence is changed.
+     * @dataProvider dpProvideUpdateCountrys
+     */
+    public function testUpdateLicence($countrys)
+    {
+        $status = Entity::STATUS_NOT_YET_SUBMITTED;
+        $statusRefData = new RefData($status);
+        $permitType = Entity::PERMIT_TYPE;
+        $permitTypeRefData = new RefData($permitType);
+        $licence = m::mock(Licence::class);
+        $sectors = m::mock(Sectors::class);
+        $cabotage = 1;
+        $declaration = 1;
+        $checkedAnswers = 1;
+        $emissions = 1;
+        $permitsRequired = 999;
+        $trips = 666;
+        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
+        $internationalJourneyRefData = new RefData($internationalJourneys);
+        $dateReceived = '2017-12-25';
+
+        $application = Entity::createNewInternal(
+            $statusRefData,
+            $permitTypeRefData,
+            $licence,
+            $dateReceived,
+            $sectors,
+            $countrys,
+            $cabotage,
+            $declaration,
+            $emissions,
+            $permitsRequired,
+            $trips,
+            $internationalJourneyRefData
+        );
+
+        $application->setCheckedAnswers($checkedAnswers);
+
+        $newLicence = m::mock(Licence::class);
+
+        $application->updateLicence($newLicence);
+
+        $this->assertSame($application->getLicence(), $newLicence);
+        $this->assertEquals($application->getCabotage(), null);
+        $this->assertEquals($application->getEmissions(), null);
+        $this->assertEquals($application->getTrips(), null);
+        $this->assertEquals($application->getInternationalJourneys(), null);
+        $this->assertEquals($application->getSectors(), null);
+        $this->assertEquals($application->getCountrys(), new ArrayCollection());
+        $this->assertEquals($application->getHasRestrictedCountries(), null);
+        $this->assertEquals($application->getCheckedAnswers(), null);
+        $this->assertEquals($application->getDeclaration(), null);
+    }
+
+    public function testProceedToIssuing()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $entity->proceedToIssuing($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsReadyForIssuingFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToIssuingException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToIssuing(m::mock(RefData::class));
+    }
+
+    public function testProceedToValid()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $entity->proceedToValid($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsIssueInProgressFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToValidException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToValid(m::mock(RefData::class));
+    }
+
+    public function testIsReadyForIssuingSuccess()
+    {
+        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $this->assertTrue($entity->isReadyForIssuing());
+    }
+
+    /**
+     * @dataProvider dpIsReadyForIssuingFail
+     */
+    public function testIsReadyForIssuingFail($status)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertFalse($entity->isReadyForIssuing());
+    }
+
+    /**
+     * Array of app statuses that don't match ready for issuing
+     *
+     * @return array
+     */
+    public function dpIsReadyForIssuingFail()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_ISSUING],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
+        ];
+    }
+
+    public function testIsIssueInProgressSuccess()
+    {
+        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $this->assertTrue($entity->isIssueInProgress());
+    }
+
+    /**
+     * @dataProvider dpIsIssueInProgressFail
+     */
+    public function testIsIssueInProgressFail($status)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertFalse($entity->isIssueInProgress());
+    }
+
+    /**
+     * Array of app statuses that don't match an issue in progress
+     *
+     * @return array
+     */
+    public function dpIsIssueInProgressFail()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_FEE_PAID],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
+        ];
     }
 }

@@ -2158,5 +2158,11 @@ return array(
                 'property' => 'irhpPermit'
             )
         ),
+        'irhp_permit_range_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitRange',
+                'property' => 'irhpPermit'
+            )
+        ),
     ),
 );

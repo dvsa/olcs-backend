@@ -41,16 +41,10 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
         $command = Cmd::create($data);
         $licence = m::mock(Licence::class);
         $application = m::mock(EcmtPermitApplication::class);
-        $application->shouldReceive('setLicence')->with($licence)->once();
-        $application->shouldReceive('setPermitsRequired')->with(null)->once();
-        $application->shouldReceive('setEmissions')->with(null)->once();
-        $application->shouldReceive('setCabotage')->with(null)->once();
-        $application->shouldReceive('setTrips')->with(null)->once();
-        $application->shouldReceive('setInternationalJourneys')->with(null)->once();
-        $application->shouldReceive('setSectors')->with(null)->once();
-        $application->shouldReceive('setDeclaration')->with(null)->once();
-        $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(5);
 
+        $application->shouldReceive('updateLicence')->with($licence)->once();
+        $application->shouldReceive('getFees')->once()->andReturn([]);
+        $application->shouldreceive('getId')->withNoArgs()->once()->andReturn(5);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with(5)
@@ -60,11 +54,9 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
             ->with(7)
             ->andReturn($licence);
 
-
         $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
             ->once()
             ->with($application);
-
 
         $result = $this->sut->handleCommand($command);
 
