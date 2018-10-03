@@ -8,19 +8,21 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * Get all valid ECMT permits by application
+ * Get all unpaid permits by application and status
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleRequiredInterface
+final class UnpaidEcmtPermits extends AbstractListQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
-    protected $repoServiceName = 'IrhpPermit';
+    protected $repoServiceName = 'IrhpCandidatePermit';
     protected $bundle = [
         'irhpPermitApplication' => [
-            'ecmtPermitApplication'
+            'ecmtPermitApplication' => [
+                'fees'
+            ]
         ],
         'irhpPermitRange' => [
             'countrys' => [
@@ -28,5 +30,6 @@ final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleR
             ],
             'irhpPermitStock'
         ],
+        'status'
     ];
 }

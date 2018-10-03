@@ -887,6 +887,18 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->mockConsole->shouldReceive('writeLine');
 
+        $this->mockCommandHandler->shouldReceive('handleCommand')
+            ->with(
+                equalTo(
+                    CliCommand\Permits\CalculateRandomAppScore::create(
+                        ['stockId' => $stockId]
+                    )
+                )
+            )
+            ->once()
+            ->ordered()
+            ->andReturn(new Command\Result());
+
         $this->mockQueryHandler->shouldReceive('handleQuery')
             ->with(
                 equalTo(
@@ -997,6 +1009,18 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->mockConsole->shouldReceive('writeLine');
 
+        $this->mockCommandHandler->shouldReceive('handleCommand')
+        ->with(
+            equalTo(
+                CliCommand\Permits\CalculateRandomAppScore::create(
+                    ['stockId' => $stockId]
+                )
+            )
+        )
+        ->once()
+        ->ordered()
+        ->andReturn(new Command\Result());
+
         $this->mockQueryHandler->shouldReceive('handleQuery')
             ->with(
                 equalTo(
@@ -1022,8 +1046,7 @@ class BatchControllerTest extends MockeryTestCase
             )
             ->never();
 
-        $this->mockQueryHandler->shouldReceive('handleCommand')
-            ->never();
+        $this->sut->identifySuccessfulPermitApplicationsAction();
     }
 
     public function testIdentifySuccessfulPermitApplicationsActionStockLackingRandomisedScoreFailed()
@@ -1041,6 +1064,18 @@ class BatchControllerTest extends MockeryTestCase
         );
 
         $this->mockConsole->shouldReceive('writeLine');
+
+        $this->mockCommandHandler->shouldReceive('handleCommand')
+        ->with(
+            equalTo(
+                CliCommand\Permits\CalculateRandomAppScore::create(
+                    ['stockId' => $stockId]
+                )
+            )
+        )
+        ->once()
+        ->ordered()
+        ->andReturn(new Command\Result());
 
         $this->mockQueryHandler->shouldReceive('handleQuery')
             ->with(
@@ -1072,8 +1107,7 @@ class BatchControllerTest extends MockeryTestCase
                 ]
             );
 
-        $this->mockQueryHandler->shouldReceive('handleCommand')
-            ->never();
+        $this->sut->identifySuccessfulPermitApplicationsAction();
     }
 
     private function mockParamsPlugin(array $map)

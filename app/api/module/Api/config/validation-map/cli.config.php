@@ -77,4 +77,5 @@ return [
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
+    CommandHandler\Permits\AllocatePermits::class => IsSystemUser::class,
 ];
