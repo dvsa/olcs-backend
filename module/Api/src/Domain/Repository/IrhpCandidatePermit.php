@@ -232,7 +232,6 @@ class IrhpCandidatePermit extends AbstractRepository
      */
     public function fetchAllScoredForStock($irhpPermitStockId)
     {
-        $qb = $this->createQueryBuilder();
         return $this->getEntityManager()->createQueryBuilder()
             ->select('icp')
             ->from(Entity::class, 'icp')

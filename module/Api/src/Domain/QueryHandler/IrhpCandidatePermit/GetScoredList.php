@@ -54,7 +54,6 @@ class GetScoredList extends AbstractQueryHandler
                 $results,
                 $this->bundledRepos
             ),
-            'count' => 0
         ];
     }
 }
