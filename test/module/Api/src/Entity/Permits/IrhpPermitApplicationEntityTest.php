@@ -2,8 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Mockery as m;
 
 /**
@@ -46,11 +48,90 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testCountValidPermits()
     {
-        $this->assertEquals(0, $this->sut->countValidPermits());
+        $candidatePermit1 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit1->shouldReceive('getIrhpPermits')
+            ->andReturn(null);
+        $candidatePermit1->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $candidatePermit2Permits = new ArrayCollection([
+            m::mock(IrhpPermit::class),
+        ]);
+        $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit2->shouldReceive('getIrhpPermits')
+            ->andReturn($candidatePermit2Permits);
+        $candidatePermit2->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $candidatePermit3Permits = new ArrayCollection([
+            m::mock(IrhpPermit::class),
+        ]);
+        $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit3->shouldReceive('getIrhpPermits')
+            ->andReturn($candidatePermit3Permits);
+        $candidatePermit3->shouldReceive('getSuccessful')
+            ->andReturn(false);
+
+        $candidatePermit4Permits = new ArrayCollection([
+            m::mock(IrhpPermit::class),
+        ]);
+        $candidatePermit4 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit4->shouldReceive('getIrhpPermits')
+            ->andReturn($candidatePermit4Permits);
+        $candidatePermit4->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $this->sut->addIrhpCandidatePermits($candidatePermit1);
+        $this->sut->addIrhpCandidatePermits($candidatePermit2);
+        $this->sut->addIrhpCandidatePermits($candidatePermit3);
+        $this->sut->addIrhpCandidatePermits($candidatePermit4);
+
+        $this->assertEquals(2, $this->sut->countValidPermits());
     }
 
     public function testCountPermitsAwarded()
     {
-        $this->assertEquals(0, $this->sut->countPermitsAwarded());
+        $candidatePermit1 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit1->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit2->shouldReceive('getSuccessful')
+            ->andReturn(false);
+
+        $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit3->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $this->sut->addIrhpCandidatePermits($candidatePermit1);
+        $this->sut->addIrhpCandidatePermits($candidatePermit2);
+        $this->sut->addIrhpCandidatePermits($candidatePermit3);
+
+        $this->assertEquals(2, $this->sut->countPermitsAwarded());
+    }
+
+    public function testGetSuccessfulIrhpCandidatePermits()
+    {
+        $candidatePermit1 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit1->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit2->shouldReceive('getSuccessful')
+            ->andReturn(false);
+
+        $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
+        $candidatePermit3->shouldReceive('getSuccessful')
+            ->andReturn(true);
+
+        $this->sut->addIrhpCandidatePermits($candidatePermit1);
+        $this->sut->addIrhpCandidatePermits($candidatePermit2);
+        $this->sut->addIrhpCandidatePermits($candidatePermit3);
+
+        $successfulIrhpCandidatePermits = $this->sut->getSuccessfulIrhpCandidatePermits();
+
+        $this->assertTrue($successfulIrhpCandidatePermits->contains($candidatePermit1));
+        $this->assertTrue($successfulIrhpCandidatePermits->contains($candidatePermit3));
+        $this->assertEquals(2, $successfulIrhpCandidatePermits->count());
     }
 }

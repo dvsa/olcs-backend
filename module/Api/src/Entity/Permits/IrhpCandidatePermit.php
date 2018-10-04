@@ -69,7 +69,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
      * @param deviationData a pre-formatted array of data for use in calculations
      * @return int a randomised statistical value derived from mean deviation and standard deviation
      */
-    public function calculateRandomisedScore(array $deviationData)
+    public function calculateRandomFactor(array $deviationData)
     {
         $standardDeviation = 0;
         $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getLicence()->getLicNo()];

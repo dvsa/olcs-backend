@@ -8,8 +8,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits as Cmd;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -29,7 +32,7 @@ class AcceptEcmtPermitsTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::PERMIT_VALID
+            EcmtPermitApplication::STATUS_ISSUING
         ];
 
         parent::initReferences();
@@ -37,28 +40,71 @@ class AcceptEcmtPermitsTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $applicationId = 1;
-        $command = Cmd::create(['id' => $applicationId]);
+        $ecmtPermitApplicationId = 7;
 
-        $application = m::mock(EcmtPermitApplication::class);
-        $application->shouldReceive('accept')->with($this->refData[EcmtPermitApplication::PERMIT_VALID])->once();
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($ecmtPermitApplicationId);
+
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('proceedToIssuing')
+            ->with($this->refData[EcmtPermitApplication::STATUS_ISSUING])
+            ->once()
+            ->ordered()
+            ->globally();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->with($applicationId)
-            ->andReturn($application)
-            ->shouldReceive('save')
+            ->with($ecmtPermitApplicationId)
+            ->andReturn($ecmtPermitApplication);
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
+            ->with($ecmtPermitApplication)
             ->once()
-            ->with($application);
+            ->ordered()
+            ->globally();
+
+        $this->expectedQueueSideEffect($ecmtPermitApplicationId, Queue::TYPE_PERMITS_ALLOCATE, []);
 
         $result = $this->sut->handleCommand($command);
 
-        $expected = [
-            'id' => [
-                'ecmtPermitApplication' => $applicationId
-            ],
-            'messages' => ['ECMT permits issued']
-        ];
+        $this->assertEquals(
+            $ecmtPermitApplicationId,
+            $result->getId('ecmtPermitApplication')
+        );
 
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertEquals(
+            ['Queuing issue of application permits'],
+            $result->getMessages()
+        );
+    }
+
+    public function testHandleCommandUnableToIssue()
+    {
+        $ecmtPermitApplicationId = 7;
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($ecmtPermitApplicationId);
+
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('proceedToIssuing')
+            ->with($this->refData[EcmtPermitApplication::STATUS_ISSUING])
+            ->once()
+            ->andThrow(ForbiddenException::class);
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
+            ->with($ecmtPermitApplicationId)
+            ->andReturn($ecmtPermitApplication);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals(
+            $ecmtPermitApplicationId,
+            $result->getId('ecmtPermitApplication')
+        );
+
+        $this->assertEquals(
+            ['Unable to issue permit for application'],
+            $result->getMessages()
+        );
     }
 }
