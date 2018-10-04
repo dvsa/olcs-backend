@@ -28,7 +28,10 @@ class GetScoredList extends AbstractQueryHandler
                 'trafficArea',
                 'organisation'
             ]
-        ]
+        ],
+        'irhpPermitRange' => [
+            'countrys'
+        ],
     ];
 
     /**
