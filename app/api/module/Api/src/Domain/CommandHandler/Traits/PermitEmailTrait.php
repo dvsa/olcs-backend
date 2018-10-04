@@ -50,6 +50,7 @@ trait PermitEmailTrait
             /** @var IrhpPermitApplication $irhpPermitApplication */
             $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
 
+            $vars['awaitingFeeUrl'] = 'http://selfserve/permits/' . (int)$recordObject->getId() . '/ecmt-awaiting-fee/';
             $vars['permitsRequired'] = $recordObject->getPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
             $vars['paymentDeadlineNumDays'] = '10';
