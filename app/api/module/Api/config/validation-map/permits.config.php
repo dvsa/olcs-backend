@@ -18,6 +18,7 @@ return [
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtApplicationByLicence::class => CanAccessLicenceWithLicence::class,
     QueryHandler\Permits\ValidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
+    QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
@@ -38,7 +39,8 @@ return [
     CommandHandler\Permits\UpdateEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\WithdrawEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\DeclineEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
-    CommandHandler\Permits\AcceptEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\AcceptEcmtPermits::class => IsSideEffect::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
-    CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class
+    CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
+    CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class
 ];

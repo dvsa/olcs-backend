@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * EcmtPermitApplication Entity
@@ -29,18 +30,19 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
  */
 class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface
 {
-    const STATUS_CANCELLED = 'ecmt_permit_cancelled';
-    const STATUS_NOT_YET_SUBMITTED = 'ecmt_permit_nys';
-    const STATUS_UNDER_CONSIDERATION = 'ecmt_permit_uc';
-    const STATUS_WITHDRAWN = 'ecmt_permit_withdrawn';
-    const STATUS_AWAITING_FEE = 'ecmt_permit_awaiting';
-    const STATUS_UNSUCCESSFUL = 'ecmt_permit_unsuccessful';
-    const STATUS_ISSUED = 'ecmt_permit_issued';
-    const STATUS_VALID = 'ecmt_permit_valid';
-
+    const STATUS_CANCELLED = 'permit_app_cancelled';
+    const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
+    const STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
+    const STATUS_WITHDRAWN = 'permit_app_withdrawn';
+    const STATUS_AWAITING_FEE = 'permit_app_awaiting';
+    const STATUS_FEE_PAID = 'permit_app_fee_paid';
+    const STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
+    const STATUS_ISSUED = 'permit_app_issued';
+    const STATUS_ISSUING = 'permit_app_issuing';
+    const STATUS_VALID = 'permit_app_valid';
+    const STATUS_DECLINED = 'permit_app_declined';
 
     const PERMIT_TYPE = 'permit_ecmt';
-    const PERMIT_VALID = 'permit_valid';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
@@ -250,6 +252,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $cancelStatus;
     }
 
+    public function proceedToIssuing(RefData $issuingStatus)
+    {
+        if (!$this->isReadyForIssuing()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to issuing');
+        }
+
+        $this->status = $issuingStatus;
+    }
+
+    public function proceedToValid(RefData $issuedStatus)
+    {
+        if (!$this->isIssueInProgress()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+        }
+
+        $this->status = $issuedStatus;
+    }
+
     /**
      * Gets calculated values
      *
@@ -285,6 +305,34 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Reset application answers - sets properties to null, or calls individual update methods in more important cases
+     *
+     * @return void
+     */
+    public function clearAnswers()
+    {
+        $this->emissions = null;
+        $this->cabotage = null;
+        $this->trips = null;
+        $this->internationalJourneys = null;
+        $this->sectors = null;
+        $this->updatePermitsRequired(null);
+        $this->resetCountrys();
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * @param Licence $licence
+     *
+     * @return void
+     */
+    public function updateLicence(Licence $licence)
+    {
+        $this->licence = $licence;
+        $this->clearAnswers();
+    }
+
+    /**
      * Updates the application to reflect whether or not cabotage will be carried out. A value of true indicates that
      * cabotage will NOT be carried out on the permit
      *
@@ -310,21 +358,22 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
 
     /**
      * Updates the application to indicate the intended use of the permit in any countries that have imposed limits
-     * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects
+     * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects.
      *
      * @param array $countrys
      */
     public function updateCountrys(array $countrys)
     {
         $this->countrys = $countrys;
-        $this->hasRestrictedCountries = (bool)count($countrys);
+        $this->hasRestrictedCountries = count($countrys) > 0;
+
         $this->resetCheckAnswersAndDeclaration();
     }
 
     /**
      * Updates the application to indicate the number of required permits
      *
-     * @param int $permitsRequired
+     * @param mixed $permitsRequired
      */
     public function updatePermitsRequired($permitsRequired)
     {
@@ -366,12 +415,34 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Updates the application to indicate a sector in which the haulier specialises
+     *
+     * @param mixed $sectors
+     */
+    public function completeIssueFee($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * Reset the checked answers and declaration sections to a value representing 'not completed'
      */
     private function resetCheckAnswersAndDeclaration()
     {
         $this->declaration = false;
         $this->checkedAnswers = false;
+    }
+
+    /**
+     * Resets the countries that are associated with the ECMT Permit Application.
+     * Also ensures that the hasRestrictedCountries variable is set to null to reset the 'completed' status.
+     *
+     * @return void
+     */
+    public function resetCountrys()
+    {
+        $this->countrys = new ArrayCollection();
+        $this->hasRestrictedCountries = null;
     }
 
     /**
@@ -522,12 +593,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         return $this->status->getId() === self::STATUS_AWAITING_FEE;
     }
 
+
     /**
      * @return bool
      */
     public function isValid()
     {
-        return $this->status->getId() === self::PERMIT_VALID;
+        return $this->status->getId() === self::STATUS_VALID;
     }
 
 
@@ -635,7 +707,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeAccepted()
     {
-        return $this->isAwaitingFee();
+        return $this->isReadyForIssuing();
     }
 
     /**
@@ -646,6 +718,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function canBeCancelled()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether the permit application is ready to be issued
+     *
+     * @return bool
+     */
+    public function isReadyForIssuing()
+    {
+        return $this->status->getId() === self::STATUS_FEE_PAID;
+    }
+
+    /**
+     * Whether the permit application is currently being issued
+     *
+     * @return bool
+     */
+    public function isIssueInProgress()
+    {
+        return $this->status->getId() === self::STATUS_ISSUING;
     }
 
     /**
@@ -685,20 +777,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function getLatestOutstandingEcmtApplicationFee()
     {
-
-        $feeTypeFeeTypeId = FeeTypeEntity::FEE_TYPE_ECMT_APP;
-
-
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
         foreach ($this->getFees()->matching($criteria) as $fee) {
             if ($fee->isOutstanding()
-                && $fee->getFeeType()->getFeeType()->getId() === $feeTypeFeeTypeId) {
+                && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
                 return $fee;
             }
         }
-
         return null;
     }
 }
