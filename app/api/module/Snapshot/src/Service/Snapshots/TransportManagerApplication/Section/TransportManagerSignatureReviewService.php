@@ -42,7 +42,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
 
     private function getPartial(TransportManagerApplication $tma) : string
     {
-        return $tma->getDigitalSignature() ? self::SIGNATURE_DIGITAL : self::SIGNATURE;
+        return $tma->getTmDigitalSignature() ? self::SIGNATURE_DIGITAL : self::SIGNATURE;
     }
 
     private function getReplaceData(TransportManagerApplication $tma) : array
@@ -52,13 +52,10 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
             $this->translate(self::ADDRESS)
         ];
 
-        if ($tma->getDigitalSignature()) {
-            $tm = $tma->getTransportManager();
-            $contactDetails = $tm->getHomeCd();
-            $person = $contactDetails->getPerson();
-            $tmFullName = $this->formatPersonFullName($person);
-            $tmDateOfBirth = $this->formatDate($person->getBirthDate(true), "d-m-Y");
-            $signatureDate = $this->formatDate($tma->getDigitalSignature()->getCreatedOn(true), "d-m-Y");
+        if ($tma->getTmDigitalSignature()) {
+            $tmFullName = $tma->getTmDigitalSignature()->getSignatureName();
+            $tmDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
+            $signatureDate = $tma->getTmDigitalSignature()->getCreatedOn();
 
             array_unshift(
                 $replaceData,
