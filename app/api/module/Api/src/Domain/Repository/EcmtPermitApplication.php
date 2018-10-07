@@ -60,4 +60,20 @@ class EcmtPermitApplication extends AbstractRepository
         }
         return $licenceIds;
     }
+
+    /**
+     * Fetch all under consideration applications
+     *
+     * @return array
+     */
+    public function fetchUnderConsiderationApplications()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('epa')
+            ->from(Entity::class, 'epa')
+            ->where('epa.status = ?1')
+            ->setParameter(1, Entity::STATUS_UNDER_CONSIDERATION)
+            ->getQuery()
+            ->getResult();
+    }
 }

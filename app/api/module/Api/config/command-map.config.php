@@ -756,6 +756,8 @@ return [
     Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
     Command\Email\SendEcmtIssued::class => CommandHandler\Email\SendEcmtIssued::class,
     Command\Email\SendEcmtUnsuccessful::class => CommandHandler\Email\SendEcmtUnsuccessful::class,
+    Command\Email\SendEcmtPartSuccessful::class => CommandHandler\Email\SendEcmtPartSuccessful::class,
+    Command\Email\SendEcmtSuccessful::class => CommandHandler\Email\SendEcmtSuccessful::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
@@ -1080,6 +1082,10 @@ return [
 
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
+    Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
+
+    // Permits - Private beta
+    TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class,
 
     // Cli - Permits
     CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>

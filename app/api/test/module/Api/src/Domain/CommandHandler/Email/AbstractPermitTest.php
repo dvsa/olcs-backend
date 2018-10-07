@@ -99,6 +99,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             ->once()
             ->withNoArgs()
             ->andReturn($organisation);
+        $applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(false);
 
         $this->repoMap['EcmtPermitApplication']
             ->shouldReceive('fetchUsingId')
