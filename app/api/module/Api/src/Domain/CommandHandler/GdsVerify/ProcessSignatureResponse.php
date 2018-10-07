@@ -16,7 +16,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'DigitalSignature';
 
-    protected $extraRepos = ['Application', 'ContinuationDetail'];
+    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication'];
 
     /** @var  \Dvsa\Olcs\GdsVerify\Service\GdsVerify */
     private $gdsVerifyService;
@@ -78,7 +78,9 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         }
 
         if ($command->getTransportManagerApplication()) {
-            $this->updateTMApplication($command->getTransportManagerApplication());
+            $isOperatorSignature = $command->getTransportManagerApplicationOperatorSignature() === 'Y' ? true : false;
+            $this->updateTMApplication($command->getTransportManagerApplication(), $digitalSignature,
+                $isOperatorSignature);
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
@@ -154,12 +156,52 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
     private function updateTMApplication(
         int $transportManagerApplicationId,
-        Entity\DigitalSignature $digitalSignature
+        Entity\DigitalSignature $digitalSignature,
+        $isOperatorSignature = false
     ): void {
+
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
-        $transportManagerApplication->setDigitalSignature($digitalSignature);
+        $this->setTmSignature($digitalSignature, $transportManagerApplication);
+        if ($isOperatorSignature) {
+            $this->setOperatorSignature($digitalSignature, $transportManagerApplication);
+        }
+
+
         $transportManagerApplication->setSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
+
         $this->getRepo('TransportManagerApplication')->save($transportManagerApplication);
+    }
+
+    /**
+     * setTmSignature
+     *
+     * @param Entity\DigitalSignature $digitalSignature
+     * @param                         $transportManagerApplication
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function setTmSignature(
+        Entity\DigitalSignature $digitalSignature,
+        Entity\Tm\TransportManagerApplication $transportManagerApplication
+    ): void {
+
+        $transportManagerApplication->setTmDigitalSignature($digitalSignature);
+        $transportManagerApplication->setTmSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
+        if ($transportManagerApplication->getIsOwner() === 'Y') {
+            $this->setOperatorSignature($digitalSignature, $transportManagerApplication);
+        }
+    }
+
+    /**
+     * setOperatorSignature
+     *
+     * @param Entity\DigitalSignature $digitalSignature
+     * @param                         $transportManagerApplication
+     */
+    private function setOperatorSignature(Entity\DigitalSignature $digitalSignature, $transportManagerApplication): void
+    {
+        $transportManagerApplication->setOpDigitalSignature($digitalSignature);
+        $transportManagerApplication->setOpSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
     }
 }
