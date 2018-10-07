@@ -79,8 +79,11 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
         if ($command->getTransportManagerApplication()) {
             $isOperatorSignature = $command->getTransportManagerApplicationOperatorSignature() === 'Y' ? true : false;
-            $this->updateTMApplication($command->getTransportManagerApplication(), $digitalSignature,
-                $isOperatorSignature);
+            $this->updateTMApplication(
+                $command->getTransportManagerApplication(),
+                $digitalSignature,
+                $isOperatorSignature
+            );
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
