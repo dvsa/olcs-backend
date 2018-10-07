@@ -31,4 +31,22 @@ class IrhpPermitRange extends AbstractRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * Returns all ranges in the specified stockId.
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function getRanges($stockId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('r')
+            ->from(Entity::class, 'r')
+            ->andWhere('IDENTITY(r.irhpPermitStock) = ?1')
+            ->setParameter(1, $stockId)
+            ->getQuery()
+            ->getResult();
+    }
 }

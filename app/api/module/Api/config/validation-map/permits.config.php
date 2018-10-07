@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrgan
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 
 return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
@@ -42,5 +43,6 @@ return [
     CommandHandler\Permits\AcceptEcmtPermits::class => IsSideEffect::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
-    CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class
+    CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\TriggerProcessEcmtApplications::class => IsInternalAdmin::class,
 ];

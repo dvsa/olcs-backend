@@ -372,6 +372,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
             Queue::TYPE_PERMITS_ALLOCATE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocatePermits::class,
+            Queue::TYPE_PROCESS_ECMT_APPLICATIONS
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\ProcessEcmtApplications::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
