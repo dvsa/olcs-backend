@@ -60,7 +60,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
             ->andReturn($expected['label'] .'translated');
 
         $tma = m::mock(TransportManagerApplication::class);
-        $tma->shouldReceive('getDigitalSignature')->andReturn($data['digitalSignature']);
+        $tma->shouldReceive('getTmDigitalSignature')->andReturn($data['digitalSignature']);
 
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
             ->andReturn($data['organisationType']);
@@ -68,33 +68,29 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $expectedMarkup = $expected['label'] .'translated_ADDRESS';
 
         if ($data['digitalSignature']) {
-            $digitalSignatureDate = new DateTime('2018-01-01');
+            $digitalSignatureDate = (new DateTime('2018-01-01'))->format('d-m-Y');
+            $birthDate = (new DateTime('1980-01-01'))->format('d-m-Y');
+            $signatureName = 'Name';
             $data['digitalSignature']
                 ->shouldReceive('getCreatedOn')
-                ->with(true)
-                ->andReturn($digitalSignatureDate);
-            $name = 'Name';
-            $familyName = 'FamilyName';
-            $birthDate = new DateTime('1980-01-01');
-            $tm = m::mock(TransportManager::class);
-            $contactDetails = m::mock(ContactDetails::class);
-            $person = m::mock(Person::class);
-            $tm->shouldReceive('getHomeCd')->andReturn($contactDetails);
-            $contactDetails->shouldReceive('getPerson')->andReturn($person);
-            $person->shouldReceive('getBirthDate')->with(true)->andReturn($birthDate);
-            $person->shouldReceive('getTitle')->andReturn(null);
-            $person->shouldReceive('getForename')->andReturn($name);
-            $person->shouldReceive('getFamilyName')->andReturn($familyName);
-            $tma->shouldReceive('getTransportManager')->andReturn($tm);
+                ->with()
+                ->andReturn($digitalSignatureDate)
+                ->shouldReceive('getDateOfBirth')
+                ->with()
+                ->andReturn($birthDate)
+                ->shouldReceive('getSignatureName')
+                ->with()
+                ->andReturn($signatureName);
+
             $mockTranslator
                 ->shouldReceive('translate')
                 ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL, 'snapshot')
                 ->once()
                 ->andReturn('%s_%s_%s_%s_%s');
-            $expectedMarkup = $name .
-                ' ' . $familyName .
-                '_' . $birthDate->format('d-m-Y') .
-                '_' . $digitalSignatureDate->format('d-m-Y') .
+
+            $expectedMarkup = $signatureName .
+                '_' . $birthDate .
+                '_' . $digitalSignatureDate .
                 '_' . $expectedMarkup;
         }
 
