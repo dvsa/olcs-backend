@@ -2,9 +2,10 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsOperatorUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanVerify;
 
 return [
-    QueryHandler\GdsVerify\GetAuthRequest::class        => IsOperatorUser::class,
-    CommandHandler\GdsVerify\ProcessSignatureResponse::class     => IsOperatorUser::class,
+    QueryHandler\GdsVerify\GetAuthRequest::class => CanVerify::class,
+    CommandHandler\GdsVerify\ProcessSignatureResponse::class => CanVerify::class,
+
 ];
