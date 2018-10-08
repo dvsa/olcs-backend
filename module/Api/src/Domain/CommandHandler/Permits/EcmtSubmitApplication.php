@@ -16,9 +16,6 @@ use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplic
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
 
 /**
  * Submit the ECMT application
