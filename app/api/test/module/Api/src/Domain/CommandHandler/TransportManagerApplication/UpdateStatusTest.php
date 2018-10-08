@@ -84,8 +84,10 @@ class UpdateStatusTest extends CommandHandlerTestCase
         $tma = m::mock(TmaEntity::class);
         $tma->shouldReceive('getId')->once();
         $tma->shouldReceive('setTmApplicationStatus')->with($this->refData[TmaEntity::STATUS_INCOMPLETE])->once();
-        $tma->shouldReceive('setDigitalSignature')->with(null)->once();
-        $tma->shouldReceive('setSignatureType')->with(null)->once();
+        $tma->shouldReceive('setOpDigitalSignature')->with(null)->once();
+        $tma->shouldReceive('setOpSignatureType')->with(null)->once();
+        $tma->shouldReceive('setTmDigitalSignature')->with(null)->once();
+        $tma->shouldReceive('setTmSignatureType')->with(null)->once();
 
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchUsingId')
