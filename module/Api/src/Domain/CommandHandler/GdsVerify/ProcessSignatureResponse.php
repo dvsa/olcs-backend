@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
+use Common\RefData;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
@@ -163,18 +165,25 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $isOperatorSignature = false
     ): void {
 
+
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
+        $status = $transportManagerApplication::STATUS_TM_SIGNED;
         $transportManagerApplication->setTmSignature($digitalSignature, $transportManagerApplication);
         if ($isOperatorSignature) {
             $transportManagerApplication->setOperatorSignature($digitalSignature, $transportManagerApplication);
             $transportManagerApplication->setOpSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
+            $status = $transportManagerApplication::STATUS_RECEIVED;
         }
+
+
 
 
         $transportManagerApplication->setSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
 
         $this->getRepo('TransportManagerApplication')->save($transportManagerApplication);
+
+        $this->handleSideEffect(UpdateStatus::class, ['status' =>$status, "id"=>$transportManagerApplicationId, 'version'=>1]);
     }
 
     /**
