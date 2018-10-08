@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as PermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Update as UpdateCmd;
-use Dvsa\Olcs\Api\Entity\System\IrhpPermitRange as PermitRangeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as PermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 
 /**
@@ -67,6 +67,9 @@ class UpdateTest extends CommandHandlerTestCase
             ->with($command)
             ->andReturn($entity);
 
+        $this->repoMap['IrhpPermitRange']->shouldReceive('findOverlappingRangesByType')
+        ->andReturn([]);
+
         $this->repoMap['IrhpPermitRange']
             ->shouldReceive('save')
             ->once()
@@ -80,5 +83,46 @@ class UpdateTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     *
+     * Test for overlapping IRHP Permit Ranges - no values are asserted as this tests to ensure that a validation
+     * exception is thrown.
+     */
+    public function testHandleOverlap()
+    {
+        $cmdData = [
+            'irhpPermitStock' => '1',
+            'prefix' => 'UK',
+            'fromNo' => '1',
+            'toNo' => '100',
+            'isReserve' => '0',
+            'isReplacement' => '0',
+            'countrys' => []
+        ];
+
+        $entity = m::mock(PermitRangeEntity::class);
+
+        $command = UpdateCmd::create($cmdData);
+
+        $this->repoMap['IrhpPermitRange']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($entity);
+
+        $this->repoMap['IrhpPermitRange']
+            ->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                $entity
+            )
+            ->andReturn([m::mock(PermitRangeEntity::class)]);
+
+        $this->sut->handleCommand($command);
     }
 }

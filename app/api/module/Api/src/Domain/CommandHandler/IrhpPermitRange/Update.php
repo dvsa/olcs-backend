@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as RangeEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Update as UpdateRangeCmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Update an IRHP Permit Range
@@ -16,6 +17,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
  */
 final class Update extends AbstractCommandHandler
 {
+    use IrhpPermitRangeOverlapTrait;
+
     protected $repoServiceName = 'IrhpPermitRange';
     protected $extraRepos = ['IrhpPermitStock', 'Country'];
 
@@ -34,13 +37,16 @@ final class Update extends AbstractCommandHandler
          */
         $range = $this->getRepo()->fetchUsingId($command);
 
-        $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
+        if ($this->numberOfOverlappingRanges($command->getIrhpPermitStock(), $command->getFromNo(), $command->getToNo(), $range) !== 0) {
+            throw new ValidationException(['This Permit Number Range overlaps with another for this stock']);
+        }
 
         $countrys = [];
         foreach ($command->getRestrictedCountries() as $country) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $country);
         }
 
+        $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
         $range->update(
             $permitStock,
             $command->getPrefix(),

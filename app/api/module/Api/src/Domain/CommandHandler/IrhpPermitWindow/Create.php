@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Create as CreateWindowCmd;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+
 /**
  * Create an IRHP Permit Window
  *
@@ -28,8 +30,16 @@ final class Create extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command): Result
     {
+        // If there are overlapping windows.
         if ($this->numberOfOverlappingWindows($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate()) > 0) {
             throw new ValidationException(['The dates overlap with another window for this Permit stock']);
+        }
+
+        // If the window starts in the past.
+        $today = (new DateTime())->format('Y-m-d');
+        $start = (new DateTime($command->getStartDate()))->format('Y-m-d');
+        if ($today > $start) {
+            throw new ValidationException(['You cannot create a window that starts in the past']);
         }
 
         $irhpPermitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
