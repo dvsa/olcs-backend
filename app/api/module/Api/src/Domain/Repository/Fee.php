@@ -760,6 +760,8 @@ class Fee extends AbstractRepository
         $doctrineQb = $this->createQueryBuilder();
         $doctrineQb
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.ecmtPermitApplication', ':ecmtPermitApplication'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.feeStatus', ':feeStatus'))
+            ->setParameter('feeStatus', Entity::STATUS_OUTSTANDING)
             ->setParameter('ecmtPermitApplication', $ecmtPermitAplicationId);
 
         return $doctrineQb->getQuery()->getResult();
