@@ -193,6 +193,8 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
 
     /**
      * @inheritdoc
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      */
     public function getRelatedOrganisation()
     {
