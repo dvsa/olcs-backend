@@ -43,7 +43,7 @@ class IrhpPermitWindow extends AbstractRepository
      *
      * @param DateTime $currentDateTime
      *
-     * @return Entity|null
+     * @return array|null
      */
     public function fetchLastOpenWindow(DateTime $currentDateTime)
     {
@@ -59,7 +59,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->setParameter(1, $currentDateTime)
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
     }
 
     /**
