@@ -30,9 +30,9 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    // Happy Path
     public function testHandleCommand()
     {
-
         $cmdData = [
             'id' => 1,
             'irhpPermitStock' => 1,
@@ -43,51 +43,268 @@ class UpdateTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($cmdData);
 
-        $permitWindowEntity = m::mock(PermitWindowEntity::class)->makePartial();
-
-        $permitWindowEntity->shouldReceive('isActive')->once()->andReturn(false);
-        $permitWindowEntity->shouldReceive('hasEnded')->once()->andReturn(false);
+        $permitWindowEntity = m::mock(PermitWindowEntity::class);
+        $permitStockEntity = m::mock(PermitStockEntity::class);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchById')
-            ->with('1')
+            ->with($cmdData['id'])
+            ->once()
             ->andReturn($permitWindowEntity);
 
-        $permitWindowEntity->shouldReceive('getId')
-            ->twice()
-            ->andReturn($command->getId());
+        $permitWindowEntity
+            ->shouldReceive('hasEnded')
+            ->once()
+            ->andReturn(false);
 
-
+        $permitWindowEntity
+            ->shouldReceive('isActive')
+            ->once()
+            ->andReturn(false);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('findOverlappingWindowsByType')
             ->once()
             ->andReturn([]);
 
-        $permitWindowEntity->shouldReceive('update')
-            ->andReturn($permitWindowEntity);
-
-
-        $permitWindowEntity->shouldReceive('processDate');
-
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('fetchById')
+            ->with($cmdData['irhpPermitStock'])
             ->once()
-            ->with($command->getIrhpPermitStock())
-            ->andReturn($permitWindowEntity);
+            ->andReturn($permitStockEntity);
+
+        $permitWindowEntity
+            ->shouldReceive('update')
+            ->once()
+            ->with(
+                $permitStockEntity,
+                $cmdData['startDate'],
+                $cmdData['endDate'],
+                $cmdData['daysForPayment']
+            );
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('save')
             ->once()
-            ->with(m::type(PermitWindowEntity::class));
+            ->with($permitWindowEntity);
+
+        $permitWindowEntity
+            ->shouldReceive('getId')
+            ->twice()
+            ->andReturn($cmdData['id']);
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => ['Irhp Permit Window' => $command->getId()],
-            'messages' => ["Irhp Permit Window '" . $command->getId() . "' updated"]
+            'id' => [
+                'Irhp Permit Window' => 1
+            ],
+            'messages' => [
+                sprintf(
+                    "Irhp Permit Window '%d' Updated",
+                    $cmdData['id']
+                )
+            ]
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage Windows which have ended cannot be edited
+     *
+     * Test for ended Window - no values are asserted as this tests to ensure that a validation exception is thrown.
+     */
+    public function testHandleWindowEnd()
+    {
+        $cmdData = [
+            'id' => 1,
+            'irhpPermitStock' => 1,
+            'startDate' => '2017-12-01',
+            'endDate' => '2017-12-30',
+            'daysForPayment' => 14
+        ];
+
+        $command = UpdateCmd::create($cmdData);
+
+        $permitWindowEntity = m::mock(PermitWindowEntity::class);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchById')
+            ->with($cmdData['id'])
+            ->andReturn($permitWindowEntity);
+
+        $permitWindowEntity
+            ->shouldReceive('hasEnded')
+            ->once()
+            ->andReturn(true);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage It is not permitted to edit the start date of an Active Window
+     *
+     * Test to prevent editing the start date of an active window - no values are asserted as this tests to ensure that
+     * a validation exception is thrown.
+     */
+    public function testIsActiveEditStartDate()
+    {
+        $cmdData = [
+            'id' => 1,
+            'irhpPermitStock' => 1,
+            'startDate' => '2017-12-01',
+            'endDate' => '2017-12-30',
+            'daysForPayment' => 14
+        ];
+
+        $command = UpdateCmd::create($cmdData);
+
+        $permitWindowEntity = m::mock(PermitWindowEntity::class);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchById')
+            ->with($cmdData['id'])
+            ->andReturn($permitWindowEntity);
+
+        $permitWindowEntity
+            ->shouldReceive('hasEnded')
+            ->once()
+            ->andReturn(false);
+        $permitWindowEntity
+            ->shouldReceive('isActive')
+            ->andReturn(true);
+
+        $permitWindowEntity
+            ->shouldReceive('getStartDate')
+            ->once()
+            ->andReturn('2017-10-01');
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage The end date of an Active Window must be greater than or equal to todays date
+     *
+     * Test to prevent editing the end date of an active window to before todays date - no values are asserted as this
+     * tests to ensure that a validation exception is thrown.
+     */
+    public function testIsActivePastEndDate()
+    {
+        $cmdData = [
+            'id' => 1,
+            'irhpPermitStock' => 1,
+            'startDate' => '2017-12-01',
+            'endDate' => '2017-12-30',
+            'daysForPayment' => 14
+        ];
+
+        $command = UpdateCmd::create($cmdData);
+
+        $permitWindowEntity = m::mock(PermitWindowEntity::class);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchById')
+            ->with($cmdData['id'])
+            ->andReturn($permitWindowEntity);
+
+        $permitWindowEntity
+            ->shouldReceive('hasEnded')
+            ->once()
+            ->andReturn(false);
+
+        $permitWindowEntity
+            ->shouldReceive('isActive')
+            ->andReturn(true);
+
+        $permitWindowEntity
+            ->shouldReceive('getStartDate')
+            ->once()
+            ->andReturn('2017-12-01');
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage The Start date must be greater than or equal to Todays date
+     *
+     * Test to prevent editing the start date of a future window to before todays date - no values are asserted as this
+     * tests to ensure that a validation exception is thrown.
+     */
+    public function testIsNotActiveStartDatePast()
+    {
+        $cmdData = [
+            'id' => 1,
+            'irhpPermitStock' => 1,
+            'startDate' => '2017-12-01',
+            'endDate' => '2017-12-30',
+            'daysForPayment' => 14
+        ];
+
+        $command = UpdateCmd::create($cmdData);
+
+        $permitWindowEntity = m::mock(PermitWindowEntity::class);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchById')
+            ->with($cmdData['id'])
+            ->andReturn($permitWindowEntity);
+
+        $permitWindowEntity
+            ->shouldReceive('hasEnded')
+            ->once()
+            ->andReturn(false);
+        $permitWindowEntity
+            ->shouldReceive('isActive')
+            ->andReturn(false);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage The dates overlap with another window for this Permit stock
+     *
+     * Test for overlapping Windows - no values are asserted as this tests to ensure that a validation exception
+     * is thrown.
+     */
+    public function testOverlappingWindows()
+    {
+        $cmdData = [
+            'id' => 1,
+            'irhpPermitStock' => 1,
+            'startDate' => '2019-12-01',
+            'endDate' => '2019-12-30',
+            'daysForPayment' => 14
+        ];
+
+        $command = UpdateCmd::create($cmdData);
+
+        $permitWindowEntity = m::mock(PermitWindowEntity::class);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchById')
+            ->with('1')
+            ->andReturn($permitWindowEntity);
+
+        $permitWindowEntity->shouldReceive('hasEnded')->once()->andReturn(false);
+        $permitWindowEntity->shouldReceive('isActive')->once()->andReturn(false);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('findOverlappingWindowsByType')
+            ->once()
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['startDate'],
+                $cmdData['endDate'],
+                $cmdData['id']
+            )
+            ->andReturn([m::mock(PermitWindowEntity::class)]);
+
+        $this->sut->handleCommand($command);
     }
 }
