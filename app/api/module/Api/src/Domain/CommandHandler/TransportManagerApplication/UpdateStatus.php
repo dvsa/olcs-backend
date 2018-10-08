@@ -39,8 +39,10 @@ final class UpdateStatus extends AbstractCommandHandler implements
 
         $tma->setTmApplicationStatus($status);
         if ($command->getStatus() === TransportManagerApplication::STATUS_INCOMPLETE) {
-            $tma->setDigitalSignature(null);
-            $tma->setSignatureType(null);
+            $tma->setOpDigitalSignature(null);
+            $tma->setOpSignatureType(null);
+            $tma->setTmDigitalSignature(null);
+            $tma->setTmSignatureType(null);
         }
         $this->getRepo()->save($tma);
 
