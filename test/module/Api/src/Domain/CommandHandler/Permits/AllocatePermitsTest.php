@@ -69,15 +69,26 @@ class AllocatePermitsTest extends CommandHandlerTestCase
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn([$irhpPermitApplication]);
-        $ecmtPermitApplication->shouldReceive('proceedToValid')
-            ->with($this->refData[EcmtPermitApplication::STATUS_VALID])
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('decacheById')
+            ->with($ecmtPermitApplicationId)
             ->once()
             ->ordered()
             ->globally();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)
+            ->once()
+            ->ordered()
+            ->globally()
             ->andReturn($ecmtPermitApplication);
+
+        $ecmtPermitApplication->shouldReceive('proceedToValid')
+            ->with($this->refData[EcmtPermitApplication::STATUS_VALID])
+            ->once()
+            ->ordered()
+            ->globally();
+
         $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
             ->with($ecmtPermitApplication)
             ->once()
