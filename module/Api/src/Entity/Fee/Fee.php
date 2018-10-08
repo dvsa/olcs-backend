@@ -531,6 +531,23 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
+     * @return boolean
+     */
+    public function isEcmtIssuingFee()
+    {
+        return $this->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_ECMT_ISSUE;
+    }
+
+    /**
+     * @return float
+     */
+    public function getFeeTypeAmount()
+    {
+        return $this->getFeeType()->getAmount();
+    }
+
+
+    /**
      * @return bool
      */
     public function canRefund()
