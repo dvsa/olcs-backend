@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
+
 /**
  * Can Manage User Test
  */
@@ -24,11 +25,9 @@ class CanVerifyTest extends AbstractHandlerTestCase
         parent::setUp();
     }
 
+
     /**
-     * @dataProvider provider
-     *
-     * @param $permission
-     * @param $expected
+     * testIsValidForOperatorUser
      */
     public function testIsValidForOperatorUser()
     {
@@ -48,7 +47,7 @@ class CanVerifyTest extends AbstractHandlerTestCase
         /** @var CommandInterface $dto */
         $dto = m::mock(CommandInterface::class);
         $this->setIsGranted(Permission::OPERATOR_ADMIN, true);
-       
+
 
         $dto->shouldReceive('getTransportManagerApplication')->andReturn(0);
         $this->assertTrue($this->sut->isValid($dto));
@@ -69,14 +68,4 @@ class CanVerifyTest extends AbstractHandlerTestCase
 
         $this->assertTrue($this->sut->isValid($dto));
     }
-
-    public function provider()
-    {
-        return [
-            [Permission::OPERATOR_ADMIN, true],
-            [Permission::OPERATOR_USER, true],
-            [Permission::LOCAL_AUTHORITY_ADMIN, false],
-        ];
-    }
 }
-
