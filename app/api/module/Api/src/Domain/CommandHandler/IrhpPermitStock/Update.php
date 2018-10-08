@@ -29,6 +29,7 @@ final class Update extends AbstractCommandHandler
         $stock = $this->getRepo()->fetchUsingId($command);
 
         $permitType = $this->getRepo('IrhpPermitType')->fetchById($command->getPermitType());
+
         $stock->update(
             $permitType,
             $command->getValidFrom(),
