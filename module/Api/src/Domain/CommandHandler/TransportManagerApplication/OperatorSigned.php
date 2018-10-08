@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Olcs\Logging\Log\Logger;
 
-final class OperatorApprove extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
+final class OperatorSigned extends AbstractCommandHandler implements TransactionedInterface, EmailAwareInterface
 {
     use EmailAwareTrait;
     use TransportManagerSnapshot;

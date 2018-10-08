@@ -32,7 +32,7 @@ return [
     CommandHandler\TransportManagerLicence\DeleteForResponsibilities::class     => Misc\IsInternalUser::class,
     CommandHandler\TransportManagerLicence\UpdateForResponsibilities::class     => Misc\IsInternalUser::class,
 
-    CommandHandler\TransportManagerApplication\OperatorApprove::class           => Misc\CanAccessTmaWithId::class,
+    CommandHandler\TransportManagerApplication\OperatorSigned::class           => Misc\CanAccessTmaWithId::class,
 
     CommandHandler\TransportManagerApplication\Delete::class => Handler\TransportManagerApplication\Delete::class,
     CommandHandler\TransportManagerApplication\UpdateStatus::class  => Misc\CanAccessTmaWithId::class,
