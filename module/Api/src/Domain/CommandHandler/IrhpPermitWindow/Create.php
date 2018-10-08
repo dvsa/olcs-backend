@@ -28,7 +28,7 @@ final class Create extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command): Result
     {
-        if ($this->overlapsExistingWindow($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate()) > 0) {
+        if ($this->numberOfOverlappingWindows($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate()) > 0) {
             throw new ValidationException(['The dates overlap with another window for this Permit stock']);
         }
 
