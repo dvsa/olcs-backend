@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitWindow;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Olcs\Logging\Log\Logger;
 
 /**
  * IRHP Window
@@ -14,7 +13,7 @@ use Olcs\Logging\Log\Logger;
 class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitWindow';
-    protected $bundle = ['irhpPermitStock'];
+    protected $bundle = ['irhpPermitStock' => ['irhpPermitType' => ['name']]];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -22,7 +21,8 @@ class GetList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $irhpPermitWindows
+                $irhpPermitWindows,
+                $this->bundle
             )
         ];
     }
