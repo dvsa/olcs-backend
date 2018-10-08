@@ -24,7 +24,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
 {
     public static function createNew(
         IrhpPermitApplication $irhpPermitApplication,
-        IrhpPermitRange $IrhpPermitRange,
+        IrhpPermitRange $IrhpPermitRange = null,
         float $intensityOfUse = null,
         float $randomizedScore = null,
         float $applicationScore = null
@@ -35,7 +35,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
         $IrhpCandidatePermit->intensityOfUse = $intensityOfUse;
         $IrhpCandidatePermit->randomizedScore = $randomizedScore;
         $IrhpCandidatePermit->applicationScore = $applicationScore;
-        $IrhpCandidatePermit->successful = 1; //temporary default for demonstration purposes
+        $IrhpCandidatePermit->successful = 0;
 
         return $IrhpCandidatePermit;
     }
