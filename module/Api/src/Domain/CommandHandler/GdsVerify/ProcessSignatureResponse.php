@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
-use Common\RefData;
+
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus;
@@ -169,7 +169,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
         $status = $transportManagerApplication::STATUS_TM_SIGNED;
-        $transportManagerApplication->setTmSignature($digitalSignature, $transportManagerApplication);
+        $this->setTmSignature($digitalSignature, $transportManagerApplication);
         if ($isOperatorSignature) {
             $transportManagerApplication->setOperatorSignature($digitalSignature, $transportManagerApplication);
             $transportManagerApplication->setOpSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
