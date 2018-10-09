@@ -178,22 +178,21 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
-        $status = $transportManagerApplication::STATUS_TM_SIGNED;
+        $$this->setTmStatus($transportManagerApplication::STATUS_TM_SIGNED);
         $this->setTmSignature($digitalSignature, $transportManagerApplication);
         if ($isOperatorSignature) {
             $this->setOperatorSignature($digitalSignature, $transportManagerApplication);
-            $status = $transportManagerApplication::STATUS_RECEIVED;
+            $this->setTmStatus($transportManagerApplication::STATUS_RECEIVED);
         }
 
         $this->getRepo('TransportManagerApplication')->save($transportManagerApplication);
-
-        $this->handleSideEffect(UpdateStatus::create([
-            'status' => $status,
-            "id" => $transportManagerApplicationId,
-            'version' => 1
-        ]));
     }
 
+
+    private function setTmStatus(Entity\Tm\TransportManagerApplication $transportManagerApplication, $status)
+    {
+        $transportManagerApplication->setTmApplicationStatus($status);
+    }
     /**
      * setTmSignature
      *
