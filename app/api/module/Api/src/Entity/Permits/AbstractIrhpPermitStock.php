@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -131,6 +133,51 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Irhp permit range
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitRanges;
+
+    /**
+     * Irhp permit window
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitWindows;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->irhpPermitRanges = new ArrayCollection();
+        $this->irhpPermitWindows = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -397,6 +444,132 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the irhp permit range
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitRanges($irhpPermitRanges)
+    {
+        $this->irhpPermitRanges = $irhpPermitRanges;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit ranges
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitRanges()
+    {
+        return $this->irhpPermitRanges;
+    }
+
+    /**
+     * Add a irhp permit ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitRanges($irhpPermitRanges)
+    {
+        if ($irhpPermitRanges instanceof ArrayCollection) {
+            $this->irhpPermitRanges = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitRanges->toArray(),
+                    $irhpPermitRanges->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitRanges->contains($irhpPermitRanges)) {
+            $this->irhpPermitRanges->add($irhpPermitRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitRanges($irhpPermitRanges)
+    {
+        if ($this->irhpPermitRanges->contains($irhpPermitRanges)) {
+            $this->irhpPermitRanges->removeElement($irhpPermitRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit window
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitWindows($irhpPermitWindows)
+    {
+        $this->irhpPermitWindows = $irhpPermitWindows;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit windows
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitWindows()
+    {
+        return $this->irhpPermitWindows;
+    }
+
+    /**
+     * Add a irhp permit windows
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitWindows($irhpPermitWindows)
+    {
+        if ($irhpPermitWindows instanceof ArrayCollection) {
+            $this->irhpPermitWindows = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitWindows->toArray(),
+                    $irhpPermitWindows->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitWindows->contains($irhpPermitWindows)) {
+            $this->irhpPermitWindows->add($irhpPermitWindows);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit windows
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitWindows($irhpPermitWindows)
+    {
+        if ($this->irhpPermitWindows->contains($irhpPermitWindows)) {
+            $this->irhpPermitWindows->removeElement($irhpPermitWindows);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
@@ -431,7 +604,11 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
