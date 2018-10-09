@@ -61,8 +61,7 @@ class IrhpCandidatePermitEntityTest extends EntityTester
     private function createCandidatePermit()
     {
         return Entity::createNew(
-            m::mock(IrhpPermitApplication::class),
-            m::mock(IrhpPermitRange::class)
+            m::mock(IrhpPermitApplication::class)
         );
     }
 
