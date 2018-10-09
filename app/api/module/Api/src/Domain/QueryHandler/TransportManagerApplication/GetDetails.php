@@ -99,7 +99,8 @@ class GetDetails extends AbstractQueryHandler
                         'subCategory',
                     ],
                 ],
-                'digitalSignature',
+                'tmDigitalSignature',
+                'opDigitalSignature',
                 'otherLicences'
             ],
             [
