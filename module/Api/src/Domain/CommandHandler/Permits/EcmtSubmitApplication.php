@@ -93,18 +93,13 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
     {
         $intensityOfUse = floatval($irhpPermitApplication->getPermitIntensityOfUse());
         $applicationScore = floatval($irhpPermitApplication->getPermitApplicationScore());
-        $randomizedScore = null;
-        $IrhpPermitRange = null;
 
         for ($i = 0; $i < $permitsRequired; $i++) {
             $candidatePermit = IrhpCandidatePermitEntity::createNew(
                 $irhpPermitApplication,
-                $IrhpPermitRange,
                 $intensityOfUse,
-                $randomizedScore,
                 $applicationScore
             );
-
             $this->getRepo('IrhpCandidatePermit')->save($candidatePermit);
         }
     }
