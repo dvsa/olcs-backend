@@ -36,6 +36,9 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
     const STATUS_OPERATOR_SIGNED = 'tmap_st_operator_signed';
     const STATUS_POSTAL_APPLICATION = 'tmap_st_postal_application';
     const STATUS_RECEIVED = 'tmap_st_received';
+    const STATUS_DETAILS_SUBMITTED = 'tmap_st_details_submitted';
+    const STATUS_DETAILS_CHECKED = 'tmap_st_details_checked';
+    const STATUS_OPERATOR_APPROVED = 'tmap_st_operator_approved';
 
     const ERROR_TM_EXIST = 'tm_exist';
     const ERROR_DOB_REQUIRED = 'dob_required';
@@ -190,6 +193,8 @@ class TransportManagerApplication extends AbstractTransportManagerApplication im
 
     /**
      * @inheritdoc
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
      */
     public function getRelatedOrganisation()
     {
