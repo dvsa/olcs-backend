@@ -137,9 +137,6 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $this->assertSame($this->subject, $message->getSubject());
     }
 
-
-
-
     /**
      * test handle command awaiting fee
      */
@@ -153,8 +150,8 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $permitsAwarded = 2;
         $issueFeeAmount = 123;
         $permitsGrantedissueFeeTotal = $permitsRequired * $issueFeeAmount;
-        $paymentDeadlineNumDays = 10;
-        $issueFeeDeadlineDate = new DateTime('11 December 2018');
+        $paymentDeadlineNumDays = '10';
+        $issueFeeDeadlineDate = '11 December 2018';
         $awaitingFeeUrl = 'http://selfserve/permits/' . $permitAppId . '/ecmt-awaiting-fee/';
 
         $userEmail = 'email1@test.com';
@@ -168,17 +165,14 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
             'applicationRef' => $applicationRef,
+            'awaitingFeeUrl' => $awaitingFeeUrl,
             'permitsRequired' => $permitsRequired,
-            'permitsGrantedissueFeeTotal' => $permitsGrantedissueFeeTotal,
-            'issueFeeAmount' => $issueFeeAmount,
+            'permitsGranted' => $permitsRequired,
             'paymentDeadlineNumDays' => $paymentDeadlineNumDays,
             'issueFeeDeadlineDate' => $issueFeeDeadlineDate,
-            'awaitingFeeUrl' => $awaitingFeeUrl
+            'issueFeeAmount' => $issueFeeAmount,
+            'issueFeeTotal' => $permitsGrantedissueFeeTotal,
         ];
-
-
-
-
 
         $contactDetails = m::mock(ContactDetails::class);
         $contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($userEmail);
@@ -194,7 +188,6 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive('getPermitsRequired')->andReturn($permitsRequired);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')->andReturn($permitsAwarded);
 
-
         $fee = m::mock(Fee::class);
         $fee->shouldReceive('isEcmtIssuingFee')->andReturn(true);
         $fee->shouldReceive('getFeeTypeAmount')->andReturn($issueFeeAmount);
@@ -202,13 +195,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $fee->shouldReceive('getInvoicedDateTime')->andReturn(
             new DateTime('1 December 2018')
         );
-
-
         $fees = [$fee];
-
-
-
-
 
         $applicationEntity = m::mock(EcmtPermitApplication::class);
         $applicationEntity->shouldReceive('getIrhpPermitApplications')->andReturn($irhpPermitApplication);
@@ -230,7 +217,12 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($applicationEntity);
 
-        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once();
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
+            m::type(Message::class),
+            $this->template,
+            $templateVars,
+            'default'
+        );
 
         $data = [
             'to' => $userEmail,
@@ -251,13 +243,6 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $this->assertSame($orgEmails, $message->getCc());
         $this->assertSame($this->subject, $message->getSubject());
     }
-
-
-
-
-
-
-
 
     /**
      * test the exception is dealt with when there are no email addresses
