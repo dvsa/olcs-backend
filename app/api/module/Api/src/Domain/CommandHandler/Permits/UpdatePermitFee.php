@@ -33,23 +33,17 @@ final class UpdatePermitFee extends AbstractCommandHandler implements ToggleRequ
 
     public function handleCommand(CommandInterface $command)
     {
-        $createNew = false;
         // Get outstanding fees for this permit application
         $fees = $this->getRepo('Fee')->fetchFeeByEcmtPermitApplicationId($command->getEcmtPermitApplicationId());
         // if no outstanding fees, create one for the number of permits requested
         if (empty($fees)) {
             $this->createApplicationFee($command);
         } else {
-            // Outstanding fee(s) detected, cancel them ans then create a new one with new permitsRequired value.
+            // Outstanding fee(s) detected (should only be one but cancel any just incase)
             foreach ($fees as $fee) {
-                if ($fee->isOutstanding()) {
-                    $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
-                    $createNew = true;
-                }
+                $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
             }
-            if ($createNew) {
-                $this->createApplicationFee($command);
-            }
+            $this->createApplicationFee($command);
         }
         return $this->result;
     }

@@ -4,22 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "72e3f7a55b9ad49f0d6769a2a6bf5cba",
-    "content-hash": "5b249cea9d37de4bc8d2b0e96f9de490",
+    "hash": "59fcc55646e23cd073bb0f5548fb7c95",
+    "content-hash": "6a47d15110d9a09ae41a2c169f7d5f83",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.1.4",
+            "version": "v1.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "1d02c580cb59f10500871ed35651cb3a9408132e"
+                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-1d02c580cb59f10500871ed35651cb3a9408132e-zip-fa9de3.tar",
-                "reference": "1d02c580cb59f10500871ed35651cb3a9408132e",
-                "shasum": "37c548491012c0e869f350db6044281ed38c4b8a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-469f65355b034b21c9c755e2d46ff2c06164567b-zip-b371a0.tar",
+                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b",
+                "shasum": "e89aad5992c7719118ced46ee89d58d511bb091a"
             },
             "require": {
                 "php": ">=5.4"
@@ -59,7 +59,7 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2018-08-13 18:18:04"
+            "time": "2018-09-26 16:18:17"
         },
         {
             "name": "behat/transliterator",
@@ -1238,11 +1238,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.190a",
+            "version": "dev-release/4.190i",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "72a55917cd555739a3042bfb30f14ba72035ed51"
+                "reference": "6b201d3f8652ece2e2261cbd816709ea5c99c6b0"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1254,15 +1254,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2018-09-26 16:27:48"
+            "time": "2018-10-04 18:10:22"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.190a",
+            "version": "dev-release/4.190i",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "87aebc235def79ce599f9e1669bebf1363bba35f"
+                "reference": "23622c65eee02f6efe048cdaec4d5a418f281bfb"
             },
             "require": {
                 "php": ">=5.4",
@@ -1306,15 +1306,15 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2018-09-26 16:27:44"
+            "time": "2018-10-04 18:10:18"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.190a",
+            "version": "dev-release/4.190i",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "036729eff207a32e830e37c9e42c13d3155417e5"
+                "reference": "8ba5cf9ae657bb3ef2ba16b3f6f5ad2695546517"
             },
             "require": {
                 "php": ">=5.4",
@@ -1352,15 +1352,15 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2018-09-26 16:29:46"
+            "time": "2018-10-04 18:12:26"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.190a",
+            "version": "dev-release/4.190i",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "9b0fc0dbd0202f470d3874ac6b574ccbaade3bc9"
+                "reference": "971343c70241047161c305590e01cebfc12d1d69"
             },
             "require": {
                 "php": ">=5.4",
@@ -1369,7 +1369,7 @@
             "require-dev": {
                 "mockery/mockery": "~0.9.3",
                 "olcs/olcs-devtools": "dev-master",
-                "olcs/olcs-logging": "dev-release/4.190a"
+                "olcs/olcs-logging": "dev-release/4.190i"
             },
             "type": "library",
             "autoload": {
@@ -1398,15 +1398,15 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2018-09-26 16:30:33"
+            "time": "2018-10-04 18:13:14"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.190a",
+            "version": "dev-release/4.190i",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "153868393686279e217efbeb17490222064677c7"
+                "reference": "f400fb28d413d86d850a880060ca9d47c9d8f6c9"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1447,7 +1447,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2018-09-26 16:26:59"
+            "time": "2018-10-04 18:09:30"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -1909,23 +1909,21 @@
         },
         {
             "name": "robrichards/xmlseclibs",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/robrichards/xmlseclibs.git",
-                "reference": "d937712f70f93a584eb0299ccd87dc6374003781"
+                "reference": "1f4de0c0d121922aafd8c62c2a9f5e528830cf38"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/robrichards-xmlseclibs-d937712f70f93a584eb0299ccd87dc6374003781-zip-bd2e41.tar",
-                "reference": "d937712f70f93a584eb0299ccd87dc6374003781",
-                "shasum": "d0c51f6786f12aef12b1ce586829dd84ae611152"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/robrichards-xmlseclibs-1f4de0c0d121922aafd8c62c2a9f5e528830cf38-zip-c76d8d.tar",
+                "reference": "1f4de0c0d121922aafd8c62c2a9f5e528830cf38",
+                "shasum": "b8dda1d867175428e8f82b3f06a8fe706ef9fba6"
             },
             "require": {
+                "ext-openssl": "*",
                 "php": ">= 5.4"
-            },
-            "suggest": {
-                "ext-openssl": "OpenSSL extension"
             },
             "type": "library",
             "autoload": {
@@ -1945,7 +1943,7 @@
                 "xml",
                 "xmldsig"
             ],
-            "time": "2017-08-31 09:27:07"
+            "time": "2018-09-27 13:24:13"
         },
         {
             "name": "ruflin/elastica",
@@ -2180,17 +2178,17 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.15",
+            "version": "v3.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "c4625e75341e4fb309ce0c049cbf7fb84b8897cd"
+                "reference": "0a612e9dfbd2ccce03eb174365f31ecdca930ff6"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-c4625e75341e4fb309ce0c049cbf7fb84b8897cd-zip-bd03b7.tar",
-                "reference": "c4625e75341e4fb309ce0c049cbf7fb84b8897cd",
-                "shasum": "2ce2242cfc33a338bac5c10265a295e074ef0655"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-0a612e9dfbd2ccce03eb174365f31ecdca930ff6-zip-dd97fc.tar",
+                "reference": "0a612e9dfbd2ccce03eb174365f31ecdca930ff6",
+                "shasum": "f83bfd1be1640c25bfe712f571e45b87c8abb9e5"
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8",
@@ -2232,7 +2230,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2018-08-03 10:42:44"
+            "time": "2018-10-02 16:33:53"
         },
         {
             "name": "symfony/filesystem",
@@ -4353,17 +4351,17 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.45",
+            "version": "v2.8.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "06c0be4cdd8363f3ec8d592c9a4d1b981d5052af"
+                "reference": "fb3469266daaa67a1e6d42fc78fa6cdc254689f6"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-config-06c0be4cdd8363f3ec8d592c9a4d1b981d5052af-zip-7e3605.tar",
-                "reference": "06c0be4cdd8363f3ec8d592c9a4d1b981d5052af",
-                "shasum": "4b00c55b94a99c260ca67f73adc010541c18b7d6"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-config-fb3469266daaa67a1e6d42fc78fa6cdc254689f6-zip-f5d2df.tar",
+                "reference": "fb3469266daaa67a1e6d42fc78fa6cdc254689f6",
+                "shasum": "9c0b59f0cd89b883bf4120a00a6e1d2210cbfd3b"
             },
             "require": {
                 "php": ">=5.3.9",
@@ -4406,7 +4404,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26 11:13:39"
+            "time": "2018-09-08 12:44:02"
         },
         {
             "name": "symfony/dependency-injection",

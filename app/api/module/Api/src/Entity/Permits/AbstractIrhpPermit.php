@@ -103,7 +103,11 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermits"
+     * )
      * @ORM\JoinColumn(name="irhp_permit_range_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitRange;

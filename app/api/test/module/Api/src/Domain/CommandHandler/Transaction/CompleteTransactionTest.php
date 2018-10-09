@@ -11,9 +11,12 @@ use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCom
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\CompleteTransaction;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCommand;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
@@ -40,6 +43,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
 
         $this->sut = new CompleteTransaction();
         $this->mockRepo('Transaction', PaymentRepo::class);
+        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
 
         $this->refData = [
             PaymentEntity::STATUS_OUTSTANDING,
@@ -190,6 +194,21 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ],
             $resolveResult
         );
+
+        $ecmtPermitApplication = m::mock(EcmtPermitApplicationEntity::class);
+
+        $this->repoMap['EcmtPermitApplication']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($ecmtPermitApplicationId)
+            ->andReturn($ecmtPermitApplication);
+
+
+        $ecmtPermitApplication
+            ->shouldReceive('isNotYetSubmitted')
+            ->once()
+            ->andReturn(true);
+
 
         $submitResult = new Result();
         $submitResult
