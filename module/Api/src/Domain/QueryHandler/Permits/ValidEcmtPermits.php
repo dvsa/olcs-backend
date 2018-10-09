@@ -28,6 +28,5 @@ final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleR
             ],
             'irhpPermitStock'
         ],
-        'status'
     ];
 }

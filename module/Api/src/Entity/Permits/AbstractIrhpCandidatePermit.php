@@ -129,6 +129,15 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $lastModifiedOn;
 
     /**
+     * Random factor
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="random_factor", precision=18, scale=9, nullable=true)
+     */
+    protected $randomFactor;
+
+    /**
      * Randomized score
      *
      * @var float
@@ -151,10 +160,10 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true)
+     * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
      * @ORM\Version
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * Irhp permit
@@ -414,6 +423,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
         }
 
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the random factor
+     *
+     * @param float $randomFactor new value being set
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setRandomFactor($randomFactor)
+    {
+        $this->randomFactor = $randomFactor;
+
+        return $this;
+    }
+
+    /**
+     * Get the random factor
+     *
+     * @return float
+     */
+    public function getRandomFactor()
+    {
+        return $this->randomFactor;
     }
 
     /**

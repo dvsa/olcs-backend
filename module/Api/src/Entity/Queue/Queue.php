@@ -59,6 +59,8 @@ class Queue extends AbstractQueue
     const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
     const TYPE_CREATE_CONTINUATION_SNAPSHOT = 'que_typ_cont_shapshot';
     const TYPE_CONT_DIGITAL_REMINDER = 'que_typ_cont_digital_reminder';
+    const TYPE_PERMITS_ALLOCATE = 'que_typ_permits_allocate';
+    const TYPE_PROCESS_ECMT_APPLICATIONS = 'que_typ_process_ecmt_apps';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -85,6 +87,8 @@ class Queue extends AbstractQueue
         self::TYPE_REMOVE_DELETED_DOCUMENTS,
         self::TYPE_CREATE_CONTINUATION_SNAPSHOT,
         self::TYPE_CONT_DIGITAL_REMINDER,
+        self::TYPE_PERMITS_ALLOCATE,
+        self::TYPE_PROCESS_ECMT_APPLICATIONS,
     ];
 
     /**
