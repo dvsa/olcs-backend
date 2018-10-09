@@ -39,7 +39,7 @@ class EcmtPermitApplication extends AbstractRepository
             }
         }
 
-        if ($query->getLicence() !== null) {
+        if (method_exists($query, 'getLicence') && $query->getLicence() !== null) {
             $qb->andWhere($qb->expr()->in($this->alias . '.licence', $query->getLicence()));
         }
     }
