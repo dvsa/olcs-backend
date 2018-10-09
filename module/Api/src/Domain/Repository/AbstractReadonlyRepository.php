@@ -308,6 +308,18 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Decache By Id
+     *
+     * @param int $id Id
+     */
+    public function decacheById($id)
+    {
+        if (isset($this->references[$id])) {
+            unset($this->references[$id]);
+        }
+    }
+
+    /**
      * Fetch by ids
      *
      * @param array $ids         List of Ids
