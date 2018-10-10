@@ -36,7 +36,7 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler
         $application = $this->getRepo()->fetchById($id);
         $newStatus = $this->refData(EcmtPermitApplication::STATUS_WITHDRAWN);
         $withdrawReason = $this->refData(EcmtPermitApplication::WITHDRAWN_REASON_BY_USER);
-        $application->withdraw($newStatus);
+        $application->withdraw($newStatus, $withdrawReason);
 
         $this->getRepo()->save($application);
 
