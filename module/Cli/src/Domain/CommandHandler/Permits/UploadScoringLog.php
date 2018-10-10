@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
