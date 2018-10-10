@@ -159,6 +159,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity = $this->createApplicationUnderConsideration();
         $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
         $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(Entity::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
     }
 
     /**
@@ -179,6 +180,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity = $this->createApplicationAwaitingFee();
         $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
         $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(Entity::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
     }
 
     /**

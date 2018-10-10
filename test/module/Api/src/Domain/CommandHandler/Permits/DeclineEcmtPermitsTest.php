@@ -29,7 +29,8 @@ class DeclineEcmtPermitsTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::STATUS_WITHDRAWN
+            EcmtPermitApplication::STATUS_WITHDRAWN,
+            EcmtPermitApplication::WITHDRAWN_REASON_DECLINED
         ];
 
         parent::initReferences();
@@ -41,7 +42,10 @@ class DeclineEcmtPermitsTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => $applicationId]);
 
         $application = m::mock(EcmtPermitApplication::class);
-        $application->shouldReceive('decline')->with($this->refData[EcmtPermitApplication::STATUS_WITHDRAWN])->once();
+        $application->shouldReceive('decline')->with(
+            $this->refData[EcmtPermitApplication::STATUS_WITHDRAWN],
+            $this->refData[EcmtPermitApplication::WITHDRAWN_REASON_DECLINED]
+        )->once();
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($applicationId)
