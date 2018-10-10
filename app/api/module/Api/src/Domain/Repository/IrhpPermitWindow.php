@@ -3,9 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as Entity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use DateTime;
 
 /**
@@ -111,7 +109,6 @@ class IrhpPermitWindow extends AbstractRepository
 
     /**
      * @param int $irhpPermitStockId
-     * @param DateTime $date
      *
      * @throws \Doctrine\ORM\NonUniqueResultException
      *
