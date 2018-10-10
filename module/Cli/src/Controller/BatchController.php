@@ -495,15 +495,15 @@ class BatchController extends AbstractConsoleController
      */
     public function identifySuccessfulPermitApplicationsAction()
     {
-        /*if (!is_numeric($this->params('stock-id'))) {
+        if (!is_numeric($this->params('stock-id'))) {
             $this->writeVerboseMessages('The stock-id parameter must be a numeric value');
             return $this->handleExitStatus(0);
-        }*/
+        }
         $stockId = intval($this->params('stock-id'));
         $stockIdParams = ['stockId' => $stockId];
 
         // TODO; do we need to reset all candidate permit records in the stock to unsuccessful?
-        /*$result = $this->handleCommand([
+        $result = $this->handleCommand([
             CliCommand\Permits\CalculateRandomAppScore::create($stockIdParams)
         ]);
 
@@ -523,18 +523,7 @@ class BatchController extends AbstractConsoleController
                 'Prerequisite failed: one or more candidate permits within the stock lack a randomised score'
             );
             return $this->handleExitStatus(1);
-        }*/
-        /*$cmdManager = $this->getServiceLocator()->get('CommandHandlerManager');
-        $logContent = '';
-
-        $result =  $cmdManager->handleCommand(CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams));
-        $logContent = $logContent . ' ' . $this->collateResultMessages($result->getMessages());
-
-        $result =  $cmdManager->handleCommand(CliCommand\Permits\MarkSuccessfulDaPermitApplications::create($stockIdParams));
-        $logContent = $logContent . ' ' . $this->collateResultMessages($result->getMessages());
-
-        $result =  $cmdManager->handleCommand(CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams));
-        $logContent = $logContent . ' ' . $this->collateResultMessages($result->getMessages());*/
+        }
 
         $result = $this->handleCommandWithLog([
             CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams),
@@ -542,12 +531,10 @@ class BatchController extends AbstractConsoleController
             CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
         ]);
 
-        \Olcs\Logging\Log\Logger::crit($result['log']);
-
+        // Upload copy of log output to the document store
         $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand(
             CliCommand\Permits\UploadScoringLog::create(['logContent' => $result['log']])
         );
-        //\Olcs\Logging\Log\Logger::crit(print_r($result->getMessages(), true));
 
         $this->handleExitStatus($result['responseCode']);
     }
@@ -640,6 +627,9 @@ class BatchController extends AbstractConsoleController
 
     /**
      * Handle DTO commands and return collated log output
+     * @todo: this was copied from handleCommand. If Scoring is going
+     *          to remain in BatchController then we should refactor
+     *          to reduce the repetition
      *
      * @param array $dto dto
      *
@@ -647,7 +637,7 @@ class BatchController extends AbstractConsoleController
      */
     protected function handleCommandWithLog(array $dto)
     {
-        $logOutput = '';
+        $logOutput = "";
 
         try {
             $count = 0;
@@ -660,7 +650,7 @@ class BatchController extends AbstractConsoleController
 
                 $this->writeVerboseMessages($result->getMessages());
 
-                $logOutput = $logOutput . ' ' . $this->collateResultMessages($result->getMessages());
+                $logOutput = $logOutput . " " . $this->collateResultMessages($result->getMessages());
             }
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
