@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
@@ -21,6 +22,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindow::class);
+        $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplication::class);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermit::class);
 
@@ -86,14 +88,23 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $command->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
 
+        $irhpPermitStockId = 1;
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getId')
+            ->andReturn($irhpPermitStockId);
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('getNextIrhpPermitStockByPermitType')
+            ->with(EcmtPermitApplication::PERMIT_TYPE, m::type('Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime'))
+            ->andReturn($irhpPermitStock);
+
         $irhpPermitWindowId = 1;
         $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
         $irhpPermitWindow->shouldReceive('getId')
             ->once()
             ->andReturn($irhpPermitWindowId);
 
-        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByPermitType')
-            ->with(EcmtPermitApplication::PERMIT_TYPE)
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByStockId')
+            ->with($irhpPermitStockId)
             ->once()
             ->andReturn($irhpPermitWindow);
 
