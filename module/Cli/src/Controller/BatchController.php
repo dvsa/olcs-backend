@@ -22,6 +22,14 @@ use Zend\View\Model\ConsoleModel;
  */
 class BatchController extends AbstractConsoleController
 {
+
+    /**
+     * Used to store a copy of messages written to the terminal & log
+     * so that it can be refered to later
+     * i.e for uploading logs to the doc store
+     */
+    private $logOutput = "";
+
     /**
      * Perform database management tasks, eg changing is_irfo flags
      *
@@ -525,7 +533,7 @@ class BatchController extends AbstractConsoleController
             return $this->handleExitStatus(1);
         }
 
-        $result = $this->handleCommandWithLog([
+        $responseCode = $this->handleCommand([
             CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams),
             CliCommand\Permits\MarkSuccessfulDaPermitApplications::create($stockIdParams),
             CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
@@ -533,10 +541,10 @@ class BatchController extends AbstractConsoleController
 
         // Upload copy of log output to the document store
         $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand(
-            CliCommand\Permits\UploadScoringLog::create(['logContent' => $result['log']])
+            CliCommand\Permits\UploadScoringLog::create(['logContent' => $this->logOutput])
         );
 
-        $this->handleExitStatus($result['responseCode']);
+        $this->handleExitStatus($responseCode);
     }
 
     /**
@@ -609,59 +617,6 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
-     * Handle DTO commands and return collated log output
-     * @todo: this was copied from handleCommand. If Scoring is going
-     *          to remain in BatchController then we should refactor
-     *          to reduce the repetition
-     *
-     * @param array $dto dto
-     *
-     * @return array Containing Response code and log output
-     */
-    protected function handleCommandWithLog(array $dto)
-    {
-        $logOutput = "";
-
-        try {
-            $count = 0;
-            foreach ($dto as $dtoCommand) {
-                $count++;
-                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
-
-                /** @var \Dvsa\Olcs\Api\Domain\Command\Result $result */
-                $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
-
-                $this->writeVerboseMessages($result->getMessages());
-
-                $logOutput = $logOutput . "\r\n" . implode("\r\n", $result->getMessages());
-            }
-        } catch (Exception\NotFoundException $e) {
-            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
-            return [
-                'responseCode' => 404,
-                'log' => $logOutput
-            ];
-        } catch (Exception\Exception $e) {
-            $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
-            return [
-                'responseCode' => 400,
-                'log' => $logOutput
-            ];
-        } catch (\Exception $e) {
-            $this->writeVerboseMessages($e->getMessage(), \Zend\Log\Logger::ERR);
-            return [
-                'responseCode' => 500,
-                'log' => $logOutput
-            ];
-        }
-
-        return [
-            'responseCode' => 0,
-            'log' => $logOutput
-        ];
-    }
-
-    /**
      * Handle DTO query
      *
      * @param QueryInterface $dto dto
@@ -704,6 +659,9 @@ class BatchController extends AbstractConsoleController
             $logPriority,
             json_encode($messages)
         );
+
+        //Store a local copy of log messages for later use (if necessary)
+        $this->logOutput = $this->logOutput . "\r\n" . implode("\r\n", $messages);
     }
 
     /**
