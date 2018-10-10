@@ -789,4 +789,21 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         }
         return null;
     }
+
+    /**
+     * Get All Outstanding Ecmt Application Fees
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
+        $fees = [];
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
+                $fees[] = $fee;
+            }
+        }
+        return $fees;
+    }
 }
