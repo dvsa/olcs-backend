@@ -495,15 +495,15 @@ class BatchController extends AbstractConsoleController
      */
     public function identifySuccessfulPermitApplicationsAction()
     {
-        if (!is_numeric($this->params('stock-id'))) {
+        /*if (!is_numeric($this->params('stock-id'))) {
             $this->writeVerboseMessages('The stock-id parameter must be a numeric value');
             return $this->handleExitStatus(0);
-        }
+        }*/
         $stockId = intval($this->params('stock-id'));
         $stockIdParams = ['stockId' => $stockId];
 
         // TODO; do we need to reset all candidate permit records in the stock to unsuccessful?
-        $result = $this->handleCommand([
+        /*$result = $this->handleCommand([
             CliCommand\Permits\CalculateRandomAppScore::create($stockIdParams)
         ]);
 
@@ -523,17 +523,50 @@ class BatchController extends AbstractConsoleController
                 'Prerequisite failed: one or more candidate permits within the stock lack a randomised score'
             );
             return $this->handleExitStatus(1);
+        }*/
+        /*$cmdManager = $this->getServiceLocator()->get('CommandHandlerManager');
+        $logContent = '';
+
+        $result =  $cmdManager->handleCommand(CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams));
+        $logContent = $logContent . ' ' . $this->collateResultMessages($result->getMessages());
+
+        $result =  $cmdManager->handleCommand(CliCommand\Permits\MarkSuccessfulDaPermitApplications::create($stockIdParams));
+        $logContent = $logContent . ' ' . $this->collateResultMessages($result->getMessages());
+
+        $result =  $cmdManager->handleCommand(CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams));
+        $logContent = $logContent . ' ' . $this->collateResultMessages($result->getMessages());*/
+
+        $result = $this->handleCommandWithLog([
+            CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams),
+            CliCommand\Permits\MarkSuccessfulDaPermitApplications::create($stockIdParams),
+            CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
+        ]);
+
+        \Olcs\Logging\Log\Logger::crit($result['log']);
+
+        $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand(
+            CliCommand\Permits\UploadScoringLog::create(['logContent' => $result['log']])
+        );
+        //\Olcs\Logging\Log\Logger::crit(print_r($result->getMessages(), true));
+
+        $this->handleExitStatus($result['responseCode']);
+    }
+
+    /**
+     * Collectes messages inside an array
+     * and returns them as a single string
+     *
+     * @param array $messages array list of messages
+     * @return string a single message
+     */
+    private function collateResultMessages(array $messages)
+    {
+        $finalMessage = "";
+        foreach ($messages as $message) {
+            $finalMessage = $finalMessage . "\r\n" . $message;
         }
 
-        $this->handleExitStatus(
-            $this->handleCommand(
-                [
-                    CliCommand\Permits\MarkSuccessfulSectorPermitApplications::create($stockIdParams),
-                    CliCommand\Permits\MarkSuccessfulDaPermitApplications::create($stockIdParams),
-                    CliCommand\Permits\MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
-                ]
-            )
-        );
+        return $finalMessage;
     }
 
     /**
@@ -603,6 +636,56 @@ class BatchController extends AbstractConsoleController
         }
 
         return 0;
+    }
+
+    /**
+     * Handle DTO commands and return collated log output
+     *
+     * @param array $dto dto
+     *
+     * @return array Containing Response code and log output
+     */
+    protected function handleCommandWithLog(array $dto)
+    {
+        $logOutput = '';
+
+        try {
+            $count = 0;
+            foreach ($dto as $dtoCommand) {
+                $count++;
+                $this->writeVerboseMessages("Handle command ". $count .' '. get_class($dtoCommand));
+
+                /** @var \Dvsa\Olcs\Api\Domain\Command\Result $result */
+                $result = $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand($dtoCommand);
+
+                $this->writeVerboseMessages($result->getMessages());
+
+                $logOutput = $logOutput . ' ' . $this->collateResultMessages($result->getMessages());
+            }
+        } catch (Exception\NotFoundException $e) {
+            $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
+            return [
+                'responseCode' => 404,
+                'log' => $logOutput
+            ];
+        } catch (Exception\Exception $e) {
+            $this->writeVerboseMessages($e->getMessages(), \Zend\Log\Logger::ERR);
+            return [
+                'responseCode' => 400,
+                'log' => $logOutput
+            ];
+        } catch (\Exception $e) {
+            $this->writeVerboseMessages($e->getMessage(), \Zend\Log\Logger::ERR);
+            return [
+                'responseCode' => 500,
+                'log' => $logOutput
+            ];
+        }
+
+        return [
+            'responseCode' => 0,
+            'log' => $logOutput
+        ];
     }
 
     /**

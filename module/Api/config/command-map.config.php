@@ -1102,5 +1102,7 @@ return [
         CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
     CommandCli\Permits\CalculateRandomAppScore::class =>
         CommandHandlerCli\Permits\CalculateRandomAppScore::class,
+    CommandCli\Permits\UploadScoringLog::class =>
+        CommandHandlerCli\Permits\UploadScoringLog::class,
 
 ];

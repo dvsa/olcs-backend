@@ -37,4 +37,7 @@ class SubCategory extends AbstractSubCategory
 
     const REPORT_SUB_CATEGORY_PSV = 192;
     const REPORT_SUB_CATEGORY_GV = 193;
+
+    const PERMITS_SUB_CATEGORY = 196;
+
 }

@@ -24,6 +24,7 @@ return [
     CliCommandHandler\Permits\MarkSuccessfulRemainingPermitApplications::class => IsSystemUser::class,
     CliCommandHandler\Permits\MarkSuccessfulSectorPermitApplications::class => IsSystemUser::class,
     CliCommandHandler\Permits\CalculateRandomAppScore::class => IsSystemUser::class,
+    CliCommandHandler\Permits\UploadScoringLog::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
     CliQueryHandler\Permits\StockAvailability::class => IsSystemUser::class,
     CliQueryHandler\Permits\StockLackingRandomisedScore::class => IsSystemUser::class,
