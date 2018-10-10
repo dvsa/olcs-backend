@@ -183,17 +183,13 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $mockTransportApplication->shouldReceive('setTmSignatureType')
             ->with($this->refData[RefData::SIG_DIGITAL_SIGNATURE])
             ->once();
+        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->once();
 
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockTransportApplication);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
-        $this->expectedSideEffect(
-            UpdateStatus::class,
-            ['status' => TransportManagerApplication::STATUS_TM_SIGNED, "id" => 65, 'version' => 1],
-            []
-        );
         $this->sut->handleCommand($command);
     }
 
@@ -231,16 +227,13 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->once();
         $mockTransportApplication->shouldReceive('setOpSignatureType')
             ->once();
+        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->twice();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockTransportApplication);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
-        $this->expectedSideEffect(
-            UpdateStatus::class,
-            ['status' => TransportManagerApplication::STATUS_RECEIVED, "id" => 65, 'version' => 1],
-            []
-        );
+
         $this->sut->handleCommand($command);
     }
 
