@@ -540,23 +540,6 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
-     * Collectes messages inside an array
-     * and returns them as a single string
-     *
-     * @param array $messages array list of messages
-     * @return string a single message
-     */
-    private function collateResultMessages(array $messages)
-    {
-        $finalMessage = "";
-        foreach ($messages as $message) {
-            $finalMessage = $finalMessage . "\r\n" . $message;
-        }
-
-        return $finalMessage;
-    }
-
-    /**
      * Is verbose
      *
      * @return boolean
@@ -650,7 +633,7 @@ class BatchController extends AbstractConsoleController
 
                 $this->writeVerboseMessages($result->getMessages());
 
-                $logOutput = $logOutput . " " . $this->collateResultMessages($result->getMessages());
+                $logOutput = $logOutput . "\r\n" . implode("\r\n", $result->getMessages());
             }
         } catch (Exception\NotFoundException $e) {
             $this->writeVerboseMessages(['NotFoundException', $e->getMessage()], \Zend\Log\Logger::WARN);
