@@ -2,13 +2,12 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication as WithdrawEcmtPermitApplicationCmd;
-use Doctrine\Common\Collections\Criteria;
 
 /**
  * Withdraw an ECMT Permit application
@@ -40,18 +39,14 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler
 
         $this->getRepo()->save($application);
 
-        $criteria = Criteria::create();
-        $criteria->andWhere($criteria->expr()->eq('feeStatus', $this->refData(Fee::STATUS_OUTSTANDING)));
-        $criteria->andWhere($criteria->expr()->eq('ecmtPermitApplication', $application));
-        foreach ($application->getFees()->matching($criteria) as $fee) {
-            $fee->setFeeStatus($this->refData(Fee::STATUS_CANCELLED));
-            $this->getRepo('Fee')->save($fee);
+        $outstandingFees = $application->getOutstandingFees();
+        foreach ($outstandingFees as $fee) {
+            $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
         }
 
-        $result = new Result();
-        $result->addId('ecmtPermitApplication', $id);
-        $result->addMessage('Permit application withdrawn');
+        $this->result->addId('ecmtPermitApplication', $id);
+        $this->result->addMessage('Permit application withdrawn');
 
-        return $result;
+        return $this->result;
     }
 }

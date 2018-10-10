@@ -7,12 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\WithdrawEcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
 /**
@@ -31,9 +33,7 @@ class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-          EcmtPermitApplication::STATUS_WITHDRAWN,
-          Fee::STATUS_CANCELLED,
-          Fee::STATUS_OUTSTANDING
+          EcmtPermitApplication::STATUS_WITHDRAWN
         ];
 
         parent::initReferences();
@@ -47,9 +47,17 @@ class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('withdraw')->with($this->refData[EcmtPermitApplication::STATUS_WITHDRAWN])->once();
 
-        $fees = m::mock(Fee::class);
-        $fees->shouldReceive('matching')->andReturnSelf();
-        $application->shouldReceive('getFees')->andReturn($fees);
+        $fee_1 = m::mock(Fee::class);
+        $fee_1->shouldReceive('getId')->andReturn(1);
+        $fees = [$fee_1];
+        $application->shouldReceive('getOutstandingFees')->andReturn($fees);
+
+        $taskResult = new Result();
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => 1],
+            $taskResult
+        );
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($applicationId)
