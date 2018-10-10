@@ -110,46 +110,19 @@ class IrhpPermitWindow extends AbstractRepository
     }
 
     /**
-     * @param string $irhpPermitStockType
+     * @param int $irhpPermitStockId
      * @param DateTime $date
      *
-     * @throws NotFoundException
      * @throws \Doctrine\ORM\NonUniqueResultException
      *
      * @return IrhpPermitWindow
      */
-    public function fetchLastOpenWindowByPermitType($irhpPermitType, DateTime $date = null)
+    public function fetchLastOpenWindowByStockId(int $irhpPermitStockId)
     {
-        if ($date === null) {
-            $date = new DateTime();
-        }
-
+        $date = new DateTime();
         $query = $this->getEntityManager()->createQueryBuilder();
 
-        $stock = $query->select('ips')
-            ->from(IrhpPermitStockEntity::class, 'ips')
-            ->innerJoin('ips.irhpPermitType', 'ipt')
-            ->where($query->expr()->andX(
-                $query->expr()->lte('ips.validFrom', '?1'),
-                $query->expr()->gte('ips.validTo', '?1'),
-                $query->expr()->eq('ipt.name', '?2')
-            ))
-            ->orderBy('ips.validTo', 'ASC')
-            ->setParameter(1, $date)
-            ->setParameter(2, $irhpPermitType)
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        if (empty($stock)) {
-            throw new NotFoundException('No available stock found.');
-        }
-
-        $stockId = $stock->getId();
-
-        $query = $this->getEntityManager()->createQueryBuilder();
-
-        $window = $query->select('ipw')
+        return $query->select('ipw')
             ->from(Entity::class, 'ipw')
             ->where($query->expr()->andX(
                 $query->expr()->between('?1', 'ipw.startDate', 'ipw.endDate'),
@@ -157,15 +130,9 @@ class IrhpPermitWindow extends AbstractRepository
             ))
             ->orderBy('ipw.id', 'DESC')
             ->setParameter(1, $date)
-            ->setParameter(2, $stockId)
+            ->setParameter(2, $irhpPermitStockId)
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
-
-        if (empty($window)) {
-            throw new NotFoundException('No available window found.');
-        }
-
-        return $window;
     }
 }

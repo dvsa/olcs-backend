@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -17,7 +18,6 @@ use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplic
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 
 /**
  * Submit the ECMT application
@@ -32,7 +32,7 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitApplication', 'IrhpCandidatePermit', 'IrhpPermitWindow'];
+    protected $extraRepos = ['IrhpPermitApplication', 'IrhpCandidatePermit', 'IrhpPermitWindow', 'IrhpPermitStock'];
 
 
     /**
@@ -53,7 +53,16 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $id = $command->getId();
         $newStatus = $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_UNDER_CONSIDERATION);
 
-        $ecmtWindow = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByPermitType(EcmtPermitApplication::PERMIT_TYPE);
+        $ecmtStock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(EcmtPermitApplication::PERMIT_TYPE, new DateTime());
+        if (empty($ecmtStock)) {
+            throw new NotFoundException('No available stock found.');
+        }
+        $ecmtStockId = $ecmtStock->getId();
+
+        $ecmtWindow = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($ecmtStockId);
+        if (empty($ecmtWindow)) {
+            throw new NotFoundException('No available window found.');
+        }
         $ecmtWindowId = $ecmtWindow->getId();
 
         $application = $this->getRepo()->fetchById($id);
@@ -85,14 +94,14 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
      * for the ecmt_permit_application being submitted.
      *
      * @param EcmtPermitApplication $ecmtPermitApplication
-     * @param int $ecmtWindow
+     * @param int $ecmtWindowId
      *
      * @return IrhpPermitApplicationEntity
      */
-    private function createIrhpPermitApplication(EcmtPermitApplication $ecmtPermitApplication, int $ecmtWindow)
+    private function createIrhpPermitApplication(EcmtPermitApplication $ecmtPermitApplication, int $ecmtWindowId)
     {
         return IrhpPermitApplicationEntity::createNew(
-            $this->getRepo()->getReference(IrhpPermitWindowEntity::class, $ecmtWindow),
+            $this->getRepo()->getReference(IrhpPermitWindowEntity::class, $ecmtWindowId),
             $ecmtPermitApplication->getLicence(),
             $ecmtPermitApplication
         );
