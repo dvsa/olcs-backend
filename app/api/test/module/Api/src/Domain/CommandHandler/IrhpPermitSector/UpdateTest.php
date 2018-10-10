@@ -39,15 +39,29 @@ class UpdateTest extends CommandHandlerTestCase
 
         $command = UpdateCmd::create($cmdData);
 
-        foreach ($cmdData['sectors'] as $index => $sector) {
-            $this->repoMap['IrhpPermitSectorQuota']
-                ->shouldReceive('updateSectorPermitQuantity')
-                ->with(
-                    $sector,
-                    $index,
-                    $command->getIrhpPermitStock()
-                );
-        }
+        $this->repoMap['IrhpPermitSectorQuota']
+            ->shouldReceive('updateSectorPermitQuantity')
+            ->with(
+                $cmdData['sectors']['1'],
+                1,
+                $command->getIrhpPermitStock()
+            )->once();
+
+        $this->repoMap['IrhpPermitSectorQuota']
+            ->shouldReceive('updateSectorPermitQuantity')
+            ->with(
+                $cmdData['sectors']['2'],
+                2,
+                $command->getIrhpPermitStock()
+            )->once();
+
+        $this->repoMap['IrhpPermitSectorQuota']
+            ->shouldReceive('updateSectorPermitQuantity')
+            ->with(
+                $cmdData['sectors']['3'],
+                3,
+                $command->getIrhpPermitStock()
+            )->once();
 
         $result = $this->sut->handleCommand($command);
 
