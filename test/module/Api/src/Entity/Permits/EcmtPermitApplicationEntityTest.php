@@ -157,7 +157,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testWithdraw()
     {
         $entity = $this->createApplicationUnderConsideration();
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
         $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
         $this->assertEquals(Entity::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
     }
@@ -169,7 +169,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testWithdrawException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -178,7 +178,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDecline()
     {
         $entity = $this->createApplicationAwaitingFee();
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_DECLINED));
         $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
         $this->assertEquals(Entity::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
     }
@@ -190,7 +190,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDeclineException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
