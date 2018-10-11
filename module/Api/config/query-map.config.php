@@ -605,4 +605,5 @@ return [
     // Cli - Permits
     QueryCli\Permits\StockAvailability::class => QueryHandlerCli\Permits\StockAvailability::class,
     QueryCli\Permits\StockLackingRandomisedScore::class => QueryHandlerCli\Permits\StockLackingRandomisedScore::class,
+    QueryCli\Permits\GetScoredList::class => QueryHandlerCli\Permits\GetScoredList::class,
 ];

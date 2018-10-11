@@ -1104,5 +1104,7 @@ return [
         CommandHandlerCli\Permits\CalculateRandomAppScore::class,
     CommandCli\Permits\UploadScoringLog::class =>
         CommandHandlerCli\Permits\UploadScoringLog::class,
+    CommandCli\Permits\UploadScoringResult::class =>
+        CommandHandlerCli\Permits\UploadScoringResult::class,
 
 ];
