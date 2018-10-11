@@ -192,6 +192,23 @@ class User extends AbstractRepository
         return $query->getResult();
     }
 
+    public function fetchFirstByEmailOrFalse(string $emailAddress)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            // match by email address
+            ->innerJoin($this->alias . '.contactDetails', 'cd')
+            ->andWhere($qb->expr()->eq('cd.emailAddress', ':emailAddress'))
+            ->setParameter('emailAddress', $emailAddress)
+            ->setMaxResults(1);
+
+        $query = $qb->getQuery();
+        $query->execute();
+
+        return current($query->getResult());
+    }
+
     /**
      * Populate Ref Data References
      *
