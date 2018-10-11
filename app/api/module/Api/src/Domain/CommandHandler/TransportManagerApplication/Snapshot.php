@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -64,7 +65,7 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
             'TM%s snapshot for application %s (%s).html',
             $tma->getTransportManager()->getId(),
             $tma->getApplication()->getId(),
-            $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_OPERATOR_SIGNED ? "at submission" : "at grant"
+            $this->getSnapshotStatus($tma)
         );
 
         $data = [
@@ -81,5 +82,27 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
         ];
 
         return $this->handleSideEffect(Upload::create($data));
+    }
+
+    /**
+     * getSnapshotStatus
+     *
+     * @param TransportManagerApplication $tmApplication
+     *
+     * @return string
+     */
+    private function getSnapshotStatus(TransportManagerApplication $tmApplication): string
+    {
+        switch ($tmApplication->getTmApplicationStatus()->getId()) {
+            case TransportManagerApplication::STATUS_RECEIVED:
+            case TransportManagerApplication::STATUS_OPERATOR_SIGNED:
+                $status = 'at submission';
+                break;
+
+            default:
+                $status = 'at granted';
+                break;
+        }
+        return $status;
     }
 }

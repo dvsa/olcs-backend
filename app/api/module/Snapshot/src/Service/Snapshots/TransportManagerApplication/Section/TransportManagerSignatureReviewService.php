@@ -13,9 +13,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 class TransportManagerSignatureReviewService extends AbstractReviewService
 {
 
-    const SIGNATURE         = 'markup-tma-declaration-signature';
+    const SIGNATURE = 'markup-tma-declaration-signature';
     const SIGNATURE_DIGITAL = 'markup-tma-declaration-signature-digital';
-    const ADDRESS           = 'tm-review-return-address';
+    const SIGNATURE_DIGITAL_BOTH = 'markup-tma-declaration-signature-digital-both';
+    const ADDRESS = 'tm-review-return-address';
+    const SIGNATURE_DIGITAL_OPERATOR_TM = 'markup-tma-declaration-signature-digital-operator-tm';
 
     /**
      * Format the readonly config from the given data
@@ -24,7 +26,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfig(TransportManagerApplication $tma) : array
+    public function getConfig(TransportManagerApplication $tma): array
     {
         $partial = $this->getPartial($tma);
 
@@ -40,12 +42,29 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
         ];
     }
 
-    private function getPartial(TransportManagerApplication $tma) : string
+    /**
+     * getPartial
+     * @param TransportManagerApplication $tma
+     *
+     * @return string
+     */
+    private function getPartial(TransportManagerApplication $tma): string
     {
-        return $tma->getTmDigitalSignature() ? self::SIGNATURE_DIGITAL : self::SIGNATURE;
+        $partial = $tma->getOpDigitalSignature()? self::SIGNATURE_DIGITAL_BOTH : self::SIGNATURE_DIGITAL;
+
+        if ($tma->getIsOwner() === 'Y') {
+            $partial = self::SIGNATURE_DIGITAL_OPERATOR_TM;
+        }
+        return $tma->getTmDigitalSignature() ? $partial : self::SIGNATURE;
     }
 
-    private function getReplaceData(TransportManagerApplication $tma) : array
+    /**
+     * getReplaceData
+     * @param TransportManagerApplication $tma
+     *
+     * @return array
+     */
+    private function getReplaceData(TransportManagerApplication $tma): array
     {
         $replaceData = [
             $this->getOwnerLabel($tma),
