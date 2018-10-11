@@ -128,4 +128,74 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             $this->sut->fetchLastOpenWindow($dateTime)
         );
     }
+
+    public function testFetchLastOpenWindowByPermitType()
+    {
+        $expectedResult = m::mock(IrhpPermitWindowEntity::class);
+
+        $irhpPermitStockId = 1;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $betweenFunc = m::mock(Func::class);
+        $eqFunc = m::mock(Func::class);
+        $andXFunc = m::mock(Func::class);
+
+        $expr = m::mock(Expr::class);
+
+        $queryBuilder->shouldReceive('expr')
+            ->andReturn($expr);
+
+        $expr->shouldReceive('andX')
+            ->with($betweenFunc, $eqFunc)
+            ->once()
+            ->andReturn($andXFunc);
+
+        $expr->shouldReceive('between')
+            ->with('?1', 'ipw.startDate', 'ipw.endDate')
+            ->once()
+            ->andReturn($betweenFunc)
+            ->shouldReceive('eq')
+            ->with('ipw.irhpPermitStock', '?2')
+            ->once()
+            ->andReturn($eqFunc);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitWindowEntity::class, 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with($andXFunc)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('orderBy')
+            ->with('ipw.id', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, m::type('DateTime'))
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $irhpPermitStockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setMaxResults')
+            ->with(1)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getOneOrNullResult')
+            ->once()
+            ->andReturn($expectedResult);
+
+        $this->assertEquals(
+            $expectedResult,
+            $this->sut->fetchLastOpenWindowByStockId($irhpPermitStockId)
+        );
+    }
 }
