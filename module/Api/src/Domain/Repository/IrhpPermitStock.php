@@ -25,6 +25,7 @@ class IrhpPermitStock extends AbstractRepository
      * @param DateTime $date
      *
      * @return array
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getNextIrhpPermitStockByPermitType($permitType, $date)
     {
@@ -39,6 +40,6 @@ class IrhpPermitStock extends AbstractRepository
                 ->setParameter(2, $permitType)
                 ->setMaxResults(1) //There should only ever be one, take the most recent
                 ->getQuery()
-                ->getResult();
+                ->getOneOrNullResult();
     }
 }

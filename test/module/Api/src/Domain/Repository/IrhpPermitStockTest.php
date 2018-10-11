@@ -64,7 +64,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->shouldReceive('setMaxResults')
             ->with(1)
             ->andReturnSelf()
-            ->shouldReceive('getQuery->getResult')
+            ->shouldReceive('getQuery->getOneOrNullResult')
             ->once()
             ->andReturn($expectedResult);
 

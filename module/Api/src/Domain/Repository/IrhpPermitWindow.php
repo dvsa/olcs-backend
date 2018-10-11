@@ -106,4 +106,30 @@ class IrhpPermitWindow extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
+
+    /**
+     * @param int $irhpPermitStockId
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return IrhpPermitWindow
+     */
+    public function fetchLastOpenWindowByStockId(int $irhpPermitStockId)
+    {
+        $date = new DateTime();
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        return $query->select('ipw')
+            ->from(Entity::class, 'ipw')
+            ->where($query->expr()->andX(
+                $query->expr()->between('?1', 'ipw.startDate', 'ipw.endDate'),
+                $query->expr()->eq('ipw.irhpPermitStock', '?2')
+            ))
+            ->orderBy('ipw.id', 'DESC')
+            ->setParameter(1, $date)
+            ->setParameter(2, $irhpPermitStockId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
