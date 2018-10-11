@@ -97,6 +97,7 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
 
         $message = new Message($email, 'email.last-tm-operator-notification.subject');
         $message->setTranslateToWelsh($translateToWelsh);
+        $message->setHighPriority();
         $this->sendEmailTemplate(
             $message,
             'last-tm-operator-notification',
