@@ -600,6 +600,7 @@ return [
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\LastOpenWindow::class => QueryHandler\Permits\LastOpenWindow::class,
+    TransferQuery\IrhpCandidatePermit\GetScoredList::class => QueryHandler\IrhpCandidatePermit\GetScoredList::class,
 
     // Cli - Permits
     QueryCli\Permits\StockAvailability::class => QueryHandlerCli\Permits\StockAvailability::class,
