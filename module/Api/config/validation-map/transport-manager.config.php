@@ -44,6 +44,7 @@ return [
     CommandHandler\Tm\UpdateNysiisName::class                       => Misc\IsSystemUser::class,
 
     CommandHandler\Email\SendTmApplication::class     => Misc\CanAccessTmaWithId::class,
+    CommandHandler\Email\SendAmendTmApplication::class     => Misc\CanAccessTmaWithId::class,
     CommandHandler\TmEmployment\Create::class         => Handler\TmEmployment\Create::class,
     CommandHandler\TmEmployment\Update::class         => Handler\TmEmployment\Modify::class,
     CommandHandler\TmEmployment\DeleteList::class     => Handler\TmEmployment\ModifyList::class,
