@@ -51,7 +51,7 @@ class Generator extends AbstractGenerator
             $sections[] = $this->getDeclarationReviewSection($tma);
             $sections[] = $this->getSignatureReviewSection($tma);
         }
-        $this->filterVariationSections($sections, )
+
         return $this->generateReadonly(
             [
                 'reviewTitle' => 'tm-review-title',
