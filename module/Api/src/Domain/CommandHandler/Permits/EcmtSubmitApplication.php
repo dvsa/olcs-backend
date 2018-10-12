@@ -54,15 +54,9 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $newStatus = $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_UNDER_CONSIDERATION);
 
         $ecmtStock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(EcmtPermitApplication::PERMIT_TYPE, new DateTime());
-        if (empty($ecmtStock)) {
-            throw new NotFoundException('No available stock found.');
-        }
         $ecmtStockId = $ecmtStock->getId();
 
         $ecmtWindow = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($ecmtStockId);
-        if (empty($ecmtWindow)) {
-            throw new NotFoundException('No available window found.');
-        }
         $ecmtWindowId = $ecmtWindow->getId();
 
         $application = $this->getRepo()->fetchById($id);
