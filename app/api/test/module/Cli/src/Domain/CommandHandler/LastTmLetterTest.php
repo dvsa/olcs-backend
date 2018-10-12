@@ -160,7 +160,7 @@ class LastTmLetterTest extends CommandHandlerTestCase
                     ]
                 ]
             ],
-            'licence_with_removed_tm_correspondenceCd_with_email' => [
+            'licence_with_removed_tm_correspondenceCd_with_email_not_existing_user' => [
                 'data' => [
                     'licence' => [
                         'id' => 1,
@@ -179,6 +179,42 @@ class LastTmLetterTest extends CommandHandlerTestCase
                             'address' => '12 Food Road'
                         ],
                         'fetchFirstByEmailOrFalse' => false
+                    ],
+                    'sideEffectResults' => $sideEffectResultsWithAllowEmail
+
+                ],
+                'expect' => [
+                    'id' => [
+                        'assignedToUser' => 111,
+                        'documents' => [123, 234]
+                    ],
+                    'messages' => [
+                        "Document id '123', queued for print",
+                        "Correspondence record created",
+                        "Email sent",
+                        "Document id '234', queued for print"
+                    ]
+                ]
+            ],
+            'licence_with_removed_tm_correspondenceCd_with_email_existing_user' => [
+                'data' => [
+                    'licence' => [
+                        'id' => 1,
+                        'licNo' => 'AB123',
+                        'isNi' => false,
+                        'isPsv' => false,
+                        'organisation' => [
+                            'allowEmail' => 'Y'
+                        ],
+                        'correspondenceCd' => [
+                            'emailAddress' => 'test@email.com'
+                        ]
+                    ],
+                    'user' => [
+                        'contactDetails ' => [
+                            'address' => '12 Food Road'
+                        ],
+                        'fetchFirstByEmailOrFalse' => m::mock(UserEntity::class)
                     ],
                     'sideEffectResults' => $sideEffectResultsWithAllowEmail
 
@@ -336,17 +372,16 @@ class LastTmLetterTest extends CommandHandlerTestCase
         $correspondenceCd = $dataProvider['licence']['correspondenceCd'];
 
         $mockCorrespondenceCd = $correspondenceCd;
-        if ($correspondenceCd !== null && $correspondenceCd['emailAddress'] === null ) {
+        if ($correspondenceCd !== null && $correspondenceCd['emailAddress'] === null) {
             $mockCorrespondenceCd = m::mock(ContactDetails::class);
             $mockCorrespondenceCd->shouldReceive('getEmailAddress')->andReturn(null);
-        } elseif ($correspondenceCd !== null && $correspondenceCd['emailAddress'] !== null ) {
+        } elseif ($correspondenceCd !== null && $correspondenceCd['emailAddress'] !== null) {
             $mockCorrespondenceCd = m::mock(ContactDetails::class);
             $mockCorrespondenceCd->shouldReceive('getEmailAddress')->andReturn($correspondenceCd['emailAddress']);
             $licence->shouldReceive('getTranslateToWelsh')->andReturn('N');
         }
 
         $licence->shouldReceive('getCorrespondenceCd')->andReturn($mockCorrespondenceCd);
-
     }
 
     private function getGenerateAndStoreMultipleAddressesResult($documents)
@@ -505,7 +540,11 @@ class LastTmLetterTest extends CommandHandlerTestCase
             ->andReturn($user);
 
         if (array_key_exists('fetchFirstByEmailOrFalse', $dataProvider['user'])) {
-            $userRepo->shouldReceive('fetchFirstByEmailOrFalse')->andReturn($dataProvider['user']['fetchFirstByEmailOrFalse']);
+            $fetchedUser = $dataProvider['user']['fetchFirstByEmailOrFalse'];
+            if ($fetchedUser) {
+                $fetchedUser->shouldReceive('getTranslateToWelsh')->andReturn('N');
+            }
+            $userRepo->shouldReceive('fetchFirstByEmailOrFalse')->andReturn($fetchedUser);
             $this->expectedSideEffect(SendEmail::class, [], new Result());
         }
     }
