@@ -42,12 +42,6 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
         ];
     }
 
-    /**
-     * getPartial
-     * @param TransportManagerApplication $tma
-     *
-     * @return string
-     */
     private function getPartial(TransportManagerApplication $tma): string
     {
         $partial = $tma->getOpDigitalSignature()? self::SIGNATURE_DIGITAL_BOTH : self::SIGNATURE_DIGITAL;
