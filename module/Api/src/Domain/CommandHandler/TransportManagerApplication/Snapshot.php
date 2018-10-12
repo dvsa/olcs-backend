@@ -100,7 +100,7 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
                 break;
 
             default:
-                $status = 'at granted';
+                $status = 'at grant';
                 break;
         }
         return $status;

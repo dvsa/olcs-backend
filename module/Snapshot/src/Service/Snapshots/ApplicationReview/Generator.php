@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview;
 
 use Doctrine\Common\Collections\Criteria;
@@ -22,188 +23,9 @@ use Zend\View\Model\ViewModel;
  */
 class Generator extends AbstractGenerator
 {
-    protected $defaultBundle = [
-        'licence' => [
-            'organisation' => ['type']
-        ]
-    ];
-
-    protected $sharedBundles = [
-        'transport_managers' => [
-            'transportManagers' => [
-                'transportManager' => [
-                    'homeCd' => [
-                        'person' => [
-                            'title'
-                        ]
-                    ]
-                ]
-            ]
-        ],
-        'operating_centres' => [
-            'licence' => [
-                'trafficArea'
-            ],
-            'operatingCentres' => [
-                'application',
-                'operatingCentre' => [
-                    'address',
-                    'adDocuments' => [
-                        'application'
-                    ]
-                ]
-            ]
-        ],
-        'vehicles' => [
-            'licenceVehicles' => [
-                'vehicle'
-            ]
-        ],
-        'vehicles_psv' => [
-            'licenceVehicles' => [
-                'vehicle'
-            ]
-        ],
-        'convictions_penalties' => [
-            'previousConvictions' => [
-                'title'
-            ]
-        ],
-        'licence_history' => [
-            'otherLicences' => [
-                'previousLicenceType'
-            ]
-        ],
-        'financial_history' => [
-            'documents' => [
-                'category',
-                'subCategory'
-            ]
-        ],
-        'conditions_undertakings' => [
-            'conditionUndertakings' => [
-                'conditionType',
-                'attachedTo',
-                'operatingCentre' => [
-                    'address'
-                ]
-            ]
-        ]
-    ];
-
-    protected $applicationBundles = [
-        'business_type' => [
-            'licence' => [
-                'organisation' => [
-                    'type'
-                ]
-            ]
-        ],
-        'business_details' => [
-            'licence' => [
-                'companySubsidiaries',
-                'organisation' => [
-                    'type',
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ],
-                'tradingNames'
-            ]
-        ],
-        'safety' => [
-            'licence' => [
-                'workshops' => [
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ],
-                'tachographIns'
-            ]
-        ],
-        'addresses' => [
-            'licence' => [
-                'correspondenceCd' => [
-                    'address',
-                    'phoneContacts' => [
-                        'phoneContactType'
-                    ]
-                ],
-                'establishmentCd' => [
-                    'address'
-                ]
-            ]
-        ],
-        'taxi_phv' => [
-            'licence' => [
-                'trafficArea',
-                'privateHireLicences' => [
-                    'contactDetails' => [
-                        'address'
-                    ]
-                ]
-            ]
-        ],
-        'people' => [
-            'licence' => [
-                'organisation' => [
-                    'type',
-                    'organisationPersons' => [
-                        'person' => [
-                            'title'
-                        ]
-                    ]
-                ]
-            ],
-            'applicationOrganisationPersons' => [
-                'originalPerson',
-                'person' => [
-                    'title'
-                ]
-            ]
-        ],
-        'vehicles_declarations' => [
-            'licence' => [
-                'trafficArea'
-            ]
-        ]
-    ];
-
-    protected $variationBundles = [
-        'type_of_licence' => [
-            'licence' => [
-                'licenceType'
-            ]
-        ],
-        'people' => [
-            'licence' => [
-                'organisation' => [
-                    'type'
-                ]
-            ],
-            'applicationOrganisationPersons' => [
-                'person' => [
-                    'title'
-                ]
-            ]
-        ],
-        'conditions_undertakings' => [
-            'conditionUndertakings' => [
-                'licConditionVariation'
-            ]
-        ]
-    ];
 
     protected $ignoredApplicationSections = [
         'community_licences'
-    ];
-
-    protected $ignoredVariationSections = [
-        'community_licences'
-    ];
-
-    protected $displayedAlwaysVariationSections = [
-        'undertakings'
     ];
 
     protected $sectionMap = [
@@ -233,18 +55,7 @@ class Generator extends AbstractGenerator
         // Set the NI Locale
         $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
 
-        if ($application->isVariation()) {
-
-            $this->lva = 'variation';
-            $sections = $this->filterVariationSections($sections, $application->getApplicationCompletion());
-
-            $bundle = $this->getReviewDataBundleForVariation($sections);
-        } else {
-            $this->lva = 'application';
-            $sections = $this->filterApplicationSections($sections);
-
-            $bundle = $this->getReviewDataBundleForApplication($sections);
-        }
+        list($sections, $bundle) = $this->getSections($application, $sections);
 
         $result = new Result(
             $application,
@@ -272,6 +83,7 @@ class Generator extends AbstractGenerator
      * duplicate section for the snapshot
      *
      * @param $sections
+     *
      * @return mixed
      */
     protected function mapSections($sections)
@@ -338,69 +150,8 @@ class Generator extends AbstractGenerator
         return $this->lva === 'application' && !$data['isGoods'] && $data['isSpecialRestricted'];
     }
 
-    protected function filterVariationSections($sections, ApplicationCompletion $completion)
-    {
-        $sections = array_values(array_diff($sections, $this->ignoredVariationSections));
-
-        $filter = new UnderscoreToCamelCase();
-
-        foreach ($sections as $key => $section) {
-
-            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
-
-            if (array_search($section, $this->displayedAlwaysVariationSections) === false &&
-                $completion->$getter() !== Application::VARIATION_STATUS_UPDATED) {
-                unset($sections[$key]);
-            }
-        }
-
-        return $sections;
-    }
-
     protected function filterApplicationSections($sections)
     {
         return array_values(array_diff($sections, $this->ignoredApplicationSections));
-    }
-
-    protected function getReviewDataBundleForApplication(array $sections = [])
-    {
-        return $this->getReviewBundle($sections, 'application');
-    }
-
-    /**
-     * Grab all of the review for a variation
-     *
-     * @param array $sections
-     *
-     * @return array
-     */
-    protected function getReviewDataBundleForVariation(array $sections = array())
-    {
-        return $this->getReviewBundle($sections, 'variation');
-    }
-
-    /**
-     * Dynamically build the review bundle
-     *
-     * @param array $sections
-     * @param string $lva
-     * @return array
-     */
-    protected function getReviewBundle($sections, $lva)
-    {
-        $bundle = $this->defaultBundle;
-
-        foreach ($sections as $section) {
-
-            if (isset($this->sharedBundles[$section])) {
-                $bundle = array_merge_recursive($bundle, $this->sharedBundles[$section]);
-            }
-
-            if (isset($this->{$lva . 'Bundles'}[$section])) {
-                $bundle = array_merge_recursive($bundle, $this->{$lva . 'Bundles'}[$section]);
-            }
-        }
-
-        return $bundle;
     }
 }
