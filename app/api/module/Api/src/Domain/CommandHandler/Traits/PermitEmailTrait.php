@@ -82,9 +82,8 @@ trait PermitEmailTrait
             }
 
             $vars['issueFeeDeadlineDate'] = $this->calculateDueDate($feeTypesAmounts[0]['invoicedDate']);
-
-            $vars['issueFeeAmount'] = $feeTypesAmounts[0]['issueFeeAmount'];
-            $vars['issueFeeTotal'] = $feeTypesAmounts[0]['issueFeeTotal'];
+            $vars['issueFeeAmount'] = str_replace('.00', '', $feeTypesAmounts[0]['issueFeeAmount']);
+            $vars['issueFeeTotal'] = str_replace('.00', '', $feeTypesAmounts[0]['issueFeeTotal']);
         }
 
         return $vars;
