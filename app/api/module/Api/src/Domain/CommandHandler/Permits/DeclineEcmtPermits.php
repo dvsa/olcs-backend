@@ -33,9 +33,9 @@ final class DeclineEcmtPermits extends AbstractCommandHandler
         $id = $command->getId();
         $application = $this->getRepo()->fetchById($id);
 
-        //@todo this needs a new status 'declined'
         $newStatus = $this->refData(EcmtPermitApplication::STATUS_WITHDRAWN);
-        $application->decline($newStatus);
+        $withdrawReason = $this->refData(EcmtPermitApplication::WITHDRAWN_REASON_DECLINED);
+        $application->decline($newStatus, $withdrawReason);
 
         $this->getRepo()->save($application);
 
