@@ -52,6 +52,9 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
     const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
 
+    const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
+    const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
+
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
      */
@@ -216,22 +219,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $submitStatus;
     }
 
-    public function withdraw(RefData $withdrawStatus)
+    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason)
     {
         if (!$this->canBeWithdrawn()) {
             throw new ForbiddenException('This application is not allowed to be withdrawn');
         }
 
         $this->status = $withdrawStatus;
+        $this->withdrawReason = $withdrawReason;
     }
 
-    public function decline(RefData $declineStatus)
+    public function decline(RefData $declineStatus, RefData $withdrawReason)
     {
         if (!$this->canBeDeclined()) {
             throw new ForbiddenException('This application is not allowed to be declined');
         }
 
         $this->status = $declineStatus;
+        $this->withdrawReason = $withdrawReason;
     }
 
     public function accept(RefData $acceptStatus)
