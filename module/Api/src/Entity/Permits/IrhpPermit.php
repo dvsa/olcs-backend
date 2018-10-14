@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * IrhpPermit Entity
@@ -24,6 +25,8 @@ use DateTime;
  */
 class IrhpPermit extends AbstractIrhpPermit
 {
+    const STATUS_PENDING = 'irhp_permit_pending';
+
     /**
      * Create new IrhpPermit
      *
@@ -44,6 +47,7 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->irhpPermitRange = $irhpCandidatePermit->getIrhpPermitRange();
         $irhpPermit->issueDate = $issueDate;
         $irhpPermit->permitNumber = $permitNumber;
+        $irhpPermit->status = new RefData(self::STATUS_PENDING);
 
         return $irhpPermit;
     }
