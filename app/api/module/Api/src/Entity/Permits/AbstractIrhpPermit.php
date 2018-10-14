@@ -164,14 +164,10 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
-     * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
-     *     fetch="LAZY",
-     *     options={"default": "irhp_permit_pending"}
-     * )
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=false)
      */
-    protected $status = 'irhp_permit_pending';
+    protected $status;
 
     /**
      * Version
