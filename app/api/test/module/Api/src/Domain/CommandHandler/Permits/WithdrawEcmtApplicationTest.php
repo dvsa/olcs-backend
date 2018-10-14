@@ -43,7 +43,11 @@ class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $applicationId = 1;
-        $command = Cmd::create(['id' => $applicationId]);
+        $cmdData = [
+            'id' => $applicationId,
+            'reason' => EcmtPermitApplication::WITHDRAWN_REASON_BY_USER
+        ];
+        $command = Cmd::create($cmdData);
 
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('withdraw')->with(
