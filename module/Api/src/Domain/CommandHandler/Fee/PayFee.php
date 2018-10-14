@@ -15,12 +15,11 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptEcmtPermits;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CompleteIssuePayment;
+use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
+use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
@@ -58,6 +57,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $this->maybeProcessGrantInterimFee($fee);
         $this->maybeContinueLicence($fee);
         $this->maybeCancelApplicationTasks($fee);
+        $this->maybeProcessEcmtPermitApplicationFee($fee);
+        $this->maybeProcessEcmtPermitIssueFee($fee);
         $this->maybeCloseFeeTask($fee);
 
         return $this->result;
@@ -129,7 +130,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $ecmtPermitApplication = $fee->getEcmtPermitApplication();
 
         if ($ecmtPermitApplication === null
-            || !$ecmtPermitApplication->isUnderConsideration()
+            || !$fee->getFeeType()->isEcmtApplication()
+            || !$ecmtPermitApplication->canBeSubmitted()
         ) {
             return;
         }
@@ -155,6 +157,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
 
 
         if ($ecmtPermitApplication === null
+            || !$fee->getFeeType()->isEcmtIssue()
             || !$ecmtPermitApplication->isAwaitingFee()
         ) {
             return;
