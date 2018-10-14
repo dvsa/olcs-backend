@@ -525,6 +525,8 @@ return [
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 
+    // IRHP Permit Application
+    TransferQuery\IrhpPermitApplication\GetList::class => QueryHandler\IrhpPermitApplication\GetList::class,
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,

@@ -83,6 +83,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $internationalJourneyRefData
         );
 
+
+
         $this->assertEquals($status, $application->getStatus());
         $this->assertEquals($permitType, $application->getPermitType()->getId());
         $this->assertEquals($licence, $application->getLicence());
@@ -326,15 +328,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function dpProvideUpdateCountrys()
     {
-        $countrys = array(
+        $countrys = new ArrayCollection([
             m::mock(Country::class),
             m::mock(Country::class),
             m::mock(Country::class)
-        );
+        ]);
 
         return [
             [$countrys, true],
-            [[], false]
+            [new ArrayCollection([]), false]
         ];
     }
 

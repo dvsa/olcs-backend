@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 
@@ -74,12 +75,10 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
      */
     private function createPermitApplicationObject(CreateFullPermitApplicationCmd $command): EcmtPermitApplication
     {
-        $countrys = [];
+        $countrys = new ArrayCollection();
         foreach ($command->getCountryIds() as $countryId) {
-            $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
+            $countrys->add($this->getRepo('Country')->getReference(Country::class, $countryId));
         }
-
-
 
         return EcmtPermitApplication::createNewInternal(
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),

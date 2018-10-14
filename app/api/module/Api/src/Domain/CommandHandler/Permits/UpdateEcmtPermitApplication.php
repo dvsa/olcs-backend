@@ -47,7 +47,6 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
 
         $ecmtPermitApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
-
         $applicationDate = new DateTime($ecmtPermitApplication->getDateReceived());
         $commandDate = new DateTime($command->getDateReceived());
 

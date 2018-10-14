@@ -129,6 +129,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
         $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
 
+        // If Internal user has completed all fields and declaration question in one step set checked answers to 1 to
+        // allow submission without a second save step required as per John S request
+        $sections = $ecmtPermitApplication->getSectionCompletion(self::SECTIONS);
+        if ($sections['allCompleted'] && $declaration == 1) {
+            $ecmtPermitApplication->checkedAnswers = 1;
+        }
+
         return $ecmtPermitApplication;
     }
 
@@ -269,7 +276,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function proceedToValid(RefData $issuedStatus)
     {
         if (!$this->isIssueInProgress()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+            throw new ForbiddenException('This application is not in the correct state to proceed to valid (' . $this->status->getId() . ')');
         }
 
         $this->status = $issuedStatus;
@@ -308,6 +315,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
+            'hasOutstandingFees' => $this->hasOutstandingFees()
         ];
     }
 
@@ -367,12 +375,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * Updates the application to indicate the intended use of the permit in any countries that have imposed limits
      * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects.
      *
-     * @param array $countrys
+     * @param ArrayCollection $countrys
      */
-    public function updateCountrys(array $countrys)
+    public function updateCountrys(ArrayCollection $countrys)
     {
         $this->countrys = $countrys;
-        $this->hasRestrictedCountries = count($countrys) > 0;
+        $this->hasRestrictedCountries = $countrys->count() > 0;
 
         $this->resetCheckAnswersAndDeclaration();
     }
@@ -818,5 +826,14 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             }
         }
         return $fees;
+    }
+
+    /**
+     * Does ECMT Application have any outstanding Fees?
+     *
+     */
+    public function hasOutstandingFees()
+    {
+        return count($this->getLatestOutstandingEcmtApplicationFee());
     }
 }
