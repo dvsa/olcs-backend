@@ -111,4 +111,20 @@ class FeeType extends AbstractFeeType
             ]
         );
     }
+
+    /**
+     * @return bool
+     */
+    public function isEcmtApplication()
+    {
+        return $this->feeType->getId() === self::FEE_TYPE_ECMT_APP;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEcmtIssue()
+    {
+        return $this->feeType->getId() === self::FEE_TYPE_ECMT_ISSUE;
+    }
 }
