@@ -31,6 +31,8 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
     * @param CommandInterface $command command
     *
     * @return Result
+    *
+    * @todo: row of headers is currently the array keys, which aren't reader-friendly. Change this.
     */
     public function handleCommand(CommandInterface $command)
     {
@@ -40,6 +42,8 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
 
         //  create csv file in memory
         $fh = fopen("php://temp", 'w');
+
+        fputcsv($fh, array_keys($csvContent['results'][0])); //row of headers
 
         foreach ($csvContent as $dataRow) {
             foreach ($dataRow as $field) {

@@ -544,24 +544,19 @@ class BatchController extends AbstractConsoleController
             // Get data for scoring results
             $dto = CliQuery\Permits\GetScoredList::create($stockIdParams);
             $scoringResults = $this->handleQuery($dto);
-            $formattedScoringResults = ScoringResultExport::mapFromResult($scoringResults);
 
-            Logger::crit(print_r($formattedScoringResults, true));
+            Logger::crit(print_r($scoringResults, true));
 
-            try{
-                // Upload scoring results file
-                $responseCode = $this->handleCommand([
-                    CliCommand\Permits\UploadScoringResult::create(['csvContent' => $formattedScoringResults]),
-                ]);
-            }catch (Exception $e) {
-                Logger::crit("UPLOAD OF SCORING RESULTS CSV DID NOT WORK");
-            }
+            // Upload scoring results file
+            $responseCode = $this->handleCommand([
+                CliCommand\Permits\UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+            ]);
         }
 
         // Upload copy of log output to the document store
-        /*$this->getServiceLocator()->get('CommandHandlerManager')->handleCommand(
+        $this->getServiceLocator()->get('CommandHandlerManager')->handleCommand(
             CliCommand\Permits\UploadScoringLog::create(['logContent' => $this->logOutput])
-        );*/
+        );
 
         $this->handleExitStatus($responseCode);
     }
