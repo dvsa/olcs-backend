@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview;
 
 use Doctrine\Common\Collections\Criteria;
@@ -234,7 +235,6 @@ class Generator extends AbstractGenerator
         $this->getServiceLocator()->get('Utils\NiTextTranslation')->setLocaleForNiFlag($application->getNiFlag());
 
         if ($application->isVariation()) {
-
             $this->lva = 'variation';
             $sections = $this->filterVariationSections($sections, $application->getApplicationCompletion());
 
@@ -272,6 +272,7 @@ class Generator extends AbstractGenerator
      * duplicate section for the snapshot
      *
      * @param $sections
+     *
      * @return mixed
      */
     protected function mapSections($sections)
@@ -382,8 +383,9 @@ class Generator extends AbstractGenerator
     /**
      * Dynamically build the review bundle
      *
-     * @param array $sections
+     * @param array  $sections
      * @param string $lva
+     *
      * @return array
      */
     protected function getReviewBundle($sections, $lva)
