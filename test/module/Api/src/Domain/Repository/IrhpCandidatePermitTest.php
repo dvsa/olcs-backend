@@ -583,4 +583,59 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
 
         $this->sut->resetScoring($stockId);
     }
+
+    public function testFetchAllScoredForStock()
+    {
+        $irhpPermitStockId = 1;
+
+        $qb = m::mock(QueryBuilder::class);
+
+        $this->queryBuilder->shouldReceive('select')
+            ->with('icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipa.status = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('orderBy')
+            ->with('icp.successful', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('addOrderBy')
+            ->with('icp.randomizedScore', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $irhpPermitStockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn(null);
+
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($this->queryBuilder);
+
+        $this->assertEquals(null, $this->sut->fetchAllScoredForStock($irhpPermitStockId));
+    }
 }
