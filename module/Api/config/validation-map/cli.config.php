@@ -27,6 +27,7 @@ return [
     CliCommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications::class => IsSystemUser::class,
     CliCommandHandler\Permits\CalculateRandomAppScore::class => IsSystemUser::class,
     CliCommandHandler\Permits\UploadScoringResult::class => IsSystemUser::class,
+    CliCommandHandler\Permits\UploadScoringLog::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
 
     //  api commands

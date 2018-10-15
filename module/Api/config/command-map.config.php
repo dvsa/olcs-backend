@@ -1116,4 +1116,6 @@ return [
         CommandHandlerCli\Permits\ApplyRangesToSuccessfulPermitApplications::class,
     CommandCli\Permits\UploadScoringResult::class =>
         CommandHandlerCli\Permits\UploadScoringResult::class,
+    CommandCli\Permits\UploadScoringLog::class =>
+        CommandHandlerCli\Permits\UploadScoringLog::class,
 ];
