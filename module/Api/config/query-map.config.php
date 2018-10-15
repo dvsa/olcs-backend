@@ -610,4 +610,7 @@ return [
     Query\Permits\QueueAcceptScoringPermitted::class => QueryHandler\Permits\QueueAcceptScoringPermitted::class,
     Query\Permits\CheckRunScoringPrerequisites::class => QueryHandler\Permits\CheckRunScoringPrerequisites::class,
     Query\Permits\CheckAcceptScoringPrerequisites::class => QueryHandler\Permits\CheckAcceptScoringPrerequisites::class,
+    Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
+    Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
+    Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
 ];

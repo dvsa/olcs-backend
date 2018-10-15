@@ -147,6 +147,34 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
     }
 
+    /**
+     * @dataProvider dpIsFeePaid
+     */
+    public function testIsFeePaid($status, $expected)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertSame($expected, $entity->isFeePaid());
+    }
+
+    /**
+     * @return array
+     */
+    public function dpIsFeePaid()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_AWAITING_FEE, false],
+            [Entity::STATUS_FEE_PAID, true],
+            [Entity::STATUS_UNSUCCESSFUL, false],
+            [Entity::STATUS_ISSUED, false],
+            [Entity::STATUS_ISSUING, false],
+            [Entity::STATUS_VALID, false],
+            [Entity::STATUS_DECLINED, false],
+        ];
+    }
 
     /**
     * Tests withdrawing an application

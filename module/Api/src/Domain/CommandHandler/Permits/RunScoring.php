@@ -18,6 +18,9 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Exception;
+use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
 
 /**
  * Run scoring
@@ -93,6 +96,7 @@ final class RunScoring extends AbstractCommandHandler implements ToggleRequiredI
         } catch (Exception $e) {
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL);
             $this->result->addMessage('Scoring process failed: ' . $e->getMessage());
+            return $this->handleReturn();
         }
 
         // TODO: result->getMessages() contains the output that we want to write to the execution report
