@@ -610,4 +610,5 @@ return [
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     TransferQuery\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     TransferQuery\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
+    Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
 ];

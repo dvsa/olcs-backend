@@ -284,4 +284,28 @@ class IrhpCandidatePermit extends AbstractRepository
             ->with('irhpPermitApplication', 'ipa')
             ->with('ipa.ecmtPermitApplication', 'epa');
     }
+
+    /**
+     * Retrieves IrhpCandidatePermits that have been scored,
+     * for a given stock.
+     *
+     * @param int $irhpPermitStockId
+     */
+    public function fetchAllScoredForStock($irhpPermitStockId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipw.irhpPermitStock', 'ips')
+            ->where('ips.id = ?1')
+            ->andWhere('ipa.status = ?2')
+            ->orderBy('icp.successful', 'DESC')
+            ->addOrderBy('icp.randomizedScore', 'DESC')
+            ->setParameter(1, $irhpPermitStockId)
+            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->getQuery()
+            ->getResult();
+    }
 }
