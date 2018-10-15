@@ -45,5 +45,6 @@ class IrhpPermitEntityTest extends EntityTester
         $this->assertSame($irhpPermitRange, $entity->getIrhpPermitRange());
         $this->assertSame($issueDate, $entity->getIssueDate());
         $this->assertSame($permitNumber, $entity->getPermitNumber());
+        $this->assertSame(Entity::STATUS_PENDING, $entity->getStatus()->getId());
     }
 }
