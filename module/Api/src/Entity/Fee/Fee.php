@@ -344,7 +344,8 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             'amount' => $this->getGrossAmount(),
             'ruleDateBeforeInvoice' => $this->isRuleBeforeInvoiceDate(),
             'isExpiredForLicence' => $this->isExpiredForLicence(),
-            'isOutstanding' => $this->isOutstanding()
+            'isOutstanding' => $this->isOutstanding(),
+            'isEcmtIssuingFee' => $this->isEcmtIssuingFee()
         ];
     }
 
