@@ -34,4 +34,5 @@ class Permission extends AbstractPermission
     const SELFSERVE_EBSR_UPLOAD = 'selfserve-ebsr-upload';
     const SELFSERVE_EBSR_DOCUMENTS = 'selfserve-ebsr-documents';
     const CAN_READ_USER_SELFSERVE = 'can-read-user-selfserve';
+    const TRANSPORT_MANAGER ='selfserve-tm';
 }
