@@ -196,9 +196,7 @@ class User extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb
-            // match by email address
-            ->innerJoin($this->alias . '.contactDetails', 'cd')
+        $qb->innerJoin($this->alias . '.contactDetails', 'cd')
             ->andWhere($qb->expr()->eq('cd.emailAddress', ':emailAddress'))
             ->setParameter('emailAddress', $emailAddress)
             ->setMaxResults(1);
