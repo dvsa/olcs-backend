@@ -86,8 +86,8 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
         // TODO: result->getMessages() contains the output that we want to write to the execution report
         // run the commands here to generate the execution and scoring reports
 
-        // Get data for scoring results
         try {
+            // Get data for scoring results
             $dto = GetScoredPermitList::create($stockIdParams);
             $scoringResults = $this->handleQuery($dto);
 
