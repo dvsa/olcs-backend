@@ -73,6 +73,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
             // for performance reasons, update range via repo method rather than persisting entity
             $this->getRepo()->updateRange($candidatePermit->getId(), $selectedRange[self::ENTITY_KEY]);
             $this->decrementRangeStock($selectedRange);
+            $this->getRepo()->decacheById($candidatePermit->getId());
         }
 
         return $this->result;
