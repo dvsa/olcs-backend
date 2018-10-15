@@ -13,6 +13,10 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplicatio
 use Dvsa\Olcs\Cli\Domain\Command\Permits\CalculateRandomAppScore;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Exception;
+use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
+
+
 
 /**
  * Run scoring
@@ -82,6 +86,18 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
 
         // TODO: result->getMessages() contains the output that we want to write to the execution report
         // run the commands here to generate the execution and scoring reports
+
+        // Get data for scoring results
+        $dto = GetScoredPermitList::create($stockIdParams);
+        $scoringResults = $this->handleQuery($dto);
+
+        Olcs\Logging\Log\Logger::crit(print_r($scoringResults, true));
+
+        // Upload scoring results file
+        $responseCode = $this->handleCommand([
+            UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+        ]);
+
 
         return $this->result;
     }
