@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse;
+use Dvsa\Olcs\Transfer\Query\GdsVerify\GetAuthRequest;
 
 class CanVerify extends AbstractHandler implements AuthAwareInterface
 {
@@ -22,9 +23,9 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
     public function isValid($dto)
     {
         $allowed = $this->isOperator();
-        if (!empty($dto->getTransportManagerApplication())) {
-            $allowed = $allowed || $this->isTransportManager();
-        }
+
+        $allowed = $allowed || $this->isValidAccess($dto);
+
         return $allowed;
     }
 
@@ -36,5 +37,16 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
     private function isTransportManager()
     {
         return $this->isGranted(Permission::TRANSPORT_MANAGER);
+    }
+
+    private function isValidAccess($dto)
+    {
+        if ($this->isTransportManager() && $dto instanceof ProcessSignatureResponse) {
+            if (method_exists($dto, 'getTransportManagerApplication')) {
+                return $dto->getTransportManagerApplication() > 0;
+            }
+
+        }
+        return false;
     }
 }
