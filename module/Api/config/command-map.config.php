@@ -1114,4 +1114,6 @@ return [
         CommandHandlerCli\Permits\CalculateRandomAppScore::class,
     CommandCli\Permits\ApplyRangesToSuccessfulPermitApplications::class =>
         CommandHandlerCli\Permits\ApplyRangesToSuccessfulPermitApplications::class,
+    CommandCli\Permits\UploadScoringResult::class =>
+        CommandHandlerCli\Permits\UploadScoringResult::class,
 ];
