@@ -15,8 +15,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Exception;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
-
-
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
 
 /**
  * Run scoring
@@ -52,13 +51,13 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
         if (!$this->passesStockAvailabilityPrerequisite($this->stockId)) {
             $this->result->addMessage('Prerequisite failed: no permits remaining within this stock.');
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL);
-            return $this->result;
+            return $this->handleReturn();
         }
 
         if (!$this->passesRandomisedScorePrerequisite()) {
             $this->result->addMessage('Prerequisite failed: one or more candidate permits lack a randomised score.');
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL);
-            return $this->result;
+            return $this->handleReturn();
         }
 
         try {
@@ -81,25 +80,29 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
         } catch (Exception $e) {
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL);
             $this->result->addMessage('Scoring process failed: ' . $e->getMessage());
-            return $this->result;
+            return $this->handleReturn();
         }
 
         // TODO: result->getMessages() contains the output that we want to write to the execution report
         // run the commands here to generate the execution and scoring reports
 
         // Get data for scoring results
-        $dto = GetScoredPermitList::create($stockIdParams);
-        $scoringResults = $this->handleQuery($dto);
+        try {
+            $dto = GetScoredPermitList::create($stockIdParams);
+            $scoringResults = $this->handleQuery($dto);
 
-        Olcs\Logging\Log\Logger::crit(print_r($scoringResults, true));
+            Olcs\Logging\Log\Logger::crit(print_r($scoringResults, true)); //TEMPORARY, for testing
 
-        // Upload scoring results file
-        $responseCode = $this->handleCommand([
-            UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
-        ]);
+            // Upload scoring results file
+            $responseCode = $this->handleCommand([
+                UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+            ]);
+        } catch (Exception $e) {
+            $this->result->addMessage('Failed to upload scoring results: ' . $e->getMessage());
+            return $this->handleReturn();
+        }
 
-
-        return $this->result;
+        return $this->handleReturn();
     }
 
     /**
@@ -124,5 +127,24 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
     private function updateStockStatus($status)
     {
         $this->getRepo('IrhpPermitStock')->updateStatus($this->stockId, $status);
+    }
+
+    /**
+     * Handles return common pre-requisites,
+     * mainly uploading a copy of the log
+     *
+     * @return Result
+     */
+    private function handleReturn()
+    {
+        // Upload copy of log output to the document store.
+        // We want to do this regardless of whether the process fell-over or not
+        $logOutput = implode("\r\n", $this->result->getMessages());
+
+        $this->handleCommand(
+            UploadScoringLog::create(['logContent' => $logOutput])
+        );
+
+        return $this->result;
     }
 }
