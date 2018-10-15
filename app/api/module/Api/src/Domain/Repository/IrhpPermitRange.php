@@ -49,4 +49,51 @@ class IrhpPermitRange extends AbstractRepository
             ->getQuery()
             ->getResult();
     }
+
+    /*
+     * Fetch Ranges by Permit Stock ID
+     *
+     * @param int $irhpPermitStockId
+     * @return array
+     */
+    public function fetchByIrhpPermitStockId($irhpPermitStockId)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
+            ->setParameter('irhpPermitStock', $irhpPermitStockId);
+
+        return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch Overlapping Ranges by Permit Stock ID, proposed Start value and proposed End value
+     *
+     * @param IrhpPermitStock $irhpPermitStock
+     * @param int $proposedStartValue
+     * @param int $proposedEndValue
+     * @param null $irhpPermitRange
+     * @return array
+     */
+    public function findOverlappingRangesByType($irhpPermitStock, $proposedStartValue, $proposedEndValue, $irhpPermitRange = null)
+    {
+        $doctrineQb = $this->createQueryBuilder();
+        $doctrineQb
+            ->orWhere($doctrineQb->expr()->between($this->alias . '.fromNo', ':fromNo', ':toNo'))
+            ->orWhere($doctrineQb->expr()->between($this->alias . '.toNo', ':fromNo', ':toNo'))
+            ->orWhere($doctrineQb->expr()->between(':fromNo', $this->alias . '.fromNo', $this->alias .'.toNo'))
+            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
+            ->setParameter('irhpPermitStock', $irhpPermitStock)
+            ->setParameter('fromNo', $proposedStartValue)
+            ->setParameter('toNo', $proposedEndValue);
+
+        if ($irhpPermitRange !== null) {
+            $doctrineQb
+                ->andWhere($doctrineQb->expr()->neq($this->alias . '.id', ':irhpPermitRange'))
+                ->setParameter('irhpPermitRange', $irhpPermitRange);
+        }
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }
