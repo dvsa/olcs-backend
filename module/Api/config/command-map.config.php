@@ -988,15 +988,21 @@ return [
     TransferCommand\IrhpPermitStock\Delete::class =>
         CommandHandler\IrhpPermitStock\Delete::class,
 
-
-
-    // Transfer - IRHP Permit Stock
+    // Transfer - IRHP Permit Window
     TransferCommand\IrhpPermitWindow\Create::class =>
         CommandHandler\IrhpPermitWindow\Create::class,
     TransferCommand\IrhpPermitWindow\Update::class =>
         CommandHandler\IrhpPermitWindow\Update::class,
     TransferCommand\IrhpPermitWindow\Delete::class =>
         CommandHandler\IrhpPermitWindow\Delete::class,
+
+    // Transfer - IRHP Permit Range
+    TransferCommand\IrhpPermitRange\Create::class =>
+        CommandHandler\IrhpPermitRange\Create::class,
+    TransferCommand\IrhpPermitRange\Update::class =>
+        CommandHandler\IrhpPermitRange\Update::class,
+    TransferCommand\IrhpPermitRange\Delete::class =>
+        CommandHandler\IrhpPermitRange\Delete::class,
 
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,

@@ -54,8 +54,6 @@ return [
     'EventHistory' => 'EventHistory',
     'EventHistoryType' => 'EventHistory',
     'FeatureToggle' => 'System',
-    'IrhpPermitStock' => 'Permits',
-    'IrhpPermitType' => 'Permits',
     'Fee' => 'Fee',
     'FeeManualAlteration' => 'Fee',
     'FeeTransaction' => 'Fee',
