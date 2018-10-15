@@ -74,11 +74,9 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
 
     private function sendEmailToOperator(LicenceEntity $licence)
     {
-        if (is_null($contactDetails = $licence->getCorrespondenceCd())) {
-            return;
-        }
-
-        if (is_null($email = $contactDetails->getEmailAddress())) {
+        if (is_null($contactDetails = $licence->getCorrespondenceCd()) ||
+            is_null($email = $contactDetails->getEmailAddress())
+        ) {
             return;
         }
 
