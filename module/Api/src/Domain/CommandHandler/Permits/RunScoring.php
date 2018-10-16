@@ -16,7 +16,6 @@ use Exception;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Run scoring
@@ -92,8 +91,6 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
             $dto = GetScoredPermitList::create($stockIdParams);
             $scoringResults =  $this->handleQuery($dto);
 
-            Logger::crit(print_r($scoringResults, true)); //TEMPORARY, for testing
-
             // Upload scoring results file
             $this->result->merge(
                 $this->handleSideEffects([
@@ -142,11 +139,13 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
     {
         // Upload copy of log output to the document store.
         // We want to do this regardless of whether the process fell-over or not
-        /*$logOutput = implode("\r\n", $this->result->getMessages());
+        $logOutput = implode("\r\n", $this->result->getMessages());
 
-        $this->handleCommand(
-            UploadScoringLog::create(['logContent' => $logOutput])
-        );*/
+        $this->result->merge(
+            $this->handleSideEffects([
+                UploadScoringLog::create(['logContent' => $logOutput])
+            ])
+        );
 
         return $this->result;
     }
