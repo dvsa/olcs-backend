@@ -31,6 +31,15 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
     /** @var int */
     private $stockId;
 
+    private $queryHandlerManager;
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->queryHandlerManager = $serviceLocator->getServiceLocator()->get('QueryHandlerManager');
+
+        return parent::createService($serviceLocator);
+    }
+
     /**
      * Handle command
      *
@@ -89,14 +98,16 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
         try {
             // Get data for scoring results
             $dto = GetScoredPermitList::create($stockIdParams);
-            $scoringResults = $this->handleQuery($dto);
+            $scoringResults =  $this->queryHandlerManager->handleQuery($dto);
 
             Olcs\Logging\Log\Logger::crit(print_r($scoringResults, true)); //TEMPORARY, for testing
 
             // Upload scoring results file
-            $responseCode = $this->handleCommand([
-                UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
-            ]);
+            $this->result->merge(
+                $this->handleSideEffects([
+                    UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+                ])
+            );
         } catch (Exception $e) {
             $this->result->addMessage('Failed to upload scoring results: ' . $e->getMessage());
             return $this->handleReturn();
@@ -139,11 +150,11 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
     {
         // Upload copy of log output to the document store.
         // We want to do this regardless of whether the process fell-over or not
-        $logOutput = implode("\r\n", $this->result->getMessages());
+        /*$logOutput = implode("\r\n", $this->result->getMessages());
 
         $this->handleCommand(
             UploadScoringLog::create(['logContent' => $logOutput])
-        );
+        );*/
 
         return $this->result;
     }
