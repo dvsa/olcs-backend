@@ -62,7 +62,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
             'filename' => 'international-goods-list.csv',
-            'description' => 'Scoring Log File ' . date('d/m/Y'),
+            'description' => 'Scoring Result File ' . date('d/m/Y'),
             'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
         ];
 
