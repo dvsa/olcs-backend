@@ -2,11 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication as WithdrawEcmtPermitApplicationCmd;
 
@@ -18,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication as Withdraw
 final class WithdrawEcmtPermitApplication extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
+    protected $extraRepos = ['Fee'];
 
     /**
      * Handle command
@@ -40,10 +40,14 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler
 
         $this->getRepo()->save($application);
 
-        $result = new Result();
-        $result->addId('ecmtPermitApplication', $id);
-        $result->addMessage('Permit application withdrawn');
+        $outstandingFees = $application->getOutstandingFees();
+        foreach ($outstandingFees as $fee) {
+            $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
+        }
 
-        return $result;
+        $this->result->addId('ecmtPermitApplication', $id);
+        $this->result->addMessage('Permit application withdrawn');
+
+        return $this->result;
     }
 }

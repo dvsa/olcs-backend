@@ -7,14 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\WithdrawEcmtPermitApplication;
-
 use Dvsa\Olcs\Api\Domain\Repository;
-
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication as Cmd;
-
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
 /**
@@ -50,6 +50,18 @@ class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
             $this->refData[EcmtPermitApplication::STATUS_WITHDRAWN],
             $this->refData[EcmtPermitApplication::WITHDRAWN_REASON_BY_USER]
         )->once();
+
+        $fee_1 = m::mock(Fee::class);
+        $fee_1->shouldReceive('getId')->andReturn(1);
+        $fees = [$fee_1];
+        $application->shouldReceive('getOutstandingFees')->andReturn($fees);
+
+        $taskResult = new Result();
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => 1],
+            $taskResult
+        );
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($applicationId)
