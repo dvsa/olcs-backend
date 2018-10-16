@@ -31,15 +31,6 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
     /** @var int */
     private $stockId;
 
-    private $queryHandlerManager;
-
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->queryHandlerManager = $serviceLocator->getServiceLocator()->get('QueryHandlerManager');
-
-        return parent::createService($serviceLocator);
-    }
-
     /**
      * Handle command
      *
@@ -98,7 +89,7 @@ final class RunScoring extends AbstractStockCheckingCommandHandler
         try {
             // Get data for scoring results
             $dto = GetScoredPermitList::create($stockIdParams);
-            $scoringResults =  $this->queryHandlerManager->handleQuery($dto);
+            $scoringResults =  $this->handleQuery($dto);
 
             Olcs\Logging\Log\Logger::crit(print_r($scoringResults, true)); //TEMPORARY, for testing
 
