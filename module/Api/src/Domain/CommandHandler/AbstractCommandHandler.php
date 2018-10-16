@@ -69,7 +69,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     private $commandHandler;
 
     /**
-     * @var QueryHandlerInterface
+     * @var Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface
      */
     private $queryHandler;
 
