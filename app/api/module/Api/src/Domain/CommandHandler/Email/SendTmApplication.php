@@ -16,5 +16,4 @@ final class SendTmApplication extends AbstractSendTmEmail
 {
     protected $template = 'transport-manager-complete-digital-form';
     protected $subject = 'email.transport-manager-complete-digital-form.subject';
-
 }

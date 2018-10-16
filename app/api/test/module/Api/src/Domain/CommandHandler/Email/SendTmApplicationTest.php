@@ -9,10 +9,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendTmApplication as CommandHandler;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication as Command;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\SendTmApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
@@ -49,12 +49,12 @@ class SendTmApplicationTest extends CommandHandlerTestCase
      */
     public function testHandleCommand($isVariation, $uriPart)
     {
-        $command = Command::create(['id' => 863]);
+        $command = Cmd::create(['id' => 863, 'emailAddress' => "test@email.com"]);
 
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
 
         $cd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
-        $cd->setEmailAddress('EMAIL');
+        //$cd->setEmailAddress('EMAIL');
 
         $user = new \Dvsa\Olcs\Api\Entity\User\User('pid', 'TYPE');
         $user->setLoginId('username1');
@@ -96,7 +96,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         $result = new Result();
         $data = [
-            'to' => 'EMAIL',
+            'to' => 'test@email.com',
             'locale' => 'cy_GB',
             'subject' => 'email.transport-manager-complete-digital-form.subject'
         ];
@@ -114,7 +114,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
      */
     public function testHandleCommandWithoutTmUsers($isVariation, $uriPart)
     {
-        $command = Command::create(['id' => 863]);
+        $command = Cmd::create(['id' => 863, 'emailAddress' => 'test@123.com']);
 
         $hcd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
         $hcd->setEmailAddress('EMAIL');
@@ -155,7 +155,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         $result = new Result();
         $data = [
-            'to' => 'EMAIL',
+            'to' => 'test@123.com',
             'locale' => 'en_GB',
             'subject' => 'email.transport-manager-complete-digital-form.subject'
         ];
