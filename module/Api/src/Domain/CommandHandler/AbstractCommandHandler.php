@@ -117,6 +117,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         $this->commandHandler = $serviceLocator;
+        $this->queryHandler = $serviceLocator;
 
         $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
 
