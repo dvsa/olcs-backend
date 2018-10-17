@@ -2,7 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitStockBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
  * IrhpStartDate
@@ -12,8 +13,19 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitBundle as Qry;
 class IrhpStartDate extends SingleValueAbstract
 {
     const FORMATTER = 'Date';
-    const FIELD  = 'issueDate';
+    const FIELD  = 'validFrom';
     const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irhpPermit';
+    const SRCH_VAL_KEY = 'irhpPermitStock';
     const QUERY_CLASS = Qry::class;
+
+    public function render()
+    {
+        $now = new DateTime();
+
+        if ($now > new DateTime($this->data['validFrom'])) {
+            $this->data['validFrom'] = $now;
+        }
+
+        return parent::render();
+    }
 }
