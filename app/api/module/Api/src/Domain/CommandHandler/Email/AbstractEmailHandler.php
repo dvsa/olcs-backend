@@ -42,13 +42,6 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
     protected $subject = 'change-me';
 
     /**
-     * Result message
-     *
-     * @var string
-     */
-    protected $resultMessage = 'Email sent';
-
-    /**
      * Email message class
      *
      * @var Message
@@ -90,11 +83,10 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
         $this->message->setSubjectVariables($subjectVariables);
         $this->message->setCc($recipients['cc']);
         $this->message->setBcc($recipients['bcc']);
-        $this->message->setTranslateToWelsh($this->getTranslateToWelsh($recordObject));
 
         $this->sendEmailTemplate($this->message, $this->template, $templateVariables);
 
-        $result->addMessage($this->resultMessage);
+        $result->addMessage('Email sent');
 
         return $result;
     }
@@ -121,18 +113,6 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
     protected function getSubjectVariables($recordObject)
     {
         return [];
-    }
-
-    /**
-     * Override this method to get the value for the setTranslateToWelsh() method
-     *
-     * @param $recordObject
-     *
-     * @return string
-     */
-    protected function getTranslateToWelsh($recordObject): string
-    {
-        return 'N';
     }
 
     /**
