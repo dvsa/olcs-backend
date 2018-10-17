@@ -42,7 +42,7 @@ final class UploadScoringLog extends AbstractCommandHandler implements ToggleReq
             'content' => base64_encode($content),
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
-            'filename' => 'international-goods-list.log',
+            'filename' => 'Permit-Scoring-Log.log',
             'description' => 'Scoring Log File ' . date('d/m/Y'),
             'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
         ];

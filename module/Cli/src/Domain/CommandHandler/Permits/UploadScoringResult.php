@@ -32,7 +32,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
     *
     * @return Result
     *
-    * @todo: row of headers is currently the array keys, which aren't reader-friendly. Change this.
+    * @todo: The description needs to be made dynamic as it may vary.
     */
     public function handleCommand(CommandInterface $command)
     {
@@ -48,6 +48,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
         } else {
             //  no results, still need to put something inside .csv file so it is generated
             fputcsv($fh, ['No Results']);
+            $result->addMessage('No scoring results passed. Creating empty report file.');
         }
 
         foreach ($csvContent as $dataRow) {
@@ -64,7 +65,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             'content' => base64_encode($content),
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
-            'filename' => '.csv',
+            'filename' => 'Permit-Scoring-Report.csv',
             'description' => 'Scoring Result File ' . date('d/m/Y'),
             'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
         ];

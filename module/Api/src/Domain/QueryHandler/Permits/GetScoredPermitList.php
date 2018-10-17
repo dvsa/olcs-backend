@@ -82,21 +82,21 @@ class GetScoredPermitList extends AbstractQueryHandler
                 $sector = $row['irhpPermitApplication']['ecmtPermitApplication']['sectors'];
 
                 $formattedData[] = [
-                    'permitRef'                     => $row['irhpPermitApplication']['licence']['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
-                    'organisation'                  => $row['irhpPermitApplication']['licence']['organisation']['name'],
-                    'applicationScore'              => $row['applicationScore'],
-                    'intensityOfUse'                => $row['intensityOfUse'],
-                    'randomFactor'                  => $row['randomFactor'],
-                    'randomizedScore'               => $row['randomizedScore'],
-                    'internationalJourneys'         => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id']],
-                    'sector'                        => $sector['name'] === 'None/More than one of these sectors' ? 'N/A' : $sector['name'],
-                    'devolvedAdministration'        => in_array(
+                    'Permit Ref'                        => $row['irhpPermitApplication']['licence']['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
+                    'Operator'                          => $row['irhpPermitApplication']['licence']['organisation']['name'],
+                    'Application Score'                 => $row['applicationScore'],
+                    'Permit Intensity of Use'           => $row['intensityOfUse'],
+                    'Random Factor'                     => $row['randomFactor'],
+                    'Randomised Permit Score'           => $row['randomizedScore'],
+                    'Percentage International'          => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id']],
+                    'Sector'                            => $sector['name'] === 'None/More than one of these sectors' ? 'N/A' : $sector['name'],
+                    'Devolved Administration'           => in_array(
                         $row['irhpPermitApplication']['licence']['trafficArea']['id'],
                         self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS
                     ) ? $row['irhpPermitApplication']['licence']['trafficArea']['name'] : 'N/A',
-                    'result'                        => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                    'restrictedCountriesRequested'  => self::getRestrictedCountriesRequested($row),
-                    'restrictedCountriesOffered'    => self::getRestrictedCountriesOffered($row)
+                    'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
+                    'Restricted Countries – Requested'  => self::getRestrictedCountriesRequested($row),
+                    'Restricted Countries – Offered'    => self::getRestrictedCountriesOffered($row)
                 ];
             }
         }
