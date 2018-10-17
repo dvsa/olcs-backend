@@ -178,6 +178,18 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     protected $version = 1;
 
     /**
+     * Irhp candidate permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit",
+     *     mappedBy="irhpPermitRange"
+     * )
+     */
+    protected $irhpCandidatePermits;
+
+    /**
      * Irhp permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -207,6 +219,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     public function initCollections()
     {
         $this->countrys = new ArrayCollection();
+        $this->irhpCandidatePermits = new ArrayCollection();
         $this->irhpPermits = new ArrayCollection();
     }
 
@@ -571,6 +584,69 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the irhp candidate permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being set as the value
+     *
+     * @return IrhpPermitRange
+     */
+    public function setIrhpCandidatePermits($irhpCandidatePermits)
+    {
+        $this->irhpCandidatePermits = $irhpCandidatePermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp candidate permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpCandidatePermits()
+    {
+        return $this->irhpCandidatePermits;
+    }
+
+    /**
+     * Add a irhp candidate permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being added
+     *
+     * @return IrhpPermitRange
+     */
+    public function addIrhpCandidatePermits($irhpCandidatePermits)
+    {
+        if ($irhpCandidatePermits instanceof ArrayCollection) {
+            $this->irhpCandidatePermits = new ArrayCollection(
+                array_merge(
+                    $this->irhpCandidatePermits->toArray(),
+                    $irhpCandidatePermits->toArray()
+                )
+            );
+        } elseif (!$this->irhpCandidatePermits->contains($irhpCandidatePermits)) {
+            $this->irhpCandidatePermits->add($irhpCandidatePermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp candidate permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being removed
+     *
+     * @return IrhpPermitRange
+     */
+    public function removeIrhpCandidatePermits($irhpCandidatePermits)
+    {
+        if ($this->irhpCandidatePermits->contains($irhpCandidatePermits)) {
+            $this->irhpCandidatePermits->removeElement($irhpCandidatePermits);
+        }
+
+        return $this;
     }
 
     /**

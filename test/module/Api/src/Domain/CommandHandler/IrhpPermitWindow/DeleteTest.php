@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as PermitWindowRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Delete as DeleteCmd;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
 
 /**
  * Delete IRHP Permit Window
@@ -36,7 +36,7 @@ class DeleteTest extends CommandHandlerTestCase
 
         $id = $command->getId();
 
-        $irhpPermitWindow = m::mock(IrhpPermitStock::class)->makePartial();
+        $irhpPermitWindow = m::mock(PermitWindowEntity::class);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchById')
