@@ -53,10 +53,36 @@ final class Create extends AbstractCommandHandler
         }
 
         $this->getRepo()->save($queue);
-
+        $this->sendMessageToSqs($command);
         $result = new Result();
         $result->addId('queue', $queue->getId(), true);
         $result->addMessage('Queue created');
         return $result;
+    }
+
+    private function sendMessageToSqs(CommandInterface $command)
+    {
+        /**
+         * @var CreateCmd $command
+         */
+        $query = http_build_query([
+            'Action' => 'SendMessage',
+            'MessageGroupId' => 'DiscPrinting',
+            'MessageDeduplicationId' => str_replace('.','',microtime(true)),
+            'MessageBody' => $command->getOptions()
+        ]);
+        $queueUrl = "https://sqs.eu-west-1.amazonaws.com/950424895123/olcs_print.fifo";
+        $url = $queueUrl . '?' . $query;
+
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $url
+        ]);
+
+        $resp = curl_exec($curl);
+
+        curl_close($curl);
+
     }
 }
