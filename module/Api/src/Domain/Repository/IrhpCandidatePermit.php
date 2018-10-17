@@ -290,6 +290,7 @@ class IrhpCandidatePermit extends AbstractRepository
      * for a given stock.
      *
      * @param int $irhpPermitStockId
+     * @return array of IrhpCandidatePermits and linked data related to scoring
      */
     public function fetchAllScoredForStock($irhpPermitStockId)
     {

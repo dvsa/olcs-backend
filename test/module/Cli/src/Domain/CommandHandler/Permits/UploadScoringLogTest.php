@@ -35,20 +35,20 @@ class UploadScoringLogTest extends CommandHandlerTestCase
         $result1->addMessage('Document created');
 
         $this->expectedSideEffect(
-          Upload::class,
-          [
-            'content' => base64_encode($logContent),
-            'category' => Category::CATEGORY_PERMITS,
-            'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
-            'filename' => 'international-goods-list.log',
-            'description' => 'Scoring Log File ' . date('d/m/Y'),
-            'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
-          ],
-          $result1
+            Upload::class,
+            [
+              'content' => base64_encode($logContent),
+              'category' => Category::CATEGORY_PERMITS,
+              'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
+              'filename' => 'international-goods-list.log',
+              'description' => 'Scoring Log File ' . date('d/m/Y'),
+              'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+            ],
+            $result1
         );
 
         $this->sut->handleCommand(
-          UploadScoringLogCommand::create(['logContent' => $logContent])
+            UploadScoringLogCommand::create(['logContent' => $logContent])
         );
     }
 }

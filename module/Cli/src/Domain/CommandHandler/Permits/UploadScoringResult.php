@@ -12,7 +12,6 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 
-
 /**
  * Upload the log output for the permit scoring
  * batch process

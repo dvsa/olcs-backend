@@ -16,7 +16,7 @@ use Mockery as m;
  *
  * @author Jason de Jonge <jason.de-jonge@capgemini.co.uk>
  */
-class UploadScoringLogTest extends CommandHandlerTestCase
+class UploadScoringResultTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -42,20 +42,20 @@ class UploadScoringLogTest extends CommandHandlerTestCase
         $result1->addMessage('Document created');
 
         $this->expectedSideEffect(
-          Upload::class,
-          [
-            'content' => $csvContent,
-            'category' => Category::CATEGORY_PERMITS,
-            'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
-            'filename' => 'international-goods-list.csv',
-            'description' => 'Scoring Result File ' . date('d/m/Y'),
-            'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
-          ],
-          $result1
+            Upload::class,
+            [
+              'content' => $csvContent,
+              'category' => Category::CATEGORY_PERMITS,
+              'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
+              'filename' => 'international-goods-list.csv',
+              'description' => 'Scoring Result File ' . date('d/m/Y'),
+              'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+            ],
+            $result1
         );
 
         $this->sut->handleCommand(
-          UploadScoringResultCommand::create(['csvContent' => $csvData])
+            UploadScoringResultCommand::create(['csvContent' => $csvData])
         );
     }
 }

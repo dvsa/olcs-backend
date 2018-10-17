@@ -1,8 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
-use Olcs\Logging\Log\Logger;
-use DateTime;
+
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
@@ -20,7 +19,7 @@ class GetScoredPermitList extends AbstractQueryHandler
 {
     const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = ['M', 'G', 'N'];
 
-    protected $repoServiceNamee = 'IrhpCandidatePermit';
+    protected $repoServiceName = 'IrhpCandidatePermit';
     protected $extraRepos = ['IrhpCandidatePermit']; //this is needed for Unit Test
     protected $bundledRepos = [
         'irhpPermitApplication' => [
@@ -46,12 +45,10 @@ class GetScoredPermitList extends AbstractQueryHandler
      * @param QueryInterface|Query $query DTO
      *
      * @return array
-     * @throws RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
         /** @var Query $query */
-        /** @var IrhpCandidatePermit $repo */
         $results = $this->getRepo('IrhpCandidatePermit')->fetchAllScoredForStock($query->getStockId());
 
         return [
@@ -68,7 +65,7 @@ class GetScoredPermitList extends AbstractQueryHandler
      * Format the results of the query fetchAllScoredForStock
      * to make them more readable
      *
-     * @param array $results an array of query results with the same
+     * @param array $data an array of query results with the same
      *                  format as that returned by fetchAllScoredForStock
      *
      * @return array a formatted and mapped array
@@ -76,10 +73,11 @@ class GetScoredPermitList extends AbstractQueryHandler
      */
     private function formatResults($data)
     {
-        $formattedData = array();
-        if(!empty($data)) {
+        $formattedData = [];
+        if (!empty($data)) {
             foreach ($data as $row) {
                 $sector = $row['irhpPermitApplication']['ecmtPermitApplication']['sectors'];
+                $trafficArea = $row['irhpPermitApplication']['licence']['trafficArea'];
 
                 $formattedData[] = [
                     'Permit Ref'                        => $row['irhpPermitApplication']['licence']['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
@@ -90,13 +88,10 @@ class GetScoredPermitList extends AbstractQueryHandler
                     'Randomised Permit Score'           => $row['randomizedScore'],
                     'Percentage International'          => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id']],
                     'Sector'                            => $sector['name'] === 'None/More than one of these sectors' ? 'N/A' : $sector['name'],
-                    'Devolved Administration'           => in_array(
-                        $row['irhpPermitApplication']['licence']['trafficArea']['id'],
-                        self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS
-                    ) ? $row['irhpPermitApplication']['licence']['trafficArea']['name'] : 'N/A',
+                    'Devolved Administration'           => in_array($trafficArea['id'], self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS) ? $trafficArea['name'] : 'N/A',
                     'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                    'Restricted Countries – Requested'  => self::getRestrictedCountriesRequested($row),
-                    'Restricted Countries – Offered'    => self::getRestrictedCountriesOffered($row)
+                    'Restricted Countries – Requested'  => $this->getRestrictedCountriesRequested($row),
+                    'Restricted Countries – Offered'    => $this->getRestrictedCountriesOffered($row)
                 ];
             }
         }
@@ -108,11 +103,11 @@ class GetScoredPermitList extends AbstractQueryHandler
      * Retrieves the list of restricted countries requested
      * for display in an export .csv file
      *
-     * @param array $data Row from data from query
+     * @param array $row Row from data from query
      *
      * @return string
      */
-    private static function getRestrictedCountriesRequested($row)
+    private function getRestrictedCountriesRequested($row)
     {
         if ($row['irhpPermitApplication']['ecmtPermitApplication']['hasRestrictedCountries']) {
             return self::formatRestrictedCountriesForDisplay($row['irhpPermitApplication']['ecmtPermitApplication']['countrys']);
@@ -125,11 +120,11 @@ class GetScoredPermitList extends AbstractQueryHandler
      * Retrieves the list of restricted countries offered
      * for display in an export .csv file
      *
-     * @param array $data Row from data from query
+     * @param array $row Row from data from query
      *
      * @return string
      */
-    private static function getRestrictedCountriesOffered($row)
+    private function getRestrictedCountriesOffered($row)
     {
         if (count($row['irhpPermitRange']['countrys']) > 0) {
             return self::formatRestrictedCountriesForDisplay($row['irhpPermitRange']['countrys']);
@@ -142,11 +137,11 @@ class GetScoredPermitList extends AbstractQueryHandler
      * Formats a given list of restricted countries
      * for display in an export .csv file
      *
-     * @param array a list of restricted countries in the format returned by backend
+     * @param array $countries a list of restricted countries in the format returned by backend
      *
      * @return string a list of countries seperated by semicolons
      */
-    private static function formatRestrictedCountriesForDisplay($countries)
+    private function formatRestrictedCountriesForDisplay($countries)
     {
         $restrictedCountries = '';
         foreach ($countries as $country) {
