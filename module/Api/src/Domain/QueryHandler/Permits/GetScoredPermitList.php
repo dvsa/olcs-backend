@@ -78,6 +78,11 @@ class GetScoredPermitList extends AbstractQueryHandler
                 $interJourneys = $row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id'];
                 $licence = $row['irhpPermitApplication']['licence'];
 
+                $devolvedAdministration = 'N/A';
+                if (in_array($trafficArea['id'], self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS)) {
+                    $devolvedAdministration = $trafficArea['name'];
+                }
+
                 $formattedData[] = [
                     'Permit Ref'                        => $licence['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
                     'Operator'                          => $licence['organisation']['name'],
@@ -87,7 +92,7 @@ class GetScoredPermitList extends AbstractQueryHandler
                     'Randomised Permit Score'           => $row['randomizedScore'],
                     'Percentage International'          => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$interJourneys],
                     'Sector'                            => $sector['name'] === 'None/More than one of these sectors' ? 'N/A' : $sector['name'],
-                    'Devolved Administration'           => in_array($trafficArea['id'], self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS) ? $trafficArea['name'] : 'N/A',
+                    'Devolved Administration'           => $devolvedAdministration,
                     'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
                     'Restricted Countries – Requested'  => $this->getRestrictedCountriesRequested($row),
                     'Restricted Countries – Offered'    => $this->getRestrictedCountriesOffered($row)
