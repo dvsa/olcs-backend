@@ -45,6 +45,9 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
 
         if (!empty(($csvContent))) {
             fputcsv($fh, array_keys($csvContent[0])); //row of headers
+        } else {
+            //  no results, still need to put something inside .csv file so it is generated
+            fputcsv($fh, ['No Results']);
         }
 
         foreach ($csvContent as $dataRow) {
@@ -61,7 +64,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             'content' => base64_encode($content),
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
-            'filename' => 'international-goods-list.csv',
+            'filename' => '.csv',
             'description' => 'Scoring Result File ' . date('d/m/Y'),
             'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
         ];
