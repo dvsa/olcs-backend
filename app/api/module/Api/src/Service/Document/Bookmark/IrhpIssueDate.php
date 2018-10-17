@@ -2,18 +2,18 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitStockBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitBundle as Qry;
 
 /**
- * IrhpEndDate
+ * IrhpIssueDate
  *
  * @author Henry White <henry.white@capgemini.com>
  */
-class IrhpExpiryDate extends SingleValueAbstract
+class IrhpIssueDate extends SingleValueAbstract
 {
     const FORMATTER = 'Date';
-    const FIELD  = 'validTo';
+    const FIELD  = 'issueDate';
     const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irhpPermitStock';
+    const SRCH_VAL_KEY = 'irhpPermit';
     const QUERY_CLASS = Qry::class;
 }

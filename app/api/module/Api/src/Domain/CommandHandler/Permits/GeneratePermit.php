@@ -36,9 +36,11 @@ final class GeneratePermit extends AbstractCommandHandler implements UploaderAwa
             $irhpPermit = $this->getRepo()->fetchById($id, Query::HYDRATE_OBJECT);
 
             $irhpPermitApplication = $irhpPermit->getIrhpPermitApplication();
-            $irhpPermitType = $irhpPermitApplication
+            $irhpPermitStock = $irhpPermitApplication
                 ->getIrhpPermitWindow()
-                ->getIrhpPermitStock()
+                ->getIrhpPermitStock();
+
+            $irhpPermitType = $irhpPermitStock
                 ->getIrhpPermitType();
 
             $description = sprintf(
@@ -53,6 +55,7 @@ final class GeneratePermit extends AbstractCommandHandler implements UploaderAwa
                         'query' => [
                             'licence' => $irhpPermitApplication->getLicence()->getId(),
                             'irhpPermit' => $irhpPermit->getId(),
+                            'irhpPermitStock' => $irhpPermitStock->getId(),
                             'organisation' => $irhpPermitApplication->getLicence()->getOrganisation()->getId()
                         ],
                         'knownValues' => [],
