@@ -43,7 +43,9 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
         //  create csv file in memory
         $fh = fopen("php://temp", 'w');
 
-        fputcsv($fh, array_keys($csvContent['results'][0])); //row of headers
+        if (!empty(($csvContent))) {
+            fputcsv($fh, array_keys($csvContent[0])); //row of headers
+        }
 
         foreach ($csvContent as $dataRow) {
             foreach ($dataRow as $field) {

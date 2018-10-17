@@ -1,7 +1,7 @@
 <?php
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
-
+use Olcs\Logging\Log\Logger;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -13,12 +13,15 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 /**
  * Get a list of scored irhp candidate permit records
  * and associated data
+ *
+ * @todo: Needed to specify $extraRepos for unknown reason to prevent unit test failing, investigate & remove
  */
 class GetScoredPermitList extends AbstractQueryHandler
 {
     const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = ['M', 'G', 'N'];
 
-    protected $repoServiceName = 'IrhpCandidatePermit';
+    protected $repoServiceNamee = 'IrhpCandidatePermit';
+    protected $extraRepos = ['IrhpCandidatePermit']; //this is needed for Unit Test
     protected $bundledRepos = [
         'irhpPermitApplication' => [
             'ecmtPermitApplication' => [
@@ -49,11 +52,7 @@ class GetScoredPermitList extends AbstractQueryHandler
     {
         /** @var Query $query */
         /** @var IrhpCandidatePermit $repo */
-        $repo = $this->getRepo();
-
-        $results = $repo->fetchAllScoredForStock(
-            $query->getStockId()
-        );
+        $results = $this->getRepo('IrhpCandidatePermit')->fetchAllScoredForStock($query->getStockId());
 
         return [
             'result' => $this->formatResults(
@@ -78,29 +77,31 @@ class GetScoredPermitList extends AbstractQueryHandler
     private function formatResults($data)
     {
         $formattedData = array();
-        foreach ($data as $row) {
-            $sector = $row['irhpPermitApplication']['ecmtPermitApplication']['sectors'];
+        if(!empty($data)) {
+            foreach ($data as $row) {
+                $sector = $row['irhpPermitApplication']['ecmtPermitApplication']['sectors'];
 
-            $formattedData[] = [
-                'permitRef'                     => $row['irhpPermitApplication']['licence']['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
-                'organisation'                  => $row['irhpPermitApplication']['licence']['organisation']['name'],
-                'applicationScore'              => $row['applicationScore'],
-                'intensityOfUse'                => $row['intensityOfUse'],
-                'randomFactor'                  => $row['randomFactor'],
-                'randomizedScore'               => $row['randomizedScore'],
-                'internationalJourneys'         => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id']],
-                'sector'                        => $sector['name'] === 'None/More than one of these sectors' ? 'N/A' : $sector['name'],
-                'devolvedAdministration'        => in_array(
-                    $row['irhpPermitApplication']['licence']['trafficArea']['id'],
-                    self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS
-                ) ? $row['irhpPermitApplication']['licence']['trafficArea']['name'] : 'N/A',
-                'result'                        => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                'restrictedCountriesRequested'  => self::getRestrictedCountriesRequested($row),
-                'restrictedCountriesOffered'    => self::getRestrictedCountriesOffered($row)
-            ];
+                $formattedData[] = [
+                    'permitRef'                     => $row['irhpPermitApplication']['licence']['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
+                    'organisation'                  => $row['irhpPermitApplication']['licence']['organisation']['name'],
+                    'applicationScore'              => $row['applicationScore'],
+                    'intensityOfUse'                => $row['intensityOfUse'],
+                    'randomFactor'                  => $row['randomFactor'],
+                    'randomizedScore'               => $row['randomizedScore'],
+                    'internationalJourneys'         => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id']],
+                    'sector'                        => $sector['name'] === 'None/More than one of these sectors' ? 'N/A' : $sector['name'],
+                    'devolvedAdministration'        => in_array(
+                        $row['irhpPermitApplication']['licence']['trafficArea']['id'],
+                        self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS
+                    ) ? $row['irhpPermitApplication']['licence']['trafficArea']['name'] : 'N/A',
+                    'result'                        => $row['successful'] ? 'Successful' : 'Unsuccessful',
+                    'restrictedCountriesRequested'  => self::getRestrictedCountriesRequested($row),
+                    'restrictedCountriesOffered'    => self::getRestrictedCountriesOffered($row)
+                ];
+            }
         }
 
-        return ['results' => $formattedData];
+        return $formattedData;
     }
 
     /**
