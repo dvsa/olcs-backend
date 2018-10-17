@@ -50,9 +50,8 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             $result->addMessage('No scoring results passed. Creating empty report file.');
         }
 
-        foreach ($csvContent as $dataRow) {
-            fputcsv($fh, current($csvContent));
-            next($csvContent);
+        foreach($csvContent as $dataRow) {
+            fputcsv($fh, $dataRow);
         }
 
         rewind($fh);
