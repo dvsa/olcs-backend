@@ -517,7 +517,7 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
     {
         $irhpPermitStockId = 1;
 
-        $qb = m::mock(\Doctrine\ORM\QueryBuilder::class);
+        $qb = m::mock(QueryBuilder::class);
 
         $this->queryBuilder->shouldReceive('select')
             ->with('icp')
