@@ -20,10 +20,12 @@ class IrhpStartDate extends SingleValueAbstract
 
     public function render()
     {
-        $now = new DateTime();
+        $now = strtotime('today midnight');
 
-        if ($now > new DateTime($this->data['validFrom'])) {
-            $this->data['validFrom'] = $now;
+        if (isset($this->data['validFrom'])) {
+            if ($now > strtotime($this->data['validFrom'])) {
+                $this->setData(['validFrom' => date("Y-m-d H:i:s", $now)]);
+            }
         }
 
         return parent::render();

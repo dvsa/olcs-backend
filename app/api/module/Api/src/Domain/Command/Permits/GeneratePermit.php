@@ -5,7 +5,7 @@
  *
  * @author Henry White <henry.white@capgemini.com>
  */
-namespace Dvsa\Olcs\Transfer\Command\Permits;
+namespace Dvsa\Olcs\Api\Domain\Command\Permits;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
@@ -19,7 +19,7 @@ final class GeneratePermit extends AbstractCommand
     protected $ids = [];
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getIds()
     {
