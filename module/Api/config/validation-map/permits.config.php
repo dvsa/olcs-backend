@@ -26,8 +26,6 @@ return [
     QueryHandler\Permits\StockScoringPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\StockScoringPermitted::class => IsInternalAdmin::class,
-    QueryHandler\Permits\StockAcceptPermitted::class => IsInternalAdmin::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,

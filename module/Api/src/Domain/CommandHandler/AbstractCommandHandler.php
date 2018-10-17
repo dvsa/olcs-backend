@@ -120,8 +120,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
 
-        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
-
         $this->pidIdentityProvider = $mainServiceLocator->get(PidIdentityProvider::class);
 
         if ($this instanceof TransactionedInterface) {
