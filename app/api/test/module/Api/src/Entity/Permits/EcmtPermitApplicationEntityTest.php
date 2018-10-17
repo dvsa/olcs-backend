@@ -25,10 +25,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     */
     protected $entityClass = Entity::class;
 
-    /**
-     * @dataProvider dpProvideUpdateCountrys
-     */
-    public function testCreateNew($countrys, $expectedHasRestrictedCountries)
+    public function testCreateNew()
     {
          $status = Entity::STATUS_NOT_YET_SUBMITTED;
          $statusRefData = new RefData($status);
@@ -628,6 +625,35 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_ISSUED],
             [Entity::STATUS_VALID],
             [Entity::STATUS_DECLINED],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsFeePaid
+     */
+    public function testIsFeePaid($status, $expected)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertSame($expected, $entity->isFeePaid());
+    }
+
+    /**
+     * @return array
+     */
+    public function dpIsFeePaid()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_AWAITING_FEE, false],
+            [Entity::STATUS_FEE_PAID, true],
+            [Entity::STATUS_UNSUCCESSFUL, false],
+            [Entity::STATUS_ISSUED, false],
+            [Entity::STATUS_ISSUING, false],
+            [Entity::STATUS_VALID, false],
+            [Entity::STATUS_DECLINED, false],
         ];
     }
 }
