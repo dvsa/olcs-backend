@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
@@ -46,5 +45,5 @@ return [
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\TriggerProcessEcmtApplications::class => IsInternalAdmin::class,
-    CommandHandler\Permits\GeneratePermit::class => IsInternalUser::class,
+    CommandHandler\Permits\GeneratePermit::class => IsSideEffect::class,
 ];

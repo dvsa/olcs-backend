@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitStockBundle as Qry;
 
 /**
- * IrhpEndDate
+ * IrhpExpiryDate
  *
  * @author Henry White <henry.white@capgemini.com>
  */

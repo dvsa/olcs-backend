@@ -8,7 +8,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -20,13 +19,9 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
  *
  * @author Henry White <henry.white@capgemini.com>
  */
-final class GeneratePermit extends AbstractCommandHandler implements UploaderAwareInterface
+final class GeneratePermit extends AbstractCommandHandler
 {
-    use UploaderAwareTrait;
-
     protected $repoServiceName = 'IrhpPermit';
-
-    protected $extraRepos = ['IrhpPermitApplication'];
 
     public function handleCommand(CommandInterface $command)
     {
@@ -44,7 +39,8 @@ final class GeneratePermit extends AbstractCommandHandler implements UploaderAwa
                 ->getIrhpPermitType();
 
             $description = sprintf(
-                'Permit %d',
+                'IRHP %s %d',
+                strtoupper(str_replace('_', ' ', $irhpPermitType->getName())),
                 $irhpPermit->getId()
             );
 
@@ -61,16 +57,15 @@ final class GeneratePermit extends AbstractCommandHandler implements UploaderAwa
                         'knownValues' => [],
                         'description' => $description,
                         'category' => CategoryEntity::CATEGORY_PERMITS,
-                        'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_CONTINUATIONS_AND_RENEWALS_LICENCE,
+                        'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT,
                         'isExternal' => false,
                         'isScan' => false
                     ]
                 )
             );
 
-            foreach($document->getMessages() as $message) {
-                $result->addMessage($message);
-            }
+            $result->addId('identifier', $document->getId('identifier'), true);
+            $result->addMessage($description . ' RTF created and stored');
         }
 
         return $result;
