@@ -14,6 +14,7 @@ return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\SectorsList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
