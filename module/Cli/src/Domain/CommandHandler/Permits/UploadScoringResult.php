@@ -48,10 +48,8 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
         }
 
         foreach ($csvContent as $dataRow) {
-            foreach ($dataRow as $field) {
-                fputcsv($fh, current($dataRow));
-                next($dataRow);
-            }
+            fputcsv($fh, current($csvContent));
+            next($csvContent);
         }
 
         rewind($fh);

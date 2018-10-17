@@ -30,7 +30,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
       parent::setUp();
     }
 
-    public function testHandleQueryMapping()
+    public function testHandleQuery()
     {
       $query = QryClass::create([ 'stockId' => 1]);
 
