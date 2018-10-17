@@ -5,15 +5,8 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredListHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList as QryClass;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
  * GetScoredList Test

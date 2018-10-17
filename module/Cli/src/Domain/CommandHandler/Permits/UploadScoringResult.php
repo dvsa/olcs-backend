@@ -64,13 +64,13 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
             'filename' => 'Permit-Scoring-Report.csv',
-            'description' => 'Scoring Result File ' . date('d/m/Y'),
+            'description' => 'Scoring Result File ' . date('d/m/Y H:m'),
             'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
         ];
 
         unset($content);
 
-        $document = $this->handleSideEffect(
+        $this->handleSideEffect(
             UploadCmd::create($data)
         );
 
