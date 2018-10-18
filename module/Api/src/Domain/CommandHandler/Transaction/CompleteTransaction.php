@@ -58,7 +58,9 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         $response = $this->getCpmsService()->handleResponse($reference, $command->getCpmsData(), reset($fees));
 
         // ToDo: remove temporary CPMS Debug Log
-        Logger::crit('CPMS - CompleteTransaction:' . print_r($response, true));
+        Logger::crit('CPMS - CompleteTransaction:' . substr(print_r($response, true), 0, 500));
+        Logger::crit('CPMS - CompleteTransaction:' . substr(print_r($response, true), 500, 500));
+
 
         // resolve payment
         $result->merge($this->resolvePayment($command, $transaction));
