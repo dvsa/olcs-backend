@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Create as CreateStockCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit Stock
@@ -16,6 +18,9 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 final class Create extends AbstractCommandHandler
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
 
     protected $extraRepos = ['IrhpPermitType'];

@@ -546,6 +546,9 @@ return [
     // IRHP Permit Sector
     TransferQuery\IrhpPermitSector\GetList::class => QueryHandler\IrhpPermitSector\GetList::class,
 
+    // IRHP Permit Jurisdiction
+    TransferQuery\IrhpPermitJurisdiction\GetList::class => QueryHandler\IrhpPermitJurisdiction\GetList::class,
+
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,
