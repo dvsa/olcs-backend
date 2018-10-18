@@ -52,9 +52,11 @@ class SendTmApplicationTest extends CommandHandlerTestCase
         $command = Cmd::create(['id' => 863, 'emailAddress' => "test@email.com"]);
 
         $tm = new \Dvsa\Olcs\Api\Entity\Tm\TransportManager();
+        $hcd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
+        $tm->setHomeCd($hcd)->getHomeCd()->setEmailAddress("h@jhf.com");
 
         $cd = new \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails(m::mock(RefData::class));
-        //$cd->setEmailAddress('EMAIL');
+        $cd->setEmailAddress('EMAIL');
 
         $user = new \Dvsa\Olcs\Api\Entity\User\User('pid', 'TYPE');
         $user->setLoginId('username1');
@@ -80,6 +82,8 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($tma);
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->with($tma)->once();
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
@@ -139,6 +143,8 @@ class SendTmApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($tma);
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->with($tma)->once();
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(\Dvsa\Olcs\Email\Data\Message::class),
