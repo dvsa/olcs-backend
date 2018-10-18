@@ -14,19 +14,14 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
-
     /**
      * @param ProcessSignatureResponse $dto
      *
      * @return bool
      */
-    public function isValid($dto)
+    public function isValid($dto):bool
     {
-        $allowed = $this->isOperator();
-
-        $allowed = $allowed || $this->isValidAccess($dto);
-
-        return $allowed;
+        return $this->isOperator() || $this->isValidAccess($dto);
     }
 
     /**
@@ -34,18 +29,24 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
      *
      * @return bool
      */
-    private function isTransportManager()
+    private function isTransportManager():bool
     {
         return $this->isGranted(Permission::TRANSPORT_MANAGER);
     }
 
-    private function isValidAccess($dto)
+    /**
+     * isValidAccess
+     * @param $dto
+     *
+     * @return bool
+     */
+    private function isValidAccess($dto): bool
     {
-        if ($this->isTransportManager() && $dto instanceof ProcessSignatureResponse) {
-            if (method_exists($dto, 'getTransportManagerApplication')) {
-                return $dto->getTransportManagerApplication() > 0;
-            }
-
+        if ($this->isTransportManager()
+            && $dto instanceof ProcessSignatureResponse
+            && method_exists($dto, 'getTransportManagerApplication')
+        ) {
+            return $dto->getTransportManagerApplication() > 0;
         }
         return false;
     }
