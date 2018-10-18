@@ -69,9 +69,10 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
 
         if (!empty($tma->getTmDigitalSignature()->getSignatureName())
             && empty($tma->getOpDigitalSignature()->getSignatureName())) {
-            $tmFullName = $tma->getTmDigitalSignature()->getSignatureName();
-            $tmDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
-            $signatureDate = $tma->getTmDigitalSignature()->getCreatedOn();
+            $tmSignature = $tma->getTmDigitalSignature();
+            $tmFullName = $tmSignature ->getSignatureName();
+            $tmDateOfBirth = $tmSignature->getDateOfBirth();
+            $signatureDate = $tmSignature->getCreatedOn();
             array_unshift(
                 $replaceData,
                 $tmFullName,
@@ -79,12 +80,14 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
                 $signatureDate
             );
         } elseif (!empty($tma->getOpDigitalSignature()->getSignatureName())) {
-            $tmFullName = $tma->getTmDigitalSignature()->getSignatureName();
-            $tmDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
-            $signatureDate = $tma->getTmDigitalSignature()->getCreatedOn();
-            $opFullName = $tma->getOpDigitalSignature()->getSignatureName();
-            $opDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
-            $OpSignature = $tma->getTmDigitalSignature()->getCreatedOn();
+            $tmSignature = $tma->getTmDigitalSignature();
+            $tmFullName = $tmSignature ->getSignatureName();
+            $tmDateOfBirth = $tmSignature->getDateOfBirth();
+            $signatureDate = $tmSignature->getCreatedOn();
+            $opSignature = $tma->getOpDigitalSignature();
+            $opFullName = $opSignature->getSignatureName();
+            $opDateOfBirth = $opSignature->getDateOfBirth();
+            $OpSignature = $opSignature->getCreatedOn();
             array_unshift(
                 $replaceData,
                 $tmFullName,
