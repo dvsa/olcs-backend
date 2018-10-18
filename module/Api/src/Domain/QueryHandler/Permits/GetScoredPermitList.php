@@ -149,6 +149,6 @@ class GetScoredPermitList extends AbstractQueryHandler
             $restrictedCountries[] = $country['countryDesc'];
         }
 
-        return implode(';', $restrictedCountries);
+        return implode('; ', $restrictedCountries);
     }
 }
