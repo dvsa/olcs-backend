@@ -346,7 +346,6 @@ class Generator extends AbstractGenerator
         $filter = new UnderscoreToCamelCase();
 
         foreach ($sections as $key => $section) {
-
             $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
 
             if (array_search($section, $this->displayedAlwaysVariationSections) === false &&
@@ -393,7 +392,6 @@ class Generator extends AbstractGenerator
         $bundle = $this->defaultBundle;
 
         foreach ($sections as $section) {
-
             if (isset($this->sharedBundles[$section])) {
                 $bundle = array_merge_recursive($bundle, $this->sharedBundles[$section]);
             }

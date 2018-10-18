@@ -44,16 +44,18 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
 
     private function getPartial(TransportManagerApplication $tma): string
     {
-        $partial = $tma->getOpDigitalSignature()? self::SIGNATURE_DIGITAL_BOTH : self::SIGNATURE_DIGITAL;
+
+        $partial = !empty($tma->getOpDigitalSignature()->getSignatureName()) ? self::SIGNATURE_DIGITAL_BOTH : self::SIGNATURE_DIGITAL;
 
         if ($tma->getIsOwner() === 'Y') {
             $partial = self::SIGNATURE_DIGITAL_OPERATOR_TM;
         }
-        return $tma->getTmDigitalSignature() ? $partial : self::SIGNATURE;
+        return !empty($tma->getTmDigitalSignature()->getSignatureName()) ? $partial : self::SIGNATURE;
     }
 
     /**
      * getReplaceData
+     *
      * @param TransportManagerApplication $tma
      *
      * @return array
@@ -65,19 +67,34 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
             $this->translate(self::ADDRESS)
         ];
 
-        if ($tma->getTmDigitalSignature()) {
+        if (!empty($tma->getTmDigitalSignature()->getSignatureName())
+            && empty($tma->getOpDigitalSignature()->getSignatureName())) {
             $tmFullName = $tma->getTmDigitalSignature()->getSignatureName();
             $tmDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
             $signatureDate = $tma->getTmDigitalSignature()->getCreatedOn();
-
             array_unshift(
                 $replaceData,
                 $tmFullName,
                 $tmDateOfBirth,
                 $signatureDate
             );
+        } elseif (!empty($tma->getOpDigitalSignature()->getSignatureName())) {
+            $tmFullName = $tma->getTmDigitalSignature()->getSignatureName();
+            $tmDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
+            $signatureDate = $tma->getTmDigitalSignature()->getCreatedOn();
+            $opFullName = $tma->getOpDigitalSignature()->getSignatureName();
+            $opDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
+            $OpSignature = $tma->getTmDigitalSignature()->getCreatedOn();
+            array_unshift(
+                $replaceData,
+                $tmFullName,
+                $tmDateOfBirth,
+                $signatureDate,
+                $opFullName,
+                $opDateOfBirth,
+                $OpSignature
+            );
         }
-
         return $replaceData;
     }
 
