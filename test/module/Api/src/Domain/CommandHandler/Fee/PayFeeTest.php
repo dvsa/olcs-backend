@@ -65,11 +65,13 @@ class PayFeeTest extends CommandHandlerTestCase
         $ecmtApp->shouldReceive('getId')->once()->withNoArgs()->andReturn($ecmtId);
 
         /** @var FeeEntity $fee */
-        $fee = m::mock(FeeEntity::class)->makePartial();
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo'); //avoided breaking old code
+        $fee = m::mock(FeeEntity::class);
+        $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
         $fee->shouldReceive('getFeeType->isEcmtApplication')->once()->withNoArgs()->andReturn(true);
         $fee->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(false);
         $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturn($ecmtApp);
+        $fee->shouldReceive('getApplication')->andReturnNull();
+        $fee->shouldReceive('getTask')->andReturnNull();
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -101,11 +103,13 @@ class PayFeeTest extends CommandHandlerTestCase
         $ecmtApp->shouldReceive('getId')->twice()->withNoArgs()->andReturn($ecmtId);
 
         /** @var FeeEntity $fee */
-        $fee = m::mock(FeeEntity::class)->makePartial();
-        $fee->shouldReceive('getFeeType->getFeeType->getId')->andReturn('foo'); //avoided breaking old code
+        $fee = m::mock(FeeEntity::class);
+        $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
         $fee->shouldReceive('getFeeType->isEcmtApplication')->once()->withNoArgs()->andReturn(false);
         $fee->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(true);
         $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturn($ecmtApp);
+        $fee->shouldReceive('getApplication')->andReturnNull();
+        $fee->shouldReceive('getTask')->andReturnNull();
 
         $this->repoMap['Fee']->shouldReceive('fetchUsingId')
             ->with($command)
