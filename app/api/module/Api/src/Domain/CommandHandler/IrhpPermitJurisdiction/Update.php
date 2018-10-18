@@ -1,16 +1,16 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitSector;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitJurisdiction;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Transfer\Command\IrhpPermitSector\Update as UpdateSectorCmd;
+use Dvsa\Olcs\Transfer\Command\IrhpPermitJurisdiction\Update as UpdateJurisdictionCmd;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * Update an IRHP Permit Sector
+ * Update an IRHP Permit Jurisdiction
  *
  * @author Scott Callaway
  */
@@ -19,7 +19,7 @@ final class Update extends AbstractCommandHandler
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
-    protected $repoServiceName = 'IrhpPermitSectorQuota';
+    protected $repoServiceName = 'IrhpPermitJurisdictionQuota';
 
     /**
      * Handle Command
@@ -30,16 +30,16 @@ final class Update extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command): Result
     {
         /**
-         * @var UpdateSectorCmd $command
+         * @var UpdateJurisdictionCmd $command
          */
         $irhpPermitStockId = $command->getIrhpPermitStock();
 
-        foreach ($command->getSectors() as $index => $sector) {
-            $this->getRepo()->updateSectorPermitQuantity($sector, $index, $irhpPermitStockId);
+        foreach ($command->getTrafficAreas() as $trafficArea => $quotaNumber) {
+            $this->getRepo()->updateTrafficAreaPermitQuantity($quotaNumber, $trafficArea, $irhpPermitStockId);
         }
 
         $this->result->addId('Irhp Permit Stock', $irhpPermitStockId);
-        $this->result->addMessage("Irhp Permit Sectors for Stock '{$irhpPermitStockId}' updated");
+        $this->result->addMessage("Irhp Permit Jurisdiction for Stock '{$irhpPermitStockId}' updated");
 
         return $this->result;
     }

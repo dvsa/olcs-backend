@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as RangeEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Create as CreateRangeCmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit Range
@@ -17,8 +19,10 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  */
 final class Create extends AbstractCommandHandler
 {
+    use ToggleAwareTrait;
     use IrhpPermitRangeOverlapTrait;
 
+    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitRange';
     protected $extraRepos = ['IrhpPermitStock', 'Country'];
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitSector;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitJurisdiction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * IRHP Sector
+ * IRHP Jurisdiction
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
@@ -18,9 +18,9 @@ class GetList extends AbstractQueryHandler implements ToggleRequiredInterface
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
-    protected $repoServiceName = 'IrhpPermitSectorQuota';
+    protected $repoServiceName = 'IrhpPermitJurisdictionQuota';
 
-    private $bundledRepos = ['irhpPermitStock', 'sector'];
+    private $bundle = ['trafficArea'];
 
     /**
      * Handle Query
@@ -30,12 +30,12 @@ class GetList extends AbstractQueryHandler implements ToggleRequiredInterface
      */
     public function handleQuery(QueryInterface $query)
     {
-        $irhpPermitSectors = $this->getRepo()->fetchByIrhpPermitStockId($query->getIrhpPermitStock());
+        $irhpPermitJurisdiction = $this->getRepo()->fetchByIrhpPermitStockId($query->getIrhpPermitStock());
 
         return [
             'result' => $this->resultList(
-                $irhpPermitSectors,
-                $this->bundledRepos
+                $irhpPermitJurisdiction,
+                $this->bundle
             )
         ];
     }
