@@ -217,11 +217,8 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
 
         $tma->shouldReceive('getOpDigitalSignature')->times($conditions['times'])->andReturn($conditions['OpSignature']);
-        $tma->shouldReceive('getSignatureName')->once()->andReturn('__TEST__');
-        $tma->shouldReceive('getDateOfBirth')->once()->andReturn('__TEST__');
-        $tma->shouldReceive('getCreatedOn')->once()->andReturn('__TEST__');
         $tma->shouldReceive('getIsOwner')->once()->andReturn($conditions['isOwner']);
-        $tma->shouldReceive('getTmDigitalSignature')->times($conditions['times'])->andReturn($tma);
+        $tma->shouldReceive('getTmDigitalSignature')->times($conditions['times'])->andReturn($conditions['tmSignature']);
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
             ->andReturn(Organisation::ORG_TYPE_SOLE_TRADER);
 
