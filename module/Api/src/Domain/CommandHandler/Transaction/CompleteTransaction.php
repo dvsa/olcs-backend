@@ -20,6 +20,7 @@ use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -53,7 +54,11 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         $fees = $transaction->getFees();
 
         // update CPMS
-        $this->getCpmsService()->handleResponse($reference, $command->getCpmsData(), reset($fees));
+        // $this->getCpmsService()->handleResponse($reference, $command->getCpmsData(), reset($fees));
+        $response = $this->getCpmsService()->handleResponse($reference, $command->getCpmsData(), reset($fees));
+
+        // ToDo: remove temporary CPMS Debug Log
+        Logger::crit('CPMS - CompleteTransaction:' . print_r($response, true));
 
         // resolve payment
         $result->merge($this->resolvePayment($command, $transaction));

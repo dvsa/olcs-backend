@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
@@ -211,6 +212,9 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
                 $extraParams
             );
         }
+
+        // ToDo: remove temporary CPMS Debug Log
+        Logger::crit('CPMS - PayOutstandingFees:' . print_r($response, true));
 
         // create transaction
         $transaction = new TransactionEntity();

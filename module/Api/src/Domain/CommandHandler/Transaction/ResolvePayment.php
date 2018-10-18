@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as Cpms;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Task\Task;
@@ -64,6 +65,10 @@ final class ResolvePayment extends AbstractCommandHandler implements
             $transaction->getReference(),
             reset($fees)
         );
+
+        // ToDo: remove temporary CPMS Debug Log
+        Logger::crit('CPMS - ResolvePayment:' . print_r($statusDetails, true));
+
         $cpmsStatus = $statusDetails['code'];
 
         $now = new DateTime();
@@ -99,7 +104,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
                 );
                 return $result;
             default:
-                // output something to the console log and continue
+                // output something to the  console log and continue
                 $result->addMessage(
                     sprintf(
                         'Unexpected status received from CPMS, transaction %d status %s, message: %s',
