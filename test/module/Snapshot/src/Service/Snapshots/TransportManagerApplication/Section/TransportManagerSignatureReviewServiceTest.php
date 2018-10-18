@@ -21,7 +21,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 {
-    /** @var TransportManagerSignatureReviewService */
+    /** @var TransportMan
+     * agerSignatureReviewService */
     protected $sut;
 
     protected $sm;
@@ -42,13 +43,6 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $mockTranslator = m::mock();
         $this->sm->setService('translator', $mockTranslator);
 
-        if (!$data['digitalSignature']) {
-            $mockTranslator
-                ->shouldReceive('translate')
-                ->with(TransportManagerSignatureReviewService::SIGNATURE, 'snapshot')
-                ->once()
-                ->andReturn('%s_%s');
-        }
 
         $mockTranslator
             ->shouldReceive('translate')
@@ -59,10 +53,18 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $mockTranslator->shouldReceive('translate')->with($expected['label'], 'snapshot')->once()
             ->andReturn($expected['label'] . 'translated');
 
-        $tma = m::mock(TransportManagerApplication::class);
-        $tma->shouldReceive('getTmDigitalSignature')->andReturn($data['digitalSignature']);
+        if (empty($data['TmDigitalSignature']->getSignatureName())) {
+            $mockTranslator->shouldReceive('translate')->with($expected['markup'], 'snapshot')->once()->
+            andReturn(
+                '%s_%s'
+            );
+        }
 
-        $tma->shouldReceive('getOpDigitalSignature')->once()->andReturn(null);
+
+        $tma = m::mock(TransportManagerApplication::class);
+        $tma->shouldReceive('getTmDigitalSignature')->andReturn($data['TmDigitalSignature']);
+
+        $tma->shouldReceive('getOpDigitalSignature')->twice()->andReturn($data['OpDigitalSignature']);
         $tma->shouldReceive('getIsOwner')->once()->andReturn('N');
 
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
@@ -70,11 +72,13 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
         $expectedMarkup = $expected['label'] . 'translated_ADDRESS';
 
-        if ($data['digitalSignature']) {
+        if ($data['TmDigitalSignature']->getSignatureName()) {
             $digitalSignatureDate = (new DateTime('2018-01-01'))->format('d-m-Y');
             $birthDate = (new DateTime('1980-01-01'))->format('d-m-Y');
             $signatureName = 'Name';
-            $data['digitalSignature']
+            $tma->shouldReceive('getOpDigitalSignature')->twice()->andReturn($data['OpDigitalSignature']);
+            $data['OpDigitalSignature'] = m::mock(DigitalSignature::class);
+            $data['OpDigitalSignature']
                 ->shouldReceive('getCreatedOn')
                 ->with()
                 ->andReturn($digitalSignatureDate)
@@ -87,11 +91,14 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
             $mockTranslator
                 ->shouldReceive('translate')
-                ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL, 'snapshot')
+                ->with(TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH, 'snapshot')
                 ->once()
-                ->andReturn('%s_%s_%s_%s_%s');
+                ->andReturn('%s_%s_%s_%s_%s_%s_%s_%s');
 
             $expectedMarkup = $signatureName .
+                '_' . $birthDate .
+                '_' . $digitalSignatureDate .
+                '_'. $signatureName .
                 '_' . $birthDate .
                 '_' . $digitalSignatureDate .
                 '_' . $expectedMarkup;
@@ -103,61 +110,80 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
     public function getConfigProvider()
     {
 
+        $emptyDigitalSignature = m::mock(DigitalSignature::class);
+        $emptyDigitalSignature->shouldReceive('getSignatureName')->andReturn(false);
+
         $digitalSignature = m::mock(DigitalSignature::class);
+        $digitalSignature->shouldReceive('getSignatureName')->andReturn('Name');
+        $digitalSignature->shouldReceive('getDateOfBirth')->andReturn('01-01-1980');
+        $digitalSignatureDate = (new DateTime('2018-01-01'))->format('d-m-Y');
+        $digitalSignature->shouldReceive('getCreatedOn')->andReturn($digitalSignatureDate);
 
         return [
             'case_01' => [
                 [
                     'organisationType' => 'unknown',
-                    'digitalSignature' => null
+                    'TmDigitalSignature' => $emptyDigitalSignature,
+                    'OpDigitalSignature' => $emptyDigitalSignature
                 ],
                 [
                     'label' => 'responsible-person-signature',
+                    'markup' => TransportManagerSignatureReviewService::SIGNATURE
                 ]
             ],
             'case_02' => [
                 [
                     'organisationType' => Organisation::ORG_TYPE_LLP,
-                    'digitalSignature' => null
+                    'TmDigitalSignature' => $emptyDigitalSignature,
+                    'OpDigitalSignature' => $emptyDigitalSignature
                 ],
                 [
                     'label' => 'directors-signature',
+                    'markup' => TransportManagerSignatureReviewService::SIGNATURE
                 ]
             ],
             'case_03' => [
                 [
                     'organisationType' => Organisation::ORG_TYPE_REGISTERED_COMPANY,
-                    'digitalSignature' => null
+                    'TmDigitalSignature' => $emptyDigitalSignature,
+                    'OpDigitalSignature' => $emptyDigitalSignature
                 ],
                 [
                     'label' => 'directors-signature',
+                    'markup' => TransportManagerSignatureReviewService::SIGNATURE
                 ]
             ],
             'case_04' => [
                 [
                     'organisationType' => Organisation::ORG_TYPE_PARTNERSHIP,
-                    'digitalSignature' => null
+                    'TmDigitalSignature' => $emptyDigitalSignature,
+                    'OpDigitalSignature' => $emptyDigitalSignature
                 ],
                 [
                     'label' => 'partners-signature',
+                    'markup' => TransportManagerSignatureReviewService::SIGNATURE
                 ]
             ],
             'case_05' => [
                 [
                     'organisationType' => Organisation::ORG_TYPE_SOLE_TRADER,
-                    'digitalSignature' => null
+                    'TmDigitalSignature' => $emptyDigitalSignature,
+                    'OpDigitalSignature' => $emptyDigitalSignature
                 ],
                 [
                     'label' => 'owners-signature',
+                    'markup' => TransportManagerSignatureReviewService::SIGNATURE
                 ]
             ],
             'case_06' => [
                 [
                     'organisationType' => 'unknown',
-                    'digitalSignature' => $digitalSignature
+                    'TmDigitalSignature' => $digitalSignature,
+                    'OpDigitalSignature' => $digitalSignature
                 ],
                 [
                     'label' => 'responsible-person-signature',
+                    'markup' => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH
                 ]
             ],
         ];
@@ -186,11 +212,16 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $mockTranslator->shouldReceive('translate')->with($expected['label'], 'snapshot')->once()
             ->andReturn($expected['label'] . 'translated');
 
+
         $tma = m::mock(TransportManagerApplication::class);
 
-        $tma->shouldReceive('getOpDigitalSignature')->once()->andReturn($conditions['OpSignature']);
+
+        $tma->shouldReceive('getOpDigitalSignature')->twice()->andReturn($conditions['OpSignature']);
+        $tma->shouldReceive('getSignatureName')->once()->andReturn('__TEST__');
+        $tma->shouldReceive('getDateOfBirth')->once()->andReturn('__TEST__');
+        $tma->shouldReceive('getCreatedOn')->once()->andReturn('__TEST__');
         $tma->shouldReceive('getIsOwner')->once()->andReturn($conditions['isOwner']);
-        $tma->shouldReceive('getTmDigitalSignature')->once()->andReturn($conditions['tmSignature']);
+        $tma->shouldReceive('getTmDigitalSignature')->times(5)->andReturn($tma);
         $tma->shouldReceive('getApplication->getLicence->getOrganisation->getType->getId')->with()->once()
             ->andReturn(Organisation::ORG_TYPE_SOLE_TRADER);
 
@@ -210,10 +241,43 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
     {
         return [
 
-                "as operator" => [
-                    ['OpSignature' => true, 'isOwner' => true, 'tmSignature' => false, "markup" =>TransportManagerSignatureReviewService::SIGNATURE_DIGITAL],
-                    ['label' => 'owners-signature', 'markup' => 'test']
+            "as operatorTM" => [
+                [
+                    'OpSignature' => m::mock(DigitalSignature::class)->shouldReceive('getSignatureName')->andReturn('NAME'),
+                    'isOwner' => true,
+                    'tmSignature' => m::mock(DigitalSignature::class)->shouldReceive('getSignatureName')->andReturn('NAME'),
+                    "markup" => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL_BOTH
+                ],
+                [
+                    'label' => 'owners-signature',
+                    'markup' => '__TEST_____TEST_____TEST___owners-signaturetranslated_ADDRESS'
                 ]
+            ],
+            "as TM only" => [
+                [
+                    'OpSignature' => m::mock(DigitalSignature::class)->shouldReceive('getSignatureName')->andReturn(''),
+                    'isOwner' => false,
+                    'tmSignature' => m::mock(DigitalSignature::class)->shouldReceive('getSignatureName')->andReturn('NAME'),
+                    "markup" => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL
+                ],
+                [
+                    'label' => 'owners-signature',
+                    'markup' => '__TEST_____TEST_____TEST___owners-signaturetranslated_ADDRESS'
+                ]
+            ],
+            "as operator only" => [
+                [
+                    'OpSignature' => false,
+                    'isOwner' => false,
+                    'tmSignature' => m::mock(DigitalSignature::class)->shouldReceive('getSignatureName')->andReturn('NAME'),
+
+                    "markup" => TransportManagerSignatureReviewService::SIGNATURE_DIGITAL
+                ],
+                [
+                    'label' => 'owners-signature',
+                    'markup' => '__TEST_____TEST_____TEST___owners-signaturetranslated_ADDRESS'
+                ]
+            ],
 
         ];
     }
