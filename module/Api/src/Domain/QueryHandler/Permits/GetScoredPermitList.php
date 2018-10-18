@@ -144,11 +144,11 @@ class GetScoredPermitList extends AbstractQueryHandler
      */
     private function formatRestrictedCountriesForDisplay($countries)
     {
-        $restrictedCountries = '';
+        $restrictedCountries = [];
         foreach ($countries as $country) {
-            $restrictedCountries = $restrictedCountries . '; ' . $country['countryDesc'];
+            $restrictedCountries[] = $country['countryDesc'];
         }
 
-        return substr($restrictedCountries, 2); //remove the first ;
+        return implode(';', $restrictedCountries);
     }
 }
