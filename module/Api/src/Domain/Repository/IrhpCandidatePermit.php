@@ -308,4 +308,9 @@ class IrhpCandidatePermit extends AbstractRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function clearCachedEntities()
+    {
+        return $this->getEntityManager()->clear(Entity::class);
+    }
 }

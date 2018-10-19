@@ -75,6 +75,8 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
             $this->decrementRangeStock($selectedRange);
         }
 
+        $this->getRepo->clearCachedEntities();
+
         return $this->result;
     }
 
