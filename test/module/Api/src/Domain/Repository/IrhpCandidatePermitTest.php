@@ -567,4 +567,17 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
 
         $this->assertEquals(null, $this->sut->fetchAllScoredForStock($irhpPermitStockId));
     }
+
+    /**
+     * Mostly here just for code-coverage
+     */
+    public function testClearCachedEntities()
+    {
+        $this->em->shouldReceive('clear')
+            ->with(IrhpCandidatePermitEntity::class)
+            ->once()
+            ->andReturnSelf();
+
+        $this->sut->clearCachedEntities();
+    }
 }
