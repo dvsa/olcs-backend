@@ -13,9 +13,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 class TransportManagerSignatureReviewService extends AbstractReviewService
 {
 
-    const SIGNATURE         = 'markup-tma-declaration-signature';
+    const SIGNATURE = 'markup-tma-declaration-signature';
     const SIGNATURE_DIGITAL = 'markup-tma-declaration-signature-digital';
-    const ADDRESS           = 'tm-review-return-address';
+    const SIGNATURE_DIGITAL_BOTH = 'markup-tma-declaration-signature-digital-both';
+    const ADDRESS = 'tm-review-return-address';
+    const SIGNATURE_DIGITAL_OPERATOR_TM = 'markup-tma-declaration-signature-digital-operator-tm';
 
     /**
      * Format the readonly config from the given data
@@ -24,7 +26,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfig(TransportManagerApplication $tma) : array
+    public function getConfig(TransportManagerApplication $tma): array
     {
         $partial = $this->getPartial($tma);
 
@@ -40,31 +42,64 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
         ];
     }
 
-    private function getPartial(TransportManagerApplication $tma) : string
+    private function getPartial(TransportManagerApplication $tma): string
     {
-        return $tma->getTmDigitalSignature() ? self::SIGNATURE_DIGITAL : self::SIGNATURE;
+        $opDigitalSignature = $tma->getOpDigitalSignature();
+
+        $partial = !empty($opDigitalSignature) && !empty($opDigitalSignature->getSignatureName()) ? self::SIGNATURE_DIGITAL_BOTH : self::SIGNATURE_DIGITAL;
+
+        if ($tma->getIsOwner() === 'Y') {
+            $partial = self::SIGNATURE_DIGITAL_OPERATOR_TM;
+        }
+        $tmDigitalSignature = $tma->getTmDigitalSignature();
+        return !empty($tmDigitalSignature) && !empty($tmDigitalSignature->getSignatureName()) ? $partial : self::SIGNATURE;
     }
 
-    private function getReplaceData(TransportManagerApplication $tma) : array
+    /**
+     * getReplaceData
+     *
+     * @param TransportManagerApplication $tma
+     *
+     * @return array
+     */
+    private function getReplaceData(TransportManagerApplication $tma): array
     {
         $replaceData = [
             $this->getOwnerLabel($tma),
             $this->translate(self::ADDRESS)
         ];
 
-        if ($tma->getTmDigitalSignature()) {
-            $tmFullName = $tma->getTmDigitalSignature()->getSignatureName();
-            $tmDateOfBirth = $tma->getTmDigitalSignature()->getDateOfBirth();
-            $signatureDate = $tma->getTmDigitalSignature()->getCreatedOn();
-
+        if (!empty($tma->getTmDigitalSignature())
+            && empty($tma->getOpDigitalSignature())) {
+            $tmSignature = $tma->getTmDigitalSignature();
+            $tmFullName = $tmSignature->getSignatureName();
+            $tmDateOfBirth = $tmSignature->getDateOfBirth();
+            $signatureDate = $tmSignature->getCreatedOn();
             array_unshift(
                 $replaceData,
                 $tmFullName,
                 $tmDateOfBirth,
                 $signatureDate
             );
+        } elseif (!empty($tma->getOpDigitalSignature())) {
+            $tmSignature = $tma->getTmDigitalSignature();
+            $tmFullName = $tmSignature->getSignatureName();
+            $tmDateOfBirth = $tmSignature->getDateOfBirth();
+            $signatureDate = $tmSignature->getCreatedOn();
+            $opSignature = $tma->getOpDigitalSignature();
+            $opFullName = $opSignature->getSignatureName();
+            $opDateOfBirth = $opSignature->getDateOfBirth();
+            $OpSignature = $opSignature->getCreatedOn();
+            array_unshift(
+                $replaceData,
+                $tmFullName,
+                $tmDateOfBirth,
+                $signatureDate,
+                $opFullName,
+                $opDateOfBirth,
+                $OpSignature
+            );
         }
-
         return $replaceData;
     }
 

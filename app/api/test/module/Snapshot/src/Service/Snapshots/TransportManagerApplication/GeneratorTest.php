@@ -75,6 +75,7 @@ class GeneratorTest extends MockeryTestCase
         /** @var TransportManagerApplication $tma */
         $tma = m::mock(TransportManagerApplication::class);
         $tma->shouldReceive('getApplication')->andReturn($application);
+        $tma->shouldReceive('isVariation')->andReturn(false);
         $tma->shouldReceive('getTmApplicationStatus')
             ->andReturn(new \Dvsa\Olcs\Api\Entity\System\RefData('foobar'));
 
@@ -159,7 +160,7 @@ class GeneratorTest extends MockeryTestCase
         $application->shouldReceive('getLicence')->andReturn($licence);
         $application->shouldReceive('getId')->andReturn(111);
         $application->shouldReceive('getNiFlag')->andReturn('N');
-
+        $application->shouldReceive('isVariation')->andReturn(false);
         /** @var TransportManagerApplication $tma */
         $tma = m::mock(TransportManagerApplication::class);
         $tma->shouldReceive('getApplication')->andReturn($application);
