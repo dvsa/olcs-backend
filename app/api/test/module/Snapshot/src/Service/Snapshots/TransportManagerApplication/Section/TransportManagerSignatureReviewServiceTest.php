@@ -242,7 +242,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
         $tmDigitalSignature->shouldReceive('getSignatureName')->andReturn('NAME');
         $tmDigitalSignature->shouldReceive('getDateOfBirth')->andReturn('01-01-1980');
         $tmDigitalSignature->shouldReceive('getCreatedOn')->andReturn($digitalSignatureDate);
-       
+
 
         return [
 

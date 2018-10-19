@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Auth Aware
