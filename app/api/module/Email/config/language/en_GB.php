@@ -33,4 +33,5 @@ return array(
     'email.notification.subject' => 'OLCS Notification',
     'email.digital-continuation.subject' => 'The licence %s is due to expire on %s',
     'email.last-tm-operator-notification.subject' => 'Urgent: Removal of last Transport Manager',
+    'email.ecmt.automatically.withdrawn.subject' => 'ECMT permit application %s has been withdrawn',
 );
