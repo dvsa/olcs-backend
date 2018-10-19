@@ -18,6 +18,6 @@ class CanMakeVerifyRequest extends AbstractHandler implements AuthAwareInterface
      */
     public function isValid($dto)
     {
-        return ($this->isOperator()|| $this->isGranted(Permission::TRANSPORT_MANAGER));
+        return ($this->isOperator()|| $this->isTransportManager());
     }
 }
