@@ -12,4 +12,5 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryByIdHandler;
 final class ById extends AbstractQueryByIdHandler
 {
     protected $repoServiceName = 'IrhpPermitStock';
+    protected $bundle = ['irhpPermitType' => ['name']];
 }
