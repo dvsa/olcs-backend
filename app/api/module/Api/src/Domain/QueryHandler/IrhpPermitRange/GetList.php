@@ -14,7 +14,7 @@ class GetList extends AbstractQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitRange';
 
-    private $bundledRepos = ['countrys'];
+    private $bundle = ['countrys', 'irhpPermitStock' => ['irhpPermitType' => ['name']]];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -22,7 +22,7 @@ class GetList extends AbstractQueryHandler
         return [
             'result' => $this->resultList(
                 $irhpPermitRanges,
-                $this->bundledRepos
+                $this->bundle
             )
         ];
     }
