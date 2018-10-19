@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpCandidatePermit;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredListHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList as QryClass;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -154,32 +155,32 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
         $expected = [
             'result' => [
                 0 => [
-                    'permitRef' => $expectedRefNum,
-                    'organisation' => $firstOrganisationName,
-                    'applicationScore' => $firstAppScore,
-                    'intensityOfUse' => $firstIntensity,
-                    'randomFactor' => $firstRandomFactor,
-                    'randomizedScore' => $firstRandomizedScore,
-                    'internationalJourneys' => EcmtPermitApplicationEntity::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$interJourneysLess60],
-                    'sector' => $firstSectorsName,
-                    'devolvedAdministration' => $firstTrafficAreaName,
-                    'result' => 'Successful',
-                    'restrictedCountriesRequested' => 'N/A',
-                    'restrictedCountriesOffered' => 'N/A',
+                    'Permit Ref' => $expectedRefNum,
+                    'Operator' => $firstOrganisationName,
+                    'Application Score' => $firstAppScore,
+                    'Permit Intensity of Use' => $firstIntensity,
+                    'Random Factor' => $firstRandomFactor,
+                    'Randomised Permit Score' => $firstRandomizedScore,
+                    'Percentage International' => EcmtPermitApplicationEntity::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$interJourneysLess60],
+                    'Sector' => $firstSectorsName,
+                    'Devolved Administration' => $firstTrafficAreaName,
+                    'Result' => 'Successful',
+                    'Restricted Countries – Requested' => 'N/A',
+                    'Restricted Countries – Offered' => 'N/A',
                 ],
                 1 => [
-                    'permitRef' => $expectedRefNum,
-                    'organisation' => $firstOrganisationName,
-                    'applicationScore' => $firstAppScore,
-                    'intensityOfUse' => $firstIntensity,
-                    'randomFactor' => $firstRandomFactor,
-                    'randomizedScore' => $firstRandomizedScore,
-                    'internationalJourneys' => EcmtPermitApplicationEntity::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$interJourneysLess60],
-                    'sector' => 'N/A',
-                    'devolvedAdministration' => 'N/A',
-                    'result' => 'Unsuccessful',
-                    'restrictedCountriesRequested' => 'Cuba; USA',
-                    'restrictedCountriesOffered' => 'England; France',
+                    'Permit Ref' => $expectedRefNum,
+                    'Operator' => $firstOrganisationName,
+                    'Application Score' => $firstAppScore,
+                    'Permit Intensity of Use' => $firstIntensity,
+                    'Random Factor' => $firstRandomFactor,
+                    'Randomised Permit Score' => $firstRandomizedScore,
+                    'Percentage International' => EcmtPermitApplicationEntity::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$interJourneysLess60],
+                    'Sector' => 'N/A',
+                    'Devolved Administration' => 'N/A',
+                    'Result' => 'Unsuccessful',
+                    'Restricted Countries – Requested' => 'Cuba; USA',
+                    'Restricted Countries – Offered' => 'England; France',
                 ],
             ]
         ];

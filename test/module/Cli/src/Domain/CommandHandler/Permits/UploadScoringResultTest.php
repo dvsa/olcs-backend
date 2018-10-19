@@ -9,6 +9,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\UploadScoringResult as UploadSco
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery as m;
 
 /**
@@ -31,11 +32,9 @@ class UploadScoringResultTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $csvData = [
-          'results' => [
             0 => [
-              'test',
+                'test',
             ]
-          ]
         ];
         $csvContent = 'MAp0ZXN0Cg=='; //this is the output of base64_encode($csvData)
         $result1 = new Result();
@@ -47,9 +46,9 @@ class UploadScoringResultTest extends CommandHandlerTestCase
               'content' => $csvContent,
               'category' => Category::CATEGORY_PERMITS,
               'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
-              'filename' => 'international-goods-list.csv',
-              'description' => 'Scoring Result File ' . date('d/m/Y'),
-              'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
+              'filename' => 'Permit-Scoring-Report.csv',
+              'description' => 'Scoring Result File ' . date('d/m/Y H:m'),
+              'user' => PidIdentityProvider::SYSTEM_USER,
             ],
             $result1
         );
