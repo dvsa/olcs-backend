@@ -762,6 +762,7 @@ return [
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
     Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
+    Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
