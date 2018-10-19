@@ -729,6 +729,8 @@ return [
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
     TransferCommand\TransportManagerApplication\SendTmApplication::class =>
         CommandHandler\Email\SendTmApplication::class,
+    TransferCommand\TransportManagerApplication\SendAmendTmApplication::class =>
+        CommandHandler\Email\SendAmendTmApplication::class,
     TransferCommand\TransportManagerApplication\Submit::class =>
         CommandHandler\TransportManagerApplication\Submit::class,
     TransferCommand\TransportManagerApplication\OperatorSigned::class =>
