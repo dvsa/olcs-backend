@@ -209,9 +209,20 @@ trait AuthAwareTrait
      * Get system user
      *
      * @return \Dvsa\Olcs\Api\Entity\User\User
+     * @throws Exception\NotFoundException
      */
     public function getSystemUser()
     {
         return $this->getUserRepository()->fetchById(PidIdentityProvider::SYSTEM_USER);
+    }
+
+    /**
+     * isTransportManager
+     *
+     * @return bool
+     */
+    public function isTransportManager(): bool
+    {
+        return $this->isGranted(Permission::TRANSPORT_MANAGER);
     }
 }

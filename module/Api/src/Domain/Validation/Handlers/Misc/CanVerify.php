@@ -24,15 +24,6 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
         return $this->isOperator() || $this->isValidAccess($dto);
     }
 
-    /**
-     * isTransportManager
-     *
-     * @return bool
-     */
-    private function isTransportManager():bool
-    {
-        return $this->isGranted(Permission::TRANSPORT_MANAGER);
-    }
 
     /**
      * isValidAccess
