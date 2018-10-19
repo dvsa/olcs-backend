@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus;
+use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
@@ -65,6 +65,8 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             ->setSamlResponse(base64_decode($command->getSamlResponse()));
         $this->getRepo()->save($digitalSignature);
         $this->result->addMessage('Digital signature created');
+
+        Logger::debug("Command " . var_export($command));
 
         if ($command->getApplication()) {
             $this->updateApplication($command->getApplication(), $digitalSignature);
@@ -176,6 +178,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     ): void {
 
 
+        Logger::debug('updating TMA '. $transportManagerApplicationId);
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
         $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_TM_SIGNED);
