@@ -65,7 +65,7 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler impleme
 
         $this->handleSideEffects($sideEffects);
         $this->result->addId('ecmtPermitApplication', $id);
-        $this->result->addMessage('Permit application ' . $id . 'withdrawn');
+        $this->result->addMessage('Permit application withdrawn');
 
         return $this->result;
     }
