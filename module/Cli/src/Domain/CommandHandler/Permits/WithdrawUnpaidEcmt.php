@@ -25,6 +25,7 @@ final class WithdrawUnpaidEcmt extends AbstractCommandHandler implements Transac
 {
     use ToggleAwareTrait;
 
+    private $query;
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
@@ -44,15 +45,15 @@ final class WithdrawUnpaidEcmt extends AbstractCommandHandler implements Transac
         $repo = $this->getRepo();
 
         $queryData = ['statusIds' => [EcmtPermitApplication::STATUS_AWAITING_FEE]];
-        $ecmtAppQuery = EcmtAppQuery::create($queryData);
-        $ecmtApps = $repo->fetchList($ecmtAppQuery, Query::HYDRATE_OBJECT);
+        $this->query = EcmtAppQuery::create($queryData);
+        $ecmtApps = $repo->fetchList($this->query, Query::HYDRATE_OBJECT);
 
         /** @var EcmtPermitApplication $application */
         foreach ($ecmtApps as $application) {
             if ($application->issueFeeOverdue()) {
                 $cmdData = [
                     'id' => $application->getId(),
-                    'reason' => $application::WITHDRAWN_REASON_UNPAID
+                    'reason' => EcmtPermitApplication::WITHDRAWN_REASON_UNPAID
                 ];
 
                 $withdrawCmd = WithdrawEcmtPermitApplication::create($cmdData);
@@ -64,5 +65,13 @@ final class WithdrawUnpaidEcmt extends AbstractCommandHandler implements Transac
         }
 
         return $this->result;
+    }
+
+    /**
+     * Used for UT only, to test the correct query is being passed
+     */
+    public function getQuery()
+    {
+        return $this->query;
     }
 }
