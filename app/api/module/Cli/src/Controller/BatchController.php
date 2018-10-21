@@ -91,6 +91,16 @@ class BatchController extends AbstractConsoleController
     }
 
     /**
+     * Withdraw ecmt applications where the fee hasn't been paid on time
+     *
+     * @return \Zend\View\Model\ConsoleModel
+     */
+    public function withdrawUnpaidEcmtApplicationsAction()
+    {
+        return $this->handleExitStatus($this->handleCommand([CliCommand\Permits\WithdrawUnpaidEcmt::create([])]));
+    }
+
+    /**
      * Flag tasks as urgent
      *
      * @return \Zend\View\Model\ConsoleModel

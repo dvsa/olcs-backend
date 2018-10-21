@@ -27,7 +27,8 @@ class Module implements ConsoleUsageProviderInterface
         unset($console);
         return [
             // Describe available commands
-            'expire-bus-registrations [--verbose|-v]' => 'Expire bus registrations past their end date',
+            'expire-bus-registration [--verbose|-v]' => 'Expire bus registrations past their end date',
+            'ecmt-withdraw-unpaid [--verbose|-v]' => 'withdraw applications and handle unpaid fees once payment deadline has passed',
             'flag-urgent-tasks [--verbose|-v]' => 'Flag applicable tasks as urgent',
             'licence-status-rules [--verbose|-v]' => 'Process licence status change rules',
             'enqueue-ch-compare [--verbose|-v]' => 'Enqueue Companies House lookups for all Organisations',
