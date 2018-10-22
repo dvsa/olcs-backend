@@ -191,7 +191,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
     private function setTmStatus(Entity\Tm\TransportManagerApplication $transportManagerApplication, $status)
     {
-        $transportManagerApplication->setTmApplicationStatus($status);
+        $transportManagerApplication->setTmApplicationStatus($this->getRepo()->getRefdataReference($status));
     }
     /**
      * setTmSignature
