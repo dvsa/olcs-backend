@@ -129,7 +129,7 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchLastOpenWindowByPermitType()
+    public function testFetchLastOpenWindowByStockId()
     {
         $expectedResult = m::mock(IrhpPermitWindowEntity::class);
 
@@ -185,17 +185,14 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(2, $irhpPermitStockId)
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('setMaxResults')
-            ->with(1)
+            ->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_ARRAY)
             ->once()
-            ->andReturnSelf()
-            ->shouldReceive('getQuery->getOneOrNullResult')
-            ->once()
-            ->andReturn($expectedResult);
+            ->andReturn([$expectedResult]);
 
         $this->assertEquals(
             $expectedResult,
-            $this->sut->fetchLastOpenWindowByStockId($irhpPermitStockId)
+            $this->sut->fetchLastOpenWindowByStockId($irhpPermitStockId, Query::HYDRATE_ARRAY)
         );
     }
 }
