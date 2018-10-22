@@ -3,11 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\DigitalSignature;
+
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\GdsVerify\Data\Attributes;
-use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify\ProcessSignatureResponse;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -159,7 +158,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $command = Cmd::create([
             'samlResponse' => base64_encode('SAML'),
             'transportManagerApplication' => 65,
-            'transportManagerApplicationOperatorSignature' => 'N'
+            'role' => 'tma_sign_as_tm'
         ]);
         $attributes = m::mock(Attributes::class);
         $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
@@ -198,7 +197,45 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $command = Cmd::create([
             'samlResponse' => base64_encode('SAML'),
             'transportManagerApplication' => 65,
-            'transportManagerApplicationOperatorSignature' => 'Y'
+            'role' => 'tma_sign_as_op'
+        ]);
+        $attributes = m::mock(Attributes::class);
+        $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
+        $attributes->shouldReceive('getArrayCopy')->with()->once()->andReturn(['foo' => 'bar']);
+        $this->mockedSmServices[Service\GdsVerify::class]->shouldReceive('getAttributesFromResponse')
+            ->with(base64_encode('SAML'))->once()->andReturn($attributes);
+
+        $this->repoMap['DigitalSignature']->shouldReceive('save')->once()->andReturnUsing(
+            function ($digitalSignature) {
+                /** @var \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature */
+                $this->assertSame(['foo' => 'bar'], $digitalSignature->getAttributesArray());
+                $this->assertSame('SAML', $digitalSignature->getSamlResponse());
+            }
+        );
+
+
+        $mockTransportApplication = m::mock(TransportManagerApplication::class);
+
+        $mockTransportApplication->shouldReceive('setOpDigitalSignature')
+            ->once();
+        $mockTransportApplication->shouldReceive('setOpSignatureType')
+            ->once();
+        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->once();
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
+            ->andReturn($mockTransportApplication);
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testOperatorTMSignatureTransportManager()
+    {
+        $command = Cmd::create([
+            'samlResponse' => base64_encode('SAML'),
+            'transportManagerApplication' => 65,
+            'role' => 'tma_sign_as_top'
         ]);
         $attributes = m::mock(Attributes::class);
         $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
@@ -227,7 +264,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->once();
         $mockTransportApplication->shouldReceive('setOpSignatureType')
             ->once();
-        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->twice();
+        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->once();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockTransportApplication);
@@ -236,6 +273,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand($command);
     }
+
 
     public function testSetGetGdsVerifyService()
     {

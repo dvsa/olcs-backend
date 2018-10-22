@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 
-
 class CanMakeVerifyRequest extends AbstractHandler implements AuthAwareInterface
 {
     use AuthAwareTrait;
