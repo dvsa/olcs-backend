@@ -45,4 +45,5 @@ return [
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\TriggerProcessEcmtApplications::class => IsInternalAdmin::class,
+    CommandHandler\Permits\GeneratePermit::class => IsSideEffect::class,
 ];
