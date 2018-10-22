@@ -8,7 +8,6 @@ use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 
-
 /**
  * Get a list of scored irhp candidate permit records and associated data
  *
