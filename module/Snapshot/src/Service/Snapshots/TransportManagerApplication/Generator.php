@@ -50,9 +50,6 @@ class Generator extends AbstractGenerator
             $tma->getTmApplicationStatus()->getId() === TransportManagerApplication::STATUS_OPERATOR_SIGNED
         ) {
             $sections[] = $this->getDeclarationReviewSection($tma);
-            if (!$tma->getApplication()->isVariation()) {
-                $sections[] = $this->getSignatureReviewSection($tma);
-            }
         }
 
         return $this->generateReadonly(
