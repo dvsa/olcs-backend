@@ -18,6 +18,9 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Exception;
+use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
 
 /**
  * Run scoring
@@ -93,12 +96,25 @@ final class RunScoring extends AbstractCommandHandler implements ToggleRequiredI
         } catch (Exception $e) {
             $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL);
             $this->result->addMessage('Scoring process failed: ' . $e->getMessage());
+            return $this->handleReturn();
         }
 
-        // TODO: result->getMessages() contains the output that we want to write to the execution report
-        // run the commands here to generate the execution and scoring reports
+        try {
+            // Get data for scoring results
+            $dto = GetScoredPermitList::create($stockIdParams);
+            $scoringResults = $this->handleQuery($dto);
 
-        return $this->result;
+            // Upload scoring results file
+            $this->result->merge(
+                $this->handleSideEffects([
+                    UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+                ])
+            );
+        } catch (Exception $e) {
+            $this->result->addMessage('Failed to upload scoring results: ' . $e->getMessage());
+        }
+
+        return $this->handleReturn();
     }
 
     /**
@@ -109,5 +125,26 @@ final class RunScoring extends AbstractCommandHandler implements ToggleRequiredI
     private function updateStockStatus($status)
     {
         $this->getRepo('IrhpPermitStock')->updateStatus($this->stockId, $status);
+    }
+
+    /**
+     * Handles return common pre-requisites,
+     * mainly uploading a copy of the log
+     *
+     * @return Result
+     */
+    private function handleReturn()
+    {
+        // Upload copy of log output to the document store.
+        // We want to do this regardless of whether the process fell-over or not
+        $logOutput = implode("\r\n", $this->result->getMessages());
+
+        $this->result->merge(
+            $this->handleSideEffects([
+                UploadScoringLog::create(['logContent' => $logOutput])
+            ])
+        );
+
+        return $this->result;
     }
 }

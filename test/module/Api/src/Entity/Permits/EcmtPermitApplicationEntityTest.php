@@ -147,7 +147,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
     }
 
-
     /**
     * Tests withdrawing an application
     */

@@ -583,4 +583,80 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
 
         $this->sut->resetScoring($stockId);
     }
+
+    public function testFetchAllScoredForStock()
+    {
+        $irhpPermitStockId = 1;
+
+        $expectedResult = [
+            m::mock(IrhpCandidatePermitEntity::class),
+            m::mock(IrhpCandidatePermitEntity::class),
+            m::mock(IrhpCandidatePermitEntity::class),
+        ];
+
+        $this->queryBuilder->shouldReceive('select')
+            ->with('icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipa.status = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('icp.randomizedScore IS NOT NULL')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('orderBy')
+            ->with('icp.successful', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('addOrderBy')
+            ->with('icp.randomizedScore', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $irhpPermitStockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($expectedResult);
+
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($this->queryBuilder);
+
+        $this->assertEquals($expectedResult, $this->sut->fetchAllScoredForStock($irhpPermitStockId));
+    }
+
+    /**
+     * Mostly here just for code-coverage
+     */
+    public function testClearCachedEntities()
+    {
+        $this->em->shouldReceive('clear')
+            ->with(IrhpCandidatePermitEntity::class)
+            ->once()
+            ->andReturnSelf();
+
+        $this->sut->clearCachedEntities();
+    }
 }

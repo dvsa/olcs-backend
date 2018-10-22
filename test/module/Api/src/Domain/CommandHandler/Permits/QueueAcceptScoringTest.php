@@ -20,7 +20,7 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
         $this->sut = m::mock(QueueAcceptScoring::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
-     
+            
         parent::setUp();
     }
 

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\Permits\UnpaidEcmtPermits;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 /**
  * IRHP Candidate Permit
@@ -292,5 +293,35 @@ class IrhpCandidatePermit extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('irhpPermitApplication', 'ipa')
             ->with('ipa.ecmtPermitApplication', 'epa');
+    }
+
+    /**
+     * Retrieves IrhpCandidatePermits that have been scored,
+     * for a given stock.
+     *
+     * @param int $irhpPermitStockId
+     * @return array of IrhpCandidatePermits and linked data related to scoring
+     */
+    public function fetchAllScoredForStock($irhpPermitStockId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->andWhere('ipa.status = ?2')
+            ->andWhere('icp.randomizedScore IS NOT NULL') //where it has been scored
+            ->orderBy('icp.successful', 'DESC')
+            ->addOrderBy('icp.randomizedScore', 'DESC')
+            ->setParameter(1, $irhpPermitStockId)
+            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function clearCachedEntities()
+    {
+        return $this->getEntityManager()->clear(Entity::class);
     }
 }

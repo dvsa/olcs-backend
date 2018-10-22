@@ -40,7 +40,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->sut = m::mock(AcceptScoring::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
-     
+
         parent::setUp();
     }
 
