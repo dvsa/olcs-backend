@@ -59,7 +59,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
                 'Verify response does not qualify as a valid signature'
             );
         }
-
+        Logger::debug("setting digital signature");
         $digitalSignature = new Entity\DigitalSignature();
         $digitalSignature->setAttributesArray($attributes->getArrayCopy())
             ->setSamlResponse(base64_decode($command->getSamlResponse()));
@@ -210,7 +210,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     ): void {
 
         $transportManagerApplication->setTmDigitalSignature($digitalSignature);
-        $transportManagerApplication->setTmSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
+        $transportManagerApplication->setTmSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
     }
 
     /**
