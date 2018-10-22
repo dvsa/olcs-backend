@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -206,7 +207,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     ): void {
 
         $transportManagerApplication->setTmDigitalSignature($digitalSignature);
-        $transportManagerApplication->setTmSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
+        $transportManagerApplication->setTmSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
     }
 
     /**
@@ -214,10 +215,11 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
      *
      * @param Entity\DigitalSignature $digitalSignature
      * @param                         $transportManagerApplication
+     * @throws RuntimeException
      */
     private function setOperatorSignature(Entity\DigitalSignature $digitalSignature, $transportManagerApplication): void
     {
         $transportManagerApplication->setOpDigitalSignature($digitalSignature);
-        $transportManagerApplication->setOpSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
+        $transportManagerApplication->setOpSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
     }
 }
