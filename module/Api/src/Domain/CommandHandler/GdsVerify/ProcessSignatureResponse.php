@@ -59,16 +59,14 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
                 'Verify response does not qualify as a valid signature'
             );
         }
-        Logger::debug("setting digital signature");
         $digitalSignature = new Entity\DigitalSignature();
         $digitalSignature->setAttributesArray($attributes->getArrayCopy())
             ->setSamlResponse(base64_decode($command->getSamlResponse()));
         $this->getRepo()->save($digitalSignature);
         $this->result->addMessage('Digital signature created');
 
-        Logger::debug("Command " . var_export($command));
 
-        if ($command->getApplication()) {
+        if ($command->getApplication() && empty($command->getTransportManagerApplication())) {
             $this->updateApplication($command->getApplication(), $digitalSignature);
             $this->result->addMessage('Digital signature added to application ' . $command->getApplication());
         }
@@ -177,8 +175,6 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $isOperatorSignature = false
     ): void {
 
-
-        Logger::debug('updating TMA '. $transportManagerApplicationId);
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
         $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_TM_SIGNED);
