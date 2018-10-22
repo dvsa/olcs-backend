@@ -2,13 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-
+use Dvsa\Olcs\Transfer\Command\Permits\CancelEcmtPermitApplication as CancelCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -32,17 +35,29 @@ final class CancelEcmtPermitApplication extends AbstractCommandHandler implement
      */
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var CancelCmd                 $command
+         * @var EcmtPermitApplication     $application
+         * @var EcmtPermitApplicationRepo $repo
+         */
+        $repo = $this->getRepo();
         $id = $command->getId();
-        $application = $this->getRepo()->fetchById($id);
+        $application = $repo->fetchById($id);
         $newStatus = $this->refData(EcmtPermitApplication::STATUS_CANCELLED);
         $application->cancel($newStatus);
 
-        $this->getRepo()->save($application);
+        $repo->save($application);
 
-        $result = new Result();
-        $result->addId('ecmtPermitApplication', $id);
-        $result->addMessage('Permit application cancelled');
+        $outstandingFees = $application->getOutstandingFees();
 
-        return $result;
+        /** @var Fee $fee */
+        foreach ($outstandingFees as $fee) {
+            $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
+        }
+
+        $this->result->addId('ecmtPermitApplication', $id);
+        $this->result->addMessage('Permit application cancelled');
+
+        return $this->result;
     }
 }
