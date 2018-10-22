@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -59,16 +60,14 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
                 'Verify response does not qualify as a valid signature'
             );
         }
-
         $digitalSignature = new Entity\DigitalSignature();
         $digitalSignature->setAttributesArray($attributes->getArrayCopy())
             ->setSamlResponse(base64_decode($command->getSamlResponse()));
         $this->getRepo()->save($digitalSignature);
         $this->result->addMessage('Digital signature created');
 
-        Logger::debug("Command " . var_export($command));
 
-        if ($command->getApplication()) {
+        if ($command->getApplication() && empty($command->getTransportManagerApplication())) {
             $this->updateApplication($command->getApplication(), $digitalSignature);
             $this->result->addMessage('Digital signature added to application ' . $command->getApplication());
         }
@@ -177,8 +176,6 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $isOperatorSignature = false
     ): void {
 
-
-        Logger::debug('updating TMA '. $transportManagerApplicationId);
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
         $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_TM_SIGNED);
@@ -218,10 +215,11 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
      *
      * @param Entity\DigitalSignature $digitalSignature
      * @param                         $transportManagerApplication
+     * @throws RuntimeException
      */
     private function setOperatorSignature(Entity\DigitalSignature $digitalSignature, $transportManagerApplication): void
     {
         $transportManagerApplication->setOpDigitalSignature($digitalSignature);
-        $transportManagerApplication->setOpSignatureType(Entity\System\RefData::SIG_DIGITAL_SIGNATURE);
+        $transportManagerApplication->setOpSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
     }
 }
