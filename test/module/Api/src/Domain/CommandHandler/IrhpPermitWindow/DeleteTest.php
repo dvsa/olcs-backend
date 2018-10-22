@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Delete as DeleteCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 
 /**
- * Create IRHP Permit Type Test
+ * Delete IRHP Permit Window
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
