@@ -3,11 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\DigitalSignature;
+
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\GdsVerify\Data\Attributes;
-use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify\ProcessSignatureResponse;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;

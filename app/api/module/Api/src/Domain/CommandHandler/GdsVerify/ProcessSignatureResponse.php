@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
-use Common\RefData;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
