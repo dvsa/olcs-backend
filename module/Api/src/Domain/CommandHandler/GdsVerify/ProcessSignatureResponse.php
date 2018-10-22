@@ -80,7 +80,6 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         }
 
         if ($command->getTransportManagerApplication()) {
-
             $this->updateTMApplication(
                 $command->getTransportManagerApplication(),
                 $digitalSignature,
