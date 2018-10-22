@@ -149,6 +149,8 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             ->with($stockId)
             ->andReturn($irhpCandidatePermits);
 
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('clearCachedEntities');
+
         // expected mapping of candidate ids to range objects
         $expectedMappings = [
             1 => $irhpPermitRangesByRangeId[1],

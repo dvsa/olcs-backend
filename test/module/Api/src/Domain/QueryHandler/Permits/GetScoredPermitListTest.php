@@ -227,6 +227,5 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals($expected, $result);
-
     }
 }
