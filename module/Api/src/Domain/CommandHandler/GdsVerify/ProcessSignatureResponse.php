@@ -2,10 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
+use Common\RefData;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
@@ -80,12 +80,13 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         }
 
         if ($command->getTransportManagerApplication()) {
-            $isOperatorSignature = $command->getTransportManagerApplicationOperatorSignature() === 'Y' ? true : false;
+
             $this->updateTMApplication(
                 $command->getTransportManagerApplication(),
                 $digitalSignature,
-                $isOperatorSignature
+                $command->getRole()
             );
+
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
@@ -166,24 +167,35 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
      *
      * @param int                     $transportManagerApplicationId
      * @param Entity\DigitalSignature $digitalSignature
-     * @param bool                    $isOperatorSignature
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function updateTMApplication(
         int $transportManagerApplicationId,
         Entity\DigitalSignature $digitalSignature,
-        $isOperatorSignature = false
+        $role
     ): void {
 
         /** @var Entity\Tm\TransportManagerApplication $transportManagerApplication */
         $transportManagerApplication = $this->getRepo('TransportManagerApplication')->fetchById($transportManagerApplicationId);
-        $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_TM_SIGNED);
-        $this->setTmSignature($digitalSignature, $transportManagerApplication);
-        if ($isOperatorSignature) {
-            $this->setOperatorSignature($digitalSignature, $transportManagerApplication);
-            $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_RECEIVED);
+
+        switch ($role) {
+            case RefData::TMA_SIGN_AS_TM:
+                $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_TM_SIGNED);
+                $this->setTmSignature($digitalSignature, $transportManagerApplication);
+                break;
+            case RefData::TMA_SIGN_AS_OP:
+                $this->setOperatorSignature($digitalSignature, $transportManagerApplication);
+                $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_RECEIVED);
+                break;
+
+            case RefData::TMA_SIGN_AS_TM_OP:
+                $this->setTmSignature($digitalSignature, $transportManagerApplication);
+                $this->setTmSignature($digitalSignature, $transportManagerApplication);
+                $this->setTmStatus($transportManagerApplication, $transportManagerApplication::STATUS_RECEIVED);
+                break;
         }
+
 
         $this->getRepo('TransportManagerApplication')->save($transportManagerApplication);
     }
@@ -193,6 +205,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     {
         $transportManagerApplication->setTmApplicationStatus($status);
     }
+
     /**
      * setTmSignature
      *
@@ -215,6 +228,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
      *
      * @param Entity\DigitalSignature $digitalSignature
      * @param                         $transportManagerApplication
+     *
      * @throws RuntimeException
      */
     private function setOperatorSignature(Entity\DigitalSignature $digitalSignature, $transportManagerApplication): void
