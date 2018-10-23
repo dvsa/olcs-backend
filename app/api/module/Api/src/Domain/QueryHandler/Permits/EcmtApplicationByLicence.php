@@ -35,7 +35,8 @@ class EcmtApplicationByLicence extends AbstractQueryHandler implements ToggleReq
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT)
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                ['licence' => ['organisation']]
             ),
             'count' => $repo->fetchCount($query),
             'licence' => $licence->serialize(),

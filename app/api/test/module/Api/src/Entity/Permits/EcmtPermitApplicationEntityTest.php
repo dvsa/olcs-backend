@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
@@ -82,6 +83,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $trips,
             $internationalJourneyRefData
         );
+
+        $ecmtPermitAppEntity = m::mock(EcmtPermitApplication::class)->shouldAllowMockingProtectedMethods();;
+        $ecmtPermitAppEntity->shouldReceive('getSectionCompletion')
+            ->with(Entity::SECTIONS)
+            ->andReturn(['allCompleted' => true]);
+
 
         $this->assertEquals($status, $application->getStatus());
         $this->assertEquals($permitType, $application->getPermitType()->getId());
@@ -326,15 +333,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function dpProvideUpdateCountrys()
     {
-        $countrys = array(
+        $countrys = new ArrayCollection([
             m::mock(Country::class),
             m::mock(Country::class),
             m::mock(Country::class)
-        );
+        ]);
 
         return [
             [$countrys, true],
-            [[], false]
+            [new ArrayCollection([]), false]
         ];
     }
 

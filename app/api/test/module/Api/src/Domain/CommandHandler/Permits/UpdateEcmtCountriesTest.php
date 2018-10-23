@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtCountries;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Mockery as m;
 
 class UpdateEcmtCountriesTest extends CommandHandlerTestCase
@@ -53,23 +55,22 @@ class UpdateEcmtCountriesTest extends CommandHandlerTestCase
 
         $countryIds = [4, 10, 12];
 
-        $countryReferences = [
-            $this->countryReference4,
-            $this->countryReference10,
-            $this->countryReference12
-        ];
-
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getCountryIds')
             ->andReturn($countryIds);
         $command->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
 
+        $country = m::mock(Country::class);
+
+        $this->repoMap['Country']->shouldReceive('getReference')
+            ->andReturn($country);
+
+
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('getId')
             ->andReturn($ecmtPermitApplicationId);
         $ecmtPermitApplication->shouldReceive('updateCountrys')
-            ->with($countryReferences)
             ->once()
             ->ordered()
             ->globally();

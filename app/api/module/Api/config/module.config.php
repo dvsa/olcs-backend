@@ -167,6 +167,7 @@ return [
             'order' => QueryPartial\Order::class,
             'filterByLicence' => QueryPartial\Filter\ByLicence::class,
             'filterByApplication' => QueryPartial\Filter\ByApplication::class,
+            'filterByPermitApplication' => QueryPartial\Filter\ByPermitApplication::class,
             'filterByBusReg' => QueryPartial\Filter\ByBusReg::class,
             'filterByIds' => QueryPartial\Filter\ByIds::class,
         ]

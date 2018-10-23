@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -35,10 +36,10 @@ final class UpdateEcmtCountries extends AbstractCommandHandler implements Toggle
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
-        $countrys = [];
+        $countrys = new ArrayCollection();
 
         foreach ($command->getCountryIds() as $countryId) {
-            $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
+            $countrys->add($this->getRepo('Country')->getReference(Country::class, $countryId));
         }
 
         /** @var EcmtPermitApplication $application */

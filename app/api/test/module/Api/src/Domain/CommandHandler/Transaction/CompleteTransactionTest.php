@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Transaction as PaymentRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
@@ -68,6 +69,15 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             'submitApplicationId' => $applicationId,
         ];
 
+        $fee1 = m::mock(Fee::class);
+        $fee2 = m::mock(Fee::class);
+
+        $fee1->shouldReceive('getEcmtPermitApplication')
+            ->andReturn([]);
+        $fee2->shouldReceive('getEcmtPermitApplication')
+            ->andReturn([]);
+
+
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
         $payment->setReference($guid);
@@ -80,7 +90,8 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             )
             ->shouldReceive('getFees')
             ->once()
-            ->andReturn(['fee1', 'fee2']);
+            ->andReturn([$fee1, $fee2]);
+
 
         $command = Cmd::create($data);
 
@@ -94,7 +105,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('handleResponse')
             ->once()
-            ->with($guid, $cpmsData, 'fee1');
+            ->with($guid, $cpmsData, $fee1);
 
         $resolveResult = new Result();
         $resolveResult
@@ -152,8 +163,27 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             'reference' => $guid,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
             'cpmsData' => $cpmsData,
-            'submitEcmtPermitApplicationId' => $ecmtPermitApplicationId,
         ];
+
+        $fee1 = m::mock(Fee::class);
+        $fee2 = m::mock(Fee::class);
+
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+
+        $fee1->shouldReceive('getEcmtPermitApplication')
+            ->andReturn($ecmtPermitApplication);
+        $fee2->shouldReceive('getEcmtPermitApplication')
+            ->andReturn([]);
+
+        $ecmtPermitApplication->shouldReceive('canBeSubmitted')
+            ->andReturn(true);
+
+        $ecmtPermitApplication->shouldReceive('canBeAccepted')
+            ->andReturn(false);
+
+        $ecmtPermitApplication->shouldReceive('getId')
+            ->andReturn($ecmtPermitApplicationId);
+
 
         $payment = m::mock(PaymentEntity::class)->makePartial();
         $payment->setId($paymentId);
@@ -166,7 +196,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             )
             ->shouldReceive('getFees')
             ->once()
-            ->andReturn(['fee1', 'fee2']);
+            ->andReturn([$fee1, $fee2]);
 
         $command = Cmd::create($data);
 
@@ -180,7 +210,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $this->mockCpmsService
             ->shouldReceive('handleResponse')
             ->once()
-            ->with($guid, $cpmsData, 'fee1');
+            ->with($guid, $cpmsData, $fee1);
 
         $resolveResult = new Result();
         $resolveResult
@@ -194,21 +224,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ],
             $resolveResult
         );
-
-        $ecmtPermitApplication = m::mock(EcmtPermitApplicationEntity::class);
-
-        $this->repoMap['EcmtPermitApplication']
-            ->shouldReceive('fetchById')
-            ->once()
-            ->with($ecmtPermitApplicationId)
-            ->andReturn($ecmtPermitApplication);
-
-
-        $ecmtPermitApplication
-            ->shouldReceive('isNotYetSubmitted')
-            ->once()
-            ->andReturn(true);
-
 
         $submitResult = new Result();
         $submitResult
@@ -231,8 +246,8 @@ class CompleteTransactionTest extends CommandHandlerTestCase
                 'application' => $ecmtPermitApplicationId,
             ],
             'messages' => [
-                'payment updated',
                 'application submitted',
+                'payment updated',
                 'CPMS record updated',
             ]
         ];

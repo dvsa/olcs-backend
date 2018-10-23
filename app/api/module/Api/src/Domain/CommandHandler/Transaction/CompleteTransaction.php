@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,7 +15,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
@@ -38,7 +38,6 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
 
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
 
         // ensure payment ref exists
         $reference = $command->getReference();
@@ -47,32 +46,36 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         $transaction = $this->getRepo()->fetchbyReference($reference);
         if (!$transaction->isOutstanding()) {
             throw new ValidationException(
-                ['Invalid transaction status: '.$transaction->getStatus()->getId()]
+                ['Invalid transaction status: ' . $transaction->getStatus()->getId()]
             );
         }
         $fees = $transaction->getFees();
+
+        foreach ($fees as $fee) {
+            if (!empty($fee->getEcmtPermitApplication())) {
+                $this->updateEcmtPermitApplication($fee);
+            }
+        }
 
         // update CPMS
         $this->getCpmsService()->handleResponse($reference, $command->getCpmsData(), reset($fees));
 
         // resolve payment
-        $result->merge($this->resolvePayment($command, $transaction));
+        $this->result->merge($this->resolvePayment($command, $transaction));
 
         // handle application submission
         if ($transaction->isPaid() && $command->getSubmitApplicationId()) {
-            $result->merge($this->updateApplication($command));
-        } elseif ($transaction->isPaid() && $command->getSubmitEcmtPermitApplicationId()) {
-            $result->merge($this->updateEcmtPermitApplication($command));
+            $this->result->merge($this->updateApplication($command));
         }
 
-        $result->addId('transaction', $transaction->getId());
-        $result->addMessage('CPMS record updated');
-        return $result;
+        $this->result->addId('transaction', $transaction->getId());
+        $this->result->addMessage('CPMS record updated');
+        return $this->result;
     }
 
     protected function resolvePayment($command, $transaction)
     {
-        return  $this->handleSideEffect(
+        return $this->handleSideEffect(
             ResolvePaymentCommand::create(
                 [
                     'id' => $transaction->getId(),
@@ -104,20 +107,18 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
      * @param $command
      * @return Result
      */
-    protected function updateEcmtPermitApplication($command)
+    protected function updateEcmtPermitApplication($fee)
     {
-        $ecmtPermitApplication = $this->getRepo('EcmtPermitApplication')->fetchById($command->getSubmitEcmtPermitApplicationId());
-
-        if ($ecmtPermitApplication->isNotYetSubmitted()) {
-            return $this->handleSideEffect(
-                SubmitEcmtPermitApplicationCmd::create(['id' => $command->getSubmitEcmtPermitApplicationId()])
-            );
+        if ($fee->getEcmtPermitApplication()->canBeSubmitted()) {
+            $this->result->merge($this->handleSideEffect(
+                SubmitEcmtPermitApplicationCmd::create(['id' => $fee->getEcmtPermitApplication()->getId()])
+            ));
         }
-        if ($ecmtPermitApplication->isAwaitingFee()) {
-            return $this->handleSideEffects([
-                CompleteIssuePayment::create(['id' => $command->getSubmitEcmtPermitApplicationId()]),
-                AcceptEcmtPermits::create(['id' => $command->getSubmitEcmtPermitApplicationId()])
-            ]);
+        if ($fee->getEcmtPermitApplication()->canBeAccepted()) {
+            $this->result->merge($this->handleSideEffects([
+                CompleteIssuePayment::create(['id' => $fee->getEcmtPermitApplication()->getId()]),
+                AcceptEcmtPermits::create(['id' => $fee->getEcmtPermitApplication()->getId()])
+            ]));
         }
     }
 }
