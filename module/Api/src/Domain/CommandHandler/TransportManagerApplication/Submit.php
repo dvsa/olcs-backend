@@ -149,6 +149,6 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
 
     private function shouldCreateSnapshot($status): bool
     {
-        return $status === TransportManagerApplication::STATUS_OPERATOR_SIGNED;
+        return $status === TransportManagerApplication::STATUS_OPERATOR_SIGNED || TransportManagerApplication::STATUS_RECEIVED;
     }
 }
