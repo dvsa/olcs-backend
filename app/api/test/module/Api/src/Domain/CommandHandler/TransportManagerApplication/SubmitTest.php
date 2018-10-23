@@ -101,7 +101,7 @@ class SubmitTest extends CommandHandlerTestCase
         $tma->shouldReceive('getTransportManager->getId')
             ->with()
             ->once()
-            ->andReturn(111);;
+            ->andReturn(111);
 
         $this->repoMap['TransportManagerApplication']
             ->shouldReceive('fetchUsingId')
@@ -119,7 +119,7 @@ class SubmitTest extends CommandHandlerTestCase
                         $tma->getTmApplicationStatus()
                     );
                 }
-        );
+            );
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot::class,
