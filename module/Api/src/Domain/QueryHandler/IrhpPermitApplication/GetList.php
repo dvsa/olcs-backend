@@ -13,9 +13,4 @@ class GetList extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $bundle = ['licence' => ['organisation']];
-
-    public function handleQuery(QueryInterface $query)
-    {
-        return parent::handleQuery($query);
-    }
 }

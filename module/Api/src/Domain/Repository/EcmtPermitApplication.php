@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use \Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
@@ -52,11 +53,11 @@ class EcmtPermitApplication extends AbstractRepository
             $qb->setParameter('status', $query->getStatus());
         }
 
-        if (method_exists($query, 'getStatusIds')) {
+        if (method_exists($query, 'getStatusIds') && !empty($query->getStatusIds())) {
             $qb->andWhere($qb->expr()->in($this->alias . '.status', $query->getStatusIds()));
         }
 
-        if (method_exists($query, 'getOrganisation')) {
+        if (method_exists($query, 'getOrganisation') && $query->getOrganisation() !== null) {
             $licences = $this->fetchLicenceByOrganisation($query->getOrganisation());
             $qb->andWhere($qb->expr()->in($this->alias . '.licence', $licences));
         }
