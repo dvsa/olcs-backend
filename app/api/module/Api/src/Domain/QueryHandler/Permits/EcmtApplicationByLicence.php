@@ -19,7 +19,7 @@ class EcmtApplicationByLicence extends AbstractQueryHandler implements ToggleReq
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $extraRepos = ['Licence', 'Organisation'];
+    protected $extraRepos = ['Licence'];
 
     /**
      * Handle query

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
@@ -83,6 +84,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $internationalJourneyRefData
         );
 
+        $ecmtPermitAppEntity = m::mock(EcmtPermitApplication::class)->shouldAllowMockingProtectedMethods();;
+        $ecmtPermitAppEntity->shouldReceive('getSectionCompletion')
+            ->with(Entity::SECTIONS)
+            ->andReturn(['allCompleted' => true]);
 
 
         $this->assertEquals($status, $application->getStatus());

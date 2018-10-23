@@ -463,7 +463,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
      */
-    private function getSectionCompletion($sections)
+    protected function getSectionCompletion($sections)
     {
         $sectionCompletion = [];
         $totalCompleted = 0;
