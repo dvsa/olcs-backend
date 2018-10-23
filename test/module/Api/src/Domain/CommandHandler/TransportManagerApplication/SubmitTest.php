@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
+use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -52,6 +52,7 @@ class SubmitTest extends CommandHandlerTestCase
             TransportManagerApplication::STATUS_TM_SIGNED,
             TransportManagerApplication::STATUS_OPERATOR_SIGNED,
             TransportManagerApplication::TYPE_EXTERNAL,
+            TransportManagerApplication::STATUS_RECEIVED,
         ];
 
         parent::initReferences();
@@ -79,6 +80,53 @@ class SubmitTest extends CommandHandlerTestCase
                 );
             }
         );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandWithNextStatus()
+    {
+        $command = Command::create(['id' => 863, 'nextStatus' => TransportManagerApplication::STATUS_RECEIVED]);
+
+        /** @var TransportManagerApplication $tma */
+        $tma = m::mock(TransportManagerApplication::class)->makePartial();
+
+        $tma->setIsOwner('N');
+        $tma->setId(863);
+
+        $tma->shouldReceive('getTransportManager->getTmType')
+            ->with()
+            ->once()
+            ->andReturn($this->refData[TransportManagerApplication::TYPE_EXTERNAL]);
+        $tma->shouldReceive('getTransportManager->getId')
+            ->with()
+            ->once()
+            ->andReturn(111);;
+
+        $this->repoMap['TransportManagerApplication']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($tma);
+
+        $this->repoMap['TransportManagerApplication']
+            ->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(
+                function (TransportManagerApplication $tma) {
+                    $this->assertSame(
+                        $this->refData[TransportManagerApplication::STATUS_RECEIVED],
+                        $tma->getTmApplicationStatus()
+                    );
+                }
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot::class,
+            ['id' => 863],
+            new Result()
+        );
+
 
         $this->sut->handleCommand($command);
     }
