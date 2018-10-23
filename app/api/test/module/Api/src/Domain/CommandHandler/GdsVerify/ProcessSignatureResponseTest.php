@@ -182,12 +182,16 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $mockTransportApplication->shouldReceive('setTmSignatureType')
             ->with($this->refData[RefData::SIG_DIGITAL_SIGNATURE])
             ->once();
-        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->once();
-
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockTransportApplication);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit::class,
+            ['id' => 65, 'nextStatus' => TransportManagerApplication::STATUS_TM_SIGNED],
+            new Result()
+        );
 
         $this->sut->handleCommand($command);
     }
@@ -220,12 +224,16 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->once();
         $mockTransportApplication->shouldReceive('setOpSignatureType')
             ->once();
-        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->once();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockTransportApplication);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit::class,
+            ['id' => 65, 'nextStatus' => TransportManagerApplication::STATUS_RECEIVED],
+            new Result()
+        );
 
         $this->sut->handleCommand($command);
     }
@@ -264,12 +272,16 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->once();
         $mockTransportApplication->shouldReceive('setOpSignatureType')
             ->once();
-        $mockTransportApplication->shouldReceive('setTmApplicationStatus')->once();
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchById')->with(65)->once()
             ->andReturn($mockTransportApplication);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit::class,
+            ['id' => 65, 'nextStatus' => TransportManagerApplication::STATUS_RECEIVED],
+            new Result()
+        );
 
         $this->sut->handleCommand($command);
     }
