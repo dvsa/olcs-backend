@@ -39,6 +39,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
         $result = new Result();
 
         $csvContent = $command->getCsvContent();
+        $fileDescription = $command->getFileDescription();
 
         //  create csv file in memory
         $fh = fopen('php://temp', 'w');
@@ -52,7 +53,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
         } else {
             //  no results, still need to put something inside .csv file so it is generated
             fputcsv($fh, ['No Results']);
-            $result->addMessage('No scoring results passed. Creating empty report file.');
+            $result->addMessage('No scoring results passed. Creating empty report file');
         }
 
         rewind($fh);
@@ -65,7 +66,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
             'filename' => 'Permit-Scoring-Report.csv',
-            'description' => 'Scoring Result File ' . date('d/m/Y H:m'),
+            'description' => $fileDescription . ' ' . date('d/m/Y H:m'),
             'user' => PidIdentityProvider::SYSTEM_USER,
         ];
 
@@ -75,7 +76,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             UploadCmd::create($data)
         );
 
-        $result->addMessage('Scoring results file successfully uploaded.');
+        $result->addMessage('Scoring results file successfully uploaded');
 
         return $result;
     }

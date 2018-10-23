@@ -107,7 +107,10 @@ final class RunScoring extends AbstractCommandHandler implements ToggleRequiredI
             // Upload scoring results file
             $this->result->merge(
                 $this->handleSideEffects([
-                    UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+                    UploadScoringResult::create([
+                        'csvContent' => $scoringResults['result'],
+                        'fileDescription' => 'Scoring Results'
+                    ]),
                 ])
             );
         } catch (Exception $e) {

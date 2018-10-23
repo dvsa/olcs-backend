@@ -10,12 +10,14 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptScoring;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
+use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
@@ -115,7 +117,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             $successfulApplicationPermitsAwarded
         );
 
-        $this->sut->shouldReceive('handleQuery')
+        $this->sut->shouldReceive('handleQuery')->once()
             ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertInstanceOf(CheckAcceptScoringPrerequisites::class, $query);
                 $this->assertEquals($stockId, $query->getId());
@@ -123,6 +125,16 @@ class AcceptScoringTest extends CommandHandlerTestCase
                 return [
                     'result' => true,
                     'message' => 'Accept scoring permitted'
+                ];
+            });
+
+        $this->sut->shouldReceive('handleQuery')->once()
+            ->andReturnUsing(function ($query) use ($stockId) {
+                $this->assertInstanceOf(GetScoredPermitList::class, $query);
+                $this->assertEquals($stockId, $query->getStockId());
+
+                return [
+                    'result' => [],
                 ];
             });
 
@@ -218,6 +230,15 @@ class AcceptScoringTest extends CommandHandlerTestCase
             $taskResult
         );
 
+        $this->expectedSideEffect(
+            UploadScoringResult::class,
+            [
+                'csvContent' => [],
+                'fileDescription' => 'Accepted Scoring Results'
+            ],
+            $taskResult
+        );
+
         $this->expectedEmailQueueSideEffect(
             SendEcmtSuccessful::class,
             ['id' => $successfulApplicationId],
@@ -242,6 +263,9 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUnderConsiderationApplicationIds')
             ->with($stockId)
             ->andReturn([$successfulApplicationId, $partSuccessfulApplicationId, $unsuccessfulApplicationId]);
+
+
+
 
         $result = $this->sut->handleCommand($command);
 

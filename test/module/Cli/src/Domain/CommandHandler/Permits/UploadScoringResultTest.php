@@ -36,6 +36,7 @@ class UploadScoringResultTest extends CommandHandlerTestCase
                 'test',
             ]
         ];
+        $fileDesc = 'TEST';
         $csvContent = 'MAp0ZXN0Cg=='; //this is the output of base64_encode($csvData)
         $result1 = new Result();
         $result1->addMessage('Document created');
@@ -47,14 +48,14 @@ class UploadScoringResultTest extends CommandHandlerTestCase
               'category' => Category::CATEGORY_PERMITS,
               'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
               'filename' => 'Permit-Scoring-Report.csv',
-              'description' => 'Scoring Result File ' . date('d/m/Y H:m'),
+              'description' => $fileDesc . ' ' . date('d/m/Y H:m'),
               'user' => PidIdentityProvider::SYSTEM_USER,
             ],
             $result1
         );
 
         $this->sut->handleCommand(
-            UploadScoringResultCommand::create(['csvContent' => $csvData])
+            UploadScoringResultCommand::create(['csvContent' => $csvData, 'fileDescription' => $fileDesc])
         );
     }
 }

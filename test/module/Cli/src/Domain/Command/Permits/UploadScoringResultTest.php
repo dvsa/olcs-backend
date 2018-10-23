@@ -14,10 +14,12 @@ class UploadScoringResultTest extends \PHPUnit_Framework_TestCase
     {
         $sut = UploadScoringResult::create(
             [
-                'csvContent' => 'TEST'
+                'csvContent' => 'TEST',
+                'fileDescription' => 'TEST DESCRIPTION'
             ]
         );
 
         static::assertEquals('TEST', $sut->getCsvContent());
+        static::assertEquals('TEST DESCRIPTION', $sut->getFileDescription());
     }
 }

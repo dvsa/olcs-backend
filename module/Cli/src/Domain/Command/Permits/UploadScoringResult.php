@@ -19,6 +19,11 @@ final class UploadScoringResult extends AbstractCommand
     protected $csvContent;
 
     /**
+     * @var string
+     */
+    protected $fileDescription;
+
+    /**
      * Gets the value of csvContent
      *
      * @return array
@@ -26,5 +31,15 @@ final class UploadScoringResult extends AbstractCommand
     public function getCsvContent()
     {
         return $this->csvContent;
+    }
+
+    /**
+     * Gets the value of fileDescription
+     *
+     * @return string
+     */
+    public function getFileDescription()
+    {
+        return $this->fileDescription;
     }
 }
