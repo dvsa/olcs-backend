@@ -158,6 +158,18 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $irhpPermitRanges;
 
     /**
+     * Irhp permit sector quota
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitSectorQuotas;
+
+    /**
      * Irhp permit window
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -187,6 +199,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     public function initCollections()
     {
         $this->irhpPermitRanges = new ArrayCollection();
+        $this->irhpPermitSectorQuotas = new ArrayCollection();
         $this->irhpPermitWindows = new ArrayCollection();
     }
 
@@ -536,6 +549,69 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     {
         if ($this->irhpPermitRanges->contains($irhpPermitRanges)) {
             $this->irhpPermitRanges->removeElement($irhpPermitRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit sector quota
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitSectorQuotas($irhpPermitSectorQuotas)
+    {
+        $this->irhpPermitSectorQuotas = $irhpPermitSectorQuotas;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit sector quotas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitSectorQuotas()
+    {
+        return $this->irhpPermitSectorQuotas;
+    }
+
+    /**
+     * Add a irhp permit sector quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitSectorQuotas($irhpPermitSectorQuotas)
+    {
+        if ($irhpPermitSectorQuotas instanceof ArrayCollection) {
+            $this->irhpPermitSectorQuotas = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitSectorQuotas->toArray(),
+                    $irhpPermitSectorQuotas->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitSectorQuotas->contains($irhpPermitSectorQuotas)) {
+            $this->irhpPermitSectorQuotas->add($irhpPermitSectorQuotas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit sector quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitSectorQuotas($irhpPermitSectorQuotas)
+    {
+        if ($this->irhpPermitSectorQuotas->contains($irhpPermitSectorQuotas)) {
+            $this->irhpPermitSectorQuotas->removeElement($irhpPermitSectorQuotas);
         }
 
         return $this;

@@ -68,7 +68,11 @@ abstract class AbstractIrhpPermitSectorQuota implements BundleSerializableInterf
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermitSectorQuotas"
+     * )
      * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitStock;
