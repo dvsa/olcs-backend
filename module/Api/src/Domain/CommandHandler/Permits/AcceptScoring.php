@@ -18,6 +18,9 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
 
 /**
  * Accept scoring
@@ -84,7 +87,20 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
         $this->getRepo('IrhpPermitStock')->updateStatus($stockId, IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL);
 
-        // TODO: write reports here?
+        try {
+            // Get data for scoring results
+            $dto = GetScoredPermitList::create(['stockId' => $stockId]);
+            $scoringResults = $this->handleQuery($dto);
+
+            // Upload scoring results file
+            $this->result->merge(
+                $this->handleSideEffects([
+                    UploadScoringResult::create(['csvContent' => $scoringResults['result']]),
+                ])
+            );
+        } catch (Exception $e) {
+            $this->result->addMessage('Failed to upload scoring results: ' . $e->getMessage());
+        }
 
         $this->result->addMessage('Acceptance of scoring completed successfully');
         return $this->result;
