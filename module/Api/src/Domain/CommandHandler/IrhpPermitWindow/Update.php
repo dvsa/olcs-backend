@@ -9,6 +9,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Update as UpdateWindowCmd;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Update an IRHP Permit Window
@@ -18,6 +20,9 @@ use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Update as UpdateWindowCmd;
 final class Update extends AbstractCommandHandler
 {
     use IrhpPermitWindowOverlapTrait;
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
 
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpPermitStock'];

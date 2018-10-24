@@ -1009,6 +1009,10 @@ return [
     TransferCommand\IrhpPermitSector\Update::class =>
         CommandHandler\IrhpPermitSector\Update::class,
 
+    // Transfer - IRHP Permit Jurisdiction
+    TransferCommand\IrhpPermitJurisdiction\Update::class =>
+        CommandHandler\IrhpPermitJurisdiction\Update::class,
+
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
     TransferCommand\System\UpdateSlaTargetDate::class => CommandHandler\System\UpdateSlaTargetDate::class,

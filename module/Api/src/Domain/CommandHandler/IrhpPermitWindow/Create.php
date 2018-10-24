@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Create as CreateWindowCmd;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit Window
@@ -19,6 +21,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 final class Create extends AbstractCommandHandler
 {
     use IrhpPermitWindowOverlapTrait;
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
 
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpPermitStock'];
