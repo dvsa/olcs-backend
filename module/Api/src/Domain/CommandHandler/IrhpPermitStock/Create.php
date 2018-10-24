@@ -37,7 +37,8 @@ final class Create extends AbstractCommandHandler
             $permitType,
             $command->getValidFrom(),
             $command->getValidTo(),
-            $command->getInitialStock()
+            $command->getInitialStock(),
+            $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN)
         );
 
         try {

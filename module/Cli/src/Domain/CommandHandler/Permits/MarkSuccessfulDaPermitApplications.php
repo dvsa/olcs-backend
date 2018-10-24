@@ -5,6 +5,9 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsCommand;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
@@ -14,8 +17,12 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implements TransactionedInterface
+class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+
     protected $repoServiceName = 'IrhpCandidatePermit';
 
     protected $extraRepos = ['IrhpPermitJurisdictionQuota'];
@@ -53,7 +60,7 @@ class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implemen
             $result->addMessage('      - #DARemainingQuota: ' . $daRemainingQuota);
 
             if ($daRemainingQuota > 0) {
-                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedUnderConsiderationIds(
+                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIds(
                     $stockId,
                     $daQuota['jurisdictionId']
                 );

@@ -283,6 +283,38 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Proceeds the application from under consideration to awaiting fee during the accept scoring process
+     *
+     * @param RefData $awaitingFeeStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToAwaitingFee(RefData $awaitingFeeStatus)
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee ('.$this->status->getId().')');
+        }
+
+        $this->status = $awaitingFeeStatus;
+    }
+
+    /**
+     * Proceeds the application from under consideration to unsuccessful during the accept scoring process
+     *
+     * @param RefData $unsuccessfulStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToUnsuccessful(RefData $unsuccessfulStatus)
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful ('.$this->status->getId().')');
+        }
+
+        $this->status = $unsuccessfulStatus;
+    }
+
+    /**
      * Gets calculated values
      *
      * @return array

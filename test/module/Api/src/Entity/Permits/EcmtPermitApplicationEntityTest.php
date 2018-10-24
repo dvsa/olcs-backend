@@ -154,7 +154,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
     }
 
-
     /**
     * Tests withdrawing an application
     */
@@ -661,6 +660,63 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_ISSUING, false],
             [Entity::STATUS_VALID, false],
             [Entity::STATUS_DECLINED, false],
+        ];
+    }
+
+    public function testProceedToAwaitingFee()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity->proceedToAwaitingFee($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsApplicationUnderConsiderationFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToAwaitingFeeException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToAwaitingFee(m::mock(RefData::class));
+    }
+
+    public function testProceedToUnsuccessful()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity->proceedToUnsuccessful($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsApplicationUnderConsiderationFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToUnsuccessfulException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToUnsuccessful(m::mock(RefData::class));
+    }
+
+    /**
+     * Array of app statuses that don't match an application under consideration
+     *
+     * @return array
+     */
+    public function dpIsApplicationUnderConsiderationFail()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_FEE_PAID],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_ISSUING],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
         ];
     }
 }

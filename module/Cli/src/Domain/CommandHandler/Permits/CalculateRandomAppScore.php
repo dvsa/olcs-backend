@@ -19,6 +19,7 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+
     protected $repoServiceName = 'IrhpCandidatePermit';
 
     /**
@@ -30,29 +31,32 @@ final class CalculateRandomAppScore extends AbstractCommandHandler implements To
     */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-        $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($command->getStockId());
+        $stockId = $command->getStockId();
+
+        if ($this->getRepo()->getCountWithRandomisedScore($stockId) > 0) {
+            $this->result->addMessage('Stock has one or more randomised scores already assigned.');
+            $this->result->addMessage('    - No randomised scores will be set.');
+
+            return $this->result;
+        }
+
+        $irhpCandidatePermits = $this->getRepo()->getIrhpCandidatePermitsForScoring($stockId);
         $totalPermitCount = count($irhpCandidatePermits);
-        $servicedPermitCount = 0;
 
         if ($totalPermitCount > 0) {
             $deviationData = IrhpCandidatePermit::getDeviationData($irhpCandidatePermits);
             foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
                 $randomFactor = $irhpCandidatePermit->calculateRandomFactor($deviationData);
 
-                if ($irhpCandidatePermit->getRandomizedScore() === null) {
-                    $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
-                    $irhpCandidatePermit->setRandomFactor($randomFactor);
-                    $this->getRepo()->save($irhpCandidatePermit);
-                    $servicedPermitCount++;
-                }
+                $irhpCandidatePermit->setRandomizedScore(abs($randomFactor * $irhpCandidatePermit->getApplicationScore()));
+                $irhpCandidatePermit->setRandomFactor($randomFactor);
+                $this->getRepo()->save($irhpCandidatePermit);
             }
         }
 
-        $result->addMessage('Updated the Randomised Score of Appropriate Candidate Permits.');
-        $result->addMessage('   - Candidate Permit Count: ' . $totalPermitCount);
-        $result->addMessage('   - Number of Permits Updated: ' . $servicedPermitCount);
+        $this->result->addMessage('Updated the Randomised Score of Appropriate Candidate Permits.');
+        $this->result->addMessage('   - Number of Permits Updated: ' . $totalPermitCount);
 
-        return $result;
+        return $this->result;
     }
 }

@@ -1094,16 +1094,22 @@ return [
     TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
 
     // Permits - internal backend
-
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
     Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
     Command\Permits\GeneratePermit::class => CommandHandler\Permits\GeneratePermit::class,
+    Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
+    Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
 
     // Permits - Private beta
     TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class,
 
+    // Permits - run/accept
+    TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
+    TransferCommand\Permits\QueueAcceptScoring::class => CommandHandler\Permits\QueueAcceptScoring::class,
+
     // Cli - Permits
+    CommandCli\Permits\ResetScoring::class => CommandHandlerCli\Permits\ResetScoring::class,
     CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulDaPermitApplications::class,
     CommandCli\Permits\MarkSuccessfulRemainingPermitApplications::class =>
@@ -1112,5 +1118,10 @@ return [
         CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
     CommandCli\Permits\CalculateRandomAppScore::class =>
         CommandHandlerCli\Permits\CalculateRandomAppScore::class,
-
+    CommandCli\Permits\ApplyRangesToSuccessfulPermitApplications::class =>
+        CommandHandlerCli\Permits\ApplyRangesToSuccessfulPermitApplications::class,
+    CommandCli\Permits\UploadScoringResult::class =>
+        CommandHandlerCli\Permits\UploadScoringResult::class,
+    CommandCli\Permits\UploadScoringLog::class =>
+        CommandHandlerCli\Permits\UploadScoringLog::class,
 ];
