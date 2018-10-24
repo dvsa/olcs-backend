@@ -66,7 +66,7 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
             'filename' => 'Permit-Scoring-Report.csv',
-            'description' => $fileDescription . ' ' . date('d/m/Y H:m'),
+            'description' => $fileDescription . ' ' . date('Y-m-d H:m'),
             'user' => PidIdentityProvider::SYSTEM_USER,
         ];
 
