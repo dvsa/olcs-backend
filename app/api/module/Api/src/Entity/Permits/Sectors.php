@@ -17,5 +17,5 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sectors extends AbstractSectors
 {
-
+    const SECTOR_OPTION_NAME__NONE = 'None/More than one of these sectors';
 }
