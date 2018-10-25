@@ -30,7 +30,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
     {
         $partial = $this->getPartial($tma);
 
-        $replaceData = $this->getReplaceData($tma);
+        $replaceData = $this->getReplaceData($tma, $partial);
 
         $markup = $this->translateReplace(
             $partial,
@@ -62,44 +62,69 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
      *
      * @return array
      */
-    private function getReplaceData(TransportManagerApplication $tma): array
+    private function getReplaceData(TransportManagerApplication $tma, string $partial): array
     {
-        $replaceData = [
-            $this->getOwnerLabel($tma),
-            $this->translate(self::ADDRESS)
-        ];
+        $ownerLabel = $this->getOwnerLabel($tma);
+        $returnAddress = $this->translate(self::ADDRESS);
+        $tmSignature = $tma->getTmDigitalSignature();
+        $opSignature = $tma->getOpDigitalSignature();
 
-        if (!empty($tma->getTmDigitalSignature())
-            && empty($tma->getOpDigitalSignature())) {
-            $tmSignature = $tma->getTmDigitalSignature();
+        if ($tmSignature !== null) {
             $tmFullName = $tmSignature->getSignatureName();
             $tmDateOfBirth = $tmSignature->getDateOfBirth();
-            $signatureDate = $tmSignature->getCreatedOn();
-            array_unshift(
-                $replaceData,
-                $tmFullName,
-                $tmDateOfBirth,
-                $signatureDate
-            );
-        } elseif (!empty($tma->getOpDigitalSignature())) {
-            $tmSignature = $tma->getTmDigitalSignature();
-            $tmFullName = $tmSignature->getSignatureName();
-            $tmDateOfBirth = $tmSignature->getDateOfBirth();
-            $signatureDate = $tmSignature->getCreatedOn();
-            $opSignature = $tma->getOpDigitalSignature();
+            $tmSignatureDate = $tmSignature->getCreatedOn(true) instanceof \DateTime ?
+                $tmSignature->getCreatedOn(true)->format('d-m-Y H:i:s') :
+                null;
+        }
+
+        if ($opSignature !== null) {
             $opFullName = $opSignature->getSignatureName();
             $opDateOfBirth = $opSignature->getDateOfBirth();
-            $OpSignature = $opSignature->getCreatedOn();
-            array_unshift(
-                $replaceData,
-                $tmFullName,
-                $tmDateOfBirth,
-                $signatureDate,
-                $opFullName,
-                $opDateOfBirth,
-                $OpSignature
-            );
+            $opSignatureDate = $opSignature->getCreatedOn(true) instanceof \DateTime ?
+                $opSignature->getCreatedOn(true)->format('d-m-Y H:i:s') :
+                null;
         }
+
+        switch ($partial) {
+            case self::SIGNATURE:
+                // no digital signature
+                $replaceData = [
+                    $ownerLabel,
+                    $returnAddress,
+                ];
+                break;
+            case self::SIGNATURE_DIGITAL:
+                // only the TM signed digitally
+                $replaceData = [
+                    $tmFullName,
+                    $tmDateOfBirth,
+                    $tmSignatureDate,
+                    $ownerLabel,
+                    $returnAddress,
+                ];
+                break;
+            case self::SIGNATURE_DIGITAL_BOTH:
+                // Both TM and Operator signed digitally
+                $replaceData = [
+                    $tmFullName,
+                    $tmDateOfBirth,
+                    $tmSignatureDate,
+                    $ownerLabel,
+                    $opFullName,
+                    $opDateOfBirth,
+                    $opSignatureDate,
+                ];
+                break;
+            case self::SIGNATURE_DIGITAL_OPERATOR_TM:
+                // The Operator is also the TM an signed digitally
+                $replaceData = [
+                    $opFullName,
+                    $opDateOfBirth,
+                    $opSignatureDate,
+                ];
+                break;
+        }
+
         return $replaceData;
     }
 
