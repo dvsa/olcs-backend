@@ -7,14 +7,13 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\GeneratePermit as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Api\Domain\Command\Permits\GeneratePermit as Cmd;
-use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -40,8 +39,28 @@ class GeneratePermitTest extends CommandHandlerTestCase
         $licenceId = 20;
         $irhpPermitStockId = 3;
         $orgId = 101;
-        $template = 'PERMIT_ECMT';
-        $description = 'IRHP PERMIT ECMT 1';
+        $expected = [
+            [
+                'template' => EcmtPermitApplicationEntity::PERMIT_TEMPLATE_NAME,
+                'query' => [
+                    'licence' => $licenceId,
+                    'irhpPermit' => $id,
+                    'irhpPermitStock' => $irhpPermitStockId,
+                    'organisation' => $orgId
+                ],
+                'description' => 'IRHP PERMIT ECMT 1',
+                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT
+            ],
+            [
+                'template' => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
+                'query' => [
+                    'licence' => $licenceId,
+                    'irhpPermit' => $id,
+                ],
+                'description' => 'IRHP PERMIT ECMT COVERING LETTER 1',
+                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT_COVERING_LETTER
+            ]
+        ];
 
         $command = Cmd::Create(
             [
@@ -51,7 +70,6 @@ class GeneratePermitTest extends CommandHandlerTestCase
             ]
         );
 
-        /** @var IrhpPermitEntity $irhpPermit */
         $irhpPermit = m::mock(IrhpPermitEntity::class);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
@@ -65,12 +83,10 @@ class GeneratePermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
             ->andReturn($irhpPermitStock);
 
-        $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
-        $irhpPermitStock->shouldReceive('getIrhpPermitType')->andReturn($irhpPermitType);
-        $irhpPermitType->shouldReceive('getName')->andReturn($template);
+        $irhpPermitType = EcmtPermitApplicationEntity::PERMIT_TYPE;
+        $irhpPermitStock->shouldReceive('getIrhpPermitType->getName')->andReturn($irhpPermitType);
 
-        $irhpPermitApplication->shouldReceive('getLicence->getId')
-            ->once()
+        $irhpPermitApplication->shouldReceive('getEcmtPermitApplication->getLicence->getId')
             ->andReturn($licenceId);
 
         $irhpPermit->shouldReceive('getId')->andReturn($id);
@@ -78,24 +94,33 @@ class GeneratePermitTest extends CommandHandlerTestCase
         $irhpPermitStock->shouldReceive('getId')->andReturn($irhpPermitStockId);
 
         $irhpPermitApplication
-            ->shouldReceive('getLicence->getOrganisation->getId')
-            ->once()
+            ->shouldReceive('getEcmtPermitApplication->getLicence->getOrganisation->getId')
             ->andReturn($orgId);
 
         $this->expectedSideEffect(
             GenerateAndStore::class,
             [
-                'template' => 'IRHP_' . $template,
-                'query' => [
-                    'licence' => $licenceId,
-                    'irhpPermit' => $id,
-                    'irhpPermitStock' => $irhpPermitStockId,
-                    'organisation' => $orgId
-                ],
+                'template' => $expected[0]['template'],
+                'query' => $expected[0]['query'],
                 'knownValues' => [],
-                'description' => $description,
+                'description' => $expected[0]['description'],
                 'category' => CategoryEntity::CATEGORY_PERMITS,
-                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT,
+                'subCategory' => $expected[0]['subCategory'],
+                'isExternal' => false,
+                'isScan' => false
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            [
+                'template' => $expected[1]['template'],
+                'query' => $expected[1]['query'],
+                'knownValues' => [],
+                'description' => $expected[1]['description'],
+                'category' => CategoryEntity::CATEGORY_PERMITS,
+                'subCategory' => $expected[1]['subCategory'],
                 'isExternal' => false,
                 'isScan' => false
             ],

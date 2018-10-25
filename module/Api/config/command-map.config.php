@@ -1098,6 +1098,7 @@ return [
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
     Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
     Command\Permits\GeneratePermit::class => CommandHandler\Permits\GeneratePermit::class,
+    TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
 
