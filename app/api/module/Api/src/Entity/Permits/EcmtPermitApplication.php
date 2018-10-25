@@ -43,6 +43,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_DECLINED = 'permit_app_declined';
 
     const PERMIT_TYPE = 'permit_ecmt';
+    const PERMIT_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT';
+    const PERMIT_COVERING_LETTER_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT_COVERING_LETTER';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
