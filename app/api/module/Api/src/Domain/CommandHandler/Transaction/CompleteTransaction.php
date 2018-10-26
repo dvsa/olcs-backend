@@ -114,7 +114,7 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
                 SubmitEcmtPermitApplicationCmd::create(['id' => $fee->getEcmtPermitApplication()->getId()])
             ));
         }
-        if ($fee->getEcmtPermitApplication()->canBeAccepted()) {
+        if ($fee->getEcmtPermitApplication()->isAwaitingFee()) {
             $this->result->merge($this->handleSideEffects([
                 CompleteIssuePayment::create(['id' => $fee->getEcmtPermitApplication()->getId()]),
                 AcceptEcmtPermits::create(['id' => $fee->getEcmtPermitApplication()->getId()])
