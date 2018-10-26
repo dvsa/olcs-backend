@@ -66,10 +66,8 @@ class EcmtPermitApplication extends AbstractRepository
             $qb->andWhere($qb->expr()->in($this->alias . '.licence', $query->getLicence()));
         }
 
-        if (method_exists($query, 'getOnlyIssued') && $query->getOnlyIssued()) {
-            $qb->andWhere($qb->expr()->in($this->alias . '.status', self::VALID_APP_STATUS_IDS));
-        } else {
-            $qb->andWhere($qb->expr()->in($this->alias . '.status', self::PENDING_APP_STATUS_IDS));
+        if (method_exists($query, 'getOnlyIssued')) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.status', $query->getOnlyIssued() ? self::VALID_APP_STATUS_IDS : self::PENDING_APP_STATUS_IDS));
         }
 
         if ((method_exists($query, 'getSort') && $query->getSort() !== null)

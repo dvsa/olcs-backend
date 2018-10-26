@@ -29,6 +29,7 @@ use Mockery as m;
  * Complete Transaction Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CompleteTransactionTest extends CommandHandlerTestCase
 {
@@ -178,7 +179,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $ecmtPermitApplication->shouldReceive('canBeSubmitted')
             ->andReturn(true);
 
-        $ecmtPermitApplication->shouldReceive('canBeAccepted')
+        $ecmtPermitApplication->shouldReceive('isAwaitingFee')
             ->andReturn(false);
 
         $ecmtPermitApplication->shouldReceive('getId')
