@@ -53,23 +53,4 @@ class IrhpPermitStock extends AbstractRepository
 
         return $results[0];
     }
-
-    /**
-     * Updates the scoring status of a given stock item
-     *
-     * @param int $irhpPermitStockId
-     * @param string $status
-     */
-    public function updateStatus($irhpPermitStockId, $status)
-    {
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->update(Entity::class, 'ips')
-            ->set('ips.status', '?1')
-            ->where('ips.id = ?2')
-            ->setParameter(1, $status)
-            ->setParameter(2, $irhpPermitStockId)
-            ->getQuery();
-
-        $query->execute();
-    }
 }

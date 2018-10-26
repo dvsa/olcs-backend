@@ -36,38 +36,18 @@ class QueueAcceptScoringPermitted extends AbstractQueryHandler implements Toggle
         $stockId = $query->getId();
         $stock = $this->getRepo()->fetchById($stockId);
 
-        $stockStatusId = $stock->getStatus()->getId();
-        if ($stockStatusId != IrhpPermitStock::STATUS_SCORING_SUCCESSFUL) {
-            return $this->generateResponse(
-                false,
-                sprintf(
-                    'Stock status needs to be %s, but is currently %s',
-                    IrhpPermitStock::STATUS_SCORING_SUCCESSFUL,
-                    $stockStatusId
+        if (!$stock->statusAllowsQueueAcceptScoring()) {
+            return [
+                'result' => false,
+                'message' => sprintf(
+                    'Acceptance is not permitted when stock status is \'%s\'',
+                    $stock->getStatusDescription()
                 )
-            );
+            ];
         }
 
-        $result = $this->getQueryHandler()->handleQuery(
+        return $this->getQueryHandler()->handleQuery(
             CheckAcceptScoringPrerequisites::create(['id' => $stockId])
         );
-
-        return $result;
-    }
-
-    /**
-     * Generate an array representing the query response
-     *
-     * @param bool $permitted
-     * @param string $message
-     *
-     * @return array
-     */
-    private function generateResponse($permitted, $message)
-    {
-        return [
-            'result' => $permitted,
-            'message' => $message
-        ];
     }
 }

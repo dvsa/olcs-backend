@@ -25,20 +25,15 @@ class QueueRunScoringPermittedTest extends QueryHandlerTestCase
     }
 
     /**
-     * @dataProvider scenariosProvider
+     * @dataProvider permittedScenariosProvider
      */
-    public function testHandleQuery(
-        $statusId,
-        $prerequisiteResult,
-        $prerequisiteMessage,
-        $expectedResult,
-        $expectedMessage
-    ) {
+    public function testHandleQuery($prerequisiteResult, $prerequisiteMessage)
+    {
         $stockId = 28;
 
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getStatus->getId')
-            ->andReturn($statusId);
+        $stock->shouldReceive('statusAllowsQueueRunScoring')
+            ->andReturn(true);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
@@ -65,170 +60,45 @@ class QueueRunScoringPermittedTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
-                'result' => $expectedResult,
-                'message' => $expectedMessage
+                'result' => $prerequisiteResult,
+                'message' => $prerequisiteMessage
             ],
             $result
         );
     }
 
-    public function scenariosProvider()
+    public function testHandleQueryUnpermittedStatus()
+    {
+        $stockId = 28;
+
+        $stock = m::mock(IrhpPermitStock::class);
+        $stock->shouldReceive('statusAllowsQueueRunScoring')
+            ->andReturn(false);
+        $stock->shouldReceive('getStatusDescription')
+            ->andReturn('stock status description');
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
+            ->with($stockId)
+            ->andReturn($stock);
+
+        $result = $this->sut->handleQuery(
+            CheckRunScoringPrerequisites::create(['id' => $stockId])
+        );
+
+        $this->assertEquals(
+            [
+                'result' => false,
+                'message' => 'Scoring is not permitted when stock status is \'stock status description\''
+            ],
+            $result
+        );
+    }
+
+    public function permittedScenariosProvider()
     {
         return [
-            [
-                IrhpPermitStock::STATUS_SCORING_NEVER_RUN,
-                true,
-                'Prerequisites passed',
-                true,
-                'Prerequisites passed',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_PENDING,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_scoring_pending',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_IN_PROGRESS,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_scoring_in_progress',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_SUCCESSFUL,
-                true,
-                'Prerequisites passed',
-                true,
-                'Prerequisites passed',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL,
-                true,
-                'Prerequisites passed',
-                true,
-                'Prerequisites passed',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL,
-                true,
-                'Prerequisites passed',
-                true,
-                'Prerequisites passed',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_PENDING,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_pending',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_IN_PROGRESS,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_in_progress',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_successful',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_PREREQUISITE_FAIL,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_prereq_fail',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_UNEXPECTED_FAIL,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_unexpected_fail',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_NEVER_RUN,
-                false,
-                'Prerequisites failed',
-                false,
-                'Prerequisites failed',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_PENDING,
-                false,
-                'Prerequisites failed',
-                false,
-                'Scoring is not permitted when stock status is stock_scoring_pending',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_IN_PROGRESS,
-                false,
-                'Prerequisites failed',
-                false,
-                'Scoring is not permitted when stock status is stock_scoring_in_progress',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_SUCCESSFUL,
-                false,
-                'Prerequisites failed',
-                false,
-                'Prerequisites failed',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL,
-                false,
-                'Prerequisites failed',
-                false,
-                'Prerequisites failed',
-            ],
-            [
-                IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL,
-                false,
-                'Prerequisites failed',
-                false,
-                'Prerequisites failed',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_PENDING,
-                false,
-                'Prerequisites failed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_pending',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_IN_PROGRESS,
-                false,
-                'Prerequisites failed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_in_progress',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL,
-                false,
-                'Prerequisites failed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_successful',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_PREREQUISITE_FAIL,
-                false,
-                'Prerequisites failed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_prereq_fail',
-            ],
-            [
-                IrhpPermitStock::STATUS_ACCEPT_UNEXPECTED_FAIL,
-                true,
-                'Prerequisites passed',
-                false,
-                'Scoring is not permitted when stock status is stock_accept_unexpected_fail',
-            ],
+            [true, 'Prerequisites ok'],
+            [false, 'Prerequisites fail']
         ];
     }
 }
