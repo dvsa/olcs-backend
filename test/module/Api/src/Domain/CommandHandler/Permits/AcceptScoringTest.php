@@ -119,22 +119,22 @@ class AcceptScoringTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('handleQuery')->once()
             ->andReturnUsing(function ($query) use ($stockId) {
+                $this->assertInstanceOf(GetScoredPermitList::class, $query);
+                $this->assertEquals($stockId, $query->getStockId());
+
+                return [
+                    'result' => [],
+                ];
+            });
+
+        $this->sut->shouldReceive('handleQuery')->once()
+            ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertInstanceOf(CheckAcceptScoringPrerequisites::class, $query);
                 $this->assertEquals($stockId, $query->getId());
 
                 return [
                     'result' => true,
                     'message' => 'Accept scoring permitted'
-                ];
-            });
-
-        $this->sut->shouldReceive('handleQuery')->once()
-            ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(GetScoredPermitList::class, $query);
-                $this->assertEquals($stockId, $query->getStockId());
-
-                return [
-                    'result' => [],
                 ];
             });
 
@@ -276,6 +276,16 @@ class AcceptScoringTest extends CommandHandlerTestCase
     {
         $stockId = 35;
 
+        $this->sut->shouldReceive('handleQuery')->once()
+            ->andReturnUsing(function ($query) use ($stockId) {
+                $this->assertInstanceOf(GetScoredPermitList::class, $query);
+                $this->assertEquals($stockId, $query->getStockId());
+
+                return [
+                    'result' => [],
+                ];
+            });
+
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
             ->andReturn($stockId);
@@ -304,6 +314,16 @@ class AcceptScoringTest extends CommandHandlerTestCase
     public function testPrerequisitesFail()
     {
         $stockId = 35;
+
+        $this->sut->shouldReceive('handleQuery')->once()
+            ->andReturnUsing(function ($query) use ($stockId) {
+                $this->assertInstanceOf(GetScoredPermitList::class, $query);
+                $this->assertEquals($stockId, $query->getStockId());
+
+                return [
+                    'result' => [],
+                ];
+            });
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
