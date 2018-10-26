@@ -49,7 +49,10 @@ class QueueRunScoring extends AbstractCommandHandler implements ToggleRequiredIn
             return $this->result;
         }
 
-        $this->getRepo()->updateStatus($stockId, IrhpPermitStock::STATUS_SCORING_PENDING);
+        $stockRepo = $this->getRepo();
+        $stock = $stockRepo->fetchById($stockId);
+        $stock->proceedToScoringPending($this->refData(IrhpPermitStock::STATUS_SCORING_PENDING));
+        $stockRepo->save($stock);
 
         $this->result->merge(
             $this->handleSideEffect(

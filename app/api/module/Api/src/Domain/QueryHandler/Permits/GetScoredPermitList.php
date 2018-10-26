@@ -13,8 +13,6 @@ use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 
 /**
  * Get a list of scored irhp candidate permit records and associated data
- *
- * @todo: Needed to specify $extraRepos for unknown reason to prevent unit test failing, investigate & remove
  */
 class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequiredInterface
 {

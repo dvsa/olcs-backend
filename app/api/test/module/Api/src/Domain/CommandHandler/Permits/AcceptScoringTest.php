@@ -51,6 +51,9 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->refData = [
             EcmtPermitApplicationEntity::STATUS_AWAITING_FEE,
             EcmtPermitApplicationEntity::STATUS_UNSUCCESSFUL,
+            IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL,
+            IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS,
+            IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL,
         ];
 
         parent::initReferences();
@@ -93,16 +96,27 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
+            ->ordered()
+            ->globally()
             ->andReturn($irhpPermitStock);
 
-        $irhpPermitStock->shouldReceive('getStatus->getId')
+        $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
+            ->with($irhpPermitStock)
             ->once()
-            ->andReturn(IrhpPermitStockEntity::STATUS_ACCEPT_PENDING)
             ->ordered()
             ->globally();
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS)
+        $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
+            ->andReturn(true);
+
+        $irhpPermitStock->shouldReceive('proceedToAcceptInProgress')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
             ->once()
             ->ordered()
             ->globally();
@@ -184,8 +198,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->ordered()
             ->globally();
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL)
+        $irhpPermitStock->shouldReceive('proceedToAcceptSuccessful')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
             ->once()
             ->ordered()
             ->globally();
@@ -264,12 +284,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->with($stockId)
             ->andReturn([$successfulApplicationId, $partSuccessfulApplicationId, $unsuccessfulApplicationId]);
 
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertEquals(
-            ['Acceptance of scoring completed successfully'],
-            $result->getMessages()
-        );
+        $this->sut->handleCommand($command);
     }
 
     public function testIncorrectStockStatus()
@@ -291,22 +306,40 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->andReturn($stockId);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
-        $irhpPermitStock->shouldReceive('getStatus->getId')
-            ->andReturn(IrhpPermitStockEntity::STATUS_SCORING_SUCCESSFUL);
+        $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
+            ->andReturn(false);
+        $irhpPermitStock->shouldReceive('getStatusDescription')
+            ->andReturn('Stock scoring never run');
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
+            ->ordered()
+            ->globally()
             ->andReturn($irhpPermitStock);
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL)
-            ->once();
+        $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitStock->shouldReceive('proceedToAcceptPrerequisiteFail')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(
-            ['Prerequisite failed: Stock status must be stock_accept_pending, currently stock_scoring_successful'],
+            ['Prerequisite failed: Accept scoring is not permitted when stock status is \'Stock scoring never run\''],
             $result->getMessages()
         );
     }
@@ -330,17 +363,33 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->andReturn($stockId);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
-        $irhpPermitStock->shouldReceive('getStatus->getId')
-            ->andReturn(IrhpPermitStockEntity::STATUS_ACCEPT_PENDING);
+        $irhpPermitStock->shouldReceive('statusAllowsAcceptScoring')
+            ->andReturn(true);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
+            ->ordered()
+            ->globally()
             ->andReturn($irhpPermitStock);
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL)
-            ->once();
+        $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $irhpPermitStock->shouldReceive('proceedToAcceptPrerequisiteFail')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $this->sut->shouldReceive('handleQuery')
             ->andReturnUsing(function ($query) use ($stockId) {

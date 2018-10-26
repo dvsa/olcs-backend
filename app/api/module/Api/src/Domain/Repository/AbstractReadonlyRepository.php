@@ -320,6 +320,16 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     }
 
     /**
+     * Refresh entity from the database
+     *
+     * @param $entity
+     */
+    public function refresh($entity)
+    {
+        $this->em->refresh($entity);
+    }
+
+    /**
      * Fetch by ids
      *
      * @param array $ids         List of Ids
