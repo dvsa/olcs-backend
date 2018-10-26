@@ -66,7 +66,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
         }
 
         $ecmtPermitApplication->update(
-            $this->getRepo()->getRefdataReference($command->getPermitType()),
+            $this->getRepo()->getRefdataReference($ecmtPermitApplication::PERMIT_TYPE),
             $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
             $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
             $countrys,
