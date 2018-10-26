@@ -764,6 +764,7 @@ return [
     Command\Email\SendPublication::class => CommandHandler\Email\SendPublication::class,
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
     Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
+    Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
@@ -990,15 +991,29 @@ return [
     TransferCommand\IrhpPermitStock\Delete::class =>
         CommandHandler\IrhpPermitStock\Delete::class,
 
-
-
-    // Transfer - IRHP Permit Stock
+    // Transfer - IRHP Permit Window
     TransferCommand\IrhpPermitWindow\Create::class =>
         CommandHandler\IrhpPermitWindow\Create::class,
     TransferCommand\IrhpPermitWindow\Update::class =>
         CommandHandler\IrhpPermitWindow\Update::class,
     TransferCommand\IrhpPermitWindow\Delete::class =>
         CommandHandler\IrhpPermitWindow\Delete::class,
+
+    // Transfer - IRHP Permit Range
+    TransferCommand\IrhpPermitRange\Create::class =>
+        CommandHandler\IrhpPermitRange\Create::class,
+    TransferCommand\IrhpPermitRange\Update::class =>
+        CommandHandler\IrhpPermitRange\Update::class,
+    TransferCommand\IrhpPermitRange\Delete::class =>
+        CommandHandler\IrhpPermitRange\Delete::class,
+
+    // Transfer - IRHP Permit Sector
+    TransferCommand\IrhpPermitSector\Update::class =>
+        CommandHandler\IrhpPermitSector\Update::class,
+
+    // Transfer - IRHP Permit Jurisdiction
+    TransferCommand\IrhpPermitJurisdiction\Update::class =>
+        CommandHandler\IrhpPermitJurisdiction\Update::class,
 
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
@@ -1081,15 +1096,23 @@ return [
     TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
 
     // Permits - internal backend
-
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
     Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
+    Command\Permits\GeneratePermit::class => CommandHandler\Permits\GeneratePermit::class,
+    TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
+    Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
+    Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
 
     // Permits - Private beta
     TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class,
 
+    // Permits - run/accept
+    TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
+    TransferCommand\Permits\QueueAcceptScoring::class => CommandHandler\Permits\QueueAcceptScoring::class,
+
     // Cli - Permits
+    CommandCli\Permits\ResetScoring::class => CommandHandlerCli\Permits\ResetScoring::class,
     CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulDaPermitApplications::class,
     CommandCli\Permits\MarkSuccessfulRemainingPermitApplications::class =>
@@ -1098,5 +1121,10 @@ return [
         CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
     CommandCli\Permits\CalculateRandomAppScore::class =>
         CommandHandlerCli\Permits\CalculateRandomAppScore::class,
-
+    CommandCli\Permits\ApplyRangesToSuccessfulPermitApplications::class =>
+        CommandHandlerCli\Permits\ApplyRangesToSuccessfulPermitApplications::class,
+    CommandCli\Permits\UploadScoringResult::class =>
+        CommandHandlerCli\Permits\UploadScoringResult::class,
+    CommandCli\Permits\UploadScoringLog::class =>
+        CommandHandlerCli\Permits\UploadScoringLog::class,
 ];

@@ -27,7 +27,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"}),
  *        @ORM\Index(name="fk_ecmt_permit_application_international_jouneys",
-     *     columns={"international_journeys"})
+     *     columns={"international_journeys"}),
+ *        @ORM\Index(name="ix_withdraw_reason", columns={"withdraw_reason"})
  *    }
  * )
  */
@@ -252,6 +253,16 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Withdraw reason
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="withdraw_reason", referencedColumnName="id", nullable=true)
+     */
+    protected $withdrawReason;
 
     /**
      * Fee
@@ -855,6 +866,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the withdraw reason
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawReason entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setWithdrawReason($withdrawReason)
+    {
+        $this->withdrawReason = $withdrawReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdraw reason
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getWithdrawReason()
+    {
+        return $this->withdrawReason;
     }
 
     /**

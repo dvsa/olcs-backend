@@ -148,6 +148,7 @@ class MessageTest extends MockeryTestCase
         $this->sut->setSubjectVariables(['subVar']);
         $this->sut->setPlainBody('plain body');
         $this->sut->setHtmlBody('html body');
+        $this->sut->setHighPriority();
 
         $result = $this->sut->buildCommand();
 
@@ -164,7 +165,8 @@ class MessageTest extends MockeryTestCase
                 'docs' => ['doc1', 'doc2'],
                 'plainBody' => 'plain body',
                 'htmlBody' => 'html body',
-                'locale' => 'en_GB'
+                'locale' => 'en_GB',
+                'highPriority' => true
             ],
             $result->getArrayCopy()
         );

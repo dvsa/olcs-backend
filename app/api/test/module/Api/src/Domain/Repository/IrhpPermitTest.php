@@ -58,6 +58,40 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
+    public function testGetPermitCountByRange()
+    {
+        $permitCount = 200;
+        $rangeId = 3;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('count(ip.id)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+           ->shouldReceive('where')
+            ->with('IDENTITY(ip.irhpPermitRange) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $rangeId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($permitCount);
+
+        $this->assertEquals(
+            $permitCount,
+            $this->sut->getPermitCountByRange($rangeId)
+        );
+    }
+
     public function testApplyListFilters()
     {
         $this->setUpSut(IrhpPermit::class, true);

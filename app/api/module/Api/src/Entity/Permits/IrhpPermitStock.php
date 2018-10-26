@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * IrhpPermitStock Entity
@@ -17,7 +18,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpPermitStock extends AbstractIrhpPermitStock
 {
-    public static function create($type, $validFrom, $validTo, $quota)
+    const STATUS_SCORING_NEVER_RUN = 'stock_scoring_never_run';
+    const STATUS_SCORING_PENDING = 'stock_scoring_pending';
+    const STATUS_SCORING_IN_PROGRESS = 'stock_scoring_in_progress';
+    const STATUS_SCORING_SUCCESSFUL = 'stock_scoring_successful';
+    const STATUS_SCORING_PREREQUISITE_FAIL = 'stock_scoring_prereq_fail';
+    const STATUS_SCORING_UNEXPECTED_FAIL = 'stock_scoring_unexpected_fail';
+    const STATUS_ACCEPT_PENDING = 'stock_accept_pending';
+    const STATUS_ACCEPT_IN_PROGRESS = 'stock_accept_in_progress';
+    const STATUS_ACCEPT_SUCCESSFUL = 'stock_accept_successful';
+    const STATUS_ACCEPT_PREREQUISITE_FAIL = 'stock_accept_prereq_fail';
+    const STATUS_ACCEPT_UNEXPECTED_FAIL = 'stock_accept_unexpected_fail';
+
+    public static function create($type, $validFrom, $validTo, $quota, RefData $status)
     {
         $instance = new self;
 
@@ -25,6 +38,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
         $instance->validFrom = static::processDate($validFrom, 'Y-m-d');
         $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
+        $instance->status = $status;
 
         return $instance;
     }
@@ -37,5 +51,22 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
 
         return $this;
+    }
+
+    public function canDelete()
+    {
+        return
+            count($this->irhpPermitRanges) === 0 &&
+            count($this->irhpPermitWindows) === 0;
+    }
+
+    /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return ['canDelete' => $this->canDelete()];
     }
 }

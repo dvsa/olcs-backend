@@ -24,18 +24,14 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
 {
     public static function createNew(
         IrhpPermitApplication $irhpPermitApplication,
-        IrhpPermitRange $IrhpPermitRange,
         float $intensityOfUse = null,
-        float $randomizedScore = null,
         float $applicationScore = null
     ) {
         $IrhpCandidatePermit = new self();
         $IrhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
-        $IrhpCandidatePermit->irhpPermitRange = $IrhpPermitRange;
         $IrhpCandidatePermit->intensityOfUse = $intensityOfUse;
-        $IrhpCandidatePermit->randomizedScore = $randomizedScore;
         $IrhpCandidatePermit->applicationScore = $applicationScore;
-        $IrhpCandidatePermit->successful = 1; //temporary default for demonstration purposes
+        $IrhpCandidatePermit->successful = 0;
 
         return $IrhpCandidatePermit;
     }
@@ -52,8 +48,8 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     {
         $licence = [];
         foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $irhpPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication();
-            $licence[$irhpPermitApplication->getLicence()->getLicNo()][$irhpPermitApplication->getId()] = $irhpPermitApplication->getPermitsRequired();
+            $ecmtPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication()->getEcmtPermitApplication();
+            $licence[$ecmtPermitApplication->getLicence()->getLicNo()][$ecmtPermitApplication->getId()] = $ecmtPermitApplication->getPermitsRequired();
         }
 
         return [
@@ -72,7 +68,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     public function calculateRandomFactor(array $deviationData)
     {
         $standardDeviation = 0;
-        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getLicence()->getLicNo()];
+        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getEcmtPermitApplication()->getLicence()->getLicNo()];
         foreach ($licenceData as $applicationPermitsRequired) {
             $standardDeviation += $applicationPermitsRequired;
         }

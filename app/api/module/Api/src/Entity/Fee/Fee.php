@@ -36,9 +36,13 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     const STATUS_PAID              = 'lfs_pd';
     const STATUS_CANCELLED         = 'lfs_cn';
 
-    const ACCRUAL_RULE_LICENCE_START = 'acr_licence_start';
-    const ACCRUAL_RULE_CONTINUATION  = 'acr_continuation';
-    const ACCRUAL_RULE_IMMEDIATE     = 'acr_immediate';
+    const ACCRUAL_RULE_LICENCE_START            = 'acr_licence_start';
+    const ACCRUAL_RULE_CONTINUATION             = 'acr_continuation';
+    const ACCRUAL_RULE_IMMEDIATE                = 'acr_immediate';
+    const ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS     = 'acr_irhp_permit_3_months';
+    const ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS     = 'acr_irhp_permit_6_months';
+    const ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS     = 'acr_irhp_permit_9_months';
+    const ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS    = 'acr_irhp_permit_12_months';
 
     const METHOD_CARD_ONLINE  = 'fpm_card_online';
     const METHOD_CARD_OFFLINE = 'fpm_card_offline';
@@ -133,6 +137,15 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
                 }
                 $date->add(new \DateInterval('P1D'));
                 return $date;
+            case self::ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS:
+            case self::ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS:
+            case self::ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS:
+            case self::ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS:
+                $irhpPermitApplication = $this->getEcmtPermitApplication()->getIrhpPermitApplications()->first();
+                if (!is_null($irhpPermitApplication)) {
+                    return $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getValidFrom(true);
+                }
+                break;
             default:
                 break;
         }
@@ -157,9 +170,13 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     public function getDefermentPeriod()
     {
         $map = [
-            self::ACCRUAL_RULE_LICENCE_START => 60,
-            self::ACCRUAL_RULE_CONTINUATION  => 60,
-            self::ACCRUAL_RULE_IMMEDIATE     => 1,
+            self::ACCRUAL_RULE_LICENCE_START            => 60,
+            self::ACCRUAL_RULE_CONTINUATION             => 60,
+            self::ACCRUAL_RULE_IMMEDIATE                => 1,
+            self::ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS     => 3,
+            self::ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS     => 6,
+            self::ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS     => 9,
+            self::ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS    => 12,
         ];
 
         $rule = $this->getFeeType()->getAccrualRule()->getId();
@@ -344,6 +361,8 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             'amount' => $this->getGrossAmount(),
             'ruleDateBeforeInvoice' => $this->isRuleBeforeInvoiceDate(),
             'isExpiredForLicence' => $this->isExpiredForLicence(),
+            'isOutstanding' => $this->isOutstanding(),
+            'isEcmtIssuingFee' => $this->isEcmtIssuingFee()
         ];
     }
 

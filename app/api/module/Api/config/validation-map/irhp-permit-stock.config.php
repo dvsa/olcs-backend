@@ -11,5 +11,4 @@ return [
     CommandHandler\IrhpPermitStock\Create::class => IsInternalAdmin::class,
     CommandHandler\IrhpPermitStock\Update::class => IsInternalAdmin::class,
     CommandHandler\IrhpPermitStock\Delete::class => IsInternalAdmin::class,
-
 ];

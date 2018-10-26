@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
@@ -12,23 +13,20 @@ use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * EcmtPermitApplication Entity Unit Tests
- *
- * Initially auto-generated but won't be overridden
- */
+* EcmtPermitApplication Entity Unit Tests
+*
+* Initially auto-generated but won't be overridden
+*/
 class EcmtPermitApplicationEntityTest extends EntityTester
 {
     /**
-     * Define the entity to test
-     *
-     * @var string
-     */
+    * Define the entity to test
+    *
+    * @var string
+    */
     protected $entityClass = Entity::class;
 
-    /**
-     * @dataProvider dpProvideUpdateCountrys
-     */
-    public function testCreateNew($countrys, $expectedHasRestrictedCountries)
+    public function testCreateNew()
     {
          $status = Entity::STATUS_NOT_YET_SUBMITTED;
          $statusRefData = new RefData($status);
@@ -86,6 +84,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $internationalJourneyRefData
         );
 
+        $ecmtPermitAppEntity = m::mock(EcmtPermitApplication::class)->shouldAllowMockingProtectedMethods();;
+        $ecmtPermitAppEntity->shouldReceive('getSectionCompletion')
+            ->with(Entity::SECTIONS)
+            ->andReturn(['allCompleted' => true]);
+
+
         $this->assertEquals($status, $application->getStatus());
         $this->assertEquals($permitType, $application->getPermitType()->getId());
         $this->assertEquals($licence, $application->getLicence());
@@ -103,8 +107,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpProvideUpdateCountrys
-     */
+    * @dataProvider dpProvideUpdateCountrys
+    */
     public function testUpdate($countrys, $expectedHasRestrictedCountries)
     {
         $application = $this->createApplication();
@@ -150,25 +154,25 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
     }
 
-
     /**
-     * Tests withdrawing an application
-     */
+    * Tests withdrawing an application
+    */
     public function testWithdraw()
     {
         $entity = $this->createApplicationUnderConsideration();
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
         $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(Entity::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
     }
 
     /**
-     * @dataProvider dpWithdrawException
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
+    * @dataProvider dpWithdrawException
+    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+    */
     public function testWithdrawException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -177,8 +181,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDecline()
     {
         $entity = $this->createApplicationAwaitingFee();
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_DECLINED));
         $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(Entity::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
     }
 
     /**
@@ -188,7 +193,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDeclineException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN));
+        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -223,9 +228,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpCancelException
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
+    * @dataProvider dpCancelException
+    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+    */
     public function testCancelException($status)
     {
         $entity = $this->createApplication($status);
@@ -233,10 +238,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * Pass array of app statuses to make sure an exception is thrown
-     *
-     * @return array
-     */
+    * Pass array of app statuses to make sure an exception is thrown
+    *
+    * @return array
+    */
     public function dpWithdrawException()
     {
         return [
@@ -284,8 +289,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider trueFalseProvider
-     */
+    * @dataProvider trueFalseProvider
+    */
     public function testUpdateCabotage($cabotage)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
@@ -298,8 +303,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider trueFalseProvider
-     */
+    * @dataProvider trueFalseProvider
+    */
     public function testUpdateEmissions($emissions)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
@@ -311,8 +316,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpProvideUpdateCountrys
-     */
+    * @dataProvider dpProvideUpdateCountrys
+    */
     public function testUpdateCountrys($countrys, $expectedHasRestrictedCountries)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
@@ -327,15 +332,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function dpProvideUpdateCountrys()
     {
-        $countrys = array(
+        $countrys = new ArrayCollection([
             m::mock(Country::class),
             m::mock(Country::class),
             m::mock(Country::class)
-        );
+        ]);
 
         return [
             [$countrys, true],
-            [[], false]
+            [new ArrayCollection([]), false]
         ];
     }
 
@@ -624,6 +629,92 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_FEE_PAID],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsFeePaid
+     */
+    public function testIsFeePaid($status, $expected)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertSame($expected, $entity->isFeePaid());
+    }
+
+    /**
+     * @return array
+     */
+    public function dpIsFeePaid()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_AWAITING_FEE, false],
+            [Entity::STATUS_FEE_PAID, true],
+            [Entity::STATUS_UNSUCCESSFUL, false],
+            [Entity::STATUS_ISSUED, false],
+            [Entity::STATUS_ISSUING, false],
+            [Entity::STATUS_VALID, false],
+            [Entity::STATUS_DECLINED, false],
+        ];
+    }
+
+    public function testProceedToAwaitingFee()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity->proceedToAwaitingFee($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsApplicationUnderConsiderationFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToAwaitingFeeException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToAwaitingFee(m::mock(RefData::class));
+    }
+
+    public function testProceedToUnsuccessful()
+    {
+        $refData = m::mock(RefData::class);
+        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity->proceedToUnsuccessful($refData);
+        $this->assertSame($refData, $entity->getStatus());
+    }
+
+    /**
+     * @dataProvider dpIsApplicationUnderConsiderationFail
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testProceedToUnsuccessfulException($status)
+    {
+        $entity = $this->createApplication($status);
+        $entity->proceedToUnsuccessful(m::mock(RefData::class));
+    }
+
+    /**
+     * Array of app statuses that don't match an application under consideration
+     *
+     * @return array
+     */
+    public function dpIsApplicationUnderConsiderationFail()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE],
+            [Entity::STATUS_FEE_PAID],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_ISSUING],
             [Entity::STATUS_VALID],
             [Entity::STATUS_DECLINED],
         ];

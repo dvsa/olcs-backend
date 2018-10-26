@@ -2142,6 +2142,12 @@ return array(
                 'property' => 'irhpCandidatePermit'
             )
         ),
+        'irhp_permit_range_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitRange',
+                'property' => 'irhpCandidatePermit'
+            )
+        )
     ),
     'irhp_permit_application' => array(
         'ecmt_permit_application_id' => array(
@@ -2164,5 +2170,21 @@ return array(
                 'property' => 'irhpPermit'
             )
         ),
+    ),
+    'irhp_permit_range' => array(
+        'irhp_permit_stock_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitStock',
+                'property' => 'irhpPermitRange'
+            )
+        )
+    ),
+    'irhp_permit_window' => array(
+        'irhp_permit_stock_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitStock',
+                'property' => 'irhpPermitWindow'
+            )
+        )
     ),
 );

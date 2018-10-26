@@ -85,7 +85,11 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermitWindows"
+     * )
      * @ORM\JoinColumn(name="irhp_permit_stock_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitStock;

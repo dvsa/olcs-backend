@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -22,7 +24,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uniqueStock", columns={"irhp_permit_type_id","valid_from","valid_to"})
@@ -105,11 +108,21 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $lastModifiedOn;
 
     /**
+     * Status
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
+
+    /**
      * Valid from
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
+     * @ORM\Column(type="date", name="valid_from", nullable=true)
      */
     protected $validFrom;
 
@@ -118,7 +131,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="valid_to", nullable=true)
+     * @ORM\Column(type="date", name="valid_to", nullable=true)
      */
     protected $validTo;
 
@@ -131,6 +144,51 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Irhp permit range
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitRanges;
+
+    /**
+     * Irhp permit window
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitWindows;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->irhpPermitRanges = new ArrayCollection();
+        $this->irhpPermitWindows = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -313,6 +371,30 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
      * Set the valid from
      *
      * @param \DateTime $validFrom new value being set
@@ -397,6 +479,132 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the irhp permit range
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitRanges($irhpPermitRanges)
+    {
+        $this->irhpPermitRanges = $irhpPermitRanges;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit ranges
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitRanges()
+    {
+        return $this->irhpPermitRanges;
+    }
+
+    /**
+     * Add a irhp permit ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitRanges($irhpPermitRanges)
+    {
+        if ($irhpPermitRanges instanceof ArrayCollection) {
+            $this->irhpPermitRanges = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitRanges->toArray(),
+                    $irhpPermitRanges->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitRanges->contains($irhpPermitRanges)) {
+            $this->irhpPermitRanges->add($irhpPermitRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit ranges
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitRanges($irhpPermitRanges)
+    {
+        if ($this->irhpPermitRanges->contains($irhpPermitRanges)) {
+            $this->irhpPermitRanges->removeElement($irhpPermitRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit window
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitWindows($irhpPermitWindows)
+    {
+        $this->irhpPermitWindows = $irhpPermitWindows;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit windows
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitWindows()
+    {
+        return $this->irhpPermitWindows;
+    }
+
+    /**
+     * Add a irhp permit windows
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitWindows($irhpPermitWindows)
+    {
+        if ($irhpPermitWindows instanceof ArrayCollection) {
+            $this->irhpPermitWindows = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitWindows->toArray(),
+                    $irhpPermitWindows->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitWindows->contains($irhpPermitWindows)) {
+            $this->irhpPermitWindows->add($irhpPermitWindows);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit windows
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitWindows($irhpPermitWindows)
+    {
+        if ($this->irhpPermitWindows->contains($irhpPermitWindows)) {
+            $this->irhpPermitWindows->removeElement($irhpPermitWindows);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
@@ -431,7 +639,11 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
