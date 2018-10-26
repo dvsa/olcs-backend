@@ -57,7 +57,7 @@
         "oro/doctrine-extensions": "^1.2",
         "ruflin/Elastica": "~5.1",
         "olcs/companies-house": "dev-develop",
-        "olcs/olcs-transfer": "dev-epic/OLCS-15057",
+        "olcs/olcs-transfer": "dev-develop",
         "olcs/olcs-utils": "dev-develop",
         "olcs/olcs-logging": "dev-develop",
         "zf-commons/zfc-rbac": "~2.4.0",
