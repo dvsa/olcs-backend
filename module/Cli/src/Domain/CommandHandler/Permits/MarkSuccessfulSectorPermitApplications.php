@@ -6,6 +6,9 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsCommand;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
@@ -16,8 +19,12 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
 
-class MarkSuccessfulSectorPermitApplications extends AbstractCommandHandler implements TransactionedInterface
+class MarkSuccessfulSectorPermitApplications extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+
     protected $repoServiceName = 'IrhpPermitSectorQuota';
 
     protected $extraRepos = ['IrhpCandidatePermit'];
@@ -41,7 +48,7 @@ class MarkSuccessfulSectorPermitApplications extends AbstractCommandHandler impl
 
         $candidatePermitIds = [];
         foreach ($sectorQuotas as $sectorQuota) {
-            $sectorCandidatePermitIds = $this->getRepo('IrhpCandidatePermit')->getScoreOrderedUnderConsiderationIdsBySector(
+            $sectorCandidatePermitIds = $this->getRepo('IrhpCandidatePermit')->getScoreOrderedIdsBySector(
                 $command->getStockId(),
                 $sectorQuota['sectorId']
             );

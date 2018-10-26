@@ -76,7 +76,8 @@ class SendEmailTest extends CommandHandlerTestCase
             'docs' => [],
             'subject' => 'Some subject',
             'plainBody' => 'This is the email',
-            'htmlBody' => null
+            'htmlBody' => null,
+            'highPriority' => false,
         ];
 
         $command = Cmd::create($data);
@@ -98,7 +99,8 @@ class SendEmailTest extends CommandHandlerTestCase
                 null,
                 [],
                 [],
-                []
+                [],
+                false
             );
 
         $this->sut->handleCommand($command);
@@ -129,7 +131,8 @@ class SendEmailTest extends CommandHandlerTestCase
             'docs' => $docIds,
             'subject' => 'Some subject',
             'plainBody' => 'This is the email http://selfserve/ http://internal/',
-            'htmlBody' => 'This is the html email http://selfserve/ http://internal/'
+            'htmlBody' => 'This is the html email http://selfserve/ http://internal/',
+            'highPriority' => true,
         ];
 
         $command = Cmd::create($data);
@@ -189,7 +192,8 @@ class SendEmailTest extends CommandHandlerTestCase
                 'translated-This is the html email http://olcs-selfserve/ http://olcs-internal/',
                 ['bar@foo.com'],
                 ['bcc@foobar.com'],
-                $expectedDocs
+                $expectedDocs,
+                true
             );
 
         $this->sut->handleCommand($command);
@@ -213,7 +217,8 @@ class SendEmailTest extends CommandHandlerTestCase
             'docs' => $docIds,
             'subject' => 'Some subject',
             'plainBody' => 'This is the email http://selfserve/ http://internal/',
-            'htmlBody' => 'This is the html email http://selfserve/ http://internal/'
+            'htmlBody' => 'This is the html email http://selfserve/ http://internal/',
+            'highPriority' => false
         ];
 
         $command = Cmd::create($data);

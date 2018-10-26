@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -16,6 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Permits\DeclineEcmtPermits as DeclineEcmtPermitsC
 final class DeclineEcmtPermits extends AbstractCommandHandler
 {
     protected $repoServiceName = 'EcmtPermitApplication';
+    protected $extraRepos = ['Fee'];
 
     /**
      * Handle command
@@ -33,11 +35,16 @@ final class DeclineEcmtPermits extends AbstractCommandHandler
         $id = $command->getId();
         $application = $this->getRepo()->fetchById($id);
 
-        //@todo this needs a new status 'declined'
         $newStatus = $this->refData(EcmtPermitApplication::STATUS_WITHDRAWN);
-        $application->decline($newStatus);
+        $withdrawReason = $this->refData(EcmtPermitApplication::WITHDRAWN_REASON_DECLINED);
+        $application->decline($newStatus, $withdrawReason);
 
         $this->getRepo()->save($application);
+
+        $outstandingFees = $application->getOutstandingFees();
+        foreach ($outstandingFees as $fee) {
+            $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
+        }
 
         $result = new Result();
         $result->addId('ecmtPermitApplication', $id);

@@ -48,6 +48,16 @@ class RefData extends AbstractRefData
 
     const LICENCE_STATUS = 'lic_status';
 
+    const PERMIT_APP_STATUS_CANCELLED = 'permit_app_cancelled';
+    const PERMIT_APP_STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
+    const PERMIT_APP_STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
+    const PERMIT_APP_STATUS_WITHDRAWN = 'permit_app_withdrawn';
+    const PERMIT_APP_STATUS_AWAITING_FEE = 'permit_app_awaiting';
+    const PERMIT_APP_STATUS_FEE_PAID = 'permit_app_fee_paid';
+    const PERMIT_APP_STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
+    const PERMIT_APP_STATUS_ISSUING = 'permit_app_issuing';
+    const PERMIT_APP_STATUS_VALID = 'permit_app_valid';
+
     /**
      * RefData constructor.
      *

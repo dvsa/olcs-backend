@@ -34,6 +34,7 @@ final class AllocatePermits extends AbstractCommandHandler
     {
         $ecmtPermitApplicationId = $command->getId();
 
+        $this->getRepo()->decacheById($ecmtPermitApplicationId);
         $ecmtPermitApplication = $this->getRepo()->fetchById($ecmtPermitApplicationId);
         $irhpPermitApplications = $ecmtPermitApplication->getIrhpPermitApplications();
         $irhpPermitApplication = $irhpPermitApplications[0];

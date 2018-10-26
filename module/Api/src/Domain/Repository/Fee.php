@@ -108,7 +108,7 @@ class Fee extends AbstractRepository
         $doctrineQb->select('COUNT(f)');
         $this->whereOutstandingFee($doctrineQb);
 
-        // @todo this is still slow, might be better doing 2 queries rather
+        // this is still slow, might be better doing 2 queries rather
         // than an OR
         $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
 
@@ -562,6 +562,7 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->filterByLicence($query->getLicence())
             ->filterByApplication($query->getApplication())
+            ->filterByPermitApplication($query->getEcmtPermitApplication())
             ->filterByIds(!empty($query->getIds()) ? $query->getIds() : null);
 
         if ($query->getOrganisation() !== null) {

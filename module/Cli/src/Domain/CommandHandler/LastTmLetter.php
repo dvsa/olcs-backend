@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
@@ -12,13 +13,18 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
-use \Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence as TmlEntity;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
+use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
+use Dvsa\Olcs\Email\Data\Message;
 
-final class LastTmLetter extends AbstractCommandHandler
+final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInterface
 {
+    use EmailAwareTrait;
+
     const GB_GV_TEMPLATE = [
         'identifier' => 'GV_letter_to_op_regarding_no_TM_specified',
         'id'         => 919
@@ -60,9 +66,44 @@ final class LastTmLetter extends AbstractCommandHandler
             $documents = $this->generateDocuments($licence);
             $this->printAndEmailDocuments($documents);
             $this->updateLastTmLetterDate($licence);
+            $this->sendEmailToOperator($licence);
         }
 
         return $this->result;
+    }
+
+    private function sendEmailToOperator(LicenceEntity $licence)
+    {
+        if (is_null($contactDetails = $licence->getCorrespondenceCd()) ||
+            is_null($email = $contactDetails->getEmailAddress())
+        ) {
+            return;
+        }
+
+        $registeredToSelfserve = false;
+        $translateToWelsh = $licence->getTranslateToWelsh();
+
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\User $userRepo */
+        $userRepo = $this->getRepo('User');
+
+        /** @var User $user */
+        $user = $userRepo->fetchFirstByEmailOrFalse($email);
+        if ($user !== false) {
+            $registeredToSelfserve = true;
+            $translateToWelsh = $user->getTranslateToWelsh();
+        }
+
+        $message = new Message($email, 'email.last-tm-operator-notification.subject');
+        $message->setTranslateToWelsh($translateToWelsh);
+        $message->setHighPriority();
+        $this->sendEmailTemplate(
+            $message,
+            'last-tm-operator-notification',
+            [
+                'licNo' => $licence->getLicNo(),
+                'registeredToSelfserve' => $registeredToSelfserve,
+            ]
+        );
     }
 
     /**

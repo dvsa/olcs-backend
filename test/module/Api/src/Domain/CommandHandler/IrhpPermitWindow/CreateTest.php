@@ -10,9 +10,10 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
- * Create IRHP Permit Type Test
+ * Create IRHP Permit Window Test
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
@@ -24,6 +25,10 @@ class CreateTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
 
+        $this->today = (new DateTime())->format('Y-m-d');
+        $this->tomorrow = (new DateTime)->modify('+1 day')->format('Y-m-d');
+        $this->yesterday = (new DateTime)->modify('-1 day')->format('Y-m-d');
+
         parent::setUp();
     }
 
@@ -31,11 +36,10 @@ class CreateTest extends CommandHandlerTestCase
     {
         $cmdData = [
             'irhpPermitStock' => '1',
-            'startDate' => '2019-01-01',
-            'endDate' => '2019-01-10',
+            'startDate' => $this->today,
+            'endDate' => $this->tomorrow,
             'daysForPayment' => '14'
         ];
-
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('findOverlappingWindowsByType')
@@ -55,7 +59,6 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (PermitWindowEntity $permitWindow) use (&$savedPermitStock) {
                     $permitWindow->setId(1);
-                    $savedPermitStock = $permitWindow;
                 }
             );
 
@@ -67,5 +70,69 @@ class CreateTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage The dates overlap with another window for this Permit stock
+     *
+     * Test for overlapping IRHP Permit Windows - no values are asserted as this tests to ensure that a validation
+     * exception is thrown.
+     */
+    public function testHandleOverlap()
+    {
+        $cmdData = [
+            'irhpPermitStock' => '1',
+            'startDate' => $this->today,
+            'endDate' => $this->tomorrow,
+            'daysForPayment' => '14'
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('findOverlappingWindowsByType')
+            ->once()
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['startDate'],
+                $cmdData['endDate'],
+                null
+            )
+            ->andReturn([m::mock(PermitWindowEntity::class)]);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     * @expectedExceptionMessage You cannot create a window that starts in the past
+     *
+     * Test for Window start date in past - no values are asserted as this tests to ensure that a validation
+     * exception is thrown.
+     */
+    public function testHandlePastStart()
+    {
+        $cmdData = [
+            'irhpPermitStock' => '1',
+            'startDate' => $this->yesterday,
+            'endDate' => $this->tomorrow,
+            'daysForPayment' => '14'
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('findOverlappingWindowsByType')
+            ->once()
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['startDate'],
+                $cmdData['endDate'],
+                null
+            )
+            ->andReturn([]);
+
+        $this->sut->handleCommand($command);
     }
 }

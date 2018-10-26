@@ -36,6 +36,8 @@ class SendEmail extends AbstractCommand
 
     protected $htmlBody;
 
+    protected $highPriority = false;
+
     protected $locale = 'en_GB';
 
     public function getFromName()
@@ -91,5 +93,10 @@ class SendEmail extends AbstractCommand
     public function getLocale()
     {
         return $this->locale;
+    }
+
+    public function isHighPriority(): bool
+    {
+        return $this->highPriority;
     }
 }
