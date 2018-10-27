@@ -119,10 +119,17 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
         switch (count($matchingRanges)) {
             case 0:
                 $matchingRange = $this->getUnrestrictedRangeWithLowestStartNumber();
+
                 if (is_null($matchingRange)) {
-                    throw new RuntimeException(
-                        'Assertion failed in method ' . __METHOD__ . ': $range is null'
-                    );
+                    $ranges = $this->getRestrictedRangesWithFewestCountries();
+
+                    if (empty($anges)) {
+                        throw new RuntimeException(
+                            'Assertion failed in method ' . __METHOD__ . ': count($ranges) == 0'
+                        );
+                    }
+
+                    $matchingRange = $ranges[0]; // Use first range
                 }
 
                 $rangeEntity = $matchingRange[self::ENTITY_KEY];
