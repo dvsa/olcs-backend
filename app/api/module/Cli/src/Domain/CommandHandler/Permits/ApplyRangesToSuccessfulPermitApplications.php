@@ -118,39 +118,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
 
         switch (count($matchingRanges)) {
             case 0:
-                $this->result->addMessage('    - no restricted ranges found with matching countries');
-
-                $matchingRange = $this->getUnrestrictedRangeWithLowestStartNumber();
-
-                if (is_null($matchingRange)) {
-                    $this->result->addMessage('    - no unrestricted ranges found with lowest start number');
-
-                    $ranges = $this->getRestrictedRangesWithFewestCountries();
-
-                    if (empty($ranges)) {
-                        throw new RuntimeException(
-                            'Assertion failed in method ' . __METHOD__ . ': count($ranges) == 0'
-                        );
-                    }
-
-                    $matchingRange = $ranges[0]; // Use first range
-
-                    $messageText = '    - using first restricted range with fewest countries: id %d starts at %d';
-
-                } else {
-                    $messageText = '    - using unrestricted range with lowest start number: id %d starts at %d';
-                }
-
-                $rangeEntity = $matchingRange[self::ENTITY_KEY];
-
-                $message = sprintf(
-                    $messageText,
-                    $rangeEntity->getId(),
-                    $rangeEntity->getFromNo()
-                );
-
-                $this->result->addMessage($message);
-                return $matchingRange;
+                return $this->selectRangeForCandidatePermitWithCountriesAndNoMatchingRanges();
             case 1:
                 $matchingRange = $matchingRanges[0];
 
@@ -164,6 +132,63 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
                 return $matchingRange;
         }
 
+        return $this->selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges($matchingRanges);
+    }
+
+    /**
+     * Selects the irhp_permit_range best-suited for a candidate permit that has countries
+     * but no matching ranges.
+     *
+     * @throws RuntimeException
+     * @return matchingRange the irhp_permit_range best suited for the candidate permit
+     */
+    private function selectRangeForCandidatePermitWithCountriesAndNoMatchingRanges()
+    {
+        $this->result->addMessage('    - no restricted ranges found with matching countries');
+
+        $matchingRange = $this->getUnrestrictedRangeWithLowestStartNumber();
+
+        if (is_null($matchingRange)) {
+            $this->result->addMessage('    - no unrestricted ranges found with lowest start number');
+
+            $ranges = $this->getRestrictedRangesWithFewestCountries();
+
+            if (empty($ranges)) {
+                throw new RuntimeException(
+                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) == 0'
+                );
+            }
+
+            $matchingRange = $ranges[0]; // Use first range
+
+            $messageText = '    - using first restricted range with fewest countries: id %d starts at %d';
+
+        } else {
+            $messageText = '    - using unrestricted range with lowest start number: id %d starts at %d';
+        }
+
+        $rangeEntity = $matchingRange[self::ENTITY_KEY];
+
+        $message = sprintf(
+            $messageText,
+            $rangeEntity->getId(),
+            $rangeEntity->getFromNo()
+        );
+
+        $this->result->addMessage($message);
+        return $matchingRange;
+    }
+
+    /**
+     * Selects the appropriate irhp_permit_range for a candidate permit with associated countries
+     * and multiple mathing ranges.
+     *
+     * @throws RuntimeException
+     * @param matchingRanges an array of the multiple matching ranges
+     * @return matchingRange the single range identified as suitable
+     */
+    private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(array $matchingRanges)
+    {
         $this->result->addMessage('    - more than one range found with most matching countries:');
         foreach ($matchingRanges as $matchingRange) {
             $message = sprintf(
