@@ -159,6 +159,12 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
                 );
             }
 
+            if (count($ranges) > 1) {
+                throw new RuntimeException(
+                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) > 1'
+                );
+            }
+
             $matchingRange = $ranges[0]; // Use first range
 
             $message = sprintf(
