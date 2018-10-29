@@ -161,19 +161,19 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
 
             $matchingRange = $ranges[0]; // Use first range
 
-            $messageText = '    - using first restricted range with fewest countries: id %d starts at %d';
-
+            $message = sprintf(
+                '    - using first restricted range with fewest countries: id %d has countries %s',
+                $matchingRange[self::ENTITY_KEY]->getId(),
+                implode(', ', $matchingRange[self::COUNTRY_IDS_KEY])
+            );
         } else {
-            $messageText = '    - using unrestricted range with lowest start number: id %d starts at %d';
+            $rangeEntity = $matchingRange[self::ENTITY_KEY];
+            $message = sprintf(
+                '    - using unrestricted range with lowest start number: id %d starts at %d',
+                $rangeEntity->getId(),
+                $rangeEntity->getFromNo()
+            );
         }
-
-        $rangeEntity = $matchingRange[self::ENTITY_KEY];
-
-        $message = sprintf(
-            $messageText,
-            $rangeEntity->getId(),
-            $rangeEntity->getFromNo()
-        );
 
         $this->result->addMessage($message);
         return $matchingRange;
