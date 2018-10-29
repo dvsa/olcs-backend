@@ -53,7 +53,6 @@ return [
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
-    CommandHandler\Permits\TriggerProcessEcmtApplications::class => IsInternalAdmin::class,
     CommandHandler\Permits\GeneratePermit::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     // TODO: these will need to be changed to IsInternalAdmin
