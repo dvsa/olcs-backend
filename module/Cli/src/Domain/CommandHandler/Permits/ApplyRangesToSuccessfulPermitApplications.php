@@ -140,7 +140,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
      * but no matching ranges.
      *
      * @throws RuntimeException
-     * @return matchingRange the irhp_permit_range best suited for the candidate permit
+     * @return array the irhp_permit_range best suited for the candidate permit
      */
     private function selectRangeForCandidatePermitWithCountriesAndNoMatchingRanges()
     {
@@ -187,11 +187,11 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
 
     /**
      * Selects the appropriate irhp_permit_range for a candidate permit with associated countries
-     * and multiple mathing ranges.
+     * and multiple matching ranges.
      *
      * @throws RuntimeException
      * @param matchingRanges an array of the multiple matching ranges
-     * @return matchingRange the single range identified as suitable
+     * @return array the single range identified as suitable
      */
     private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(array $matchingRanges)
     {
