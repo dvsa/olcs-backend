@@ -37,10 +37,9 @@ final class Create extends AbstractCommandHandler implements AuthAwareInterface,
 
         $this->getRepo()->save($surrender);
 
-        $result = new Result();
-        $result->addId('surrender', $surrender->getId());
-        $result->addMessage('Surrender successfully created.');
+        $this->result->addId('surrender', $surrender->getId());
+        $this->result->addMessage('Surrender successfully created.');
 
-        return $result;
+        return $this->result;
     }
 }
