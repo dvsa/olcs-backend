@@ -2,12 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
-use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Create as Sut;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Surrender\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
@@ -55,6 +52,8 @@ class CreateTest extends CommandHandlerTestCase
             ->once();
 
         $result = $this->sut->handleCommand($command);
+
+        $this->assertSame(['Surrender successfully created.'], $result->getMessages());
 
         $this->assertInstanceOf(Result::class, $result);
     }
