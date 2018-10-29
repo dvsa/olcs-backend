@@ -53,6 +53,8 @@ class CreateTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
+        $this->assertSame(['Surrender successfully created.'], $result->getMessages());
+
         $this->assertInstanceOf(Result::class, $result);
     }
 }
