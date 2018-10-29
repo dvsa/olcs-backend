@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Surrender\Create as Cmd;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -22,8 +23,11 @@ final class Create extends AbstractCommandHandler implements AuthAwareInterface,
     {
         /** @var Cmd $command */
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
+        $status = $this->getRepo()->getRefdataReference($command->getStatus());
+
         $surrender = new Surrender();
         $surrender->setLicence($licence);
+        $surrender->setStatus($status);
 
         $this->getRepo()->save($surrender);
 
