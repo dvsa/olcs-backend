@@ -118,26 +118,33 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
 
         switch (count($matchingRanges)) {
             case 0:
+                $this->result->addMessage('    - no restricted ranges found with matching countries');
+
                 $matchingRange = $this->getUnrestrictedRangeWithLowestStartNumber();
 
                 if (is_null($matchingRange)) {
+                    $this->result->addMessage('    - no unrestricted ranges found with lowest start number');
+
                     $ranges = $this->getRestrictedRangesWithFewestCountries();
 
-                    if (empty($anges)) {
+                    if (empty($ranges)) {
                         throw new RuntimeException(
                             'Assertion failed in method ' . __METHOD__ . ': count($ranges) == 0'
                         );
                     }
 
                     $matchingRange = $ranges[0]; // Use first range
+
+                    $messageText = '    - using first restricted range with fewest countries: id %d starts at %d';
+
+                } else {
+                    $messageText = '    - using unrestricted range with lowest start number: id %d starts at %d';
                 }
 
                 $rangeEntity = $matchingRange[self::ENTITY_KEY];
 
-                $this->result->addMessage('    - no restricted ranges found with matching countries');
-
                 $message = sprintf(
-                    '    - using unrestricted range with lowest start number: id %d starts at %d',
+                    $messageText,
                     $rangeEntity->getId(),
                     $rangeEntity->getFromNo()
                 );
