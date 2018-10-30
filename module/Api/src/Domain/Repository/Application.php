@@ -306,27 +306,23 @@ class Application extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function fetchOpenApplicationsForLicence($licenceId)
+    /**
+     * Fetch applications with status: 'apsts_consideration' associated with a licence
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function fetchOpenApplicationsForLicence($licenceId): array
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->leftJoin($this->alias . '.licence', 'l');
-
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licenceId'));
         $qb->andWhere($qb->expr()->eq($this->alias . '.status', ':applicationStatus'));
-//        $qb->andWhere($qb->expr()->notIn(
-//            'l' . '.status',
-//            [
-//                LicenceE::LICENCE_STATUS_VALID,
-//                LicenceE::LICENCE_STATUS_CURTAILED,
-//                LicenceE::LICENCE_STATUS_SUSPENDED
-//            ]
-//        ));
 
         $qb->setParameter('licenceId', $licenceId);
         $qb->setParameter('applicationStatus', Entity::APPLICATION_STATUS_UNDER_CONSIDERATION);
 
         return $qb->getQuery()->getResult();
-        //return count($qb->getQuery()->getResult()) === 0;
     }
 }

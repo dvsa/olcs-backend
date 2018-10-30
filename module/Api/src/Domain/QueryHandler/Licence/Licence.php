@@ -154,6 +154,15 @@ class Licence extends AbstractQueryHandler
         }
     }
 
+    /**
+     * If fetchOpenApplicationsForLicence() returns empty array, the licence applications for do have the correct
+     * statuses for surrendering a licence
+     *
+     * @param QueryInterface $query
+     *
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     private function doesLicenceApplicationsHaveCorrectStatusForSurrender($query): bool
     {
         /** @var \Dvsa\Olcs\Api\Domain\Repository\Application $applications */
@@ -161,6 +170,13 @@ class Licence extends AbstractQueryHandler
         return empty($applications->fetchOpenApplicationsForLicence($query->getId()));
     }
 
+    /**
+     * Checks if a licence can be surrendered based on the licence status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
+     *
+     * @return bool
+     */
     private function isLicenceStatusCorrectForSurrender($licence): bool
     {
         $allowedLicenceStatusesForSurrender = [
@@ -171,7 +187,5 @@ class Licence extends AbstractQueryHandler
 
         /** @var Entity\Licence\Licence $licence */
         return in_array($licence->getStatus()->getId(), $allowedLicenceStatusesForSurrender);
-
     }
-
 }
