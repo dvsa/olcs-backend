@@ -81,7 +81,7 @@ class GetScoredPermitList extends AbstractQueryHandler
             }
 
             $formattedData[] = [
-                'Permit Ref'                        => $licence['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
+                'Permit Ref'                        => $licence['licNo'] . '/' . $row['irhpPermitApplication']['ecmtPermitApplication']['id'] . '/' . $row['id'],
                 'Operator'                          => $licence['organisation']['name'],
                 'Application Score'                 => $row['applicationScore'],
                 'Permit Intensity of Use'           => $row['intensityOfUse'],
