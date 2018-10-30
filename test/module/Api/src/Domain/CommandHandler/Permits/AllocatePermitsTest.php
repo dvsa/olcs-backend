@@ -28,7 +28,8 @@ class AllocatePermitsTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::STATUS_VALID
+            EcmtPermitApplication::STATUS_VALID,
+            IrhpPermit::STATUS_PENDING
         ];
 
         parent::initReferences();
@@ -106,13 +107,16 @@ class AllocatePermitsTest extends CommandHandlerTestCase
             [$candidatePermit6, $range2, $irhpPermitApplication, 409, false]
         ];
 
+        $expectedStatus = $this->refData[IrhpPermit::STATUS_PENDING];
+
         $this->repoMap['IrhpPermit']->shouldReceive('save')
-            ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount) {
+            ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount, $expectedStatus) {
                 foreach ($permitSaveExpectations as &$expectation) {
                     if (($irhpPermit->getIrhpCandidatePermit() === $expectation[0]) &&
                         ($irhpPermit->getIrhpPermitRange() === $expectation[1]) &&
                         ($irhpPermit->getIrhpPermitApplication() === $expectation[2]) &&
-                        ($irhpPermit->getPermitNumber() == $expectation[3])) {
+                        ($irhpPermit->getPermitNumber() == $expectation[3]) &&
+                        ($irhpPermit->getStatus() == $expectedStatus)) {
                         $expectation[4] = true;
                     }
                 }
