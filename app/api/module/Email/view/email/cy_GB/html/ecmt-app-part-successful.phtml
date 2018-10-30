@@ -1,18 +1,22 @@
+<p>CY - Vehicle Operator Licensing</p>
+
 <p>CY - Your ECMT permit application <?php echo $this->escapeHtml($this->applicationRef); ?> has now been considered and processed.</p>
 
 <h3>CY - Application status: Partially successful</h3>
-<p>You have been allocated a lower number of permits than you applied for due to very high numbers of applications for all available permits.
+<p>During the current round of permit allocations, you have not been fully successful in getting all the permits that you applied for. We were oversubscribed and therefore needed to allocate a smaller number of permits to operators.
 <ul>
-    <li>Number of permits required: <?php echo $this->escapeHtml($this->permitsRequired); ?></li>
-    <li>Number of permits granted: <?php echo $this->escapeHtml($this->permitsGranted); ?></li>
+    <li>Number of permits applied for: <?php echo $this->escapeHtml($this->permitsRequired); ?></li>
+    <li>Number of permits allocated to you: <?php echo $this->escapeHtml($this->permitsGranted); ?></li>
 </ul>
+</p>
 
-<h3>Next steps</h3>
-<p>You now need to pay the Permit Issuing total fee of £<?php echo $this->escapeHtml($this->issueFeeTotal); ?>
-    (£<?php echo $this->escapeHtml($this->issueFeeAmount); ?> per permit) before receiving your paper based permit and
-    corresponding logbook. These will be posted by first class recorded delivery.</p>
+<p>You now need to pay the £<?php echo $this->escapeHtml($this->issueFeeTotal); ?> Permit Issue fee before receiving your paper based permit and corresponding Logbook. These will be posted by first class recorded delivery and must be carried in your vehicle on all international transport journeys across the EU.</p>
 
-<p>You have <?php echo $this->escapeHtml($this->paymentDeadlineNumDays); ?> calendar days to pay for your allocated
-    permits. If you do not pay the Permit Issuing fee by <?php echo $this->escapeHtml($this->issueFeeDeadlineDate); ?>
-    the permits granted to your business will be automatically cancelled.</p>
-<a href="<?php echo $this->awaitingFeeUrl; //replaced based on the env, so can't escape ?>">Pay for your permits</a>
+<p>You have <?php echo $this->escapeHtml($this->paymentDeadlineNumDays); ?> calendar days to accept this permit allocation after which it will be re-allocated and your £<?php echo $this->escapeHtml($this->applicationFee); ?> application fee per permit is non-refundable.</p>
+
+<h3>What happens next?</h3>
+<p>Further permits may become available in the future but are not guaranteed.</p>
+
+<p>You can consider <a href="<?php echo $this->escapeHtml($this->guidanceUrl); ?>">applying for other types of international road haulage permits</a> that are also available to UK hauliers.</p>
+
+<p>To find out the latest information plus details about any future application periods, please bookmark our <a href="<?php echo $this->escapeHtml($this->guidanceUrl); ?>">Guidance page</a> for your reference.</p>
