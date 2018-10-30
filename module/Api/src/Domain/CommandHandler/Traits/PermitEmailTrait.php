@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 
 /**
  * Permit email trait
@@ -38,12 +39,19 @@ trait PermitEmailTrait
      */
     protected function getTemplateVariables($recordObject): array
     {
+        $this->extraRepos[] = 'FeeType';
+
         $vars = [
             // http://selfserve is replaced based on the environment
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
             'applicationRef' => $recordObject->getApplicationRef(),
+            'applicationFee' => str_replace(
+                '.00',
+                '',
+                $this->getRepo('FeeType')->getLatestForEcmtPermit(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)->getAmount()
+            ),
         ];
 
         if ($recordObject->isAwaitingFee()) {

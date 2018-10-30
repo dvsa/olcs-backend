@@ -1,13 +1,21 @@
+CY - Vehicle Operator Licensing
+
 CY - Your ECMT permit application <?php echo $this->applicationRef; ?> has now been considered and processed.
 
 CY - Application status: Partially successful
-You have been allocated a lower number of permits than you applied for due to very high numbers of applications for all available permits.
+During the current round of permit allocations, you have not been fully successful in getting all the permits that you applied for. We were oversubscribed and therefore needed to allocate a smaller number of permits to operators.
 
-* Number of permits required: <?php echo $this->permitsRequired; ?>
-* Number of permits granted: <?php echo $this->permitsGranted; ?>
+* Number of permits applied for: <?php echo $this->permitsRequired; ?>
+* Number of permits allocated to you: <?php echo $this->permitsGranted; ?>
 
-Next steps
-You now need to pay the Permit Issuing total fee of £<?php echo $this->issueFeeTotal; ?> (£<?php echo $this->issueFeeAmount; ?> per permit) before receiving your paper based permit and corresponding logbook. These will be posted by first class recorded delivery.
+You now need to pay the £<?php echo $this->issueFeeTotal; ?> Permit Issue fee before receiving your paper based permit and corresponding Logbook. These will be posted by first class recorded delivery and must be carried in your vehicle on all international transport journeys across the EU.
 
-You have <?php echo $this->paymentDeadlineNumDays; ?> calendar days to pay for your allocated permits. If you do not pay the Permit Issuing fee by <?php echo $this->issueFeeDeadlineDate; ?> the permits granted to your business will be automatically cancelled.
-Pay for your permits at <?php echo $this->awaitingFeeUrl; ?>
+You have <?php echo $this->paymentDeadlineNumDays; ?> calendar days to accept this permit allocation after which it will be re-allocated and your £<?php echo $this->applicationFee; ?> application fee per permit is non-refundable.
+
+What happens next?
+Further permits may become available in the future but are not guaranteed.
+
+You can consider applying for other types of international road haulage permits that are also available to UK hauliers (<?php echo $this->guidanceUrl; ?>).
+
+To find out the latest information plus details about any future application periods, please bookmark our Guidance page (<?php echo $this->guidanceUrl; ?>) for your reference.
+
