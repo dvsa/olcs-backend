@@ -611,4 +611,26 @@ class ApplicationTest extends RepositoryTestCase
 
         $this->assertEquals(['RESULT'], $this->sut->fetchAbandonedVariations($olderThanDate));
     }
+
+    public function testFetchOpenApplicationsForLicence()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
+
+        $licenceId = 5;
+
+        $mockQb->shouldReceive('expr->eq')->with('a.licence', ':licenceId')->once()->andReturn('EXPR1');
+        $mockQb->shouldReceive('setParameter')->with('licenceId', 5)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('expr->eq')->with('a.status', ':applicationStatus')->once()
+            ->andReturn('EXPR2');
+        $mockQb->shouldReceive('setParameter')
+            ->with('applicationStatus', Application::APPLICATION_STATUS_UNDER_CONSIDERATION)->once()->andReturn();
+        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $this->assertEquals(['RESULT'], $this->sut->fetchOpenApplicationsForLicence($licenceId));
+    }
 }
