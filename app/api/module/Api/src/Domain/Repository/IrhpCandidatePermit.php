@@ -279,6 +279,10 @@ class IrhpCandidatePermit extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getId());
         }
+        if (method_exists($query, 'getEcmtPermitApplication')) {
+            $qb->andWhere($qb->expr()->eq('epa.id', ':ecmtId'))
+                ->setParameter('ecmtId', $query->getEcmtPermitApplication());
+        }
     }
 
     /**

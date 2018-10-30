@@ -25,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_candidate_permit_id"}),
  *        @ORM\Index(name="fk_irhp_permit_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_last_modified_by_user_id", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irhp_permit_status_ref_data_id", columns={"status"})
+ *        @ORM\Index(name="fk_irhp_permit_status_ref_data_id", columns={"status"}),
+ *        @ORM\Index(name="fk_irhp_permit_replaces_id_irhp_permit_id", columns={"replaces_id"})
  *    }
  * )
  */
@@ -158,6 +159,16 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      * @ORM\Column(type="text", name="permit_properties", nullable=true)
      */
     protected $permitProperties;
+
+    /**
+     * Replaces
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermit
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermit", fetch="LAZY")
+     * @ORM\JoinColumn(name="replaces_id", referencedColumnName="id", nullable=true)
+     */
+    protected $replaces;
 
     /**
      * Status
@@ -489,6 +500,30 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     public function getPermitProperties()
     {
         return $this->permitProperties;
+    }
+
+    /**
+     * Set the replaces
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermit $replaces entity being set as the value
+     *
+     * @return IrhpPermit
+     */
+    public function setReplaces($replaces)
+    {
+        $this->replaces = $replaces;
+
+        return $this;
+    }
+
+    /**
+     * Get the replaces
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermit
+     */
+    public function getReplaces()
+    {
+        return $this->replaces;
     }
 
     /**
