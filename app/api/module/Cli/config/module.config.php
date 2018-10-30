@@ -284,6 +284,15 @@ return [
                         ],
                     ],
                 ],
+                'permits' => [
+                    'options' => [
+                        'route' => 'permits (close-expired-windows) [--since=<date>] [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'permits',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -393,6 +402,7 @@ return [
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
+            Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
         ],
     ],
 

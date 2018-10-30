@@ -34,6 +34,7 @@ class EcmtPermitApplication extends AbstractRepository
     ];
 
     protected $entity = Entity::class;
+    protected $alias = 'epa';
 
     /**
      * @param QueryBuilder $qb
@@ -136,5 +137,28 @@ class EcmtPermitApplication extends AbstractRepository
             ->setParameter(1, Entity::STATUS_UNDER_CONSIDERATION)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Fetch all applications by IRHP permit window id and status
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $windowId    IRHP Permit Window
+     * @param array                                              $appStatuses List of app statuses
+     *
+     * @return array
+     */
+    public function fetchByWindowId($windowId, $appStatuses)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->innerJoin($this->alias.'.irhpPermitApplications', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->where('ipw.id = :windowId')
+            ->andWhere($qb->expr()->in($this->alias.'.status', ':appStatuses'))
+            ->setParameter('windowId', $windowId)
+            ->setParameter('appStatuses', $appStatuses);
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -998,6 +998,8 @@ return [
         CommandHandler\IrhpPermitWindow\Update::class,
     TransferCommand\IrhpPermitWindow\Delete::class =>
         CommandHandler\IrhpPermitWindow\Delete::class,
+    Command\IrhpPermitWindow\Close::class =>
+        CommandHandler\IrhpPermitWindow\Close::class,
 
     // Transfer - IRHP Permit Range
     TransferCommand\IrhpPermitRange\Create::class =>
