@@ -24,7 +24,7 @@ class Licence extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter'];
+    protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter', 'Application'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -68,6 +68,9 @@ class Licence extends AbstractQueryHandler
             $this->result($continuationDetail, ['continuation', 'licence'])->serialize() :
             null;
         $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
+
+        $isLicenceSurrenderAllowed = $this->doesLicenceApplicationsHaveCorrectStatusForSurrender($query)
+            && $this->isLicenceStatusCorrectForSurrender($licence);
 
         $showExpiryWarning = $continuationDetail !== null
             && $licence->isExpiring()
@@ -114,6 +117,7 @@ class Licence extends AbstractQueryHandler
                 'latestNote' => $latestNote,
                 'canHaveInspectionRequest' => !$licence->isSpecialRestricted(),
                 'showExpiryWarning' => $showExpiryWarning,
+                'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed,
             ]
         );
     }
@@ -149,4 +153,25 @@ class Licence extends AbstractQueryHandler
             throw new ForbiddenException('You do not have permission to access this record');
         }
     }
+
+    private function doesLicenceApplicationsHaveCorrectStatusForSurrender($query): bool
+    {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Application $applications */
+        $applications = $this->getRepo('Application');
+        return empty($applications->fetchOpenApplicationsForLicence($query->getId()));
+    }
+
+    private function isLicenceStatusCorrectForSurrender($licence): bool
+    {
+        $allowedLicenceStatusesForSurrender = [
+            Entity\Licence\Licence::LICENCE_STATUS_VALID,
+            Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED,
+            Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
+        ];
+
+        /** @var Entity\Licence\Licence $licence */
+        return in_array($licence->getStatus()->getId(), $allowedLicenceStatusesForSurrender);
+
+    }
+
 }
