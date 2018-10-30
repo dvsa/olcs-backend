@@ -14,4 +14,5 @@ class SendEcmtIssuedTest extends AbstractPermitTest
     protected $commandHandler = SendEcmtIssuedHandler::class;
     protected $template = 'ecmt-app-issued';
     protected $subject = 'email.ecmt.issued.subject';
+    protected $extraRepos = ['FeeType'];
 }

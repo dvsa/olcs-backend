@@ -14,4 +14,5 @@ class SendEcmtAppSubmittedTest extends AbstractPermitTest
     protected $commandHandler = SendEcmtAppSubmittedHandler::class;
     protected $template = 'ecmt-app-submitted';
     protected $subject = 'email.ecmt.default.subject';
+    protected $extraRepos = ['FeeType'];
 }
