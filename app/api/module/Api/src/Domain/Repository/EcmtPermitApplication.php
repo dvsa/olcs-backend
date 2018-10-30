@@ -124,22 +124,6 @@ class EcmtPermitApplication extends AbstractRepository
     }
 
     /**
-     * Fetch all under consideration applications
-     *
-     * @return array
-     */
-    public function fetchUnderConsiderationApplications()
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('epa')
-            ->from(Entity::class, 'epa')
-            ->where('epa.status = ?1')
-            ->setParameter(1, Entity::STATUS_UNDER_CONSIDERATION)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
      * Fetch all applications by IRHP permit window id and status
      *
      * @param int|\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $windowId    IRHP Permit Window
