@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitRange;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -14,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Delete extends AbstractCommandHandler
+final class Delete extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
