@@ -68,6 +68,7 @@ final class AllocatePermits extends AbstractCommandHandler
         $irhpPermit = IrhpPermit::createNew(
             $candidatePermit,
             new DateTime(),
+            $this->refData(IrhpPermit::STATUS_PENDING),
             $this->getNextPermitNumber($range)
         );
 
