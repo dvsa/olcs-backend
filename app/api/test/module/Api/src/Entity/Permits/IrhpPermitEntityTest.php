@@ -290,4 +290,33 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_ERROR, true],
         ];
     }
+
+    public function dpCease()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_ISSUED, false],
+            [Entity::STATUS_CEASED, true]
+        ];
+    }
+
+    /**
+     * @dataProvider dpCease
+     */
+    public function testCease($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        if (!$expected) {
+            $this->expectException(ForbiddenException::class);
+        }
+
+        $this->sut->cease(new RefData($statusId));
+
+        $this->assertEquals(Entity::STATUS_CEASED, $this->sut->getStatus()->getId());
+    }
 }

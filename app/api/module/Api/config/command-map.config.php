@@ -983,6 +983,10 @@ return [
     TransferCommand\FeatureToggle\Delete::class =>
         CommandHandler\FeatureToggle\Delete::class,
 
+    // Transfer - IRHP Permit
+    TransferCommand\IrhpPermit\Replace::class =>
+        CommandHandler\IrhpPermit\Replace::class,
+
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
@@ -1113,6 +1117,9 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+
+    // IrhpPermit Internal Backend Command
+    Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
