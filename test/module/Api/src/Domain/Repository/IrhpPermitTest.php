@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
@@ -142,5 +144,51 @@ class IrhpPermitTest extends RepositoryTestCase
             . ']]] '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchByPermitNumber()
+    {
+
+        $this->setUpSut(IrhpPermit::class, true);
+        $permitNumber = 200;
+        $permitRange = 7;
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $eqFunc1 = m::mock(Func::class);
+        $eqFunc2 = m::mock(Func::class);
+        $expr = m::mock(Expr::class);
+        $expr->shouldReceive('eq')
+            ->with('irhp_permit.permitNumber', ':permitNumber')
+            ->andReturn($eqFunc1);
+        $expr->shouldReceive('eq')
+            ->with('irhp_permit.permitRange', ':permitRange')
+            ->andReturn($eqFunc2);
+
+        $collection = [m::mock(IrhpPermitEntity::class)];
+
+        $qb->shouldReceive('andWhere')
+            ->with($eqFunc1)
+            ->andReturnSelf();
+
+        $qb->shouldReceive('andWhere')
+            ->with($eqFunc2)
+            ->andReturnSelf();
+
+        $qb->shouldReceive('setParameter')
+            ->with('permitNumber', $permitNumber)
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('permitRange', $permitRange)
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->execute')
+            ->once()
+            ->andReturn($collection);
+
+        $this->assertEquals(
+            $collection,
+            $this->sut->fetchByPermitNumberAndRange($permitNumber, $permitRange)
+        );
     }
 }

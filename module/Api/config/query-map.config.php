@@ -525,7 +525,7 @@ return [
 
     // IRHP Permit Application
     TransferQuery\IrhpPermitApplication\GetList::class => QueryHandler\IrhpPermitApplication\GetList::class,
-    
+
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
@@ -630,6 +630,11 @@ return [
     Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
+
+    // IRHP Permit - internal
+
+    Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
+    Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
     //Digital Surrender
     TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class
