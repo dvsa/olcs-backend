@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use DateTime;
 use Mockery as m;
 
@@ -27,6 +28,7 @@ class IrhpPermitEntityTest extends EntityTester
     public function testCreateNew()
     {
         $issueDate = m::mock(DateTime::class);
+        $status = m::mock(RefData::class);
         $permitNumber = 431;
         
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
@@ -38,13 +40,13 @@ class IrhpPermitEntityTest extends EntityTester
         $irhpCandidatePermit->shouldReceive('getIrhpPermitRange')
             ->andReturn($irhpPermitRange);
 
-        $entity = Entity::createNew($irhpCandidatePermit, $issueDate, $permitNumber);
+        $entity = Entity::createNew($irhpCandidatePermit, $issueDate, $status, $permitNumber);
 
         $this->assertSame($irhpCandidatePermit, $entity->getIrhpCandidatePermit());
         $this->assertSame($irhpPermitApplication, $entity->getIrhpPermitApplication());
         $this->assertSame($irhpPermitRange, $entity->getIrhpPermitRange());
         $this->assertSame($issueDate, $entity->getIssueDate());
         $this->assertSame($permitNumber, $entity->getPermitNumber());
-        $this->assertSame(Entity::STATUS_PENDING, $entity->getStatus()->getId());
+        $this->assertSame($status, $entity->getStatus());
     }
 }

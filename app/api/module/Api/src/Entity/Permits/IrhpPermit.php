@@ -32,6 +32,7 @@ class IrhpPermit extends AbstractIrhpPermit
      *
      * @param IrhpCandidatePermit   $irhpCandidatePermit
      * @param DateTime              $issueDate
+     * @param RefData               $status
      * @param int                   $permitNumber
      *
      * @return IrhpPermit
@@ -39,6 +40,7 @@ class IrhpPermit extends AbstractIrhpPermit
     public static function createNew(
         IrhpCandidatePermit $irhpCandidatePermit,
         DateTime $issueDate,
+        RefData $status,
         $permitNumber
     ) {
         $irhpPermit = new self();
@@ -46,8 +48,8 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->irhpPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication();
         $irhpPermit->irhpPermitRange = $irhpCandidatePermit->getIrhpPermitRange();
         $irhpPermit->issueDate = $issueDate;
+        $irhpPermit->status = $status;
         $irhpPermit->permitNumber = $permitNumber;
-        $irhpPermit->status = new RefData(self::STATUS_PENDING);
 
         return $irhpPermit;
     }
