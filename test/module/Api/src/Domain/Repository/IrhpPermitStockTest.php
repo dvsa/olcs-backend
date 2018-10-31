@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
@@ -24,10 +26,33 @@ class IrhpPermitStockTest extends RepositoryTestCase
     {
         $date = new DateTime('2010-01-01');
         $permitType = 'permit_ecmt';
-        $expectedResult = [0 => 'result'];
+        $expectedResult = m::mock(IrhpPermitStockEntity::class);
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $gteFunc = m::mock(Func::class);
+        $eqFunc = m::mock(Func::class);
+        $andXFunc = m::mock(Func::class);
+
+        $expr = m::mock(Expr::class);
+
+        $queryBuilder->shouldReceive('expr')
+            ->andReturn($expr);
+
+        $expr->shouldReceive('andX')
+            ->with($gteFunc, $eqFunc)
+            ->once()
+            ->andReturn($andXFunc);
+
+        $expr->shouldReceive('gte')
+            ->with('ips.validFrom', '?1')
+            ->once()
+            ->andReturn($gteFunc)
+            ->shouldReceive('eq')
+            ->with('ipt.name', '?2')
+            ->once()
+            ->andReturn($eqFunc);
 
         $queryBuilder->shouldReceive('select')
             ->with('ips')
@@ -42,15 +67,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('where')
-            ->with('ips.validFrom >= ?1')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->with('ipt.name = ?2')
-            ->once()
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('ips.validTo', 'ASC')
+            ->with($andXFunc)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
@@ -61,16 +78,58 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->with(2, $permitType)
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('setMaxResults')
-            ->with(1)
+            ->shouldReceive('orderBy')
+            ->with('ips.validTo', 'ASC')
+            ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_ARRAY)
             ->once()
-            ->andReturn($expectedResult);
+            ->andReturn([$expectedResult]);
 
             $this->assertEquals(
                 $expectedResult,
-                $this->sut->getNextIrhpPermitStockByPermitType($permitType, $date)
+                $this->sut->getNextIrhpPermitStockByPermitType($permitType, $date, Query::HYDRATE_ARRAY)
             );
+    }
+
+    public function testUpdateStatus()
+    {
+        $status = IrhpPermitStockEntity::STATUS_SCORING_PENDING;
+        $irhpPermitStockId = 44;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $query = m::mock(AbstractQuery::class);
+        $query->shouldReceive('execute')
+            ->withNoArgs()
+            ->once();
+
+        $queryBuilder->shouldReceive('update')
+            ->with(IrhpPermitStockEntity::class, 'ips')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('set')
+            ->with('ips.status', '?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ips.id = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $status)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $irhpPermitStockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($query);
+
+        $this->sut->updateStatus($irhpPermitStockId, $status);
     }
 }

@@ -34,6 +34,8 @@ return [
     BookmarkQuery\InterimUnlinkedTm::class => BookmarkQueryHandler\InterimUnlinkedTm::class,
     BookmarkQuery\InterimOperatingCentres::class => BookmarkQueryHandler\InterimOperatingCentres::class,
     BookmarkQuery\IrfoGvPermitBundle::class => BookmarkQueryHandler\IrfoGvPermitBundle::class,
+    BookmarkQuery\IrhpPermitBundle::class => BookmarkQueryHandler\IrhpPermitBundle::class,
+    BookmarkQuery\IrhpPermitStockBundle::class => BookmarkQueryHandler\IrhpPermitStockBundle::class,
     BookmarkQuery\IrfoPsvAuthBundle::class => BookmarkQueryHandler\IrfoPsvAuthBundle::class,
     BookmarkQuery\OrganisationBundle::class => BookmarkQueryHandler\OrganisationBundle::class,
     BookmarkQuery\UserBundle::class => BookmarkQueryHandler\UserBundle::class,
@@ -523,6 +525,8 @@ return [
     TransferQuery\FeatureToggle\GetList::class => QueryHandler\FeatureToggle\GetList::class,
     TransferQuery\FeatureToggle\IsEnabled::class => QueryHandler\FeatureToggle\IsEnabled::class,
 
+    // IRHP Permit Application
+    TransferQuery\IrhpPermitApplication\GetList::class => QueryHandler\IrhpPermitApplication\GetList::class,
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
@@ -538,6 +542,12 @@ return [
     // IRHP Permit Range
     TransferQuery\IrhpPermitRange\ById::class => QueryHandler\IrhpPermitRange\ById::class,
     TransferQuery\IrhpPermitRange\GetList::class => QueryHandler\IrhpPermitRange\GetList::class,
+
+    // IRHP Permit Sector
+    TransferQuery\IrhpPermitSector\GetList::class => QueryHandler\IrhpPermitSector\GetList::class,
+
+    // IRHP Permit Jurisdiction
+    TransferQuery\IrhpPermitJurisdiction\GetList::class => QueryHandler\IrhpPermitJurisdiction\GetList::class,
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
@@ -591,6 +601,7 @@ return [
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
     TransferQuery\Permits\EcmtCountriesList::class => QueryHandler\Permits\EcmtCountriesList::class,
+    TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
@@ -600,8 +611,14 @@ return [
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\LastOpenWindow::class => QueryHandler\Permits\LastOpenWindow::class,
+    TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
 
-    // Cli - Permits
-    QueryCli\Permits\StockAvailability::class => QueryHandlerCli\Permits\StockAvailability::class,
-    QueryCli\Permits\StockLackingRandomisedScore::class => QueryHandlerCli\Permits\StockLackingRandomisedScore::class,
+    // Permits - internal
+    Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,
+    Query\Permits\QueueAcceptScoringPermitted::class => QueryHandler\Permits\QueueAcceptScoringPermitted::class,
+    Query\Permits\CheckRunScoringPrerequisites::class => QueryHandler\Permits\CheckRunScoringPrerequisites::class,
+    Query\Permits\CheckAcceptScoringPrerequisites::class => QueryHandler\Permits\CheckAcceptScoringPrerequisites::class,
+    Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
+    Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
+    Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
 ];

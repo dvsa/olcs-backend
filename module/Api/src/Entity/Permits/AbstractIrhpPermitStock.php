@@ -24,7 +24,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uniqueStock", columns={"irhp_permit_type_id","valid_from","valid_to"})
@@ -107,11 +108,21 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $lastModifiedOn;
 
     /**
+     * Status
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="status", referencedColumnName="id", nullable=true)
+     */
+    protected $status;
+
+    /**
      * Valid from
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
+     * @ORM\Column(type="date", name="valid_from", nullable=true)
      */
     protected $validFrom;
 
@@ -120,7 +131,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="valid_to", nullable=true)
+     * @ORM\Column(type="date", name="valid_to", nullable=true)
      */
     protected $validTo;
 
@@ -357,6 +368,30 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
         }
 
         return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the status
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $status entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     /**

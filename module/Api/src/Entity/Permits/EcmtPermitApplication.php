@@ -43,6 +43,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_DECLINED = 'permit_app_declined';
 
     const PERMIT_TYPE = 'permit_ecmt';
+    const PERMIT_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT';
+    const PERMIT_COVERING_LETTER_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT_COVERING_LETTER';
 
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
@@ -51,6 +53,9 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
     const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
     const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
+
+    const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
+    const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
 
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
@@ -125,6 +130,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $ecmtPermitApplication->trips = $trips;
         $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
         $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
+
+        // If Internal user has completed all fields and declaration question in one step set checked answers to 1 to
+        // allow submission without a second save step required as per John S request
+        $sections = $ecmtPermitApplication->getSectionCompletion(self::SECTIONS);
+        if ($sections['allCompleted'] && $declaration == 1) {
+            $ecmtPermitApplication->checkedAnswers = 1;
+        }
 
         return $ecmtPermitApplication;
     }
@@ -216,22 +228,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $submitStatus;
     }
 
-    public function withdraw(RefData $withdrawStatus)
+    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason)
     {
         if (!$this->canBeWithdrawn()) {
             throw new ForbiddenException('This application is not allowed to be withdrawn');
         }
 
         $this->status = $withdrawStatus;
+        $this->withdrawReason = $withdrawReason;
     }
 
-    public function decline(RefData $declineStatus)
+    public function decline(RefData $declineStatus, RefData $withdrawReason)
     {
         if (!$this->canBeDeclined()) {
             throw new ForbiddenException('This application is not allowed to be declined');
         }
 
         $this->status = $declineStatus;
+        $this->withdrawReason = $withdrawReason;
     }
 
     public function accept(RefData $acceptStatus)
@@ -264,10 +278,42 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function proceedToValid(RefData $issuedStatus)
     {
         if (!$this->isIssueInProgress()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+            throw new ForbiddenException('This application is not in the correct state to proceed to valid (' . $this->status->getId() . ')');
         }
 
         $this->status = $issuedStatus;
+    }
+
+    /**
+     * Proceeds the application from under consideration to awaiting fee during the accept scoring process
+     *
+     * @param RefData $awaitingFeeStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToAwaitingFee(RefData $awaitingFeeStatus)
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee ('.$this->status->getId().')');
+        }
+
+        $this->status = $awaitingFeeStatus;
+    }
+
+    /**
+     * Proceeds the application from under consideration to unsuccessful during the accept scoring process
+     *
+     * @param RefData $unsuccessfulStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToUnsuccessful(RefData $unsuccessfulStatus)
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful ('.$this->status->getId().')');
+        }
+
+        $this->status = $unsuccessfulStatus;
     }
 
     /**
@@ -297,10 +343,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
             'isAwaitingFee' => $this->isAwaitingFee(),
+            'isFeePaid' => $this->isFeePaid(),
+            'isIssueInProgress' => $this->isIssueInProgress(),
             'isValid' => $this->isValid(),
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
+            'hasOutstandingFees' => $this->hasOutstandingFees()
         ];
     }
 
@@ -360,12 +409,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * Updates the application to indicate the intended use of the permit in any countries that have imposed limits
      * on the issue of permits for UK hauliers. The $countrys parameter should be an array of Country objects.
      *
-     * @param array $countrys
+     * @param ArrayCollection $countrys
      */
-    public function updateCountrys(array $countrys)
+    public function updateCountrys(ArrayCollection $countrys)
     {
         $this->countrys = $countrys;
-        $this->hasRestrictedCountries = count($countrys) > 0;
+        $this->hasRestrictedCountries = $countrys->count() > 0;
 
         $this->resetCheckAnswersAndDeclaration();
     }
@@ -448,7 +497,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
      */
-    private function getSectionCompletion($sections)
+    protected function getSectionCompletion($sections)
     {
         $sectionCompletion = [];
         $totalCompleted = 0;
@@ -593,6 +642,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         return $this->status->getId() === self::STATUS_AWAITING_FEE;
     }
 
+    /**
+     * @return bool
+     */
+    public function isFeePaid()
+    {
+        return $this->status->getId() === self::STATUS_FEE_PAID;
+    }
 
     /**
      * @return bool
@@ -601,7 +657,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     {
         return $this->status->getId() === self::STATUS_VALID;
     }
-
 
     /**
      * Whether the permit application can be submitted
@@ -727,7 +782,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function isReadyForIssuing()
     {
-        return $this->status->getId() === self::STATUS_FEE_PAID;
+        return $this->isFeePaid();
     }
 
     /**
@@ -788,5 +843,31 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             }
         }
         return null;
+    }
+
+    /**
+     * Get All Outstanding Ecmt Application Fees
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
+        $fees = [];
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
+                $fees[] = $fee;
+            }
+        }
+        return $fees;
+    }
+
+    /**
+     * Does ECMT Application have any outstanding Fees?
+     *
+     */
+    public function hasOutstandingFees()
+    {
+        return count($this->getLatestOutstandingEcmtApplicationFee());
     }
 }

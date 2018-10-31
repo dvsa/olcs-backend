@@ -5,10 +5,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocatePermits as AllocatePermitsCmd;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use DateTime;
 
@@ -17,8 +20,11 @@ use DateTime;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-final class AllocatePermits extends AbstractCommandHandler
+final class AllocatePermits extends AbstractCommandHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['IrhpPermit'];
@@ -68,6 +74,7 @@ final class AllocatePermits extends AbstractCommandHandler
         $irhpPermit = IrhpPermit::createNew(
             $candidatePermit,
             new DateTime(),
+            $this->refData(IrhpPermit::STATUS_PENDING),
             $this->getNextPermitNumber($range)
         );
 

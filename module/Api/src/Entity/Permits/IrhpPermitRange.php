@@ -73,4 +73,27 @@ class IrhpPermitRange extends AbstractIrhpPermitRange
 
         return $this;
     }
+
+    /**
+     * Checks whether there are dependencies on the Permit Range and returns whether the Permit Range can be deleted.
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return
+            count($this->irhpCandidatePermits) === 0 &&
+            count($this->irhpPermits) === 0 &&
+            count($this->countrys) === 0;
+    }
+
+    /**
+     * Get the number of possible permits in this range
+     *
+     * @return int
+     */
+    public function getSize()
+    {
+        return(($this->toNo - $this->fromNo) + 1);
+    }
 }

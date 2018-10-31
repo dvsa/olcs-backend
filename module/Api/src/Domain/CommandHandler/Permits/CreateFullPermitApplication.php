@@ -2,13 +2,17 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateFullPermitApplication as CreateFullPermitApplicationCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 
@@ -20,8 +24,12 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Andy Newton
  */
-final class CreateFullPermitApplication extends AbstractCommandHandler
+final class CreateFullPermitApplication extends AbstractCommandHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+
     /**
      * @var string
      */
@@ -74,12 +82,10 @@ final class CreateFullPermitApplication extends AbstractCommandHandler
      */
     private function createPermitApplicationObject(CreateFullPermitApplicationCmd $command): EcmtPermitApplication
     {
-        $countrys = [];
+        $countrys = new ArrayCollection();
         foreach ($command->getCountryIds() as $countryId) {
-            $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
+            $countrys->add($this->getRepo('Country')->getReference(Country::class, $countryId));
         }
-
-
 
         return EcmtPermitApplication::createNewInternal(
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),

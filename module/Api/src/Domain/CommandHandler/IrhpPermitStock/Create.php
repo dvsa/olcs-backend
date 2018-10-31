@@ -3,19 +3,25 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Create as CreateStockCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit Stock
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Create extends AbstractCommandHandler
+final class Create extends AbstractCommandHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
 
     protected $extraRepos = ['IrhpPermitType'];
@@ -32,7 +38,8 @@ final class Create extends AbstractCommandHandler
             $permitType,
             $command->getValidFrom(),
             $command->getValidTo(),
-            $command->getInitialStock()
+            $command->getInitialStock(),
+            $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN)
         );
 
         try {

@@ -21,6 +21,7 @@ return array(
     'email.licensing-information.continuation.subject' => 'Operator licence continuation/expiry',
     'email.licensing-information.standard.subject' => 'Operator licensing information',
     'email.transport-manager-complete-digital-form.subject' => 'You\'ve been named as a Transport Manager',
+    'email.transport-manager-amend-digital-form.subject' => 'Please amend your Transport Manager details',
     'email.transport-manager-submitted-form.subject' => 'A Transport Manager has submitted their details for review',
     'email.transport-manager-confirmed.subject' => 'Your details have been confirmed',
     'email.transport-manager-user-created.subject' => 'You\'ve been named as a Transport Manager',
@@ -32,4 +33,6 @@ return array(
     'email.duplicate-vehicles-removal.subject' => 'List of removed duplicated vehicles',
     'email.notification.subject' => 'OLCS Notification',
     'email.digital-continuation.subject' => 'The licence %s is due to expire on %s',
+    'email.last-tm-operator-notification.subject' => 'Urgent: Removal of last Transport Manager',
+    'email.ecmt.automatically.withdrawn.subject' => 'ECMT permit application %s has been withdrawn',
 );

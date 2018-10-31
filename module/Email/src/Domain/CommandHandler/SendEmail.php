@@ -286,7 +286,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
             ];
         }
 
-        $this->send($to, $subject, $plainBody, $htmlBody, $fromEmail, $fromName, $cc, $bcc, $downloadedDocs);
+        $this->send($to, $subject, $plainBody, $htmlBody, $fromEmail, $fromName, $cc, $bcc, $downloadedDocs, $command->isHighPriority());
 
         $this->result->addMessage('Email sent');
         return $this->result;
@@ -308,9 +308,9 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      * @return void
      * @throws EmailNotSentException
      */
-    protected function send($to, $subject, $plain, $html, $fromEmail, $fromName, array $cc, array $bcc, array $docs)
+    protected function send($to, $subject, $plain, $html, $fromEmail, $fromName, array $cc, array $bcc, array $docs, bool $highPriority = false)
     {
-        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $plain, $html, $cc, $bcc, $docs);
+        $this->getEmailService()->send($fromEmail, $fromName, $to, $subject, $plain, $html, $cc, $bcc, $docs, $highPriority);
     }
 
     /**

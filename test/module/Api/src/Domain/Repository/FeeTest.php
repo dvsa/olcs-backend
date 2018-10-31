@@ -376,6 +376,9 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('filterByApplication')
             ->once()
             ->andReturnSelf()
+            ->shouldReceive('filterByPermitApplication')
+            ->once()
+            ->andReturnSelf()
             ->shouldReceive('filterByIds')
             ->once()
             ->andReturnSelf();

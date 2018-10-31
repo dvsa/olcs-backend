@@ -5,6 +5,8 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 
 /**
@@ -23,22 +25,51 @@ class IrhpPermitStock extends AbstractRepository
      *
      * @param string $permitType
      * @param DateTime $date
+     * @param Query::HYDRATE_OBJECT $hydrationMode
      *
      * @return array
+     * @throws NotFoundException
      */
-    public function getNextIrhpPermitStockByPermitType($permitType, $date)
+    public function getNextIrhpPermitStockByPermitType($permitType, $date, $hydrationMode = Query::HYDRATE_OBJECT)
     {
-        return $this->getEntityManager()->createQueryBuilder()
-                ->select('ips')
-                ->from(Entity::class, 'ips')
-                ->innerJoin('ips.irhpPermitType', 'ipt')
-                ->where('ips.validFrom >= ?1') //stock starts in future
-                ->andWhere('ipt.name = ?2') //Permit Type ECMT
-                ->orderBy('ips.validTo', 'ASC')
-                ->setParameter(1, $date)
-                ->setParameter(2, $permitType)
-                ->setMaxResults(1) //There should only ever be one, take the most recent
-                ->getQuery()
-                ->getResult();
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        $results = $query->select('ips')
+            ->from(Entity::class, 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->where($query->expr()->andX(
+                $query->expr()->gte('ips.validFrom', '?1'),
+                $query->expr()->eq('ipt.name', '?2')
+            ))
+            ->setParameter(1, $date)
+            ->setParameter(2, $permitType)
+            ->orderBy('ips.validTo', 'ASC')
+            ->getQuery()
+            ->getResult($hydrationMode);
+
+        if (empty($results)) {
+            throw new NotFoundException('No stock available.');
+        }
+
+        return $results[0];
+    }
+
+    /**
+     * Updates the scoring status of a given stock item
+     *
+     * @param int $irhpPermitStockId
+     * @param string $status
+     */
+    public function updateStatus($irhpPermitStockId, $status)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder()
+            ->update(Entity::class, 'ips')
+            ->set('ips.status', '?1')
+            ->where('ips.id = ?2')
+            ->setParameter(1, $status)
+            ->setParameter(2, $irhpPermitStockId)
+            ->getQuery();
+
+        $query->execute();
     }
 }

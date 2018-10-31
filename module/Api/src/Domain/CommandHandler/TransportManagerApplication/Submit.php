@@ -29,7 +29,7 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Handle command
      *
-     * @param CommandInterface $command command
+     * @param \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit $command command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -42,12 +42,11 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         } else {
             $tma = $this->getRepo()->fetchUsingId($command);
         }
-
-        // next status depends on whether TM is the owner
-        $nextStatus = ($tma->getIsOwner() === 'Y') ? TransportManagerApplication::STATUS_OPERATOR_SIGNED :
-            TransportManagerApplication::STATUS_TM_SIGNED;
-
-
+        $nextStatus = $command->getNextStatus();
+        if (is_null($nextStatus)) {
+            $nextStatus = ($tma->getIsOwner() === 'Y') ? TransportManagerApplication::STATUS_OPERATOR_SIGNED :
+                TransportManagerApplication::STATUS_TM_SIGNED;
+        }
 
         $tma->setTmApplicationStatus($this->getRepo()->getRefdataReference($nextStatus));
         $this->getRepo()->save($tma);
@@ -149,6 +148,6 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
 
     private function shouldCreateSnapshot($status): bool
     {
-        return $status === TransportManagerApplication::STATUS_OPERATOR_SIGNED;
+        return ($status === TransportManagerApplication::STATUS_OPERATOR_SIGNED) || ($status === TransportManagerApplication::STATUS_RECEIVED);
     }
 }

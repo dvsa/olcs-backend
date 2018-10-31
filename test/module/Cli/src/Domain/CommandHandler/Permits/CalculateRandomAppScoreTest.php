@@ -20,103 +20,133 @@ use Mockery as m;
  */
 class CalculateRandomAppScoreTest extends CommandHandlerTestCase
 {
-    private $irhpPermitApplication;
-
-    private $irhpCandidatePermit;
-
-    private $stockId;
-
     public function setUp()
     {
         $this->sut = new CalculateRandomApplicationScoreHandler();
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
 
-        $this->stockId = 7;
-        $licenceNo = 'OB111111';
-
-        $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-
-        $this->irhpPermitApplication->shouldReceive('getLicence->getLicNo')
-            ->with()
-            ->andReturn($licenceNo);
-        $this->irhpPermitApplication->shouldReceive('getId')
-            ->with()
-            ->andReturn(1);
-        $this->irhpPermitApplication->shouldReceive('getPermitsRequired')
-            ->with()
-            ->andReturn(12);
-
-        $this->irhpCandidatePermit = m::mock(IrhpCandidatePermit::class);
-
-        $this->irhpCandidatePermit->shouldReceive('calculateRandomFactor')
-            ->with(
-                [
-                    'licenceData' => [$licenceNo => [1 => 12]],
-                    'meanDeviation' => 1
-                ]
-            )
-            ->andReturn(10.1);
-        $this->irhpCandidatePermit->shouldReceive('getApplicationScore')
-            ->with()
-            ->andReturn(2);
-        $this->irhpCandidatePermit->shouldReceive('getIrhpPermitApplication')
-            ->with()
-            ->andReturn($this->irhpPermitApplication);
-
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getIrhpCandidatePermitsForScoring')
-            ->with($this->stockId)
-            ->andReturn([$this->irhpCandidatePermit]);
-
         parent::setUp();
     }
-
 
     /**
      * tests handleCommand
      */
     public function testHandleCommand()
     {
-        $this->irhpCandidatePermit->shouldReceive('getRandomizedScore')
-            ->andReturn(null);
+        $stockId = 7;
 
-        $this->irhpCandidatePermit->shouldReceive('setRandomizedScore')
-            ->with(10.1 * 2)
-            ->once();
+        $candidatePermit1 = $this->createCandidatePermit(1, 77, 0.5, 0.5, 0.25);
+        $candidatePermit2 = $this->createCandidatePermit(2, 70, 1.0, 0.8, 0.8);
 
-        $this->irhpCandidatePermit->shouldReceive('setRandomFactor')
-            ->with(10.1)
-            ->once();
+        $candidatePermitsForScoring = [
+            $candidatePermit1,
+            $candidatePermit2
+        ];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
-            ->with($this->irhpCandidatePermit);
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getIrhpCandidatePermitsForScoring')
+            ->with($stockId)
+            ->andReturn($candidatePermitsForScoring);
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getCountWithRandomisedScore')
+            ->with($stockId)
+            ->andReturn(0);
 
-        $this->sut->handleCommand(
-            CalculateRandomApplicationScoreCommand::create(['stockId' => $this->stockId])
+        $result = $this->sut->handleCommand(CalculateRandomApplicationScoreCommand::create(['stockId' => $stockId]));
+
+        $expectedMessages = [
+            'Updated the Randomised Score of Appropriate Candidate Permits.',
+            '   - Number of Permits Updated: 2'
+        ];
+
+        $this->assertEquals(
+            $expectedMessages,
+            $result->getMessages()
         );
     }
 
-    /**
-     * In this scenario, the randomised score is already set.
-     * Therefore, the command should skip some unnecessary operations.
-     */
-    public function testHandleCommandRandomizedScoreAlreadySet()
+    public function testHandleCommandScoresAlreadySet()
     {
-        $this->irhpCandidatePermit->shouldReceive('getRandomizedScore')
-            ->andReturn(1); //this time randomised score is already set so shouldn't do some operations
+        $stockId = 7;
 
-        $this->irhpCandidatePermit->shouldReceive('setRandomizedScore')
-            ->with(10.1 * 2)
-            ->never();
-
-        $this->irhpCandidatePermit->shouldReceive('setRandomFactor')
-            ->with(10.1)
-            ->never();
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getCountWithRandomisedScore')
+            ->with($stockId)
+            ->andReturn(5);
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
             ->never();
 
-        $this->sut->handleCommand(
-            CalculateRandomApplicationScoreCommand::create(['stockId' => $this->stockId])
+        $result = $this->sut->handleCommand(CalculateRandomApplicationScoreCommand::create(['stockId' => $stockId]));
+
+        $expectedMessages = [
+            'Stock has one or more randomised scores already assigned.',
+            '    - No randomised scores will be set.'
+        ];
+
+        $this->assertEquals(
+            $expectedMessages,
+            $result->getMessages()
         );
+    }
+
+    private function createCandidatePermit(
+        $applicationId,
+        $applicationLicenceNo,
+        $applicationScore,
+        $randomFactor,
+        $expectedRandomizedScore
+    ) {
+        $deviationData = [
+            'licenceData' => [
+                77 => [
+                    1 => 1
+                ],
+                70 => [
+                    2 => 1
+                ]
+            ],
+            'meanDeviation' => 1
+        ];
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')
+            ->andReturn($applicationLicenceNo);
+
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('getLicence')
+            ->andReturn($licence);
+        $ecmtPermitApplication->shouldReceive('getPermitsRequired')
+            ->andReturn(1);
+        $ecmtPermitApplication->shouldReceive('getId')
+            ->andReturn($applicationId);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getEcmtPermitApplication')
+            ->andReturn($ecmtPermitApplication);
+
+        $irhpCandidatePermit = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit->shouldReceive('getIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $irhpCandidatePermit->shouldReceive('getApplicationScore')
+            ->andReturn($applicationScore);
+        $irhpCandidatePermit->shouldReceive('setRandomizedScore')
+            ->with($expectedRandomizedScore)
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpCandidatePermit->shouldReceive('setRandomFactor')
+            ->with($randomFactor)
+            ->once()
+            ->ordered()
+            ->globally();
+        $irhpCandidatePermit->shouldReceive('calculateRandomFactor')
+            ->with($deviationData)
+            ->andReturn($randomFactor);
+
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
+            ->with($irhpCandidatePermit)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        return $irhpCandidatePermit;
     }
 }
