@@ -39,8 +39,6 @@ trait PermitEmailTrait
      */
     protected function getTemplateVariables($recordObject): array
     {
-        $this->extraRepos[] = 'FeeType';
-
         $vars = [
             // http://selfserve is replaced based on the environment
             'appUrl' => 'http://selfserve/',
