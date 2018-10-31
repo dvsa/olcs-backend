@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
@@ -17,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Andy Newton
  */
-final class Update extends AbstractCommandHandler
+final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use IrhpPermitWindowOverlapTrait;
     use ToggleAwareTrait;
