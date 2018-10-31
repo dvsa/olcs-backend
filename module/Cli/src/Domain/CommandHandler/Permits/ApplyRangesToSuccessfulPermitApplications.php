@@ -132,7 +132,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
                 return $matchingRange;
         }
 
-        return $this->selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges($matchingRanges);
+        return $this->selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges($matchingRanges, $applicationCountryIds);
     }
 
     /**
@@ -160,9 +160,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
             }
 
             if (count($ranges) > 1) {
-                throw new RuntimeException(
-                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) > 1'
-                );
+                $this->result->addMessage('    - More than 1 range returned by getRestrictedRangesWithFewestCountries()');
             }
 
             $matchingRange = $ranges[0]; // Use first range
@@ -191,9 +189,11 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
      *
      * @throws RuntimeException
      * @param matchingRanges an array of the multiple matching ranges
+     * @param array $applicationCountryIds The country ids specified in the application
+     *
      * @return array the single range identified as suitable
      */
-    private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(array $matchingRanges)
+    private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(array $matchingRanges, array $applicationCountryIds)
     {
         $this->result->addMessage('    - more than one range found with most matching countries:');
         foreach ($matchingRanges as $matchingRange) {
