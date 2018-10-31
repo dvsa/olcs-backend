@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -13,10 +16,13 @@ use Dvsa\Olcs\Api\Entity\Permits\Sectors;
  *
  * @todo: Needed to specify $extraRepos for unknown reason to prevent unit test failing, investigate & remove
  */
-class GetScoredPermitList extends AbstractQueryHandler
+class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
     const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = ['M', 'G', 'N'];
 
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'IrhpCandidatePermit';
     protected $bundledRepos = [
         'irhpPermitApplication' => [
