@@ -26,7 +26,7 @@ final class ValidEcmtPermits extends AbstractListQueryHandler implements ToggleR
             'countrys' => [
                 'country'
             ],
-            'irhpPermitStock'
+            'irhpPermitStock' => ['irhpPermitRange' => 'countrys']
         ],
     ];
 }

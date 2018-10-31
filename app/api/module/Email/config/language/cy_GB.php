@@ -29,4 +29,5 @@ return array(
     'email.user-created.subject' => 'Rydych wedi eich ychwanegu i gyfrif ',
     'email.user-registered.subject' => 'Mae eich cyfrif wedi ei gofrestru',
     'email.user-temporary-password.subject' => 'Eich cyfrinair dros dro',
+    'email.ecmt.automatically.withdrawn.subject' => 'CY - ECMT permit application %s has been withdrawn',
 );

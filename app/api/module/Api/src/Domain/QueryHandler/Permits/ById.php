@@ -18,10 +18,10 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $bundle = ['licence'=>['trafficArea', 'licenceType'],
+    protected $bundle = ['licence'=>['trafficArea', 'licenceType', 'organisation'],
                          'sectors' => ['sectors'],
                          'countrys' => ['country'],
                          'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock']],
-                         'fees'
+                         'fees' => ['feeStatus', 'feeType' => ['feeType']]
                         ];
 }

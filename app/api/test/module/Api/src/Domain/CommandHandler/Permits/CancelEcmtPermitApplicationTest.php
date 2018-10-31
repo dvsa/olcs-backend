@@ -2,6 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CancelEcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -29,8 +32,9 @@ class CancelEcmtPermitApplicationTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $commandId = 4096;
         $applicationId = 4096;
+        $feeId1 = 111;
+        $feeId2 = 222;
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('cancel')
@@ -44,10 +48,30 @@ class CancelEcmtPermitApplicationTest extends CommandHandlerTestCase
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
-            ->andReturn($commandId);
+            ->andReturn($applicationId);
+
+        $fee1 = m::mock(Fee::class);
+        $fee1->shouldReceive('getId')->once()->withNoArgs()->andReturn($feeId1);
+        $fee2 = m::mock(Fee::class);
+        $fee2->shouldReceive('getId')->once()->withNoArgs()->andReturn($feeId2);
+        $fees = [$fee1, $fee2];
+
+        $ecmtPermitApplication->shouldReceive('getOutstandingFees')->once()->withNoArgs()->andReturn($fees);
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => $feeId1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => $feeId2],
+            new Result()
+        );
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->with($commandId)
+            ->with($applicationId)
             ->andReturn($ecmtPermitApplication);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('save')

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as Entity;
 use DateTime;
 
@@ -105,5 +106,36 @@ class IrhpPermitWindow extends AbstractRepository
         }
 
         return $doctrineQb->getQuery()->getResult();
+    }
+
+    /**
+     * @param int $irhpPermitStockId
+     * @param Query::HYDRATE_OBJECT $hydrationMode
+     *
+     * @return array
+     * @throws NotFoundException
+     */
+    public function fetchLastOpenWindowByStockId(int $irhpPermitStockId, $hydrationMode = Query::HYDRATE_OBJECT)
+    {
+        $date = new DateTime();
+        $query = $this->getEntityManager()->createQueryBuilder();
+
+        $results = $query->select('ipw')
+            ->from(Entity::class, 'ipw')
+            ->where($query->expr()->andX(
+                $query->expr()->between('?1', 'ipw.startDate', 'ipw.endDate'),
+                $query->expr()->eq('ipw.irhpPermitStock', '?2')
+            ))
+            ->orderBy('ipw.id', 'DESC')
+            ->setParameter(1, $date)
+            ->setParameter(2, $irhpPermitStockId)
+            ->getQuery()
+            ->getResult($hydrationMode);
+
+        if (empty($results)) {
+            throw new NotFoundException('No window available.');
+        }
+
+        return $results[0];
     }
 }

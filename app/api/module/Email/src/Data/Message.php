@@ -33,6 +33,8 @@ class Message
 
     protected $htmlBody;
 
+    protected $highPriority = false;
+
     protected $hasHtml = true;
 
     protected $locale = 'en_GB';
@@ -56,6 +58,7 @@ class Message
             'docs' => $this->getDocs(),
             'plainBody' => $this->getPlainBody(),
             'htmlBody' => $this->getHtmlBody(),
+            'highPriority' => $this->isHighPriority(),
             'hasHtml' => $this->getHasHtml(),
             'locale' => $this->getLocale()
         ];
@@ -186,6 +189,22 @@ class Message
     {
         $this->htmlBody = $htmlBody;
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHighPriority(): bool
+    {
+        return $this->highPriority;
+    }
+
+    /**
+     * @param bool $highPriority
+     */
+    public function setHighPriority(bool $highPriority = true): void
+    {
+        $this->highPriority = $highPriority;
     }
 
     /**

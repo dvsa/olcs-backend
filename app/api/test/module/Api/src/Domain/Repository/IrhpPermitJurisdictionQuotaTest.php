@@ -59,4 +59,55 @@ class IrhpPermitJurisdictionQuotaTest extends RepositoryTestCase
             $this->sut->fetchByNonZeroQuota($stockId)
         );
     }
+
+    public function testFetchByPermitStockId()
+    {
+        /** @var QueryBuilder $qb */
+        $qb = m::mock(QueryBuilder::class);
+
+        $mockJurisdictionQuotaRepo = m::mock();
+
+        $this->em
+            ->shouldReceive('getRepository')
+            ->andReturn($mockJurisdictionQuotaRepo);
+
+        $mockJurisdictionQuotaRepo
+            ->shouldReceive('createQueryBuilder')
+            ->andReturn($qb);
+
+        $where = m::mock();
+
+        $qb
+            ->shouldReceive('andWhere')
+            ->once()
+            ->with($where)
+            ->andReturnSelf();
+
+        $qb
+            ->shouldReceive('expr->eq')
+            ->once()
+            ->with('m.irhpPermitStock', ':irhpPermitStock')
+            ->andReturn($where);
+
+        $qb
+            ->shouldReceive('setParameter')
+            ->once()
+            ->with('irhpPermitStock', '1')
+            ->andReturnSelf();
+
+        $result = [
+            'jurisdictionId' => 8,
+            'quotaNumber' => 320
+        ];
+
+        $qb
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($result);
+
+        $this->assertEquals(
+            $result,
+            $this->sut->fetchByIrhpPermitStockId(1)
+        );
+    }
 }

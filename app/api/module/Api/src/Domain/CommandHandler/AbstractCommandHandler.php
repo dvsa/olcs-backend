@@ -27,6 +27,7 @@ use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\Exception\ExceptionInterface as ZendServiceException;
 use Zend\ServiceManager\FactoryInterface;
@@ -66,6 +67,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      * @var CommandHandlerInterface
      */
     private $commandHandler;
+
+    /**
+     * @var Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface
+     */
+    private $queryHandler;
 
     private $repoManager;
 
@@ -111,6 +117,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         $this->commandHandler = $serviceLocator;
+
+        $this->queryHandler = $mainServiceLocator->get('QueryHandlerManager');
 
         $this->pidIdentityProvider = $mainServiceLocator->get(PidIdentityProvider::class);
 
@@ -264,6 +272,16 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
+     * get query handler
+     *
+     * @return \Dvsa\Olcs\Api\Domain\QueryHandlerManager
+     */
+    protected function getQueryHandler()
+    {
+        return $this->queryHandler;
+    }
+
+    /**
      * Get PidIdentityProvider
      *
      * @return PidIdentityProvider
@@ -271,6 +289,25 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     protected function getPidIdentityProvider()
     {
         return $this->pidIdentityProvider;
+    }
+
+    /**
+     * Wrapper to call a query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return \Dvsa\Olcs\Api\Domain\Query\Result
+     */
+    protected function handleQuery(QueryInterface $query)
+    {
+        try {
+            $result = $this->getQueryHandler()->handleQuery($query, false);
+        } catch (DisabledHandlerException $e) {
+            $result = new Result();
+            $result->addMessage($e->getMessage());
+        }
+
+        return $result;
     }
 
     /**
@@ -445,5 +482,17 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     protected function refData(string $refDataKey): RefDataEntity
     {
         return $this->getRepo()->getRefdataReference($refDataKey);
+    }
+
+    /**
+     * @param string|null $value ('Y' or 'N')
+     * @return bool|null
+     */
+    protected function yesNoToBoolOrNull(?string $value): ?bool
+    {
+        if ($value === null || ($value !== 'Y' && $value !== 'N')) {
+            return null;
+        }
+        return $value === 'Y' ? true : false;
     }
 }

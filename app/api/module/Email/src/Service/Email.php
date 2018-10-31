@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Email\Service;
 
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\Olcs\Email\Transport\Factory;
+use Zend\Mail\Header\GenericHeader;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail as ZendMail;
@@ -149,7 +150,8 @@ class Email implements FactoryInterface
         $htmlBody,
         array $cc = [],
         array $bcc = [],
-        array $docs = []
+        array $docs = [],
+        bool $highPriority = false
     ) {
         $emailBody = new MimeMessage();
 
@@ -219,6 +221,10 @@ class Email implements FactoryInterface
         $mail->setBody($emailBody);
         $mail->getHeaders()->get('content-type')->setType($messageType);
 
+        if ($highPriority) {
+            $this->setHighPriority($mail);
+        }
+
         $trans = $this->getMailTransport();
 
         try {
@@ -228,5 +234,14 @@ class Email implements FactoryInterface
             Logger::err('email failed', ['data' => $message]);
             throw new EmailNotSentException($message, 0, $e);
         }
+    }
+
+    private function setHighPriority(ZendMail\Message $mail): void
+    {
+        $headers = $mail->getHeaders();
+        $importanceHeader = new GenericHeader('Importance', 'High');
+        $priorityHeader = new GenericHeader('X-Priority', '1');
+        $msPriorityHeader = new GenericHeader('X-MSMail-Priority', 'High');
+        $headers->addHeaders([$importanceHeader, $priorityHeader, $msPriorityHeader]);
     }
 }
