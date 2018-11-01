@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -67,6 +68,18 @@ class IrhpPermit extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getId());
             $qb->orderBy($this->alias . '.permitNumber', 'DESC');
+        } elseif ($query instanceof ReadyToPrint) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+                ->setParameter(
+                    'statuses',
+                    [
+                        Entity::STATUS_PENDING,
+                        Entity::STATUS_AWAITING_PRINTING,
+                        Entity::STATUS_PRINTING,
+                        Entity::STATUS_ERROR,
+                    ]
+                );
+            $qb->orderBy($this->alias . '.permitNumber', 'ASC');
         }
     }
 
