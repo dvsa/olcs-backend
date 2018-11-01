@@ -48,7 +48,7 @@ class UploadScoringResultTest extends CommandHandlerTestCase
               'category' => Category::CATEGORY_PERMITS,
               'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
               'filename' => 'Permit-Scoring-Report.csv',
-              'description' => $fileDesc . ' ' . date('Y-m-d H:m'),
+              'description' => $fileDesc . ' ' . date('Y-m-d H:i'),
               'user' => PidIdentityProvider::SYSTEM_USER,
             ],
             $result1
