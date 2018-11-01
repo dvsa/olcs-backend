@@ -41,11 +41,25 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setStatus($status);
         }
 
-        $surrender->setDiscDestroyed($command->getDiscDestroyed());
-        $surrender->setDiscLost($command->getDiscLost());
-        $surrender->setDiscLostInfo($command->getDiscLostInfo());
-        $surrender->setDiscStolen($command->getDiscStolen());
-        $surrender->setDiscStolenInfo($command->getDiscStolenInfo());
+        if ($command->getDiscDestroyed() !== null) {
+            $surrender->setDiscDestroyed($command->getDiscDestroyed());
+        }
+
+        if ($command->getDiscLost() !== null) {
+            $surrender->setDiscLost($command->getDiscLost());
+        }
+
+        if ($command->getDiscLostInfo() !== null) {
+            $surrender->setDiscLostInfo($command->getDiscLostInfo());
+        }
+
+        if ($command->getDiscStolen() !== null) {
+            $surrender->setDiscStolen($command->getDiscStolen());
+        }
+
+        if ($command->getDiscStolenInfo() !== null) {
+            $surrender->setDiscStolenInfo($command->getDiscStolenInfo());
+        }
 
         $this->getRepo()->save($surrender);
 
@@ -54,5 +68,4 @@ final class Update extends AbstractSurrenderCommandHandler
 
         return $this->result;
     }
-
 }

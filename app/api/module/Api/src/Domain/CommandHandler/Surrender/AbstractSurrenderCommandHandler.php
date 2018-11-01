@@ -17,5 +17,4 @@ abstract class AbstractSurrenderCommandHandler extends AbstractCommandHandler im
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
 
     protected $repoServiceName = 'Surrender';
-
 }
