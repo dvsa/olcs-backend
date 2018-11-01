@@ -38,7 +38,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
         $firstRandomizedScore = '2.9';
         $firstSectorsName = 'TEST';
         $firstTrafficAreaName = 'Ireland';
-        $expectedRefNum = 'OB1111/101/1';
+        $firstApplicationRef = 'OB1111 / 101';
+        $expectedRefNum = 'OB1111 / 101 / 1';
 
         $secondSectorName = 'None/More than one of these sectors';
 
@@ -53,6 +54,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'irhpPermitApplication' => [
                     'id' => $firstIrhpApplicationId,
                     'ecmtPermitApplication' => [
+                        'applicationRef' => $firstApplicationRef,
                         'sectors' => [
                             'name' => $firstSectorsName
                         ],
@@ -86,6 +88,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'irhpPermitApplication' => [
                     'id' => $firstIrhpApplicationId,
                     'ecmtPermitApplication' => [
+                        'applicationRef' => $firstApplicationRef,
                         'sectors' => [
                             'name' => $secondSectorName
                         ],
