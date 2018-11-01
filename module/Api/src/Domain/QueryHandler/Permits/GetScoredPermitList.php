@@ -97,8 +97,8 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
                 'Sector'                            => $sector['name'] === Sectors::SECTOR_OPTION_NAME__NONE ? 'N/A' : $sector['name'],
                 'Devolved Administration'           => $devolvedAdministration,
                 'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                'Restricted Countries – Requested'  => $this->getRestrictedCountriesRequested($row),
-                'Restricted Countries – Offered'    => $this->getRestrictedCountriesOffered($row)
+                'Restricted Countries - Requested'  => $this->getRestrictedCountriesRequested($row),
+                'Restricted Countries - Offered'    => $this->getRestrictedCountriesOffered($row)
             ];
         }
 
