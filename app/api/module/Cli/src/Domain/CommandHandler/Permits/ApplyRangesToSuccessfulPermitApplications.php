@@ -160,7 +160,9 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
             }
 
             if (count($ranges) > 1) {
-                $this->result->addMessage('    - More than 1 range returned by getRestrictedRangesWithFewestCountries()');
+                throw new RuntimeException(
+                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) > 1'
+                );
             }
 
             $matchingRange = $ranges[0]; // Use first range
