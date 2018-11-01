@@ -144,9 +144,9 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Permit number
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", name="permit_number", length=100, nullable=true)
+     * @ORM\Column(type="integer", name="permit_number", nullable=true)
      */
     protected $permitNumber;
 
@@ -446,7 +446,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Set the permit number
      *
-     * @param string $permitNumber new value being set
+     * @param int $permitNumber new value being set
      *
      * @return IrhpPermit
      */
@@ -460,7 +460,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Get the permit number
      *
-     * @return string
+     * @return int
      */
     public function getPermitNumber()
     {

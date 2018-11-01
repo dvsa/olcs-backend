@@ -50,6 +50,8 @@ class Queue extends AbstractQueue
     const TYPE_PRINT = 'que_typ_print';
     const TYPE_DISC_PRINTING_PRINT = 'que_typ_disc_printing_print';
     const TYPE_DISC_PRINTING = 'que_typ_disc_printing';
+    const TYPE_PERMIT_GENERATE = 'que_typ_permit_generate';
+    const TYPE_PERMIT_PRINT = 'que_typ_permit_print';
     const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehicle_list';
     const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehicle_list';
     const TYPE_UPDATE_NYSIIS_TM_NAME = 'que_typ_update_nysiis_tm_name';
@@ -79,6 +81,8 @@ class Queue extends AbstractQueue
         self::TYPE_PRINT,
         self::TYPE_DISC_PRINTING,
         self::TYPE_DISC_PRINTING_PRINT,
+        self::TYPE_PERMIT_GENERATE,
+        self::TYPE_PERMIT_PRINT,
         self::TYPE_CREATE_GOODS_VEHICLE_LIST,
         self::TYPE_CREATE_PSV_VEHICLE_LIST,
         self::TYPE_UPDATE_NYSIIS_TM_NAME,

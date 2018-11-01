@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -25,7 +26,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermit extends AbstractIrhpPermit
 {
-    const STATUS_PENDING = 'irhp_permit_pending';
+    const STATUS_PENDING            = 'irhp_permit_pending';
+    const STATUS_AWAITING_PRINTING  = 'irhp_permit_awaiting_printing';
+    const STATUS_PRINTING           = 'irhp_permit_printing';
+    const STATUS_PRINTED            = 'irhp_permit_printed';
+    const STATUS_ERROR              = 'irhp_permit_error';
 
     /**
      * Create new IrhpPermit
@@ -52,5 +57,69 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->permitNumber = $permitNumber;
 
         return $irhpPermit;
+    }
+
+    /**
+     * Get the permit number with prefix
+     *
+     * @return string
+     */
+    public function getPermitNumberWithPrefix()
+    {
+        return sprintf('%s%05d', $this->getIrhpPermitRange()->getPrefix(), $this->getPermitNumber());
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix()
+        ];
+    }
+
+    /**
+     * Proceed to awaiting printing
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    public function proceedToAwaitingPrinting(RefData $status)
+    {
+        if (!$this->isPending() && !$this->hasError()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to awaiting printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Is pending
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->status->getId() === self::STATUS_PENDING;
+    }
+
+    /**
+     * Has error
+     *
+     * @return bool
+     */
+    public function hasError()
+    {
+        return $this->status->getId() === self::STATUS_ERROR;
     }
 }
