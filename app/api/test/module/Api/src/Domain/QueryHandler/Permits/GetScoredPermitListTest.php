@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpCandidatePermit;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredListHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
@@ -163,8 +163,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                     'Sector' => $firstSectorsName,
                     'Devolved Administration' => $firstTrafficAreaName,
                     'Result' => 'Successful',
-                    'Restricted Countries – Requested' => 'N/A',
-                    'Restricted Countries – Offered' => 'N/A',
+                    'Restricted Countries - Requested' => 'N/A',
+                    'Restricted Countries - Offered' => 'N/A',
                 ],
                 1 => [
                     'Permit Ref' => $expectedRefNum,
@@ -177,8 +177,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                     'Sector' => 'N/A',
                     'Devolved Administration' => 'N/A',
                     'Result' => 'Unsuccessful',
-                    'Restricted Countries – Requested' => 'Cuba; USA',
-                    'Restricted Countries – Offered' => 'England; France',
+                    'Restricted Countries - Requested' => 'Cuba; USA',
+                    'Restricted Countries - Offered' => 'England; France',
                 ],
             ]
         ];
