@@ -32,6 +32,7 @@ return [
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
