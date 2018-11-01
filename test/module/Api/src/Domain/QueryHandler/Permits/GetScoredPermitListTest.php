@@ -177,8 +177,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                     'Sector' => 'N/A',
                     'Devolved Administration' => 'N/A',
                     'Result' => 'Unsuccessful',
-                    'Restricted Countries – Requested' => 'Cuba; USA',
-                    'Restricted Countries – Offered' => 'England; France',
+                    'Restricted Countries - Requested' => 'Cuba; USA',
+                    'Restricted Countries - Offered' => 'England; France',
                 ],
             ]
         ];
