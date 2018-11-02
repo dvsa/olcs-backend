@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Doctrine\ORM\Query;
@@ -40,9 +41,9 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
          * @var $ecmtPermitApplication EcmtPermitApplication
          * @var $command UpdateEcmtPermitApplicationCmd
          */
-        $countrys = [];
+        $countrys = new ArrayCollection();
         foreach ($command->getCountryIds() as $countryId) {
-            $countrys[] = $this->getRepo('Country')->getReference(Country::class, $countryId);
+            $countrys->add($this->getRepo('Country')->getReference(Country::class, $countryId));
         }
 
         $ecmtPermitApplication = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
@@ -65,7 +66,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
         }
 
         $ecmtPermitApplication->update(
-            $this->getRepo()->getRefdataReference($command->getPermitType()),
+            $this->getRepo()->getRefdataReference($ecmtPermitApplication::PERMIT_TYPE),
             $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
             $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
             $countrys,

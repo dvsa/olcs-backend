@@ -175,7 +175,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
     protected $version = 1;

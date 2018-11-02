@@ -31,8 +31,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_transport_manager_application_tm_type", columns={"tm_type"}),
  *        @ORM\Index(name="ix_transport_manager_application_tm_application_status",
      *     columns={"tm_application_status"}),
- *        @ORM\Index(name="ix_tm_application_digital_signature_id", columns={"digital_signature_id"}),
- *        @ORM\Index(name="ix_tm_application_signature_type", columns={"signature_type"})
+ *        @ORM\Index(name="ix_tm_application_tm_digital_signature_id",
+     *     columns={"tm_digital_signature_id"}),
+ *        @ORM\Index(name="ix_tm_application_tm_signature_type", columns={"tm_signature_type"}),
+ *        @ORM\Index(name="ix_op_application_op_digital_signature_id",
+     *     columns={"op_digital_signature_id"}),
+ *        @ORM\Index(name="ix_op_application_op_signature_type", columns={"op_signature_type"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_transport_manager_application_olbs_key", columns={"olbs_key"})
@@ -118,14 +122,40 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     protected $deletedDate;
 
     /**
-     * Digital signature
+     * Has convictions
      *
-     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     * @var boolean
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
-     * @ORM\JoinColumn(name="digital_signature_id", referencedColumnName="id", nullable=true)
+     * @ORM\Column(type="boolean", name="has_convictions", nullable=true)
      */
-    protected $digitalSignature;
+    protected $hasConvictions;
+
+    /**
+     * Has other employment
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_other_employment", nullable=true)
+     */
+    protected $hasOtherEmployment;
+
+    /**
+     * Has other licences
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_other_licences", nullable=true)
+     */
+    protected $hasOtherLicences;
+
+    /**
+     * Has previous licences
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="has_previous_licences", nullable=true)
+     */
+    protected $hasPreviousLicences;
 
     /**
      * Hours fri
@@ -240,14 +270,24 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     protected $olbsKey;
 
     /**
-     * Signature type
+     * Op digital signature
+     *
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
+     * @ORM\JoinColumn(name="op_digital_signature_id", referencedColumnName="id", nullable=true)
+     */
+    protected $opDigitalSignature;
+
+    /**
+     * Op signature type
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="signature_type", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="op_signature_type", referencedColumnName="id", nullable=true)
      */
-    protected $signatureType;
+    protected $opSignatureType;
 
     /**
      * Tm application status
@@ -258,6 +298,26 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
      */
     protected $tmApplicationStatus;
+
+    /**
+     * Tm digital signature
+     *
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
+     * @ORM\JoinColumn(name="tm_digital_signature_id", referencedColumnName="id", nullable=true)
+     */
+    protected $tmDigitalSignature;
+
+    /**
+     * Tm signature type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="tm_signature_type", referencedColumnName="id", nullable=true)
+     */
+    protected $tmSignatureType;
 
     /**
      * Tm type
@@ -506,27 +566,99 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     }
 
     /**
-     * Set the digital signature
+     * Set the has convictions
      *
-     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature entity being set as the value
+     * @param boolean $hasConvictions new value being set
      *
      * @return TransportManagerApplication
      */
-    public function setDigitalSignature($digitalSignature)
+    public function setHasConvictions($hasConvictions)
     {
-        $this->digitalSignature = $digitalSignature;
+        $this->hasConvictions = $hasConvictions;
 
         return $this;
     }
 
     /**
-     * Get the digital signature
+     * Get the has convictions
      *
-     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     * @return boolean
      */
-    public function getDigitalSignature()
+    public function getHasConvictions()
     {
-        return $this->digitalSignature;
+        return $this->hasConvictions;
+    }
+
+    /**
+     * Set the has other employment
+     *
+     * @param boolean $hasOtherEmployment new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasOtherEmployment($hasOtherEmployment)
+    {
+        $this->hasOtherEmployment = $hasOtherEmployment;
+
+        return $this;
+    }
+
+    /**
+     * Get the has other employment
+     *
+     * @return boolean
+     */
+    public function getHasOtherEmployment()
+    {
+        return $this->hasOtherEmployment;
+    }
+
+    /**
+     * Set the has other licences
+     *
+     * @param boolean $hasOtherLicences new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasOtherLicences($hasOtherLicences)
+    {
+        $this->hasOtherLicences = $hasOtherLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the has other licences
+     *
+     * @return boolean
+     */
+    public function getHasOtherLicences()
+    {
+        return $this->hasOtherLicences;
+    }
+
+    /**
+     * Set the has previous licences
+     *
+     * @param boolean $hasPreviousLicences new value being set
+     *
+     * @return TransportManagerApplication
+     */
+    public function setHasPreviousLicences($hasPreviousLicences)
+    {
+        $this->hasPreviousLicences = $hasPreviousLicences;
+
+        return $this;
+    }
+
+    /**
+     * Get the has previous licences
+     *
+     * @return boolean
+     */
+    public function getHasPreviousLicences()
+    {
+        return $this->hasPreviousLicences;
     }
 
     /**
@@ -824,27 +956,51 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     }
 
     /**
-     * Set the signature type
+     * Set the op digital signature
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $opDigitalSignature entity being set as the value
      *
      * @return TransportManagerApplication
      */
-    public function setSignatureType($signatureType)
+    public function setOpDigitalSignature($opDigitalSignature)
     {
-        $this->signatureType = $signatureType;
+        $this->opDigitalSignature = $opDigitalSignature;
 
         return $this;
     }
 
     /**
-     * Get the signature type
+     * Get the op digital signature
+     *
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     */
+    public function getOpDigitalSignature()
+    {
+        return $this->opDigitalSignature;
+    }
+
+    /**
+     * Set the op signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $opSignatureType entity being set as the value
+     *
+     * @return TransportManagerApplication
+     */
+    public function setOpSignatureType($opSignatureType)
+    {
+        $this->opSignatureType = $opSignatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the op signature type
      *
      * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
-    public function getSignatureType()
+    public function getOpSignatureType()
     {
-        return $this->signatureType;
+        return $this->opSignatureType;
     }
 
     /**
@@ -869,6 +1025,54 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     public function getTmApplicationStatus()
     {
         return $this->tmApplicationStatus;
+    }
+
+    /**
+     * Set the tm digital signature
+     *
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $tmDigitalSignature entity being set as the value
+     *
+     * @return TransportManagerApplication
+     */
+    public function setTmDigitalSignature($tmDigitalSignature)
+    {
+        $this->tmDigitalSignature = $tmDigitalSignature;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm digital signature
+     *
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
+     */
+    public function getTmDigitalSignature()
+    {
+        return $this->tmDigitalSignature;
+    }
+
+    /**
+     * Set the tm signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmSignatureType entity being set as the value
+     *
+     * @return TransportManagerApplication
+     */
+    public function setTmSignatureType($tmSignatureType)
+    {
+        $this->tmSignatureType = $tmSignatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the tm signature type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getTmSignatureType()
+    {
+        return $this->tmSignatureType;
     }
 
     /**

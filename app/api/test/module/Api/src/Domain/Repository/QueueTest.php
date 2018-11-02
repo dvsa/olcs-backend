@@ -303,4 +303,41 @@ SQL;
             ' AND q.type IN [[["foo"]]] AND q.type NOT IN [[["bar"]]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    /**
+     * @param array $results
+     * @param bool  $expected
+     *
+     * @dataProvider dpIsItemInQueue
+     */
+    public function testIsItemInQueue($results, $expected)
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getArrayResult')
+                ->andReturn($results)
+                ->getMock()
+        );
+        $this->assertEquals($expected, $this->sut->isItemInQueue(['T1', 'T2'], ['S1', 'S2']));
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT q.id '
+            . 'AND q.type IN [[["T1","T2"]]] '
+            . 'AND q.status IN [[["S1","S2"]]] '
+            . 'LIMIT 1';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function dpIsItemInQueue()
+    {
+        return [
+            'exists in the queue' => [['RESULTS'], true],
+            'not in the queue' => [[], false],
+        ];
+    }
 }
