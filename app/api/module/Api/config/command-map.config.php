@@ -729,10 +729,12 @@ return [
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
     TransferCommand\TransportManagerApplication\SendTmApplication::class =>
         CommandHandler\Email\SendTmApplication::class,
+    TransferCommand\TransportManagerApplication\SendAmendTmApplication::class =>
+        CommandHandler\Email\SendAmendTmApplication::class,
     TransferCommand\TransportManagerApplication\Submit::class =>
         CommandHandler\TransportManagerApplication\Submit::class,
-    TransferCommand\TransportManagerApplication\OperatorApprove::class =>
-        CommandHandler\TransportManagerApplication\OperatorApprove::class,
+    TransferCommand\TransportManagerApplication\OperatorSigned::class =>
+        CommandHandler\TransportManagerApplication\OperatorSigned::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,
@@ -996,6 +998,8 @@ return [
         CommandHandler\IrhpPermitWindow\Update::class,
     TransferCommand\IrhpPermitWindow\Delete::class =>
         CommandHandler\IrhpPermitWindow\Delete::class,
+    Command\IrhpPermitWindow\Close::class =>
+        CommandHandler\IrhpPermitWindow\Close::class,
 
     // Transfer - IRHP Permit Range
     TransferCommand\IrhpPermitRange\Create::class =>
@@ -1100,14 +1104,10 @@ return [
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
-    Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
     Command\Permits\GeneratePermit::class => CommandHandler\Permits\GeneratePermit::class,
     TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
-
-    // Permits - Private beta
-    TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
