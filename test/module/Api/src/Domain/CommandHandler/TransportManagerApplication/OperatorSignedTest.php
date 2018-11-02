@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\OperatorApprove as CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\OperatorSigned as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
@@ -14,11 +14,11 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
 
 /**
- * OperatorApproveTest
+ * OperatorSignedTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class OperatorApproveTest extends CommandHandlerTestCase
+class OperatorSignedTest extends CommandHandlerTestCase
 {
     protected $loggedInUser;
 

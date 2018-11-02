@@ -41,7 +41,7 @@ class UploadScoringLogTest extends CommandHandlerTestCase
               'category' => Category::CATEGORY_PERMITS,
               'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
               'filename' => 'Permit-Scoring-Log.log',
-              'description' => 'Scoring Log File ' . date('Y-m-d H:m'),
+              'description' => 'Scoring Log File ' . date('Y-m-d H:i'),
               'user' => \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::SYSTEM_USER,
             ],
             $result1

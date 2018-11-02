@@ -549,6 +549,9 @@ return [
     // IRHP Permit Jurisdiction
     TransferQuery\IrhpPermitJurisdiction\GetList::class => QueryHandler\IrhpPermitJurisdiction\GetList::class,
 
+    // Permit Printing
+    TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
+
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
     TransferQuery\DataRetention\RuleList::class => QueryHandler\DataRetention\RuleList::class,
@@ -601,6 +604,7 @@ return [
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\SectorsList::class => QueryHandler\Permits\SectorsList::class,
     TransferQuery\Permits\EcmtCountriesList::class => QueryHandler\Permits\EcmtCountriesList::class,
+    TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
