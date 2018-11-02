@@ -362,6 +362,12 @@ return [
         'gv_vehicle_list_batch_size' => 120,
     ],
 
+    // Permit printing
+    'permit_printing' => [
+        // Maximum number of permits to print in one batch
+        'max_batch_size' => 100,
+    ],
+
     // GDS Verify configuration
     'gds_verify' => [
         // URL of hub metadata

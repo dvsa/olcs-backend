@@ -122,7 +122,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="valid_from", nullable=true)
+     * @ORM\Column(type="date", name="valid_from", nullable=true)
      */
     protected $validFrom;
 
@@ -131,7 +131,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="valid_to", nullable=true)
+     * @ORM\Column(type="date", name="valid_to", nullable=true)
      */
     protected $validTo;
 
@@ -140,7 +140,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true, options={"default": 1})
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
     protected $version = 1;

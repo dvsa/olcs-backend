@@ -52,6 +52,10 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     {
         $stockId = $command->getId();
 
+        // Get data for scoring results
+        $dto = GetScoredPermitList::create(['stockId' => $stockId]);
+        $scoringResults = $this->handleQuery($dto);
+
         $stock = $this->getRepo('IrhpPermitStock')->fetchById($stockId);
         $statusId = $stock->getStatus()->getId();
 
@@ -88,10 +92,6 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
         $this->getRepo('IrhpPermitStock')->updateStatus($stockId, IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL);
 
         try {
-            // Get data for scoring results
-            $dto = GetScoredPermitList::create(['stockId' => $stockId]);
-            $scoringResults = $this->handleQuery($dto);
-
             // Upload scoring results file
             $this->result->merge(
                 $this->handleSideEffects([

@@ -14,6 +14,7 @@ return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\SectorsList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\EcmtPermitFees::class => NotIsAnonymousUser::class,
@@ -31,6 +32,7 @@ return [
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
@@ -52,7 +54,6 @@ return [
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
-    CommandHandler\Permits\TriggerProcessEcmtApplications::class => IsInternalAdmin::class,
     CommandHandler\Permits\GeneratePermit::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     // TODO: these will need to be changed to IsInternalAdmin
