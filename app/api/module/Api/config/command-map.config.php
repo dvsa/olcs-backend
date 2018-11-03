@@ -1104,10 +1104,11 @@ return [
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
-    Command\Permits\GeneratePermit::class => CommandHandler\Permits\GeneratePermit::class,
+    Command\Permits\GeneratePermitDocuments::class => CommandHandler\Permits\GeneratePermitDocuments::class,
     TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
+    Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
@@ -1129,4 +1130,6 @@ return [
         CommandHandlerCli\Permits\UploadScoringResult::class,
     CommandCli\Permits\UploadScoringLog::class =>
         CommandHandlerCli\Permits\UploadScoringLog::class,
+    CommandCli\Permits\GeneratePermits::class =>
+        CommandHandlerCli\Permits\GeneratePermits::class,
 ];
