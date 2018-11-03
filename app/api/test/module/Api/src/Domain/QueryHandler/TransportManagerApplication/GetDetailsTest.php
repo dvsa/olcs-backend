@@ -28,6 +28,7 @@ class GetDetailsTest extends QueryHandlerTestCase
         $this->mockRepo('PreviousConviction', Repository\PreviousConviction::class);
         $this->mockRepo('OtherLicence', Repository\OtherLicence::class);
         $this->mockRepo('TmEmployment', Repository\TmEmployment::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class),
@@ -79,6 +80,8 @@ class GetDetailsTest extends QueryHandlerTestCase
 
         // loadTransportManagerEmployements
         $this->repoMap['TmEmployment']->shouldReceive('fetchByTransportManager')->with(213)->once();
+
+        $this->repoMap['SystemParameter']->shouldReceive('getDisableGdsVerifySignatures')->once();
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);

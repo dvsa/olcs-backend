@@ -20,7 +20,8 @@ class GetDetails extends AbstractQueryHandler
         'LicenceOperatingCentre',
         'PreviousConviction',
         'OtherLicence',
-        'TmEmployment'
+        'TmEmployment',
+        'SystemParameter',
     ];
 
     /**
@@ -98,10 +99,13 @@ class GetDetails extends AbstractQueryHandler
                         'subCategory',
                     ],
                 ],
+                'tmDigitalSignature',
+                'opDigitalSignature',
                 'otherLicences'
             ],
             [
-                'isTmLoggedInUser' => $this->getCurrentUser()->getTransportManager() === $tma->getTransportManager()
+                'isTmLoggedInUser' => $this->getCurrentUser()->getTransportManager() === $tma->getTransportManager(),
+                'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures()
             ]
         );
     }
