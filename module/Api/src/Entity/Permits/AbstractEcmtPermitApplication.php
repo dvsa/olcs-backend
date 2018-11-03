@@ -29,7 +29,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_ecmt_permit_application_international_jouneys",
      *     columns={"international_journeys"}),
  *        @ORM\Index(name="ix_withdraw_reason", columns={"withdraw_reason"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_source", columns={"source"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_source", columns={"source"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_in_scope", columns={"in_scope"})
  *    }
  * )
  */
@@ -143,6 +144,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * In scope
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="in_scope", nullable=true, options={"default": 0})
+     */
+    protected $inScope = 0;
 
     /**
      * International journeys
@@ -607,6 +617,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the in scope
+     *
+     * @param boolean $inScope new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setInScope($inScope)
+    {
+        $this->inScope = $inScope;
+
+        return $this;
+    }
+
+    /**
+     * Get the in scope
+     *
+     * @return boolean
+     */
+    public function getInScope()
+    {
+        return $this->inScope;
     }
 
     /**

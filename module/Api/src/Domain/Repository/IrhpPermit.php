@@ -32,6 +32,8 @@ class IrhpPermit extends AbstractRepository
             ->from(Entity::class, 'ip')
             ->innerJoin('ip.irhpPermitRange', 'ipr')
             ->where('IDENTITY(ipr.irhpPermitStock) = ?1')
+            ->andWhere('ipr.ssReserve = false')
+            ->andWhere('ipr.lostReplacement = false')
             ->setParameter(1, $stockId)
             ->getQuery()
             ->getSingleScalarResult();

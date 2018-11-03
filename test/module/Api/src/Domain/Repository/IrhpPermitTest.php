@@ -47,6 +47,14 @@ class IrhpPermitTest extends RepositoryTestCase
             ->with('IDENTITY(ipr.irhpPermitStock) = ?1')
             ->once()
             ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.ssReserve = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.lostReplacement = false')
+            ->once()
+            ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with(1, $stockId)
             ->once()
@@ -148,9 +156,6 @@ class IrhpPermitTest extends RepositoryTestCase
 
     public function testFetchByNumberAndRange()
     {
-
-
-
         $permitNumber = 1500;
         $rangeId = 7;
 
