@@ -23,7 +23,7 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
 
     protected $repoServiceName = 'IrhpPermitRange';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermit'];
+    protected $extraRepos = ['EcmtPermitApplication', 'IrhpPermitWindow', 'IrhpPermit'];
 
     /**
      * Handle query
@@ -38,7 +38,7 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
 
         $windowOpen = true;
         try {
-            $lastOpenWindow = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stockId);
+            $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stockId);
         } catch (NotFoundException $e) {
             $windowOpen = false;
         }
@@ -47,6 +47,14 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
             return $this->generateResponse(
                 false,
                 'A window is currently open within the stock'
+            );
+        }
+
+        $applicationIds = $this->getRepo('EcmtPermitApplication')->fetchApplicationIdsAwaitingScoring($stockId);
+        if (count($applicationIds) == 0) {
+            return $this->generateResponse(
+                false,
+                'No under consideration applications available'
             );
         }
 

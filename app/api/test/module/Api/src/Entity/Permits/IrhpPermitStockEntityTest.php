@@ -102,7 +102,7 @@ class IrhpPermitStockEntityTest extends EntityTester
             [Entity::STATUS_SCORING_UNEXPECTED_FAIL, true],
             [Entity::STATUS_ACCEPT_PENDING, false],
             [Entity::STATUS_ACCEPT_IN_PROGRESS, false],
-            [Entity::STATUS_ACCEPT_SUCCESSFUL, false],
+            [Entity::STATUS_ACCEPT_SUCCESSFUL, true],
             [Entity::STATUS_ACCEPT_PREREQUISITE_FAIL, true],
             [Entity::STATUS_ACCEPT_UNEXPECTED_FAIL, false],
         ];
@@ -218,6 +218,7 @@ class IrhpPermitStockEntityTest extends EntityTester
             [Entity::STATUS_SCORING_PREREQUISITE_FAIL],
             [Entity::STATUS_SCORING_UNEXPECTED_FAIL],
             [Entity::STATUS_ACCEPT_PREREQUISITE_FAIL],
+            [Entity::STATUS_ACCEPT_SUCCESSFUL],
         ];
     }
 
@@ -261,11 +262,6 @@ class IrhpPermitStockEntityTest extends EntityTester
                 Entity::STATUS_ACCEPT_IN_PROGRESS,
                 'Accept in progress',
                 ['This stock is not in the correct status to proceed to scoring pending (Accept in progress)']
-            ],
-            [
-                Entity::STATUS_ACCEPT_SUCCESSFUL,
-                'Accept successful',
-                ['This stock is not in the correct status to proceed to scoring pending (Accept successful)']
             ],
             [
                 Entity::STATUS_ACCEPT_UNEXPECTED_FAIL,

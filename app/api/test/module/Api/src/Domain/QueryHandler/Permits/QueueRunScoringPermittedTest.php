@@ -41,8 +41,8 @@ class QueueRunScoringPermittedTest extends QueryHandlerTestCase
 
         $queryHandler = m::mock(AbstractQueryHandler::class);
         $queryHandler->shouldReceive('handleQuery')
+            ->with(m::type(CheckRunScoringPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId, $prerequisiteResult, $prerequisiteMessage) {
-                $this->assertInstanceOf(CheckRunScoringPrerequisites::class, $query);
                 $this->assertEquals($stockId, $query->getId());
 
                 return [

@@ -118,4 +118,24 @@ class IrhpPermitRange extends AbstractRepository
 
         return $qb->getQuery()->execute();
     }
+
+    /**
+     * Fetch a flat list of range to country associations within the specified stock
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function fetchRangeIdToCountryIdAssociations($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select iprc.irhp_permit_stock_range_id as rangeId, iprc.country_id as countryId ' .
+            'from irhp_permit_range_country iprc ' .
+            'inner join irhp_permit_range as r on r.id = iprc.irhp_permit_stock_range_id ' .
+            'where r.irhp_permit_stock_id = :stockId',
+            ['stockId' => $stockId]
+        );
+
+        return $statement->fetchAll();
+    }
 }

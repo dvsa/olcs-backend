@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
  */
 class EcmtPermitApplication extends AbstractRepository
 {
-
     const VALID_APP_STATUS_IDS = [
         RefData::PERMIT_APP_STATUS_ISSUING,
         RefData::PERMIT_APP_STATUS_VALID
@@ -99,31 +98,6 @@ class EcmtPermitApplication extends AbstractRepository
     }
 
     /**
-     * Fetch under consideration application ids within a given stock
-     *
-     * @param int $stockId
-     *
-     * @return array
-     */
-    public function fetchUnderConsiderationApplicationIds($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'select epa.id ' .
-            'from irhp_permit_application ipa '.
-            'inner join ecmt_permit_application epa on ipa.ecmt_permit_application_id = epa.id '.
-            'inner join irhp_permit_window ipw on ipa.irhp_permit_window_id = ipw.id '.
-            'where ipw.irhp_permit_stock_id = :stockId '.
-            'and epa.status = :status',
-            [
-                'stockId' => $stockId,
-                'status' => Entity::STATUS_UNDER_CONSIDERATION
-            ]
-        );
-
-        return array_column($statement->fetchAll(), 'id');
-    }
-
-    /**
      * Fetch all applications by IRHP permit window id and status
      *
      * @param int|\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $windowId    IRHP Permit Window
@@ -144,5 +118,134 @@ class EcmtPermitApplication extends AbstractRepository
             ->setParameter('appStatuses', $appStatuses);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch application ids within a stock that are awaiting scoring
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function fetchApplicationIdsAwaitingScoring($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select e.id from ecmt_permit_application e ' .
+            'inner join licence as l on e.licence_id = l.id ' .
+            'where e.id in (' .
+            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ') ' .
+            'and e.status = :status ' .
+            'and (l.licence_type = :licenceType1 or l.licence_type = :licenceType2)',
+            [
+                'stockId' => $stockId,
+                'status' => Entity::STATUS_UNDER_CONSIDERATION,
+                'licenceType1' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            ]
+        );
+
+        return array_column($statement->fetchAll(), 'id');
+    }
+
+    /**
+     * Fetch application ids within a stock that are in scope
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function fetchInScopeApplicationIds($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select e.id from ecmt_permit_application e ' .
+            'where e.id in (' .
+            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ') ' .
+            'and e.in_scope = 1 ',
+            ['stockId' => $stockId]
+        );
+
+        return array_column($statement->fetchAll(), 'id');
+    }
+
+    /**
+     * Removes the existing scope from the specified stock id
+     *
+     * @param int $stockId
+     */
+    public function clearScope($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'update ecmt_permit_application e ' .
+            'set e.in_scope = 0 ' .
+            'where e.id in (' .
+            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ')',
+            ['stockId' => $stockId]
+        );
+
+        $statement->execute();
+    }
+
+    /**
+     * Applies a new scope to the specified stock id, to include all applications that are under consideration and
+     * and have a licence type of restricted or standard international
+     *
+     * @param int $stockId
+     */
+    public function applyScope($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'update ecmt_permit_application as e ' .
+            'inner join licence as l on e.licence_id = l.id ' .
+            'set e.in_scope = 1 ' .
+            'where e.id in (' .
+            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ') ' .
+            'and e.status = :status ' .
+            'and (l.licence_type = :licenceType1 or l.licence_type = :licenceType2)',
+            [
+                'stockId' => $stockId,
+                'status' => Entity::STATUS_UNDER_CONSIDERATION,
+                'licenceType1' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+            ]
+        );
+
+        $statement->execute();
+    }
+
+    /**
+     * Fetch a flat list of application to country associations within the specified stock
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function fetchApplicationIdToCountryIdAssociations($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select e.id as ecmtApplicationId, eacl.country_id as countryId ' .
+            'from ecmt_application_country_link eacl ' .
+            'inner join ecmt_permit_application as e on e.id = eacl.ecmt_application_id ' .
+            'where e.id in (' .
+            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ') ' .
+            'and e.in_scope = 1 ',
+            ['stockId' => $stockId]
+        );
+
+        return $statement->fetchAll();
     }
 }

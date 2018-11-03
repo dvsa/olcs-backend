@@ -42,4 +42,18 @@ class Country extends AbstractRepository
             $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
         }
     }
+
+    /**
+     * Retrieves a list of all country ids and their associated descriptions
+     *
+     * @return array
+     */
+    public function fetchIdsAndDescriptions()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('c.id as countryId, c.countryDesc as description')
+            ->from(Entity::class, 'c')
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

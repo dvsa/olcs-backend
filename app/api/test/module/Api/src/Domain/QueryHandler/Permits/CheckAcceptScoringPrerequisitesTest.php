@@ -43,7 +43,7 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             ->with($stockId)
             ->andReturn($permitCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCount')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn($successfulCount);
 

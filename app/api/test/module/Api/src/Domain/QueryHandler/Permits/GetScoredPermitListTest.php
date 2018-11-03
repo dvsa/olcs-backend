@@ -2,22 +2,28 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredListHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredPermitListHandler;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList as QryClass;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
- * GetScoredList Test
+ * GetScoredPermitList Test
  *
- * @author Jason de Jonge <jason.de-jonge@capgemini.com>
+ * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
 class GetScoredPermitListTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = m::mock(GetScoredListHandler::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->sut = new GetScoredPermitListHandler();
+        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
+        $this->mockRepo('Country', CountryRepo::class);
+        $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
 
         parent::setUp();
@@ -25,209 +31,193 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = QryClass::create([ 'stockId' => 1]);
+        $stockId = 8;
 
-        $firstPermitId = '1';
-        $interJourneysLess60 = 'inter_journey_less_60';
-        $firstIrhpApplicationId = '101';
-        $firstLicenceNo = 'OB1111';
-        $firstOrganisationName = 'Testing Inc.';
-        $firstAppScore = '1.1';
-        $firstIntensity = '0.8';
-        $firstRandomFactor = '0.2';
-        $firstRandomizedScore = '2.9';
-        $firstSectorsName = 'TEST';
-        $firstTrafficAreaName = 'Ireland';
-        $firstApplicationRef = 'OB1111 / 101';
-        $expectedRefNum = 'OB1111 / 101 / 1';
-
-        $secondSectorName = 'None/More than one of these sectors';
-
-        $rawResults = [
-            0 => [
-                'id' => $firstPermitId,
-                'applicationScore' => $firstAppScore,
-                'intensityOfUse' => $firstIntensity,
-                'randomFactor' => $firstRandomFactor,
-                'randomizedScore' => $firstRandomizedScore,
-                'successful' => 1,
-                'irhpPermitApplication' => [
-                    'id' => $firstIrhpApplicationId,
-                    'ecmtPermitApplication' => [
-                        'applicationRef' => $firstApplicationRef,
-                        'sectors' => [
-                            'name' => $firstSectorsName
-                        ],
-                        'internationalJourneys' => [
-                            'id' => $interJourneysLess60
-                        ],
-                        'hasRestrictedCountries' => false //don't need to specify countries because this is false
-                    ],
-                    'licence' => [
-                        'licNo' => $firstLicenceNo,
-                        'organisation' => [
-                            'name' => $firstOrganisationName
-                        ],
-                        'trafficArea' => [
-                            'id' => 'M', // this needs to match a Devolved Administration Traffic Area
-                            'name' => $firstTrafficAreaName
-                        ]
-                    ]
-                ],
-                'irhpPermitRange' => [
-                    'countrys' => []
-                ]
+        $scoringReport = [
+            [
+                'candidatePermitId' => 100,
+                'applicationId' => 200,
+                'organisationName' => 'British Steel',
+                'candidatePermitApplicationScore' => 0.123456,
+                'candidatePermitIntensityOfUse' => 0.5,
+                'candidatePermitRandomFactor' => 0.2,
+                'candidatePermitRandomizedScore' => 0.823322,
+                'applicationInternationalJourneys' => 'inter_journey_less_60',
+                'applicationSectorName' => 'Coke and refined petroleum products',
+                'licenceNo' => 'OB4234565',
+                'trafficAreaId' => 'K',
+                'trafficAreaName' => 'London and the South East of England',
+                'candidatePermitSuccessful' => 1,
+                'candidatePermitRangeId' => 4
             ],
-            1 => [
-                'id' => $firstPermitId,
-                'applicationScore' => $firstAppScore,
-                'intensityOfUse' => $firstIntensity,
-                'randomFactor' => $firstRandomFactor,
-                'randomizedScore' => $firstRandomizedScore,
-                'successful' => 0,
-                'irhpPermitApplication' => [
-                    'id' => $firstIrhpApplicationId,
-                    'ecmtPermitApplication' => [
-                        'applicationRef' => $firstApplicationRef,
-                        'sectors' => [
-                            'name' => $secondSectorName
-                        ],
-                        'internationalJourneys' => [
-                            'id' => $interJourneysLess60
-                        ],
-                        'hasRestrictedCountries' => 1, //need to specify countries because this is true
-                        'countrys' => [
-                            0 => ['countryDesc' => 'Cuba'],
-                            1 => ['countryDesc' => 'USA']
-                        ]
-                    ],
-                    'licence' => [
-                        'licNo' => $firstLicenceNo,
-                        'organisation' => [
-                            'name' => $firstOrganisationName
-                        ],
-                        'trafficArea' => [
-                            'id' => 'X', // this needs to NOT match a Devolved Administration Traffic Area
-                            'name' => $firstTrafficAreaName
-                        ]
-                    ]
-                ],
-                'irhpPermitRange' => [
-                    'countrys' => [
-                        0 => ['countryDesc' => 'England'],
-                        1 => ['countryDesc' => 'France']
-                    ]
-                ]
+            [
+                'candidatePermitId' => 101,
+                'applicationId' => 201,
+                'organisationName' => 'Howdens',
+                'candidatePermitApplicationScore' => 0.654321,
+                'candidatePermitIntensityOfUse' => 0.25,
+                'candidatePermitRandomFactor' => 0.1,
+                'candidatePermitRandomizedScore' => 0.223338,
+                'applicationInternationalJourneys' => 'inter_journey_60_90',
+                'applicationSectorName' => 'None/More than one of these sectors',
+                'licenceNo' => 'TS1234568',
+                'trafficAreaId' => 'M',
+                'trafficAreaName' => 'Scotland',
+                'candidatePermitSuccessful' => 0,
+                'candidatePermitRangeId' => 5
+            ],
+            [
+                'candidatePermitId' => 102,
+                'applicationId' => 202,
+                'organisationName' => 'Top Haulage',
+                'candidatePermitApplicationScore' => 0.700201,
+                'candidatePermitIntensityOfUse' => 0.3,
+                'candidatePermitRandomFactor' => 0.05,
+                'candidatePermitRandomizedScore' => 0.102045,
+                'applicationInternationalJourneys' => 'inter_journey_more_90',
+                'applicationSectorName' => 'Municipal wastes and other wastes',
+                'licenceNo' => 'OG4567723',
+                'trafficAreaId' => 'G',
+                'trafficAreaName' => 'Wales',
+                'candidatePermitSuccessful' => 1,
+                'candidatePermitRangeId' => 6
             ],
         ];
 
-        $this->sut->shouldReceive('resultList')
-            ->once()
-            ->with(
-                $rawResults,
-                [
-                    'irhpPermitApplication' => [
-                        'ecmtPermitApplication' => [
-                            'countrys',
-                            'sectors',
-                            'internationalJourneys'
-                        ],
-                        'irhpPermitWindow',
-                        'licence' => [
-                            'trafficArea',
-                            'organisation'
-                        ]
-                    ],
-                    'irhpPermitRange' => [
-                        'countrys'
-                    ],
-                ]
-            )
-            ->andReturn($rawResults);
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('fetchScoringReport')
+            ->with($stockId)
+            ->andReturn($scoringReport);
 
-        $this->repoMap['IrhpCandidatePermit']
-            ->shouldReceive('fetchAllScoredForStock')
-            ->with($query->getStockId())
-            ->once()
-            ->andReturn($rawResults);
-
-        $result = $this->sut->handleQuery($query);
-
-        $expected = [
-            'result' => [
-                0 => [
-                    'Permit Ref' => $expectedRefNum,
-                    'Operator' => $firstOrganisationName,
-                    'Application Score' => $firstAppScore,
-                    'Permit Intensity of Use' => $firstIntensity,
-                    'Random Factor' => $firstRandomFactor,
-                    'Randomised Permit Score' => $firstRandomizedScore,
-                    'Percentage International' => 0.3, //map for less than 60
-                    'Sector' => $firstSectorsName,
-                    'Devolved Administration' => $firstTrafficAreaName,
-                    'Result' => 'Successful',
-                    'Restricted Countries - Requested' => 'N/A',
-                    'Restricted Countries - Offered' => 'N/A',
-                ],
-                1 => [
-                    'Permit Ref' => $expectedRefNum,
-                    'Operator' => $firstOrganisationName,
-                    'Application Score' => $firstAppScore,
-                    'Permit Intensity of Use' => $firstIntensity,
-                    'Random Factor' => $firstRandomFactor,
-                    'Randomised Permit Score' => $firstRandomizedScore,
-                    'Percentage International' => 0.3, //less than 60%
-                    'Sector' => 'N/A',
-                    'Devolved Administration' => 'N/A',
-                    'Result' => 'Unsuccessful',
-                    'Restricted Countries - Requested' => 'Cuba; USA',
-                    'Restricted Countries - Offered' => 'England; France',
-                ],
+        $rangeIdToCountryIdAssociations = [
+            [
+                'rangeId' => 4,
+                'countryId' => 'RU'
+            ],
+            [
+                'rangeId' => 4,
+                'countryId' => 'AT'
+            ],
+            [
+                'rangeId' => 4,
+                'countryId' => 'HU'
+            ],
+            [
+                'rangeId' => 5,
+                'countryId' => 'HU'
+            ],
+            [
+                'rangeId' => 5,
+                'countryId' => 'RU'
             ]
         ];
 
-        $this->assertEquals($expected, $result);
-    }
+        $this->repoMap['IrhpPermitRange']->shouldReceive('fetchRangeIdToCountryIdAssociations')
+            ->with($stockId)
+            ->andReturn($rangeIdToCountryIdAssociations);
 
-    public function testHandleQueryNoResults()
-    {
-        $query = QryClass::create([ 'stockId' => 1]);
+        $applicationIdToCountryIdAssociations = [
+            [
+                'ecmtApplicationId' => 200,
+                'countryId' => 'IT'
+            ],
+            [
+                'ecmtApplicationId' => 202,
+                'countryId' => 'GR'
+            ],
+            [
+                'ecmtApplicationId' => 202,
+                'countryId' => 'HU'
+            ],
+            [
+                'ecmtApplicationId' => 202,
+                'countryId' => 'IT'
+            ]
+        ];
 
-        $rawResults = [];
-        $expected = ['result' => []];
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchApplicationIdToCountryIdAssociations')
+            ->with($stockId)
+            ->andReturn($applicationIdToCountryIdAssociations);
 
-        $this->sut->shouldReceive('resultList')
-            ->once()
-            ->with(
-                $rawResults,
+        $countryIdsAndDescriptions = [
+            [
+                'countryId' => 'AT',
+                'description' => 'Austria'
+            ],
+            [
+                'countryId' => 'GR',
+                'description' => 'Greece'
+            ],
+            [
+                'countryId' => 'HU',
+                'description' => 'Hungary'
+            ],
+            [
+                'countryId' => 'IT',
+                'description' => 'Italy'
+            ],
+            [
+                'countryId' => 'RU',
+                'description' => 'Russia'
+            ],
+        ];
+
+        $this->repoMap['Country']->shouldReceive('fetchIdsAndDescriptions')
+            ->andReturn($countryIdsAndDescriptions);
+
+        $expected = [
+            'result' => [
                 [
-                    'irhpPermitApplication' => [
-                        'ecmtPermitApplication' => [
-                            'countrys',
-                            'sectors',
-                            'internationalJourneys'
-                        ],
-                        'irhpPermitWindow',
-                        'licence' => [
-                            'trafficArea',
-                            'organisation'
-                        ]
-                    ],
-                    'irhpPermitRange' => [
-                        'countrys'
-                    ],
+                    'Permit Ref' => 'OB4234565 / 200 / 100',
+                    'Operator' => 'British Steel',
+                    'Application Score' => 0.123456,
+                    'Permit Intensity of Use' => 0.5,
+                    'Random Factor' => 0.2,
+                    'Randomised Permit Score' => 0.823322,
+                    'Percentage International' => 0.3,
+                    'Sector' => 'Coke and refined petroleum products',
+                    'Devolved Administration' => 'N/A',
+                    'Result' => 'Successful',
+                    'Restricted Countries - Requested' => 'Italy',
+                    'Restricted Countries - Offered' => 'Russia; Austria; Hungary'
+                ],
+                [
+                    'Permit Ref' => 'TS1234568 / 201 / 101',
+                    'Operator' => 'Howdens',
+                    'Application Score' => 0.654321,
+                    'Permit Intensity of Use' => 0.25,
+                    'Random Factor' => 0.1,
+                    'Randomised Permit Score' => 0.223338,
+                    'Percentage International' => 0.75,
+                    'Sector' => 'N/A',
+                    'Devolved Administration' => 'Scotland',
+                    'Result' => 'Unsuccessful',
+                    'Restricted Countries - Requested' => '',
+                    'Restricted Countries - Offered' => 'Hungary; Russia'
+                ],
+                [
+                    'Permit Ref' => 'OG4567723 / 202 / 102',
+                    'Operator' => 'Top Haulage',
+                    'Application Score' => 0.700201,
+                    'Permit Intensity of Use' => 0.3,
+                    'Random Factor' => 0.05,
+                    'Randomised Permit Score' => 0.102045,
+                    'Percentage International' => 1,
+                    'Sector' => 'Municipal wastes and other wastes',
+                    'Devolved Administration' => 'Wales',
+                    'Result' => 'Successful',
+                    'Restricted Countries - Requested' => 'Greece; Hungary; Italy',
+                    'Restricted Countries - Offered' => ''
                 ]
-            )
-            ->andReturn($rawResults);
+            ]
+        ];
 
-        $this->repoMap['IrhpCandidatePermit']
-            ->shouldReceive('fetchAllScoredForStock')
-            ->with($query->getStockId())
-            ->once()
-            ->andReturn($rawResults);
+        $query = m::mock(QryClass::class);
+        $query->shouldReceive('getStockId')
+            ->andReturn($stockId);
 
-        $result = $this->sut->handleQuery($query);
-
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(
+            $expected,
+            $this->sut->handleQuery($query)
+        );
     }
 }

@@ -7,8 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\RunScoring;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\ResetScoring;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\CalculateRandomAppScore;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulDaPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications;
@@ -110,20 +109,12 @@ class RunScoringTest extends CommandHandlerTestCase
             ->ordered()
             ->globally();
 
-        $resetScoringResult = new Result();
-        $resetScoringResult->addMessage('ResetScoring output');
+        $initialiseScopeResult = new Result();
+        $initialiseScopeResult->addMessage('InitialiseScope output');
         $this->expectedSideEffect(
-            ResetScoring::class,
+            InitialiseScope::class,
             ['stockId' => $stockId],
-            $resetScoringResult
-        );
-
-        $calculateRandomResult = new Result();
-        $calculateRandomResult->addMessage('CalculateRandom output');
-        $this->expectedSideEffect(
-            CalculateRandomAppScore::class,
-            ['stockId' => $stockId],
-            $calculateRandomResult
+            $initialiseScopeResult
         );
 
         $markSuccessfulSectorResult = new Result();
@@ -166,8 +157,7 @@ class RunScoringTest extends CommandHandlerTestCase
             $uploadScoringResultResult
         );
 
-        $logContent = "ResetScoring output\r\n" .
-            "CalculateRandom output\r\n".
+        $logContent = "InitialiseScope output\r\n".
             "MarkSuccessfulSector output\r\n" .
             "MarkSuccessfulDa output\r\n" .
             "MarkSuccessfulRemaining output\r\n" .
@@ -199,8 +189,7 @@ class RunScoringTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
-                'ResetScoring output',
-                'CalculateRandom output',
+                'InitialiseScope output',
                 'MarkSuccessfulSector output',
                 'MarkSuccessfulDa output',
                 'MarkSuccessfulRemaining output',
@@ -254,7 +243,7 @@ class RunScoringTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(
-            ['Prerequisite failed: Run scoring is not permitted with when stock status is \'Stock accept pending\''],
+            ['Prerequisite failed: Run scoring is not permitted when stock status is \'Stock accept pending\''],
             $result->getMessages()
         );
     }

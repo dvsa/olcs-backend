@@ -6,21 +6,21 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\RunScoring as RunScoringCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckRunScoringPrerequisites;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\ResetScoring;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulDaPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\CalculateRandomAppScore;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Exception;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
+use Exception;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Run scoring
@@ -61,7 +61,7 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
             $prerequisiteResult = [
                 'result' => false,
                 'message' => sprintf(
-                    'Run scoring is not permitted with when stock status is \'%s\'',
+                    'Run scoring is not permitted when stock status is \'%s\'',
                     $stock->getStatusDescription()
                 )
             ];
@@ -75,17 +75,16 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
             return $this->result;
         }
 
-        $stockIdParams = ['stockId' => $this->stockId];
-
         $stock->proceedToScoringInProgress($this->refData(IrhpPermitStock::STATUS_SCORING_IN_PROGRESS));
         $stockRepo->save($stock);
+
+        $stockIdParams = ['stockId' => $this->stockId];
 
         try {
             $this->result->merge(
                 $this->handleSideEffects(
                     [
-                        ResetScoring::create($stockIdParams),
-                        CalculateRandomAppScore::create($stockIdParams),
+                        InitialiseScope::create($stockIdParams),
                         MarkSuccessfulSectorPermitApplications::create($stockIdParams),
                         MarkSuccessfulDaPermitApplications::create($stockIdParams),
                         MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
@@ -94,51 +93,38 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
                 )
             );
 
-            $stock->proceedToScoringSuccessful($this->refData(IrhpPermitStock::STATUS_SCORING_SUCCESSFUL));
-            $stockRepo->save($stock);
-
-            $dto = GetScoredPermitList::create($stockIdParams);
-            $scoringResults = $this->handleQuery($dto);
+            $scoringResults = $this->handleQuery(
+                GetScoredPermitList::create($stockIdParams)
+            );
 
             $this->result->merge(
-                $this->handleSideEffects([
+                $this->handleSideEffect(
                     UploadScoringResult::create([
                         'csvContent' => $scoringResults['result'],
                         'fileDescription' => 'Scoring Results'
-                    ]),
-                ])
+                    ])
+                )
             );
 
+            $stock->proceedToScoringSuccessful($this->refData(IrhpPermitStock::STATUS_SCORING_SUCCESSFUL));
             $this->result->addMessage('Scoring process completed successfully.');
         } catch (Exception $e) {
             $stock->proceedToScoringUnexpectedFail($this->refData(IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL));
-            $stockRepo->save($stock);
-
             $this->result->addMessage('Scoring process failed: ' . $e->getMessage());
-            return $this->handleReturn();
         }
 
-        return $this->handleReturn();
-    }
+        try {
+            $logOutput = implode("\r\n", $this->result->getMessages());
+            $this->result->merge(
+                $this->handleSideEffect(
+                    UploadScoringLog::create(['logContent' => $logOutput])
+                )
+            );
+        } catch (Exception $e) {
+            Logger::err('Unable to update status/write scoring log file for stock id' . $this->stockId);
+        }
 
-    /**
-     * Handles return common pre-requisites,
-     * mainly uploading a copy of the log
-     *
-     * @return Result
-     */
-    private function handleReturn()
-    {
-        // Upload copy of log output to the document store.
-        // We want to do this regardless of whether the process fell-over or not
-        $logOutput = implode("\r\n", $this->result->getMessages());
-
-        $this->result->merge(
-            $this->handleSideEffects([
-                UploadScoringLog::create(['logContent' => $logOutput])
-            ])
-        );
-
+        $stockRepo->save($stock);
         return $this->result;
     }
 }

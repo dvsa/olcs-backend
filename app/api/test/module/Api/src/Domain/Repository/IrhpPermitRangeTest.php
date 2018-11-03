@@ -111,7 +111,6 @@ class IrhpPermitRangeTest extends RepositoryTestCase
         );
     }
 
-
     public function testFetchByPermitNumberAndStock()
     {
         $permitNumber = 200;
@@ -172,6 +171,41 @@ class IrhpPermitRangeTest extends RepositoryTestCase
         $this->assertEquals(
             $expectedResult,
             $this->sut->fetchByPermitNumberAndStock($permitNumber, $permitStock)
+        );
+    }
+
+    public function testFetchRangeIdToCountryIdAssociations()
+    {
+        $stockId = 14;
+
+        $associations = [
+            2 => 'AT',
+            2 => 'RU',
+            3 => 'GR'
+        ];
+
+        $statement = m::mock(Statement::class);
+        $statement->shouldReceive('fetchAll')
+            ->once()
+            ->andReturn($associations);
+
+        $connection = m::mock(Connection::class);
+        $connection->shouldReceive('executeQuery')
+            ->with(
+                'select iprc.irhp_permit_stock_range_id as rangeId, iprc.country_id as countryId ' .
+                'from irhp_permit_range_country iprc ' .
+                'inner join irhp_permit_range as r on r.id = iprc.irhp_permit_stock_range_id ' .
+                'where r.irhp_permit_stock_id = :stockId',
+                ['stockId' => $stockId]
+            )
+            ->once()
+            ->andReturn($statement);
+
+        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
+
+        $this->assertEquals(
+            $associations,
+            $this->sut->fetchRangeIdToCountryIdAssociations($stockId)
         );
     }
 }

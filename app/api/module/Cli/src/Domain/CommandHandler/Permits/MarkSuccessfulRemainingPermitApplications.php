@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
@@ -18,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulRemainingPermitApplications extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -37,37 +36,41 @@ class MarkSuccessfulRemainingPermitApplications extends AbstractCommandHandler i
      */
     public function handleCommand(CommandInterface $command)
     {
+        $this->profileMessage('mark successful remaining permit applications...');
+
         $stockId = $command->getStockId();
 
         $availableStockCount = $this->getRepo('IrhpPermitRange')->getCombinedRangeSize($stockId);
         $validPermitCount = $this->getRepo('IrhpPermit')->getPermitCount($stockId);
         $allocationQuota = $availableStockCount - $validPermitCount;
 
-        $successfulPaCount = $this->getRepo()->getSuccessfulCount($stockId);
+        $successfulPaCount = $this->getRepo()->getSuccessfulCountInScope($stockId);
         $remainingQuota = $allocationQuota - $successfulPaCount;
 
-        $result = new Result();
-        $result->addMessage('STEP 2d:');
-        $result->addMessage('  Derived values:');
-        $result->addMessage('    - #availableStockCount: ' . $availableStockCount);
-        $result->addMessage('    - #validPermitCount:    ' . $validPermitCount);
-        $result->addMessage('    - #allocationQuota:     ' . $allocationQuota);
-        $result->addMessage('    - #successfulPACount:   ' . $successfulPaCount);
-        $result->addMessage('    - #remainingQuota:      ' . $remainingQuota);
+        $this->result->addMessage('STEP 2d:');
+        $this->result->addMessage('  Derived values:');
+        $this->result->addMessage('    - #availableStockCount: ' . $availableStockCount);
+        $this->result->addMessage('    - #validPermitCount:    ' . $validPermitCount);
+        $this->result->addMessage('    - #allocationQuota:     ' . $allocationQuota);
+        $this->result->addMessage('    - #successfulPACount:   ' . $successfulPaCount);
+        $this->result->addMessage('    - #remainingQuota:      ' . $remainingQuota);
 
         // TODO: could remainingQuota ever be zero or less?
         if ($remainingQuota > 0) {
-            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIds($stockId);
+            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIdsInScope($stockId);
 
             $truncatedCandidatePermitIds = array_slice($candidatePermitIds, 0, $remainingQuota);
             $this->getRepo()->markAsSuccessful($truncatedCandidatePermitIds);
 
-            $result->addMessage('  Unsuccessful remaining permits found in stock: ' . count($candidatePermitIds));
-            $result->addMessage('  Marking ' . count($truncatedCandidatePermitIds) . ' permits as successful');
+            $this->result->addMessage('  Unsuccessful remaining permits found in stock: ' . count($candidatePermitIds));
+            $this->result->addMessage('  Marking the following' . count($truncatedCandidatePermitIds) . ' permits as successful');
+            foreach ($truncatedCandidatePermitIds as $candidatePermitId) {
+                $this->result->addMessage('    - id = ' . $candidatePermitId);
+            }
         } else {
-            $result->addMessage('#remainingQuota < 1 - nothing to do');
+            $this->result->addMessage('#remainingQuota < 1 - nothing to do');
         }
 
-        return $result;
+        return $this->result;
     }
 }

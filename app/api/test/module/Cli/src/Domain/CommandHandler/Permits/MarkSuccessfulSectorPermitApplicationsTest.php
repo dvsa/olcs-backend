@@ -43,16 +43,16 @@ class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySector')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySectorInScope')
             ->with($stockId, 7)
             ->andReturn([4, 5]);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySector')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySectorInScope')
             ->with($stockId, 3)
             ->andReturn([10, 13, 15, 16]);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySector')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySectorInScope')
             ->with($stockId, 4)
             ->andReturn([24, 25, 26]);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySector')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedIdsBySectorInScope')
             ->with($stockId, 2)
             ->andReturn([]);
 

@@ -2,18 +2,18 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\Command\Permits;
 
-use Dvsa\Olcs\Cli\Domain\Command\Permits\CalculateRandomAppScore;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope;
 
 /**
- * Calculate Random Application Score test
+ * Initialise Scope test
  *
  * @author Jason de Jonge <jason.de-jonge@capgemini.co.uk>
  */
-class CalculateRandomAppScoreTest extends \PHPUnit_Framework_TestCase
+class InitialiseScopeTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {
-        $sut = CalculateRandomAppScore::create(
+        $sut = InitialiseScope::create(
             [
                 'stockId' => 7
             ]

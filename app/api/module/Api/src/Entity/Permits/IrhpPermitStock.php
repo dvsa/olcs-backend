@@ -96,7 +96,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
                 self::STATUS_SCORING_SUCCESSFUL,
                 self::STATUS_SCORING_PREREQUISITE_FAIL,
                 self::STATUS_SCORING_UNEXPECTED_FAIL,
-                self::STATUS_ACCEPT_PREREQUISITE_FAIL
+                self::STATUS_ACCEPT_PREREQUISITE_FAIL,
+                self::STATUS_ACCEPT_SUCCESSFUL,
             ]
         );
     }

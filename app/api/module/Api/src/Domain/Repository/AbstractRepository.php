@@ -45,6 +45,39 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
     }
 
     /**
+     * Mark an entity for later persisting to the database using flushAll
+     *
+     * @param mixed $entity Entity to save
+     *
+     * @return void
+     * @throws Exception\RuntimeException
+     * @throws \Exception
+     */
+    public function saveOnFlush($entity)
+    {
+        if (!($entity instanceof $this->entity)) {
+            throw new Exception\RuntimeException('This repository can only saveOnFlush entities of type ' . $this->entity);
+        }
+
+        try {
+            $this->getEntityManager()->persist($entity);
+        } catch (\Exception $e) {
+            \Olcs\Logging\Log\Logger::crit($e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Persist to the database all entities (of all types) queued using saveOnFlush
+     *
+     * @throws \Exception
+     */
+    public function flushAll()
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Delete an entity
      *
      * @param mixed $entity Entity to delete
