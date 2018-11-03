@@ -20,12 +20,13 @@ class StatusTest extends QueryHandlerTestCase
     {
         $query = GetStatus::create(['id' => 1]);
         $mockSurrender = \Mockery::mock(\Dvsa\Olcs\Api\Entity\Surrender::class);
-        $mockSurrender->shouldReceive('getStatus')->once()->andReturn(null);
+
+        $mockSurrender->shouldReceive('serialize')->andReturn(["test"]);
         $this->repoMap['Surrender']->
-        shouldReceive('fetchById')->once()->andReturn(
-            $mockSurrender
-        );
+        shouldReceive('fetchUsingId')->once()->andReturn($mockSurrender);
+
+
         $result = $this->sut->handleQuery($query);
-        $this->assertEquals([], $result->serialize());
+        $this->assertEquals(['test'], $result->serialize());
     }
 }

@@ -23,7 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="surrender_fk_community_licence_document_status_ref_data_id",
      *     columns={"community_licence_document_status"}),
  *        @ORM\Index(name="surrender_fk_digital_signature_id_ref_data_id",
-     *     columns={"digitial_signature_id"}),
+     *     columns={"digital_signature_id"}),
  *        @ORM\Index(name="surrender_fk_last_modified", columns={"last_modified_by"}),
  *        @ORM\Index(name="surrender_status_index", columns={"status"}),
  *        @ORM\Index(name="surrender_created_by_index", columns={"created_by"}),
@@ -72,14 +72,14 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     protected $createdOn;
 
     /**
-     * Digitial signature
+     * Digital signature
      *
      * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
-     * @ORM\JoinColumn(name="digitial_signature_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="digital_signature_id", referencedColumnName="id", nullable=true)
      */
-    protected $digitialSignature;
+    protected $digitalSignature;
 
     /**
      * Disc destroyed
@@ -276,27 +276,27 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     }
 
     /**
-     * Set the digitial signature
+     * Set the digital signature
      *
-     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitialSignature entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature entity being set as the value
      *
      * @return Surrender
      */
-    public function setDigitialSignature($digitialSignature)
+    public function setDigitalSignature($digitalSignature)
     {
-        $this->digitialSignature = $digitialSignature;
+        $this->digitalSignature = $digitalSignature;
 
         return $this;
     }
 
     /**
-     * Get the digitial signature
+     * Get the digital signature
      *
      * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
      */
-    public function getDigitialSignature()
+    public function getDigitalSignature()
     {
-        return $this->digitialSignature;
+        return $this->digitalSignature;
     }
 
     /**
