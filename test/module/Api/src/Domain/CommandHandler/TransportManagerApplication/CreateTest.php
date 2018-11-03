@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Create as Co
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Repository\User;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Create as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -146,16 +147,18 @@ class CreateTest extends CommandHandlerTestCase
         $command = Command::create(['application' => 863, 'user' => 234, 'action' => 'D']);
 
         $user = m::mock(UserEntity::class)->makePartial();
-        $user->setContactDetails('CD');
+        $mockCd = m::mock(ContactDetails::class);
+        $mockCd->shouldReceive('getEmailAddress')->andReturn('test@test.com');
+        $user->setContactDetails($mockCd);
 
         $this->repoMap['User']->shouldReceive('fetchForTma')->with(234)->once()->andReturn($user);
 
         $savedTm = null;
         $this->repoMap['TransportManager']->shouldReceive('save')->once()->andReturnUsing(
-            function (\Dvsa\Olcs\Api\Entity\Tm\TransportManager $tm) use (&$savedTm) {
+            function (\Dvsa\Olcs\Api\Entity\Tm\TransportManager $tm) use (&$savedTm, $mockCd) {
                 $tm->setId(645);
 
-                $this->assertSame('CD', $tm->getHomeCd());
+                $this->assertSame($mockCd, $tm->getHomeCd());
 
                 $this->assertSame($this->refData['tm_s_cur'], $tm->getTmStatus());
 
@@ -183,9 +186,10 @@ class CreateTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Email\SendTmApplication::class,
+            \Dvsa\Olcs\Transfer\Command\TransportManagerApplication\SendTmApplication::class,
             [
                 'id' => 534,
+                'emailAddress' => 'test@test.com'
             ],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );

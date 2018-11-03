@@ -729,10 +729,12 @@ return [
         CommandHandler\TransportManagerApplication\DeleteForResponsibilities::class,
     TransferCommand\TransportManagerApplication\SendTmApplication::class =>
         CommandHandler\Email\SendTmApplication::class,
+    TransferCommand\TransportManagerApplication\SendAmendTmApplication::class =>
+        CommandHandler\Email\SendAmendTmApplication::class,
     TransferCommand\TransportManagerApplication\Submit::class =>
         CommandHandler\TransportManagerApplication\Submit::class,
-    TransferCommand\TransportManagerApplication\OperatorApprove::class =>
-        CommandHandler\TransportManagerApplication\OperatorApprove::class,
+    TransferCommand\TransportManagerApplication\OperatorSigned::class =>
+        CommandHandler\TransportManagerApplication\OperatorSigned::class,
 
     // Email
     Command\Email\SendTmApplication::class => CommandHandler\Email\SendTmApplication::class,

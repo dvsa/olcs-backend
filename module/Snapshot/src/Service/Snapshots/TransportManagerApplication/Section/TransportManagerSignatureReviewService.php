@@ -12,6 +12,13 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class TransportManagerSignatureReviewService extends AbstractReviewService
 {
+
+    const SIGNATURE = 'markup-tma-declaration-signature';
+    const SIGNATURE_DIGITAL = 'markup-tma-declaration-signature-digital';
+    const SIGNATURE_DIGITAL_BOTH = 'markup-tma-declaration-signature-digital-both';
+    const ADDRESS = 'tm-review-return-address';
+    const SIGNATURE_DIGITAL_OPERATOR_TM = 'markup-tma-declaration-signature-digital-operator-tm';
+
     /**
      * Format the readonly config from the given data
      *
@@ -19,14 +26,106 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfig(TransportManagerApplication $tma)
+    public function getConfig(TransportManagerApplication $tma): array
     {
+        $partial = $this->getPartial($tma);
+
+        $replaceData = $this->getReplaceData($tma, $partial);
+
+        $markup = $this->translateReplace(
+            $partial,
+            $replaceData
+        );
+
         return [
-            'markup' => $this->translateReplace(
-                'markup-tma-declaration-signature',
-                [$this->getOwnerLabel($tma), $this->translate('tm-review-return-address')]
-            )
+            'markup' => $markup
         ];
+    }
+
+    private function getPartial(TransportManagerApplication $tma): string
+    {
+        $opDigitalSignature = $tma->getOpDigitalSignature();
+
+        $partial = !empty($opDigitalSignature) && !empty($opDigitalSignature->getSignatureName()) ? self::SIGNATURE_DIGITAL_BOTH : self::SIGNATURE_DIGITAL;
+
+        if ($tma->getIsOwner() === 'Y') {
+            $partial = self::SIGNATURE_DIGITAL_OPERATOR_TM;
+        }
+        $tmDigitalSignature = $tma->getTmDigitalSignature();
+        return !empty($tmDigitalSignature) && !empty($tmDigitalSignature->getSignatureName()) ? $partial : self::SIGNATURE;
+    }
+
+    /**
+     * getReplaceData
+     *
+     * @param TransportManagerApplication $tma
+     *
+     * @return array
+     */
+    private function getReplaceData(TransportManagerApplication $tma, string $partial): array
+    {
+        $ownerLabel = $this->getOwnerLabel($tma);
+        $returnAddress = $this->translate(self::ADDRESS);
+        $tmSignature = $tma->getTmDigitalSignature();
+        $opSignature = $tma->getOpDigitalSignature();
+
+        if ($tmSignature !== null) {
+            $tmFullName = $tmSignature->getSignatureName();
+            $tmDateOfBirth = $tmSignature->getDateOfBirth();
+            $tmSignatureDate = $tmSignature->getCreatedOn(true) instanceof \DateTime ?
+                $tmSignature->getCreatedOn(true)->format('d-m-Y H:i:s') :
+                null;
+        }
+
+        if ($opSignature !== null) {
+            $opFullName = $opSignature->getSignatureName();
+            $opDateOfBirth = $opSignature->getDateOfBirth();
+            $opSignatureDate = $opSignature->getCreatedOn(true) instanceof \DateTime ?
+                $opSignature->getCreatedOn(true)->format('d-m-Y H:i:s') :
+                null;
+        }
+
+        switch ($partial) {
+            case self::SIGNATURE:
+                // no digital signature
+                $replaceData = [
+                    $ownerLabel,
+                    $returnAddress,
+                ];
+                break;
+            case self::SIGNATURE_DIGITAL:
+                // only the TM signed digitally
+                $replaceData = [
+                    $tmFullName,
+                    $tmDateOfBirth,
+                    $tmSignatureDate,
+                    $ownerLabel,
+                    $returnAddress,
+                ];
+                break;
+            case self::SIGNATURE_DIGITAL_BOTH:
+                // Both TM and Operator signed digitally
+                $replaceData = [
+                    $tmFullName,
+                    $tmDateOfBirth,
+                    $tmSignatureDate,
+                    $ownerLabel,
+                    $opFullName,
+                    $opDateOfBirth,
+                    $opSignatureDate,
+                ];
+                break;
+            case self::SIGNATURE_DIGITAL_OPERATOR_TM:
+                // The Operator is also the TM an signed digitally
+                $replaceData = [
+                    $opFullName,
+                    $opDateOfBirth,
+                    $opSignatureDate,
+                ];
+                break;
+        }
+
+        return $replaceData;
     }
 
     /**
