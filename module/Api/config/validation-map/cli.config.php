@@ -28,6 +28,8 @@ return [
     CliCommandHandler\Permits\CalculateRandomAppScore::class => IsSystemUser::class,
     CliCommandHandler\Permits\UploadScoringResult::class => IsSystemUser::class,
     CliCommandHandler\Permits\UploadScoringLog::class => IsSystemUser::class,
+    CliCommandHandler\Permits\CloseExpiredWindows::class => IsSystemUser::class,
+    CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
 
     //  api commands
@@ -83,7 +85,6 @@ return [
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
     CommandHandler\Permits\AllocatePermits::class => IsSystemUser::class,
-    CommandHandler\Permits\ProcessEcmtApplications::class => IsSystemUser::class,
     CommandHandler\Permits\RunScoring::class => IsSystemUser::class,
     CommandHandler\Permits\AcceptScoring::class => IsSystemUser::class,
 ];

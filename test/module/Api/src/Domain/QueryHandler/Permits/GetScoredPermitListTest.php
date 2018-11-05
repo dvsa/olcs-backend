@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpCandidatePermit;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredListHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
@@ -38,7 +38,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
         $firstRandomizedScore = '2.9';
         $firstSectorsName = 'TEST';
         $firstTrafficAreaName = 'Ireland';
-        $expectedRefNum = 'OB1111/101/1';
+        $firstApplicationRef = 'OB1111 / 101';
+        $expectedRefNum = 'OB1111 / 101 / 1';
 
         $secondSectorName = 'None/More than one of these sectors';
 
@@ -53,6 +54,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'irhpPermitApplication' => [
                     'id' => $firstIrhpApplicationId,
                     'ecmtPermitApplication' => [
+                        'applicationRef' => $firstApplicationRef,
                         'sectors' => [
                             'name' => $firstSectorsName
                         ],
@@ -86,6 +88,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'irhpPermitApplication' => [
                     'id' => $firstIrhpApplicationId,
                     'ecmtPermitApplication' => [
+                        'applicationRef' => $firstApplicationRef,
                         'sectors' => [
                             'name' => $secondSectorName
                         ],
@@ -163,8 +166,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                     'Sector' => $firstSectorsName,
                     'Devolved Administration' => $firstTrafficAreaName,
                     'Result' => 'Successful',
-                    'Restricted Countries – Requested' => 'N/A',
-                    'Restricted Countries – Offered' => 'N/A',
+                    'Restricted Countries - Requested' => 'N/A',
+                    'Restricted Countries - Offered' => 'N/A',
                 ],
                 1 => [
                     'Permit Ref' => $expectedRefNum,
@@ -177,8 +180,8 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                     'Sector' => 'N/A',
                     'Devolved Administration' => 'N/A',
                     'Result' => 'Unsuccessful',
-                    'Restricted Countries – Requested' => 'Cuba; USA',
-                    'Restricted Countries – Offered' => 'England; France',
+                    'Restricted Countries - Requested' => 'Cuba; USA',
+                    'Restricted Countries - Offered' => 'England; France',
                 ],
             ]
         ];

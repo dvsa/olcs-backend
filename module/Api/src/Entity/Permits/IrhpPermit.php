@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -25,13 +26,18 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermit extends AbstractIrhpPermit
 {
-    const STATUS_PENDING = 'irhp_permit_pending';
+    const STATUS_PENDING            = 'irhp_permit_pending';
+    const STATUS_AWAITING_PRINTING  = 'irhp_permit_awaiting_printing';
+    const STATUS_PRINTING           = 'irhp_permit_printing';
+    const STATUS_PRINTED            = 'irhp_permit_printed';
+    const STATUS_ERROR              = 'irhp_permit_error';
 
     /**
      * Create new IrhpPermit
      *
      * @param IrhpCandidatePermit   $irhpCandidatePermit
      * @param DateTime              $issueDate
+     * @param RefData               $status
      * @param int                   $permitNumber
      *
      * @return IrhpPermit
@@ -39,6 +45,7 @@ class IrhpPermit extends AbstractIrhpPermit
     public static function createNew(
         IrhpCandidatePermit $irhpCandidatePermit,
         DateTime $issueDate,
+        RefData $status,
         $permitNumber
     ) {
         $irhpPermit = new self();
@@ -46,9 +53,162 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->irhpPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication();
         $irhpPermit->irhpPermitRange = $irhpCandidatePermit->getIrhpPermitRange();
         $irhpPermit->issueDate = $issueDate;
+        $irhpPermit->status = $status;
         $irhpPermit->permitNumber = $permitNumber;
-        $irhpPermit->status = new RefData(self::STATUS_PENDING);
 
         return $irhpPermit;
+    }
+
+    /**
+     * Get the permit number with prefix
+     *
+     * @return string
+     */
+    public function getPermitNumberWithPrefix()
+    {
+        return sprintf('%s%05d', $this->getIrhpPermitRange()->getPrefix(), $this->getPermitNumber());
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix()
+        ];
+    }
+
+    /**
+     * Proceed to status
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    public function proceedToStatus(RefData $status)
+    {
+        switch ($status->getId()) {
+            case self::STATUS_AWAITING_PRINTING:
+                $this->proceedToAwaitingPrinting($status);
+                break;
+            case self::STATUS_PRINTING:
+                $this->proceedToPrinting($status);
+                break;
+            case self::STATUS_ERROR:
+                $this->proceedToError($status);
+                break;
+            default:
+                throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId()));
+        }
+    }
+
+    /**
+     * Proceed to awaiting printing
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToAwaitingPrinting(RefData $status)
+    {
+        if (!$this->isPending() && !$this->hasError()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to awaiting printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to printing
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToPrinting(RefData $status)
+    {
+        if (!$this->isAwaitingPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to error
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToError(RefData $status)
+    {
+        if (!$this->isPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to error (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Is pending
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->status->getId() === self::STATUS_PENDING;
+    }
+
+    /**
+     * Is awaiting printing
+     *
+     * @return bool
+     */
+    public function isAwaitingPrinting()
+    {
+        return $this->status->getId() === self::STATUS_AWAITING_PRINTING;
+    }
+
+    /**
+     * Is printing
+     *
+     * @return bool
+     */
+    public function isPrinting()
+    {
+        return $this->status->getId() === self::STATUS_PRINTING;
+    }
+
+    /**
+     * Has error
+     *
+     * @return bool
+     */
+    public function hasError()
+    {
+        return $this->status->getId() === self::STATUS_ERROR;
     }
 }

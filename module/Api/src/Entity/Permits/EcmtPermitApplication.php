@@ -599,7 +599,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function isActive()
     {
-        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee() || $this->isFeePaid();
     }
 
     /**
