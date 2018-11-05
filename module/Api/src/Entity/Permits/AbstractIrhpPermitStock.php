@@ -146,6 +146,18 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $version = 1;
 
     /**
+     * Irhp permit jurisdiction quota
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitJurisdictionQuotas;
+
+    /**
      * Irhp permit range
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -198,6 +210,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
+        $this->irhpPermitJurisdictionQuotas = new ArrayCollection();
         $this->irhpPermitRanges = new ArrayCollection();
         $this->irhpPermitSectorQuotas = new ArrayCollection();
         $this->irhpPermitWindows = new ArrayCollection();
@@ -489,6 +502,69 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the irhp permit jurisdiction quota
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitJurisdictionQuotas($irhpPermitJurisdictionQuotas)
+    {
+        $this->irhpPermitJurisdictionQuotas = $irhpPermitJurisdictionQuotas;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit jurisdiction quotas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitJurisdictionQuotas()
+    {
+        return $this->irhpPermitJurisdictionQuotas;
+    }
+
+    /**
+     * Add a irhp permit jurisdiction quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitJurisdictionQuotas($irhpPermitJurisdictionQuotas)
+    {
+        if ($irhpPermitJurisdictionQuotas instanceof ArrayCollection) {
+            $this->irhpPermitJurisdictionQuotas = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitJurisdictionQuotas->toArray(),
+                    $irhpPermitJurisdictionQuotas->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitJurisdictionQuotas->contains($irhpPermitJurisdictionQuotas)) {
+            $this->irhpPermitJurisdictionQuotas->add($irhpPermitJurisdictionQuotas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit jurisdiction quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitJurisdictionQuotas($irhpPermitJurisdictionQuotas)
+    {
+        if ($this->irhpPermitJurisdictionQuotas->contains($irhpPermitJurisdictionQuotas)) {
+            $this->irhpPermitJurisdictionQuotas->removeElement($irhpPermitJurisdictionQuotas);
+        }
+
+        return $this;
     }
 
     /**
