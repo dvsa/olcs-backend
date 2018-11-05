@@ -130,7 +130,7 @@ class IrhpPermitEntityTest extends EntityTester
             $this->expectException(ForbiddenException::class);
         }
 
-        $this->sut->proceedToAwaitingPrinting(new RefData(Entity::STATUS_AWAITING_PRINTING));
+        $this->sut->proceedToStatus(new RefData(Entity::STATUS_AWAITING_PRINTING));
 
         $this->assertEquals(Entity::STATUS_AWAITING_PRINTING, $this->sut->getStatus()->getId());
     }
@@ -144,6 +144,67 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, true],
         ];
+    }
+
+    /**
+    * @dataProvider dpProceedToPrinting
+    */
+    public function testProceedToPrinting($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        if (!$expected) {
+            $this->expectException(ForbiddenException::class);
+        }
+
+        $this->sut->proceedToStatus(new RefData(Entity::STATUS_PRINTING));
+
+        $this->assertEquals(Entity::STATUS_PRINTING, $this->sut->getStatus()->getId());
+    }
+
+    public function dpProceedToPrinting()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_AWAITING_PRINTING, true],
+            [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    /**
+    * @dataProvider dpProceedToError
+    */
+    public function testProceedToError($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        if (!$expected) {
+            $this->expectException(ForbiddenException::class);
+        }
+
+        $this->sut->proceedToStatus(new RefData(Entity::STATUS_ERROR));
+
+        $this->assertEquals(Entity::STATUS_ERROR, $this->sut->getStatus()->getId());
+    }
+
+    public function dpProceedToError()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, true],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    public function testProceedToUnknown()
+    {
+        $this->expectException(ForbiddenException::class);
+
+        $this->sut->proceedToStatus(new RefData());
     }
 
     /**
@@ -162,6 +223,48 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PENDING, true],
             [Entity::STATUS_AWAITING_PRINTING, false],
             [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    /**
+    * @dataProvider dpIsAwaitingPrinting
+    */
+    public function testIsAwaitingPrinting($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        $this->assertEquals($expected, $this->sut->isAwaitingPrinting());
+    }
+
+    public function dpIsAwaitingPrinting()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_AWAITING_PRINTING, true],
+            [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    /**
+    * @dataProvider dpIsPrinting
+    */
+    public function testIsPrinting($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        $this->assertEquals($expected, $this->sut->isPrinting());
+    }
+
+    public function dpIsPrinting()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, true],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
         ];

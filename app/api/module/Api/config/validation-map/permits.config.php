@@ -54,8 +54,9 @@ return [
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
-    CommandHandler\Permits\GeneratePermit::class => IsSideEffect::class,
+    CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
+    CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
     // TODO: these will need to be changed to IsInternalAdmin
     CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\QueueAcceptScoring::class => NotIsAnonymousUser::class,

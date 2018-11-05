@@ -376,6 +376,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\RunScoring::class,
             Queue::TYPE_ACCEPT_ECMT_SCORING
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AcceptScoring::class,
+            Queue::TYPE_PERMIT_GENERATE
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GeneratePermits::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,

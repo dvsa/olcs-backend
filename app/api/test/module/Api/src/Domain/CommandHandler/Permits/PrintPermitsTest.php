@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
+use Dvsa\Olcs\Api\Domain\Command\Permits\ProceedToStatus;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\PrintPermits as PrintPermitsHandler;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
@@ -23,7 +23,6 @@ class PrintPermitsTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new PrintPermitsHandler();
-        $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
         $this->mockRepo('Queue', QueueRepo::class);
 
         $this->mockedSmServices = [
@@ -34,15 +33,6 @@ class PrintPermitsTest extends CommandHandlerTestCase
         ];
 
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [
-            IrhpPermit::STATUS_AWAITING_PRINTING,
-        ];
-
-        parent::initReferences();
     }
 
     /**
@@ -126,39 +116,22 @@ class PrintPermitsTest extends CommandHandlerTestCase
             (new Result())->addMessage('Queue item created')
         );
 
-        $p1 = m::mock(PermitWindowEntity::class);
-        $p1->shouldReceive('getId')
-            ->andReturn($p1Id)
-            ->shouldReceive('proceedToAwaitingPrinting')
-            ->with($this->refData[IrhpPermit::STATUS_AWAITING_PRINTING])
-            ->once();
-
-        $p2 = m::mock(PermitWindowEntity::class);
-        $p2->shouldReceive('getId')
-            ->andReturn($p2Id)
-            ->shouldReceive('proceedToAwaitingPrinting')
-            ->with($this->refData[IrhpPermit::STATUS_AWAITING_PRINTING])
-            ->once();
-
-        $this->repoMap['IrhpPermit']
-            ->shouldReceive('fetchByIds')
-            ->with([$p1Id, $p2Id])
-            ->andReturn([$p1, $p2])
-            ->shouldReceive('save')
-            ->with($p1)
-            ->once()
-            ->shouldReceive('save')
-            ->with($p2)
-            ->once();
+        $this->expectedSideEffect(
+            ProceedToStatus::class,
+            [
+                'ids' => [$p1Id, $p2Id],
+                'status' => IrhpPermit::STATUS_AWAITING_PRINTING,
+            ],
+            (new Result())->addMessage('Permits updated')
+        );
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [
-                'id' => [$p1Id, $p2Id]
-            ],
+            'id' => [],
             'messages' => [
                 'Queue item created',
+                'Permits updated',
                 'Permits submitted for printing',
             ]
         ];
