@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitSector;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitSector\Update as UpdateSectorCmd;
@@ -14,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Scott Callaway
  */
-final class Update extends AbstractCommandHandler
+final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 

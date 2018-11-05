@@ -138,4 +138,27 @@ class IrhpPermitWindow extends AbstractRepository
 
         return $results[0];
     }
+
+    /**
+     * Fetch all windows to be closed
+     *
+     * @param \DateTime $currentDateTime Current datetime
+     * @param string    $since           Date since which the query should go to find an expired window
+     *
+     * @return array
+     */
+    public function fetchWindowsToBeClosed(\DateTime $currentDateTime, $since = '-1 day')
+    {
+        $clonedDateTime = clone $currentDateTime;
+
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->where($qb->expr()->gte($this->alias.'.endDate', ':periodStart'))
+            ->andWhere($qb->expr()->lt($this->alias.'.endDate', ':periodEnd'))
+            ->setParameter('periodStart', $clonedDateTime->modify($since)->setTime(0, 0, 0)->format(\DateTime::ISO8601))
+            ->setParameter('periodEnd', $currentDateTime->format(\DateTime::ISO8601));
+
+        return $qb->getQuery()->getResult();
+    }
 }

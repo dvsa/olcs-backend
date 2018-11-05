@@ -34,6 +34,7 @@ class EcmtPermitApplication extends AbstractRepository
     ];
 
     protected $entity = Entity::class;
+    protected $alias = 'epa';
 
     /**
      * @param QueryBuilder $qb
@@ -123,18 +124,25 @@ class EcmtPermitApplication extends AbstractRepository
     }
 
     /**
-     * Fetch all under consideration applications
+     * Fetch all applications by IRHP permit window id and status
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $windowId    IRHP Permit Window
+     * @param array                                              $appStatuses List of app statuses
      *
      * @return array
      */
-    public function fetchUnderConsiderationApplications()
+    public function fetchByWindowId($windowId, $appStatuses)
     {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('epa')
-            ->from(Entity::class, 'epa')
-            ->where('epa.status = ?1')
-            ->setParameter(1, Entity::STATUS_UNDER_CONSIDERATION)
-            ->getQuery()
-            ->getResult();
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->innerJoin($this->alias.'.irhpPermitApplications', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->where('ipw.id = :windowId')
+            ->andWhere($qb->expr()->in($this->alias.'.status', ':appStatuses'))
+            ->setParameter('windowId', $windowId)
+            ->setParameter('appStatuses', $appStatuses);
+
+        return $qb->getQuery()->getResult();
     }
 }

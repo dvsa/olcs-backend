@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  *        @ORM\Index(name="surrender_fk_community_licence_document_status_ref_data_id",
      *     columns={"community_licence_document_status"}),
  *        @ORM\Index(name="surrender_fk_digital_signature_id_ref_data_id",
-     *     columns={"digitial_signature_id"}),
+     *     columns={"digital_signature_id"}),
  *        @ORM\Index(name="surrender_fk_last_modified", columns={"last_modified_by"}),
  *        @ORM\Index(name="surrender_status_index", columns={"status"}),
  *        @ORM\Index(name="surrender_created_by_index", columns={"created_by"}),

@@ -3,6 +3,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -13,10 +16,13 @@ use Dvsa\Olcs\Api\Entity\Permits\Sectors;
  *
  * @todo: Needed to specify $extraRepos for unknown reason to prevent unit test failing, investigate & remove
  */
-class GetScoredPermitList extends AbstractQueryHandler
+class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
     const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = ['M', 'G', 'N'];
 
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'IrhpCandidatePermit';
     protected $bundledRepos = [
         'irhpPermitApplication' => [
@@ -81,7 +87,7 @@ class GetScoredPermitList extends AbstractQueryHandler
             }
 
             $formattedData[] = [
-                'Permit Ref'                        => $licence['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
+                'Permit Ref'                        => $row['irhpPermitApplication']['ecmtPermitApplication']['applicationRef'] . ' / ' . $row['id'],
                 'Operator'                          => $licence['organisation']['name'],
                 'Application Score'                 => $row['applicationScore'],
                 'Permit Intensity of Use'           => $row['intensityOfUse'],
@@ -91,8 +97,8 @@ class GetScoredPermitList extends AbstractQueryHandler
                 'Sector'                            => $sector['name'] === Sectors::SECTOR_OPTION_NAME__NONE ? 'N/A' : $sector['name'],
                 'Devolved Administration'           => $devolvedAdministration,
                 'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                'Restricted Countries – Requested'  => $this->getRestrictedCountriesRequested($row),
-                'Restricted Countries – Offered'    => $this->getRestrictedCountriesOffered($row)
+                'Restricted Countries - Requested'  => $this->getRestrictedCountriesRequested($row),
+                'Restricted Countries - Offered'    => $this->getRestrictedCountriesOffered($row)
             ];
         }
 

@@ -284,6 +284,15 @@ return [
                         ],
                     ],
                 ],
+                'permits' => [
+                    'options' => [
+                        'route' => 'permits (close-expired-windows) [--since=<date>] [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'permits',
+                        ],
+                    ],
+                ],
             ]
         ]
     ],
@@ -363,12 +372,12 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
             Queue::TYPE_PERMITS_ALLOCATE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocatePermits::class,
-            Queue::TYPE_PROCESS_ECMT_APPLICATIONS
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\ProcessEcmtApplications::class,
             Queue::TYPE_RUN_ECMT_SCORING
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\RunScoring::class,
             Queue::TYPE_ACCEPT_ECMT_SCORING
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AcceptScoring::class,
+            Queue::TYPE_PERMIT_GENERATE
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GeneratePermits::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
@@ -393,6 +402,7 @@ return [
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
+            Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
         ],
     ],
 
