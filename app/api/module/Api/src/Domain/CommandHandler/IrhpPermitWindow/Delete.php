@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -14,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Andy Newton
  */
-final class Delete extends AbstractCommandHandler
+final class Delete extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 

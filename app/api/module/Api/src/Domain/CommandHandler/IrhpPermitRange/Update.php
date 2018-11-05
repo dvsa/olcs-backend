@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitRange;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as RangeEntity;
@@ -17,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Update extends AbstractCommandHandler
+final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use IrhpPermitRangeOverlapTrait;
     use ToggleAwareTrait;

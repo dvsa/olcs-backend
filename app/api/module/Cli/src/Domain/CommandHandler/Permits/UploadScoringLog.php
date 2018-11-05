@@ -43,7 +43,7 @@ final class UploadScoringLog extends AbstractCommandHandler implements ToggleReq
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::REPORT_SUB_CATEGORY_PERMITS,
             'filename' => 'Permit-Scoring-Log.log',
-            'description' => 'Scoring Log File ' . date('Y-m-d H:m'),
+            'description' => 'Scoring Log File ' . date('Y-m-d H:i'),
             'user' => PidIdentityProvider::SYSTEM_USER,
         ];
 

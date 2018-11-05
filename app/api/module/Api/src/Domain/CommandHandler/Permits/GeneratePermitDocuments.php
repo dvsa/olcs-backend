@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Generate Permit
+ * Generate Permit Documents
  */
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
@@ -9,8 +9,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -20,8 +23,11 @@ use Doctrine\ORM\Query;
  *
  * @author Henry White <henry.white@capgemini.com>
  */
-final class GeneratePermit extends AbstractCommandHandler
+final class GeneratePermitDocuments extends AbstractCommandHandler implements ToggleRequiredInterface
 {
+    use ToggleAwareTrait;
+
+    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'IrhpPermit';
 
     private $templates = [
@@ -116,7 +122,7 @@ final class GeneratePermit extends AbstractCommandHandler
                     )
                 );
 
-                $result->addId($documentType, $documentGenerated->getId('identifier'), true);
+                $result->addId($documentType, $documentGenerated->getId('document'), true);
                 $result->addMessage($documentDescription . ' RTF created and stored');
             }
         }
