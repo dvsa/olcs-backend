@@ -1079,4 +1079,53 @@ class BatchControllerTest extends MockeryTestCase
 
         $this->sut->lastTmLetterAction();
     }
+
+    /**
+     * @param array $params
+     * @param array $expected
+     *
+     * @dataProvider dpPermits
+     */
+    public function testPermitsAction($params, $expected)
+    {
+        $this->mockParamsPlugin($params);
+
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type($expected['command']))
+            ->once()
+            ->andReturnUsing(
+                function ($command) use ($expected) {
+                    $this->assertEquals($expected['data'], $command->getArrayCopy());
+                    return new Command\Result();
+                }
+            );
+
+        $this->sut->permitsAction();
+    }
+
+    public function dpPermits()
+    {
+        return [
+            'close expired windows' => [
+                [
+                    'close-expired-windows' => true,
+                ],
+                [
+                    'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\CloseExpiredWindows::class,
+                    'data' => ['since' => '-1 day'],
+                ]
+            ],
+            'close expired windows within last month' => [
+                [
+                    'close-expired-windows' => true,
+                    'since' => '-1 month',
+                ],
+                [
+                    'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\CloseExpiredWindows::class,
+                    'data' => ['since' => '-1 month'],
+                ]
+            ],
+        ];
+    }
 }

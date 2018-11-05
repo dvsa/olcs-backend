@@ -337,6 +337,7 @@ return [
             'DocumentToDelete' => RepositoryFactory::class,
             'Hearing' => RepositoryFactory::class,
             'GetDbValue' => RepositoryFactory::class,
+            'Surrender' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
