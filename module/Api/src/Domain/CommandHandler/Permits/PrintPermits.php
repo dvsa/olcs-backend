@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
+use Dvsa\Olcs\Api\Domain\Command\Permits\ProceedToStatus;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
@@ -30,9 +31,7 @@ final class PrintPermits extends AbstractCommandHandler implements
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
 
-    protected $repoServiceName = 'IrhpPermit';
-
-    protected $extraRepos = ['Queue'];
+    protected $repoServiceName = 'Queue';
 
     const MAX_BATCH_SIZE = 100;
     const ERR_MAX_BATCH_SIZE_REACHED = 'ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED';
@@ -78,17 +77,16 @@ final class PrintPermits extends AbstractCommandHandler implements
         $this->result->merge($this->handleSideEffect(CreateQueue::create($params)));
 
         // update status of permits
-        $status = $this->getRepo()->getRefdataReference(IrhpPermitEntity::STATUS_AWAITING_PRINTING);
-
-        $permits = $this->getRepo()->fetchByIds($ids);
-
-        foreach ($permits as $permit) {
-            $permit->proceedToAwaitingPrinting($status);
-
-            $this->getRepo()->save($permit);
-
-            $this->result->addId('id', $permit->getId(), true);
-        }
+        $this->result->merge(
+            $this->handleSideEffect(
+                ProceedToStatus::create(
+                    [
+                        'ids' => $ids,
+                        'status' => IrhpPermitEntity::STATUS_AWAITING_PRINTING,
+                    ]
+                )
+            )
+        );
 
         $this->result->addMessage('Permits submitted for printing');
 

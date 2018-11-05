@@ -82,6 +82,31 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
+     * Proceed to status
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    public function proceedToStatus(RefData $status)
+    {
+        switch ($status->getId()) {
+            case self::STATUS_AWAITING_PRINTING:
+                $this->proceedToAwaitingPrinting($status);
+                break;
+            case self::STATUS_PRINTING:
+                $this->proceedToPrinting($status);
+                break;
+            case self::STATUS_ERROR:
+                $this->proceedToError($status);
+                break;
+            default:
+                throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId()));
+        }
+    }
+
+    /**
      * Proceed to awaiting printing
      *
      * @param RefData $status Status
@@ -89,12 +114,56 @@ class IrhpPermit extends AbstractIrhpPermit
      * @return void
      * @throws ForbiddenException
      */
-    public function proceedToAwaitingPrinting(RefData $status)
+    private function proceedToAwaitingPrinting(RefData $status)
     {
         if (!$this->isPending() && !$this->hasError()) {
             throw new ForbiddenException(
                 sprintf(
                     'The permit is not in the correct state to proceed to awaiting printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to printing
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToPrinting(RefData $status)
+    {
+        if (!$this->isAwaitingPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to error
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToError(RefData $status)
+    {
+        if (!$this->isPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to error (%s)',
                     $this->status->getId()
                 )
             );
@@ -111,6 +180,26 @@ class IrhpPermit extends AbstractIrhpPermit
     public function isPending()
     {
         return $this->status->getId() === self::STATUS_PENDING;
+    }
+
+    /**
+     * Is awaiting printing
+     *
+     * @return bool
+     */
+    public function isAwaitingPrinting()
+    {
+        return $this->status->getId() === self::STATUS_AWAITING_PRINTING;
+    }
+
+    /**
+     * Is printing
+     *
+     * @return bool
+     */
+    public function isPrinting()
+    {
+        return $this->status->getId() === self::STATUS_PRINTING;
     }
 
     /**
