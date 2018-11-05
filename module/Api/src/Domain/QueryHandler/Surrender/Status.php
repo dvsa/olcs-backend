@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\Query;
 
 final class Status extends AbstractQueryHandler implements ToggleRequiredInterface
 {
@@ -17,7 +18,7 @@ final class Status extends AbstractQueryHandler implements ToggleRequiredInterfa
 
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
     protected $repoServiceName = 'Surrender';
-
+    protected $extraRepos = ['Licence'];
 
     /**
      * handleQuery
@@ -29,13 +30,11 @@ final class Status extends AbstractQueryHandler implements ToggleRequiredInterfa
      */
     public function handleQuery(QueryInterface $query)
     {
-
-        $status = $this->getRepo()->fetchOneById($query, Query::HYDRATE_OBJECT);
-        return [
-            'result' => new Result(
-                $status,
-                ['status']
-            ),
-        ];
+        $licence = $this->getRepo('Licence')->fetchById($query->getId(), Query::HYDRATE_OBJECT);
+        $surrender = $this->getRepo()->fetchOneByLicence($licence->getId(), Query::HYDRATE_OBJECT);
+        $status = $surrender->getStatus();
+        return $this->result(
+            $status
+        );
     }
 }
