@@ -24,6 +24,15 @@ class QueueRunScoringTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+            IrhpPermitStockEntity::STATUS_SCORING_PENDING
+        ];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $stockId = 47;
@@ -45,9 +54,22 @@ class QueueRunScoringTest extends CommandHandlerTestCase
 
         $this->expectedQueueSideEffect($stockId, Queue::TYPE_RUN_ECMT_SCORING, []);
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_SCORING_PENDING)
-            ->once();
+        $stock = m::mock(IrhpPermitStockEntity::class);
+        $stock->shouldReceive('proceedToScoringPending')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_PENDING])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
+            ->with($stockId)
+            ->andReturn($stock);
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($stock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $this->sut->handleCommand($command);
     }

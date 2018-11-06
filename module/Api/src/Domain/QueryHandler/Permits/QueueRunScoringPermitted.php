@@ -34,47 +34,20 @@ class QueueRunScoringPermitted extends AbstractQueryHandler implements ToggleReq
     public function handleQuery(QueryInterface $query)
     {
         $stockId = $query->getId();
+        $stock = $this->getRepo()->fetchById($stockId);
 
-        $stock = $this->getRepo()->fetchById($query->getId());
-        $statusId = $stock->getStatus()->getId();
-
-        $permitted = in_array(
-            $statusId,
-            [
-                IrhpPermitStock::STATUS_SCORING_NEVER_RUN,
-                IrhpPermitStock::STATUS_SCORING_SUCCESSFUL,
-                IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL,
-                IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL
-            ]
-        );
-
-        if (!$permitted) {
-            return $this->generateResponse(
-                false,
-                'Scoring is not permitted when stock status is ' . $statusId
-            );
+        if (!$stock->statusAllowsQueueRunScoring()) {
+            return [
+                'result' => false,
+                'message' => sprintf(
+                    'Scoring is not permitted when stock status is \'%s\'',
+                    $stock->getStatusDescription()
+                )
+            ];
         }
 
-        $result = $this->getQueryHandler()->handleQuery(
+        return $this->getQueryHandler()->handleQuery(
             CheckRunScoringPrerequisites::create(['id' => $stockId])
         );
-
-        return $result;
-    }
-
-    /**
-     * Generate an array representing the query response
-     *
-     * @param bool $permitted
-     * @param string $message
-     *
-     * @return array
-     */
-    private function generateResponse($permitted, $message)
-    {
-        return [
-            'result' => $permitted,
-            'message' => $message
-        ];
     }
 }

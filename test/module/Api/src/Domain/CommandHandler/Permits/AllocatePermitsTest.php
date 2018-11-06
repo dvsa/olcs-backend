@@ -71,18 +71,18 @@ class AllocatePermitsTest extends CommandHandlerTestCase
         $ecmtPermitApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn([$irhpPermitApplication]);
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('decacheById')
-            ->with($ecmtPermitApplicationId)
-            ->once()
-            ->ordered()
-            ->globally();
-
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)
             ->once()
             ->ordered()
             ->globally()
             ->andReturn($ecmtPermitApplication);
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('refresh')
+            ->with($ecmtPermitApplication)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $ecmtPermitApplication->shouldReceive('proceedToValid')
             ->with($this->refData[EcmtPermitApplication::STATUS_VALID])

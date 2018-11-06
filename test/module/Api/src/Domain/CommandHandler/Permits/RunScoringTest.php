@@ -33,6 +33,17 @@ class RunScoringTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+            IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL,
+            IrhpPermitStockEntity::STATUS_SCORING_IN_PROGRESS,
+            IrhpPermitStockEntity::STATUS_SCORING_SUCCESSFUL,
+        ];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $stockId = 47;
@@ -56,11 +67,18 @@ class RunScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
+            ->ordered()
+            ->globally()
             ->andReturn($irhpPermitStock);
 
-        $irhpPermitStock->shouldReceive('getStatus->getId')
+        $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
+            ->with($irhpPermitStock)
             ->once()
-            ->andReturn(IrhpPermitStockEntity::STATUS_SCORING_PENDING);
+            ->ordered()
+            ->globally();
+
+        $irhpPermitStock->shouldReceive('statusAllowsRunScoring')
+            ->andReturn(true);
 
         $this->sut->shouldReceive('handleQuery')
             ->andReturnUsing(function ($command) use ($stockId, $scoringResults) {
@@ -80,10 +98,17 @@ class RunScoringTest extends CommandHandlerTestCase
                 }
             });
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_SCORING_IN_PROGRESS)
+        $irhpPermitStock->shouldReceive('proceedToScoringInProgress')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_IN_PROGRESS])
             ->once()
-            ->ordered();
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $resetScoringResult = new Result();
         $resetScoringResult->addMessage('ResetScoring output');
@@ -147,8 +172,8 @@ class RunScoringTest extends CommandHandlerTestCase
             "MarkSuccessfulDa output\r\n" .
             "MarkSuccessfulRemaining output\r\n" .
             "ApplyRanges output\r\n" .
-            "Scoring process completed successfully.\r\n" .
-            "UploadScoringResult output";
+            "UploadScoringResult output\r\n" .
+            "Scoring process completed successfully.";
 
         $uploadScoringLogResult = new Result();
         $uploadScoringLogResult->addMessage('UploadScoringLog output');
@@ -158,10 +183,17 @@ class RunScoringTest extends CommandHandlerTestCase
             $uploadScoringLogResult
         );
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_SCORING_SUCCESSFUL)
+        $irhpPermitStock->shouldReceive('proceedToScoringSuccessful')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_SUCCESSFUL])
             ->once()
-            ->ordered();
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $result = $this->sut->handleCommand($command);
 
@@ -173,18 +205,15 @@ class RunScoringTest extends CommandHandlerTestCase
                 'MarkSuccessfulDa output',
                 'MarkSuccessfulRemaining output',
                 'ApplyRanges output',
-                'Scoring process completed successfully.',
                 'UploadScoringResult output',
+                'Scoring process completed successfully.',
                 'UploadScoringLog output'
             ],
             $result->getMessages()
         );
     }
 
-    /**
-     * @dataProvider invalidStatusIdsProvider
-     */
-    public function testIncorrectStatus($stockStatusId)
+    public function testIncorrectStatus()
     {
         $stockId = 47;
 
@@ -193,24 +222,39 @@ class RunScoringTest extends CommandHandlerTestCase
             ->andReturn($stockId);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
+        $irhpPermitStock->shouldReceive('getStatusDescription')
+            ->andReturn('Stock accept pending');
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
-        $irhpPermitStock->shouldReceive('getStatus->getId')
+        $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
+            ->with($irhpPermitStock)
             ->once()
-            ->andReturn($stockStatusId);
+            ->ordered();
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL)
-            ->once();
+        $irhpPermitStock->shouldReceive('statusAllowsRunScoring')
+            ->andReturn(false);
+
+        $irhpPermitStock->shouldReceive('proceedToScoringPrerequisiteFail')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(
-            ['Prerequisite failed: Stock status must be stock_scoring_pending, currently '.$stockStatusId],
+            ['Prerequisite failed: Run scoring is not permitted with when stock status is \'Stock accept pending\''],
             $result->getMessages()
         );
     }
@@ -228,13 +272,19 @@ class RunScoringTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
             ->once()
+            ->ordered()
             ->andReturn($irhpPermitStock);
 
-        $irhpPermitStock->shouldReceive('getStatus->getId')
+        $this->repoMap['IrhpPermitStock']->shouldReceive('refresh')
+            ->with($irhpPermitStock)
             ->once()
-            ->andReturn(IrhpPermitStockEntity::STATUS_SCORING_PENDING);
+            ->ordered();
+
+        $irhpPermitStock->shouldReceive('statusAllowsRunScoring')
+            ->andReturn(true);
 
         $this->sut->shouldReceive('handleQuery')
+            ->once()
             ->andReturnUsing(function ($command) use ($stockId) {
                 $this->assertInstanceOf(CheckRunScoringPrerequisites::class, $command);
                 $this->assertEquals($stockId, $command->getId());
@@ -245,9 +295,17 @@ class RunScoringTest extends CommandHandlerTestCase
                 ];
             });
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL)
-            ->once();
+        $irhpPermitStock->shouldReceive('proceedToScoringPrerequisiteFail')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL])
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($irhpPermitStock)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $result = $this->sut->handleCommand($command);
 
@@ -255,21 +313,5 @@ class RunScoringTest extends CommandHandlerTestCase
             ['Prerequisite failed: Failure message from CheckRunScoringPrerequisites'],
             $result->getMessages()
         );
-    }
-
-    public function invalidStatusIdsProvider()
-    {
-        return [
-            [IrhpPermitStockEntity::STATUS_SCORING_NEVER_RUN],
-            [IrhpPermitStockEntity::STATUS_SCORING_IN_PROGRESS],
-            [IrhpPermitStockEntity::STATUS_SCORING_SUCCESSFUL],
-            [IrhpPermitStockEntity::STATUS_SCORING_PREREQUISITE_FAIL],
-            [IrhpPermitStockEntity::STATUS_SCORING_UNEXPECTED_FAIL],
-            [IrhpPermitStockEntity::STATUS_ACCEPT_PENDING],
-            [IrhpPermitStockEntity::STATUS_ACCEPT_IN_PROGRESS],
-            [IrhpPermitStockEntity::STATUS_ACCEPT_SUCCESSFUL],
-            [IrhpPermitStockEntity::STATUS_ACCEPT_PREREQUISITE_FAIL],
-            [IrhpPermitStockEntity::STATUS_ACCEPT_UNEXPECTED_FAIL],
-        ];
     }
 }
