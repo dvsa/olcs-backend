@@ -1,5 +1,4 @@
 <?php
-
 $startTime = microtime(true);
 // Backend default timezone is UTC
 date_default_timezone_set('UTC');
