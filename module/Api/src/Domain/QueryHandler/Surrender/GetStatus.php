@@ -17,7 +17,7 @@ final class GetStatus extends AbstractQueryHandler implements ToggleRequiredInte
 
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
     protected $repoServiceName = 'Surrender';
-    protected $extraRepos = ['Licence'];
+   
 
     /**
      * handleQuery
