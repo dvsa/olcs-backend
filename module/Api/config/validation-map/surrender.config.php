@@ -8,4 +8,5 @@ return [
     CommandHandler\Surrender\Create::class                              => IsExternalUser::class,
     QueryHandler\Surrender\GetStatus::class                                 => IsExternalUser::class,
     CommandHandler\Surrender\Update::class                              => IsExternalUser::class,
+    CommandHandler\Surrender\Delete::class                              => IsInternalUser::class,
 ];
