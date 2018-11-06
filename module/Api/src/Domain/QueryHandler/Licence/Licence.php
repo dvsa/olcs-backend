@@ -155,9 +155,6 @@ class Licence extends AbstractQueryHandler
     }
 
     /**
-     * If fetchOpenApplicationsForLicence() returns empty array, the licence applications for do have the correct
-     * statuses for surrendering a licence
-     *
      * @param QueryInterface $query
      *
      * @return bool
