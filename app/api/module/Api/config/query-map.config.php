@@ -624,4 +624,7 @@ return [
     Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
+
+    //Digital Surrender
+    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class
 ];
