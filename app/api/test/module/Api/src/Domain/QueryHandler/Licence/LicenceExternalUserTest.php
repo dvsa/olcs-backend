@@ -25,6 +25,7 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
         $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
         $this->mockRepo('Note', Repository\Note::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+        $this->mockRepo('Application', Repository\SystemParameter::class);
 
         /** @var UserEntity $currentUser */
         $currentUser = m::mock(UserEntity::class)->makePartial();
@@ -48,7 +49,10 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryExternalUser()
+    /**
+     * @dataProvider dptestHandleQuery
+     */
+    public function testHandleQueryExternalUser($isLicenceSurrenderAllowed, $openApplicationsForLicence)
     {
         $query = Qry::create(['id' => 111]);
 
@@ -88,6 +92,10 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($licence);
 
+        $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
+            ->with($query->getId())
+            ->andReturn($openApplicationsForLicence);
+
         $sections = ['bar', 'cake'];
 
         $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
@@ -106,6 +114,7 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => true,
             'showExpiryWarning' => false,
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -130,5 +139,19 @@ class LicenceExternalUserTest extends QueryHandlerTestCase
             ->andReturn($licence);
 
         $this->sut->handleQuery($query);
+    }
+
+    public function dptestHandleQuery()
+    {
+        return [
+            [
+                'isLicenceSurrenderAllowed' => true,
+                'openApplicationsForLicence' => []
+            ],
+            [
+                'isLicenceSurrenderAllowed' => false,
+                'openApplicationsForLicence' => ['some data']
+            ]
+        ];
     }
 }

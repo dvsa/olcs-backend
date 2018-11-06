@@ -29,6 +29,7 @@ class LicenceTest extends QueryHandlerTestCase
         $this->mockRepo('ContinuationDetail', Repository\ContinuationDetail::class);
         $this->mockRepo('Note', Repository\Note::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+        $this->mockRepo('Application', Repository\SystemParameter::class);
 
         /** @var UserEntity $currentUser */
         $currentUser = m::mock(UserEntity::class)->makePartial();
@@ -46,7 +47,10 @@ class LicenceTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider dptestHandleQuery
+     */
+    public function testHandleQuery($isLicenceSurrenderAllowed, $openApplicationsForLicence)
     {
         $query = Qry::create(['id' => 111]);
 
@@ -86,6 +90,10 @@ class LicenceTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($licence);
 
+        $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
+            ->with($query->getId())
+            ->andReturn($openApplicationsForLicence);
+
         $sections = ['bar', 'cake'];
 
         $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
@@ -104,12 +112,16 @@ class LicenceTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => true,
             'showExpiryWarning' => false,
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
         $this->assertEquals($expected, $result->serialize());
     }
 
-    public function testHandleQueryNoContinuationDetail()
+    /**
+     * @dataProvider dptestHandleQuery
+     */
+    public function testHandleQueryNoContinuationDetail($isLicenceSurrenderAllowed, $openApplicationsForLicence)
     {
         $query = Qry::create(['id' => 111]);
 
@@ -146,6 +158,10 @@ class LicenceTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($licence);
 
+        $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
+            ->with($query->getId())
+            ->andReturn($openApplicationsForLicence);
+
         $sections = ['bar', 'cake'];
 
         $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
@@ -164,6 +180,7 @@ class LicenceTest extends QueryHandlerTestCase
             'latestNote' => 'latest note',
             'canHaveInspectionRequest' => false,
             'showExpiryWarning' => false,
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
         $this->assertEquals($expected, $result->serialize());
@@ -172,8 +189,14 @@ class LicenceTest extends QueryHandlerTestCase
     /**
      * @dataProvider testHandleQueryShowExpiryWarningDataProvider
      */
-    public function testHandleQueryShowExpiryWarning($expected, $isExpiring, $isDisabled, $continuationDetailStatusId)
-    {
+    public function testHandleQueryShowExpiryWarning(
+        $expected,
+        $isExpiring,
+        $isDisabled,
+        $continuationDetailStatusId,
+        $isLicenceSurrenderAllowed,
+        $openApplicationsForLicence
+    ) {
         $query = Qry::create(['id' => 111]);
 
         /** @var LicenceEntity $licence */
@@ -206,6 +229,10 @@ class LicenceTest extends QueryHandlerTestCase
         $this->repoMap['SystemParameter']->shouldReceive('getDisabledDigitalContinuations')->with()
             ->andReturn($isDisabled);
 
+        $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
+            ->with($query->getId())
+            ->andReturn($openApplicationsForLicence);
+
         $sections = ['bar', 'cake'];
         $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
             ->once()
@@ -214,7 +241,10 @@ class LicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $expected = ['showExpiryWarning' => $expected];
+        $expected = [
+            'showExpiryWarning' => $expected,
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
+        ];
 
         $this->assertArraySubset($expected, $result->serialize());
     }
@@ -222,15 +252,20 @@ class LicenceTest extends QueryHandlerTestCase
     public function testHandleQueryShowExpiryWarningDataProvider()
     {
         return [
-            'Should show' => [true, true, false, ContinuationDetail::STATUS_PRINTED],
-            'Licence is expiring' => [false, false, false, ContinuationDetail::STATUS_PRINTED],
-            'System Paramtere disabled' => [false, true, true, ContinuationDetail::STATUS_PRINTED],
-            'Wrong Continuation detail status' => [false, true, false, ContinuationDetail::STATUS_PRINTING],
+            'Should show' => [true, true, false, ContinuationDetail::STATUS_PRINTED, true, []],
+            'Licence is expiring' => [false, false, false, ContinuationDetail::STATUS_PRINTED, true, []],
+            'System Paramtere disabled' => [false, true, true, ContinuationDetail::STATUS_PRINTED, false, ['some data']],
+            'Wrong Continuation detail status' => [false, true, false, ContinuationDetail::STATUS_PRINTING, true, []],
         ];
     }
 
-    public function testHandleQueryShowExpiryWarningNoContinuationDetail()
-    {
+    /**
+     * @dataProvider dptestHandleQuery
+     */
+    public function testHandleQueryShowExpiryWarningNoContinuationDetail(
+        $isLicenceSurrenderAllowed,
+        $openApplicationsForLicence
+    ) {
         $query = Qry::create(['id' => 111]);
 
         /** @var LicenceEntity $licence */
@@ -257,6 +292,10 @@ class LicenceTest extends QueryHandlerTestCase
         $this->repoMap['Note']->shouldReceive('fetchForOverview')->with(111)->once()->andReturn('latest note');
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->andReturn($licence);
 
+        $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
+            ->with($query->getId())
+            ->andReturn($openApplicationsForLicence);
+
         $sections = ['bar', 'cake'];
         $this->mockedSmServices['SectionAccessService']->shouldReceive('getAccessibleSectionsForLicence')
             ->once()
@@ -265,8 +304,25 @@ class LicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $expected = ['showExpiryWarning' => false];
+        $expected = [
+            'showExpiryWarning' => false,
+            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
+            ];
 
         $this->assertArraySubset($expected, $result->serialize());
+    }
+
+    public function dptestHandleQuery()
+    {
+        return [
+            [
+                'isLicenceSurrenderAllowed' => true,
+                'openApplicationsForLicence' => []
+            ],
+            [
+                'isLicenceSurrenderAllowed' => false,
+                'openApplicationsForLicence' => ['some data']
+            ]
+        ];
     }
 }
