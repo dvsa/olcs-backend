@@ -1070,6 +1070,7 @@ return [
     // Surrender
     TransferCommand\Surrender\Create::class => CommandHandler\Surrender\Create::class,
     TransferCommand\Surrender\Update::class => CommandHandler\Surrender\Update::class,
+    TransferCommand\Surrender\Delete::class => CommandHandler\Surrender\Delete::class,
 
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
