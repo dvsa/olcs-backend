@@ -192,7 +192,7 @@ class LicenceTest extends QueryHandlerTestCase
     public function testHandleQueryShowExpiryWarning(
         $expected,
         $isExpiring,
-        $isDisabled,
+        $isSystemParamDisabled,
         $continuationDetailStatusId,
         $isLicenceSurrenderAllowed,
         $openApplicationsForLicence
@@ -227,7 +227,7 @@ class LicenceTest extends QueryHandlerTestCase
         $this->repoMap['Note']->shouldReceive('fetchForOverview')->with(111)->once()->andReturn('latest note');
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->andReturn($licence);
         $this->repoMap['SystemParameter']->shouldReceive('getDisabledDigitalContinuations')->with()
-            ->andReturn($isDisabled);
+            ->andReturn($isSystemParamDisabled);
 
         $this->repoMap['Application']->shouldReceive('fetchOpenApplicationsForLicence')
             ->with($query->getId())
@@ -241,21 +241,49 @@ class LicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $expected = [
+        $expectedResult = [
             'showExpiryWarning' => $expected,
             'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
-        $this->assertArraySubset($expected, $result->serialize());
+        $this->assertArraySubset($expectedResult, $result->serialize());
     }
 
     public function testHandleQueryShowExpiryWarningDataProvider()
     {
         return [
-            'Should show' => [true, true, false, ContinuationDetail::STATUS_PRINTED, true, []],
-            'Licence is expiring' => [false, false, false, ContinuationDetail::STATUS_PRINTED, true, []],
-            'System Paramtere disabled' => [false, true, true, ContinuationDetail::STATUS_PRINTED, false, ['some data']],
-            'Wrong Continuation detail status' => [false, true, false, ContinuationDetail::STATUS_PRINTING, true, []],
+            'should show' => [
+                'expected' => true,
+                'isExpiring' => true,
+                'isSystemParamDisabled' => false,
+                'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTED,
+                'isLicenceSurrenderAllowed' => true,
+                'openApplicationsForLicence' => []
+            ],
+            'licence is expiring' => [
+                'expected' => false,
+                'isExpiring' => false,
+                'isSystemParamDisabled' => false,
+                'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTED,
+                'isLicenceSurrenderAllowed' => true,
+                'openApplicationsForLicence' => []
+            ],
+            'system Parameter disabled' => [
+                'expected' => false,
+                'isExpiring' => true,
+                'isSystemParamDisabled' => true,
+                'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTED,
+                'isLicenceSurrenderAllowed' => false,
+                'openApplicationsForLicence' => ['some data']
+            ],
+            'wrong continuation detail status' => [
+                'expected' => false,
+                'isExpiring' => true,
+                'isSystemParamDisabled' => false,
+                'continuationDetailStatusId' => ContinuationDetail::STATUS_PRINTING,
+                'isLicenceSurrenderAllowed' => false,
+                'openApplicationsForLicence' => ['some data']
+            ],
         ];
     }
 
@@ -307,7 +335,7 @@ class LicenceTest extends QueryHandlerTestCase
         $expected = [
             'showExpiryWarning' => false,
             'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
-            ];
+        ];
 
         $this->assertArraySubset($expected, $result->serialize());
     }
