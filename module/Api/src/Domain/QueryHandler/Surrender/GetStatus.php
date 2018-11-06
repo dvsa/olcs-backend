@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
-final class Status extends AbstractQueryHandler implements ToggleRequiredInterface
+final class GetStatus extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -29,8 +29,8 @@ final class Status extends AbstractQueryHandler implements ToggleRequiredInterfa
      */
     public function handleQuery(QueryInterface $query)
     {
-        $licence = $this->getRepo('Licence')->fetchById($query->getId(), Query::HYDRATE_OBJECT);
-        $surrender = $this->getRepo()->fetchOneByLicence($licence->getId(), Query::HYDRATE_OBJECT);
+        $licenceId  = $query->getId();
+        $surrender = $this->getRepo()->fetchOneByLicence($licenceId, Query::HYDRATE_OBJECT);
         $status = $surrender->getStatus();
         return $this->result(
             $status

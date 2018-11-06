@@ -626,5 +626,5 @@ return [
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
 
     //Digital Surrender
-    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\Status::class
+    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class
 ];
