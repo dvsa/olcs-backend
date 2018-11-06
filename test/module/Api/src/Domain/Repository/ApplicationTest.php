@@ -611,4 +611,22 @@ class ApplicationTest extends RepositoryTestCase
 
         $this->assertEquals(['RESULT'], $this->sut->fetchAbandonedVariations($olderThanDate));
     }
+
+    public function testFetchOpenApplicationsForLicence()
+    {
+        $licenceId = 5;
+        $status = Application::APPLICATION_STATUS_UNDER_CONSIDERATION;
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+
+        $result = $this->sut->fetchOpenApplicationsForLicence($licenceId);
+
+        $this->assertEquals('QUERY AND a.licence = [[5]] AND a.status = ' . "[[$status]]", $this->query);
+
+        $this->assertEquals(['RESULT'], $result);
+    }
 }
