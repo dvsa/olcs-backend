@@ -614,23 +614,19 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testFetchOpenApplicationsForLicence()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
-        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
-
         $licenceId = 5;
+        $status = Application::APPLICATION_STATUS_UNDER_CONSIDERATION;
 
-        $mockQb->shouldReceive('expr->eq')->with('a.licence', ':licenceId')->once()->andReturn('EXPR1');
-        $mockQb->shouldReceive('setParameter')->with('licenceId', 5)->once()->andReturn();
-        $mockQb->shouldReceive('andWhere')->with('EXPR1')->once()->andReturnSelf();
+        $qb = $this->createMockQb('QUERY');
 
-        $mockQb->shouldReceive('expr->eq')->with('a.status', ':applicationStatus')->once()
-            ->andReturn('EXPR2');
-        $mockQb->shouldReceive('setParameter')
-            ->with('applicationStatus', Application::APPLICATION_STATUS_UNDER_CONSIDERATION)->once()->andReturn();
-        $mockQb->shouldReceive('andWhere')->with('EXPR2')->once()->andReturnSelf();
+        $this->mockCreateQueryBuilder($qb);
 
-        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULT']);
 
-        $this->assertEquals(['RESULT'], $this->sut->fetchOpenApplicationsForLicence($licenceId));
+        $result = $this->sut->fetchOpenApplicationsForLicence($licenceId);
+
+        $this->assertEquals('QUERY AND a.licence = [[5]] AND a.status = ' . "[[$status]]", $this->query);
+
+        $this->assertEquals(['RESULT'], $result);
     }
 }
