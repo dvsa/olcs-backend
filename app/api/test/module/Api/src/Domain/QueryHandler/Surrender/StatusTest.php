@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Surrender;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Surrender\Status;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Surrender\GetStatus as QryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -10,13 +10,13 @@ use Dvsa\Olcs\Transfer\Query\Surrender\GetStatus;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
-class StatusTest extends QueryHandlerTestCase
+class GetStatusTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
-        $this->sut = new Status();
+        $this->sut = new QryHandler();
         $this->mockRepo('Surrender', Surrender::class);
-        $this->mockRepo('Licence', Licence::class);
+
         parent::setUp();
     }
 
@@ -30,12 +30,8 @@ class StatusTest extends QueryHandlerTestCase
             $mockRefData
         )->getMock();
 
-        $mockLicence = m::mock(\Dvsa\Olcs\Api\Entity\Licence\Licence::class);
-        $mockLicence->shouldReceive('getId')->once()->andReturn(1);
-        $this->repoMap['Licence']->shouldReceive('fetchById')->once()
-            ->andReturn($mockLicence);
         $this->repoMap['Surrender']->
-        shouldReceive('fetchOneByLicence')->once()->andReturn($mockSurrender);
+        shouldReceive('fetchOneByLicence')->once()->with(1, 1)->andReturn($mockSurrender);
 
 
         $result = $this->sut->handleQuery($query);
