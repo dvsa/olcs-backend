@@ -32,8 +32,8 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         $stockId = 28;
 
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getStatus->getId')
-            ->andReturn(IrhpPermitStock::STATUS_SCORING_SUCCESSFUL);
+        $stock->shouldReceive('statusAllowsQueueAcceptScoring')
+            ->andReturn(true);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
@@ -67,16 +67,15 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         );
     }
 
-    /**
-     * @dataProvider unpermittedStatusesProvider
-     */
-    public function testHandleQueryUnpermittedStatus($statusId)
+    public function testHandleQueryUnpermittedStatus()
     {
         $stockId = 28;
 
         $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getStatus->getId')
-            ->andReturn($statusId);
+        $stock->shouldReceive('statusAllowsQueueAcceptScoring')
+            ->andReturn(false);
+        $stock->shouldReceive('getStatusDescription')
+            ->andReturn('stock status description');
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
             ->with($stockId)
@@ -89,7 +88,7 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         $this->assertEquals(
             [
                 'result' => false,
-                'message' => 'Stock status needs to be stock_scoring_successful, but is currently ' . $statusId
+                'message' => 'Acceptance is not permitted when stock status is \'stock status description\''
             ],
             $result
         );
@@ -100,22 +99,6 @@ class QueueAcceptScoringPermittedTest extends QueryHandlerTestCase
         return [
             [true, 'Prerequisites ok'],
             [false, 'Prerequisites fail']
-        ];
-    }
-
-    public function unpermittedStatusesProvider()
-    {
-        return [
-            [IrhpPermitStock::STATUS_SCORING_NEVER_RUN],
-            [IrhpPermitStock::STATUS_SCORING_PENDING],
-            [IrhpPermitStock::STATUS_SCORING_IN_PROGRESS],
-            [IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL],
-            [IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL],
-            [IrhpPermitStock::STATUS_ACCEPT_PENDING],
-            [IrhpPermitStock::STATUS_ACCEPT_IN_PROGRESS],
-            [IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL],
-            [IrhpPermitStock::STATUS_ACCEPT_PREREQUISITE_FAIL],
-            [IrhpPermitStock::STATUS_ACCEPT_UNEXPECTED_FAIL],
         ];
     }
 }

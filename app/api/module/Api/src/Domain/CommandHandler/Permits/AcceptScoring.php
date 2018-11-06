@@ -21,6 +21,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
+use Exception;
 
 /**
  * Accept scoring
@@ -56,10 +57,11 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
         $dto = GetScoredPermitList::create(['stockId' => $stockId]);
         $scoringResults = $this->handleQuery($dto);
 
-        $stock = $this->getRepo('IrhpPermitStock')->fetchById($stockId);
-        $statusId = $stock->getStatus()->getId();
+        $stockRepo = $this->getRepo('IrhpPermitStock');
+        $stock = $stockRepo->fetchById($stockId);
+        $stockRepo->refresh($stock);
 
-        if ($statusId == IrhpPermitStock::STATUS_ACCEPT_PENDING) {
+        if ($stock->statusAllowsAcceptScoring()) {
             $prerequisiteResult = $this->handleQuery(
                 CheckAcceptScoringPrerequisites::create(['id' => $stockId])
             );
@@ -67,32 +69,36 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
             $prerequisiteResult = [
                 'result' => false,
                 'message' => sprintf(
-                    'Stock status must be %s, currently %s',
-                    IrhpPermitStock::STATUS_ACCEPT_PENDING,
-                    $statusId
+                    'Accept scoring is not permitted when stock status is \'%s\'',
+                    $stock->getStatusDescription()
                 )
             ];
         }
 
         if (!$prerequisiteResult['result']) {
+            $stock->proceedToAcceptPrerequisiteFail($this->refData(IrhpPermitStock::STATUS_ACCEPT_PREREQUISITE_FAIL));
+            $stockRepo->save($stock);
+
             $this->result->addMessage('Prerequisite failed: ' . $prerequisiteResult['message']);
-            $this->getRepo('IrhpPermitStock')->updateStatus($stockId, IrhpPermitStock::STATUS_ACCEPT_PREREQUISITE_FAIL);
             return $this->result;
         }
 
-        $this->getRepo('IrhpPermitStock')->updateStatus($stockId, IrhpPermitStock::STATUS_ACCEPT_IN_PROGRESS);
-
-        $applicationIds = $this->getRepo()->fetchUnderConsiderationApplicationIds($stockId);
-        foreach ($applicationIds as $applicationId) {
-            $this->processApplication(
-                $this->getRepo()->fetchById($applicationId)
-            );
-        }
-
-        $this->getRepo('IrhpPermitStock')->updateStatus($stockId, IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL);
+        $stock->proceedToAcceptInProgress($this->refData(IrhpPermitStock::STATUS_ACCEPT_IN_PROGRESS));
+        $stockRepo->save($stock);
 
         try {
-            // Upload scoring results file
+            $applicationIds = $this->getRepo()->fetchUnderConsiderationApplicationIds($stockId);
+
+            $this->result->addMessage(
+                sprintf('%d under consideration applications found', count($applicationIds))
+            );
+
+            foreach ($applicationIds as $applicationId) {
+                $this->processApplication(
+                    $this->getRepo()->fetchById($applicationId)
+                );
+            }
+
             $this->result->merge(
                 $this->handleSideEffects([
                     UploadScoringResult::create([
@@ -101,8 +107,14 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
                     ]),
                 ])
             );
+
+            $stock->proceedToAcceptSuccessful($this->refData(IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL));
+            $stockRepo->save($stock);
         } catch (Exception $e) {
-            $this->result->addMessage('Failed to upload scoring results: ' . $e->getMessage());
+            $stock->proceedToAcceptUnexpectedFail($this->refData(IrhpPermitStock::STATUS_ACCEPT_UNEXPECTED_FAIL));
+            $stockRepo->save($stock);
+
+            return $this->result;
         }
 
         $this->result->addMessage('Acceptance of scoring completed successfully');
@@ -119,16 +131,30 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
         $irhpPermitApplications = $ecmtPermitApplication->getIrhpPermitApplications();
         $irhpPermitApplication = $irhpPermitApplications[0];
 
+        $this->result->addMessage(
+            sprintf('processing ecmt application with id %d:', $ecmtPermitApplication->getId())
+        );
+
         $permitsRequested = $ecmtPermitApplication->getPermitsRequired();
         $permitsAwarded = $irhpPermitApplication->countPermitsAwarded();
 
+        $this->result->addMessage(
+            sprintf('- permits requested: %d', $permitsRequested)
+        );
+        $this->result->addMessage(
+            sprintf('- permits awarded: %d', $permitsAwarded)
+        );
+
+        $emailCommand = SendEcmtPartSuccessful::class;
         if ($permitsAwarded == 0) {
             $emailCommand = SendEcmtUnsuccessful::class;
         } elseif ($permitsRequested == $permitsAwarded) {
             $emailCommand = SendEcmtSuccessful::class;
-        } else {
-            $emailCommand = SendEcmtPartSuccessful::class;
         }
+
+        $this->result->addMessage(
+            sprintf('- sending email using command %s', $emailCommand)
+        );
 
         $this->result->merge(
             $this->handleSideEffect(
@@ -150,7 +176,15 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
             $ecmtPermitApplication->proceedToAwaitingFee(
                 $this->refData(EcmtPermitApplication::STATUS_AWAITING_FEE)
             );
+
+            $this->result->addMessage(
+                sprintf('- creating fee and updating application status to %s', EcmtPermitApplication::STATUS_AWAITING_FEE)
+            );
         } else {
+            $this->result->addMessage(
+                sprintf('- no fee applicable, updating application status to %s', EcmtPermitApplication::STATUS_UNSUCCESSFUL)
+            );
+
             $ecmtPermitApplication->proceedToUnsuccessful(
                 $this->refData(EcmtPermitApplication::STATUS_UNSUCCESSFUL)
             );
