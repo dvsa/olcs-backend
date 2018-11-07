@@ -50,7 +50,7 @@ return [
     CommandHandler\Permits\UpdateEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\WithdrawEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\DeclineEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
-    CommandHandler\Permits\AcceptEcmtPermits::class => IsSideEffect::class,
+    CommandHandler\Permits\AcceptEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
