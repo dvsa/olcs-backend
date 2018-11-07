@@ -78,7 +78,6 @@ final class AcceptEcmtPermits extends AbstractCommandHandler implements ToggleRe
      * check for and return an outstanding free from the ['fees'] array on the permit application entity
      *
      * @param $fees
-     * @param $type
      * @return bool
      */
     protected function hasOutstandingIssueFees($fees)
