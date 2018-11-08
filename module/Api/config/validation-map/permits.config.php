@@ -52,6 +52,7 @@ return [
     CommandHandler\Permits\DeclineEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\AcceptEcmtPermits::class => IsSideEffect::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
+    CommandHandler\Permits\CreateIrhpPermitApplication::class => IsSideEffect::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,
     CommandHandler\Permits\CompleteIssuePayment::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
