@@ -230,43 +230,6 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage The Start date must be greater than or equal to Todays date
-     *
-     * Test to prevent editing the start date of a future window to before todays date - no values are asserted as this
-     * tests to ensure that a validation exception is thrown.
-     */
-    public function testIsNotActiveStartDatePast()
-    {
-        $cmdData = [
-            'id' => 1,
-            'irhpPermitStock' => 1,
-            'startDate' => '2017-12-01',
-            'endDate' => '2017-12-30',
-            'daysForPayment' => 14
-        ];
-
-        $command = UpdateCmd::create($cmdData);
-
-        $permitWindowEntity = m::mock(PermitWindowEntity::class);
-
-        $this->repoMap['IrhpPermitWindow']
-            ->shouldReceive('fetchById')
-            ->with($cmdData['id'])
-            ->andReturn($permitWindowEntity);
-
-        $permitWindowEntity
-            ->shouldReceive('hasEnded')
-            ->once()
-            ->andReturn(false);
-        $permitWindowEntity
-            ->shouldReceive('isActive')
-            ->andReturn(false);
-
-        $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      * @expectedExceptionMessage The dates overlap with another window for this Permit stock
      *
      * Test for overlapping Windows - no values are asserted as this tests to ensure that a validation exception

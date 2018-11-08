@@ -103,36 +103,4 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->sut->handleCommand($command);
     }
-
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-     * @expectedExceptionMessage You cannot create a window that starts in the past
-     *
-     * Test for Window start date in past - no values are asserted as this tests to ensure that a validation
-     * exception is thrown.
-     */
-    public function testHandlePastStart()
-    {
-        $cmdData = [
-            'irhpPermitStock' => '1',
-            'startDate' => $this->yesterday,
-            'endDate' => $this->tomorrow,
-            'daysForPayment' => '14'
-        ];
-
-        $command = CreateCmd::create($cmdData);
-
-        $this->repoMap['IrhpPermitWindow']
-            ->shouldReceive('findOverlappingWindowsByType')
-            ->once()
-            ->with(
-                $cmdData['irhpPermitStock'],
-                $cmdData['startDate'],
-                $cmdData['endDate'],
-                null
-            )
-            ->andReturn([]);
-
-        $this->sut->handleCommand($command);
-    }
 }
