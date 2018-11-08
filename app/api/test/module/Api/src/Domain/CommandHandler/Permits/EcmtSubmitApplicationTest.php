@@ -54,8 +54,6 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     {
         $ecmtPermitApplicationId = 129;
 
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('submit')
             ->with($this->mapRefData(EcmtPermitApplication::STATUS_UNDER_CONSIDERATION))
@@ -63,20 +61,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
-        $ecmtPermitApplication->shouldReceive('getPermitsRequired')
-            ->andReturn(3);
-
-        $ecmtPermitApplication->shouldReceive('getLicence')
-            ->andReturn(m::mock(Licence::class));
-
-        $ecmtPermitApplication->shouldReceive('getId')
-            ->andReturn($ecmtPermitApplicationId);
-
-        $ecmtPermitApplication->shouldReceive('getPermitIntensityOfUse')
-            ->andReturn(3);
-
-        $ecmtPermitApplication->shouldReceive('getPermitApplicationScore')
-            ->andReturn(3);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
         $irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
             ->andReturn(3);
@@ -84,29 +69,11 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive('getPermitApplicationScore')
             ->andReturn(3);
 
-        $command = m::mock(CommandInterface::class);
-        $command->shouldReceive('getId')
-            ->andReturn($ecmtPermitApplicationId);
+        $ecmtPermitApplication->shouldReceive('getPermitsRequired')
+            ->andReturn(3);
 
-        $irhpPermitStockId = 1;
-        $irhpPermitStock = m::mock(IrhpPermitStock::class);
-        $irhpPermitStock->shouldReceive('getId')
-            ->andReturn($irhpPermitStockId);
-
-        $this->repoMap['IrhpPermitStock']->shouldReceive('getNextIrhpPermitStockByPermitType')
-            ->with(EcmtPermitApplication::PERMIT_TYPE, m::type('Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime'))
-            ->andReturn($irhpPermitStock);
-
-        $irhpPermitWindowId = 1;
-        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $irhpPermitWindow->shouldReceive('getId')
-            ->once()
-            ->andReturn($irhpPermitWindowId);
-
-        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByStockId')
-            ->with($irhpPermitStockId)
-            ->once()
-            ->andReturn($irhpPermitWindow);
+        $ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)
@@ -118,13 +85,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
-        $this->repoMap['IrhpPermitApplication']->shouldReceive('save');
-
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save');
-
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('getReference')
-            ->with(IrhpPermitWindow::class, $irhpPermitWindowId)
-            ->andReturn(m::mock(IrhpPermitWindow::class));
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')->times(3);
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtAppSubmitted::class,
@@ -132,6 +93,10 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             $ecmtPermitApplicationId,
             new Result()
         );
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($ecmtPermitApplicationId);
 
         $result = $this->sut->handleCommand($command);
 
