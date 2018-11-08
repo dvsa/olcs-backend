@@ -42,28 +42,20 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
         }
 
         if ($window->isActive()) {
-            $windowStart = new DateTime($window->getStartDate());
-            $editStart = new DateTime($command->getStartDate());
+            $windowStart = strtotime($window->getStartDate());
+            $editStart = strtotime($command->getStartDate());
 
-            if ($windowStart->format('Y-m-d') !== $editStart->format('Y-m-d')) {
+            if ($windowStart !== $editStart) {
                 throw new ValidationException(['It is not permitted to edit the start date of an Active Window']);
             }
 
-            $today = (new DateTime())->format('Y-m-d');
-            $editEnd = (new DateTime($command->getEndDate()))->format('Y-m-d');
+            $today = time();
+            $editEnd = strtotime($command->getEndDate());
 
             if ($editEnd < $today) {
                 throw new ValidationException([
                     'The end date of an Active Window must be greater than or equal to todays date'
                 ]);
-            }
-        } else {
-            // Shouldn't be able to edit a future windows start date to before todays date
-            $today = (new DateTime())->format('Y-m-d');
-            $editStart = (new DateTime($command->getStartDate()))->format('Y-m-d');
-
-            if ($today > $editStart) {
-                throw new ValidationException(['The Start date must be greater than or equal to Todays date']);
             }
         }
 

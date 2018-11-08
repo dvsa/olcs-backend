@@ -41,13 +41,6 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             throw new ValidationException(['The dates overlap with another window for this Permit stock']);
         }
 
-        // If the window starts in the past.
-        $today = (new DateTime())->format('Y-m-d');
-        $start = (new DateTime($command->getStartDate()))->format('Y-m-d');
-        if ($today > $start) {
-            throw new ValidationException(['You cannot create a window that starts in the past']);
-        }
-
         $irhpPermitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
         /**
          * @var CreateWindowCmd $command
