@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -22,6 +23,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  */
 class Licence extends AbstractQueryHandler
 {
+    use LicenceStatusAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter', 'Application'];
@@ -70,7 +73,7 @@ class Licence extends AbstractQueryHandler
         $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
 
         $isLicenceSurrenderAllowed = $this->doesLicenceApplicationsHaveCorrectStatusForSurrender($query)
-            && $this->isLicenceStatusCorrectForSurrender($licence);
+            && $this->isLicenceStatusSurrenderable($licence);
 
         $showExpiryWarning = $continuationDetail !== null
             && $licence->isExpiring()
@@ -141,15 +144,7 @@ class Licence extends AbstractQueryHandler
 
     private function guardAgainstLackOfPermission(Entity\Licence\Licence $licence) : void
     {
-        $allowedStatusesForExternalUser = [
-            Entity\Licence\Licence::LICENCE_STATUS_VALID,
-            Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED,
-            Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
-        ];
-
-        $licenceStatus = $licence->getStatus()->getId();
-
-        if ($this->isExternalUser() && !in_array($licenceStatus, $allowedStatusesForExternalUser)) {
+        if ($this->isExternalUser() && !$this->isLicenceStatusAccessibleForExternalUser($licence)) {
             throw new ForbiddenException('You do not have permission to access this record');
         }
     }
@@ -165,24 +160,5 @@ class Licence extends AbstractQueryHandler
         /** @var \Dvsa\Olcs\Api\Domain\Repository\Application $applications */
         $applications = $this->getRepo('Application');
         return empty($applications->fetchOpenApplicationsForLicence($query->getId()));
-    }
-
-    /**
-     * Checks if a licence can be surrendered based on the licence status
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
-     *
-     * @return bool
-     */
-    private function isLicenceStatusCorrectForSurrender($licence): bool
-    {
-        $allowedLicenceStatusesForSurrender = [
-            Entity\Licence\Licence::LICENCE_STATUS_VALID,
-            Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED,
-            Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
-        ];
-
-        /** @var Entity\Licence\Licence $licence */
-        return in_array($licence->getStatus()->getId(), $allowedLicenceStatusesForSurrender);
     }
 }
