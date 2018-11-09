@@ -997,4 +997,34 @@ class UserEntityTest extends EntityTester
             [Entity::USER_TYPE_TRANSPORT_MANAGER, 'Y', false],
         ];
     }
+
+    /**
+     * @dataProvider dpIsEligibleForPermits
+     */
+    public function testIsEligibleForPermits($isOrgEligibleForPermits, $expected)
+    {
+        $user = new Entity('pid', Entity::USER_TYPE_OPERATOR);
+
+        if (isset($isOrgEligibleForPermits)) {
+            $org = m::mock(OrganisationEntity::class)->makePartial();
+            $org->shouldReceive('isEligibleForPermits')->andReturn($isOrgEligibleForPermits);
+
+            $orgUser = new OrganisationUserEntity();
+            $orgUser->setUser($user);
+            $orgUser->setOrganisation($org);
+
+            $user->addOrganisationUsers($orgUser);
+        }
+
+        $this->assertSame($expected, $user->isEligibleForPermits());
+    }
+
+    public function dpIsEligibleForPermits()
+    {
+        return [
+            [null, false],
+            [true, true],
+            [false, false],
+        ];
+    }
 }
