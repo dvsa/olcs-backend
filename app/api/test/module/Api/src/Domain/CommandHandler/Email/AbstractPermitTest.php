@@ -98,7 +98,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
             'applicationRef' => $applicationRef,
-            'applicationFee' => str_replace('.00', '', $applicationFee),
+            'applicationFee' => '10',
         ];
 
         $contactDetails = m::mock(ContactDetails::class);
@@ -200,7 +200,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             'issueFeeDeadlineDate' => $issueFeeDeadlineDate,
             'issueFeeAmount' => $issueFeeAmount,
             'issueFeeTotal' => $permitsGrantedissueFeeTotal,
-            'applicationFee' => str_replace('.00', '', $applicationFee),
+            'applicationFee' => '10',
         ];
 
         $contactDetails = m::mock(ContactDetails::class);
