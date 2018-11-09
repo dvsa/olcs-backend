@@ -139,8 +139,6 @@ return [
     TransferQuery\Organisation\CpidOrganisation::class
         => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
-    TransferQuery\Organisation\EligibleForPermits::class => QueryHandler\Organisation\EligibleForPermits::class,
-    TransferQuery\Organisation\EligibleForPermitsById::class => QueryHandler\Organisation\EligibleForPermits::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
