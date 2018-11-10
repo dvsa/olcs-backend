@@ -14,4 +14,5 @@ class SendEcmtAutomaticallyWithdrawnTest extends AbstractPermitTest
     protected $commandHandler = SendEcmtAutomaticallyWithdrawnHandler::class;
     protected $template = 'ecmt-automatically-withdrawn';
     protected $subject = 'email.ecmt.automatically.withdrawn.subject';
+    protected $extraRepos = ['FeeType'];
 }

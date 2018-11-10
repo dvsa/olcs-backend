@@ -14,4 +14,5 @@ class SendEcmtUnsuccessfulTest extends AbstractPermitTest
     protected $commandHandler = SendEcmtUnsuccessfulHandler::class;
     protected $template = 'ecmt-app-unsuccessful';
     protected $subject = 'email.ecmt.response.subject';
+    protected $extraRepos = ['FeeType'];
 }
