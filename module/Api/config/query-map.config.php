@@ -525,6 +525,7 @@ return [
 
     // IRHP Permit Application
     TransferQuery\IrhpPermitApplication\GetList::class => QueryHandler\IrhpPermitApplication\GetList::class,
+    
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
@@ -549,6 +550,13 @@ return [
 
     // Permit Printing
     TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
+
+    // IRHP Permits
+    TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
+    TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
+
+    // IRHP Candidate Permits
+    TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
