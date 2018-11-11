@@ -30,7 +30,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="surrender__index_licence", columns={"licence_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="surrender_id_uindex", columns={"id"})
+ *        @ORM\UniqueConstraint(name="surrender_id_uindex", columns={"id"}),
+ *        @ORM\UniqueConstraint(name="uk_licence_id", columns={"licence_id"})
  *    }
  * )
  */
@@ -162,7 +163,7 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
