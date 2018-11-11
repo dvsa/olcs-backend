@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -80,6 +81,13 @@ class IrhpPermit extends AbstractRepository
                     ]
                 );
             $qb->orderBy($this->alias . '.permitNumber', 'ASC');
+        }
+
+        if ($query instanceof GetList) {
+            if ($query->getIrhpPermitApplication() != null) {
+                $qb->andWhere($qb->expr()->eq($this->alias . '.irhpPermitApplication', ':irhpPermitApplication'));
+                $qb->setParameter('irhpPermitApplication', $query->getIrhpPermitApplication());
+            }
         }
     }
 
