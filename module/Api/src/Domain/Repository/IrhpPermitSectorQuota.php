@@ -49,26 +49,4 @@ class IrhpPermitSectorQuota extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
-
-    /**
-     * Update a Sector Permit Quantity by Permit Stock ID and Sector ID.
-     *
-     * @param string $quotaNumber
-     * @param int $sectorId
-     * @param int $irhpPermitStockId
-     */
-    public function updateSectorPermitQuantity($quotaNumber, $sectorId, $irhpPermitStockId)
-    {
-        $doctrineQb = $this->createQueryBuilder();
-
-        $doctrineQb
-            ->update(Entity::class, 'ipsq')
-            ->set('ipsq.quotaNumber', $doctrineQb->expr()->literal($quotaNumber))
-            ->where($doctrineQb->expr()->eq('ipsq.irhpPermitStock', ':irhpPermitStock'))
-            ->andWhere($doctrineQb->expr()->eq('ipsq.sector', ':sectorId'))
-            ->setParameter('irhpPermitStock', $irhpPermitStockId)
-            ->setParameter('sectorId', $sectorId);
-
-        $doctrineQb->getQuery()->execute();
-    }
 }

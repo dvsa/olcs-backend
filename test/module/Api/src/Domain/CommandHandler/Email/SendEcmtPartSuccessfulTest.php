@@ -14,4 +14,5 @@ class SendEcmtPartSuccessfulTest extends AbstractPermitTest
     protected $commandHandler = SendEcmtPartSuccessfulHandler::class;
     protected $template = 'ecmt-app-part-successful';
     protected $subject = 'email.ecmt.response.subject';
+    protected $extraRepos = ['FeeType'];
 }

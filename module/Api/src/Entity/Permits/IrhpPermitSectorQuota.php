@@ -21,5 +21,33 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpPermitSectorQuota extends AbstractIrhpPermitSectorQuota
 {
+    /**
+     * Creates a sector quota record
+     *
+     * @param Sectors         $sector          sector
+     * @param IrhpPermitStock $irhpPermitStock permit stock
+     *
+     * @return IrhpPermitSectorQuota
+     */
+    public static function create(Sectors $sector, IrhpPermitStock $irhpPermitStock)
+    {
+        $instance = new self;
 
+        $instance->sector = $sector;
+        $instance->irhpPermitStock = $irhpPermitStock;
+
+        return $instance;
+    }
+
+    /**
+     * Update the quota
+     *
+     * @param int $quotaNumber quota number
+     *
+     * @return void
+     */
+    public function update($quotaNumber)
+    {
+        $this->quotaNumber = $quotaNumber;
+    }
 }

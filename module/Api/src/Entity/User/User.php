@@ -698,4 +698,22 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         return $this->accountDisabled === 'Y';
     }
+
+    /**
+     * Is eligible for permits
+     *
+     * @return bool
+     */
+    public function isEligibleForPermits()
+    {
+        $eligibleForPermits = false;
+
+        $org = $this->getRelatedOrganisation();
+
+        if ($org instanceof Organisation) {
+            $eligibleForPermits = $org->isEligibleForPermits();
+        }
+
+        return $eligibleForPermits;
+    }
 }
