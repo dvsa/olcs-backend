@@ -12,7 +12,7 @@ class CanDeleteSurrender extends AbstractHandler implements AuthAwareInterface
 
     use AuthAwareTrait;
 
-    public function isValid($dto)
+    public function isValid($dto): bool
     {
         return $this->isInternalUser() || $this->isSystemUser();
     }
