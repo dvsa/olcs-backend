@@ -31,6 +31,8 @@ class IrhpPermit extends AbstractIrhpPermit
     const STATUS_PRINTING           = 'irhp_permit_printing';
     const STATUS_PRINTED            = 'irhp_permit_printed';
     const STATUS_ERROR              = 'irhp_permit_error';
+    const STATUS_CEASED             = 'irhp_permit_ceased';
+    const STATUS_ISSUED             = 'irhp_permit_issued';
 
     /**
      * Create new IrhpPermit
@@ -57,6 +59,49 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->permitNumber = $permitNumber;
 
         return $irhpPermit;
+    }
+
+    /**
+     * Create new IrhpPermit
+     *
+     * @param IrhpPermit $oldPermit
+     * @param IrhpPermitRange $irhpPermitRange
+     * @param RefData $status
+     * @param int $permitNumber
+     *
+     * @return IrhpPermit
+     */
+    public static function createReplacement(
+        IrhpPermit $oldPermit,
+        IrhpPermitRange $irhpPermitRange,
+        RefData $status,
+        $permitNumber
+    ) {
+        $irhpPermit = new self();
+        $irhpPermit->replaces = $oldPermit;
+        $irhpPermit->irhpCandidatePermit = $oldPermit->getIrhpCandidatePermit();
+        $irhpPermit->irhpPermitApplication = $oldPermit->getIrhpPermitApplication();
+        $irhpPermit->irhpPermitRange = $irhpPermitRange;
+        $irhpPermit->issueDate = new DateTime();
+        $irhpPermit->expiryDate = $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+        $irhpPermit->status = $status;
+        $irhpPermit->permitNumber = $permitNumber;
+
+        return $irhpPermit;
+    }
+
+    /**
+     * @param RefData $status
+     * @return $this
+     */
+    public function cease(RefData $status)
+    {
+        // Check status provided is correct for Ceased and set expiry date to now.
+        if ($status->getId() !== self::STATUS_CEASED) {
+            throw new ForbiddenException('This method can only be called with refdata status id: '.self::STATUS_CEASED);
+        }
+        $this->status = $status;
+        $this->expiryDate = new DateTime();
     }
 
     /**
@@ -200,6 +245,16 @@ class IrhpPermit extends AbstractIrhpPermit
     public function isPrinting()
     {
         return $this->status->getId() === self::STATUS_PRINTING;
+    }
+
+    /**
+     * Is not issued
+     *
+     * @return bool
+     */
+    public function isNotIssued()
+    {
+        return $this->status->getId() !== self::STATUS_ISSUED;
     }
 
     /**
