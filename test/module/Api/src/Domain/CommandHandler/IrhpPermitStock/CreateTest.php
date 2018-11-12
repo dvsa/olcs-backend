@@ -2,6 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitStock;
 
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermitJurisdiction\Create as CreateJurisdictionQuotasCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
@@ -21,7 +24,6 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
-        $this->mockRepo('IrhpPermitType', PermitTypeRepo::class);
 
         parent::setUp();
     }
@@ -31,7 +33,11 @@ class CreateTest extends CommandHandlerTestCase
         $this->refData = [
             PermitStockEntity::STATUS_SCORING_NEVER_RUN,
         ];
-        $this->references = [];
+        $this->references = [
+            IrhpPermitType::class => [
+                2 => m::mock(IrhpPermitType::class),
+            ],
+        ];
 
         parent::initReferences();
     }
@@ -39,17 +45,13 @@ class CreateTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $cmdData = [
-            'permitType' => '1',
+            'permitType' => '2',
             'validFrom' => '2019-01-01',
             'validTo' => '2019-02-01',
             'initialStock' => '1500'
         ];
 
         $command = CreateCmd::create($cmdData);
-
-        $this->repoMap['IrhpPermitType']
-            ->shouldReceive('fetchById')
-            ->andReturn(m::mock(IrhpPermitType::class)->makePartial());
 
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('save')
@@ -61,6 +63,9 @@ class CreateTest extends CommandHandlerTestCase
                     $savedPermitStock = $permitStock;
                 }
             );
+
+        $this->expectedSideEffect(CreateSectorQuotasCmd::class, ['id' => 1], new Result());
+        $this->expectedSideEffect(CreateJurisdictionQuotasCmd::class, ['id' => 1], new Result());
 
         $result = $this->sut->handleCommand($command);
 

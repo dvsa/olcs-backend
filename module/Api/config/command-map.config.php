@@ -1012,10 +1012,14 @@ return [
     // Transfer - IRHP Permit Sector
     TransferCommand\IrhpPermitSector\Update::class =>
         CommandHandler\IrhpPermitSector\Update::class,
+    // Backend command - IRHP Permit Sector
+    Command\IrhpPermitSector\Create::class => CommandHandler\IrhpPermitSector\Create::class,
 
     // Transfer - IRHP Permit Jurisdiction
     TransferCommand\IrhpPermitJurisdiction\Update::class =>
         CommandHandler\IrhpPermitJurisdiction\Update::class,
+    // Backend command - IRHP Permit Jurisdiction
+    Command\IrhpPermitJurisdiction\Create::class => CommandHandler\IrhpPermitJurisdiction\Create::class,
 
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
