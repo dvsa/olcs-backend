@@ -146,49 +146,48 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testFetchByPermitNumber()
+    public function testFetchByNumberAndRange()
     {
 
-        $this->setUpSut(IrhpPermit::class, true);
-        $permitNumber = 200;
-        $permitRange = 7;
 
-        $qb = $this->createMockQb('BLAH');
-        $this->mockCreateQueryBuilder($qb);
 
-        $eqFunc1 = m::mock(Func::class);
-        $eqFunc2 = m::mock(Func::class);
-        $expr = m::mock(Expr::class);
-        $expr->shouldReceive('eq')
-            ->with('irhp_permit.permitNumber', ':permitNumber')
-            ->andReturn($eqFunc1);
-        $expr->shouldReceive('eq')
-            ->with('irhp_permit.permitRange', ':permitRange')
-            ->andReturn($eqFunc2);
+        $permitNumber = 1500;
+        $rangeId = 7;
 
-        $collection = [m::mock(IrhpPermitEntity::class)];
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
-        $qb->shouldReceive('andWhere')
-            ->with($eqFunc1)
-            ->andReturnSelf();
-
-        $qb->shouldReceive('andWhere')
-            ->with($eqFunc2)
-            ->andReturnSelf();
-
-        $qb->shouldReceive('setParameter')
-            ->with('permitNumber', $permitNumber)
+        $queryBuilder->shouldReceive('select')
+            ->with('ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ip.permitNumber = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ip.irhpPermitRange = ?2')
+            ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with('permitRange', $permitRange)
+            ->with(1, $permitNumber)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $rangeId)
+            ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->execute')
             ->once()
-            ->andReturn($collection);
+            ->andReturn([]);
 
         $this->assertEquals(
-            $collection,
-            $this->sut->fetchByPermitNumberAndRange($permitNumber, $permitRange)
+            [],
+            $this->sut->fetchByNumberAndRange($permitNumber, $rangeId)
         );
     }
 }

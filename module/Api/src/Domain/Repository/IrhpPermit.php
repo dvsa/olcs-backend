@@ -109,7 +109,7 @@ class IrhpPermit extends AbstractRepository
      */
     public function fetchByNumberAndRange($permitNumber, $permitRange)
     {
-        return $this->createQueryBuilder()
+        return $this->getEntityManager()->createQueryBuilder()
             ->select('ip')
             ->from(Entity::class, 'ip')
             ->where('ip.permitNumber = ?1')
