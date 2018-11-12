@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 /**
  * IrhpPermitJurisdictionQuota Entity
@@ -23,5 +24,33 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpPermitJurisdictionQuota extends AbstractIrhpPermitJurisdictionQuota
 {
+    /**
+     * Creates a jurisdiction quota record
+     *
+     * @param TrafficArea     $trafficArea     traffic area
+     * @param IrhpPermitStock $irhpPermitStock permit stock
+     *
+     * @return IrhpPermitJurisdictionQuota
+     */
+    public static function create(TrafficArea $trafficArea, IrhpPermitStock $irhpPermitStock)
+    {
+        $instance = new self;
 
+        $instance->trafficArea = $trafficArea;
+        $instance->irhpPermitStock = $irhpPermitStock;
+
+        return $instance;
+    }
+
+    /**
+     * Update the quota
+     *
+     * @param int $quotaNumber quota number
+     *
+     * @return void
+     */
+    public function update($quotaNumber)
+    {
+        $this->quotaNumber = $quotaNumber;
+    }
 }

@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
+use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Traffic Area
@@ -13,6 +15,24 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as Entity;
 class TrafficArea extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
+     *
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getIsEngland') && $query->getIsEngland() !== null) {
+            $qb->andWhere(
+                $qb->expr()->eq($this->alias .'.isEngland', ':isEngland')
+            );
+            $qb->setParameter('isEngland', $query->getIsEngland());
+        }
+    }
 
     /**
      * Get value options (suitable for UI) for traffic areas, optionally for a given allowed location. In the case of

@@ -146,6 +146,18 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     protected $version = 1;
 
     /**
+     * Irhp permit jurisdiction quota
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitJurisdictionQuotas;
+
+    /**
      * Irhp permit range
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -156,6 +168,18 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * )
      */
     protected $irhpPermitRanges;
+
+    /**
+     * Irhp permit sector quota
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota",
+     *     mappedBy="irhpPermitStock"
+     * )
+     */
+    protected $irhpPermitSectorQuotas;
 
     /**
      * Irhp permit window
@@ -186,7 +210,9 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
+        $this->irhpPermitJurisdictionQuotas = new ArrayCollection();
         $this->irhpPermitRanges = new ArrayCollection();
+        $this->irhpPermitSectorQuotas = new ArrayCollection();
         $this->irhpPermitWindows = new ArrayCollection();
     }
 
@@ -479,6 +505,69 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the irhp permit jurisdiction quota
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitJurisdictionQuotas($irhpPermitJurisdictionQuotas)
+    {
+        $this->irhpPermitJurisdictionQuotas = $irhpPermitJurisdictionQuotas;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit jurisdiction quotas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitJurisdictionQuotas()
+    {
+        return $this->irhpPermitJurisdictionQuotas;
+    }
+
+    /**
+     * Add a irhp permit jurisdiction quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitJurisdictionQuotas($irhpPermitJurisdictionQuotas)
+    {
+        if ($irhpPermitJurisdictionQuotas instanceof ArrayCollection) {
+            $this->irhpPermitJurisdictionQuotas = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitJurisdictionQuotas->toArray(),
+                    $irhpPermitJurisdictionQuotas->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitJurisdictionQuotas->contains($irhpPermitJurisdictionQuotas)) {
+            $this->irhpPermitJurisdictionQuotas->add($irhpPermitJurisdictionQuotas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit jurisdiction quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitJurisdictionQuotas($irhpPermitJurisdictionQuotas)
+    {
+        if ($this->irhpPermitJurisdictionQuotas->contains($irhpPermitJurisdictionQuotas)) {
+            $this->irhpPermitJurisdictionQuotas->removeElement($irhpPermitJurisdictionQuotas);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the irhp permit range
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being set as the value
@@ -536,6 +625,69 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     {
         if ($this->irhpPermitRanges->contains($irhpPermitRanges)) {
             $this->irhpPermitRanges->removeElement($irhpPermitRanges);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit sector quota
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setIrhpPermitSectorQuotas($irhpPermitSectorQuotas)
+    {
+        $this->irhpPermitSectorQuotas = $irhpPermitSectorQuotas;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit sector quotas
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitSectorQuotas()
+    {
+        return $this->irhpPermitSectorQuotas;
+    }
+
+    /**
+     * Add a irhp permit sector quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being added
+     *
+     * @return IrhpPermitStock
+     */
+    public function addIrhpPermitSectorQuotas($irhpPermitSectorQuotas)
+    {
+        if ($irhpPermitSectorQuotas instanceof ArrayCollection) {
+            $this->irhpPermitSectorQuotas = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitSectorQuotas->toArray(),
+                    $irhpPermitSectorQuotas->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitSectorQuotas->contains($irhpPermitSectorQuotas)) {
+            $this->irhpPermitSectorQuotas->add($irhpPermitSectorQuotas);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit sector quotas
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being removed
+     *
+     * @return IrhpPermitStock
+     */
+    public function removeIrhpPermitSectorQuotas($irhpPermitSectorQuotas)
+    {
+        if ($this->irhpPermitSectorQuotas->contains($irhpPermitSectorQuotas)) {
+            $this->irhpPermitSectorQuotas->removeElement($irhpPermitSectorQuotas);
         }
 
         return $this;
