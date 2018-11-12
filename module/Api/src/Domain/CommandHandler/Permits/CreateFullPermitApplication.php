@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -14,10 +15,9 @@ use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateFullPermitApplication as CreateFullPermitApplicationCmd;
+use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
-
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Create an ECMT Permit application
@@ -35,7 +35,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
      */
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['Country'];
+    protected $extraRepos = ['Country', 'IrhpPermitWindow', 'IrhpPermitStock'];
 
     /**
      * Handle command
@@ -68,7 +68,25 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
         }
 
         $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
-        $result->addMessage('EcmtPermitApplication created successfully');
+        $result->addMessage('ECMT Permit Application created successfully');
+
+        $stock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(
+            EcmtPermitApplication::PERMIT_TYPE,
+            new DateTime()
+        );
+
+        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stock->getId());
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                CreateIrhpPermitApplication::create(
+                    [
+                        'window' => $window->getId(),
+                        'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
+                    ]
+                )
+            )
+        );
 
         return $result;
     }
