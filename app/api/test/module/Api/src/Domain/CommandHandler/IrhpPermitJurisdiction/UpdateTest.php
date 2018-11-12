@@ -2,9 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitJurisdiction;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitJurisdiction\Update as UpdateHandler;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdiction as PermitJurisdictionQuotaRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as PermitJurisdictionQuotaRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitJurisdiction\Update as UpdateCmd;
 
@@ -25,48 +26,62 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $idQuotaG = 111;
+        $idQuotaM = 222;
+        $idQuotaN = 333;
+
+        $amountQuotaG = 444;
+        $amountQuotaM = 555;
+        $amountQuotaN = 666;
+
         $cmdData = [
-            'irhpPermitStock' => 1,
             'trafficAreas' => [
-                'B' => 100,
-                'C' => 200,
-                'D' => 300
-            ]
+                $idQuotaG => $amountQuotaG,
+                $idQuotaM => $amountQuotaM,
+                $idQuotaN => $amountQuotaN,
+            ],
         ];
 
         $command = UpdateCmd::create($cmdData);
 
-        $this->repoMap['IrhpPermitJurisdictionQuota']
-            ->shouldReceive('updateTrafficAreaPermitQuantity')
-            ->with(
-                $cmdData['trafficAreas']['B'],
-                'B',
-                $command->getIrhpPermitStock()
-            )->once();
+        $quotaG = m::mock(IrhpPermitJurisdictionQuota::class);
+        $quotaG->shouldReceive('getId')->once()->withNoArgs()->andReturn($idQuotaG);
+        $quotaG->shouldReceive('update')->once()->with($amountQuotaG);
+
+        $quotaM = m::mock(IrhpPermitJurisdictionQuota::class);
+        $quotaM->shouldReceive('getId')->once()->withNoArgs()->andReturn($idQuotaM);
+        $quotaM->shouldReceive('update')->once()->with($amountQuotaM);
+
+        $quotaN = m::mock(IrhpPermitJurisdictionQuota::class);
+        $quotaN->shouldReceive('getId')->once()->withNoArgs()->andReturn($idQuotaN);
+        $quotaN->shouldReceive('update')->once()->with($amountQuotaN);
+
+        $returnedRecords = [$quotaG, $quotaM, $quotaN];
 
         $this->repoMap['IrhpPermitJurisdictionQuota']
-            ->shouldReceive('updateTrafficAreaPermitQuantity')
-            ->with(
-                $cmdData['trafficAreas']['C'],
-                'C',
-                $command->getIrhpPermitStock()
-            )->once();
+            ->shouldReceive('fetchByIds')
+            ->once()
+            ->with([$idQuotaG, $idQuotaM, $idQuotaN])
+            ->andReturn($returnedRecords);
 
         $this->repoMap['IrhpPermitJurisdictionQuota']
-            ->shouldReceive('updateTrafficAreaPermitQuantity')
-            ->with(
-                $cmdData['trafficAreas']['D'],
-                'D',
-                $command->getIrhpPermitStock()
-            )->once();
+            ->shouldReceive('save')
+            ->times(3)
+            ->with(m::type(IrhpPermitJurisdictionQuota::class));
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => ['Irhp Permit Stock' => $command->getIrhpPermitStock()],
-            'messages' => ["Irhp Permit Jurisdiction for Stock '1' updated"]
+            'id' => [
+                'IrhpPermitJurisdictionQuota' => [
+                    0 => $idQuotaG,
+                    1 => $idQuotaM,
+                    2 => $idQuotaN,
+                ],
+            ],
+            'messages' => ['Irhp Permit Jurisdiction Quota updated'],
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        self::assertEquals($expected, $result->toArray());
     }
 }

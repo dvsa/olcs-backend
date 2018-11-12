@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
@@ -142,5 +144,50 @@ class IrhpPermitTest extends RepositoryTestCase
             . ']]] '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchByNumberAndRange()
+    {
+
+
+
+        $permitNumber = 1500;
+        $rangeId = 7;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ip.permitNumber = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ip.irhpPermitRange = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $permitNumber)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $rangeId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->execute')
+            ->once()
+            ->andReturn([]);
+
+        $this->assertEquals(
+            [],
+            $this->sut->fetchByNumberAndRange($permitNumber, $rangeId)
+        );
     }
 }

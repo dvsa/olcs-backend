@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -81,6 +82,11 @@ class IrhpPermit extends AbstractRepository
                 );
             $qb->orderBy($this->alias . '.permitNumber', 'ASC');
         }
+
+        if (($query instanceof GetList) && ($query->getIrhpPermitApplication() != null)) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.irhpPermitApplication', ':irhpPermitApplication'));
+            $qb->setParameter('irhpPermitApplication', $query->getIrhpPermitApplication());
+        }
     }
 
     /**
@@ -94,5 +100,22 @@ class IrhpPermit extends AbstractRepository
     {
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('irhpPermitApplication', 'ipa');
+    }
+
+    /**
+     * @param int $permitNumber
+     * @param int $permitRange
+     * @return mixed
+     */
+    public function fetchByNumberAndRange($permitNumber, $permitRange)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('ip')
+            ->from(Entity::class, 'ip')
+            ->where('ip.permitNumber = ?1')
+            ->andWhere('ip.irhpPermitRange = ?2')
+            ->setParameter(1, $permitNumber)
+            ->setParameter(2, $permitRange)
+            ->getQuery()->execute();
     }
 }

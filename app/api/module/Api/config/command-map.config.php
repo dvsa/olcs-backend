@@ -983,6 +983,10 @@ return [
     TransferCommand\FeatureToggle\Delete::class =>
         CommandHandler\FeatureToggle\Delete::class,
 
+    // Transfer - IRHP Permit
+    TransferCommand\IrhpPermit\Replace::class =>
+        CommandHandler\IrhpPermit\Replace::class,
+
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
@@ -1012,10 +1016,14 @@ return [
     // Transfer - IRHP Permit Sector
     TransferCommand\IrhpPermitSector\Update::class =>
         CommandHandler\IrhpPermitSector\Update::class,
+    // Backend command - IRHP Permit Sector
+    Command\IrhpPermitSector\Create::class => CommandHandler\IrhpPermitSector\Create::class,
 
     // Transfer - IRHP Permit Jurisdiction
     TransferCommand\IrhpPermitJurisdiction\Update::class =>
         CommandHandler\IrhpPermitJurisdiction\Update::class,
+    // Backend command - IRHP Permit Jurisdiction
+    Command\IrhpPermitJurisdiction\Create::class => CommandHandler\IrhpPermitJurisdiction\Create::class,
 
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
@@ -1113,6 +1121,9 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+
+    // IrhpPermit Internal Backend Command
+    Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
