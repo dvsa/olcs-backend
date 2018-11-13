@@ -97,6 +97,7 @@ return [
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
     TransferQuery\Licence\Licence::class => QueryHandler\Licence\Licence::class,
+    TransferQuery\Licence\LicenceWithCorrespondenceCd::class => QueryHandler\Licence\LicenceWithCorrespondenceCd::class,
     TransferQuery\Licence\LicenceByNumber::class => QueryHandler\Licence\LicenceByNumber::class,
     TransferQuery\Licence\LicenceRegisteredAddress::class => QueryHandler\Licence\LicenceRegisteredAddress::class,
     TransferQuery\Licence\TypeOfLicence::class => QueryHandler\Licence\TypeOfLicence::class,
