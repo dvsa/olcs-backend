@@ -10,6 +10,7 @@ return [
     QueryHandler\Licence\BusinessDetails::class => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Licence\ConditionUndertaking::class => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Licence\Licence::class => Misc\CanAccessLicenceWithId::class,
+    QueryHandler\Licence\LicenceWithCorrespondenceCd::class => Misc\CanAccessLicenceWithId::class,
     QueryHandler\Licence\LicenceByNumber::class => Misc\CanAccessLicenceWithLicNo::class,
     QueryHandler\Licence\LicenceRegisteredAddress::class => Misc\NoValidationRequired::class,
     QueryHandler\Licence\OtherActiveLicences::class => Misc\CanAccessLicenceWithId::class,
