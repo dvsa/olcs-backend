@@ -13,8 +13,6 @@ use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 
 /**
  * Get a list of scored irhp candidate permit records and associated data
- *
- * @todo: Needed to specify $extraRepos for unknown reason to prevent unit test failing, investigate & remove
  */
 class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequiredInterface
 {
@@ -87,7 +85,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
             }
 
             $formattedData[] = [
-                'Permit Ref'                        => $licence['licNo'] . '/' . $row['irhpPermitApplication']['id'] . '/' . $row['id'],
+                'Permit Ref'                        => $row['irhpPermitApplication']['ecmtPermitApplication']['applicationRef'] . ' / ' . $row['id'],
                 'Operator'                          => $licence['organisation']['name'],
                 'Application Score'                 => $row['applicationScore'],
                 'Permit Intensity of Use'           => $row['intensityOfUse'],
@@ -97,8 +95,8 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
                 'Sector'                            => $sector['name'] === Sectors::SECTOR_OPTION_NAME__NONE ? 'N/A' : $sector['name'],
                 'Devolved Administration'           => $devolvedAdministration,
                 'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                'Restricted Countries – Requested'  => $this->getRestrictedCountriesRequested($row),
-                'Restricted Countries – Offered'    => $this->getRestrictedCountriesOffered($row)
+                'Restricted Countries - Requested'  => $this->getRestrictedCountriesRequested($row),
+                'Restricted Countries - Offered'    => $this->getRestrictedCountriesOffered($row)
             ];
         }
 

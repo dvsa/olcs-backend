@@ -32,24 +32,6 @@ class IrhpPermitRange extends AbstractRepository
             ->getSingleScalarResult();
     }
 
-    /**
-     * Returns all ranges in the specified stockId.
-     *
-     * @param int $stockId
-     *
-     * @return array
-     */
-    public function getRanges($stockId)
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('r')
-            ->from(Entity::class, 'r')
-            ->andWhere('IDENTITY(r.irhpPermitStock) = ?1')
-            ->setParameter(1, $stockId)
-            ->getQuery()
-            ->getResult();
-    }
-
     /*
      * Fetch Ranges by Permit Stock ID
      *
@@ -115,5 +97,25 @@ class IrhpPermitRange extends AbstractRepository
             ->setParameter(1, $stockId)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Finds a Replacement Range by permit number and stock ID
+     *
+     * @param int $permitNumber
+     * @param int $permitStock
+     * @return array
+     */
+    public function fetchByPermitNumberAndStock($permitNumber, $permitStock)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias.'.irhpPermitStock', ':permitStock'))
+           ->andWhere($qb->expr()->gte(':permitNumber', $this->alias.'.fromNo'))
+           ->andWhere($qb->expr()->lte(':permitNumber', $this->alias.'.toNo'))
+           ->andWhere($qb->expr()->eq($this->alias.'.lostReplacement', 1))
+           ->setParameter('permitNumber', $permitNumber)
+           ->setParameter('permitStock', $permitStock);
+
+        return $qb->getQuery()->execute();
     }
 }

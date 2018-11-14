@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -22,9 +23,11 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  */
 class Licence extends AbstractQueryHandler
 {
+    use LicenceStatusAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
-    protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter'];
+    protected $extraRepos = ['ContinuationDetail', 'Note', 'SystemParameter', 'Application'];
 
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\SectionAccessService
@@ -68,6 +71,9 @@ class Licence extends AbstractQueryHandler
             $this->result($continuationDetail, ['continuation', 'licence'])->serialize() :
             null;
         $latestNote = $this->getRepo('Note')->fetchForOverview($query->getId());
+
+        $isLicenceSurrenderAllowed = $this->doesLicenceApplicationsHaveCorrectStatusForSurrender($query)
+            && $this->isLicenceStatusSurrenderable($licence);
 
         $showExpiryWarning = $continuationDetail !== null
             && $licence->isExpiring()
@@ -114,6 +120,7 @@ class Licence extends AbstractQueryHandler
                 'latestNote' => $latestNote,
                 'canHaveInspectionRequest' => !$licence->isSpecialRestricted(),
                 'showExpiryWarning' => $showExpiryWarning,
+                'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed,
             ]
         );
     }
@@ -137,16 +144,21 @@ class Licence extends AbstractQueryHandler
 
     private function guardAgainstLackOfPermission(Entity\Licence\Licence $licence) : void
     {
-        $allowedStatusesForExternalUser = [
-            Entity\Licence\Licence::LICENCE_STATUS_VALID,
-            Entity\Licence\Licence::LICENCE_STATUS_SUSPENDED,
-            Entity\Licence\Licence::LICENCE_STATUS_CURTAILED,
-        ];
-
-        $licenceStatus = $licence->getStatus()->getId();
-
-        if ($this->isExternalUser() && !in_array($licenceStatus, $allowedStatusesForExternalUser)) {
+        if ($this->isExternalUser() && !$this->isLicenceStatusAccessibleForExternalUser($licence)) {
             throw new ForbiddenException('You do not have permission to access this record');
         }
+    }
+
+    /**
+     * @param QueryInterface $query
+     *
+     * @return bool
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function doesLicenceApplicationsHaveCorrectStatusForSurrender($query): bool
+    {
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Application $applications */
+        $applications = $this->getRepo('Application');
+        return empty($applications->fetchOpenApplicationsForLicence($query->getId()));
     }
 }

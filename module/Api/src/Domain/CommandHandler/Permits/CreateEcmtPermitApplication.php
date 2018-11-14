@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
-
+use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -25,6 +25,8 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
+
+    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock'];
 
     /**
      * Handle command
@@ -40,12 +42,28 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
 
         $this->getRepo()->save($ecmtPermitApplication);
 
-        $result = new Result();
+        $this->result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
+        $this->result->addMessage('ECMT Permit Application created successfully');
 
-        $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
-        $result->addMessage('EcmtPermitApplication created successfully');
+        $stock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(
+            EcmtPermitApplication::PERMIT_TYPE,
+            new DateTime()
+        );
 
-        return $result;
+        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stock->getId());
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                CreateIrhpPermitApplication::create(
+                    [
+                        'window' => $window->getId(),
+                        'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
+                    ]
+                )
+            )
+        );
+
+        return $this->result;
     }
 
     /**

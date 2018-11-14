@@ -49,26 +49,4 @@ class IrhpPermitJurisdictionQuota extends AbstractRepository
 
         return $doctrineQb->getQuery()->getResult();
     }
-
-    /**
-     * Update a Jurisdiction Permit Quantity by Permit Stock ID and Traffic Area.
-     *
-     * @param string $quotaNumber
-     * @param string $trafficArea
-     * @param int $irhpPermitStockId
-     */
-    public function updateTrafficAreaPermitQuantity($quotaNumber, $trafficArea, $irhpPermitStockId)
-    {
-        $doctrineQb = $this->createQueryBuilder();
-
-        $doctrineQb
-            ->update(Entity::class, 'ipsq')
-            ->set('ipsq.quotaNumber', $doctrineQb->expr()->literal($quotaNumber))
-            ->where($doctrineQb->expr()->eq('ipsq.irhpPermitStock', ':irhpPermitStock'))
-            ->andWhere($doctrineQb->expr()->eq('ipsq.trafficArea', ':trafficArea'))
-            ->setParameter('irhpPermitStock', $irhpPermitStockId)
-            ->setParameter('trafficArea', $trafficArea);
-
-        $doctrineQb->getQuery()->execute();
-    }
 }

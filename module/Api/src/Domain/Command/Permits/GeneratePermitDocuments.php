@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Generate IRHP Permit
+ * Generate IRHP Permit Documents
  *
  * @author Henry White <henry.white@capgemini.com>
  */
@@ -10,11 +10,11 @@ namespace Dvsa\Olcs\Api\Domain\Command\Permits;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * GeneratePermit
+ * GeneratePermitDocuments
  *
  * @author Henry White <henry.white@capgemini.com>
  */
-final class GeneratePermit extends AbstractCommand
+final class GeneratePermitDocuments extends AbstractCommand
 {
     protected $ids = [];
 

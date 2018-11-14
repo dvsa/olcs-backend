@@ -84,7 +84,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
         $payment->setReference($guid);
         $payment
             ->shouldReceive('getStatus')
-            ->twice()
+            ->times(3)
             ->andReturn(
                 $this->refData[PaymentEntity::STATUS_OUTSTANDING],
                 $this->refData[PaymentEntity::STATUS_PAID]

@@ -51,9 +51,11 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         }
         $fees = $transaction->getFees();
 
-        foreach ($fees as $fee) {
-            if (!empty($fee->getEcmtPermitApplication())) {
-                $this->updateEcmtPermitApplication($fee);
+        if ($transaction->isPaid()) {
+            foreach ($fees as $fee) {
+                if (!empty($fee->getEcmtPermitApplication())) {
+                    $this->updateEcmtPermitApplication($fee);
+                }
             }
         }
 

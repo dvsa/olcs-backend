@@ -2,13 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\Sectors;
-use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -84,7 +85,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $internationalJourneyRefData
         );
 
-        $ecmtPermitAppEntity = m::mock(EcmtPermitApplication::class)->shouldAllowMockingProtectedMethods();;
+        $ecmtPermitAppEntity = m::mock(Entity::class)->shouldAllowMockingProtectedMethods();
         $ecmtPermitAppEntity->shouldReceive('getSectionCompletion')
             ->with(Entity::SECTIONS)
             ->andReturn(['allCompleted' => true]);
@@ -718,5 +719,53 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_VALID],
             [Entity::STATUS_DECLINED],
         ];
+    }
+
+    public function testGetFirstIrhpPermitApplicationWithoutItem()
+    {
+        $appId = 100;
+
+        $entity = $this->createApplication();
+        $entity->setId($appId);
+
+        // exception expected
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            sprintf('This ECMT Application has none or more than one IRHP Permit Application (id: %d)', $appId)
+        );
+        $entity->getFirstIrhpPermitApplication();
+    }
+
+    public function testGetFirstIrhpPermitApplicationWithOneItem()
+    {
+        $entity = $this->createApplication();
+
+        // add an IRHP application
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        // check the method returns valid result
+        $this->assertSame($irhpPermitApplication, $entity->getFirstIrhpPermitApplication());
+    }
+
+    public function testGetFirstIrhpPermitApplicationWithMoreThanOneItem()
+    {
+        $appId = 100;
+
+        $entity = $this->createApplication();
+        $entity->setId($appId);
+
+        // add an IRHP application
+        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+
+        // add another IRHP application
+        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+
+        // exception expected
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            sprintf('This ECMT Application has none or more than one IRHP Permit Application (id: %d)', $appId)
+        );
+        $entity->getFirstIrhpPermitApplication();
     }
 }

@@ -24,6 +24,15 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+            IrhpPermitStockEntity::STATUS_ACCEPT_PENDING
+        ];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $stockId = 47;
@@ -45,11 +54,29 @@ class QueueAcceptScoringTest extends CommandHandlerTestCase
 
         $this->expectedQueueSideEffect($stockId, Queue::TYPE_ACCEPT_ECMT_SCORING, []);
 
-        $this->repoMap['IrhpPermitStock']->shouldReceive('updateStatus')
-            ->with($stockId, IrhpPermitStockEntity::STATUS_ACCEPT_PENDING)
-            ->once();
+        $stock = m::mock(IrhpPermitStockEntity::class);
+        $stock->shouldReceive('proceedToAcceptPending')
+            ->with($this->refData[IrhpPermitStockEntity::STATUS_ACCEPT_PENDING])
+            ->once()
+            ->ordered()
+            ->globally();
 
-        $this->sut->handleCommand($command);
+        $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
+            ->with($stockId)
+            ->andReturn($stock);
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('save')
+            ->with($stock)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals(
+            ['Queueing accept scoring of ECMT applications'],
+            $result->getMessages()
+        );
     }
 
     public function testHandleCommandPermittedQueryFailed()

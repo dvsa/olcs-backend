@@ -195,4 +195,27 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             $this->sut->fetchLastOpenWindowByStockId($irhpPermitStockId, Query::HYDRATE_ARRAY)
         );
     }
+
+    public function testFetchWindowsToBeClosed()
+    {
+        $now = new \DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchWindowsToBeClosed($now, '-2 days'));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.endDate >= [[2018-10-23T00:00:00+0000]] '
+            . 'AND m.endDate < [[2018-10-25T13:21:10+0000]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }

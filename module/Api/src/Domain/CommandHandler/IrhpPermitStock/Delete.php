@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -34,6 +35,7 @@ final class Delete extends AbstractCommandHandler implements ToggleRequiredInter
         $id = $command->getId();
         $stock = $this->getRepo()->fetchById($id);
 
+        /** @var IrhpPermitStock $stock */
         if (!$stock->canDelete()) {
             throw new ValidationException(['irhp-permit-stock-cannot-delete-active-dependencies']);
         }

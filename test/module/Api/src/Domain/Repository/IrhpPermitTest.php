@@ -2,8 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
+use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Mockery as m;
@@ -92,36 +95,99 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
-    public function testApplyListFilters()
+    public function testFetchListForValidEcmtPermits()
     {
         $this->setUpSut(IrhpPermit::class, true);
-        $mockQb = m::mock(QueryBuilder::class);
-        $mockQ = m::mock(QueryInterface::class);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
-        $mockQb->shouldReceive('expr')
-            ->andReturnSelf()
-            ->shouldReceive('eq')
-            ->with('ipa.ecmtPermitApplication', ':ecmtId')
-            ->andReturnSelf()
-            ->shouldReceive('andWhere')
-            ->andReturnSelf()
-            ->shouldReceive('setParameter')
-            ->with('ecmtId', 1)
-            ->andReturnSelf()
-            ->shouldReceive('orderBy')
-            ->with('m.permitNumber', 'DESC')
-            ->andReturnSelf();
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
 
-        $this->sut->applyListFilters($mockQb, $mockQ);
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = ValidEcmtPermits::create(['id' => 'ID']);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND ipa.ecmtPermitApplication = [[ID]] '
+            . 'ORDER BY m.permitNumber DESC';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 
-    public function testApplyListJoins()
+    public function testFetchListForReadyToPrint()
     {
-        $sut = m::mock(IrhpPermit::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $mockQb = m::mock(QueryBuilder::class);
-        $mockQb->shouldReceive('modifyQuery')->andReturnSelf();
-        $mockQb->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf();
-        $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
-        $sut->applyListJoins($mockQb);
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = ReadyToPrint::create([]);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'ORDER BY m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchByNumberAndRange()
+    {
+
+
+
+        $permitNumber = 1500;
+        $rangeId = 7;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ip.permitNumber = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ip.irhpPermitRange = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $permitNumber)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $rangeId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->execute')
+            ->once()
+            ->andReturn([]);
+
+        $this->assertEquals(
+            [],
+            $this->sut->fetchByNumberAndRange($permitNumber, $rangeId)
+        );
     }
 }

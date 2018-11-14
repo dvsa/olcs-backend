@@ -49,10 +49,11 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
     {
         $this->stockId = $command->getId();
 
-        $stock = $this->getRepo()->fetchById($this->stockId);
-        $statusId = $stock->getStatus()->getId();
+        $stockRepo = $this->getRepo();
+        $stock = $stockRepo->fetchById($this->stockId);
+        $stockRepo->refresh($stock);
 
-        if ($statusId == IrhpPermitStock::STATUS_SCORING_PENDING) {
+        if ($stock->statusAllowsRunScoring()) {
             $prerequisiteResult = $this->handleQuery(
                 CheckRunScoringPrerequisites::create(['id' => $this->stockId])
             );
@@ -60,24 +61,26 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
             $prerequisiteResult = [
                 'result' => false,
                 'message' => sprintf(
-                    'Stock status must be %s, currently %s',
-                    IrhpPermitStock::STATUS_SCORING_PENDING,
-                    $statusId
+                    'Run scoring is not permitted with when stock status is \'%s\'',
+                    $stock->getStatusDescription()
                 )
             ];
         }
 
         if (!$prerequisiteResult['result']) {
+            $stock->proceedToScoringPrerequisiteFail($this->refData(IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL));
+            $stockRepo->save($stock);
+
             $this->result->addMessage('Prerequisite failed: ' . $prerequisiteResult['message']);
-            $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_PREREQUISITE_FAIL);
             return $this->result;
         }
 
         $stockIdParams = ['stockId' => $this->stockId];
 
-        try {
-            $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_IN_PROGRESS);
+        $stock->proceedToScoringInProgress($this->refData(IrhpPermitStock::STATUS_SCORING_IN_PROGRESS));
+        $stockRepo->save($stock);
 
+        try {
             $this->result->merge(
                 $this->handleSideEffects(
                     [
@@ -91,20 +94,12 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
                 )
             );
 
-            $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_SUCCESSFUL);
-            $this->result->addMessage('Scoring process completed successfully.');
-        } catch (Exception $e) {
-            $this->updateStockStatus(IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL);
-            $this->result->addMessage('Scoring process failed: ' . $e->getMessage());
-            return $this->handleReturn();
-        }
+            $stock->proceedToScoringSuccessful($this->refData(IrhpPermitStock::STATUS_SCORING_SUCCESSFUL));
+            $stockRepo->save($stock);
 
-        try {
-            // Get data for scoring results
             $dto = GetScoredPermitList::create($stockIdParams);
             $scoringResults = $this->handleQuery($dto);
 
-            // Upload scoring results file
             $this->result->merge(
                 $this->handleSideEffects([
                     UploadScoringResult::create([
@@ -113,21 +108,17 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
                     ]),
                 ])
             );
+
+            $this->result->addMessage('Scoring process completed successfully.');
         } catch (Exception $e) {
-            $this->result->addMessage('Failed to upload scoring results: ' . $e->getMessage());
+            $stock->proceedToScoringUnexpectedFail($this->refData(IrhpPermitStock::STATUS_SCORING_UNEXPECTED_FAIL));
+            $stockRepo->save($stock);
+
+            $this->result->addMessage('Scoring process failed: ' . $e->getMessage());
+            return $this->handleReturn();
         }
 
         return $this->handleReturn();
-    }
-
-    /**
-     * Update the status of the stock item
-     *
-     * @param string $status
-     */
-    private function updateStockStatus($status)
-    {
-        $this->getRepo('IrhpPermitStock')->updateStatus($this->stockId, $status);
     }
 
     /**

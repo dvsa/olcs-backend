@@ -53,5 +53,6 @@ return [
         'canAccessContinuationDetail' => Validators\CanAccessContinuationDetail::class,
         'canAccessPermitApp' => Validators\CanAccessPermitApp::class,
         'canEditPermitApp' => Validators\CanEditPermitApp::class,
+        'isLicenceSurrenderable' => Validators\IsLicenceSurrenderable::class,
     ]
 ];

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -17,7 +16,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 
 /**
  * Submit the ECMT application
@@ -53,21 +51,15 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $id = $command->getId();
         $newStatus = $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_UNDER_CONSIDERATION);
 
-        $ecmtStock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(EcmtPermitApplication::PERMIT_TYPE, new DateTime());
-        $ecmtStockId = $ecmtStock->getId();
-
-        $ecmtWindow = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($ecmtStockId);
-        $ecmtWindowId = $ecmtWindow->getId();
-
         $application = $this->getRepo()->fetchById($id);
         $application->submit($newStatus);
 
         $this->getRepo()->save($application);
 
-        $irhpApplication = $this->createIrhpPermitApplication($application, $ecmtWindowId);
-        $this->getRepo('IrhpPermitApplication')->save($irhpApplication);
-
-        $this->createIrhpCandidatePermitRecords($application->getPermitsRequired(), $irhpApplication);
+        $this->createIrhpCandidatePermitRecords(
+            $application->getPermitsRequired(),
+            $application->getFirstIrhpPermitApplication()
+        );
 
         $result = new Result();
         $result->addId('ecmtPermitApplication', $id);
@@ -81,24 +73,6 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         );
 
         return $result;
-    }
-
-    /**
-     * Creates a new Irhp_Permit_Application record
-     * for the ecmt_permit_application being submitted.
-     *
-     * @param EcmtPermitApplication $ecmtPermitApplication
-     * @param int $ecmtWindowId
-     *
-     * @return IrhpPermitApplicationEntity
-     */
-    private function createIrhpPermitApplication(EcmtPermitApplication $ecmtPermitApplication, int $ecmtWindowId)
-    {
-        return IrhpPermitApplicationEntity::createNew(
-            $this->getRepo()->getReference(IrhpPermitWindowEntity::class, $ecmtWindowId),
-            $ecmtPermitApplication->getLicence(),
-            $ecmtPermitApplication
-        );
     }
 
     /**

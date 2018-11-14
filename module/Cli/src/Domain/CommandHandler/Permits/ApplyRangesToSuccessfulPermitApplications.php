@@ -118,25 +118,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
 
         switch (count($matchingRanges)) {
             case 0:
-                $matchingRange = $this->getUnrestrictedRangeWithLowestStartNumber();
-                if (is_null($matchingRange)) {
-                    throw new RuntimeException(
-                        'Assertion failed in method ' . __METHOD__ . ': $range is null'
-                    );
-                }
-
-                $rangeEntity = $matchingRange[self::ENTITY_KEY];
-
-                $this->result->addMessage('    - no restricted ranges found with matching countries');
-
-                $message = sprintf(
-                    '    - using unrestricted range with lowest start number: id %d starts at %d',
-                    $rangeEntity->getId(),
-                    $rangeEntity->getFromNo()
-                );
-
-                $this->result->addMessage($message);
-                return $matchingRange;
+                return $this->selectRangeForCandidatePermitWithCountriesAndNoMatchingRanges();
             case 1:
                 $matchingRange = $matchingRanges[0];
 
@@ -150,6 +132,71 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
                 return $matchingRange;
         }
 
+        return $this->selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges($matchingRanges, $applicationCountryIds);
+    }
+
+    /**
+     * Selects the irhp_permit_range best-suited for a candidate permit that has countries
+     * but no matching ranges.
+     *
+     * @throws RuntimeException
+     * @return array the irhp_permit_range best suited for the candidate permit
+     */
+    private function selectRangeForCandidatePermitWithCountriesAndNoMatchingRanges()
+    {
+        $this->result->addMessage('    - no restricted ranges found with matching countries');
+
+        $matchingRange = $this->getUnrestrictedRangeWithLowestStartNumber();
+
+        if (is_null($matchingRange)) {
+            $this->result->addMessage('    - no unrestricted ranges found with lowest start number');
+
+            $ranges = $this->getRestrictedRangesWithFewestCountries();
+
+            if (empty($ranges)) {
+                throw new RuntimeException(
+                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) == 0'
+                );
+            }
+
+            if (count($ranges) > 1) {
+                throw new RuntimeException(
+                    'Assertion failed in method ' . __METHOD__ . ': count($ranges) > 1'
+                );
+            }
+
+            $matchingRange = $ranges[0]; // Use first range
+
+            $message = sprintf(
+                '    - using first restricted range with fewest countries: id %d has countries %s',
+                $matchingRange[self::ENTITY_KEY]->getId(),
+                implode(', ', $matchingRange[self::COUNTRY_IDS_KEY])
+            );
+        } else {
+            $rangeEntity = $matchingRange[self::ENTITY_KEY];
+            $message = sprintf(
+                '    - using unrestricted range with lowest start number: id %d starts at %d',
+                $rangeEntity->getId(),
+                $rangeEntity->getFromNo()
+            );
+        }
+
+        $this->result->addMessage($message);
+        return $matchingRange;
+    }
+
+    /**
+     * Selects the appropriate irhp_permit_range for a candidate permit with associated countries
+     * and multiple matching ranges.
+     *
+     * @throws RuntimeException
+     * @param matchingRanges an array of the multiple matching ranges
+     * @param array $applicationCountryIds The country ids specified in the application
+     *
+     * @return array the single range identified as suitable
+     */
+    private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(array $matchingRanges, array $applicationCountryIds)
+    {
         $this->result->addMessage('    - more than one range found with most matching countries:');
         foreach ($matchingRanges as $matchingRange) {
             $message = sprintf(

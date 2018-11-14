@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
+use Dvsa\Olcs\Transfer\Query\Permits\StockOperationsPermitted as StockOperationsPermittedQuery;
 use Dvsa\Olcs\Api\Domain\Query\Permits\QueueRunScoringPermitted as QueueRunScoringPermittedQuery;
 use Dvsa\Olcs\Api\Domain\Query\Permits\QueueAcceptScoringPermitted as QueueAcceptScoringPermittedQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -21,6 +22,8 @@ class StockOperationsPermitted extends AbstractQueryHandler implements ToggleReq
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
 
+    protected $repoServiceName = 'IrhpPermitStock';
+
     /**
      * Handle query
      *
@@ -30,15 +33,23 @@ class StockOperationsPermitted extends AbstractQueryHandler implements ToggleReq
      */
     public function handleQuery(QueryInterface $query)
     {
-        $stockIdParams = ['id' => $query->getId()];
+        $stockId = $query->getId();
+
+        $stock = $this->getRepo()->fetchById($stockId);
+        $stockStatus = $stock->getStatus();
+        $stockIdParams = ['id' => $stockId];
 
         $queryHandler = $this->getQueryHandler();
         $scoringResult = $queryHandler->handleQuery(QueueRunScoringPermittedQuery::create($stockIdParams));
         $acceptResult = $queryHandler->handleQuery(QueueAcceptScoringPermittedQuery::create($stockIdParams));
 
         return [
+            'stockStatusId' => $stockStatus->getId(),
+            'stockStatusMessage' => $stockStatus->getDescription(),
             'scoringPermitted' => $scoringResult['result'],
-            'acceptPermitted' => $acceptResult['result']
+            'scoringMessage' => $scoringResult['message'],
+            'acceptPermitted' => $acceptResult['result'],
+            'acceptMessage' => $acceptResult['message']
         ];
     }
 }

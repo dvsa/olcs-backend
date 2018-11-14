@@ -21,9 +21,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 class QueueAcceptScoring extends AbstractCommandHandler implements ToggleRequiredInterface
 {
-    use QueueAwareTrait;
-
-    use ToggleAwareTrait;
+    use QueueAwareTrait, ToggleAwareTrait;
 
     protected $repoServiceName = 'IrhpPermitStock';
 
@@ -49,7 +47,10 @@ class QueueAcceptScoring extends AbstractCommandHandler implements ToggleRequire
             return $this->result;
         }
 
-        $this->getRepo('IrhpPermitStock')->updateStatus($stockId, IrhpPermitStock::STATUS_ACCEPT_PENDING);
+        $stockRepo = $this->getRepo();
+        $stock = $stockRepo->fetchById($stockId);
+        $stock->proceedToAcceptPending($this->refData(IrhpPermitStock::STATUS_ACCEPT_PENDING));
+        $stockRepo->save($stock);
 
         $this->result->merge(
             $this->handleSideEffect(

@@ -143,4 +143,6 @@ return [
     Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest::class              => IsSideEffect::class,
     Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail::class                            => IsSideEffect::class,
     CommandHandler\ConditionUndertaking\CreateSmallVehicleCondition::class            => IsSideEffect::class,
+    CommandHandler\IrhpPermitJurisdiction\Create::class                               => IsSideEffect::class,
+    CommandHandler\IrhpPermitSector\Create::class                                     => IsSideEffect::class,
 ];
