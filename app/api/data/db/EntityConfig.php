@@ -2187,4 +2187,20 @@ return array(
             )
         )
     ),
+    'irhp_permit_sector_quota' => array(
+        'irhp_permit_stock_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitStock',
+                'property' => 'irhpPermitSectorQuota'
+            )
+        )
+    ),
+    'irhp_permit_jurisdiction_quota' => array(
+        'irhp_permit_stock_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitStock',
+                'property' => 'irhpPermitJurisdictionQuota'
+            )
+        )
+    ),
 );

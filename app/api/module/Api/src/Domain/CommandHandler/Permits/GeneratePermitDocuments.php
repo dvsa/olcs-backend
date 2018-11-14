@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Generate Permit
+ * Generate Permit Documents
  */
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
@@ -23,7 +23,7 @@ use Doctrine\ORM\Query;
  *
  * @author Henry White <henry.white@capgemini.com>
  */
-final class GeneratePermit extends AbstractCommandHandler implements ToggleRequiredInterface
+final class GeneratePermitDocuments extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -122,7 +122,7 @@ final class GeneratePermit extends AbstractCommandHandler implements ToggleRequi
                     )
                 );
 
-                $result->addId($documentType, $documentGenerated->getId('identifier'), true);
+                $result->addId($documentType, $documentGenerated->getId('document'), true);
                 $result->addMessage($documentDescription . ' RTF created and stored');
             }
         }

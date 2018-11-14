@@ -9,6 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits as Cmd;
@@ -47,6 +48,23 @@ class AcceptEcmtPermitsTest extends CommandHandlerTestCase
             ->andReturn($ecmtPermitApplicationId);
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+
+        $fee1 = m::mock(Fee::class);
+        $fees = [$fee1];
+
+        $ecmtPermitApplication->shouldReceive('getFees')
+            ->once()
+            ->andReturn($fees);
+
+
+        $fee1->shouldReceive('getFeeStatus->getId')
+            ->andReturn(Fee::STATUS_PAID);
+
+        $ecmtPermitApplication->shouldReceive('isAwaitingFee')
+            ->once()
+            ->andReturn(false);
+
+
         $ecmtPermitApplication->shouldReceive('proceedToIssuing')
             ->with($this->refData[EcmtPermitApplication::STATUS_ISSUING])
             ->once()
@@ -90,6 +108,21 @@ class AcceptEcmtPermitsTest extends CommandHandlerTestCase
             ->with($this->refData[EcmtPermitApplication::STATUS_ISSUING])
             ->once()
             ->andThrow(ForbiddenException::class);
+
+        $fee1 = m::mock(Fee::class);
+        $fees = [$fee1];
+
+        $ecmtPermitApplication->shouldReceive('getFees')
+            ->once()
+            ->andReturn($fees);
+
+        $fee1->shouldReceive('getFeeStatus->getId')
+            ->andReturn(Fee::STATUS_PAID);
+
+        $ecmtPermitApplication->shouldReceive('isAwaitingFee')
+            ->once()
+            ->andReturn(false);
+
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)

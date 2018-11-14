@@ -193,6 +193,31 @@ SQL;
     }
 
     /**
+     * Is there an item of type/status already in the queue
+     *
+     * @param array $types    Queue::TYPE_
+     * @param array $statuses Queue::STATUS_
+     *
+     * @return bool
+     */
+    public function isItemInQueue(array $types, array $statuses)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias . '.id')
+            ->andWhere($qb->expr()->in($this->alias . '.type', ':types'))
+            ->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+            ->setParameter('types', $types)
+            ->setParameter('statuses', $statuses)
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->getArrayResult();
+
+        return !empty($results);
+    }
+
+    /**
      * Get the QueryBuilder for getting the next item
      *
      * @return \Doctrine\ORM\QueryBuilder

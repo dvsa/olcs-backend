@@ -3,37 +3,42 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as StockRepo;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermitJurisdiction\Create as CreateDevolvedQuotasCmd;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Create as CreateStockCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
  * Create an IRHP Permit Stock
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-final class Create extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Create extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
 
-    protected $extraRepos = ['IrhpPermitType'];
-
     public function handleCommand(CommandInterface $command): Result
     {
-        $result = new Result();
-        $permitType = $this->getRepo('IrhpPermitType')->fetchById($command->getPermitType());
-
         /**
+         * @var StockRepo      $stockRepo
          * @var CreateStockCmd $command
          */
+        $stockRepo = $this->getRepo('IrhpPermitStock');
+
+        $permitType = $stockRepo->getReference(IrhpPermitType::class, $command->getPermitType());
+
         $stock = StockEntity::create(
             $permitType,
             $command->getValidFrom(),
@@ -43,14 +48,25 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         );
 
         try {
-            $this->getRepo()->save($stock);
+            $stockRepo->save($stock);
         } catch (\Exception $e) {
             throw new ValidationException(['You cannot create a duplicate stock']);
         }
 
-        $result->addId('IrhpPermitStock', $stock->getId());
-        $result->addMessage("IRHP Permit Stock '{$stock->getId()}' created");
+        $stockId = $stock->getId();
 
-        return $result;
+        $sideEffects = [
+            CreateSectorQuotasCmd::create(['id' => $stockId]),
+            CreateDevolvedQuotasCmd::create(['id' => $stockId])
+        ];
+
+        $this->result->merge(
+            $this->handleSideEffects($sideEffects)
+        );
+
+        $this->result->addId('IrhpPermitStock', $stockId);
+        $this->result->addMessage("IRHP Permit Stock '{$stockId}' created");
+
+        return $this->result;
     }
 }

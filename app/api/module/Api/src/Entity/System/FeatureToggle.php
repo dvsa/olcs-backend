@@ -31,6 +31,10 @@ class FeatureToggle extends AbstractFeatureToggle
     const BACKEND_ECMT = 'back_ecmt';
     const BACKEND_PERMITS = 'back_permits';
 
+    const INTERNAL_SURRENDER = 'internal_surrender';
+    const SELFSERVE_SURRENDER = 'ss_surrender';
+    const BACKEND_SURRENDER = 'back_surrender';
+
     public static function create(/*string*/ $configName, /*string*/ $friendlyName, RefData $status)/*: FeatureToggle */
     {
         $instance = new self;

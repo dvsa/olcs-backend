@@ -983,6 +983,10 @@ return [
     TransferCommand\FeatureToggle\Delete::class =>
         CommandHandler\FeatureToggle\Delete::class,
 
+    // Transfer - IRHP Permit
+    TransferCommand\IrhpPermit\Replace::class =>
+        CommandHandler\IrhpPermit\Replace::class,
+
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
@@ -998,6 +1002,8 @@ return [
         CommandHandler\IrhpPermitWindow\Update::class,
     TransferCommand\IrhpPermitWindow\Delete::class =>
         CommandHandler\IrhpPermitWindow\Delete::class,
+    Command\IrhpPermitWindow\Close::class =>
+        CommandHandler\IrhpPermitWindow\Close::class,
 
     // Transfer - IRHP Permit Range
     TransferCommand\IrhpPermitRange\Create::class =>
@@ -1010,10 +1016,14 @@ return [
     // Transfer - IRHP Permit Sector
     TransferCommand\IrhpPermitSector\Update::class =>
         CommandHandler\IrhpPermitSector\Update::class,
+    // Backend command - IRHP Permit Sector
+    Command\IrhpPermitSector\Create::class => CommandHandler\IrhpPermitSector\Create::class,
 
     // Transfer - IRHP Permit Jurisdiction
     TransferCommand\IrhpPermitJurisdiction\Update::class =>
         CommandHandler\IrhpPermitJurisdiction\Update::class,
+    // Backend command - IRHP Permit Jurisdiction
+    Command\IrhpPermitJurisdiction\Create::class => CommandHandler\IrhpPermitJurisdiction\Create::class,
 
     // Sla Target Dates
     TransferCommand\System\CreateSlaTargetDate::class => CommandHandler\System\CreateSlaTargetDate::class,
@@ -1065,9 +1075,17 @@ return [
     TransferCommand\DataRetention\AssignItems::class => CommandHandler\DataRetention\AssignItems::class,
     TransferCommand\DataRetention\UpdateRule::class => CommandHandler\DataRetention\UpdateRule::class,
 
+    // Surrender
+    TransferCommand\Surrender\Create::class => CommandHandler\Surrender\Create::class,
+    TransferCommand\Surrender\Update::class => CommandHandler\Surrender\Update::class,
+    TransferCommand\Surrender\Delete::class => CommandHandler\Surrender\Delete::class,
+
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
+
+    // Irhp Permit Create
+    Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
 
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
@@ -1098,14 +1116,14 @@ return [
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
-    Command\Permits\ProcessEcmtApplications::class => CommandHandler\Permits\ProcessEcmtApplications::class,
-    Command\Permits\GeneratePermit::class => CommandHandler\Permits\GeneratePermit::class,
+    Command\Permits\GeneratePermitDocuments::class => CommandHandler\Permits\GeneratePermitDocuments::class,
     TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
+    Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
 
-    // Permits - Private beta
-    TransferCommand\Permits\TriggerProcessEcmtApplications::class => CommandHandler\Permits\TriggerProcessEcmtApplications::class,
+    // IrhpPermit Internal Backend Command
+    Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
@@ -1127,4 +1145,6 @@ return [
         CommandHandlerCli\Permits\UploadScoringResult::class,
     CommandCli\Permits\UploadScoringLog::class =>
         CommandHandlerCli\Permits\UploadScoringLog::class,
+    CommandCli\Permits\GeneratePermits::class =>
+        CommandHandlerCli\Permits\GeneratePermits::class,
 ];

@@ -5,8 +5,10 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -599,7 +601,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function isActive()
     {
-        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee() || $this->isFeePaid();
     }
 
     /**
@@ -869,5 +871,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function hasOutstandingFees()
     {
         return count($this->getLatestOutstandingEcmtApplicationFee());
+    }
+
+    /**
+     * Retrieves the first Irhp Permit Application linked to the Ecmt Permit Application.
+     * There should only ever be one Irhp Permit Application per Ecmt Permit Application.
+     *
+     * @return IrhpPermitApplication
+     * @throws RuntimeException
+     */
+    public function getFirstIrhpPermitApplication()
+    {
+        if ($this->irhpPermitApplications->count() != 1) {
+            throw new RuntimeException(
+                sprintf(
+                    'This ECMT Application has none or more than one IRHP Permit Application (id: %d)',
+                    $this->getId()
+                )
+            );
+        }
+
+        return $this->irhpPermitApplications->first();
     }
 }

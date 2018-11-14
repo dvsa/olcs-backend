@@ -21,4 +21,5 @@ class SendEcmtAppSubmitted extends AbstractEmailHandler implements ToggleRequire
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-app-submitted';
     protected $subject = 'email.ecmt.default.subject';
+    protected $extraRepos = ['FeeType'];
 }

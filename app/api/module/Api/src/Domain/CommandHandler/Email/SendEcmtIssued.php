@@ -21,4 +21,5 @@ class SendEcmtIssued extends AbstractEmailHandler implements ToggleRequiredInter
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-app-issued';
     protected $subject = 'email.ecmt.issued.subject';
+    protected $extraRepos = ['FeeType'];
 }

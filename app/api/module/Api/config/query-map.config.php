@@ -139,8 +139,6 @@ return [
     TransferQuery\Organisation\CpidOrganisation::class
         => QueryHandler\Organisation\CpidOrganisation::class,
     TransferQuery\Organisation\UnlicensedCases::class => QueryHandler\Organisation\UnlicensedCases::class,
-    TransferQuery\Organisation\EligibleForPermits::class => QueryHandler\Organisation\EligibleForPermits::class,
-    TransferQuery\Organisation\EligibleForPermitsById::class => QueryHandler\Organisation\EligibleForPermits::class,
 
     // Variation
     TransferQuery\Variation\Variation::class => QueryHandler\Variation\Variation::class,
@@ -527,6 +525,7 @@ return [
 
     // IRHP Permit Application
     TransferQuery\IrhpPermitApplication\GetList::class => QueryHandler\IrhpPermitApplication\GetList::class,
+
     // IRHP Permit Stock
     TransferQuery\IrhpPermitStock\ById::class => QueryHandler\IrhpPermitStock\ById::class,
     TransferQuery\IrhpPermitStock\GetList::class => QueryHandler\IrhpPermitStock\GetList::class,
@@ -548,6 +547,16 @@ return [
 
     // IRHP Permit Jurisdiction
     TransferQuery\IrhpPermitJurisdiction\GetList::class => QueryHandler\IrhpPermitJurisdiction\GetList::class,
+
+    // Permit Printing
+    TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
+
+    // IRHP Permits
+    TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
+    TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
+
+    // IRHP Candidate Permits
+    TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,
@@ -621,4 +630,12 @@ return [
     Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
+
+    // IRHP Permit - internal
+
+    Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
+    Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
+
+    //Digital Surrender
+    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class
 ];

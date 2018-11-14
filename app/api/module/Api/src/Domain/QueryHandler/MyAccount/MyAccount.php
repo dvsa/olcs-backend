@@ -52,6 +52,7 @@ class MyAccount extends AbstractQueryHandler
                 'numberOfVehicles' => $user->getNumberOfVehicles(),
                 'disableDataRetentionRecords' => $this->getRepo('SystemParameter')
                     ->getDisableDataRetentionRecords(),
+                'eligibleForPermits' => $user->isEligibleForPermits(),
             ]
         );
     }

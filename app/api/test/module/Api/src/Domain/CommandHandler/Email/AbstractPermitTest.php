@@ -7,9 +7,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as PermitApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -55,6 +57,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
     {
         $this->sut = new $this->commandHandler();
         $this->mockRepo('EcmtPermitApplication', PermitApplicationRepo::class);
+        $this->mockRepo('FeeType', FeeTypeRepo::class);
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
@@ -78,11 +81,24 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             'orgEmail2@test.com'
         ];
 
+        $applicationFee = '10.00';
+        $feeTypeEntity = m::mock(FeeType::class);
+
+        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+            ->once()
+            ->with(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF)
+            ->andReturn($feeTypeEntity);
+
+        $feeTypeEntity->shouldReceive('getAmount')
+            ->withNoArgs()
+            ->andReturn($applicationFee);
+
         $templateVars = [
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
             'applicationRef' => $applicationRef,
+            'applicationFee' => '10',
         ];
 
         $contactDetails = m::mock(ContactDetails::class);
@@ -160,6 +176,18 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             'orgEmail2@test.com'
         ];
 
+        $applicationFee = '10.00';
+        $feeTypeEntity = m::mock(FeeType::class);
+
+        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+            ->once()
+            ->with(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF)
+            ->andReturn($feeTypeEntity);
+
+        $feeTypeEntity->shouldReceive('getAmount')
+            ->withNoArgs()
+            ->andReturn($applicationFee);
+
         $templateVars = [
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
@@ -172,6 +200,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             'issueFeeDeadlineDate' => $issueFeeDeadlineDate,
             'issueFeeAmount' => $issueFeeAmount,
             'issueFeeTotal' => $permitsGrantedissueFeeTotal,
+            'applicationFee' => '10',
         ];
 
         $contactDetails = m::mock(ContactDetails::class);

@@ -627,4 +627,22 @@ class BatchController extends AbstractConsoleController
             $this->handleCommand([CliCommand\LastTmLetter::create([])])
         );
     }
+
+    /**
+     * Permits
+     *
+     * @return ConsoleModel
+     */
+    public function permitsAction()
+    {
+        if ($this->params('close-expired-windows')) {
+            $params = [
+                'since' =>  $this->params('since') ? : '-1 day',
+            ];
+
+            return $this->handleExitStatus(
+                $this->handleCommand([CliCommand\Permits\CloseExpiredWindows::create($params)])
+            );
+        }
+    }
 }

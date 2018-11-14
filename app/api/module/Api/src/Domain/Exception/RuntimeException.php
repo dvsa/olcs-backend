@@ -14,10 +14,10 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class RuntimeException extends Exception
 {
-    public function __construct($message)
+    public function __construct($message, int $code = 0, \Throwable $previous = null)
     {
         $this->messages = [$message];
 
-        parent::__construct($message);
+        parent::__construct($message, $code, $previous);
     }
 }

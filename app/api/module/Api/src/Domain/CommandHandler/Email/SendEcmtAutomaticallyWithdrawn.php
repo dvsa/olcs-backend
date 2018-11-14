@@ -21,4 +21,5 @@ class SendEcmtAutomaticallyWithdrawn extends AbstractEmailHandler implements Tog
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-automatically-withdrawn';
     protected $subject = 'email.ecmt.automatically.withdrawn.subject';
+    protected $extraRepos = ['FeeType'];
 }

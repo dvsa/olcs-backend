@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -25,7 +26,13 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermit extends AbstractIrhpPermit
 {
-    const STATUS_PENDING = 'irhp_permit_pending';
+    const STATUS_PENDING            = 'irhp_permit_pending';
+    const STATUS_AWAITING_PRINTING  = 'irhp_permit_awaiting_printing';
+    const STATUS_PRINTING           = 'irhp_permit_printing';
+    const STATUS_PRINTED            = 'irhp_permit_printed';
+    const STATUS_ERROR              = 'irhp_permit_error';
+    const STATUS_CEASED             = 'irhp_permit_ceased';
+    const STATUS_ISSUED             = 'irhp_permit_issued';
 
     /**
      * Create new IrhpPermit
@@ -52,5 +59,211 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->permitNumber = $permitNumber;
 
         return $irhpPermit;
+    }
+
+    /**
+     * Create new IrhpPermit
+     *
+     * @param IrhpPermit $oldPermit
+     * @param IrhpPermitRange $irhpPermitRange
+     * @param RefData $status
+     * @param int $permitNumber
+     *
+     * @return IrhpPermit
+     */
+    public static function createReplacement(
+        IrhpPermit $oldPermit,
+        IrhpPermitRange $irhpPermitRange,
+        RefData $status,
+        $permitNumber
+    ) {
+        $irhpPermit = new self();
+        $irhpPermit->replaces = $oldPermit;
+        $irhpPermit->irhpCandidatePermit = $oldPermit->getIrhpCandidatePermit();
+        $irhpPermit->irhpPermitApplication = $oldPermit->getIrhpPermitApplication();
+        $irhpPermit->irhpPermitRange = $irhpPermitRange;
+        $irhpPermit->issueDate = new DateTime();
+        $irhpPermit->expiryDate = $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+        $irhpPermit->status = $status;
+        $irhpPermit->permitNumber = $permitNumber;
+
+        return $irhpPermit;
+    }
+
+    /**
+     * @param RefData $status
+     * @return $this
+     */
+    public function cease(RefData $status)
+    {
+        // Check status provided is correct for Ceased and set expiry date to now.
+        if ($status->getId() !== self::STATUS_CEASED) {
+            throw new ForbiddenException('This method can only be called with refdata status id: '.self::STATUS_CEASED);
+        }
+        $this->status = $status;
+        $this->expiryDate = new DateTime();
+    }
+
+    /**
+     * Get the permit number with prefix
+     *
+     * @return string
+     */
+    public function getPermitNumberWithPrefix()
+    {
+        return sprintf('%s%05d', $this->getIrhpPermitRange()->getPrefix(), $this->getPermitNumber());
+    }
+
+    /**
+     * Calculated values to be added to a bundle
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix()
+        ];
+    }
+
+    /**
+     * Proceed to status
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    public function proceedToStatus(RefData $status)
+    {
+        switch ($status->getId()) {
+            case self::STATUS_AWAITING_PRINTING:
+                $this->proceedToAwaitingPrinting($status);
+                break;
+            case self::STATUS_PRINTING:
+                $this->proceedToPrinting($status);
+                break;
+            case self::STATUS_ERROR:
+                $this->proceedToError($status);
+                break;
+            default:
+                throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId()));
+        }
+    }
+
+    /**
+     * Proceed to awaiting printing
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToAwaitingPrinting(RefData $status)
+    {
+        if (!$this->isPending() && !$this->hasError()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to awaiting printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to printing
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToPrinting(RefData $status)
+    {
+        if (!$this->isAwaitingPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to error
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToError(RefData $status)
+    {
+        if (!$this->isPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to error (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Is pending
+     *
+     * @return bool
+     */
+    public function isPending()
+    {
+        return $this->status->getId() === self::STATUS_PENDING;
+    }
+
+    /**
+     * Is awaiting printing
+     *
+     * @return bool
+     */
+    public function isAwaitingPrinting()
+    {
+        return $this->status->getId() === self::STATUS_AWAITING_PRINTING;
+    }
+
+    /**
+     * Is printing
+     *
+     * @return bool
+     */
+    public function isPrinting()
+    {
+        return $this->status->getId() === self::STATUS_PRINTING;
+    }
+
+    /**
+     * Is not issued
+     *
+     * @return bool
+     */
+    public function isNotIssued()
+    {
+        return $this->status->getId() !== self::STATUS_ISSUED;
+    }
+
+    /**
+     * Has error
+     *
+     * @return bool
+     */
+    public function hasError()
+    {
+        return $this->status->getId() === self::STATUS_ERROR;
     }
 }

@@ -25,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_candidate_permit_id"}),
  *        @ORM\Index(name="fk_irhp_permit_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_last_modified_by_user_id", columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_irhp_permit_status_ref_data_id", columns={"status"})
+ *        @ORM\Index(name="fk_irhp_permit_status_ref_data_id", columns={"status"}),
+ *        @ORM\Index(name="fk_irhp_permit_replaces_id_irhp_permit_id", columns={"replaces_id"})
  *    }
  * )
  */
@@ -144,9 +145,9 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Permit number
      *
-     * @var string
+     * @var int
      *
-     * @ORM\Column(type="string", name="permit_number", length=100, nullable=true)
+     * @ORM\Column(type="integer", name="permit_number", nullable=true)
      */
     protected $permitNumber;
 
@@ -158,6 +159,16 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      * @ORM\Column(type="text", name="permit_properties", nullable=true)
      */
     protected $permitProperties;
+
+    /**
+     * Replaces
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermit
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermit", fetch="LAZY")
+     * @ORM\JoinColumn(name="replaces_id", referencedColumnName="id", nullable=true)
+     */
+    protected $replaces;
 
     /**
      * Status
@@ -174,10 +185,10 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true)
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * Set the created by
@@ -446,7 +457,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Set the permit number
      *
-     * @param string $permitNumber new value being set
+     * @param int $permitNumber new value being set
      *
      * @return IrhpPermit
      */
@@ -460,7 +471,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     /**
      * Get the permit number
      *
-     * @return string
+     * @return int
      */
     public function getPermitNumber()
     {
@@ -489,6 +500,30 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
     public function getPermitProperties()
     {
         return $this->permitProperties;
+    }
+
+    /**
+     * Set the replaces
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermit $replaces entity being set as the value
+     *
+     * @return IrhpPermit
+     */
+    public function setReplaces($replaces)
+    {
+        $this->replaces = $replaces;
+
+        return $this;
+    }
+
+    /**
+     * Get the replaces
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermit
+     */
+    public function getReplaces()
+    {
+        return $this->replaces;
     }
 
     /**
