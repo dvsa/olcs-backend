@@ -44,6 +44,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_DECLINED = 'permit_app_declined';
 
+    const SOURCE_INTERNAL = 'app_source_internal';
+    const SOURCE_SELFSERVE = 'app_source_selfserve';
+
+    const NOTIFICATION_TYPE_EMAIL = 'notification_type_email';
+    const NOTIFICATION_TYPE_MANUAL = 'notification_type_manual';
+
     const PERMIT_TYPE = 'permit_ecmt';
     const PERMIT_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT';
     const PERMIT_COVERING_LETTER_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT_COVERING_LETTER';
@@ -58,6 +64,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
 
     const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
     const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
+
+    const SUCCESS_LEVEL_FULL = 'success_level_full';
+    const SUCCESS_LEVEL_PARTIAL = 'success_level_partial';
+    const SUCCESS_LEVEL_NONE = 'success_level_none';
 
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
@@ -91,6 +101,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     /**
      * Create new EcmtPermitApplication
      *
+     * @param RefData $source Source
      * @param RefData $status Status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
@@ -103,9 +114,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * @param int|null $permitsRequired
      * @param int|null $trips
      * @param RefData $internationalJourneys
+     *
      * @return EcmtPermitApplication
      */
     public static function createNewInternal(
+        RefData $source,
         RefData $status,
         RefData $permitType,
         Licence $licence,
@@ -120,6 +133,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         RefData $internationalJourneys = null
     ) {
         $ecmtPermitApplication = new self();
+        $ecmtPermitApplication->source = $source;
         $ecmtPermitApplication->status = $status;
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
@@ -147,19 +161,23 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     /**
      * Create new EcmtPermitApplication
      *
+     * @param RefData $source Source
      * @param RefData $status Status
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
      * @param string|null $dateReceived
+     *
      * @return EcmtPermitApplication
      */
     public static function createNew(
+        RefData $source,
         RefData $status,
         RefData $permitType,
         Licence $licence,
         string $dateReceived = null
     ) {
         $ecmtPermitApplication = new self();
+        $ecmtPermitApplication->source = $source;
         $ecmtPermitApplication->status = $status;
         $ecmtPermitApplication->permitType = $permitType;
         $ecmtPermitApplication->licence = $licence;
@@ -167,9 +185,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         return $ecmtPermitApplication;
     }
 
-
     /**
-     * Create new EcmtPermitApplication
+     * Update EcmtPermitApplication
      *
      * @param RefData $permitType Permit type
      * @param Licence $licence Licence
@@ -182,6 +199,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * @param int|null $trips
      * @param RefData $internationalJourneys
      * @param string|null $dateReceived
+     *
      * @return EcmtPermitApplication
      */
     public function update(
@@ -892,5 +910,61 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         }
 
         return $this->irhpPermitApplications->first();
+    }
+
+    /**
+     * Return the number of permits awarded to this application. Only applicable to applications that are currently
+     * under consideration
+     *
+     * @return int
+     *
+     * @throws ForbiddenException
+     */
+    public function getPermitsAwarded()
+    {
+        if (!$this->isUnderConsideration()) {
+            throw new ForbiddenException(
+                'This application is not in the correct state to return permits awarded ('.$this->status->getId().')'
+            );
+        }
+
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        return $irhpPermitApplication->countPermitsAwarded();
+    }
+
+    /**
+     * Indicate whether this application is either unsuccessful, partially successful or fully successful, returning
+     * one of the class constants SUCCESS_LEVEL_NONE, SUCCESS_LEVEL_PARTIAL or SUCCESS_LEVEL_FULL accordingly
+     *
+     * @return string
+     */
+    public function getSuccessLevel()
+    {
+        $permitsAwarded = $this->getPermitsAwarded();
+
+        $successLevel = self::SUCCESS_LEVEL_PARTIAL;
+        if ($permitsAwarded == 0) {
+            $successLevel = self::SUCCESS_LEVEL_NONE;
+        } elseif ($this->permitsRequired == $permitsAwarded) {
+            $successLevel = self::SUCCESS_LEVEL_FULL;
+        }
+
+        return $successLevel;
+    }
+
+    /**
+     * Indicate the type of notification required upon completion of scoring acceptance, returning one of the
+     * NOTIFICATION_TYPE_* constants
+     *
+     * @return string
+     */
+    public function getOutcomeNotificationType()
+    {
+        $mappings = [
+            self::SOURCE_SELFSERVE => self::NOTIFICATION_TYPE_EMAIL,
+            self::SOURCE_INTERNAL => self::NOTIFICATION_TYPE_MANUAL
+        ];
+
+        return $mappings[$this->source->getId()];
     }
 }

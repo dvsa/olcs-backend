@@ -28,7 +28,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_sectors_id", columns={"sectors_id"}),
  *        @ORM\Index(name="fk_ecmt_permit_application_international_jouneys",
      *     columns={"international_journeys"}),
- *        @ORM\Index(name="ix_withdraw_reason", columns={"withdraw_reason"})
+ *        @ORM\Index(name="ix_withdraw_reason", columns={"withdraw_reason"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_source", columns={"source"})
  *    }
  * )
  */
@@ -224,6 +225,16 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\JoinColumn(name="sectors_id", referencedColumnName="id", nullable=true)
      */
     protected $sectors;
+
+    /**
+     * Source
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="source", referencedColumnName="id", nullable=false)
+     */
+    protected $source;
 
     /**
      * Status
@@ -794,6 +805,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getSectors()
     {
         return $this->sectors;
+    }
+
+    /**
+     * Set the source
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $source entity being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * Get the source
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 
     /**

@@ -7,7 +7,9 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AcceptScoring as AcceptScoringCmd;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
@@ -17,10 +19,9 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
 use Exception;
 
 /**
@@ -30,9 +31,7 @@ use Exception;
  */
 class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInterface
 {
-    use QueueAwareTrait;
-
-    use ToggleAwareTrait;
+    use QueueAwareTrait, ToggleAwareTrait;
 
     const ISSUE_FEE_PRODUCT_REFERENCE = 'IRHP_GV_ECMT_100_PERMIT_FEE';
 
@@ -40,7 +39,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitStock', 'IrhpPermitRange', 'IrhpPermit', 'FeeType'];
+    protected $extraRepos = ['IrhpPermitStock', 'FeeType'];
 
     /**
      * Handle command
@@ -53,7 +52,6 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     {
         $stockId = $command->getId();
 
-        // Get data for scoring results
         $dto = GetScoredPermitList::create(['stockId' => $stockId]);
         $scoringResults = $this->handleQuery($dto);
 
@@ -122,99 +120,158 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     }
 
     /**
-     * Send email notification and create fees as required for an application
+     * Send outcome notification and create fees as required for an application
      *
      * @param EcmtPermitApplication $ecmtPermitApplication
+     *
+     * @throws Exception
      */
     private function processApplication(EcmtPermitApplication $ecmtPermitApplication)
     {
-        $irhpPermitApplications = $ecmtPermitApplication->getIrhpPermitApplications();
-        $irhpPermitApplication = $irhpPermitApplications[0];
-
         $this->result->addMessage(
             sprintf('processing ecmt application with id %d:', $ecmtPermitApplication->getId())
         );
 
-        $permitsRequested = $ecmtPermitApplication->getPermitsRequired();
-        $permitsAwarded = $irhpPermitApplication->countPermitsAwarded();
-
-        $this->result->addMessage(
-            sprintf('- permits requested: %d', $permitsRequested)
-        );
-        $this->result->addMessage(
-            sprintf('- permits awarded: %d', $permitsAwarded)
-        );
-
-        $emailCommand = SendEcmtPartSuccessful::class;
-        if ($permitsAwarded == 0) {
-            $emailCommand = SendEcmtUnsuccessful::class;
-        } elseif ($permitsRequested == $permitsAwarded) {
-            $emailCommand = SendEcmtSuccessful::class;
+        $outcomeNotificationType = $ecmtPermitApplication->getOutcomeNotificationType();
+        switch ($outcomeNotificationType) {
+            case EcmtPermitApplication::NOTIFICATION_TYPE_EMAIL:
+                $this->triggerEmailNotification($ecmtPermitApplication);
+                break;
+            case EcmtPermitApplication::NOTIFICATION_TYPE_MANUAL:
+                $this->triggerManualNotification($ecmtPermitApplication);
+                break;
+            default:
+                throw new Exception('Unknown notification type: ' . $outcomeNotificationType);
         }
+
+        $this->createApplicationFeesAndUpdateStatus($ecmtPermitApplication);
+        $this->getRepo()->save($ecmtPermitApplication);
+    }
+
+    /**
+     * Send the outcome notification for an application requiring manual notification
+     *
+     * @param EcmtPermitApplication $ecmtPermitApplication
+     */
+    private function triggerManualNotification(EcmtPermitApplication $ecmtPermitApplication)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(
+                $this->getCreateTaskCommand($ecmtPermitApplication)
+            )
+        );
+    }
+
+    /**
+     * Send the outcome notification for an application requiring email notification
+     *
+     * @param EcmtPermitApplication $ecmtPermitApplication
+     */
+    private function triggerEmailNotification(EcmtPermitApplication $ecmtPermitApplication)
+    {
+        $emailCommandLookup = [
+            EcmtPermitApplication::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+            EcmtPermitApplication::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+            EcmtPermitApplication::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+        ];
+
+        $emailCommand = $emailCommandLookup[$ecmtPermitApplication->getSuccessLevel()];
 
         $this->result->addMessage(
             sprintf('- sending email using command %s', $emailCommand)
         );
 
+        $ecmtPermitApplicationId = $ecmtPermitApplication->getId();
+
         $this->result->merge(
             $this->handleSideEffect(
                 $this->emailQueue(
                     $emailCommand,
-                    [ 'id' => $ecmtPermitApplication->getId() ],
-                    $ecmtPermitApplication->getId()
+                    [ 'id' => $ecmtPermitApplicationId ],
+                    $ecmtPermitApplicationId
                 )
             )
         );
+    }
 
-        if ($permitsAwarded > 0) {
-            $this->result->merge(
-                $this->handleSideEffect(
-                    $this->getIssueFeeCommand($ecmtPermitApplication, $permitsAwarded)
-                )
-            );
-
-            $ecmtPermitApplication->proceedToAwaitingFee(
-                $this->refData(EcmtPermitApplication::STATUS_AWAITING_FEE)
-            );
-
-            $this->result->addMessage(
-                sprintf('- creating fee and updating application status to %s', EcmtPermitApplication::STATUS_AWAITING_FEE)
-            );
-        } else {
-            $this->result->addMessage(
-                sprintf('- no fee applicable, updating application status to %s', EcmtPermitApplication::STATUS_UNSUCCESSFUL)
-            );
+    /**
+     * Create any applicable fees for an application and update the status accordingly
+     *
+     * @param EcmtPermitApplication $ecmtPermitApplication
+     */
+    private function createApplicationFeesAndUpdateStatus(EcmtPermitApplication $ecmtPermitApplication)
+    {
+        if ($ecmtPermitApplication->getSuccessLevel() == EcmtPermitApplication::SUCCESS_LEVEL_NONE) {
+            $this->result->addMessage('- no fee applicable, set application to unsuccessful');
 
             $ecmtPermitApplication->proceedToUnsuccessful(
                 $this->refData(EcmtPermitApplication::STATUS_UNSUCCESSFUL)
             );
+
+            return;
         }
 
-        $this->getRepo()->save($ecmtPermitApplication);
+        $this->result->merge(
+            $this->handleSideEffect(
+                $this->getCreateIssueFeeCommand($ecmtPermitApplication)
+            )
+        );
+
+        $this->result->addMessage('- create fee and set application to awaiting fee');
+
+        $ecmtPermitApplication->proceedToAwaitingFee(
+            $this->refData(EcmtPermitApplication::STATUS_AWAITING_FEE)
+        );
     }
 
     /**
-     * Get issue fee command for an application
+     * Get issue fee creation command for an application
      *
      * @param EcmtPermitApplication $ecmtPermitApplication
-     * @param int $permitsAwarded
      *
-     * @return Fee
+     * @return CreateFee
      */
-    private function getIssueFeeCommand(EcmtPermitApplication $ecmtPermitApplication, $permitsAwarded)
+    private function getCreateIssueFeeCommand(EcmtPermitApplication $ecmtPermitApplication)
     {
         $feeType = $this->getRepo('FeeType')->getLatestForEcmtPermit(self::ISSUE_FEE_PRODUCT_REFERENCE);
+        $permitsAwarded = $ecmtPermitApplication->getPermitsAwarded();
 
-        $data = [
-            'licence' => $ecmtPermitApplication->getLicence()->getId(),
-            'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
-            'invoicedDate' => date('Y-m-d'),
-            'description' => $feeType->getDescription() . ' - ' . $permitsAwarded . ' permits',
-            'feeType' => $feeType->getId(),
-            'feeStatus' => Fee::STATUS_OUTSTANDING,
-            'amount' => $feeType->getFixedValue() * $permitsAwarded
-        ];
+        $feeDescription = sprintf(
+            '%s - %d permits',
+            $feeType->getDescription(),
+            $permitsAwarded
+        );
 
-        return CreateFee::create($data);
+        return CreateFee::create(
+            [
+                'licence' => $ecmtPermitApplication->getLicence()->getId(),
+                'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
+                'invoicedDate' => date('Y-m-d'),
+                'description' => $feeDescription,
+                'feeType' => $feeType->getId(),
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'amount' => $feeType->getFixedValue() * $permitsAwarded
+            ]
+        );
+    }
+
+    /**
+     * Get task creation command for an application
+     *
+     * @param EcmtPermitApplication $application
+     *
+     * @return CreateTask
+     */
+    private function getCreateTaskCommand(EcmtPermitApplication $ecmtPermitApplication)
+    {
+        return CreateTask::create(
+            [
+                'category' => Task::CATEGORY_PERMITS,
+                'subCategory' => Task::SUBCATEGORY_PERMITS_APPLICATION_OUTCOME,
+                'description' => Task::TASK_DESCRIPTION_SEND_OUTCOME_LETTER,
+                'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
+                'licence' => $ecmtPermitApplication->getLicence()->getId()
+            ]
+        );
     }
 }

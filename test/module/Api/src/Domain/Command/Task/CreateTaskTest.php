@@ -36,6 +36,7 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
             'submission' => 765,
             'transportManager' => 125,
             'irfoOrganisation' => 126,
+            'ecmtPermitApplication' => 97,
             'assignedByUser' => 7
 
         ];
@@ -56,6 +57,7 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(124, $command->getCase());
         $this->assertEquals(125, $command->getTransportManager());
         $this->assertEquals(126, $command->getIrfoOrganisation());
+        $this->assertEquals(97, $command->getEcmtPermitApplication());
         $this->assertEquals(765, $command->getSubmission());
         $this->assertEquals(7, $command->getAssignedByUser());
 
@@ -76,6 +78,7 @@ class CreateTaskTest extends PHPUnit_Framework_TestCase
                 'submission' => 765,
                 'transportManager' => 125,
                 'irfoOrganisation' => 126,
+                'ecmtPermitApplication' => 97,
                 'assignedByUser' => 7
             ],
             $command->getArrayCopy()

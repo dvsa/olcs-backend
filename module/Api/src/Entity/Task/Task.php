@@ -41,6 +41,7 @@ class Task extends AbstractTask
     const CATEGORY_LICENSING = 1;
     const CATEGORY_COMPLIANCE = 2;
     const CATEGORY_BUS = 3;
+    const CATEGORY_PERMITS = 4;
     const CATEGORY_ENVIRONMENTAL = 7;
     const CATEGORY_APPLICATION = 9;
     const CATEGORY_SUBMISSION = 10;
@@ -51,6 +52,7 @@ class Task extends AbstractTask
     const SUBCATEGORY_REVIEW_COMPLAINT = 61;
     const SUBCATEGORY_SUBMISSION_ASSIGNMENT = 114;
     const SUBCATEGORY_LICENSING_GENERAL_TASK = 77;
+    const SUBCATEGORY_PERMITS_APPLICATION_OUTCOME = 199;
 
     /**
      * Ref data constants
@@ -66,6 +68,7 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE = 'Check digital signature for licence continuation';
     const TASK_DESCRIPTION_CHECK_WET_SIGNATURE = 'Check wet signature for licence continuation';
     const TASK_DESCRIPTION_LICENCE_EXPIRED = 'Licence expired';
+    const TASK_DESCRIPTION_SEND_OUTCOME_LETTER = 'Send outcome letter';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 

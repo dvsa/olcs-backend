@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -123,6 +124,9 @@ class CreateTaskTest extends CommandHandlerTestCase
             Submission::class => [
                 765 => m::mock(Cases::class)
             ],
+            EcmtPermitApplication::class => [
+                97 => m::mock(EcmtPermitApplication::class)
+            ],
         ];
 
         parent::initReferences();
@@ -148,6 +152,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             'case' => 164,
             'transportManager' => 264,
             'irfoOrganisation' => 364,
+            'ecmtPermitApplication' => 97,
             'submission' => 765,
             'assignedByUser' => 999,
         ];
@@ -173,6 +178,7 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertSame($this->references[Submission::class][765], $task->getSubmission());
                     $this->assertSame($this->references[TransportManager::class][264], $task->getTransportManager());
                     $this->assertSame($this->references[Organisation::class][364], $task->getIrfoOrganisation());
+                    $this->assertSame($this->references[EcmtPermitApplication::class][97], $task->getEcmtPermitApplication());
 
                     $this->assertEquals('2015-01-01', $task->getActionDate()->format('Y-m-d'));
                     $this->assertEquals('Some task', $task->getDescription());
