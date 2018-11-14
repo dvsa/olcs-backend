@@ -4,9 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 class LicenceWithCorrespondenceCd extends AbstractQueryHandler
 {
@@ -41,6 +39,4 @@ class LicenceWithCorrespondenceCd extends AbstractQueryHandler
             ]
         );
     }
-
-
 }
