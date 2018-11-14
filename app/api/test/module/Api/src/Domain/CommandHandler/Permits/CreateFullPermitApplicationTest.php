@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateFullPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
@@ -20,9 +19,9 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
- * Create Ecmt Permit Application test
+ * Create Full Permit Application test
  */
-class CreateFullPermitApplcationTest extends CommandHandlerTestCase
+class CreateFullPermitApplicationTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -37,6 +36,7 @@ class CreateFullPermitApplcationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
+            EcmtPermitApplication::SOURCE_INTERNAL,
             EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
             EcmtPermitApplication::PERMIT_TYPE
         ];
@@ -121,15 +121,19 @@ class CreateFullPermitApplcationTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(EcmtPermitApplication::class, $ecmtPermitApplication);
-        $this->assertSame(
+        $this->assertEquals(
+            EcmtPermitApplication::SOURCE_INTERNAL,
+            $ecmtPermitApplication->getSource()->getId()
+        );
+        $this->assertEquals(
             EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
             $ecmtPermitApplication->getStatus()->getId()
         );
-        $this->assertSame(
+        $this->assertEquals(
             EcmtPermitApplication::PERMIT_TYPE,
             $ecmtPermitApplication->getPermitType()->getId()
         );
-        $this->assertSame(
+        $this->assertEquals(
             $this->references[Licence::class][$licenceId],
             $ecmtPermitApplication->getLicence()
         );
