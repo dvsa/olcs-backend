@@ -33,7 +33,7 @@ class CreateTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'licence' => self::LIC_ID,
+            'id' => self::LIC_ID,
         ];
 
         $command = Cmd::create($data);

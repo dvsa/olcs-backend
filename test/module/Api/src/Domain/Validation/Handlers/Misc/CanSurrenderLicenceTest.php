@@ -35,7 +35,7 @@ class CanSurrenderLicenceTest extends AbstractHandlerTestCase
     {
         $licenceId = 1;
         $dto = m::mock(CommandInterface::class);
-        $dto->shouldReceive('getLicence')->andReturn($licenceId);
+        $dto->shouldReceive('getId')->andReturn($licenceId);
 
         $this->setIsValid('canAccessLicence', [$licenceId], $canAccess);
         $this->setIsValid('isLicenceSurrenderable', [$licenceId], $isSurrenderable);
