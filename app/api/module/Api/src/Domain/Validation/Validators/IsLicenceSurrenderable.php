@@ -40,6 +40,5 @@ class IsLicenceSurrenderable extends AbstractValidator implements AuthAwareInter
         }
 
         return true;
-
     }
 }
