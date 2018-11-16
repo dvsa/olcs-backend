@@ -71,7 +71,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
 
         if ($tmSignature !== null) {
             $tmFullName = $tmSignature->getSignatureName();
-            $tmDateOfBirth = $tmSignature->getDateOfBirth();
+            $tmDateOfBirth = $this->formatDate($tmSignature->getDateOfBirth());
             $tmSignatureDate = $tmSignature->getCreatedOn(true) instanceof \DateTime ?
                 $tmSignature->getCreatedOn(true)->format('d-m-Y H:i:s') :
                 null;
@@ -79,7 +79,7 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
 
         if ($opSignature !== null) {
             $opFullName = $opSignature->getSignatureName();
-            $opDateOfBirth = $opSignature->getDateOfBirth();
+            $opDateOfBirth = $this->formatDate($opSignature->getDateOfBirth());
             $opSignatureDate = $opSignature->getCreatedOn(true) instanceof \DateTime ?
                 $opSignature->getCreatedOn(true)->format('d-m-Y H:i:s') :
                 null;

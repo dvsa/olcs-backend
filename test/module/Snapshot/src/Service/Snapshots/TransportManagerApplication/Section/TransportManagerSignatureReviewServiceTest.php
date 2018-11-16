@@ -74,7 +74,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
         if ($data['TmDigitalSignature']) {
             $digitalSignatureDate = new DateTime('2018-01-01');
-            $birthDate = (new DateTime('1980-01-01'))->format('d-m-Y');
+            $birthDate = (new DateTime('1980-01-01'))->format('d M Y');
             $signatureName = 'Name';
 
             $mockTranslator
@@ -100,7 +100,7 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
         $digitalSignature = m::mock(DigitalSignature::class);
         $digitalSignature->shouldReceive('getSignatureName')->andReturn('Name');
-        $digitalSignature->shouldReceive('getDateOfBirth')->andReturn('01-01-1980');
+        $digitalSignature->shouldReceive('getDateOfBirth')->andReturn('01 Jan 1980');
         $digitalSignatureDate = new DateTime('2018-01-01');
         $digitalSignature->shouldReceive('getCreatedOn')->with(true)->andReturn($digitalSignatureDate);
 
