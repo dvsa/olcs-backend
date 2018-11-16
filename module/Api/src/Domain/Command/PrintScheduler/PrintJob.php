@@ -14,7 +14,8 @@ final class PrintJob extends AbstractCommand
 {
     use Identity;
 
-    protected $document;
+    /** @var array */
+    protected $documents;
 
     protected $title;
 
@@ -23,9 +24,14 @@ final class PrintJob extends AbstractCommand
     /** @var  int */
     protected $copies;
 
-    public function getDocument()
+    /**
+     * Get the list of document ids to be printed
+     *
+     * @return array
+     */
+    public function getDocuments()
     {
-        return $this->document;
+        return $this->documents;
     }
 
     public function getTitle()
