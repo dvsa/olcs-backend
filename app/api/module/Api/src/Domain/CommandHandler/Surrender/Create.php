@@ -17,7 +17,7 @@ final class Create extends AbstractSurrenderCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
+        $licence = $this->getRepo('Licence')->fetchById($command->getId());
         $status = $this->getRepo()->getRefdataReference($command->getStatus());
 
         $surrender = new Surrender();
