@@ -78,7 +78,9 @@
         "olcs/olcs-devtools": "dev-master",
         "mockery/mockery": "~0.9.3",
         "mikey179/vfsStream": "~1.4.0",
-        "xificurk/phpstan-shim": "^0.10.4"
+        "phpstan/phpstan-shim": "^0.10.5",
+        "phpstan/phpstan-mockery": "^0.10.2",
+        "phpstan/phpstan-doctrine": "^0.10.0"
     },
     "autoload": {
         "classmap": [
