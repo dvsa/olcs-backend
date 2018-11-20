@@ -90,8 +90,8 @@ class GrantDirectorChangeTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        assertThat($result->getMessages(), hasItemInArray('GRANT_PEOPLE_CALLED'));
-        assertThat($result->getMessages(), hasItemInArray('CREATE_SNAPSHOT_CALLED'));
+        $this->assertContains('GRANT_PEOPLE_CALLED', $result->getMessages());
+        $this->assertContains('CREATE_SNAPSHOT_CALLED', $result->getMessages());
     }
 
     public function testThatNullDirectorChangeVariationsAreRejected()
