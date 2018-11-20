@@ -38,7 +38,7 @@ class DataGovUkTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('prepare')
             ->once()
-            ->with('/data_gov_uk_psv_operator_list$/')
+            ->with(m::pattern('/data_gov_uk_psv_operator_list$/'))
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
@@ -54,12 +54,12 @@ class DataGovUkTest extends MockeryTestCase
         $this->mockStmt
             ->shouldReceive('bindValue')
             ->times(count($areas))
-            ->with(m::anyOf(1, 2, 3), '/^areaKey/', \PDO::PARAM_STR);
+            ->with(m::anyOf(1, 2, 3), m::pattern('/^areaKey/'), \PDO::PARAM_STR);
 
         $this->mockConn
             ->shouldReceive('prepare')
             ->once()
-            ->with('/data_gov_uk_operator_licence_view (.*)IN \(\?, \?, \?\)$/')
+            ->with(m::pattern('/data_gov_uk_operator_licence_view (.*)IN \(\?, \?, \?\)$/'))
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
@@ -75,12 +75,12 @@ class DataGovUkTest extends MockeryTestCase
         $this->mockStmt
             ->shouldReceive('bindValue')
             ->times(count($areas))
-            ->with(m::anyOf(1, 2, 3), '/^areaKey/', \PDO::PARAM_STR);
+            ->with(m::anyOf(1, 2, 3), m::pattern('/^areaKey/'), \PDO::PARAM_STR);
 
         $this->mockConn
             ->shouldReceive('prepare')
             ->once()
-            ->with('/data_gov_uk_bus_registered_only_view (.*)IN \(\?, \?, \?\)$/')
+            ->with(m::pattern('/data_gov_uk_bus_registered_only_view (.*)IN \(\?, \?, \?\)$/'))
             ->andReturn($this->mockStmt);
 
         static::assertEquals(
@@ -102,7 +102,7 @@ class DataGovUkTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('prepare')
             ->once()
-            ->with('/data_gov_uk_bus_variation_view (.*)IN \(\?\)$/')
+            ->with(m::pattern('/data_gov_uk_bus_variation_view (.*)IN \(\?\)$/'))
             ->andReturn($this->mockStmt);
 
         static::assertEquals(

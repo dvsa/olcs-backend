@@ -36,7 +36,8 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('query')
             ->once()
-            ->with('/^CALL sp_ch_vs_olcs_diff_/')
+            ->with(m::pattern('/^CALL sp_ch_vs_olcs_diff_/'))
+
             ->andReturn($this->mockStmt);
 
         static::assertSame($this->mockStmt, $this->sut->fetchOfficerDiffs());
@@ -47,7 +48,7 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('query')
             ->once()
-            ->with('/^CALL sp_ch_vs_olcs_diff_/')
+            ->with(m::pattern('/^CALL sp_ch_vs_olcs_diff_/'))
             ->andReturn($this->mockStmt);
 
         static::assertSame($this->mockStmt, $this->sut->fetchAddressDiffs());
@@ -58,7 +59,7 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('query')
             ->once()
-            ->with('/^CALL sp_ch_vs_olcs_diff_/')
+            ->with(m::pattern('/^CALL sp_ch_vs_olcs_diff_/'))
             ->andReturn($this->mockStmt);
 
         static::assertSame($this->mockStmt, $this->sut->fetchNameDiffs());
@@ -69,7 +70,7 @@ class CompaniesHouseVsOlcsDiffsTest extends MockeryTestCase
         $this->mockConn
             ->shouldReceive('query')
             ->once()
-            ->with('/^CALL sp_ch_vs_olcs_diff/')
+            ->with(m::pattern('/^CALL sp_ch_vs_olcs_diff/'))
             ->andReturn($this->mockStmt);
 
         static::assertSame($this->mockStmt, $this->sut->fetchWithNotActiveStatus());
