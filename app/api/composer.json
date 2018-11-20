@@ -72,15 +72,15 @@
         "fzaninotto/faker": "^1.6",
         "phpseclib/phpseclib": "^2.0.6",
         "beberlei/DoctrineExtensions": "^1.0",
-        "qandidate/toggle": "^1.1",
-        "mockery/mockery": "^1.2"
+        "qandidate/toggle": "^1.1"
     },
     "require-dev": {
         "olcs/olcs-devtools": "dev-master",
         "mikey179/vfsStream": "~1.4.0",
         "phpstan/phpstan-shim": "^0.10.5",
         "phpstan/phpstan-mockery": "^0.10.2",
-        "phpstan/phpstan-doctrine": "^0.10.0"
+        "phpstan/phpstan-doctrine": "^0.10.0",
+        "mockery/mockery": "^1.2"
     },
     "autoload": {
         "classmap": [
