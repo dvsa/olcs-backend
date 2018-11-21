@@ -134,11 +134,40 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $lic2->shouldReceive('isGoods')->andReturn(false);
         $lic2->shouldReceive('isPsv')->andReturn(true);
         $lic2->shouldReceive('isSpecialRestricted')->andReturn(false);
+        $lic2->shouldReceive('isRestricted')->andReturn(false);
         $organisation->addLicences($lic2);
 
         $result = $this->sut->validateForSameTrafficAreas($application, 'TA');
 
         $this->assertSame(['ERR_TA_PSV' => 'TA_NAME'], $result);
+    }
+
+    public function testValidateErrorWithPsvRestrictedLicence()
+    {
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new Application($licence, new RefData(), false);
+        $application->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
+        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_RESTRICTED));
+        $licence->addApplications($application);
+        $organisation->addLicences($licence);
+
+        $ta = new TrafficArea();
+        $ta->setId('TA')->setName('TA_NAME');
+        $lic2 = m::mock(Licence::class);
+        $lic2->shouldReceive('getStatus->getId')->andReturn(Licence::LICENCE_STATUS_VALID);
+        $lic2->shouldReceive('getTrafficArea')->andReturn($ta);
+        $lic2->shouldReceive('hasQueuedRevocation')->andReturn(false);
+        $lic2->shouldReceive('getApplications')->andReturn(new ArrayCollection());
+        $lic2->shouldReceive('isGoods')->andReturn(false);
+        $lic2->shouldReceive('isPsv')->andReturn(true);
+        $lic2->shouldReceive('isSpecialRestricted')->andReturn(false);
+        $lic2->shouldReceive('isRestricted')->andReturn(true);
+        $organisation->addLicences($lic2);
+
+        $result = $this->sut->validateForSameTrafficAreas($application, 'TA');
+
+        $this->assertSame(['ERR_TA_PSV_RES' => 'TA_NAME'], $result);
     }
 
     public function testValidateErrorWithPsvSrLicence()
@@ -163,6 +192,71 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $lic2->shouldReceive('isPsv')->andReturn(true);
         $lic2->shouldReceive('isSpecialRestricted')->andReturn(true);
         $organisation->addLicences($lic2);
+
+        $result = $this->sut->validateForSameTrafficAreas($application, 'TA');
+
+        $this->assertSame(['ERR_TA_PSV_SR' => 'TA_NAME'], $result);
+    }
+
+    public function testValidateErrorWithPsvApplication()
+    {
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new Application($licence, new RefData(), false);
+        $application->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
+
+        $licence->addApplications($application);
+        $organisation->addLicences($licence);
+
+        $trafficArea = new TrafficArea();
+        $trafficArea->setId('TA');
+        $trafficArea->setName('TA_NAME');
+
+        $app1 = m::mock(Application::class);
+        $app1->shouldReceive('getStatus->getId')->andReturn(Application::APPLICATION_STATUS_GRANTED);
+        $app1->shouldReceive('isNew')->andReturn(true);
+        $app1->shouldReceive('getTrafficArea')->andReturn($trafficArea);
+        $app1->shouldReceive('isGoods')->andReturn(false);
+        $app1->shouldReceive('isPsv')->andReturn(true);
+        $app1->shouldReceive('isSpecialRestricted')->andReturn(false);
+
+        $lic1 = m::mock(Licence::class);
+        $lic1->shouldReceive('getStatus->getId')->andReturn(Licence::LICENCE_STATUS_REVOKED);
+        $lic1->shouldReceive('getApplications')->andReturn(new ArrayCollection([$app1]));
+        $organisation->addLicences($lic1);
+
+        $result = $this->sut->validateForSameTrafficAreas($application, 'TA');
+
+        $this->assertSame(['ERR_TA_PSV' => 'TA_NAME'], $result);
+    }
+
+    public function testValidateErrorWithPsvSrApplication()
+    {
+        $organisation = new \Dvsa\Olcs\Api\Entity\Organisation\Organisation();
+        $licence = new Licence($organisation, new RefData());
+        $application = new Application($licence, new RefData(), false);
+        $application->setGoodsOrPsv(new RefData(Licence::LICENCE_CATEGORY_PSV));
+        $application->setLicenceType(new RefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED));
+
+        $licence->addApplications($application);
+        $organisation->addLicences($licence);
+
+        $trafficArea = new TrafficArea();
+        $trafficArea->setId('TA');
+        $trafficArea->setName('TA_NAME');
+
+        $app1 = m::mock(Application::class);
+        $app1->shouldReceive('getStatus->getId')->andReturn(Application::APPLICATION_STATUS_GRANTED);
+        $app1->shouldReceive('isNew')->andReturn(true);
+        $app1->shouldReceive('getTrafficArea')->andReturn($trafficArea);
+        $app1->shouldReceive('isGoods')->andReturn(false);
+        $app1->shouldReceive('isPsv')->andReturn(true);
+        $app1->shouldReceive('isSpecialRestricted')->andReturn(true);
+
+        $lic1 = m::mock(Licence::class);
+        $lic1->shouldReceive('getStatus->getId')->andReturn(Licence::LICENCE_STATUS_REVOKED);
+        $lic1->shouldReceive('getApplications')->andReturn(new ArrayCollection([$app1]));
+        $organisation->addLicences($lic1);
 
         $result = $this->sut->validateForSameTrafficAreas($application, 'TA');
 
