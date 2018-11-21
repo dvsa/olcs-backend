@@ -157,7 +157,11 @@ class BatchControllerTest extends MockeryTestCase
                     ->addMessage('unit_message')
             );
 
-        $this->mockConsole->shouldReceive('writeLine')->times(2);
+        $this->mockConsole
+            ->shouldReceive('writeLine')
+            ->once()
+            ->with(m::pattern('/' . addslashes(CliCommand\CompaniesHouseVsOlcsDiffsExport::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
         $this->sut->companiesHouseVsOlcsDiffsExportAction();
     }
