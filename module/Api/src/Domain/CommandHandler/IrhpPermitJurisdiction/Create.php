@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitJurisdiction;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota;
@@ -16,7 +15,6 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as StockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Transfer\Query\TrafficArea\TrafficAreaList;
 
 /**
  * Create IRHP permit devolved quotas (called as a side effect of stock creation)
@@ -54,8 +52,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
         $stock = $stockRepo->fetchUsingId($command);
 
-        $trafficAreaListQry = TrafficAreaList::create(['isEngland' => false]);
-        $trafficAreaList = $trafficAreaRepo->fetchList($trafficAreaListQry, Query::HYDRATE_OBJECT);
+        $trafficAreaList = $trafficAreaRepo->fetchDevolved();
 
         /** @var TrafficAreaEntity $trafficArea */
         foreach ($trafficAreaList as $trafficArea) {
