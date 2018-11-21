@@ -17,21 +17,19 @@ class TrafficArea extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
+     * Fetch traffic areas for devolved administrations i.e. Scotland, Wales, NI
      *
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
+     * @return array
      */
-    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    public function fetchDevolved()
     {
-        if (method_exists($query, 'getIsEngland') && $query->getIsEngland() !== null) {
-            $qb->andWhere(
-                $qb->expr()->eq($this->alias .'.isEngland', ':isEngland')
-            );
-            $qb->setParameter('isEngland', $query->getIsEngland());
-        }
+        $qb = $this->createQueryBuilder();
+        $this->getQueryBuilder()->modifyQuery($qb);
+        $qb->andWhere(
+            $qb->expr()->eq($this->alias . '.isEngland', 0)
+        );
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
