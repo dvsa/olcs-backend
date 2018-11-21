@@ -51,9 +51,9 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturn($stockEntity);
 
         $this->repoMap['TrafficArea']
-            ->shouldReceive('fetchList')
+            ->shouldReceive('fetchDevolved')
             ->once()
-            ->with(m::type(TrafficAreaList::class), Query::HYDRATE_OBJECT)
+            ->withNoArgs()
             ->andReturn($trafficAreaResults);
 
         $this->repoMap['IrhpPermitJurisdictionQuota']
