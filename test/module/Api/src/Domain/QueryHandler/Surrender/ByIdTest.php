@@ -1,13 +1,10 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Surrender;
-
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Surrender\ById as QryHandler;
 use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\Surrender\ById;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
@@ -35,5 +32,4 @@ class ByIdTest extends QueryHandlerTestCase
         $expected = new Result($surrender, ['licence'], ['disableSignatures' => true]);
         $this->assertEquals($expected, $this->sut->handleQuery($query));
     }
-
 }
