@@ -11,16 +11,18 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptScoring;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AcceptScoring;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -127,13 +129,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $successfulApplication = $this->getEcmtPermitApplicationMock(
             $successfulApplicationId,
             $successfulApplicationLicenceId,
-            10,
-            $successfulApplicationPermitsAwarded
+            $successfulApplicationPermitsAwarded,
+            EcmtPermitApplicationEntity::SUCCESS_LEVEL_FULL,
+            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_EMAIL
         );
 
         $this->sut->shouldReceive('handleQuery')->once()
+            ->with(m::type(GetScoredPermitList::class))
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(GetScoredPermitList::class, $query);
                 $this->assertEquals($stockId, $query->getStockId());
 
                 return [
@@ -142,8 +145,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
             });
 
         $this->sut->shouldReceive('handleQuery')->once()
+            ->with(m::type(CheckAcceptScoringPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(CheckAcceptScoringPrerequisites::class, $query);
                 $this->assertEquals($stockId, $query->getId());
 
                 return [
@@ -170,8 +173,9 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $partSuccessfulApplication = $this->getEcmtPermitApplicationMock(
             $partSuccessfulApplicationId,
             $partSuccessfulApplicationLicenceId,
-            8,
-            $partSuccessfulApplicationPermitsAwarded
+            $partSuccessfulApplicationPermitsAwarded,
+            EcmtPermitApplicationEntity::SUCCESS_LEVEL_PARTIAL,
+            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_MANUAL
         );
 
         $partSuccessfulApplication->shouldReceive('proceedToAwaitingFee')
@@ -186,7 +190,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->globally();
 
         $unsuccessfulApplicationId = 4;
-        $unsuccessfulApplication = $this->getEcmtPermitApplicationMock($unsuccessfulApplicationId, 46, 7, 0);
+        $unsuccessfulApplication = $this->getEcmtPermitApplicationMock(
+            $unsuccessfulApplicationId,
+            46,
+            7,
+            EcmtPermitApplicationEntity::SUCCESS_LEVEL_NONE,
+            EcmtPermitApplicationEntity::NOTIFICATION_TYPE_EMAIL
+        );
+
         $unsuccessfulApplication->shouldReceive('proceedToUnsuccessful')
             ->with($this->refData[EcmtPermitApplicationEntity::STATUS_UNSUCCESSFUL])
             ->once()
@@ -266,12 +277,14 @@ class AcceptScoringTest extends CommandHandlerTestCase
             $taskResult
         );
 
-        $this->expectedEmailQueueSideEffect(
-            SendEcmtPartSuccessful::class,
-            ['id' => $partSuccessfulApplicationId],
-            $partSuccessfulApplicationId,
-            $taskResult
-        );
+        $taskParams = [
+            'category' => TaskEntity::CATEGORY_PERMITS,
+            'subCategory' => TaskEntity::SUBCATEGORY_PERMITS_APPLICATION_OUTCOME,
+            'description' => 'Send outcome letter',
+            'ecmtPermitApplication' => $partSuccessfulApplicationId,
+            'licence' => $partSuccessfulApplicationLicenceId
+        ];
+        $this->expectedSideEffect(CreateTask::class, $taskParams, $taskResult);
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtUnsuccessful::class,
@@ -292,8 +305,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $stockId = 35;
 
         $this->sut->shouldReceive('handleQuery')->once()
+            ->with(m::type(GetScoredPermitList::class))
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(GetScoredPermitList::class, $query);
                 $this->assertEquals($stockId, $query->getStockId());
 
                 return [
@@ -349,8 +362,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $stockId = 35;
 
         $this->sut->shouldReceive('handleQuery')->once()
+            ->with(m::type(GetScoredPermitList::class))
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(GetScoredPermitList::class, $query);
                 $this->assertEquals($stockId, $query->getStockId());
 
                 return [
@@ -392,8 +405,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->globally();
 
         $this->sut->shouldReceive('handleQuery')
+            ->with(m::type(CheckAcceptScoringPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertInstanceOf(CheckAcceptScoringPrerequisites::class, $query);
                 $this->assertEquals($stockId, $query->getId());
 
                 return [
@@ -410,25 +423,28 @@ class AcceptScoringTest extends CommandHandlerTestCase
         );
     }
 
-    private function getEcmtPermitApplicationMock($id, $licenceId, $permitsRequired, $permitsAwarded)
-    {
-        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermitApplication->shouldReceive('countPermitsAwarded')
-            ->andReturn($permitsAwarded);
-
+    private function getEcmtPermitApplicationMock(
+        $id,
+        $licenceId,
+        $permitsAwarded,
+        $successLevel,
+        $outcomeNotificationType
+    ) {
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getId')
             ->andReturn($licenceId);
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplicationEntity::class);
-        $ecmtPermitApplication->shouldReceive('getPermitsRequired')
-            ->andReturn($permitsRequired);
         $ecmtPermitApplication->shouldReceive('getId')
             ->andReturn($id);
-        $ecmtPermitApplication->shouldReceive('getIrhpPermitApplications')
-            ->andReturn([$irhpPermitApplication]);
         $ecmtPermitApplication->shouldReceive('getLicence')
             ->andReturn($licence);
+        $ecmtPermitApplication->shouldReceive('getPermitsAwarded')
+            ->andReturn($permitsAwarded);
+        $ecmtPermitApplication->shouldReceive('getSuccessLevel')
+            ->andReturn($successLevel);
+        $ecmtPermitApplication->shouldReceive('getOutcomeNotificationType')
+            ->andReturn($outcomeNotificationType);
 
         return $ecmtPermitApplication;
     }

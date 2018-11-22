@@ -29,25 +29,27 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testCreateNew()
     {
-         $status = Entity::STATUS_NOT_YET_SUBMITTED;
-         $statusRefData = new RefData($status);
+        $sourceRefData = m::mock(RefData::class);
+        $statusRefData = m::mock(RefData::class);
+        $permitTypeRefData = m::mock(RefData::class);
+        $licence = m::mock(Licence::class);
+        $dateReceived = '2017-12-25';
 
-         $permitType = Entity::PERMIT_TYPE;
-         $permitTypeRefData = new RefData($permitType);
-         $licence = m::mock(Licence::class)->makePartial(); //make partial allows to differ from what's there already
-         $dateReceived = '2017-12-25';
+        $application = Entity::createNew(
+            $sourceRefData,
+            $statusRefData,
+            $permitTypeRefData,
+            $licence,
+            $dateReceived
+        );
 
-         $application = Entity::createNew(
-             $statusRefData,
-             $permitTypeRefData,
-             $licence,
-             $dateReceived
-         );
+        $this->assertSame($sourceRefData, $application->getSource());
+        $this->assertSame($statusRefData, $application->getStatus());
+        $this->assertSame($permitTypeRefData, $application->getPermitType());
+        $this->assertSame($licence, $application->getLicence());
 
-         $this->assertEquals($status, $application->getStatus());
-         $this->assertEquals($permitType, $application->getPermitType()->getId());
-         $this->assertEquals($licence, $application->getLicence());
-         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
+        $actualDate = $application->getDateReceived()->format('Y-m-d');
+        $this->assertEquals($dateReceived, $actualDate);
     }
 
     /**
@@ -55,22 +57,21 @@ class EcmtPermitApplicationEntityTest extends EntityTester
      */
     public function testCreateNewInternal($countrys, $expectedHasRestrictedCountries)
     {
-        $status = Entity::STATUS_NOT_YET_SUBMITTED;
-        $statusRefData = new RefData($status);
-        $permitType = Entity::PERMIT_TYPE;
-        $permitTypeRefData = new RefData($permitType);
-        $licence = m::mock(Licence::class)->makePartial(); //make partial allows to differ from what's there already
+        $sourceRefData = m::mock(RefData::class);
+        $statusRefData = m::mock(RefData::class);
+        $permitTypeRefData = m::mock(RefData::class);
+        $licence = m::mock(Licence::class);
+        $dateReceived = '2017-12-25';
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
-        $declaration = 0;
+        $declaration = 1;
         $emissions = 1;
         $permitsRequired = 999;
         $trips = 666;
-        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
-        $internationalJourneyRefData = new RefData($internationalJourneys);
-        $dateReceived = '2017-12-25';
+        $internationalJourneysRefData = m::mock(RefData::class);
 
         $application = Entity::createNewInternal(
+            $sourceRefData,
             $statusRefData,
             $permitTypeRefData,
             $licence,
@@ -82,7 +83,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $emissions,
             $permitsRequired,
             $trips,
-            $internationalJourneyRefData
+            $internationalJourneysRefData
         );
 
         $ecmtPermitAppEntity = m::mock(Entity::class)->shouldAllowMockingProtectedMethods();
@@ -90,10 +91,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             ->with(Entity::SECTIONS)
             ->andReturn(['allCompleted' => true]);
 
-
-        $this->assertEquals($status, $application->getStatus());
-        $this->assertEquals($permitType, $application->getPermitType()->getId());
-        $this->assertEquals($licence, $application->getLicence());
+        $this->assertSame($sourceRefData, $application->getSource());
+        $this->assertSame($statusRefData, $application->getStatus());
+        $this->assertSame($permitTypeRefData, $application->getPermitType());
+        $this->assertSame($licence, $application->getLicence());
+        $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
         $this->assertEquals($sectors, $application->getSectors());
         $this->assertEquals($countrys, $application->getCountrys());
         $this->assertEquals($expectedHasRestrictedCountries, $application->getHasRestrictedCountries());
@@ -103,8 +105,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($emissions, $application->getEmissions());
         $this->assertEquals($permitsRequired, $application->getPermitsRequired());
         $this->assertEquals($trips, $application->getTrips());
-        $this->assertEquals($internationalJourneys, $application->getInternationalJourneys()->getId());
-        $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
+        $this->assertSame($internationalJourneysRefData, $application->getInternationalJourneys());
     }
 
     /**
@@ -229,9 +230,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-    * @dataProvider dpCancelException
-    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-    */
+     * @dataProvider dpCancelException
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
     public function testCancelException($status)
     {
         $entity = $this->createApplication($status);
@@ -239,10 +240,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     }
 
     /**
-    * Pass array of app statuses to make sure an exception is thrown
-    *
-    * @return array
-    */
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
     public function dpWithdrawException()
     {
         return [
@@ -435,6 +436,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     private function createApplication($status = Entity::STATUS_NOT_YET_SUBMITTED)
     {
         $entity = Entity::createNew(
+            m::mock(RefData::class),
             new RefData($status),
             m::mock(RefData::class),
             m::mock(Licence::class)
@@ -478,10 +480,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
      */
     public function testUpdateLicence($countrys)
     {
-        $status = Entity::STATUS_NOT_YET_SUBMITTED;
-        $statusRefData = new RefData($status);
-        $permitType = Entity::PERMIT_TYPE;
-        $permitTypeRefData = new RefData($permitType);
+        $sourceRefData = m::mock(RefData::class);
+        $statusRefData = m::mock(RefData::class);
+        $permitTypeRefData = m::mock(RefData::class);
         $licence = m::mock(Licence::class);
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
@@ -495,6 +496,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $dateReceived = '2017-12-25';
 
         $application = Entity::createNewInternal(
+            $sourceRefData,
             $statusRefData,
             $permitTypeRefData,
             $licence,
@@ -767,5 +769,108 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             sprintf('This ECMT Application has none or more than one IRHP Permit Application (id: %d)', $appId)
         );
         $entity->getFirstIrhpPermitApplication();
+    }
+
+    public function testGetPermitsAwarded()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('countPermitsAwarded')
+            ->andReturn(5);
+
+        $entity = $this->createApplicationUnderConsideration();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals(5, $entity->getPermitsAwarded());
+    }
+
+    /**
+    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+    */
+    public function testGetPermitsAwardedException()
+    {
+        $entity = $this->createApplicationAwaitingFee();
+
+        $entity->getPermitsAwarded();
+    }
+
+    /**
+     * @dataProvider dpProvideSuccessLevel
+     */
+    public function testGetSuccessLevel($permitsRequired, $permitsAwarded, $expectedSuccessLevel)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('countPermitsAwarded')
+            ->andReturn($permitsAwarded);
+
+        $entity = $this->createApplicationUnderConsideration();
+        $entity->setPermitsRequired($permitsRequired);
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals(
+            $expectedSuccessLevel,
+            $entity->getSuccessLevel()
+        );
+    }
+
+    /**
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpProvideSuccessLevel()
+    {
+        return [
+            [10, 1, Entity::SUCCESS_LEVEL_PARTIAL],
+            [10, 9, Entity::SUCCESS_LEVEL_PARTIAL],
+            [10, 0, Entity::SUCCESS_LEVEL_NONE],
+            [1, 0, Entity::SUCCESS_LEVEL_NONE],
+            [1, 1, Entity::SUCCESS_LEVEL_FULL],
+            [10, 10, Entity::SUCCESS_LEVEL_FULL]
+        ];
+    }
+
+    /**
+    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+    */
+    public function testGetSuccessLevelException()
+    {
+        $entity = $this->createApplicationAwaitingFee();
+
+        $entity->getSuccessLevel();
+    }
+
+    /**
+     * @dataProvider dpProvideOutcomeNotificationType
+     */
+    public function testGetOutcomeNotificationType($source, $expectedNotificationType)
+    {
+        $sourceRefData = m::mock(RefData::class);
+        $sourceRefData->shouldReceive('getId')
+            ->andReturn($source);
+
+        $entity = Entity::createNew(
+            $sourceRefData,
+            m::mock(RefData::class),
+            m::mock(RefData::class),
+            m::mock(Licence::class)
+        );
+
+        $this->assertEquals(
+            $expectedNotificationType,
+            $entity->getOutcomeNotificationType()
+        );
+    }
+
+    /**
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpProvideOutcomeNotificationType()
+    {
+        return [
+            [Entity::SOURCE_SELFSERVE, Entity::NOTIFICATION_TYPE_EMAIL],
+            [Entity::SOURCE_INTERNAL, Entity::NOTIFICATION_TYPE_MANUAL]
+        ];
     }
 }
