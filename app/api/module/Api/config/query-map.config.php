@@ -639,5 +639,5 @@ return [
 
     //Digital Surrender
     TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class,
-    TransferQuery\Surrender\ById::class => QueryHandler\Surrender\ById::class
+    TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class
 ];

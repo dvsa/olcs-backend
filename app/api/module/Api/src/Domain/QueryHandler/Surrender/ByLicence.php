@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-final class ById extends AbstractQueryHandler implements ToggleRequiredInterface
+final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 

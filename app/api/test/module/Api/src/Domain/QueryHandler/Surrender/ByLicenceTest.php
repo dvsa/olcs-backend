@@ -3,12 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Surrender\ById as QryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Surrender\ByLicence as QryHandler;
 use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Transfer\Query\Surrender\ById;
+use Dvsa\Olcs\Transfer\Query\Surrender\ByLicence;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
-class ByIdTest extends QueryHandlerTestCase
+class ByLicenceTest extends QueryHandlerTestCase
 {
     public function setUp()
     {
@@ -20,7 +20,7 @@ class ByIdTest extends QueryHandlerTestCase
 
     public function testQueryHandle()
     {
-        $query = ById::create(['id' => 1]);
+        $query = ByLicence::create(['id' => 1]);
         $surrender = new Surrender();
         $surrender->setId(1);
         $this->repoMap['Surrender']->shouldReceive(
