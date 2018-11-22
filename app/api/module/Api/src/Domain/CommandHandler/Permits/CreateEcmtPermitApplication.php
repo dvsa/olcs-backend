@@ -75,11 +75,12 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
      */
     private function createPermitApplicationObject(CreateEcmtPermitApplicationCmd $command): EcmtPermitApplication
     {
-            return EcmtPermitApplication::createNew(
-                $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
-                $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
-                $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
-                date('Y-m-d')
-            );
+        return EcmtPermitApplication::createNew(
+            $this->getRepo()->getRefDataReference(EcmtPermitApplication::SOURCE_SELFSERVE),
+            $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+            $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
+            $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
+            date('Y-m-d')
+        );
     }
 }

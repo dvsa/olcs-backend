@@ -35,6 +35,7 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
+            EcmtPermitApplication::SOURCE_SELFSERVE,
             EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
             EcmtPermitApplication::PERMIT_TYPE
         ];
@@ -105,11 +106,15 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(EcmtPermitApplication::class, $ecmtPermitApplication);
-        $this->assertSame(
+        $this->assertEquals(
+            EcmtPermitApplication::SOURCE_SELFSERVE,
+            $ecmtPermitApplication->getSource()->getId()
+        );
+        $this->assertEquals(
             EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
             $ecmtPermitApplication->getStatus()->getId()
         );
-        $this->assertSame(
+        $this->assertEquals(
             EcmtPermitApplication::PERMIT_TYPE,
             $ecmtPermitApplication->getPermitType()->getId()
         );

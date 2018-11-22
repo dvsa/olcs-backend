@@ -50,6 +50,8 @@ final class CreateTask extends AbstractCommand
 
     protected $irfoOrganisation;
 
+    protected $ecmtPermitApplication;
+
     protected $assignedByUser;
 
     /**
@@ -170,6 +172,14 @@ final class CreateTask extends AbstractCommand
     public function getIrfoOrganisation()
     {
         return $this->irfoOrganisation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEcmtPermitApplication()
+    {
+        return $this->ecmtPermitApplication;
     }
 
     /**
