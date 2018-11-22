@@ -15,6 +15,7 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
     const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
     const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
     const ERR_TA_PSV_SR = 'ERR_TA_PSV_SR'; // Operator already has PSV SR licence/application in same Traffic Area
+    const ERR_TA_PSV_RES = 'ERR_TA_PSV_RES'; // Operator already has PSV Restricted licence/application in same Traffic Area
 
     protected $messages = [];
 
@@ -89,7 +90,8 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
                 !$orgLicence->hasQueuedRevocation() &&
                 $orgLicence->getTrafficArea()->getId() === $trafficAreaId
             ) {
-                if ($errorCode = $this->checkLicenceType($application, $orgLicence)) {
+                $errorCode = $this->licenceConflictError($application, $orgLicence);
+                if ($errorCode) {
                     return $this->getResponse($errorCode, $orgLicence->getTrafficArea()->getName());
                 }
             }
@@ -108,7 +110,8 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
                     $orgApplication->getTrafficArea() &&
                     $orgApplication->getTrafficArea()->getId() === $trafficAreaId
                 ) {
-                    if ($errorCode = $this->checkLicenceType($application, $orgApplication)) {
+                    $errorCode = $this->applicationConflictError($application, $orgApplication);
+                    if ($errorCode) {
                         return $this->getResponse($errorCode, $orgApplication->getTrafficArea()->getName());
                     }
                 }
@@ -132,38 +135,88 @@ class TrafficAreaValidator implements \Zend\ServiceManager\FactoryInterface
     }
 
     /**
-     * @param Application $application
-     * @param type $applicationOrLicence
-     * @return boolean
+     * @param Application $application         the ongoing application
+     * @param Application $existingApplication with the same traffic area of the ongoing application
+     * @return bool|string
      */
-    private function checkLicenceType(Application $application, $applicationOrLicence)
+    private function applicationConflictError(Application $application, Application $existingApplication)
     {
-        // if its a new goods application and there is an 'active'
-        // goods licence or new application with the same traffic area
+        // if its a new goods application and there is an
+        // existing application (not variation) with the same traffic area
         if ($application->isGoods() &&
-            $applicationOrLicence->isGoods()
+            $existingApplication->isGoods()
         ) {
             return self::ERR_TA_GOODS;
         }
 
-        // if its a new PSV application (excluding special restricted) and there is an 'active'
-        // PSV licence or new application with the same traffic area
+        // if its a new PSV application (excluding special restricted)
+        // and there is an existing PSV application (not variation) with the same traffic area
         if ($application->isPsv() &&
             !$application->isSpecialRestricted() &&
-            $applicationOrLicence->isPsv() &&
-            !$applicationOrLicence->isSpecialRestricted()
+            $existingApplication->isPsv() &&
+            !$existingApplication->isSpecialRestricted()
+        ) {
+            return self::ERR_TA_PSV;
+        }
+
+        // if its a new PSV special restricted application
+        // and there is an existing Special restricted PSV application (not variation) with the same traffic area
+        if ($application->isPsv() &&
+            $application->isSpecialRestricted() &&
+            $existingApplication->isPsv() &&
+            $existingApplication->isSpecialRestricted()
+        ) {
+            return self::ERR_TA_PSV_SR;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Application $application the ongoing application
+     * @param Licence     $licence     with the same traffic area of the ongoing application
+     * @return bool|string
+     */
+    private function licenceConflictError(Application $application, Licence $licence)
+    {
+        // if its a new goods application and there is an 'active'
+        // goods licence with the same traffic area
+        if ($application->isGoods() &&
+            $licence->isGoods()
+        ) {
+            return self::ERR_TA_GOODS;
+        }
+
+        // if its a new PSV application (excluding restricted and special restricted)
+        // and there is an 'active' PSV licence with the same traffic area
+        if ($application->isPsv() &&
+            !$application->isSpecialRestricted() &&
+            !$application->isRestricted() &&
+            $licence->isPsv() &&
+            !$licence->isSpecialRestricted() &&
+            !$licence->isRestricted()
         ) {
             return self::ERR_TA_PSV;
         }
 
         // if its a new PSV special restricted application and there is an 'active'
-        // PSV Special restricted licence or new application
+        // PSV Special restricted licence
         if ($application->isPsv() &&
             $application->isSpecialRestricted() &&
-            $applicationOrLicence->isPsv() &&
-            $applicationOrLicence->isSpecialRestricted()
+            $licence->isPsv() &&
+            $licence->isSpecialRestricted()
         ) {
             return self::ERR_TA_PSV_SR;
+        }
+
+        // if its a new PSV special restricted application
+        // and there is an 'active' PSV Restricted licence
+        if ($application->isPsv() &&
+            $application->isRestricted() &&
+            $licence->isPsv() &&
+            $licence->isRestricted()
+        ) {
+            return self::ERR_TA_PSV_RES;
         }
 
         return false;
