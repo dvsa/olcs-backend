@@ -638,5 +638,6 @@ return [
     Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
     //Digital Surrender
-    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class
+    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class,
+    TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class
 ];
