@@ -81,7 +81,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
      *
      * @return void
      */
-    public function processOtherServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
+    private function processOtherServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
     {
         $idsOfOtherServiceNumbers = [];
 
