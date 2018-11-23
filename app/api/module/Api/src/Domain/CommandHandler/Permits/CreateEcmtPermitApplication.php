@@ -53,7 +53,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
         }
 
         /** @var CreateEcmtPermitApplicationCmd $ecmtPermitApplication */
-        $ecmtPermitApplication = $this->createPermitApplicationObject($command, $licence);
+        $ecmtPermitApplication = $this->createPermitApplicationObject($licence);
 
         $this->getRepo()->save($ecmtPermitApplication);
 
