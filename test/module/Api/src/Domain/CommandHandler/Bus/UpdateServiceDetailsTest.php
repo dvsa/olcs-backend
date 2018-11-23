@@ -60,7 +60,7 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
      * @note         we don't test the two dates here relate to each other properly, that is tested elsewhere
      * First date is included for completeness
      *
-     * @dataProvider testCommandHandlerProvider
+     * @dataProvider testHandleCommandProvider
      *
      * @param bool  $createFee
      * @param array $expectedData
@@ -210,7 +210,7 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
     /**
      * return array
      */
-    public function testCommandHandlerProvider()
+    public function testHandleCommandProvider()
     {
         return [
             [
