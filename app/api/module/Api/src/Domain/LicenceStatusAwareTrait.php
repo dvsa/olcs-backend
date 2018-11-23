@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 trait LicenceStatusAwareTrait
@@ -46,5 +45,4 @@ trait LicenceStatusAwareTrait
             Licence::LICENCE_STATUS_CURTAILED,
         ];
     }
-
 }

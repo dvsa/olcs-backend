@@ -321,6 +321,7 @@ class OrganisationEntityTest extends EntityTester
                             LicenceEntity::LICENCE_STATUS_VALID,
                             LicenceEntity::LICENCE_STATUS_SUSPENDED,
                             LicenceEntity::LICENCE_STATUS_CURTAILED,
+                            LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
                         ],
                         $expr->getValue()->getValue()
                     );
@@ -358,6 +359,7 @@ class OrganisationEntityTest extends EntityTester
                             LicenceEntity::LICENCE_STATUS_VALID,
                             LicenceEntity::LICENCE_STATUS_SUSPENDED,
                             LicenceEntity::LICENCE_STATUS_CURTAILED,
+                            LicenceEntity::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
                         ],
                         $expr[0]->getValue()->getValue()
                     );
