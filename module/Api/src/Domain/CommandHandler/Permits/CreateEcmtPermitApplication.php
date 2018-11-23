@@ -29,7 +29,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock'];
+    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock', 'Licence'];
 
     /**
      * Handle command
@@ -45,7 +45,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
          * @var LicenceEntity                  $licence
          * @var CreateEcmtPermitApplicationCmd $command
          */
-        $licence = $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence());
+        $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
         if (!$licence->canMakeEcmtApplication()) {
             $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
@@ -53,7 +53,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
         }
 
         /** @var CreateEcmtPermitApplicationCmd $ecmtPermitApplication */
-        $ecmtPermitApplication = $this->createPermitApplicationObject($command, $licence);
+        $ecmtPermitApplication = $this->createPermitApplicationObject($licence);
 
         $this->getRepo()->save($ecmtPermitApplication);
 
