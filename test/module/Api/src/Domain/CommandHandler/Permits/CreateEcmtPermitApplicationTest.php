@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
@@ -137,24 +138,25 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    /**
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
     public function testHandleCommandForbidden()
     {
         $licenceId = 200;
+        $licNo = 'OB1234567';
         $command = CreateEcmtPermitApplicationCmd::create(['licence' => $licenceId]);
 
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn(false);
         $licence->shouldReceive('getId')->once()->withNoArgs()->andReturn($licenceId);
-        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn('OB1234567');
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
             ->with($licenceId)
             ->once()
             ->andReturn($licence);
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Licence ID ' . $licenceId . ' with number ' . $licNo . ' is unable to make an ECMT application');
 
         $this->sut->handleCommand($command);
     }
