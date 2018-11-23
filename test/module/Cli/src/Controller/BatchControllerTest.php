@@ -672,7 +672,9 @@ class BatchControllerTest extends MockeryTestCase
                     ->addMessage('unit_message')
             );
 
-        $this->mockConsole->shouldReceive('writeLine')->times(2);
+        $this->mockConsole
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/' . addslashes(CliCommand\DataGovUkExport::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
         $this->sut->dataGovUkExportAction();
     }
@@ -697,7 +699,8 @@ class BatchControllerTest extends MockeryTestCase
             );
 
         $this->mockConsole
-            ->shouldReceive('writeLine')->times(2);
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/' . preg_quote(CliCommand\DataDvaNiExport::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
         $this->sut->dataDvaNiExportAction();
     }
@@ -861,7 +864,9 @@ class BatchControllerTest extends MockeryTestCase
             );
 
         $this->mockConsole
-            ->shouldReceive('writeLine')->times(2);
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/' . addslashes(CliCommand\ImportUsersFromCsv::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
+
 
         $this->sut->importUsersFromCsvAction();
     }
