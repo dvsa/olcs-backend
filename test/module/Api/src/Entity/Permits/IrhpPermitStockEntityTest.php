@@ -92,7 +92,7 @@ class IrhpPermitStockEntityTest extends EntityTester
             '2019-01-01',
             '2019-02-01',
             1400,
-            $stock
+            $status
         );
 
         $stock->setIrhpPermitRanges($data['irhpPermitRanges']);
