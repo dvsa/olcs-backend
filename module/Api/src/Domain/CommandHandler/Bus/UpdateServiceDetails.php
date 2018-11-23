@@ -81,7 +81,7 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
      *
      * @return void
      */
-    private function processOtherServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
+    public function processOtherServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
     {
         $idsOfOtherServiceNumbers = [];
 
@@ -107,7 +107,9 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
                 }
 
                 $this->getRepo('BusRegOtherService')->save($otherServiceEntity);
-                $this->result->addId('BusRegOtherService', $otherServiceEntity->getId());
+
+
+                $this->result->addId('BusRegOtherService', $otherServiceEntity->getId(), true);
                 $this->result->addMessage('Other Bus Service/s saved successfully');
                 $idsOfOtherServiceNumbers[] = $otherServiceEntity->getId();
             }
