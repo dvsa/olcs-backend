@@ -16,7 +16,6 @@ class ForbiddenException extends Exception
         }
 
         $this->messages = [$message];
-
         parent::__construct($message);
     }
 }
