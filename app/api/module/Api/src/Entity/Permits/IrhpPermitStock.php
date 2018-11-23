@@ -54,11 +54,36 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
         return $this;
     }
 
+    /**
+     * Checks if there are ranges existing on the Permit Stock
+     *
+     * @return boolean
+     */
+    private function canDeletePermitRanges()
+    {
+        return count($this->irhpPermitRanges) === 0;
+    }
+
+    /**
+     * Checks if there are windows existing on the Permit Stock.
+     *
+     * @return boolean
+     */
+    private function canDeletePermitWindows()
+    {
+        return count($this->irhpPermitWindows) === 0;
+    }
+
+    /**
+     * Checks whether the Permit Stock can be deleted.
+     *
+     * @return boolean
+     */
     public function canDelete()
     {
         return
-            count($this->irhpPermitRanges) === 0 &&
-            count($this->irhpPermitWindows) === 0;
+            $this->canDeletePermitRanges() &&
+            $this->canDeletePermitWindows();
     }
 
     /**
