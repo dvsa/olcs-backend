@@ -6,6 +6,8 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
@@ -76,6 +78,66 @@ class IrhpPermitStockEntityTest extends EntityTester
             $statusDescription,
             $stock->getStatusDescription()
         );
+    }
+
+    /**
+     * @dataProvider canDeleteProvider
+     */
+    public function testCanDelete($data, $expected)
+    {
+        $status = m::mock(RefData::class);
+
+        $stock = Entity::create(
+            m::mock(IrhpPermitType::class),
+            '2019-01-01',
+            '2019-02-01',
+            1400,
+            $stock
+        );
+
+        $stock->setIrhpPermitRanges($data['irhpPermitRanges']);
+        $stock->setIrhpPermitWindows($data['irhpPermitWindows']);
+
+        $this->assertEquals($expected, $stock->canDelete($data));
+    }
+
+    /**
+     * Data provider
+     *
+     * @return array
+     */
+    public function canDeleteProvider()
+    {
+        return [
+            'valid delete' => [
+                [
+                    'irhpPermitRanges' => [],
+                    'irhpPermitWindows' => [],
+                ],
+                true,
+            ],
+            'existing range' => [
+                [
+                    'irhpPermitRanges' => [m::mock(IrhpPermitRange::class)],
+                    'irhpPermitWindows' => [],
+                ],
+                false,
+            ],
+            'existing window' => [
+                [
+                    'irhpPermitRanges' => [],
+                    'irhpPermitWindows' => [m::mock(IrhpPermitWindow::class)],
+                ],
+                false,
+            ],
+            'existing window and range' => [
+                [
+                    'irhpPermitRanges' => [m::mock(IrhpPermitRange::class)],
+                    'irhpPermitWindows' => [m::mock(IrhpPermitWindow::class)],
+                ],
+                false,
+            ]
+        ];
     }
 
     /**
