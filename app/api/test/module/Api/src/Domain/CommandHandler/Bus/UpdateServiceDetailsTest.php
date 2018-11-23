@@ -3,9 +3,12 @@
 /**
  * Update Service Details Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateServiceDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
@@ -54,13 +57,15 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
     /**
      * testHandleCommand
      *
-     * @note we don't test the two dates here relate to each other properly, that is tested elsewhere
+     * @note         we don't test the two dates here relate to each other properly, that is tested elsewhere
      * First date is included for completeness
      *
-     * @dataProvider createFeeProvider
-     * @param bool $createFee
+     * @dataProvider testHandleCommandProvider
+     *
+     * @param bool  $createFee
+     * @param array $expectedData
      */
-    public function testHandleCommand($createFee)
+    public function testHandleCommand($createFee, $expectedData)
     {
         $busRegId = 99;
         $serviceNumber = 12345;
@@ -73,21 +78,26 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         $endDate = '';
         $busNoticePeriod = 2;
         $otherServices = [
-            0 => [
-                'id' => 1,
+            [
+                'id' => 19,
                 'version' => 1,
-                'serviceNo' => 99999
+                'serviceNo' => 0,
             ],
-            1 => [
+            [
+                'id' => 21,
+                'version' => 1,
+                'serviceNo' => '1b',
+            ],
+            [
+                'id' => 22,
+                'version' => 1,
+                'serviceNo' => null,
+            ],
+            [
                 'id' => null,
                 'version' => 1,
-                'serviceNo' => 88888
+                'serviceNo' => 1,
             ],
-            2 => [
-                'id' => 2,
-                'version' => 1,
-                'serviceNo' => null
-            ]
         ];
         $busServiceTypes = [
             0 => 5
@@ -110,10 +120,32 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ]
         );
 
-        /** @var BusRegOtherServiceEntity $busReg */
-        $mockBusRegOtherServiceEntity = m::mock(BusRegOtherServiceEntity::class);
-        $mockBusRegOtherServiceEntity->shouldReceive('setServiceNo');
-        $mockBusRegOtherServiceEntity->shouldReceive('getId');
+        $mockOtherService = $this->repoMap['BusRegOtherService'];
+        $mockedEntity = m::mock(BusRegOtherServiceEntity::class)->shouldReceive('setServiceNo')
+            ->with(0)
+            ->getMock();
+        $mockedEntity->shouldReceive('getId')->andReturn(19);
+
+        $mockedEntity2 = m::mock(BusRegOtherServiceEntity::class)->shouldReceive('setServiceNo')
+            ->with('1b')
+            ->getMock();
+        $mockedEntity2->shouldReceive('getId')->andReturn(21);
+
+
+        $mockOtherService->shouldReceive('fetchById')
+            ->with(19, 1, 1)
+            ->andReturn(
+                $mockedEntity
+            )->getMock();
+
+        $mockOtherService->shouldReceive('fetchById')
+            ->with(21, 1, 1)
+            ->andReturn(
+                $mockedEntity2
+            )->getMock();
+        $mockOtherService->shouldReceive('save')->with($mockedEntity)->getMock();
+        $mockOtherService->shouldReceive('save')->with($mockedEntity2)->getMock();
+        $mockOtherService->shouldReceive('save')->with(any(BusRegOtherService::class));
 
         /** @var BusRegOtherServiceEntity $busReg */
         $mockBusRegObjectOtherServiceEntity = m::mock(BusRegOtherServiceEntity::class);
@@ -147,13 +179,6 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             ->with(m::type(BusRegEntity::class))
             ->once();
 
-        $this->repoMap['BusRegOtherService']->shouldReceive('fetchById')
-            ->andReturn($mockBusRegOtherServiceEntity)
-            ->shouldReceive('save')
-            ->with(m::type(BusRegOtherServiceEntity::class))
-            ->shouldReceive('delete')
-            ->with(m::type(BusRegOtherServiceEntity::class));
-
         $mockBusNoticePeriodEntity = m::mock(BusNoticePeriodEntity::class);
 
         $this->repoMap['BusNoticePeriod']->shouldReceive('fetchById')
@@ -162,24 +187,55 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
         if ($createFee) {
             $createFeeResult = new Result();
             $createFeeResult
-                ->addId('fee', 99)
+                ->addId('fee', 999)
                 ->addMessage('bus reg fee created');
             $this->expectedSideEffect(CmdCreateBusFee::class, ['id' => $busRegId], $createFeeResult);
         }
 
+        $busReg = m::mock(BusReg::class);
+
+        $busReg->shouldReceive('getOtherServices')->andReturn(
+            [
+                (new BusRegOtherService($busReg, 19))->setId(19),
+                (new BusRegOtherService($busReg, 20))->setId(20)
+            ]
+        )->getMock();
+        $mockOtherService->shouldReceive('delete')->times(1);
+
         $result = $this->sut->handleCommand($command);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertSame($expectedData, $result->getIds());
     }
 
     /**
      * return array
      */
-    public function createFeeProvider()
+    public function testHandleCommandProvider()
     {
         return [
-            [true],
-            [false]
+            [
+                'createFee' => true,
+                'expectedResult' => [
+                    'BusRegOtherService' => [
+                        19,
+                        21,
+                        null,
+                    ],
+                    'fee' => 999,
+                    'BusReg' => 99,
+                ]
+            ],
+            [
+                'createFee' => false,
+                'expectedResult' => [
+                    'BusRegOtherService' => [
+                        19,
+                        21,
+                        null,
+                    ],
+                    'BusReg' => 99,
+                ]
+            ]
         ];
     }
 }
