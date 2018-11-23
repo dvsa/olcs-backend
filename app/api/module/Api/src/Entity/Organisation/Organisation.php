@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Organisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -33,6 +34,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Organisation extends AbstractOrganisation implements ContextProviderInterface, OrganisationProviderInterface
 {
+    use LicenceStatusAwareTrait;
+
     const ORG_TYPE_PARTNERSHIP = 'org_t_p';
     const ORG_TYPE_OTHER = 'org_t_pa';
     const ORG_TYPE_REGISTERED_COMPANY = 'org_t_rc';
@@ -278,11 +281,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $criteria->where(
             $criteria->expr()->in(
                 'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED,
-                ]
+                $this->getLicenceStatusesActive()
             )
         );
 
