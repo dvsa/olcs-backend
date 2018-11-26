@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -23,10 +24,12 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
 {
     use ToggleAwareTrait;
 
+    const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an ECMT application';
+
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock'];
+    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock', 'Licence'];
 
     /**
      * Handle command
@@ -34,11 +37,23 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
      * @param CommandInterface $command command
      *
      * @return Result
+     * @throws ForbiddenException
      */
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var LicenceEntity                  $licence
+         * @var CreateEcmtPermitApplicationCmd $command
+         */
+        $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
+
+        if (!$licence->canMakeEcmtApplication()) {
+            $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
+            throw new ForbiddenException($message);
+        }
+
         /** @var CreateEcmtPermitApplicationCmd $ecmtPermitApplication */
-        $ecmtPermitApplication = $this->createPermitApplicationObject($command);
+        $ecmtPermitApplication = $this->createPermitApplicationObject($licence);
 
         $this->getRepo()->save($ecmtPermitApplication);
 
@@ -69,17 +84,17 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     /**
      * Create EcmtPermitApplication object
      *
-     * @param CreateEcmtPermitApplicationCmd $command Command
+     * @param LicenceEntity $licence licence
      *
      * @return EcmtPermitApplication
      */
-    private function createPermitApplicationObject(CreateEcmtPermitApplicationCmd $command): EcmtPermitApplication
+    private function createPermitApplicationObject(LicenceEntity $licence): EcmtPermitApplication
     {
         return EcmtPermitApplication::createNew(
             $this->getRepo()->getRefDataReference(EcmtPermitApplication::SOURCE_SELFSERVE),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
-            $this->getRepo()->getReference(LicenceEntity::class, $command->getLicence()),
+            $licence,
             date('Y-m-d')
         );
     }
