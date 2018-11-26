@@ -4,10 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Domain\Repository\Fee;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
@@ -35,10 +32,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
-        $this->mockRepo('Fee', Fee::class);
         $this->mockRepo('FeeType', FeeType::class);
-        $this->mockRepo('IrhpPermitRange', IrhpPermitRange::class);
-        $this->mockRepo('IrhpPermit', IrhpPermit::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
 
         $this->sut = m::mock(AcceptScoring::class)
@@ -85,14 +79,6 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->with('IRHP_GV_ECMT_100_PERMIT_FEE')
             ->andReturn($feeType);
 
-        $this->repoMap['IrhpPermitRange']->shouldReceive('getCombinedRangeSize')
-            ->with($stockId)
-            ->andReturn(54);
-
-        $this->repoMap['IrhpPermit']->shouldReceive('getPermitCount')
-            ->with($stockId)
-            ->andReturn(33);
-
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchById')
@@ -135,16 +121,6 @@ class AcceptScoringTest extends CommandHandlerTestCase
         );
 
         $this->sut->shouldReceive('handleQuery')->once()
-            ->with(m::type(GetScoredPermitList::class))
-            ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertEquals($stockId, $query->getStockId());
-
-                return [
-                    'result' => [],
-                ];
-            });
-
-        $this->sut->shouldReceive('handleQuery')->once()
             ->with(m::type(CheckAcceptScoringPrerequisites::class))
             ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertEquals($stockId, $query->getId());
@@ -154,6 +130,17 @@ class AcceptScoringTest extends CommandHandlerTestCase
                     'message' => 'Accept scoring permitted'
                 ];
             });
+
+        $this->sut->shouldReceive('handleQuery')->once()
+            ->with(m::type(GetScoredPermitList::class))
+            ->andReturnUsing(function ($query) use ($stockId) {
+                $this->assertEquals($stockId, $query->getStockId());
+
+                return [
+                    'result' => [],
+                ];
+            });
+
 
         $successfulApplication->shouldReceive('proceedToAwaitingFee')
             ->with($this->refData[EcmtPermitApplicationEntity::STATUS_AWAITING_FEE])
@@ -293,7 +280,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             $taskResult
         );
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUnderConsiderationApplicationIds')
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchInScopeApplicationIds')
             ->with($stockId)
             ->andReturn([$successfulApplicationId, $partSuccessfulApplicationId, $unsuccessfulApplicationId]);
 
@@ -303,16 +290,6 @@ class AcceptScoringTest extends CommandHandlerTestCase
     public function testIncorrectStockStatus()
     {
         $stockId = 35;
-
-        $this->sut->shouldReceive('handleQuery')->once()
-            ->with(m::type(GetScoredPermitList::class))
-            ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertEquals($stockId, $query->getStockId());
-
-                return [
-                    'result' => [],
-                ];
-            });
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
@@ -360,16 +337,6 @@ class AcceptScoringTest extends CommandHandlerTestCase
     public function testPrerequisitesFail()
     {
         $stockId = 35;
-
-        $this->sut->shouldReceive('handleQuery')->once()
-            ->with(m::type(GetScoredPermitList::class))
-            ->andReturnUsing(function ($query) use ($stockId) {
-                $this->assertEquals($stockId, $query->getStockId());
-
-                return [
-                    'result' => [],
-                ];
-            });
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')

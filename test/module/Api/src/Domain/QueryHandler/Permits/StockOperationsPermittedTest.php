@@ -48,20 +48,27 @@ class StockOperationsPermittedTest extends QueryHandlerTestCase
             ->andReturn($stock);
 
         $queryHandler = m::mock(AbstractQueryHandler::class);
+
         $queryHandler->shouldReceive('handleQuery')
+            ->with(m::type(QueueRunScoringPermittedQry::class))
             ->andReturnUsing(function ($query) use ($stockId) {
                 $this->assertEquals($stockId, $query->getId());
-                if ($query instanceof QueueRunScoringPermittedQry) {
-                    return [
-                        'result' => 'scoringPermittedResult',
-                        'message' => 'scoringPermittedMessage'
-                    ];
-                } elseif ($query instanceof QueueAcceptScoringPermittedQry) {
-                    return [
-                        'result' => 'acceptPermittedResult',
-                        'message' => 'acceptPermittedMessage'
-                    ];
-                }
+
+                return [
+                    'result' => 'scoringPermittedResult',
+                    'message' => 'scoringPermittedMessage'
+                ];
+            });
+
+        $queryHandler->shouldReceive('handleQuery')
+            ->with(m::type(QueueAcceptScoringPermittedQry::class))
+            ->andReturnUsing(function ($query) use ($stockId) {
+                $this->assertEquals($stockId, $query->getId());
+
+                return [
+                    'result' => 'acceptPermittedResult',
+                    'message' => 'acceptPermittedMessage'
+                ];
             });
 
         $this->sut->shouldReceive('getQueryHandler')

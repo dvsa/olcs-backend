@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -18,7 +17,7 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
  * batch process
  *
  */
-final class UploadScoringResult extends AbstractCommandHandler implements ToggleRequiredInterface
+final class UploadScoringResult extends ScoringCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -36,6 +35,8 @@ final class UploadScoringResult extends AbstractCommandHandler implements Toggle
     */
     public function handleCommand(CommandInterface $command)
     {
+        $this->profileMessage('upload scoring result...');
+
         $result = new Result();
 
         $csvContent = $command->getCsvContent();

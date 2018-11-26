@@ -45,7 +45,7 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements To
 
         $assignedPermits = $this->getRepo('IrhpPermit')->getPermitCount($stockId);
         $permitsAvailable = $combinedRangeSize - $assignedPermits;
-        $permitsRequired = $this->getRepo('IrhpCandidatePermit')->getSuccessfulCount($stockId);
+        $permitsRequired = $this->getRepo('IrhpCandidatePermit')->getSuccessfulCountInScope($stockId);
 
         if ($permitsAvailable < $permitsRequired) {
             return $this->generateResponse(
