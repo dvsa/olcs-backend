@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -238,5 +239,17 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     {
         $transportManagerApplication->setOpDigitalSignature($digitalSignature);
         $transportManagerApplication->setOpSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
+    }
+
+
+    private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $surrenderId)
+    {
+        $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
+            [
+                'digitalSignature' => $digitalSignature,
+                'id' => $surrenderId,
+                'status' => $this->getRepo()->getRefdataReference(Entity\System\RefData::)
+            ]
+        ))
     }
 }
