@@ -40,8 +40,6 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
         /** @var UpdateServiceDetailsCmd $command */
         /** @var BusReg $busReg */
 
-        $result = new Result();
-
         $busReg = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
         $busRegId = $busReg->getId();
 
@@ -62,33 +60,34 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $this->getRepo()->save($busReg);
 
-        $this->processServiceNumbers($busReg, $command->getOtherServices());
+        $this->processOtherServiceNumbers($busReg, $command->getOtherServices());
 
         if ($busReg->shouldCreateFee()) {
-            $result->merge($this->handleSideEffect($this->createBusFeeCommand($busRegId)));
+            $this->result->merge($this->handleSideEffect($this->createBusFeeCommand($busRegId)));
         }
 
-        $result->addId('BusReg', $busRegId);
-        $result->addMessage('Bus registration saved successfully');
+        $this->result->addId('BusReg', $busRegId);
+        $this->result->addMessage('Bus registration saved successfully');
 
-        return $result;
+
+        return $this->result;
     }
 
     /**
-     * Process service numbers
+     * Process other service numbers
      *
      * @param BusReg $busReg              Bus reg
      * @param array  $otherServiceNumbers Other service numbers
      *
-     * @return array
+     * @return void
      */
-    private function processServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
+    private function processOtherServiceNumbers(BusReg $busReg, array $otherServiceNumbers)
     {
-        $reduced = [];
+        $idsOfOtherServiceNumbers = [];
 
         if (!empty($otherServiceNumbers)) {
             foreach ($otherServiceNumbers as $serviceNumber) {
-                if (empty($serviceNumber['serviceNo'])) {
+                if (is_null($serviceNumber['serviceNo'])) {
                     // filter out empty values
                     continue;
                 }
@@ -108,18 +107,20 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
                 }
 
                 $this->getRepo('BusRegOtherService')->save($otherServiceEntity);
-                $reduced[] = $otherServiceEntity->getId();
+
+
+                $this->result->addId('BusRegOtherService', $otherServiceEntity->getId(), true);
+                $this->result->addMessage('Other Bus Service/s saved successfully');
+                $idsOfOtherServiceNumbers[] = $otherServiceEntity->getId();
             }
 
             // remove the remaining records
             foreach ($busReg->getOtherServices() as $otherServiceEntity) {
-                if (!in_array($otherServiceEntity->getId(), $reduced)) {
+                if (!in_array($otherServiceEntity->getId(), $idsOfOtherServiceNumbers)) {
                     $this->getRepo('BusRegOtherService')->delete($otherServiceEntity);
                 }
             }
         }
-
-        return $reduced;
     }
 
     /**

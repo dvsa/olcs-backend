@@ -6,6 +6,8 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
@@ -79,6 +81,66 @@ class IrhpPermitStockEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider canDeleteProvider
+     */
+    public function testCanDelete($data, $expected)
+    {
+        $status = m::mock(RefData::class);
+
+        $stock = Entity::create(
+            m::mock(IrhpPermitType::class),
+            '2019-01-01',
+            '2019-02-01',
+            1400,
+            $status
+        );
+
+        $stock->setIrhpPermitRanges($data['irhpPermitRanges']);
+        $stock->setIrhpPermitWindows($data['irhpPermitWindows']);
+
+        $this->assertEquals($expected, $stock->canDelete($data));
+    }
+
+    /**
+     * Data provider
+     *
+     * @return array
+     */
+    public function canDeleteProvider()
+    {
+        return [
+            'valid delete' => [
+                [
+                    'irhpPermitRanges' => [],
+                    'irhpPermitWindows' => [],
+                ],
+                true,
+            ],
+            'existing range' => [
+                [
+                    'irhpPermitRanges' => [m::mock(IrhpPermitRange::class)],
+                    'irhpPermitWindows' => [],
+                ],
+                false,
+            ],
+            'existing window' => [
+                [
+                    'irhpPermitRanges' => [],
+                    'irhpPermitWindows' => [m::mock(IrhpPermitWindow::class)],
+                ],
+                false,
+            ],
+            'existing window and range' => [
+                [
+                    'irhpPermitRanges' => [m::mock(IrhpPermitRange::class)],
+                    'irhpPermitWindows' => [m::mock(IrhpPermitWindow::class)],
+                ],
+                false,
+            ]
+        ];
+    }
+
+    /**
      * @dataProvider statusAllowsQueueRunScoringProvider
      */
     public function testStatusAllowsQueueRunScoring($statusId, $expectedResult)
@@ -102,7 +164,7 @@ class IrhpPermitStockEntityTest extends EntityTester
             [Entity::STATUS_SCORING_UNEXPECTED_FAIL, true],
             [Entity::STATUS_ACCEPT_PENDING, false],
             [Entity::STATUS_ACCEPT_IN_PROGRESS, false],
-            [Entity::STATUS_ACCEPT_SUCCESSFUL, false],
+            [Entity::STATUS_ACCEPT_SUCCESSFUL, true],
             [Entity::STATUS_ACCEPT_PREREQUISITE_FAIL, true],
             [Entity::STATUS_ACCEPT_UNEXPECTED_FAIL, false],
         ];
@@ -218,6 +280,7 @@ class IrhpPermitStockEntityTest extends EntityTester
             [Entity::STATUS_SCORING_PREREQUISITE_FAIL],
             [Entity::STATUS_SCORING_UNEXPECTED_FAIL],
             [Entity::STATUS_ACCEPT_PREREQUISITE_FAIL],
+            [Entity::STATUS_ACCEPT_SUCCESSFUL],
         ];
     }
 
@@ -261,11 +324,6 @@ class IrhpPermitStockEntityTest extends EntityTester
                 Entity::STATUS_ACCEPT_IN_PROGRESS,
                 'Accept in progress',
                 ['This stock is not in the correct status to proceed to scoring pending (Accept in progress)']
-            ],
-            [
-                Entity::STATUS_ACCEPT_SUCCESSFUL,
-                'Accept successful',
-                ['This stock is not in the correct status to proceed to scoring pending (Accept successful)']
             ],
             [
                 Entity::STATUS_ACCEPT_UNEXPECTED_FAIL,

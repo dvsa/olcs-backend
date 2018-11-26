@@ -45,20 +45,20 @@ class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCount')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCountInScope')
             ->with($stockId, 4)
             ->andReturn(9);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCount')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCountInScope')
             ->with($stockId, 6)
             ->andReturn(6);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCount')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCountInScope')
             ->with($stockId, 8)
             ->andReturn(8);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIds')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIdsInScope')
             ->with($stockId, 4)
             ->andReturn([4, 5, 6]);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIds')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIdsInScope')
             ->with($stockId, 8)
             ->andReturn([12, 14, 20, 25]);
 

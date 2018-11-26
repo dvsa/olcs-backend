@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 return [
     QueryHandler\IrhpPermit\ById::class => IsInternalAdmin::class,
     QueryHandler\IrhpPermit\GetList::class => IsInternalAdmin::class,
+    QueryHandler\IrhpPermit\GetListByEcmtId::class => IsInternalAdmin::class,
     CommandHandler\IrhpPermit\Replace::class => IsInternalUser::class,
     CommandHandler\IrhpPermit\CreateReplacement::class => IsSideEffect::class,
     QueryHandler\IrhpPermit\ByPermitNumber::class => NotIsAnonymousUser::class,

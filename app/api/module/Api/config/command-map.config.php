@@ -1130,15 +1130,14 @@ return [
     TransferCommand\Permits\QueueAcceptScoring::class => CommandHandler\Permits\QueueAcceptScoring::class,
 
     // Cli - Permits
-    CommandCli\Permits\ResetScoring::class => CommandHandlerCli\Permits\ResetScoring::class,
     CommandCli\Permits\MarkSuccessfulDaPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulDaPermitApplications::class,
     CommandCli\Permits\MarkSuccessfulRemainingPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulRemainingPermitApplications::class,
     CommandCli\Permits\MarkSuccessfulSectorPermitApplications::class =>
         CommandHandlerCli\Permits\MarkSuccessfulSectorPermitApplications::class,
-    CommandCli\Permits\CalculateRandomAppScore::class =>
-        CommandHandlerCli\Permits\CalculateRandomAppScore::class,
+    CommandCli\Permits\InitialiseScope::class =>
+        CommandHandlerCli\Permits\InitialiseScope::class,
     CommandCli\Permits\ApplyRangesToSuccessfulPermitApplications::class =>
         CommandHandlerCli\Permits\ApplyRangesToSuccessfulPermitApplications::class,
     CommandCli\Permits\UploadScoringResult::class =>
