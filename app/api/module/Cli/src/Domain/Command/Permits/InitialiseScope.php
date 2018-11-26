@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Calculate randomised app score
+ * Initialise scope
  *
  */
 namespace Dvsa\Olcs\Cli\Domain\Command\Permits;
@@ -10,8 +10,8 @@ use Dvsa\Olcs\Transfer\Util\Annotation as Transfer;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
- * Calculate randomised app score
+ * Initialise scope
  */
-final class CalculateRandomAppScore extends AbstractStockIdCommand
+final class InitialiseScope extends AbstractStockIdCommand
 {
 }
