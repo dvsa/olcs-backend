@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\CheckRunScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckRunScoringPrerequisites as CheckRunScoringPrerequisitesQry;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
@@ -18,8 +19,9 @@ class CheckRunScoringPrerequisitesTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new CheckRunScoringPrerequisites();
-        $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
+        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
+        $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
 
         parent::setUp();
@@ -30,6 +32,7 @@ class CheckRunScoringPrerequisitesTest extends QueryHandlerTestCase
      */
     public function testHandleQuery(
         $lastOpenWindow,
+        $applicationIds,
         $combinedRangeSize,
         $permitCount,
         $expectedResult,
@@ -46,6 +49,10 @@ class CheckRunScoringPrerequisitesTest extends QueryHandlerTestCase
                 ->with($stockId)
                 ->andReturn($lastOpenWindow);
         }
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchApplicationIdsAwaitingScoring')
+            ->with($stockId)
+            ->andReturn($applicationIds);
 
         $this->repoMap['IrhpPermitRange']->shouldReceive('getCombinedRangeSize')
             ->with($stockId)
@@ -71,10 +78,46 @@ class CheckRunScoringPrerequisitesTest extends QueryHandlerTestCase
     public function scenariosProvider()
     {
         return [
-            [null, 50, 25, true, 'Prerequisites passed'],
-            [m::mock(IrhpPermitWindow::class), 50, 25, false, 'A window is currently open within the stock'],
-            [null, null, 0, false, 'No ranges available in this stock'],
-            [null, 25, 25, false, 'No free permits available within the stock'],
+            [
+                null,
+                [1, 2, 3],
+                50,
+                25,
+                true,
+                'Prerequisites passed'
+            ],
+            [
+                m::mock(IrhpPermitWindow::class),
+                [1, 2, 3],
+                50,
+                25,
+                false,
+                'A window is currently open within the stock'
+            ],
+            [
+                null,
+                [],
+                50,
+                25,
+                false,
+                'No under consideration applications available'
+            ],
+            [
+                null,
+                [1, 2, 3],
+                null,
+                0,
+                false,
+                'No ranges available in this stock'
+            ],
+            [
+                null,
+                [1, 2, 3],
+                25,
+                25,
+                false,
+                'No free permits available within the stock'
+            ],
         ];
     }
 }

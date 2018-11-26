@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\ApplyRangesToSuccessfulPermitApplications
@@ -10,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Query\Permits\EcmtConstrainedCountriesList;
 use RuntimeException;
 
 /**
@@ -19,7 +20,7 @@ use RuntimeException;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -36,6 +37,9 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
     /** @var array */
     private $ranges;
 
+    /** @var array */
+    private $restrictedCountryIds;
+
     /**
      * Handle command
      *
@@ -47,11 +51,15 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
     {
         $stockId = $command->getStockId();
 
+        $this->populateRestrictedCountryIds();
+
         $this->populateRanges(
             $this->getRepo('IrhpPermitRange')->getByStockId($stockId)
         );
 
-        $candidatePermits = $this->getRepo()->getSuccessfulScoreOrdered($stockId);
+        $candidatePermits = $this->getRepo()->getSuccessfulScoreOrderedInScope($stockId);
+
+        $this->profileMessage('apply ranges to successful permit applications...');
 
         foreach ($candidatePermits as $candidatePermit) {
             $applicationCountries = $candidatePermit->getIrhpPermitApplication()
@@ -77,12 +85,14 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
             );
             $this->result->addMessage($message);
 
-            // for performance reasons, update range via repo method rather than persisting entity
-            $this->getRepo()->updateRange($candidatePermit->getId(), $selectedRange[self::ENTITY_KEY]);
+            $candidatePermit->applyRange($selectedRange[self::ENTITY_KEY]);
+            $this->getRepo()->saveOnFlush($candidatePermit);
             $this->decrementRangeStock($selectedRange);
         }
 
-        $this->getRepo()->clearCachedEntities();
+        $this->profileMessage('flushing apply ranges...');
+
+        $this->getRepo()->flushAll();
 
         return $this->result;
     }
@@ -132,7 +142,10 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
                 return $matchingRange;
         }
 
-        return $this->selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges($matchingRanges, $applicationCountryIds);
+        return $this->selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(
+            $matchingRanges,
+            $applicationCountryIds
+        );
     }
 
     /**
@@ -140,6 +153,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
      * but no matching ranges.
      *
      * @throws RuntimeException
+     *
      * @return array the irhp_permit_range best suited for the candidate permit
      */
     private function selectRangeForCandidatePermitWithCountriesAndNoMatchingRanges()
@@ -189,14 +203,17 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
      * Selects the appropriate irhp_permit_range for a candidate permit with associated countries
      * and multiple matching ranges.
      *
-     * @throws RuntimeException
-     * @param matchingRanges an array of the multiple matching ranges
+     * @param array $matchingRanges an array of the multiple matching ranges
      * @param array $applicationCountryIds The country ids specified in the application
+     *
+     * @throws RuntimeException
      *
      * @return array the single range identified as suitable
      */
-    private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(array $matchingRanges, array $applicationCountryIds)
-    {
+    private function selectRangeForCandidatePermitWithCountriesAndMultipleMatchingRanges(
+        array $matchingRanges,
+        array $applicationCountryIds
+    ) {
         $this->result->addMessage('    - more than one range found with most matching countries:');
         foreach ($matchingRanges as $matchingRange) {
             $message = sprintf(
@@ -220,13 +237,13 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
 
         $matchingRange = $matchingRanges[0];
 
-        $message = sprintf(
-            '    - range %d with countries %s has the fewest non-requested countries',
-            $matchingRange[self::ENTITY_KEY]->getId(),
-            implode(', ', $matchingRange[self::COUNTRY_IDS_KEY])
+        $this->result->addMessage(
+            sprintf(
+                '    - range %d with countries %s has the fewest non-requested countries',
+                $matchingRange[self::ENTITY_KEY]->getId(),
+                implode(', ', $matchingRange[self::COUNTRY_IDS_KEY])
+            )
         );
-
-        $this->result->addMessage($message);
 
         return $matchingRange;
     }
@@ -282,6 +299,8 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
      * Returns the set of one or more restricted ranges (i.e. ranges that allow travel to one or more of the
      * restricted countries) that share the lowest number of restricted countries amongst the full set of ranges
      *
+     * @throws RuntimeException
+     *
      * @return array
      */
     private function getRestrictedRangesWithFewestCountries()
@@ -335,7 +354,7 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
         array $ranges
     ) {
         $nonRequestedCountryIds = array_diff(
-            $this->getRestrictedCountryIds(),
+            $this->restrictedCountryIds,
             $applicationCountryIds
         );
 
@@ -422,6 +441,8 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
      * permit numbers remaining within this range
      *
      * @param array $rangeEntities An array of Range entities
+     *
+     * @throws RuntimeException
      */
     private function populateRanges(array $rangeEntities)
     {
@@ -480,14 +501,15 @@ class ApplyRangesToSuccessfulPermitApplications extends AbstractCommandHandler i
     }
 
     /**
-     * Get a list of ids representing the full list of restricted countries
-     *
-     * @return array
+     * Populate a list of ids representing the restricted countries
      */
-    private function getRestrictedCountryIds()
+    private function populateRestrictedCountryIds()
     {
-        // TODO: remove hard coding
-        return ['AT', 'GR', 'HU', 'IT', 'RU'];
+        $result = $this->handleQuery(
+            EcmtConstrainedCountriesList::create(['hasEcmtConstraints' => 1])
+        );
+
+        $this->restrictedCountryIds = array_column($result['result'], 'id');
     }
 
     /**

@@ -27,52 +27,62 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
         float $intensityOfUse = null,
         float $applicationScore = null
     ) {
-        $IrhpCandidatePermit = new self();
-        $IrhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
-        $IrhpCandidatePermit->intensityOfUse = $intensityOfUse;
-        $IrhpCandidatePermit->applicationScore = $applicationScore;
-        $IrhpCandidatePermit->successful = 0;
+        $irhpCandidatePermit = new self();
+        $irhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
+        $irhpCandidatePermit->intensityOfUse = $intensityOfUse;
+        $irhpCandidatePermit->applicationScore = $applicationScore;
+        $irhpCandidatePermit->successful = 0;
+        $irhpCandidatePermit->inScope = 0;
 
-        return $IrhpCandidatePermit;
+        return $irhpCandidatePermit;
     }
 
     /**
-     * Collects data from given candidate permits
-     * for use in deviation calculations
-     *
-     * @param irhpCandidatePermits list of irhp candidate permits to collate information from
-     *
-     * @return array containing data relevant to Deviation calculations as well as the Mean Deviation
+     * Prepares this candidate permit for use in a scoring run
      */
-    public static function getDeviationData(array $irhpCandidatePermits)
+    public function prepareForScoring()
     {
-        $licence = [];
-        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $ecmtPermitApplication = $irhpCandidatePermit->getIrhpPermitApplication()->getEcmtPermitApplication();
-            $licence[$ecmtPermitApplication->getLicence()->getLicNo()][$ecmtPermitApplication->getId()] = $ecmtPermitApplication->getPermitsRequired();
-        }
-
-        return [
-            'licenceData' => $licence,
-            'meanDeviation' => count($irhpCandidatePermits) / count($licence),
-        ];
+        $this->successful = 0;
+        $this->irhpPermitRange = null;
     }
 
     /**
-     * Calculates the randomised score for this candidate permit
-     * using the given deviation data
+     * Indicates if this candidate permit already has a randomized score set
      *
-     * @param deviationData a pre-formatted array of data for use in calculations
-     * @return int a randomised statistical value derived from mean deviation and standard deviation
+     * @return bool
      */
-    public function calculateRandomFactor(array $deviationData)
+    public function hasRandomizedScore()
+    {
+        return !is_null($this->randomizedScore);
+    }
+
+    /**
+     * Calculates the randomised score and random factor for this candidate permit
+     *
+     * @param array $deviationData a pre-formatted array of data for use in calculations
+     * @param int $licNo the licence number corresponding to the candidate permit
+     */
+    public function applyRandomizedScore(array $deviationData, $licNo)
     {
         $standardDeviation = 0;
-        $licenceData = $deviationData['licenceData'][$this->getIrhpPermitApplication()->getEcmtPermitApplication()->getLicence()->getLicNo()];
+        $licenceData = $deviationData['licenceData'][$licNo];
         foreach ($licenceData as $applicationPermitsRequired) {
             $standardDeviation += $applicationPermitsRequired;
         }
 
-        return stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
+        $randomFactor = stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
+
+        $this->randomizedScore = abs($randomFactor) * $this->applicationScore;
+        $this->randomFactor = $randomFactor;
+    }
+
+    /**
+     * Sets the range for this candidate permit
+     *
+     * @param IrhpPermitRange $range the range to be applied
+     */
+    public function applyRange(IrhpPermitRange $range)
+    {
+        $this->irhpPermitRange = $range;
     }
 }
