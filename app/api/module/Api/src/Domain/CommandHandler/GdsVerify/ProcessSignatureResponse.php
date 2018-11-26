@@ -18,7 +18,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'DigitalSignature';
 
-    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication'];
+    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication', 'Licence'];
 
     /** @var  \Dvsa\Olcs\GdsVerify\Service\GdsVerify */
     private $gdsVerifyService;
@@ -87,6 +87,16 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             );
 
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
+        }
+
+        if($command->getSurrenderId())
+        {
+            $this->updateSurrender(
+                $digitalSignature,
+                $command->getSurrenderId()
+            );
+
+            $this->result->addMessage('Digital Signature added to surrender' . $command->getSurrenderId());
         }
 
         return $this->result;
@@ -248,8 +258,10 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             [
                 'digitalSignature' => $digitalSignature,
                 'id' => $surrenderId,
-                'status' => $this->getRepo()->getRefdataReference(Entity\System\RefData::)
+                'status' => 'surr_sts_signed'
             ]
-        ))
+        ));
+        //update licence
+        $this->getRepo('Licence')->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
     }
 }
