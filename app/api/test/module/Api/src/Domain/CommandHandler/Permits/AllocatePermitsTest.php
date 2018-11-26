@@ -68,8 +68,8 @@ class AllocatePermitsTest extends CommandHandlerTestCase
             ->andReturn($successfulCandidatePermits);
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication->shouldReceive('getIrhpPermitApplications')
-            ->andReturn([$irhpPermitApplication]);
+        $ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)

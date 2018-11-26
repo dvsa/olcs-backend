@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsCommand;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -17,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+class MarkSuccessfulDaPermitApplications extends ScoringCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -36,31 +35,32 @@ class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implemen
      */
     public function handleCommand(CommandInterface $command)
     {
+        $this->profileMessage('mark successful da permit applications...');
+
         $stockId = $command->getStockId();
         $candidatePermitIds = array();
         $daQuotas = $this->getRepo('IrhpPermitJurisdictionQuota')->fetchByNonZeroQuota($stockId);
 
-        $result = new Result();
-        $result->addMessage('STEP 2c:');
-        $result->addMessage('  DAs associated with stock where quota > 0: ' . count($daQuotas));
+        $this->result->addMessage('STEP 2c:');
+        $this->result->addMessage('  DAs associated with stock where quota > 0: ' . count($daQuotas));
 
         $candidatePermitIds = [];
         foreach ($daQuotas as $daQuota) {
-            $daSuccessCount = $this->getRepo()->getSuccessfulDaCount(
+            $daSuccessCount = $this->getRepo()->getSuccessfulDaCountInScope(
                 $stockId,
                 $daQuota['jurisdictionId']
             );
 
             $daRemainingQuota = $daQuota['quotaNumber'] - $daSuccessCount;
 
-            $result->addMessage('    DA with id ' . $daQuota['jurisdictionId'] . ':');
-            $result->addMessage('      Derived values:');
-            $result->addMessage('      - #DAQuota:          ' . $daQuota['quotaNumber']);
-            $result->addMessage('      - #DASuccessCount:   ' . $daSuccessCount);
-            $result->addMessage('      - #DARemainingQuota: ' . $daRemainingQuota);
+            $this->result->addMessage('    DA with id ' . $daQuota['jurisdictionId'] . ':');
+            $this->result->addMessage('      Derived values:');
+            $this->result->addMessage('      - #DAQuota:          ' . $daQuota['quotaNumber']);
+            $this->result->addMessage('      - #DASuccessCount:   ' . $daSuccessCount);
+            $this->result->addMessage('      - #DARemainingQuota: ' . $daRemainingQuota);
 
             if ($daRemainingQuota > 0) {
-                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIds(
+                $daCandidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIdsInScope(
                     $stockId,
                     $daQuota['jurisdictionId']
                 );
@@ -71,17 +71,20 @@ class MarkSuccessfulDaPermitApplications extends AbstractCommandHandler implemen
                     $truncatedDaCandidatePermitIds
                 );
 
-                $result->addMessage('      Permits requesting this DA: ' . count($daCandidatePermitIds));
-                $result->addMessage('      - adjusted for quota: ' . count($truncatedDaCandidatePermitIds));
-                $result->addMessage('      ' . count($truncatedDaCandidatePermitIds) . ' permits will be marked as successful');
+                $this->result->addMessage('      Permits requesting this DA: ' . count($daCandidatePermitIds));
+                $this->result->addMessage('      - adjusted for quota: ' . count($truncatedDaCandidatePermitIds));
+                $this->result->addMessage('      The following ' . count($truncatedDaCandidatePermitIds) . ' permits will be marked as successful:');
+                foreach ($truncatedDaCandidatePermitIds as $candidatePermitId) {
+                    $this->result->addMessage('        - id = ' . $candidatePermitId);
+                }
             } else {
-                $result->addMessage('      #DARemainingQuota < 1 - nothing to do');
+                $this->result->addMessage('      #DARemainingQuota < 1 - nothing to do');
             }
         }
 
         $this->getRepo()->markAsSuccessful($candidatePermitIds);
 
-        $result->addMessage('  ' . count($candidatePermitIds) . ' permits have been marked as successful');
-        return $result;
+        $this->result->addMessage('  ' . count($candidatePermitIds) . ' permits have been marked as successful');
+        return $this->result;
     }
 }
