@@ -43,9 +43,7 @@ final class AllocatePermits extends AbstractCommandHandler implements ToggleRequ
         $ecmtPermitApplication = $this->getRepo()->fetchById($ecmtPermitApplicationId);
         $this->getRepo()->refresh($ecmtPermitApplication);
 
-        $irhpPermitApplications = $ecmtPermitApplication->getIrhpPermitApplications();
-        $irhpPermitApplication = $irhpPermitApplications[0];
-
+        $irhpPermitApplication = $ecmtPermitApplication->getFirstIrhpPermitApplication();
         $candidatePermits = $irhpPermitApplication->getSuccessfulIrhpCandidatePermits();
         foreach ($candidatePermits as $candidatePermit) {
             $this->addIrhpPermit($candidatePermit);

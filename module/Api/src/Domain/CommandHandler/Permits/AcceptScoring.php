@@ -52,9 +52,6 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     {
         $stockId = $command->getId();
 
-        $dto = GetScoredPermitList::create(['stockId' => $stockId]);
-        $scoringResults = $this->handleQuery($dto);
-
         $stockRepo = $this->getRepo('IrhpPermitStock');
         $stock = $stockRepo->fetchById($stockId);
         $stockRepo->refresh($stock);
@@ -85,7 +82,20 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
         $stockRepo->save($stock);
 
         try {
-            $applicationIds = $this->getRepo()->fetchUnderConsiderationApplicationIds($stockId);
+            $scoringResults = $this->handleQuery(
+                GetScoredPermitList::create(['stockId' => $stockId])
+            );
+
+            $this->result->merge(
+                $this->handleSideEffect(
+                    UploadScoringResult::create([
+                        'csvContent' => $scoringResults['result'],
+                        'fileDescription' => 'Accepted Scoring Results'
+                    ])
+                )
+            );
+
+            $applicationIds = $this->getRepo()->fetchInScopeApplicationIds($stockId);
 
             $this->result->addMessage(
                 sprintf('%d under consideration applications found', count($applicationIds))
@@ -97,25 +107,14 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
                 );
             }
 
-            $this->result->merge(
-                $this->handleSideEffects([
-                    UploadScoringResult::create([
-                        'csvContent' => $scoringResults['result'],
-                        'fileDescription' => 'Accepted Scoring Results'
-                    ]),
-                ])
-            );
-
             $stock->proceedToAcceptSuccessful($this->refData(IrhpPermitStock::STATUS_ACCEPT_SUCCESSFUL));
-            $stockRepo->save($stock);
+            $this->result->addMessage('Acceptance process completed successfully.');
         } catch (Exception $e) {
             $stock->proceedToAcceptUnexpectedFail($this->refData(IrhpPermitStock::STATUS_ACCEPT_UNEXPECTED_FAIL));
-            $stockRepo->save($stock);
-
-            return $this->result;
+            $this->result->addMessage('Acceptance process failed: ' . $e->getMessage());
         }
 
-        $this->result->addMessage('Acceptance of scoring completed successfully');
+        $stockRepo->save($stock);
         return $this->result;
     }
 

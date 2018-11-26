@@ -45,11 +45,11 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
             ->with($stockId)
             ->andReturn($permitCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCount')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn($successfulCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIds')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedIdsInScope')
             ->with($stockId)
             ->andReturn($underConsiderationIds);
 
@@ -74,7 +74,7 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
             ->with($stockId)
             ->andReturn(75);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCount')
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn(75);
 

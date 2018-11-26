@@ -553,6 +553,7 @@ return [
     TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
 
     // IRHP Permits
+    TransferQuery\IrhpPermit\GetListByEcmtId::class => QueryHandler\IrhpPermit\GetListByEcmtId::class,
     TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
 
@@ -638,5 +639,6 @@ return [
     Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
     //Digital Surrender
-    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class
+    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class,
+    TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class
 ];

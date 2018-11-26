@@ -3,13 +3,11 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\Permits\UnpaidEcmtPermits;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Doctrine\ORM\Query;
 
 /**
  * IRHP Candidate Permit
@@ -21,39 +19,17 @@ class IrhpCandidatePermit extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Returns the count of candidate permits in the specified stock that have been assigned a randomised score
+     * Returns the ids of in scope candidate permits within the specified stock where the randomised score is not empty
+     * and the associated application has requested the specified sector, ordered by randomised score descending
      *
      * @param int $stockId
-     *
-     * @return int
-     */
-    public function getCountWithRandomisedScore($stockId)
-    {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('count(icp.id)')
-            ->from(Entity::class, 'icp')
-            ->innerJoin('icp.irhpPermitApplication', 'ipa')
-            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
-            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->andWhere('icp.randomizedScore is not null')
-            ->setParameter(1, $stockId)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-    /**
-     * Returns the ids of candidate permits within the specified stock where the randomised score is not empty and the
-     * associated application has requested the specified sector, ordered by randomised score
-     * descending
-     *
-     * @param int $stockId
-     * @param int sectorsId
+     * @param int $sectorsId
      *
      * @return array
      */
-    public function getScoreOrderedIdsBySector($stockId, $sectorsId)
+    public function getScoreOrderedIdsBySectorInScope($stockId, $sectorsId)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $result = $this->getEntityManager()->createQueryBuilder()
             ->select('icp.id')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
@@ -61,12 +37,14 @@ class IrhpCandidatePermit extends AbstractRepository
             ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
             ->andWhere('IDENTITY(epa.sectors) = ?2')
-            ->andWhere('icp.randomizedScore is not null')
+            ->andWhere('epa.inScope = 1')
             ->orderBy('icp.randomizedScore', 'DESC')
             ->setParameter(1, $stockId)
             ->setParameter(2, $sectorsId)
             ->getQuery()
             ->getScalarResult();
+
+        return array_column($result, 'id');
     }
 
     /**
@@ -78,7 +56,7 @@ class IrhpCandidatePermit extends AbstractRepository
      *
      * @return int
      */
-    public function getSuccessfulDaCount($stockId, $jurisdictionId)
+    public function getSuccessfulDaCountInScope($stockId, $jurisdictionId)
     {
         $result = $this->getEntityManager()->createQueryBuilder()
             ->select('count(icp.id)')
@@ -90,6 +68,7 @@ class IrhpCandidatePermit extends AbstractRepository
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
             ->andWhere('icp.successful = 1')
             ->andWhere('IDENTITY(l.trafficArea) = ?2')
+            ->andWhere('epa.inScope = 1')
             ->setParameter(1, $stockId)
             ->setParameter(2, $jurisdictionId)
             ->getQuery()
@@ -112,27 +91,28 @@ class IrhpCandidatePermit extends AbstractRepository
      *
      * @return array
      */
-    public function getUnsuccessfulScoreOrderedIds($stockId, $trafficAreaId = null)
+    public function getUnsuccessfulScoreOrderedIdsInScope($stockId, $trafficAreaId = null)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->select('icp.id')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
             ->andWhere('icp.successful = 0')
-            ->andWhere('icp.randomizedScore is not null')
+            ->andWhere('epa.inScope = 1')
             ->orderBy('icp.randomizedScore', 'DESC')
             ->setParameter(1, $stockId);
 
         if (!is_null($trafficAreaId)) {
-            $queryBuilder->innerJoin('ipa.ecmtPermitApplication', 'epa')
-            ->innerJoin('epa.licence', 'l')
+            $queryBuilder->innerJoin('epa.licence', 'l')
             ->andWhere('IDENTITY(l.trafficArea) = ?2')
             ->setParameter(2, $trafficAreaId);
         }
 
-        return $queryBuilder->getQuery()->getScalarResult();
+        $result = $queryBuilder->getQuery()->getScalarResult();
+        return array_column($result, 'id');
     }
 
     /**
@@ -142,15 +122,17 @@ class IrhpCandidatePermit extends AbstractRepository
      *
      * @return int
      */
-    public function getSuccessfulCount($stockId)
+    public function getSuccessfulCountInScope($stockId)
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select('count(icp)')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->andWhere('icp.successful = true')
+            ->andWhere('icp.successful = 1')
+            ->andWhere('epa.inScope = 1')
             ->setParameter(1, $stockId)
             ->getQuery()
             ->getSingleScalarResult();
@@ -161,17 +143,19 @@ class IrhpCandidatePermit extends AbstractRepository
      *
      * @param int $stockId
      *
-     * @return int
+     * @return array
      */
-    public function getSuccessfulScoreOrdered($stockId)
+    public function getSuccessfulScoreOrderedInScope($stockId)
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select('icp')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
             ->andWhere('icp.successful = 1')
+            ->andWhere('epa.inScope = 1')
             ->orderBy('icp.randomizedScore', 'DESC')
             ->setParameter(1, $stockId)
             ->getQuery()
@@ -183,7 +167,7 @@ class IrhpCandidatePermit extends AbstractRepository
      *
      * @param array $candidatePermitIds
      */
-    public function markAsSuccessful($candidatePermitIds)
+    public function markAsSuccessful(array $candidatePermitIds)
     {
         $query = $this->getEntityManager()->createQueryBuilder()
             ->update(Entity::class, 'icp')
@@ -196,69 +180,26 @@ class IrhpCandidatePermit extends AbstractRepository
     }
 
     /**
-     * Sets the range for a given candidate permit
+     * Retrieves the ids of candidate permits and corresponding licence numbers in scope for the current scoring run
      *
-     * @param array $candidatePermitIds
-     */
-    public function updateRange($candidatePermitId, IrhpPermitRangeEntity $range)
-    {
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->update(Entity::class, 'icp')
-            ->set('icp.irhpPermitRange', $range)
-            ->where('icp.id = ?1')
-            ->setParameter(1, $candidatePermitId)
-            ->getQuery();
-
-        $query->execute();
-    }
-
-    /**
-     * Retrieves the IrhpCandidateRecords that need to have a randomised score set, for a given stock
+     * @param int $irhpPermitStockId the Id of the IrhpPermitStock that the scoring will be for
      *
-     * @param int the Id of the IrhpPermitStock that the scoring will be for.
-     * @return array a list of IrhpCandidatePermits
-     * @TODO: Replace this query with the bundle & listFilter design pattern.
+     * @return array a list of candidate permit ids and corresponding licence numbers
      */
-    public function getIrhpCandidatePermitsForScoring($irhpPermitStockId)
+    public function fetchDeviationSourceValues($irhpPermitStockId)
     {
-        $licenceTypes = [Licence::LICENCE_TYPE_RESTRICTED,  Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL];
-
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('icp')
+            ->select('icp.id as candidatePermitId, l.licNo, epa.id as applicationId, epa.permitsRequired')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
             ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->innerJoin('epa.licence', 'l')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->andWhere('epa.status = ?2')
-            ->andWhere('l.licenceType IN (?3)')
+            ->andWhere('epa.inScope = 1')
             ->setParameter(1, $irhpPermitStockId)
-            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
-            ->setParameter(3, $licenceTypes)
             ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * Resets all candidate permits within a stock to their pre-scoring state
-     *
-     * @param int $stockId
-     */
-    public function resetScoring($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'update irhp_candidate_permit ' .
-            'set successful = 0, irhp_permit_range_id = NULL ' .
-            'where irhp_permit_application_id in (' .
-            '    select id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ')',
-            ['stockId' => $stockId]
-        );
-
-        $statement->execute();
+            ->getScalarResult();
     }
 
     /**
@@ -300,33 +241,45 @@ class IrhpCandidatePermit extends AbstractRepository
     }
 
     /**
-     * Retrieves IrhpCandidatePermits that have been scored,
-     * for a given stock.
+     * Retrieves a partial list of column values for the scoring report
      *
-     * @param int $irhpPermitStockId
-     * @return array of IrhpCandidatePermits and linked data related to scoring
+     * @param int $irhpPermitStockId the Id of the IrhpPermitStock that the scoring will be for
+     *
+     * @return array
      */
-    public function fetchAllScoredForStock($irhpPermitStockId)
+    public function fetchScoringReport($irhpPermitStockId)
     {
+        $columns = [
+            'icp.id as candidatePermitId',
+            'epa.id as applicationId',
+            'o.name as organisationName',
+            'icp.applicationScore as candidatePermitApplicationScore',
+            'icp.intensityOfUse as candidatePermitIntensityOfUse',
+            'icp.randomFactor as candidatePermitRandomFactor',
+            'icp.randomizedScore as candidatePermitRandomizedScore',
+            'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys',
+            's.name as applicationSectorName',
+            'l.licNo as licenceNo',
+            'ta.id as trafficAreaId',
+            'ta.name as trafficAreaName',
+            'icp.successful as candidatePermitSuccessful',
+            'IDENTITY(icp.irhpPermitRange) as candidatePermitRangeId'
+        ];
+
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('icp')
+            ->select(implode(', ', $columns))
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
-            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
+            ->innerJoin('epa.licence', 'l')
+            ->innerJoin('epa.sectors', 's')
+            ->innerJoin('l.trafficArea', 'ta')
+            ->innerJoin('l.organisation', 'o')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->andWhere('epa.status = ?2')
-            ->andWhere('icp.randomizedScore IS NOT NULL') //where it has been scored
-            ->orderBy('icp.successful', 'DESC')
-            ->addOrderBy('icp.randomizedScore', 'DESC')
+            ->andWhere('epa.inScope = 1')
             ->setParameter(1, $irhpPermitStockId)
-            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
             ->getQuery()
-            ->getResult();
-    }
-
-    public function clearCachedEntities()
-    {
-        return $this->getEntityManager()->clear(Entity::class);
+            ->getScalarResult();
     }
 }

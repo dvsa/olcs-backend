@@ -22,6 +22,7 @@ final class Delete extends AbstractCommandHandler implements ToggleRequiredInter
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
+    protected $extraRepos = ['IrhpPermitJurisdictionQuota', 'IrhpPermitSectorQuota'];
 
     /**
      * Delete Command Handler
@@ -38,6 +39,16 @@ final class Delete extends AbstractCommandHandler implements ToggleRequiredInter
         /** @var IrhpPermitStock $stock */
         if (!$stock->canDelete()) {
             throw new ValidationException(['irhp-permit-stock-cannot-delete-active-dependencies']);
+        }
+
+        // Remove the connection to the Jurisdiction Quotas
+        foreach ($stock->getIrhpPermitJurisdictionQuotas() as $quota) {
+            $this->getRepo('IrhpPermitJurisdictionQuota')->delete($quota);
+        }
+
+        // Remove the connection to the Sector Quotas
+        foreach ($stock->getIrhpPermitSectorQuotas() as $quota) {
+            $this->getRepo('IrhpPermitSectorQuota')->delete($quota);
         }
 
         try {

@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -18,27 +19,17 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
 {
     use ToggleAwareTrait;
 
-    const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = ['M', 'G', 'N'];
+    const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = [
+        TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE,
+        TrafficArea::WELSH_TRAFFIC_AREA_CODE,
+        TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+    ];
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
-    protected $repoServiceName = 'IrhpCandidatePermit';
-    protected $bundledRepos = [
-        'irhpPermitApplication' => [
-            'ecmtPermitApplication' => [
-                'countrys',
-                'sectors',
-                'internationalJourneys'
-            ],
-            'irhpPermitWindow',
-            'licence' => [
-                'trafficArea',
-                'organisation'
-            ]
-        ],
-        'irhpPermitRange' => [
-            'countrys'
-        ],
-    ];
+
+    protected $repoServiceName = 'EcmtPermitApplication';
+
+    protected $extraRepos = ['Country', 'IrhpPermitRange', 'IrhpCandidatePermit'];
 
     /**
      * Return a list of scored irhp candidate permit records and associated data
@@ -48,102 +39,161 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Query $query */
-        $results = $this->getRepo('IrhpCandidatePermit')->fetchAllScoredForStock($query->getStockId());
-
-        return [
-            'result' => $this->formatResults(
-                $this->resultList(
-                    $results,
-                    $this->bundledRepos
-                )
-            )
-        ];
-    }
-
-    /**
-     * Format the results of the query fetchAllScoredForStock to make them more readable
-     *
-     * @param array $data an array of query results with the same
-     *                  format as that returned by fetchAllScoredForStock
-     *
-     * @return array a formatted and mapped array
-     */
-    private function formatResults(array $data)
-    {
         $formattedData = [];
 
-        foreach ($data as $row) {
-            $sector = $row['irhpPermitApplication']['ecmtPermitApplication']['sectors'];
-            $trafficArea = $row['irhpPermitApplication']['licence']['trafficArea'];
-            $interJourneys = $row['irhpPermitApplication']['ecmtPermitApplication']['internationalJourneys']['id'];
-            $licence = $row['irhpPermitApplication']['licence'];
+        $stockId = $query->getStockId();
+        $countryIdsByRangeId = $this->getCountryIdsByRangeIdLookup($stockId);
+        $countryIdsByApplicationId = $this->getCountryIdsByApplicationIdLookup($stockId);
+        $countryNamesById = $this->getCountryNamesByIdLookup();
 
-            $devolvedAdministration = 'N/A';
-            if (in_array($trafficArea['id'], self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS)) {
-                $devolvedAdministration = $trafficArea['name'];
+        $rows = $this->getRepo('IrhpCandidatePermit')->fetchScoringReport($stockId);
+
+        foreach ($rows as $row) {
+            $permitReference = $row['licenceNo'] . ' / ' . $row['applicationId'] . ' / ' . $row['candidatePermitId'];
+
+            $devolvedAdministrationName = 'N/A';
+            if (in_array($row['trafficAreaId'], self::DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS)) {
+                $devolvedAdministrationName = $row['trafficAreaName'];
             }
 
-            $formattedData[] = [
-                'Permit Ref'                        => $row['irhpPermitApplication']['ecmtPermitApplication']['applicationRef'] . ' / ' . $row['id'],
-                'Operator'                          => $licence['organisation']['name'],
-                'Application Score'                 => $row['applicationScore'],
-                'Permit Intensity of Use'           => $row['intensityOfUse'],
-                'Random Factor'                     => $row['randomFactor'],
-                'Randomised Permit Score'           => $row['randomizedScore'],
-                'Percentage International'          => EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$interJourneys],
-                'Sector'                            => $sector['name'] === Sectors::SECTOR_OPTION_NAME__NONE ? 'N/A' : $sector['name'],
-                'Devolved Administration'           => $devolvedAdministration,
-                'Result'                            => $row['successful'] ? 'Successful' : 'Unsuccessful',
-                'Restricted Countries - Requested'  => $this->getRestrictedCountriesRequested($row),
-                'Restricted Countries - Offered'    => $this->getRestrictedCountriesOffered($row)
+            $percentageInternationalName = EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[
+                $row['applicationInternationalJourneys']
             ];
+
+            $applicationSectorName = $row['applicationSectorName'];
+            if ($row['applicationSectorName'] == Sectors::SECTOR_OPTION_NAME__NONE) {
+                $applicationSectorName = 'N/A';
+            }
+
+            $applicationId = $row['applicationId'];
+            $countryNamesRequestedCsv = '';
+            if (isset($countryIdsByApplicationId[$applicationId])) {
+                $countryNamesRequestedCsv = $this->generateCountryNamesCsv(
+                    $countryIdsByApplicationId[$applicationId],
+                    $countryNamesById
+                );
+            }
+
+            $candidatePermitRangeId = $row['candidatePermitRangeId'];
+            $countryNamesOfferedCsv = '';
+            if (isset($countryIdsByRangeId[$candidatePermitRangeId])) {
+                $countryNamesOfferedCsv = $this->generateCountryNamesCsv(
+                    $countryIdsByRangeId[$candidatePermitRangeId],
+                    $countryNamesById
+                );
+            }
+
+            $successCaption = $row['candidatePermitSuccessful'] ? 'Successful' : 'Unsuccessful';
+
+            $formattedRow = [
+                'Permit Ref'                        => $permitReference,
+                'Operator'                          => $row['organisationName'],
+                'Application Score'                 => $row['candidatePermitApplicationScore'],
+                'Permit Intensity of Use'           => $row['candidatePermitIntensityOfUse'],
+                'Random Factor'                     => $row['candidatePermitRandomFactor'],
+                'Randomised Permit Score'           => $row['candidatePermitRandomizedScore'],
+                'Percentage International'          => $percentageInternationalName,
+                'Sector'                            => $applicationSectorName,
+                'Devolved Administration'           => $devolvedAdministrationName,
+                'Result'                            => $successCaption,
+                'Restricted Countries - Requested'  => $countryNamesRequestedCsv,
+                'Restricted Countries - Offered'    => $countryNamesOfferedCsv
+            ];
+
+            $formattedData[] = $formattedRow;
         }
 
-        return $formattedData;
+        return ['result' => $formattedData];
     }
 
     /**
-     * Retrieves the list of restricted countries requested for display in an export .csv file
+     * Returns a semicolon separated list of country names
      *
-     * @param array $row Row from data from query
+     * @param array $countryNamesById a lookup table of country codes to names
+     * @param array $countryCodes an array of country codes
      *
      * @return string
      */
-    private function getRestrictedCountriesRequested(array $row)
+    private function generateCountryNamesCsv(array $countryCodes, array $countryNamesById)
     {
-        if ($row['irhpPermitApplication']['ecmtPermitApplication']['hasRestrictedCountries']) {
-            return $this->formatRestrictedCountriesForDisplay($row['irhpPermitApplication']['ecmtPermitApplication']['countrys']);
+        $countryNames = [];
+        foreach ($countryCodes as $countryCode) {
+            $countryNames[] = $countryNamesById[$countryCode];
         }
 
-        return 'N/A';
+        return implode('; ', $countryNames);
     }
 
     /**
-     * Retrieves the list of restricted countries offered for display in an export .csv file
+     * Return an array with indexes containing range ids and values containing the associated country codes
      *
-     * @param array $row Row from data from query
+     * @param int stockId
      *
-     * @return string
+     * @return array
      */
-    private function getRestrictedCountriesOffered(array $row)
+    private function getCountryIdsByRangeIdLookup($stockId)
     {
-        if (count($row['irhpPermitRange']['countrys']) > 0) {
-            return $this->formatRestrictedCountriesForDisplay($row['irhpPermitRange']['countrys']);
-        }
-
-        return 'N/A';
+        return $this->getCountryIdLookup(
+            $this->getRepo('IrhpPermitRange')->fetchRangeIdToCountryIdAssociations($stockId),
+            'rangeId'
+        );
     }
 
     /**
-     * Formats a given list of restricted countries for display in an export .csv file
+     * Return an array with indexes containing ecmt application ids and values containing the associated country codes
      *
-     * @param array $countries a list of restricted countries in the format returned by backend
+     * @param int stockId
      *
-     * @return string a list of countries seperated by semicolons
+     * @return array
      */
-    private function formatRestrictedCountriesForDisplay(array $countries)
+    private function getCountryIdsByApplicationIdLookup($stockId)
     {
-        return implode('; ', array_column($countries, 'countryDesc'));
+        return $this->getCountryIdLookup(
+            $this->getRepo('EcmtPermitApplication')->fetchApplicationIdToCountryIdAssociations($stockId),
+            'ecmtApplicationId'
+        );
+    }
+
+    /**
+     * Return an unflattened list of associations between an entity and the associated country codes
+     *
+     * @param array $associations an array containing entity ids and country codes
+     * @param string $entityIdIndex the key in the associations array containing the entity id
+     *
+     * @return array
+     */
+    private function getCountryIdLookup(array $associations, $entityIdIndex)
+    {
+        $countryIdsByEntity = [];
+
+        foreach ($associations as $association) {
+            $entityId = $association[$entityIdIndex];
+            $countryId = $association['countryId'];
+
+            if (isset($countryIdsByEntity[$entityId])) {
+                $countryIdsByEntity[$entityId][] = $countryId;
+            } else {
+                $countryIdsByEntity[$entityId] = [$countryId];
+            }
+        }
+
+        return $countryIdsByEntity;
+    }
+
+    /**
+     * Return an array with country codes as keys and country names as values
+     *
+     * @return array
+     */
+    private function getCountryNamesByIdLookup()
+    {
+        $countries = $this->getRepo('Country')->fetchIdsAndDescriptions();
+
+        $countriesLookup = [];
+        foreach ($countries as $country) {
+            $countriesLookup[$country['countryId']] = $country['description'];
+        }
+
+        return $countriesLookup;
     }
 }
