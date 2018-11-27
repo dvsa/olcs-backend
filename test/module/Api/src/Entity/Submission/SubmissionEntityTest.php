@@ -165,7 +165,6 @@ class SubmissionEntityTest extends EntityTester
         $submission = new Entity($case, $submissionType);
 
         $this->assertSame('ORG1', $submission->getRelatedOrganisation());
-
     }
 
     public function testGetSetSectionData()
@@ -200,13 +199,13 @@ class SubmissionEntityTest extends EntityTester
     public function testReopenError()
     {
         $this->sut->setClosedDate(null);
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $this->sut->reopen();
     }
     public function testCloseError()
     {
         $this->sut->setClosedDate('YYYY-MM-DD');
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $this->sut->close();
     }
 }

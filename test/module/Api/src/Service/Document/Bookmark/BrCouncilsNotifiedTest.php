@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-class BrCouncilsNotifiedTest extends \PHPUnit_Framework_TestCase
+class BrCouncilsNotifiedTest extends \PHPUnit\Framework\TestCase
 {
     const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\BrCouncilsNotified';
 

@@ -74,7 +74,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAlreadyExists()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -122,7 +122,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationSelfserve()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
+        $this->expectException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -160,7 +160,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationSelfserveIdentifyDuplicates()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
+        $this->expectException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -200,7 +200,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternal()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
+        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -260,7 +260,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternalIdentifyDuplicates()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-'.self::LIC_ID.'"]');
+        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-'.self::LIC_ID.'"]');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -395,7 +395,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -476,7 +477,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
@@ -557,7 +559,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
@@ -646,7 +649,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
     }
@@ -730,7 +734,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($this->mockLic, $savedLicenceVehicle->getLicence());
         $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -804,7 +809,8 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertSame($licence, $savedLicenceVehicle->getLicence());
         $this->assertSame($this->mockApp, $savedLicenceVehicle->getApplication());
         $this->assertEquals(
-            '2015-01-01 12:00:00', $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $savedLicenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $savedLicenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -812,7 +818,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandForApplicationWithException()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -842,7 +848,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandForApplicationWithExceptionAlternative()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licence' => self::LIC_ID,

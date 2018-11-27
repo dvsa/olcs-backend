@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class InjectNaptanCodesTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter
  */
-class InjectNaptanCodesTest extends TestCase
+class InjectNaptanCodesTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

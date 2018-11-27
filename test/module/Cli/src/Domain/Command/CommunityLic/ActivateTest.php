@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Command\CommunityLic\Activate;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ActivateTest extends \PHPUnit_Framework_TestCase
+class ActivateTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

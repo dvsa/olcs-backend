@@ -45,7 +45,7 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
      */
     public function testCreateServiceMissingConfig($config, $errorMsg)
     {
-        $this->setExpectedException(\RuntimeException::class, $errorMsg);
+        $this->expectException(\RuntimeException::class, $errorMsg);
 
         $config = [
             'nysiis' => [

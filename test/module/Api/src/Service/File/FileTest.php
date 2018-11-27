@@ -8,7 +8,7 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @covers \Dvsa\Olcs\Api\Service\File\File
  */
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit\Framework\TestCase
 {
     /** @var  File */
     private $sut;

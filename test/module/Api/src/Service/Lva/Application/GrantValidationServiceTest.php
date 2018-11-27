@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -12,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
+class GrantValidationServiceTest extends TestCase
 {
     protected $sut;
 

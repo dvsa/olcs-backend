@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class ExistingRegNoTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
  */
-class ExistingRegNoTest extends TestCase
+class ExistingRegNoTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Tests filter

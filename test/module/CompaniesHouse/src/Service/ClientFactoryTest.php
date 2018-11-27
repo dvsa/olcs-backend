@@ -29,7 +29,7 @@ class ClientFactoryTest extends MockeryTestCase
     public function testOptionsMissing()
     {
         //  expect
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         //  call
         $this->sl->shouldReceive('get')->with('Configuration')->once()->andReturn([]);
@@ -40,7 +40,7 @@ class ClientFactoryTest extends MockeryTestCase
     public function testOptionsBaseUriMissing()
     {
         //  expect
-        $this->setExpectedException(\RuntimeException::class, 'Missing required option companies_house.client.baseuri');
+        $this->expectException(\RuntimeException::class, 'Missing required option companies_house.client.baseuri');
 
         //  call
         $this->sl->shouldReceive('get')->with('Configuration')->once()->andReturn(

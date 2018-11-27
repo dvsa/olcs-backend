@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\View\ViOcView;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ViOcViewTest extends \PHPUnit_Framework_TestCase
+class ViOcViewTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ViOcView

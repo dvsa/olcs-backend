@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesPsvStatus;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Vehicles Psv Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateVehiclesPsvStatusTest extends PHPUnit_Framework_TestCase
+class UpdateVehiclesPsvStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {
