@@ -47,7 +47,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockTmaRepo = $this->mockRepo(
-            'TransportManagerApplication', Repository\TransportManagerApplication::class
+            'TransportManagerApplication',
+            Repository\TransportManagerApplication::class
         );
 
         $trafficArea = new Entity\TrafficArea\TrafficArea();
@@ -183,16 +184,19 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            [
+                'id' => self::APP_ID,
+                'event' => CreateSnapshot::ON_SUBMIT
+            ],
+            $result1
         );
 
-        if (
-            !$isInternalUser
-            && !(
-                $isVariation
-                && $goodOrPsv === LicenceEntity::LICENCE_CATEGORY_PSV
-            )
-            && !$hasS4
+        if (!$isInternalUser && !(
+                $isVariation &&
+                $goodOrPsv === LicenceEntity::LICENCE_CATEGORY_PSV
+            ) &&
+            !$hasS4
         ) {
             $this->expectedSideEffect(
                 \Dvsa\Olcs\Transfer\Command\Publication\Application::class,
@@ -387,7 +391,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            [
+                'id' => self::APP_ID,
+                'event' => CreateSnapshot::ON_SUBMIT
+            ],
+            $result1
         );
 
         $result = $this->sut->handleCommand($command);
@@ -494,7 +503,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            [
+                'id' => self::APP_ID,
+                'event' => CreateSnapshot::ON_SUBMIT
+            ],
+            $result1
         );
 
         $result = $this->sut->handleCommand($command);
@@ -585,7 +599,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
-            CreateSnapshot::class, ['id' => self::APP_ID, 'event' => CreateSnapshot::ON_SUBMIT], $result1
+            CreateSnapshot::class,
+            [
+                'id' => self::APP_ID,
+                'event' => CreateSnapshot::ON_SUBMIT
+            ],
+            $result1
         );
 
         $this->sut->handleCommand($command);
@@ -712,7 +731,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, self::VERSION)
             ->andReturn($application);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

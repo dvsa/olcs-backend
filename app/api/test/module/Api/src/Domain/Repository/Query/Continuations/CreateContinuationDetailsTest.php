@@ -112,7 +112,7 @@ class CreateContinuationDetailsTest extends AbstractDbQueryTestCase
 
     public function testExecuteInsertException()
     {
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->connection->shouldReceive('quote')
             ->times(4)

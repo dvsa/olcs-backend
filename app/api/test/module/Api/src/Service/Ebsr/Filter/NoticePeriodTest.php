@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class NoticePeriodTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter
  */
-class NoticePeriodTest extends TestCase
+class NoticePeriodTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideFilter

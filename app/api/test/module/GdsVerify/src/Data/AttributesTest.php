@@ -7,7 +7,7 @@ use Dvsa\Olcs\GdsVerify\Data\Attributes;
 /**
  * Attributes  test
  */
-class AttributesTest extends \PHPUnit_Framework_TestCase
+class AttributesTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

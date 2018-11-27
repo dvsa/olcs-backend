@@ -5,13 +5,14 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Class SubmissionResultTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SubmissionResultTest extends \PHPUnit_Framework_TestCase
+class SubmissionResultTest extends TestCase
 {
     /**
      * Tests filter

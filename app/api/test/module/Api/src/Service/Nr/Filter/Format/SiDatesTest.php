@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Nr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class SiDatesTest
  * @package Dvsa\OlcsTest\Api\Service\NrFilter\Format
  */
-class SiDatesTest extends TestCase
+class SiDatesTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

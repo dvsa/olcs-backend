@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\ApplicationVehicleLimit;
  *
  * @author Alex Peskov <alex.peshkov@valtech.co.uk>
  */
-class ApplicationVehicleLimitTest extends \PHPUnit_Framework_TestCase
+class ApplicationVehicleLimitTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

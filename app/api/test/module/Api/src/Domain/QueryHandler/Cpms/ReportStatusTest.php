@@ -90,7 +90,7 @@ class ReportStatusTest extends QueryHandlerTestCase
             ->with($reference)
             ->andReturn($data);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
         $this->sut->handleQuery($query);
     }
@@ -109,7 +109,7 @@ class ReportStatusTest extends QueryHandlerTestCase
             ->with($reference)
             ->andReturn($data);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class, 'Report is not ready');
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class, 'Report is not ready');
 
         $this->sut->handleQuery($query);
     }

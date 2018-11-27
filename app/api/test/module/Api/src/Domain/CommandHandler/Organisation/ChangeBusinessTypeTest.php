@@ -46,7 +46,7 @@ class ChangeBusinessTypeTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiresConfirmation()
     {
-        $this->setExpectedException(RequiresConfirmationException::class);
+        $this->expectException(RequiresConfirmationException::class);
 
         $data = [
             'id' => 111,

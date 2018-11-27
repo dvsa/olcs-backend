@@ -48,7 +48,7 @@ class SetViFlagsTest extends CommandHandlerTestCase
         $mockStmt->shouldReceive('fetchAll')->with()->once()->andReturn([0 => ['Result' => 'Something gone wrong']]);
         $this->mockDbConnection->shouldReceive('prepare')->with('CALL vi_set_flags()')->once()->andReturn($mockStmt);
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->sut->handleCommand(\Dvsa\Olcs\Cli\Domain\Command\SetViFlags::create([]));
     }

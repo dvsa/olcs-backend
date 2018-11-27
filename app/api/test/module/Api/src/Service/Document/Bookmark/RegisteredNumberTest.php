@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\RegisteredNumber;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class RegisteredNumberTest extends \PHPUnit_Framework_TestCase
+class RegisteredNumberTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

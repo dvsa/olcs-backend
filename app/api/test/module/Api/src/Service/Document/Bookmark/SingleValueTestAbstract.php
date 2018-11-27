@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-abstract class SingleValueTestAbstract extends \PHPUnit_Framework_TestCase
+abstract class SingleValueTestAbstract extends \PHPUnit\Framework\TestCase
 {
     /**
      * Implement this in the child class
@@ -45,15 +45,14 @@ abstract class SingleValueTestAbstract extends \PHPUnit_Framework_TestCase
         $bookmark->setData([$key => $value]);
 
         $formatter = $this->getFormatter();
-        if ($formatter instanceof FormatterInterface) {
 
+        if ($formatter instanceof FormatterInterface) {
             $formatterName = get_class($formatter);
 
             $this->assertEquals(
                 $formatterName::format((array)$value),
                 $bookmark->render()
             );
-
         } else {
             $this->assertEquals($value, $bookmark->render());
         }

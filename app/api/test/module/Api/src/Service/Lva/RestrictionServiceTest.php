@@ -3,12 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Service\Lva;
 
 use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
-use PHPUnit_Framework_TestCase;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Lva\RestrictionService
  */
-class RestrictionServiceTest extends PHPUnit_Framework_TestCase
+class RestrictionServiceTest extends \PHPUnit\Framework\TestCase
 {
     /** @var  RestrictionService */
     protected $helper;

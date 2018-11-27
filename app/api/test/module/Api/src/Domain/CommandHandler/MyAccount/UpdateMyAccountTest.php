@@ -608,7 +608,7 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithNewLoginIdWithLoginIdClash()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $userId = 1;
 

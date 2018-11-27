@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrLogo;
 /**
  * Br Logo test
  */
-class BrLogoTest extends \PHPUnit_Framework_TestCase
+class BrLogoTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

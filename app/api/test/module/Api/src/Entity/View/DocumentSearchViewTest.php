@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\View\DocumentSearchView;
 /**
  * @covers Dvsa\Olcs\Api\Entity\View\DocumentSearchView
  */
-class DocumentSearchViewTest extends \PHPUnit_Framework_TestCase
+class DocumentSearchViewTest extends \PHPUnit\Framework\TestCase
 {
     /** @var DocumentSearchView */
     protected $sut;

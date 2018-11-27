@@ -43,7 +43,7 @@ class UpdateVehiclesTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithoutPartialWithoutVehicles()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 111,

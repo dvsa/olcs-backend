@@ -4,15 +4,16 @@ namespace OlcsTest\Db\Service\Search;
 
 use Olcs\Db\Service\Search\QueryTemplate;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Class QueryTemplateTest
  */
-class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
+class QueryTemplateTest extends TestCase
 {
     public function testQueryTemplateMissing()
     {
-        $this->setExpectedException(\RuntimeException::class, "Query template file 'foo.json' is missing");
+        $this->expectException(\RuntimeException::class, "Query template file 'foo.json' is missing");
         $sut = new QueryTemplate('foo.json', 'bar');
         // prevent unused variable violation
         unset($sut);

@@ -89,7 +89,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(717)->once()
             ->andReturn([]);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -251,7 +251,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class,
-            ['id' => $licenceId], new Result()
+            ['id' => $licenceId],
+            new Result()
         );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
@@ -379,7 +380,8 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Licence\PrintLicence::class,
-            ['id' => $licenceId], new Result()
+            ['id' => $licenceId],
+            new Result()
         );
 
         $this->repoMap['ContinuationDetail']->shouldReceive('save')->once()->andReturnUsing(
