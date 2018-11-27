@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Api\Domain\Query\Bus\PreviousVariationByRouteNo;
 use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Bus\Expire as ExpireQuery;
+use Hamcrest\Text\MatchesPattern;
 
 /**
  * Bus test
@@ -308,7 +309,7 @@ class BusTest extends RepositoryTestCase
             m::type('string'),
             m::type('string'),
             'WITH',
-            matchesPattern('/localAuthority IS NULL AND t.organisation =/')
+            MatchesPattern::matchesPattern('/localAuthority IS NULL AND t.organisation =/')
         )->andReturnSelf()
          ->shouldReceive('setParameter')->with('organisation', 1);
 
@@ -358,7 +359,7 @@ class BusTest extends RepositoryTestCase
                 m::type('string'),
                 m::type('string'),
                 'WITH',
-                matchesPattern('/localAuthority = 1/')
+                MatchesPattern::matchesPattern('/localAuthority = 1/')
             )
             ->andReturnSelf()
             ->shouldReceive('setParameter')->with('localAuthority', 1);
@@ -409,7 +410,7 @@ class BusTest extends RepositoryTestCase
                 m::type('string'),
                 m::type('string'),
                 'WITH',
-                matchesPattern('/localAuthority IS NULL/')
+                MatchesPattern::matchesPattern('/localAuthority IS NULL/')
             )
             ->andReturnSelf()
             ->shouldReceive('setParameter')->with('localAuthority', 1);

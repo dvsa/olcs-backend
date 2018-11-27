@@ -160,9 +160,8 @@ class BatchControllerTest extends MockeryTestCase
         $this->mockConsole
             ->shouldReceive('writeLine')
             ->once()
-            ->with('/' . addslashes(CliCommand\CompaniesHouseVsOlcsDiffsExport::class) . '$/')
-            //
-            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+            ->with(m::pattern('/' . addslashes(CliCommand\CompaniesHouseVsOlcsDiffsExport::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
         $this->sut->companiesHouseVsOlcsDiffsExportAction();
     }
@@ -674,8 +673,8 @@ class BatchControllerTest extends MockeryTestCase
             );
 
         $this->mockConsole
-            ->shouldReceive('writeLine')->once()->with('/' . addslashes(CliCommand\DataGovUkExport::class) . '$/')
-            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/' . addslashes(CliCommand\DataGovUkExport::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
         $this->sut->dataGovUkExportAction();
     }
@@ -700,8 +699,8 @@ class BatchControllerTest extends MockeryTestCase
             );
 
         $this->mockConsole
-            ->shouldReceive('writeLine')->once()->with('/' . preg_quote(CliCommand\DataDvaNiExport::class) . '$/')
-            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/' . preg_quote(CliCommand\DataDvaNiExport::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
 
         $this->sut->dataDvaNiExportAction();
     }
@@ -865,8 +864,9 @@ class BatchControllerTest extends MockeryTestCase
             );
 
         $this->mockConsole
-            ->shouldReceive('writeLine')->once()->with('/' . addslashes(CliCommand\ImportUsersFromCsv::class) . '$/')
-            ->shouldReceive('writeLine')->once()->with('/unit_message$/');
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/' . addslashes(CliCommand\ImportUsersFromCsv::class) . '$/'))
+            ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
+
 
         $this->sut->importUsersFromCsvAction();
     }
