@@ -59,6 +59,7 @@ class RefData extends AbstractRefData
     const PERMIT_APP_STATUS_VALID = 'permit_app_valid';
 
 
+
     /**
      * RefData constructor.
      *

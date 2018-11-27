@@ -89,8 +89,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
-        if($command->getSurrenderId())
-        {
+        if ($command->getSurrenderId()) {
             $this->updateSurrender(
                 $digitalSignature,
                 $command->getSurrenderId()
@@ -254,14 +253,19 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
     private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $surrenderId)
     {
-        $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
+        $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
             [
                 'digitalSignature' => $digitalSignature,
                 'id' => $surrenderId,
-                'status' => 'surr_sts_signed'
+                'status' => $this->getRepo()->getRefdataReference(Entity\Surrender::SURRENDER_STATUS_SIGNED)
             ]
         ));
         //update licence
-        $this->getRepo('Licence')->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
+        $status = $this->getRepo('Licence')->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION);
+        /**
+         * @var Entity\Licence\Licence $licence
+         */
+        $licence = $this->getRepo('Surrender')->fetchById($surrenderId)->getLicence();
+        $licence->setStatus($status);
     }
 }

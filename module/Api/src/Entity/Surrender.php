@@ -28,5 +28,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Surrender extends AbstractSurrender
 {
-
+    const SURRENDER_STATUS_START='surrender_status_start';
+    const SURRENDER_STATUS_CONTACTS_COMPLETE='surrender_status_contacts_complete';
+    const SURRENDER_STATUS_DISCS_COMPLETE='surrender_status_discs_complete';
+    const SURRENDER_STATUS_LIC_DOCS_COMPLETE='surrender_status_lic_docs_completE';
+    const SURRENDER_STATUS_COMM_LIC_DOCS_COMPLETE='surrender_status_comm_lic_docs_complete';
+    const SURRENDER_STATUS_DETAILS_CONFIRMED='surrender_status_details_confirmed';
+    const SURRENDER_STATUS_SUBMITTED='surrender_status_submitted';
+    const SURRENDER_STATUS_SIGNED='surrender_status_signed';
+    const SURRENDER_STATUS_APPROVED='surrender_status_approved';
+    const SURRENDER_DOC_STATUS_DESTROYED='doc_status_destroyed';
+    const SURRENDER_DOC_STATUS_LOST='doc_status_lost';
+    const SURRENDER_DOC_STATUS_STOLEN='doc_status_stolen';
 }
