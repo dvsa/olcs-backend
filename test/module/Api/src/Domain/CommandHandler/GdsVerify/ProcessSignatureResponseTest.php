@@ -287,6 +287,29 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
     }
 
 
+    public function testProcessSignatureSurrender()
+    {
+        $command = Cmd::create([
+            'samlResponse' => base64_encode('SAML'),
+            'siurrenderid' => 65,
+            'role' => 'tma_sign_as_op'
+        ]);
+        $attributes = m::mock(Attributes::class);
+        $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
+        $attributes->shouldReceive('getArrayCopy')->with()->once()->andReturn(['foo' => 'bar']);
+        $this->mockedSmServices[Service\GdsVerify::class]->shouldReceive('getAttributesFromResponse')
+            ->with(base64_encode('SAML'))->once()->andReturn($attributes);
+
+        $this->repoMap['DigitalSignature']->shouldReceive('save')->once()->andReturnUsing(
+            function ($digitalSignature) {
+                /** @var \Dvsa\Olcs\Api\Entity\DigitalSignature $digitalSignature */
+                $this->assertSame(['foo' => 'bar'], $digitalSignature->getAttributesArray());
+                $this->assertSame('SAML', $digitalSignature->getSamlResponse());
+            }
+        );
+
+    }
+
     public function testSetGetGdsVerifyService()
     {
         $sut = new ProcessSignatureResponse();
