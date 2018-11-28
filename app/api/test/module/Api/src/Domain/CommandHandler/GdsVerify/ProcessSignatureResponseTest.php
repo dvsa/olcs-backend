@@ -291,8 +291,8 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([
             'samlResponse' => base64_encode('SAML'),
-            'siurrenderid' => 65,
-            'role' => 'tma_sign_as_op'
+            'surrenderId' => 65,
+
         ]);
         $attributes = m::mock(Attributes::class);
         $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
@@ -307,6 +307,8 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
                 $this->assertSame('SAML', $digitalSignature->getSamlResponse());
             }
         );
+
+       
 
     }
 
