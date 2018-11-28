@@ -7,6 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
+use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -83,6 +84,10 @@ class IrhpPermit extends AbstractRepository
                         Entity::STATUS_ERROR,
                     ]
                 );
+            $qb->orderBy($this->alias . '.permitNumber', 'ASC');
+        } elseif ($query instanceof ReadyToPrintConfirm) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.id', ':ids'))
+                ->setParameter('ids', $query->getIds());
             $qb->orderBy($this->alias . '.permitNumber', 'ASC');
         }
 
