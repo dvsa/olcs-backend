@@ -89,10 +89,11 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         }
 
         if ($command->getSurrenderId()) {
-            $this->updateSurrender(
+            $result = $this->updateSurrender(
                 $digitalSignature,
                 $command->getSurrenderId()
             );
+            $this->result->addMessage($result);
 
             $this->result->addMessage('Digital Signature added to surrender' . $command->getSurrenderId());
         }
@@ -250,21 +251,22 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     }
 
 
-    private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $surrenderId)
+    private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $licenceId)
     {
         $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
             [
                 'digitalSignature' => $digitalSignature,
-                'id' => $surrenderId,
-                'status' => $this->getRepo()->getRefdataReference(Entity\Surrender::SURRENDER_STATUS_SIGNED)
+                'id' => $licenceId,
+                'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED
             ]
         ));
-        //update licence
-        $status = $this->getRepo('Licence')->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION);
+
         /**
          * @var Entity\Licence\Licence $licence
          */
-        $licence = $this->getRepo('Surrender')->fetchById($surrenderId)->getLicence();
-        $licence->setStatus($status);
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        $licence->setStatus(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION);
+        $licence->save();
+        return $result;
     }
 }

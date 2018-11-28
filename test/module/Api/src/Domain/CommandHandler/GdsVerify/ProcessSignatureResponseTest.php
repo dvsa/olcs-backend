@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\GdsVerify\Data\Attributes;
@@ -29,6 +31,8 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->sut = new ProcessSignatureResponse();
         $this->mockRepo('DigitalSignature', \Dvsa\Olcs\Api\Domain\Repository\DigitalSignature::class);
         $this->mockRepo('Application', \Dvsa\Olcs\Api\Domain\Repository\Application::class);
+        $this->mockRepo('Licence', \Dvsa\Olcs\Api\Domain\Repository\Licence::class);
+        $this->mockRepo('Surrender', \Dvsa\Olcs\Api\Domain\Repository\Surrender::class);
         $this->mockRepo('ContinuationDetail', \Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail::class);
         $this->mockRepo(
             'TransportManagerApplication',
@@ -308,8 +312,29 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             }
         );
 
-       
+      
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,
+            ['id' => 65, 'status' => Surrender::SURRENDER_STATUS_SIGNED],
+            new Result()
+        );
+
+        $licence = m::mock(Licence::class)
+            ->shouldReceive('setStatus')
+            ->once()
+            ->with(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
+        ->getMock();
+
+        $licence->shouldReceive('save')->once();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with(65)
+            ->once()
+            ->andReturn($licence);
+
+        $this->sut->handleCommand($command);
     }
 
     public function testSetGetGdsVerifyService()
