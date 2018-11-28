@@ -130,6 +130,14 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * @return bool
      */
+    public function canMakeEcmtApplication()
+    {
+        return !$this->hasActiveEcmtApplication() && $this->isEligibleForPermits();
+    }
+
+    /**
+     * @return bool
+     */
     public function hasActiveEcmtApplication()
     {
         if ($this->ecmtApplications === null) {
