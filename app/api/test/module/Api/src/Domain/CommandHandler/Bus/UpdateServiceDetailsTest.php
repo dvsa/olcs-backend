@@ -145,7 +145,7 @@ class UpdateServiceDetailsTest extends CommandHandlerTestCase
             )->getMock();
         $mockOtherService->shouldReceive('save')->with($mockedEntity)->getMock();
         $mockOtherService->shouldReceive('save')->with($mockedEntity2)->getMock();
-        $mockOtherService->shouldReceive('save')->with(any(BusRegOtherService::class));
+        $mockOtherService->shouldReceive('save')->with(\Hamcrest\Matchers::anInstanceOf(BusRegOtherService::class));
 
         /** @var BusRegOtherServiceEntity $busReg */
         $mockBusRegObjectOtherServiceEntity = m::mock(BusRegOtherServiceEntity::class);
