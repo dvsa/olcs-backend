@@ -6,6 +6,7 @@ use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
+use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
@@ -150,6 +151,29 @@ class IrhpPermitTest extends RepositoryTestCase
                 . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
             . ']]] '
+            . 'ORDER BY m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForReadyToPrintConfirm()
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->andReturnSelf();
+
+        $query = ReadyToPrintConfirm::create(['ids' => [1, 2, 3]]);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND m.id IN [[[1,2,3]]] '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
     }

@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use ZfcRbac\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
@@ -116,6 +117,7 @@ trait AuthAwareTrait
     }
 
     /**
+     * get user
      *
      * @return \Dvsa\Olcs\Api\Entity\User\User
      */
@@ -134,6 +136,11 @@ trait AuthAwareTrait
         return ($this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER));
     }
 
+    /**
+     * is user a read only internal user
+     *
+     * @return bool
+     */
     public function isReadOnlyInternalUser()
     {
         $isReadOnlyUser = false;
@@ -205,7 +212,6 @@ trait AuthAwareTrait
         );
     }
 
-
     /**
      * Get system user
      *
@@ -225,5 +231,17 @@ trait AuthAwareTrait
     public function isTransportManager(): bool
     {
         return $this->isGranted(Permission::TRANSPORT_MANAGER);
+    }
+
+    /**
+     * Does the licence belong to the current organisation
+     *
+     * @param Licence $licence licence
+     *
+     * @return bool
+     */
+    public function licenceBelongsToOrganisation(Licence $licence): bool
+    {
+        return $licence->getRelatedOrganisation()->getId() === $this->getCurrentOrganisation()->getId();
     }
 }

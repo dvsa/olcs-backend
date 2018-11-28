@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DataRetention;
 
-use DateTime;
 use Dvsa\Olcs\Api\Domain\QueryHandler\DataRetention\GetProcessedList;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -27,13 +26,13 @@ class GetProcessedListTest extends QueryHandlerTestCase
         $query = Query::create(['dataRetentionRuleId' => 9999, 'startDate' => '2017-05-23', 'endDate' => '2017-09-01']);
 
         $this->repoMap['DataRetention']->shouldReceive('fetchAllProcessedForRule')
-            ->with(
-                9999,
-                equalTo(new DateTime("2017-05-23 0:0:0.0")),
-                equalTo(new DateTime("2017-09-01 0:0:0.0"))
-            )
             ->once()
-            ->andReturn(['RESULTS']);
+            ->andReturnUsing(function ($id, $startDate, $endDate) {
+                $this->assertEquals(9999, $id);
+                $this->assertEquals('2017-05-23', $startDate->format('Y-m-d'));
+                $this->assertEquals('2017-09-01', $endDate->format('Y-m-d'));
+                return ['RESULTS'];
+            });
 
         /** @var Result $actual */
         $actual = $this->sut->handleQuery($query);
