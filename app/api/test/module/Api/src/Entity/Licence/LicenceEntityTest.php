@@ -393,7 +393,6 @@ class LicenceEntityTest extends EntityTester
         $licence = $this->instantiate(Entity::class);
         $licence->setStatus(new RefData(Entity::LICENCE_STATUS_VALID));
         $licence->setGoodsOrPsv(new RefData(Entity::LICENCE_CATEGORY_GOODS_VEHICLE));
-        $licence->setLicenceType(new RefData(Entity::LICENCE_TYPE_RESTRICTED));
         $licence->setLicenceType(new RefData($licenceType));
 
         $this->assertEquals($expectedResult, $licence->isEligibleForPermits());
@@ -404,7 +403,7 @@ class LicenceEntityTest extends EntityTester
         return [
             [Entity::LICENCE_TYPE_RESTRICTED, true],
             [Entity::LICENCE_TYPE_STANDARD_INTERNATIONAL, true],
-            [Entity::LICENCE_TYPE_STANDARD_NATIONAL, false],
+            [Entity::LICENCE_TYPE_STANDARD_NATIONAL, true],
             [Entity::LICENCE_TYPE_SPECIAL_RESTRICTED, false],
         ];
     }

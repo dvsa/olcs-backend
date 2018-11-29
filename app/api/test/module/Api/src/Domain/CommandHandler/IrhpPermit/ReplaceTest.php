@@ -46,7 +46,7 @@ class ReplaceTest extends CommandHandlerTestCase
     {
         $this->refData = [
             IrhpPermit::STATUS_CEASED,
-            IrhpPermit::STATUS_ISSUED
+            IrhpPermit::STATUS_PRINTED
         ];
 
         parent::initReferences();
@@ -67,7 +67,7 @@ class ReplaceTest extends CommandHandlerTestCase
         /** @var IrhpPermit $oldPermit */
         $oldPermit = m::mock(IrhpPermit::class)->makePartial();
         $oldPermit->setIrhpCandidatePermit(m::mock(IrhpCandidatePermit::class)->makePartial());
-        $oldPermit->setStatus(new RefData(IrhpPermit::STATUS_ISSUED));
+        $oldPermit->setStatus(new RefData(IrhpPermit::STATUS_PRINTED));
         /** @var IrhpPermitRange $oldRange */
         $oldRange = m::mock(IrhpPermitRange::class)->makePartial();
         /** @var IrhpPermitStock $oldStock */
@@ -83,7 +83,7 @@ class ReplaceTest extends CommandHandlerTestCase
             ->andReturn($oldPermit);
 
         $oldPermit->shouldReceive('getStatus->getId')
-            ->andReturn(IrhpPermit::STATUS_ISSUED);
+            ->andReturn(IrhpPermit::STATUS_PRINTED);
 
         $this->sut->shouldReceive('handleQuery')
             ->once()
@@ -152,8 +152,8 @@ class ReplaceTest extends CommandHandlerTestCase
             ->with($cmdData['id'])
             ->andReturn($oldPermit);
 
-        $oldPermit->shouldReceive('isNotIssued')
-            ->andReturn(true);
+        $oldPermit->shouldReceive('isPrinted')
+            ->andReturn(false);
 
         $this->sut->handleCommand($command);
     }
@@ -189,8 +189,8 @@ class ReplaceTest extends CommandHandlerTestCase
             ->with($cmdData['id'])
             ->andReturn($oldPermit);
 
-        $oldPermit->shouldReceive('isNotIssued')
-            ->andReturn(false);
+        $oldPermit->shouldReceive('isPrinted')
+            ->andReturn(true);
 
         $this->sut->shouldReceive('handleQuery')
             ->once()

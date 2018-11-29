@@ -445,9 +445,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return $entity;
     }
 
-    private function createApplicationWithCompletedDeclaration()
+    private function createApplicationWithCompletedDeclaration($status = Entity::STATUS_NOT_YET_SUBMITTED)
     {
-        $entity = $this->createApplication();
+        $entity = $this->createApplication($status);
 
         $entity->setCheckedAnswers(true);
         $entity->setDeclaration(true);
@@ -871,6 +871,88 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return [
             [Entity::SOURCE_SELFSERVE, Entity::NOTIFICATION_TYPE_EMAIL],
             [Entity::SOURCE_INTERNAL, Entity::NOTIFICATION_TYPE_MANUAL]
+        ];
+    }
+
+    /**
+     * @dataProvider dpCantBeSubmittedByStatus
+     *
+     * check false is immediately returned for all statuses (the successful tests use a status of not yet submitted)
+     */
+    public function testCantBeSubmittedByStatus($status)
+    {
+        $application = $this->createApplication($status);
+        self::assertEquals(false, $application->canBeSubmitted());
+    }
+
+    /**
+     * App statuses where submission is not allowed
+     *
+     * @return array
+     */
+    public function dpCantBeSubmittedByStatus()
+    {
+        return [
+            [Entity::STATUS_CANCELLED],
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_WITHDRAWN],
+            [Entity::STATUS_AWAITING_FEE ],
+            [Entity::STATUS_FEE_PAID],
+            [Entity::STATUS_UNSUCCESSFUL],
+            [Entity::STATUS_ISSUED],
+            [Entity::STATUS_ISSUING],
+            [Entity::STATUS_VALID],
+            [Entity::STATUS_DECLINED],
+        ];
+    }
+
+    /**
+     * @dataProvider dpLicenceCanMakeApplicationProvider
+     *
+     * This test puts the application into a state it can be submitted, depending on the state of the licence
+     * If the licence is in the correct state then true will be returned
+     */
+    public function testCanBeSubmittedTrue($licenceCanMakeApplication)
+    {
+        $sourceRefData = m::mock(RefData::class);
+        $statusRefData = new RefData(Entity::STATUS_NOT_YET_SUBMITTED);
+        $permitTypeRefData = m::mock(RefData::class);
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn($licenceCanMakeApplication);
+        $dateReceived = '2017-12-25';
+        $sectors = m::mock(Sectors::class);
+        $cabotage = 1;
+        $declaration = 1;
+        $emissions = 1;
+        $permitsRequired = 999;
+        $trips = 666;
+        $internationalJourneysRefData = m::mock(RefData::class);
+        $countrys = new ArrayCollection([m::mock(Country::class)]);
+
+        $application = Entity::createNewInternal(
+            $sourceRefData,
+            $statusRefData,
+            $permitTypeRefData,
+            $licence,
+            $dateReceived,
+            $sectors,
+            $countrys,
+            $cabotage,
+            $declaration,
+            $emissions,
+            $permitsRequired,
+            $trips,
+            $internationalJourneysRefData
+        );
+
+        self::assertEquals($licenceCanMakeApplication, $application->canBeSubmitted());
+    }
+
+    public function dpLicenceCanMakeApplicationProvider()
+    {
+        return [
+            [true],
+            [false]
         ];
     }
 }

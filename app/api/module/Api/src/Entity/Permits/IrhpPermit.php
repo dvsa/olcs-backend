@@ -248,6 +248,16 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
+     * Is printed
+     *
+     * @return bool
+     */
+    public function isPrinted()
+    {
+        return $this->status->getId() === self::STATUS_PRINTED;
+    }
+
+    /**
      * Is not issued
      *
      * @return bool

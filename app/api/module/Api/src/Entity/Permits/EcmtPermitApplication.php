@@ -690,15 +690,19 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             return false;
         }
 
-        $sections = $this->getSectionCompletion(self::CONFIRMATION_SECTIONS);
+        $confirmationSections = $this->getSectionCompletion(self::CONFIRMATION_SECTIONS);
 
-        if (!$sections['allCompleted']) {
+        if (!$confirmationSections['allCompleted']) {
             return false;
         }
 
-        $sections = $this->getSectionCompletion(self::SECTIONS);
+        $applicationSections = $this->getSectionCompletion(self::SECTIONS);
 
-        return $sections['allCompleted'];
+        if (!$applicationSections['allCompleted']) {
+            return false;
+        }
+
+        return $this->licence->canMakeEcmtApplication();
     }
 
     /**
