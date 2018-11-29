@@ -47,8 +47,8 @@ class Replace extends AbstractCommandHandler implements TransactionedInterface, 
         // Retrieve old permit and verify that it is in a valid state to replace
         /** @var IrhpPermit $oldPermit */
         $oldPermit = $this->getRepo()->fetchById($command->getId());
-        if ($oldPermit->isNotIssued()) {
-            throw new ValidationException(['Only "Issued" Permits can be replaced']);
+        if (!$oldPermit->isPrinted()) {
+            throw new ValidationException(['Only "Printed" Permits can be replaced']);
         }
 
         $targetRange = $this->findTargetRange(
