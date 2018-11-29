@@ -702,7 +702,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             return false;
         }
 
-        return $this->licence->canMakeEcmtApplication();
+        return $this->licence->canMakeEcmtApplication($this);
     }
 
     /**
