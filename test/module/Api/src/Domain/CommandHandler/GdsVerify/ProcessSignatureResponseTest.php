@@ -312,7 +312,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             }
         );
 
-      
+
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,

@@ -5,7 +5,7 @@
  */
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
-;
+
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService;
