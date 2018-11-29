@@ -48,12 +48,17 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
                 '    )' .
                 ') ' .
                 'and e.status = :status ' .
-                'and (l.licence_type = :licenceType1 or l.licence_type = :licenceType2)',
+                'and l.licence_type in (:licenceType1, :licenceType2, :licenceType3) ' .
+                'and l.status in (:licenceStatus1, :licenceStatus2, :licenceStatus3)',
                 [
                     'stockId' => $stockId,
                     'status' => EcmtPermitApplicationEntity::STATUS_UNDER_CONSIDERATION,
                     'licenceType1' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                    'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'licenceType3' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'licenceStatus1' => LicenceEntity::LICENCE_STATUS_VALID,
+                    'licenceStatus2' => LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    'licenceStatus3' => LicenceEntity::LICENCE_STATUS_CURTAILED
                 ]
             )
             ->once()
@@ -176,12 +181,17 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
                 '    )' .
                 ') ' .
                 'and e.status = :status ' .
-                'and (l.licence_type = :licenceType1 or l.licence_type = :licenceType2)',
+                'and l.licence_type in (:licenceType1, :licenceType2, :licenceType3) ' .
+                'and l.status in (:licenceStatus1, :licenceStatus2, :licenceStatus3)',
                 [
                     'stockId' => $stockId,
                     'status' => EcmtPermitApplicationEntity::STATUS_UNDER_CONSIDERATION,
                     'licenceType1' => LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                    'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL
+                    'licenceType2' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'licenceType3' => LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'licenceStatus1' => LicenceEntity::LICENCE_STATUS_VALID,
+                    'licenceStatus2' => LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    'licenceStatus3' => LicenceEntity::LICENCE_STATUS_CURTAILED
                 ]
             )
             ->once()
