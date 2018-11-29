@@ -85,11 +85,11 @@ class TransportManagerSignatureReviewServiceTest extends MockeryTestCase
 
             $expectedMarkup = $signatureName .
                 '_' . $birthDate .
-                '_' . $digitalSignatureDate->format('d-m-Y H:i:s') .
+                '_' . $digitalSignatureDate->format('d M Y') .
                 '_' . $expected['label'] . 'translated' .
                 '_' . $signatureName .
                 '_' . $birthDate .
-                '_' . $digitalSignatureDate->format('d-m-Y H:i:s');
+                '_' . $digitalSignatureDate->format('d M Y');
         }
 
         $this->assertEquals(['markup' => $expectedMarkup], $this->sut->getConfig($tma));
