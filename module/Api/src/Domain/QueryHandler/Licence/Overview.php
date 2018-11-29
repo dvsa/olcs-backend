@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -21,6 +22,8 @@ use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as SearchViewListQuery;
  */
 class Overview extends AbstractQueryHandler
 {
+    use LicenceStatusAwareTrait;
+
     protected $repoServiceName = 'Licence';
 
     protected $extraRepos = ['Application', 'TrafficArea', 'BusRegSearchView'];
@@ -38,11 +41,7 @@ class Overview extends AbstractQueryHandler
         $statusCriteria->where(
             $statusCriteria->expr()->in(
                 'status',
-                [
-                    LicenceEntity::LICENCE_STATUS_VALID,
-                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    LicenceEntity::LICENCE_STATUS_CURTAILED,
-                ]
+                $this->getLicenceStatusesActive()
             )
         );
 
@@ -90,10 +89,6 @@ class Overview extends AbstractQueryHandler
         return $this->getRepo('Application')->fetchActiveForOrganisation($organisationId);
     }
 
-    /**
-     * @todo, this is horrendously slow. Need a better way of getting
-     * a bus reg count for a licence, or speed up the view query! :(
-     */
     protected function getBusRegCount($licence)
     {
         // Here we get the bus reg list - all we need is a count...
