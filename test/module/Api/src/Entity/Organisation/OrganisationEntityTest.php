@@ -839,6 +839,7 @@ class OrganisationEntityTest extends EntityTester
                     $this->assertEquals(
                         [
                             LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                            LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
                             LicenceEntity::LICENCE_TYPE_RESTRICTED
                         ],
                         $expr->getExpressionList()[1]->getValue()->getValue()
