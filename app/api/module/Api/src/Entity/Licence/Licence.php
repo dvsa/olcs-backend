@@ -125,17 +125,25 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     }
 
     /**
+     * Check whether the licence can make an ECMT application (in some cases excluding checks on the current app)
+     *
+     * @param EcmtPermitApplication $exclude application to exclude
+     *
      * @return bool
      */
-    public function canMakeEcmtApplication()
+    public function canMakeEcmtApplication($exclude = null)
     {
-        return !$this->hasActiveEcmtApplication() && $this->isEligibleForPermits();
+        return !$this->hasActiveEcmtApplication($exclude) && $this->isEligibleForPermits();
     }
 
     /**
+     * Check whether the licence has active ECMT applications (in some cases excluding checks on the current app)
+     *
+     * @param EcmtPermitApplication $exclude application to exclude
+     *
      * @return bool
      */
-    public function hasActiveEcmtApplication()
+    public function hasActiveEcmtApplication($exclude = null)
     {
         if ($this->ecmtApplications === null) {
             return false;
@@ -143,6 +151,10 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         /** @var EcmtPermitApplication $application */
         foreach ($this->ecmtApplications as $application) {
+            if ($exclude instanceof EcmtPermitApplication && $application->getId() === $exclude->getId()) {
+                continue;
+            }
+
             if ($application->isActive()) {
                 return true;
             }
