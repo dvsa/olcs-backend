@@ -624,6 +624,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 'licenceType',
                 [
                     LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
                     LicenceEntity::LICENCE_TYPE_RESTRICTED
                 ]
             )
