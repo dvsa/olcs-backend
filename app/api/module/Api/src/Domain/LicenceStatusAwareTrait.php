@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
-
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 trait LicenceStatusAwareTrait
@@ -10,18 +9,40 @@ trait LicenceStatusAwareTrait
 
     private function isLicenceStatusSurrenderable(Licence $licence): bool
     {
-        return $this->isLicenceStatusAccessibleForExternalUser($licence);
+        return $this->isLicenceStatusStrictlyActive($licence);
     }
 
     private function isLicenceStatusAccessibleForExternalUser(Licence $licence): bool
     {
-        $statusesAccessibleForExternalUser = [
+        return in_array($licence->getStatus()->getId(), $this->getLicenceStatusesStrictlyActive());
+    }
+
+    private function isLicenceStatusActive(Licence $licence): bool
+    {
+        return in_array($licence->getStatus()->getId(), $this->getLicenceStatusesActive());
+    }
+
+    private function isLicenceStatusStrictlyActive(Licence $licence): bool
+    {
+        return in_array($licence->getStatus()->getId(), $this->getLicenceStatusesStrictlyActive());
+    }
+
+    private function getLicenceStatusesActive(): array
+    {
+        return array_merge(
+            $this->getLicenceStatusesStrictlyActive(),
+            [
+                Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
+            ]
+        );
+    }
+
+    private function getLicenceStatusesStrictlyActive(): array
+    {
+        return [
             Licence::LICENCE_STATUS_VALID,
             Licence::LICENCE_STATUS_SUSPENDED,
             Licence::LICENCE_STATUS_CURTAILED,
         ];
-
-        return in_array($licence->getStatus()->getId(), $statusesAccessibleForExternalUser);
     }
-
 }

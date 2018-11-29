@@ -5,10 +5,10 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceE;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 
 /**
@@ -18,6 +18,8 @@ use Dvsa\Olcs\Transfer\Query as TransferQry;
  */
 class Application extends AbstractRepository
 {
+    use LicenceStatusAwareTrait;
+
     protected $entity = Entity::class;
 
     protected $alias = 'a';
@@ -81,7 +83,7 @@ class Application extends AbstractRepository
             $qbE->orX(
                 $qbE->eq($this->alias . '.isVariation', 0),
                 $qbE->andX(
-                    $qbE->in('l.status', LicenceE::ACTIVE_STATUSES),
+                    $qbE->in('l.status', $this->getLicenceStatusesStrictlyActive()),
                     $qbE->eq($this->alias . '.isVariation', 1),
                     $qbE->orX(
                         $qbE->isNull($this->alias . '.variationType'),
