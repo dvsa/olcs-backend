@@ -295,7 +295,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([
             'samlResponse' => base64_encode('SAML'),
-            'surrenderId' => 65,
+            'licenceId' => 65,
 
         ]);
         $attributes = m::mock(Attributes::class);

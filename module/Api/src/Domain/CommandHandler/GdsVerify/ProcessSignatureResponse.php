@@ -88,14 +88,14 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
-        if ($command->getSurrenderId()) {
+        if ($command->getLicenceId()) {
             $result = $this->updateSurrender(
                 $digitalSignature,
-                $command->getSurrenderId()
+                $command->getLicenceId()
             );
             $this->result->addMessage($result);
 
-            $this->result->addMessage('Digital Signature added to surrender' . $command->getSurrenderId());
+            $this->result->addMessage('Digital Signature added to surrender' . $command->getLicenceId());
         }
 
         return $this->result;
