@@ -56,7 +56,7 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
             throw new ForbiddenException(self::LICENCE_ORG_MSG);
         }
 
-        if (!$licence->canMakeEcmtApplication()) {
+        if (!$licence->canMakeEcmtApplication($application)) {
             $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
             throw new ForbiddenException($message);
         }
