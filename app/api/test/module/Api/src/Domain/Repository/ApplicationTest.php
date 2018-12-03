@@ -449,7 +449,7 @@ class ApplicationTest extends RepositoryTestCase
             'AND (' .
             'a.isVariation = 0 ' .
             'OR (' .
-            'l.status IN ["lsts_suspended","lsts_valid","lsts_curtailed"] ' .
+            'l.status IN ["lsts_valid","lsts_suspended","lsts_curtailed"] ' .
             'AND a.isVariation = 1 ' .
             'AND (' .
             'a.variationType IS NULL ' .

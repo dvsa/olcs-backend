@@ -62,8 +62,6 @@ class Licence extends AbstractQueryHandler
         /** @var Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
 
-        $this->guardAgainstLackOfPermission($licence);
-
         $this->auditRead($licence);
 
         $continuationDetail = $this->getContinuationDetail($licence);
@@ -140,13 +138,6 @@ class Licence extends AbstractQueryHandler
         }
 
         return null;
-    }
-
-    private function guardAgainstLackOfPermission(Entity\Licence\Licence $licence) : void
-    {
-        if ($this->isExternalUser() && !$this->isLicenceStatusAccessibleForExternalUser($licence)) {
-            throw new ForbiddenException('You do not have permission to access this record');
-        }
     }
 
     /**
