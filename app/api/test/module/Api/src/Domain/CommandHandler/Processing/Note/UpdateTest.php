@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
-use Dvsa\Olcs\Api\Entity;
-
 /**
  * Update Note Test
  */
@@ -32,33 +30,6 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-            NoteEntity::NOTE_TYPE_APPLICATION,
-            NoteEntity::NOTE_TYPE_BUS,
-            NoteEntity::NOTE_TYPE_CASE,
-            NoteEntity::NOTE_TYPE_LICENCE,
-            NoteEntity::NOTE_TYPE_ORGANISATION,
-            NoteEntity::NOTE_TYPE_PERSON,
-            NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER
-        ];
-
-        $this->references = [
-            Entity\Application\Application::class => [
-                55 => m::mock(Entity\Application\Application::class)
-            ],
-            Entity\System\RefData::class => [
-                NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER => m::mock(Entity\System\RefData::class)
-            ],
-            Entity\User\User::class => [
-                1 => m::mock(Entity\User\User::class)
-            ]
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
         $id = 150;
@@ -67,8 +38,7 @@ class UpdateTest extends CommandHandlerTestCase
         $data = [
             'id' => $id,
             'version' => $version,
-            'comment' => 'my comment update',
-            'priority' => '1'
+            'priority' => 'Y'
         ];
 
         $command = UpdateCommand::create($data);
@@ -79,8 +49,9 @@ class UpdateTest extends CommandHandlerTestCase
             ->andReturn(
                 m::mock(NoteEntity::class)
                     ->shouldReceive('setPriority')
-                    ->with(1)
-                    ->shouldreceive('getId')
+                    ->once()
+                    ->with('Y')
+                    ->shouldReceive('getId')
                     ->andReturn($id)
                     ->getMock()
             )
