@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Create Update Abstract a Note
@@ -40,7 +39,7 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
             $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_APPLICATION));
         }
 
-        if (method_exists($command, 'getApplication') && $command->getBusReg() !== null) {
+        if (method_exists($command, 'getBusReg') && $command->getBusReg() !== null) {
 
             /** @var Entity\Bus\BusReg $busReg */
             $busReg = $this->getRepo()->getReference(
@@ -85,7 +84,6 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         }
 
         if (method_exists($command, 'getLicence') && $command->getLicence() !== null) {
-
             $licence = $this->getRepo()->getReference(
                 Entity\Licence\Licence::class,
                 $command->getLicence()
@@ -96,7 +94,6 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         }
 
         if (method_exists($command, 'getOrganisation') && $command->getOrganisation() !== null) {
-
             $org = $this->getRepo()->getReference(
                 Entity\Organisation\Organisation::class,
                 $command->getOrganisation()
@@ -107,18 +104,17 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
         }
 
         if (method_exists($command, 'getTransportManager') && $command->getTransportManager() !== null) {
-
             $transportManager = $this->getRepo()->getReference(
                 Entity\Tm\TransportManager::class,
                 $command->getTransportManager()
             );
 
             $entity->setTransportManager($transportManager);
-            $entity->setNoteType(
-                $this->getRepo()->getReference(
-                    RefData::class, NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER
-                )
-            );
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER));
+        }
+
+        if (method_exists($command, 'getEcmtPermitApplication') && $command->getEcmtPermitApplication() !== null) {
+            $entity->setNoteType($this->getRepo()->getRefdataReference(NoteEntity::NOTE_TYPE_PERMIT));
         }
 
         return $entity;
