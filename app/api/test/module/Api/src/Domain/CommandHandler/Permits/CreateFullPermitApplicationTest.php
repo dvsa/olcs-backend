@@ -6,9 +6,11 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateFullPermitApplication;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
@@ -29,6 +31,7 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
@@ -41,12 +44,6 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
             EcmtPermitApplication::PERMIT_TYPE
         ];
 
-        $this->references = [
-            Licence::class => [
-                100 => m::mock(Licence::class),
-            ],
-        ];
-
         parent::initReferences();
     }
 
@@ -56,15 +53,20 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
         $stockId = 200;
         $windowId = 300;
         $ecmtPermitApplicationId = 400;
+        $permitsRequired = 500;
+        $dateReceived = '2018-11-10';
 
         $cmdData = [
             'licence' => $licenceId,
             'countryIds' => [],
-            'permitsRequired' => 10,
-            'dateReceived' => '2018-11-10'
+            'permitsRequired' => $permitsRequired,
+            'dateReceived' => $dateReceived
         ];
 
         $command = CreateFullPermitApplicationCmd::create($cmdData);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn(true);
 
         $ecmtPermitApplication = null;
         $this->repoMap['EcmtPermitApplication']
@@ -77,6 +79,12 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
                     $app->setId($ecmtPermitApplicationId);
                 }
             );
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->once()
+            ->with($licenceId)
+            ->andReturn($licence);
 
         $stock = m::mock(IrhpPermitStock::class);
         $stock->shouldReceive('getId')
@@ -101,10 +109,10 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
             UpdatePermitFee::class,
             [
                 'ecmtPermitApplicationId' => $ecmtPermitApplicationId,
-                'licenceId' => $command->getLicence(),
-                'permitsRequired' => $command->getPermitsRequired(),
+                'licenceId' => $licenceId,
+                'permitsRequired' => $permitsRequired,
                 'permitType' =>  EcmtPermitApplication::PERMIT_TYPE,
-                'receivedDate' =>  new DateTime($command->getDateReceived())
+                'receivedDate' =>  new DateTime($dateReceived)
             ],
             (new Result())->addMessage('IRHP Permit Application created')
         );
@@ -134,7 +142,7 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
             $ecmtPermitApplication->getPermitType()->getId()
         );
         $this->assertEquals(
-            $this->references[Licence::class][$licenceId],
+            $licence,
             $ecmtPermitApplication->getLicence()
         );
         $this->assertInstanceOf(\DateTime::class, $ecmtPermitApplication->getDateReceived());
@@ -149,5 +157,28 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandForbidden()
+    {
+        $licenceId = 200;
+        $licNo = 'OB1234567';
+        $command = CreateFullPermitApplicationCmd::create(['licence' => $licenceId]);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn(false);
+        $licence->shouldReceive('getId')->once()->withNoArgs()->andReturn($licenceId);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->once()
+            ->andReturn($licence);
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Licence ID ' . $licenceId . ' with number ' . $licNo . ' is unable to make an ECMT application');
+
+        $this->sut->handleCommand($command);
     }
 }
