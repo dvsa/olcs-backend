@@ -257,7 +257,8 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             [
                 'digitalSignature' => $digitalSignature,
                 'id' => $licenceId,
-                'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED
+                'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED,
+                'signatureType' => Entity\System\RefData::SIG_DIGITAL_SIGNATURE
             ]
         ));
 
