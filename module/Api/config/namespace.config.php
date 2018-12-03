@@ -189,4 +189,10 @@ return [
     'IrhpPermitStock' => 'Permits',
     'IrhpPermitType' => 'Permits',
     'IrhpPermitWindow' => 'Permits',
+    'ApplicationStep' => 'Generic',
+    'ApplicationValidation' => 'Generic',
+    'ApplicationPath' => 'Generic',
+    'Question' => 'Generic',
+    'Answer' => 'Generic',
+    'QuestionText' => 'Generic',
 ];

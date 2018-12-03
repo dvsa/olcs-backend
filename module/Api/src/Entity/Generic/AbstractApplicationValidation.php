@@ -1,0 +1,461 @@
+<?php
+
+namespace Dvsa\Olcs\Api\Entity\Generic;
+
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use JsonSerializable;
+use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
+/**
+ * ApplicationValidation Abstract Entity
+ *
+ * Auto-Generated
+ *
+ * @ORM\MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
+ * @ORM\Table(name="application_validation",
+ *    indexes={
+ *        @ORM\Index(name="fk_application_validation_question1_idx", columns={"question_id"}),
+ *        @ORM\Index(name="fk_application_validation_application_step1_idx",
+     *     columns={"application_step_id"})
+ *    }
+ * )
+ */
+abstract class AbstractApplicationValidation implements BundleSerializableInterface, JsonSerializable
+{
+    use BundleSerializableTrait;
+    use ProcessDateTrait;
+
+    /**
+     * Application step
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Generic\ApplicationStep
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationStep",
+     *     fetch="LAZY",
+     *     inversedBy="applicationValidations"
+     * )
+     * @ORM\JoinColumn(name="application_step_id", referencedColumnName="id", nullable=true)
+     */
+    protected $applicationStep;
+
+    /**
+     * Created by
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @Gedmo\Blameable(on="create")
+     */
+    protected $createdBy;
+
+    /**
+     * Created on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="created_on", nullable=true)
+     */
+    protected $createdOn;
+
+    /**
+     * Identifier - Id
+     *
+     * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * Last modified by
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @Gedmo\Blameable(on="update")
+     */
+    protected $lastModifiedBy;
+
+    /**
+     * Last modified on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
+     */
+    protected $lastModifiedOn;
+
+    /**
+     * Parameters
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="parameters", length=255, nullable=true)
+     */
+    protected $parameters;
+
+    /**
+     * Question
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Generic\Question
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Question",
+     *     fetch="LAZY",
+     *     inversedBy="applicationValidations"
+     * )
+     * @ORM\JoinColumn(name="question_id", referencedColumnName="id", nullable=true)
+     */
+    protected $question;
+
+    /**
+     * Rule
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="rule", length=255, nullable=true)
+     */
+    protected $rule;
+
+    /**
+     * Version
+     *
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
+     * @ORM\Version
+     */
+    protected $version = 1;
+
+    /**
+     * Weight
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="weight", precision=10, scale=2, nullable=true)
+     */
+    protected $weight;
+
+    /**
+     * Set the application step
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Generic\ApplicationStep $applicationStep entity being set as the value
+     *
+     * @return ApplicationValidation
+     */
+    public function setApplicationStep($applicationStep)
+    {
+        $this->applicationStep = $applicationStep;
+
+        return $this;
+    }
+
+    /**
+     * Get the application step
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Generic\ApplicationStep
+     */
+    public function getApplicationStep()
+    {
+        return $this->applicationStep;
+    }
+
+    /**
+     * Set the created by
+     *
+     * @param int $createdBy new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the created by
+     *
+     * @return int
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Set the created on
+     *
+     * @param \DateTime $createdOn new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setCreatedOn($createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the created on
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getCreatedOn($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->createdOn);
+        }
+
+        return $this->createdOn;
+    }
+
+    /**
+     * Set the id
+     *
+     * @param int $id new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the last modified by
+     *
+     * @param int $lastModifiedBy new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setLastModifiedBy($lastModifiedBy)
+    {
+        $this->lastModifiedBy = $lastModifiedBy;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified by
+     *
+     * @return int
+     */
+    public function getLastModifiedBy()
+    {
+        return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the last modified on
+     *
+     * @param \DateTime $lastModifiedOn new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setLastModifiedOn($lastModifiedOn)
+    {
+        $this->lastModifiedOn = $lastModifiedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last modified on
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedOn($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastModifiedOn);
+        }
+
+        return $this->lastModifiedOn;
+    }
+
+    /**
+     * Set the parameters
+     *
+     * @param string $parameters new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setParameters($parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Get the parameters
+     *
+     * @return string
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * Set the question
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Generic\Question $question entity being set as the value
+     *
+     * @return ApplicationValidation
+     */
+    public function setQuestion($question)
+    {
+        $this->question = $question;
+
+        return $this;
+    }
+
+    /**
+     * Get the question
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Generic\Question
+     */
+    public function getQuestion()
+    {
+        return $this->question;
+    }
+
+    /**
+     * Set the rule
+     *
+     * @param string $rule new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setRule($rule)
+    {
+        $this->rule = $rule;
+
+        return $this;
+    }
+
+    /**
+     * Get the rule
+     *
+     * @return string
+     */
+    public function getRule()
+    {
+        return $this->rule;
+    }
+
+    /**
+     * Set the version
+     *
+     * @param int $version new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setVersion($version)
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    /**
+     * Get the version
+     *
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * Set the weight
+     *
+     * @param float $weight new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    /**
+     * Get the weight
+     *
+     * @return float
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * Set the createdOn field on persist
+     *
+     * @ORM\PrePersist
+     *
+     * @return void
+     */
+    public function setCreatedOnBeforePersist()
+    {
+        $this->createdOn = new \DateTime();
+    }
+
+    /**
+     * Set the lastModifiedOn field on persist
+     *
+     * @ORM\PreUpdate
+     *
+     * @return void
+     */
+    public function setLastModifiedOnBeforeUpdate()
+    {
+        $this->lastModifiedOn = new \DateTime();
+    }
+
+    /**
+     * Clear properties
+     *
+     * @param array $properties array of properties
+     *
+     * @return void
+     */
+    public function clearProperties($properties = array())
+    {
+        foreach ($properties as $property) {
+            if (property_exists($this, $property)) {
+                $this->$property = null;
+            }
+        }
+    }
+}
