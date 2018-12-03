@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection as CollectionInterface;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg;
@@ -52,6 +53,8 @@ use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
  */
 class Licence extends AbstractLicence implements ContextProviderInterface, OrganisationProviderInterface
 {
+    use LicenceStatusAwareTrait;
+
     const ERROR_CANT_BE_SR = 'LIC-TOL-1';
     const ERROR_REQUIRES_VARIATION = 'LIC-REQ-VAR';
     const ERROR_SAFETY_REQUIRES_TACHO_NAME = 'LIC-SAFE-TACH-1';
@@ -88,12 +91,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     const TACH_EXT = 'tach_external';
     const TACH_INT = 'tach_internal';
     const TACH_NA = 'tach_na';
-
-    const ACTIVE_STATUSES = [
-        self::LICENCE_STATUS_SUSPENDED,
-        self::LICENCE_STATUS_VALID,
-        self::LICENCE_STATUS_CURTAILED,
-    ];
 
     /**
      * Licence constructor
@@ -451,7 +448,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $criteria = Criteria::create();
         $criteria->andWhere(
-            $criteria->expr()->in('status', self::ACTIVE_STATUSES)
+            $criteria->expr()->in('status', $this->getLicenceStatusesStrictlyActive())
         );
         $criteria->andWhere(
             $criteria->expr()->eq('goodsOrPsv', $this->getGoodsOrPsv())
@@ -616,7 +613,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function isValid()
     {
-        return in_array($this->status->getId(), self::ACTIVE_STATUSES);
+        return in_array($this->status->getId(), $this->getLicenceStatusesStrictlyActive());
     }
 
     /**

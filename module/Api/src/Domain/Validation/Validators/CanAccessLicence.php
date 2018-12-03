@@ -7,14 +7,42 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
+use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
+use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareTrait;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+
 /**
  * Can Access Licence
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CanAccessLicence extends AbstractCanAccessEntity
+class CanAccessLicence extends AbstractValidator implements AuthAwareInterface, RepositoryManagerAwareInterface
 {
-    protected $repo = 'Licence';
+    use RepositoryManagerAwareTrait;
+    use LicenceStatusAwareTrait;
+    use AuthAwareTrait;
+
+    public function isValid($licenceId)
+    {
+        if ($this->isInternalUser()) {
+            return true;
+        }
+
+        if ($this->isSystemUser()) {
+            return true;
+        }
+
+        $licence = $this->getLicence($licenceId);
+
+        if (!$this->isLicenceStatusAccessibleForExternalUser($licence)) {
+            return false;
+        }
+
+        return $this->isOwner($licence);
+    }
 
     /**
      * Get Licence entity
@@ -23,12 +51,12 @@ class CanAccessLicence extends AbstractCanAccessEntity
      *
      * @return \Dvsa\Olcs\Api\Entity\Licence\Licence
      */
-    protected function getEntity($entityId)
+    protected function getLicence($licenceId) : Licence
     {
-        if (is_numeric($entityId)) {
-            return parent::getEntity($entityId);
+        if (is_numeric($licenceId)) {
+            return $this->getRepo('Licence')->fetchById($licenceId);
         }
 
-        return $this->getRepo($this->repo)->fetchByLicNo($entityId);
+        return $this->getRepo('Licence')->fetchByLicNo($licenceId);
     }
 }
