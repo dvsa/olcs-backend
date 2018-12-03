@@ -296,6 +296,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $command = Cmd::create([
             'samlResponse' => base64_encode('SAML'),
             'licenceId' => 65,
+            'signatureType' => RefData::SIG_DIGITAL_SIGNATURE
 
         ]);
         $attributes = m::mock(Attributes::class);
@@ -316,7 +317,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,
-            ['id' => 65, 'status' => Surrender::SURRENDER_STATUS_SIGNED],
+            ['id' => 65, 'status' => Surrender::SURRENDER_STATUS_SIGNED, 'signatureType'=>RefData::SIG_DIGITAL_SIGNATURE],
             new Result()
         );
 
