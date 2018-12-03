@@ -918,7 +918,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $statusRefData = new RefData(Entity::STATUS_NOT_YET_SUBMITTED);
         $permitTypeRefData = m::mock(RefData::class);
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn($licenceCanMakeApplication);
         $dateReceived = '2017-12-25';
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
@@ -944,6 +943,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $trips,
             $internationalJourneysRefData
         );
+
+        $licence->shouldReceive('canMakeEcmtApplication')
+            ->once()
+            ->with($application)
+            ->andReturn($licenceCanMakeApplication);
 
         self::assertEquals($licenceCanMakeApplication, $application->canBeSubmitted());
     }
