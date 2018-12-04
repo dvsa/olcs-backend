@@ -39,6 +39,7 @@ class CreateTest extends CommandHandlerTestCase
             NoteEntity::NOTE_TYPE_CASE,
             NoteEntity::NOTE_TYPE_LICENCE,
             NoteEntity::NOTE_TYPE_ORGANISATION,
+            NoteEntity::NOTE_TYPE_PERMIT,
             NoteEntity::NOTE_TYPE_PERSON,
             NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER
         ];
@@ -62,26 +63,16 @@ class CreateTest extends CommandHandlerTestCase
             Entity\Tm\TransportManager::class => [
                 55 => m::mock(Entity\Tm\TransportManager::class)
             ],
-            Entity\System\RefData::class => [
-                NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER => m::mock(Entity\System\RefData::class)
-            ]
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand($data, $expected)
     {
-        $data = [
-            'application' => 50,
-            'busReg' => 51,
-            'case' => 52,
-            'licence' => 53,
-            'organisation' => 54,
-            'transportManager' => 55,
-            'comment' => 'my comment'
-        ];
-
         $command = CreateCommand::create($data);
 
         /** @var $note NoteEntity */
@@ -112,15 +103,160 @@ class CreateTest extends CommandHandlerTestCase
         $this->assertEquals($expectedResult, $result->toArray());
 
         $this->assertEquals(111, $note->getId());
+        $this->assertEquals($expected['comment'], $note->getComment());
+        $this->assertEquals($expected['priority'], $note->getPriority());
+        $this->assertEquals($expected['type'], $note->getNoteType()->getId());
 
-        $this->assertEquals(50, $note->getApplication()->getId());
-        $this->assertEquals(51, $note->getBusReg()->getId());
-        $this->assertEquals(52, $note->getCase()->getId());
-        $this->assertEquals(53, $note->getLicence()->getId());
-        $this->assertEquals(54, $note->getOrganisation()->getId());
-        $this->assertEquals(55, $note->getTransportManager()->getId());
+        if (isset($expected['application'])) {
+            $this->assertEquals($expected['application'], $note->getApplication()->getId());
+        } else {
+            $this->assertNull($note->getApplication());
+        }
+        if (isset($expected['busReg'])) {
+            $this->assertEquals($expected['busReg'], $note->getBusReg()->getId());
+        } else {
+            $this->assertNull($note->getBusReg());
+        }
+        if (isset($expected['case'])) {
+            $this->assertEquals($expected['case'], $note->getCase()->getId());
+        } else {
+            $this->assertNull($note->getCase());
+        }
+        if (isset($expected['licence'])) {
+            $this->assertEquals($expected['licence'], $note->getLicence()->getId());
+        } else {
+            $this->assertNull($note->getLicence());
+        }
+        if (isset($expected['organisation'])) {
+            $this->assertEquals($expected['organisation'], $note->getOrganisation()->getId());
+        } else {
+            $this->assertNull($note->getOrganisation());
+        }
+        if (isset($expected['transportManager'])) {
+            $this->assertEquals($expected['transportManager'], $note->getTransportManager()->getId());
+        } else {
+            $this->assertNull($note->getTransportManager());
+        }
+    }
 
-        // Because we set the TM last, it will be a TM note Type.
-        $this->assertEquals(NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER, $note->getNoteType()->getId());
+    public function dpTestHandleCommand()
+    {
+        return [
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'application' => 50,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_APPLICATION,
+                    'application' => 50,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'busReg' => 51,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_BUS,
+                    'busReg' => 51,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'case' => 52,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_CASE,
+                    'case' => 52,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'licence' => 53,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_LICENCE,
+                    'licence' => 53,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'organisation' => 54,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_ORGANISATION,
+                    'organisation' => 54,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'transportManager' => 55,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_TRANSPORT_MANAGER,
+                    'transportManager' => 55,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'ecmtPermitApplication' => 56,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'Y',
+                    'type' => NoteEntity::NOTE_TYPE_PERMIT,
+                ],
+            ],
+            [
+                'data' => [
+                    'comment' => 'my comment',
+                    'priority' => 'N',
+                    'application' => 50,
+                    'busReg' => 51,
+                    'case' => 52,
+                    'licence' => 53,
+                    'organisation' => 54,
+                    'transportManager' => 55,
+                    'ecmtPermitApplication' => 56,
+                ],
+                'expected' => [
+                    'comment' => 'my comment',
+                    'priority' => 'N',
+                    'type' => NoteEntity::NOTE_TYPE_PERMIT,
+                    'application' => 50,
+                    'busReg' => 51,
+                    'case' => 52,
+                    'licence' => 53,
+                    'organisation' => 54,
+                    'transportManager' => 55,
+                    'ecmtPermitApplication' => 56,
+                ],
+            ],
+        ];
     }
 }
