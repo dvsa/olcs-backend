@@ -200,7 +200,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     {
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
-            'eligibleLicences' => $this->getEligibleLicences(),
+            // @Todo Change below to accept multiple permit types for reusable application journey
+            'eligibleEcmtLicences' => $this->getEligibleEcmtLicences(),
             'hasAvailableLicences' => $this->hasAvailableLicences()
         ];
     }
@@ -598,7 +599,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      **
      * @return array
      */
-    public function getEligibleLicences()
+    public function getEligibleEcmtLicences()
     {
         $criteria = Criteria::create();
         $criteria->where(
@@ -643,7 +644,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 'totAuthVehicles' => $licence->getTotAuthVehicles(),
                 'licenceType' => $licence->getLicenceType(),
                 'restricted' => $licence->getLicenceType() === LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                'hasActiveApplication' => $licence->hasActiveEcmtApplication()
+                'canMakeEcmtApplication' => $licence->canMakeEcmtApplication()
             ];
         }
 
@@ -657,8 +658,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function hasAvailableLicences()
     {
-        foreach ($this->getEligibleLicences()['result'] as $licence) {
-            if (!$licence['hasActiveApplication']) {
+        foreach ($this->getEligibleEcmtLicences()['result'] as $licence) {
+            if ($licence['canMakeEcmtApplication']) {
                 return true;
             }
         }
