@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class SubsidyTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
  */
-class SubsidyTest extends TestCase
+class SubsidyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideFilter

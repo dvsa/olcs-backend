@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Vehicle;
 
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Create Goods Vehicle Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateGoodsVehicleTest extends PHPUnit_Framework_TestCase
+class CreateGoodsVehicleTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

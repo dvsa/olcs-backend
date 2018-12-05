@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OpCorrespondenceAddress as Sut;
 /**
  * OpCorrespondenceAddress bookmark test
  */
-class OpCorrespondenceAddressTest extends \PHPUnit_Framework_TestCase
+class OpCorrespondenceAddressTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

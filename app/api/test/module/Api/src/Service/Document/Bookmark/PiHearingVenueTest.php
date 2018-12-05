@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\PiHearingVenue;
 /**
  * Pi Hearing Venue test
  */
-class PiHearingVenueTest extends \PHPUnit_Framework_TestCase
+class PiHearingVenueTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

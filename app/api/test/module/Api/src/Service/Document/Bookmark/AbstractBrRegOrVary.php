@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
 /**
  * AbstractBrRegOrVary test
  */
-class AbstractBrRegOrVary extends \PHPUnit_Framework_TestCase
+class AbstractBrRegOrVary extends \PHPUnit\Framework\TestCase
 {
     protected $renderReg;
     protected $renderVary;
@@ -34,7 +34,7 @@ class AbstractBrRegOrVary extends \PHPUnit_Framework_TestCase
      */
     public function testRenderWithEmptyData()
     {
-        $this->setExpectedException(
+        $this->expectException(
             \Exception::class,
             'Failed to generate bookmark ' . $this->bookmarkClass
         );

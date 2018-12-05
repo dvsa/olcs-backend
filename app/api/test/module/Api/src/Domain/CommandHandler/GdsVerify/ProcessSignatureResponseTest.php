@@ -59,7 +59,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->mockedSmServices[Service\GdsVerify::class]->shouldReceive('getAttributesFromResponse')
             ->with('SAML')->once()->andReturn($attributes);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
         $this->sut->handleCommand($command);
     }
 

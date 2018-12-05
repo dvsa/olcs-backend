@@ -10,14 +10,14 @@ namespace OlcsTest\Db\Utility;
 use OlcsTest\Bootstrap;
 use Olcs\Db\Utility\BundleQuery;
 use Mockery as m;
-use PHPUnit_Framework_TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * BundleQuery Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class BundleQueryTest extends PHPUnit_Framework_TestCase
+class BundleQueryTest extends TestCase
 {
     protected $qb;
     protected $sm;

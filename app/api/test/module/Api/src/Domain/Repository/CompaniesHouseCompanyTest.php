@@ -116,7 +116,7 @@ class CompaniesHouseCompanyTest extends RepositoryTestCase
             ->with(CompanyEntity::class)
             ->andReturn($repo);
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->sut->getLatestByCompanyNumber($companyNumber);
     }

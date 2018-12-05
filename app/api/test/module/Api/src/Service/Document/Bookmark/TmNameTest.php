@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TmName;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TmNameTest extends \PHPUnit_Framework_TestCase
+class TmNameTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

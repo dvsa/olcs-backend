@@ -7,13 +7,14 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Email aware trait test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class EmailAwareTraitTest extends m\Adapter\Phpunit\MockeryTestCase
+class EmailAwareTraitTest extends TestCase
 {
     /**
      * Test organisation recipients when user and contact details present

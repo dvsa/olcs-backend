@@ -10,7 +10,7 @@ use Qandidate\Toggle\ToggleManager;
  * Class ToggleServiceTest
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ToggleServiceTest extends \PHPUnit_Framework_TestCase
+class ToggleServiceTest extends \PHPUnit\Framework\TestCase
 {
     public function testEnabledAndDisabled()
     {

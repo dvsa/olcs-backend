@@ -66,7 +66,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($licence);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -132,7 +132,8 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
                     $licenceVehicle->setId(321);
                     $this->assertEquals('2015-01-01', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
                     $this->assertEquals(
-                        '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+                        '2015-01-01 12:00:00',
+                        $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
                     );
                     $this->assertSame($savedVehicle, $licenceVehicle->getVehicle());
                     $this->assertSame($licence, $licenceVehicle->getLicence());

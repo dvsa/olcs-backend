@@ -167,7 +167,7 @@ class UnmergeTest extends CommandHandlerTestCase
 
         $this->repoMap['TransportManager']->shouldReceive('fetchById')->with(3)->once()->andReturn($mockTm);
 
-        $this->setExpectedException(\RuntimeException::class, 'Unable to unmerge entity FooBar');
+        $this->expectException(\RuntimeException::class, 'Unable to unmerge entity FooBar');
 
         $command = Cmd::create($data);
         $this->sut->handleCommand($command);

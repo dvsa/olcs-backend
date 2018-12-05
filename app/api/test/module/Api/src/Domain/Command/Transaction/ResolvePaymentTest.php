@@ -8,7 +8,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Transaction;
 
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment;
-use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 
 /**
@@ -16,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ResolvePaymentTest extends PHPUnit_Framework_TestCase
+class ResolvePaymentTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

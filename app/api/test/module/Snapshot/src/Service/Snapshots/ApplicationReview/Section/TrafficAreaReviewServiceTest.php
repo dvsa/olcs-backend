@@ -7,7 +7,6 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
-use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TrafficAreaReviewService;
 
 /**
@@ -15,7 +14,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\TrafficAreaRe
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class TrafficAreaReviewServiceTest extends PHPUnit_Framework_TestCase
+class TrafficAreaReviewServiceTest extends \PHPUnit\Framework\TestCase
 {
     protected $sut;
 

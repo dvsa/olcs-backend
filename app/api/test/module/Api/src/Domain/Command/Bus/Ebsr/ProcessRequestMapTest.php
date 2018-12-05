@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Process request map Test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ProcessRequestMapTest extends PHPUnit_Framework_TestCase
+class ProcessRequestMapTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

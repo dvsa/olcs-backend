@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\Compare;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Companies House Compare command test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CompareTest extends PHPUnit_Framework_TestCase
+class CompareTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {
