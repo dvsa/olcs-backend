@@ -7,11 +7,9 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use \Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
-use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 
 /**
  * Permit Application
