@@ -67,6 +67,11 @@ class UpdateTest extends CommandHandlerTestCase
             $surrenderEntity->shouldReceive('setDiscStolenInfo')->once();
         }
 
+        if (array_key_exists('signatureType', $data)) {
+            $surrenderEntity->shouldReceive('setSignatureType')->once();
+        }
+
+
         $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
 
         $this->repoMap['Surrender']
@@ -103,12 +108,14 @@ class UpdateTest extends CommandHandlerTestCase
                     'discStolenInfo' => 'text',
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
                     'status' => 'surr_sts_comm_lic_docs_complete',
+                    'signatureType' =>'TEST'
                 ]
             ],
             'case_02' => [
                 [
                     'licence' => 11,
                     'status' => 'surr_sts_comm_lic_docs_complete',
+                    'signatureType' =>'TEST'
                 ]
             ],
             'case_03' => [
