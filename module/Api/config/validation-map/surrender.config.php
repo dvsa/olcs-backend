@@ -11,6 +11,6 @@ return [
     CommandHandler\Surrender\Create::class                              => CanSurrenderLicence::class,
     CommandHandler\Surrender\Update::class                              => CanAccessLicenceWithLicence::class,
     CommandHandler\Surrender\Delete::class                              => CanDeleteSurrender::class,
-    QueryHandler\Surrender\GetStatus::class                             => CanAccessLicenceWithId::class,
-    QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceWithId::class
+    QueryHandler\Surrender\GetStatus::class                             => CanAccessLicenceWithLicence::class,
+    QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceWithLicence::class
 ];
