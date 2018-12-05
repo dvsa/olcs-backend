@@ -88,14 +88,14 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
         }
 
-        if ($command->getLicenceId()) {
+        if ($command->getLicence()) {
             $result = $this->updateSurrender(
                 $digitalSignature,
-                $command->getLicenceId()
+                $command->getLicence()
             );
             $this->result->addMessage($result);
 
-            $this->result->addMessage('Digital Signature added to surrender' . $command->getLicenceId());
+            $this->result->addMessage('Digital Signature added to surrender' . $command->getLicence());
         }
 
         return $this->result;
@@ -256,7 +256,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
             [
                 'digitalSignature' => $digitalSignature,
-                'id' => $licenceId,
+                'licence' => $licenceId,
                 'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED,
                 'signatureType' => Entity\System\RefData::SIG_DIGITAL_SIGNATURE
             ]

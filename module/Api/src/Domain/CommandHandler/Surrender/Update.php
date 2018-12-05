@@ -13,13 +13,16 @@ final class Update extends AbstractSurrenderCommandHandler
 
     /**
      * @param Cmd $command
+     *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
         /** @var SurrenderEntity $surrender */
-        $surrender = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $surrender = $this->getRepo()->fetchByLicenceId($command->getLicence(), Query::HYDRATE_OBJECT);
+
+
 
         if ($command->getCommunityLicenceDocumentStatus()) {
             $communityLicDocumentStatus = $this->getRepo()->getRefdataReference($command->getCommunityLicenceDocumentStatus());
@@ -27,7 +30,10 @@ final class Update extends AbstractSurrenderCommandHandler
         }
 
         if ($command->getDigitalSignature()) {
-            $digitalSignature = $this->getRepo()->getReference(DigitalSignature::class, $command->getDigitalSignature());
+            $digitalSignature = $this->getRepo()->getReference(
+                DigitalSignature::class,
+                $command->getDigitalSignature()
+            );
             $surrender->setDigitalSignature($digitalSignature);
         }
 
@@ -60,6 +66,11 @@ final class Update extends AbstractSurrenderCommandHandler
         if ($command->getDiscStolenInfo() !== null) {
             $surrender->setDiscStolenInfo($command->getDiscStolenInfo());
         }
+
+        if ($command->getSignatureType() !== null) {
+            $surrender->setSignatureType($command->getSignatureType());
+        }
+
 
         $this->getRepo()->save($surrender);
 
