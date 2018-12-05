@@ -67,10 +67,10 @@ class UpdateTest extends CommandHandlerTestCase
             $surrenderEntity->shouldReceive('setDiscStolenInfo')->once();
         }
 
-        $surrenderEntity->shouldReceive('getId')->andReturn($data['id'])->once();
+        $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
 
         $this->repoMap['Surrender']
-            ->shouldReceive('fetchUsingId')
+            ->shouldReceive('fetchByLicenceId')
             ->andReturn($surrenderEntity)
             ->once();
 
@@ -79,9 +79,10 @@ class UpdateTest extends CommandHandlerTestCase
             ->with(m::type(SurrenderEntity::class))
             ->once();
 
+
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame($data['id'], $result->getId('surrender'));
+        $this->assertSame(1, $result->getId('surrender'));
         $this->assertSame(['Surrender successfully updated.'], $result->getMessages());
 
         $this->assertInstanceOf(Result::class, $result);
@@ -92,7 +93,7 @@ class UpdateTest extends CommandHandlerTestCase
         $data = [
             'case_01' => [
                 [
-                    'id' => 11,
+                    'licence' => 11,
                     'communityLicenceDocumentStatus' => 'doc_sts_lost',
                     'digitalSignature' => '1',
                     'discDestroyed' => '1',
@@ -106,13 +107,13 @@ class UpdateTest extends CommandHandlerTestCase
             ],
             'case_02' => [
                 [
-                    'id' => 11,
+                    'licence' => 11,
                     'status' => 'surr_sts_comm_lic_docs_complete',
                 ]
             ],
             'case_03' => [
                 [
-                    'id' => 11,
+                    'licence' => 11,
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
                 ]
             ],
