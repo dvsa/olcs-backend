@@ -65,7 +65,6 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
         $this->assertObjectHasAttribute('messages', $result);
         $this->assertContains('Submission reopened', $result->getMessages());
         $this->assertNull($savedSubmission->getClosedDate());
-
     }
 
     /**
@@ -88,7 +87,7 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($submission);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }

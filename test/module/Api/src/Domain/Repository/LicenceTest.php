@@ -73,7 +73,7 @@ class LicenceTest extends RepositoryTestCase
             ->with(Licence::class)
             ->andReturn($repo);
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->sut->fetchSafetyDetailsUsingId($command, Query::HYDRATE_OBJECT, 1);
     }
@@ -262,7 +262,7 @@ class LicenceTest extends RepositoryTestCase
 
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn([]);
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->sut->fetchByLicNo('LIC0001');
     }

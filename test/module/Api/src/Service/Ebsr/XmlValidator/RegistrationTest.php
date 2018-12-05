@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class RegistrationTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator
  */
-class RegistrationTest extends TestCase
+class RegistrationTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param $xml

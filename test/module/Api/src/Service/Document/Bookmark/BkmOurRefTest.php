@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmOurRef as Sut;
 /**
  * BkmOurRef Test
  */
-class BkmOurRefTest extends \PHPUnit_Framework_TestCase
+class BkmOurRefTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

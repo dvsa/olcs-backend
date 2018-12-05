@@ -99,7 +99,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(['foo' => 'bar']);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -151,7 +151,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(['foo' => 'bar']);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

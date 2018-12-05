@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Task;
 
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Create Task Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateTaskTest extends PHPUnit_Framework_TestCase
+class CreateTaskTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OpNameOnly;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class OpNameOnlyTest extends \PHPUnit_Framework_TestCase
+class OpNameOnlyTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

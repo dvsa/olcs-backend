@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OpDetails;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class OpDetailsTest extends \PHPUnit_Framework_TestCase
+class OpDetailsTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

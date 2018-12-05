@@ -3,13 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
-use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class ViaTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
  */
-class ViaTest extends TestCase
+class ViaTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideFilter

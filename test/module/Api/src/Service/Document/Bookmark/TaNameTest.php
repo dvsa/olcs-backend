@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TaName;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class TaNameTest extends \PHPUnit_Framework_TestCase
+class TaNameTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

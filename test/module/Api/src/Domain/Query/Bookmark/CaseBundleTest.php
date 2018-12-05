@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Query\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\CaseBundle;
 
-class CaseBundleTest extends \PHPUnit_Framework_TestCase
+class CaseBundleTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

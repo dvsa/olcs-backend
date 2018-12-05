@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails;
 /**
  * @covers \Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerDetails
  */
-class CaseworkerDetailsTest extends \PHPUnit_Framework_TestCase
+class CaseworkerDetailsTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

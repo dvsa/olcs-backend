@@ -4,11 +4,12 @@ namespace Dvsa\OlcsTest\GdsVerify\Data;
 
 use Dvsa\Olcs\GdsVerify\SAML2\Binding;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Binding test
  */
-class BindingTest extends \PHPUnit_Framework_TestCase
+class BindingTest extends TestCase
 {
     public function testSend()
     {
@@ -33,12 +34,7 @@ class BindingTest extends \PHPUnit_Framework_TestCase
 
     public function testReceive()
     {
-        $mockContainer = m::mock(\SAML2\Compat\AbstractContainer::class);
-        $mockContainer->shouldReceive('debugMessage')->once();
-        \SAML2\Compat\ContainerSingleton::setContainer($mockContainer);
-
-        $sut = new Binding();
-        $this->assertNull($sut->receive());
+        // Nothing to test (is No op)
     }
 
     public function testProcessResponse()

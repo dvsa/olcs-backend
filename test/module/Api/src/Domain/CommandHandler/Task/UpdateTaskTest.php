@@ -197,7 +197,7 @@ class UpdateTaskTest extends CommandHandlerTestCase
 
     public function testHandleCommandFailTeamInvalid()
     {
-        $this->setExpectedException(ValidationException::class, UpdateTask::ERR_TEAM_INVALID);
+        $this->expectException(ValidationException::class, UpdateTask::ERR_TEAM_INVALID);
 
         $this->sut->handleCommand(
             Cmd::create(

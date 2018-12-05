@@ -3,15 +3,15 @@
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
 use phpseclib\Crypt\AES;
-use PHPUnit_Framework_TestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 
 /**
  * Class EncryptedStringTypeTest
  * @covers \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType
  */
-class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
+class EncryptedStringTypeTest extends TestCase
 {
     /**
      * @var EncryptedStringType
@@ -33,7 +33,7 @@ class EncryptedStringTypeTest extends PHPUnit_Framework_TestCase
 
     public function testGetEncrypterNotSet()
     {
-        $this->setExpectedException(\RuntimeException::class, 'An encrypter must be set to allow encrypting data');
+        $this->expectException(\RuntimeException::class, 'An encrypter must be set to allow encrypting data');
         $this->sut->getEncrypter();
     }
 

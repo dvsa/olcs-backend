@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\CaseworkerName;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class CaseworkerNameTest extends \PHPUnit_Framework_TestCase
+class CaseworkerNameTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
