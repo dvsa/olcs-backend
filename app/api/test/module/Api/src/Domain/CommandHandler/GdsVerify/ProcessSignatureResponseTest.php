@@ -293,12 +293,13 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
 
     public function testProcessSignatureSurrender()
     {
-        $command = Cmd::create([
+        $data = [
             'samlResponse' => base64_encode('SAML'),
-            'licenceId' => 65,
+            'licence' => 65,
             'signatureType' => RefData::SIG_DIGITAL_SIGNATURE
 
-        ]);
+        ];
+        $command = Cmd::create($data);
         $attributes = m::mock(Attributes::class);
         $attributes->shouldReceive('isValidSignature')->with()->once()->andReturn(true);
         $attributes->shouldReceive('getArrayCopy')->with()->once()->andReturn(['foo' => 'bar']);
@@ -314,10 +315,14 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         );
 
 
-
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,
-            ['id' => 65, 'status' => Surrender::SURRENDER_STATUS_SIGNED, 'signatureType'=>RefData::SIG_DIGITAL_SIGNATURE],
+            [
+                'signatureType' => RefData::SIG_DIGITAL_SIGNATURE,
+                'licence' => 65,
+                'status' => Surrender::SURRENDER_STATUS_SIGNED,
+                'digitalSignature' => ''
+            ],
             new Result()
         );
 
@@ -325,7 +330,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->shouldReceive('setStatus')
             ->once()
             ->with(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
-        ->getMock();
+            ->getMock();
 
         $licence->shouldReceive('save')->once();
 
