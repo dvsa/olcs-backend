@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateTypeOfLicenceStatus;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update TypeOfLicence Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateTypeOfLicenceStatusTest extends \PHPUnit\Framework\TestCase
+class UpdateTypeOfLicenceStatusTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

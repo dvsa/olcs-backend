@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
+use PHPUnit_Framework_TestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
@@ -10,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  * Class ApplicationTypeTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
  */
-class ApplicationTypeTest extends \PHPUnit\Framework\TestCase
+class ApplicationTypeTest extends TestCase
 {
     /**
      * @dataProvider provideIsValid

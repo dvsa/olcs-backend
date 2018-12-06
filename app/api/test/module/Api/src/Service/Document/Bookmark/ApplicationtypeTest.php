@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Applicationtype as Sut;
 /**
  * ApplicationtypeTest
  */
-class ApplicationtypeTest extends \PHPUnit\Framework\TestCase
+class ApplicationtypeTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQueryApplication()
     {

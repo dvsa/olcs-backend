@@ -67,7 +67,7 @@ class PublicationGeneratorTest extends MockeryTestCase
     public function testCreatePublicationFailInvalidCfg()
     {
         //  expect
-        $this->expectException(\Exception::class, 'Invalid publication config');
+        $this->setExpectedException(\Exception::class, 'Invalid publication config');
 
         //  call
         $sut = new PublicationGenerator([], $this->mockCtxMngr, $this->mockProcessMngr);
@@ -94,7 +94,7 @@ class PublicationGeneratorTest extends MockeryTestCase
         $this->mockCtxMngr->shouldReceive('get')->andReturn($mockCtxClass);
 
         //  expect
-        $this->expectException(\Exception::class, 'No publication processors specified');
+        $this->setExpectedException(\Exception::class, 'No publication processors specified');
 
         //  call
         $sut = new PublicationGenerator($cfg, $this->mockCtxMngr, $this->mockProcessMngr);

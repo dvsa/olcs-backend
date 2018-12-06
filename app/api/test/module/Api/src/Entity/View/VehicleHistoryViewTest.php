@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\View\VehicleHistoryView;
 /**
  * @covers \Dvsa\Olcs\Api\Entity\View\VehicleHistoryView
  */
-class VehicleHistoryViewTest extends \PHPUnit\Framework\TestCase
+class VehicleHistoryViewTest extends \PHPUnit_Framework_TestCase
 {
     /** @var VehicleHistoryView */
     protected $sut;

@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Person;
 
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update Person
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateFullTest extends \PHPUnit\Framework\TestCase
+class UpdateFullTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

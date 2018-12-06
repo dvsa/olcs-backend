@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
+use PHPUnit_Framework_TestCase;
 
 /**
  * CancelFeeTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CancelFeeTest extends \PHPUnit\Framework\TestCase
+class CancelFeeTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

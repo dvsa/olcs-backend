@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\S9AuthorisorsAge;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-class S9AuthorisorsAgeTest extends \PHPUnit\Framework\TestCase
+class S9AuthorisorsAgeTest extends \PHPUnit_Framework_TestCase
 {
     public function testRender()
     {

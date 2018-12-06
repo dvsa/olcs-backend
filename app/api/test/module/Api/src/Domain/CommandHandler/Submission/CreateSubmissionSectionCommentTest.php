@@ -47,9 +47,8 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
 
     public function testHandleCommandAlreadyExists()
     {
-        $this->expectException(
-            ValidationException::class,
-            CreateSubmissionSectionComment::ERR_COMMENT_EXISTS
+        $this->setExpectedException(
+            ValidationException::class, CreateSubmissionSectionComment::ERR_COMMENT_EXISTS
         );
 
         $cmd = Cmd::create([]);
@@ -107,5 +106,6 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
         );
 
         $this->assertEquals($data['comment'], $savedSubmissionSectionComment->getComment());
+
     }
 }

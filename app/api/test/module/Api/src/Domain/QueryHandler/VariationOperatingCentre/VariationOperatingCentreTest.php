@@ -120,7 +120,7 @@ class VariationOperatingCentreTest extends QueryHandlerTestCase
 
     public function testHandleQueryNeither()
     {
-        $this->expectException(\Exception::class);
+        $this->setExpectedException(\Exception::class);
 
         $query = Qry::create(['id' => 'X111']);
 

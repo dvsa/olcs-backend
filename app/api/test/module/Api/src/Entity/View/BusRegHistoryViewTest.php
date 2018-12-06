@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\View\BusRegHistoryView;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class BusRegHistoryViewTest extends \PHPUnit\Framework\TestCase
+class BusRegHistoryViewTest extends \PHPUnit_Framework_TestCase
 {
     protected $entity;
 

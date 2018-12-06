@@ -210,7 +210,7 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->expectException(
+        $this->setExpectedException(
             ValidationException::class,
             var_export(
                 [

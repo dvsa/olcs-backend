@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Entity\Types\YesNoNullType;
 
 /**
@@ -14,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Types\YesNoNullType;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
+class YesNoNullTypeTest extends PHPUnit_Framework_TestCase
 {
     private $type;
 

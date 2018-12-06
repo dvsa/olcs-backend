@@ -91,6 +91,7 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
             $this->metaMap[$entity]->shouldReceive('getTableName')->andReturn($this->tableNameMap[$entity]);
 
             foreach ($this->columnNameMap[$entity] as $column => $details) {
+
                 $isAssociation = isset($details['isAssociation']) ? $details['isAssociation'] : false;
 
                 $this->metaMap[$entity]->shouldReceive('isAssociationWithSingleJoinColumn')
@@ -124,7 +125,7 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
         // add generic params
         $expectedParams['currentUserId'] = 1;
 
-        $this->expectException(RuntimeException::class);
+        $this->setExpectedException(RuntimeException::class);
 
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)

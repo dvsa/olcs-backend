@@ -271,7 +271,7 @@ class GrantIrfoPsvAuthTest extends CommandHandlerTestCase
      */
     public function testHandleCommandAnnualFeeOutstanding()
     {
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $data = [
             'id' => 42,

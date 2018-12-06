@@ -88,7 +88,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
     public function testHandleQueryFailingValidator()
     {
-        $this->expectException(ForbiddenException::class);
+        $this->setExpectedException(ForbiddenException::class);
 
         $query = m::mock(QueryInterface::class)->makePartial();
         $query->shouldReceive('getArrayCopy')->twice()->andReturn(['foo' => 'bar']);
@@ -108,7 +108,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
     public function testHandleQueryInvalid()
     {
-        $this->expectException(RuntimeException::class);
+        $this->setExpectedException(RuntimeException::class);
 
         $query = m::mock(QueryInterface::class)->makePartial();
 

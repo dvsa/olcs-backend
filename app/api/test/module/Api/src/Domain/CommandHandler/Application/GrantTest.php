@@ -39,7 +39,7 @@ class GrantTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'shouldCreateInspectionRequest' => 'Y',

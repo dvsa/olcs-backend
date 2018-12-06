@@ -44,7 +44,7 @@ class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
         $this->repoMap['TransportManagerLicence']->shouldReceive('fetchById')->with(345)->once()->andReturn($tml1);
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
         $this->sut->handleCommand($command);
     }

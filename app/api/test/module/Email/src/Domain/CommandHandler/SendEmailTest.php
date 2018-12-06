@@ -56,7 +56,7 @@ class SendEmailTest extends CommandHandlerTestCase
 
     public function testHandleCommandEmptyBody()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->setExpectedException(\RuntimeException::class);
 
         $data = [
             'plainBody' => ''
@@ -201,7 +201,7 @@ class SendEmailTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoAttachment()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->setExpectedException(\RuntimeException::class);
 
         $docId1 = 33;
         $docIdentifier1 = 'abcde123';

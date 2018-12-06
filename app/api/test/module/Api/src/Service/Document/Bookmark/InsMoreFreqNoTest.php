@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\InsMoreFreqNo;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class InsMoreFreqNoTest extends \PHPUnit\Framework\TestCase
+class InsMoreFreqNoTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

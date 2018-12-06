@@ -68,7 +68,7 @@ class DeleteOperatingCentreTest extends CommandHandlerTestCase
 
         $this->references[ApplicationOperatingCentre::class][22]->setAction('D');
 
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -100,7 +100,7 @@ class DeleteOperatingCentreTest extends CommandHandlerTestCase
 
         $this->references[LicenceOperatingCentre::class][22]->setOperatingCentre($oc);
 
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -171,7 +171,7 @@ class DeleteOperatingCentreTest extends CommandHandlerTestCase
         $this->references[ApplicationOperatingCentre::class][22]->shouldReceive('checkCanDelete')->with()->once()
             ->andReturn(['ERROR' => 'Foo']);
 
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
         $this->sut->handleCommand($command);
     }
 
@@ -255,7 +255,7 @@ class DeleteOperatingCentreTest extends CommandHandlerTestCase
         $this->references[LicenceOperatingCentre::class][22]->shouldReceive('checkCanDelete')->with()->once()
             ->andReturn(['ERROR' => 'Foo']);
 
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }

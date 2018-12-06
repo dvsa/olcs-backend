@@ -221,7 +221,7 @@ class UserTest extends MockeryTestCase
         $this->mockClient->shouldReceive('updateUser');
 
         //  expect
-        $this->expectException(\Exception::class, 'Invalid callback: unit_InvalidCallback');
+        $this->setExpectedException(\Exception::class, 'Invalid callback: unit_InvalidCallback');
 
         //  call
         $this->sut->resetPassword(9999, 'unit_InvalidCallback');

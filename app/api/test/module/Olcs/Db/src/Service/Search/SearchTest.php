@@ -273,7 +273,7 @@ class SearchTest extends MockeryTestCase
             ->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(true)
             ->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
 
-        $this->expectException(
+        $this->setExpectedException(
             \RuntimeException::class,
             'Cannot generate an elasticsearch query, is the template missing'
         );

@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateBusinessDetailsStatus;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update Business Details Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateBusinessDetailsStatusTest extends \PHPUnit\Framework\TestCase
+class UpdateBusinessDetailsStatusTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

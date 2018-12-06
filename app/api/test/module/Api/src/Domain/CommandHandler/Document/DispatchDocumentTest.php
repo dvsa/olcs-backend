@@ -78,7 +78,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoLicence()
     {
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $data = [];
         $command = Cmd::create($data);
@@ -88,7 +88,7 @@ class DispatchDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoDescription()
     {
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $data = [
             'licence' => self::LIC_ID

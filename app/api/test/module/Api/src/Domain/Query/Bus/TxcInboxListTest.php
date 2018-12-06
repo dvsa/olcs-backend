@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Bus;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Bus\TxcInboxList;
 
 /**
  * TxcInboxList test
  */
-class TxcInboxListTest extends \PHPUnit\Framework\TestCase
+class TxcInboxListTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

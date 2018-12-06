@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
+use PHPUnit_Framework_TestCase;
 use OlcsTest\Bootstrap;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory;
 
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class MessageConsumerManagerFactoryTest extends \PHPUnit\Framework\TestCase
+class MessageConsumerManagerFactoryTest extends PHPUnit_Framework_TestCase
 {
     protected $sut;
 

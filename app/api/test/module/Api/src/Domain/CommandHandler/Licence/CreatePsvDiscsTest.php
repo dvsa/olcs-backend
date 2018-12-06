@@ -63,7 +63,7 @@ class CreatePsvDiscsTest extends CommandHandlerTestCase
         $licence->shouldReceive('getPsvDiscs->matching->count')
             ->andReturn(5);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmOperatorName as Sut;
 /**
  * BkmOperatorName Test
  */
-class BkmOperatorNameTest extends \PHPUnit\Framework\TestCase
+class BkmOperatorNameTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

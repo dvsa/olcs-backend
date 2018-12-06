@@ -30,7 +30,7 @@ class WebServiceClientTest extends MockeryTestCase
         $mockHttpClient->shouldReceive('setFileUpload')->with('foo.rtf', 'file')->once();
         $mockHttpClient->shouldReceive('send')->andReturn($mockResponse);
 
-        $this->expectException(
+        $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
             'ConvertToPdf failed, web service response : TEXT'
         );
@@ -51,7 +51,7 @@ class WebServiceClientTest extends MockeryTestCase
         $mockHttpClient->shouldReceive('setFileUpload')->with('foo.rtf', 'file')->once();
         $mockHttpClient->shouldReceive('send')->andReturn($mockResponse);
 
-        $this->expectException(
+        $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
             'ConvertToPdf failed, web service response : TEXT2'
         );

@@ -147,7 +147,7 @@ class RejectWaiveTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(false);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

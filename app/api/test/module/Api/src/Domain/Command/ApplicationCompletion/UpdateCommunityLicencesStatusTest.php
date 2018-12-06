@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateCommunityLicencesStatus;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update Community Licences Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateCommunityLicencesStatusTest extends \PHPUnit\Framework\TestCase
+class UpdateCommunityLicencesStatusTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

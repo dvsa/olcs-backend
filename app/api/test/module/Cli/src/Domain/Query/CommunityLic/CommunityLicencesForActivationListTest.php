@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Query\CommunityLic\CommunityLicencesForActivationList;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CommunityLicencesForActivationListTest extends \PHPUnit\Framework\TestCase
+class CommunityLicencesForActivationListTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

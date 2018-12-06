@@ -80,7 +80,7 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
 
     public function testHandleCommandNotInProgressWithErrors()
     {
-        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
 
         $command = $this->getCommand();
 
@@ -102,7 +102,7 @@ class UpdateLicenceHistoryTest extends CommandHandlerTestCase
 
     public function testHandleCommandNotInProgressWithEmptyAnswer()
     {
-        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
 
         $command = $this->getCommand(false, true);
 

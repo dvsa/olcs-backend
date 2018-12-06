@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update Application Completion Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateApplicationCompletionTest extends \PHPUnit\Framework\TestCase
+class UpdateApplicationCompletionTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

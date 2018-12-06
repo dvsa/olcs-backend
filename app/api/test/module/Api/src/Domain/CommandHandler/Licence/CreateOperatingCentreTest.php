@@ -54,7 +54,7 @@ class CreateOperatingCentreTest extends CommandHandlerTestCase
         $data = [];
         $command = Cmd::create($data);
 
-        $this->expectException(ForbiddenException::class);
+        $this->setExpectedException(ForbiddenException::class);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->with(Permission::INTERNAL_USER, null)

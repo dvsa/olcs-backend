@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\PermitApplicationReference as Sut;
 /**
  * PermitApplicationReference bookmark test
  */
-class PermitApplicationReferenceTest extends \PHPUnit\Framework\TestCase
+class PermitApplicationReferenceTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

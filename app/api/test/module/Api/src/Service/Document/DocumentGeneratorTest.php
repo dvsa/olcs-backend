@@ -118,7 +118,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testGenerateFromTemplateWithQueryThrowException()
     {
-        $this->expectException(\Exception::class);
+        $this->setExpectedException(\Exception::class);
 
         $this->contentStore->shouldReceive('read')
             ->with('x')
@@ -137,7 +137,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testGenerateFromTemplateWithQueryFailedQuery()
     {
-        $this->expectException('\Exception');
+        $this->setExpectedException('\Exception');
 
         $query = [
             'a' => m::mock(QueryInterface::class),
@@ -260,7 +260,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testGenerateFromTemplateWithQueryWithApplicationWithoutTemplate()
     {
-        $this->expectException('\Exception');
+        $this->setExpectedException('\Exception');
 
         $this->contentStore
             ->shouldReceive('read')->with('x')->andReturn(null)
@@ -295,7 +295,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testUploadGeneratedContentError()
     {
-        $this->expectException(\Exception::class, 'any error');
+        $this->setExpectedException(\Exception::class, 'any error');
 
         $this->fileUploader
             ->shouldReceive('upload')
@@ -328,7 +328,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testGenerateFromTemplateWithDocumentIdNotFound()
     {
-        $this->expectException('\Exception', 'Template not found');
+        $this->setExpectedException('\Exception', 'Template not found');
 
         $this->documentRepo->shouldReceive('fetchById')->with(412)->once()
             ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);

@@ -403,7 +403,7 @@ class UploadEvidenceTest extends CommandHandlerTestCase
 
     public function testCommandHandlerNoOcException()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $command = Cmd::create(
             [

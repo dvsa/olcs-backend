@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\InterimTrailers;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class InterimTrailersTest extends \PHPUnit\Framework\TestCase
+class InterimTrailersTest extends \PHPUnit_Framework_TestCase
 {
     public function testRenderWithNoValueAppliesDefault()
     {

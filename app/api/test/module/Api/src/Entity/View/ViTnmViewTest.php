@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\View\ViTnmView;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ViTnmViewTest extends \PHPUnit\Framework\TestCase
+class ViTnmViewTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var ViTnmView

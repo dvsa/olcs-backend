@@ -54,7 +54,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
 
     public function testHandleCommandThrowsIncorrectStatusException()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
 
         $id = 99;
 
@@ -76,7 +76,7 @@ class GrantBusRegTest extends CommandHandlerTestCase
 
     public function testHandleCommandThrowsMissingVariationReasonsException()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $id = 99;
 

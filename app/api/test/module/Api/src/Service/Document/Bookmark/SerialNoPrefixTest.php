@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\SerialNoPrefix;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class SerialNoPrefixTest extends \PHPUnit\Framework\TestCase
+class SerialNoPrefixTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {
