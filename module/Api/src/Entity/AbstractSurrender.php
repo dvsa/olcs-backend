@@ -27,7 +27,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="surrender_fk_last_modified", columns={"last_modified_by"}),
  *        @ORM\Index(name="surrender_status_index", columns={"status"}),
  *        @ORM\Index(name="surrender_created_by_index", columns={"created_by"}),
- *        @ORM\Index(name="surrender__index_licence", columns={"licence_id"})
+ *        @ORM\Index(name="surrender__index_licence", columns={"licence_id"}),
+ *        @ORM\Index(name="fk_signature_type_ref_data_id", columns={"signature_type"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="surrender_id_uindex", columns={"id"}),
@@ -177,6 +178,16 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
      * @ORM\JoinColumn(name="licence_document_status", referencedColumnName="id", nullable=true)
      */
     protected $licenceDocumentStatus;
+
+    /**
+     * Signature type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="signature_type", referencedColumnName="id", nullable=true)
+     */
+    protected $signatureType;
 
     /**
      * Status
@@ -544,6 +555,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     public function getLicenceDocumentStatus()
     {
         return $this->licenceDocumentStatus;
+    }
+
+    /**
+     * Set the signature type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
+     *
+     * @return Surrender
+     */
+    public function setSignatureType($signatureType)
+    {
+        $this->signatureType = $signatureType;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getSignatureType()
+    {
+        return $this->signatureType;
     }
 
     /**
