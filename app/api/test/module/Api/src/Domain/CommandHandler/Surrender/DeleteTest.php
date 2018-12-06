@@ -32,14 +32,14 @@ class DeleteTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'id' => 1
+            'licence' => 1
         ];
         $command = Cmd::create($data);
 
         $surrenderEntity = m::mock(SurrenderEntity::class);
         $this->repoMap['Surrender']
-            ->shouldReceive('fetchById')
-            ->with($data['id'])
+            ->shouldReceive('fetchByLicenceId')
+            ->with($data['licence'])
             ->andReturn($surrenderEntity)
             ->once();
 
@@ -50,8 +50,8 @@ class DeleteTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame($data['id'], $result->getId('id' . $data['id']));
-        $this->assertSame(['Id ' . $data['id'] . ' deleted'], $result->getMessages());
+        $this->assertSame($data['licence'], $result->getId('id' . $data['licence']));
+        $this->assertSame(['surrender for licence Id ' . $data['licence'] . ' deleted'], $result->getMessages());
 
         $this->assertInstanceOf(Result::class, $result);
     }
@@ -59,19 +59,19 @@ class DeleteTest extends CommandHandlerTestCase
     public function testHandleCommandException()
     {
         $data = [
-            'id' => 1
+            'licence' => 1
         ];
         $command = Cmd::create($data);
 
         $this->repoMap['Surrender']
-            ->shouldReceive('fetchById')
-            ->with($data['id'])
+            ->shouldReceive('fetchByLicenceId')
+            ->with($data['licence'])
             ->andThrow(NotFoundException::class)
             ->once();
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertSame(['Id ' . $data['id'] . ' not found'], $result->getMessages());
+        $this->assertSame(['surrender for licence Id ' . $data['licence'] . ' not found'], $result->getMessages());
 
         $this->assertInstanceOf(Result::class, $result);
     }

@@ -17,7 +17,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'DigitalSignature';
 
-    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication'];
+    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication', 'Licence'];
 
     /** @var  \Dvsa\Olcs\GdsVerify\Service\GdsVerify */
     private $gdsVerifyService;
@@ -86,6 +86,16 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             );
 
             $this->result->addMessage('Digital Signature added to transport manager application' . $command->getTransportManagerApplication());
+        }
+
+        if ($command->getLicence()) {
+            $result = $this->updateSurrender(
+                $digitalSignature,
+                $command->getLicence()
+            );
+            $this->result->addMessage($result);
+
+            $this->result->addMessage('Digital Signature added to surrender' . $command->getLicence());
         }
 
         return $this->result;
@@ -238,5 +248,26 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     {
         $transportManagerApplication->setOpDigitalSignature($digitalSignature);
         $transportManagerApplication->setOpSignatureType($this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE));
+    }
+
+
+    private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $licenceId)
+    {
+        $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
+            [
+                'digitalSignature' => $digitalSignature,
+                'licence' => $licenceId,
+                'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED,
+                'signatureType' => Entity\System\RefData::SIG_DIGITAL_SIGNATURE
+            ]
+        ));
+
+        /**
+         * @var Entity\Licence\Licence $licence
+         */
+        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        $licence->setStatus(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION);
+        $licence->save();
+        return $result;
     }
 }
