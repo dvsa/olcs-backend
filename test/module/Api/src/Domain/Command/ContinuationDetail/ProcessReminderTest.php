@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\ProcessReminder;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Process Reminder Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ProcessReminderTest extends \PHPUnit\Framework\TestCase
+class ProcessReminderTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

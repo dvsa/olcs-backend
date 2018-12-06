@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\SubjectAddress;
 /**
  * Subject Address test
  */
-class SubjectAddressTest extends \PHPUnit\Framework\TestCase
+class SubjectAddressTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

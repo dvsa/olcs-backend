@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Bookmark;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\PolicePeopleBundle;
 
 /**
@@ -9,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\PolicePeopleBundle;
  * @package Dvsa\OlcsTest\Api\Domain\Query\Bookmark
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class PolicePeopleBundleTest extends \PHPUnit\Framework\TestCase
+class PolicePeopleBundleTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

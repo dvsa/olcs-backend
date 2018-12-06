@@ -47,7 +47,7 @@ class NamingServiceTest extends MockeryTestCase
 
     public function testCreateServiceFail()
     {
-        $this->expectException('\RuntimeException');
+        $this->setExpectedException('\RuntimeException');
 
         $config = [];
 

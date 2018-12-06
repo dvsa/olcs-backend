@@ -99,7 +99,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -116,7 +116,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -124,7 +124,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
     public function testHandleCommandNoEntityForCategory()
     {
         $sut = m::mock(CommandHandler::class)->makePartial();
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $sut->getEntityTypeForCategory(-1);
     }
 
@@ -346,8 +346,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) {
                     $scan->setId(self::SCAN_ID);
                     $this->assertSame(
-                        $this->categoryReferences[Category::CATEGORY_ENVIRONMENTAL],
-                        $scan->getCategory()
+                        $this->categoryReferences[Category::CATEGORY_ENVIRONMENTAL], $scan->getCategory()
                     );
                     $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
@@ -558,8 +557,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) {
                     $scan->setId(self::SCAN_ID);
                     $this->assertSame(
-                        $this->categoryReferences[Category::CATEGORY_TRANSPORT_MANAGER],
-                        $scan->getCategory()
+                        $this->categoryReferences[Category::CATEGORY_TRANSPORT_MANAGER], $scan->getCategory()
                     );
                     $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());
@@ -640,8 +638,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
                 function (\Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan) use ($busReg) {
                     $scan->setId(self::SCAN_ID);
                     $this->assertSame(
-                        $this->categoryReferences[Category::CATEGORY_BUS_REGISTRATION],
-                        $scan->getCategory()
+                        $this->categoryReferences[Category::CATEGORY_BUS_REGISTRATION], $scan->getCategory()
                     );
                     $this->assertSame($this->subCategoryReferences[self::SUB_CAT_ID], $scan->getSubCategory());
                     $this->assertSame('TEST 1', $scan->getDescription());

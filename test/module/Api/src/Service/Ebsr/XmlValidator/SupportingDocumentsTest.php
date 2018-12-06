@@ -4,12 +4,13 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class SupportingDocumentsTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator
  */
-class SupportingDocumentsTest extends \PHPUnit\Framework\TestCase
+class SupportingDocumentsTest extends TestCase
 {
     /**
      * @param $xml

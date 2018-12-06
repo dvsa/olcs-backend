@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\ProceedToStatus;
  * Proceed to status test
  *
  */
-class ProceedToStatusTest extends \PHPUnit\Framework\TestCase
+class ProceedToStatusTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

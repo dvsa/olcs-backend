@@ -159,7 +159,7 @@ class ConfirmPrintingTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->expectException(RuntimeException::class);
+        $this->setExpectedException(RuntimeException::class);
 
         $niFlag = 'N';
         $licenceType = 'ltyp_r';

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoAddressB as Sut;
 /**
  * IrfoAddressB bookmark test
  */
-class IrfoAddressBTest extends \PHPUnit\Framework\TestCase
+class IrfoAddressBTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

@@ -387,7 +387,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithEmailWithUsernameInUse()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'application' => 111,
@@ -416,7 +416,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithEmailWithMissingEmail()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'application' => 111,
@@ -435,7 +435,7 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithEmailWithMissingEmailAndUsername()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'application' => 111,

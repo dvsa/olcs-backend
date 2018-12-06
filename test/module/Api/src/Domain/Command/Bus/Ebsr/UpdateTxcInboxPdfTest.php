@@ -3,13 +3,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update Txc Inbox PDF Test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class UpdateTxcInboxPdfTest extends \PHPUnit\Framework\TestCase
+class UpdateTxcInboxPdfTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

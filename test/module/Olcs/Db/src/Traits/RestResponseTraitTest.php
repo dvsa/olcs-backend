@@ -7,6 +7,7 @@
  */
 namespace OlcsTest\Db\Service;
 
+use PHPUnit_Framework_TestCase;
 use Zend\Http\Response;
 
 /**
@@ -14,7 +15,7 @@ use Zend\Http\Response;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
+class RestResponseTraitTest extends PHPUnit_Framework_TestCase
 {
 
     /**
@@ -96,7 +97,8 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
             ->method('getNewResponse')
             ->will($this->returnValue($mockResponse));
 
-        switch (count($input)) {
+        switch(count($input)) {
+
             case 1:
                 $response = $trait->respond($input[0]);
                 break;

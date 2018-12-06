@@ -5,9 +5,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\IrhpPermit;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\IrhpPermit\ByPermitNumber;
 
-class ByPermitNumberTest extends \PHPUnit\Framework\TestCase
+class ByPermitNumberTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

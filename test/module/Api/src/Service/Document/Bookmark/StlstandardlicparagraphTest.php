@@ -9,12 +9,11 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\CaseBundle;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Stlstandardlicparagraph as Sut;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * StlstandardlicparagraphTest
  */
-class StlstandardlicparagraphTest extends TestCase
+class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQueryLicence()
     {

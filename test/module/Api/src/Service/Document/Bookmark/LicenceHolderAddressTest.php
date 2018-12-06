@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceHolderAddress;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class LicenceHolderAddressTest extends \PHPUnit\Framework\TestCase
+class LicenceHolderAddressTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

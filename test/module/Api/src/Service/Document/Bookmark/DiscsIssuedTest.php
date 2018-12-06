@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\DiscsIssued;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class DiscsIssuedTest extends \PHPUnit\Framework\TestCase
+class DiscsIssuedTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

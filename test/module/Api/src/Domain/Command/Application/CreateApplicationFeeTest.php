@@ -3,13 +3,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee;
+use PHPUnit_Framework_TestCase;
 
 /**
  * CreateApplicationFee test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateApplicationFeeTest extends \PHPUnit\Framework\TestCase
+class CreateApplicationFeeTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

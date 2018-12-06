@@ -343,6 +343,7 @@ class FeeTypeTest extends RepositoryTestCase
         $this->sut->shouldReceive('fetchLatestForIrfo')->andReturn(['foo']);
 
         $this->assertEquals($this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType), ['foo']);
+
     }
 
     public function testGetLatestIrfoFeeTypeForPsvAuth()
@@ -363,7 +364,7 @@ class FeeTypeTest extends RepositoryTestCase
 
     public function testGetLatestIrfoFeeTypeForUnknownEntity()
     {
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $feeTypeFeeType = new RefData('feeTypefeeType');
 

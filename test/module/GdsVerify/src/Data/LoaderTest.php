@@ -4,12 +4,11 @@ namespace Dvsa\OlcsTest\GdsVerify\Data;
 
 use Dvsa\Olcs\GdsVerify\Data\Loader;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Loader test
  */
-class LoaderTest extends TestCase
+class LoaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testConstructorNoCache()
     {
@@ -52,7 +51,7 @@ class LoaderTest extends TestCase
         );
 
         $mockHttpClient = m::mock(\Zend\Http\Client::class);
-        $mockHttpClient->shouldReceive('reset')->with()->twice();
+        $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setUri')->with('http:/foo.bar')->once();
         $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($mockResponse);
 
@@ -71,14 +70,14 @@ class LoaderTest extends TestCase
         $mockResponse->shouldReceive('isOk')->with()->once()->andReturn(false);
 
         $mockHttpClient = m::mock(\Zend\Http\Client::class);
-        $mockHttpClient->shouldReceive('reset')->with()->twice();
+        $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setUri')->with('http:/foo.bar')->once();
         $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($mockResponse);
 
         $sut = new Loader();
         $sut->setHttpClient($mockHttpClient);
 
-        $this->expectException(
+        $this->setExpectedException(
             \Dvsa\Olcs\GdsVerify\Exception::class,
             'Error getting metadata document http:/foo.bar'
         );
@@ -98,7 +97,7 @@ class LoaderTest extends TestCase
         $mockResponse->shouldReceive('getBody')->with()->once()->andReturn($xml);
 
         $mockHttpClient = m::mock(\Zend\Http\Client::class);
-        $mockHttpClient->shouldReceive('reset')->with()->twice();
+        $mockHttpClient->shouldReceive('reset')->with()->once();
         $mockHttpClient->shouldReceive('setUri')->with('http:/foo.bar')->once();
         $mockHttpClient->shouldReceive('send')->with()->once()->andReturn($mockResponse);
 

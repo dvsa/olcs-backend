@@ -112,7 +112,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
 
         //  expect
-        $this->expectException(\Exception::class, DataGovUkExport::ERR_INVALID_REPORT);
+        $this->setExpectedException(\Exception::class, DataGovUkExport::ERR_INVALID_REPORT);
 
         //  call
         $this->sut->handleCommand($cmd);
@@ -192,7 +192,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         $date = new DateTime('now');
         $expectedFile = $this->tmpPath . '/' . $fileName. '_' .
             $date->format(DataGovUkExport::FILE_DATETIME_FORMAT) . '.csv';
-
+        
         $expectMsg =
             'Fetching data for international goods list' .
             'create csv file: ' . $expectedFile;
@@ -506,7 +506,7 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             ->andReturn([]);
 
         //  expect
-        $this->expectException(\Exception::class, DataGovUkExport::ERR_NO_TRAFFIC_AREAS);
+        $this->setExpectedException(\Exception::class, DataGovUkExport::ERR_NO_TRAFFIC_AREAS);
 
         //  call
         $this->sut->handleCommand(

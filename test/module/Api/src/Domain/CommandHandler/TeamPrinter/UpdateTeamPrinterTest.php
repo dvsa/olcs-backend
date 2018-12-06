@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTeamPrinterTest extends CommandHandlerTestCase
+class UpdateTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
@@ -154,7 +154,7 @@ class UpdateTeamPrinterTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithVaidationException()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $command = Cmd::create(
             [

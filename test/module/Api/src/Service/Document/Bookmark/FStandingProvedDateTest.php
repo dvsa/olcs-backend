@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\FStandingProvedDate;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class FStandingProvedDateTest extends \PHPUnit\Framework\TestCase
+class FStandingProvedDateTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

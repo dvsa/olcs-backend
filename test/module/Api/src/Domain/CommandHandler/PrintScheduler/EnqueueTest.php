@@ -39,7 +39,7 @@ class EnqueueTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([]);
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $this->sut->handleCommand($command);
     }
 
@@ -47,7 +47,7 @@ class EnqueueTest extends CommandHandlerTestCase
     {
         $command = Cmd::create(['documentId' => 'x']);
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $this->sut->handleCommand($command);
     }
 
@@ -60,7 +60,7 @@ class EnqueueTest extends CommandHandlerTestCase
         $user->setTeam($team);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
 
-        $this->expectException(
+        $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class,
             'Failed to generate document as there are no printer settings for the current user'
         );

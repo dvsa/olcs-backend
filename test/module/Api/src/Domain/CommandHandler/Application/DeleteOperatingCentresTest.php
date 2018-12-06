@@ -153,7 +153,7 @@ class DeleteOperatingCentresTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($application);
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }

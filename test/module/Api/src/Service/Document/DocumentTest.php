@@ -5,13 +5,12 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 use Dvsa\Olcs\Api\Service\Document\Document;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document
  */
-class DocumentTest extends TestCase
+class DocumentTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  Document */
     private $sut;

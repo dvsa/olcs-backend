@@ -18,7 +18,7 @@ class WebServiceClientFactoryTest extends MockeryTestCase
         $mockSl = m::mock(ServiceLocatorInterface::class);
         $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
-        $this->expectException(\RuntimeException::class, 'Missing print service config[convert_to_pdf][uri]');
+        $this->setExpectedException(\RuntimeException::class, 'Missing print service config[convert_to_pdf][uri]');
         $sut = new WebServiceClientFactory();
         $sut->createService($mockSl);
     }

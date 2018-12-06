@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmPostCode as Sut;
 /**
  * BkmPostCode bookmark test
  */
-class BkmPostCodeTest extends \PHPUnit\Framework\TestCase
+class BkmPostCodeTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

@@ -44,7 +44,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAttemptToUpdateRemovalDate()
     {
-        $this->expectException(ForbiddenException::class);
+        $this->setExpectedException(ForbiddenException::class);
 
         $data = [
             'removalDate' => '2015-01-01'
@@ -60,7 +60,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAttemptToUpdateRemovalDateOnActiveRecord()
     {
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $data = [
             'removalDate' => '2015-01-01',
@@ -84,7 +84,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAttemptToUpdateRemovedRecord()
     {
-        $this->expectException(BadRequestException::class);
+        $this->setExpectedException(BadRequestException::class);
 
         $data = [
             'specifiedDate' => '2015-01-01',
@@ -148,8 +148,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(
-            '2015-01-01 12:00:00',
-            $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());
@@ -198,8 +197,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(
-            '2015-01-01 12:00:00',
-            $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
         $this->assertEquals('2015-02-02', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(100, $vehicle->getPlatedWeight());

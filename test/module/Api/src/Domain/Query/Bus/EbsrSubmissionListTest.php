@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Bus;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList;
 
 /**
  * EbsrSubmissionList test
  */
-class EbsrSubmissionListTest extends \PHPUnit\Framework\TestCase
+class EbsrSubmissionListTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress;
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress
  */
-class StatementNameBodyAddressTest extends \PHPUnit\Framework\TestCase
+class StatementNameBodyAddressTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

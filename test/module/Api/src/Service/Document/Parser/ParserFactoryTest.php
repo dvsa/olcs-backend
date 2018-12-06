@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Parser;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Service\Document\Parser\ParserFactory;
 
 /**
@@ -9,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Parser\ParserFactory;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class ParserFactoryTest extends \PHPUnit\Framework\TestCase
+class ParserFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider typeProvider

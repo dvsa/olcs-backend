@@ -57,7 +57,7 @@ class QueueEntityTest extends EntityTester
      */
     public function testValidateQueueWithException($type, $status, $date)
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
         $sut = new $this->entityClass();
         $sut->validateQueue($type, $status, $date);
     }

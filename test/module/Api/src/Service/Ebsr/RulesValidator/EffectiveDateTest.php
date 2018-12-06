@@ -3,13 +3,14 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
+use PHPUnit_Framework_TestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class EffectiveDateTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
  */
-class EffectiveDateTest extends \PHPUnit\Framework\TestCase
+class EffectiveDateTest extends TestCase
 {
     /**
      * @dataProvider isValidProvider

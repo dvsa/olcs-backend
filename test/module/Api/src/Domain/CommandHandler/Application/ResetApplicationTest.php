@@ -74,7 +74,7 @@ class ResetApplicationTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($application);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -103,7 +103,7 @@ class ResetApplicationTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($application);
 
-        $this->expectException(RequiresConfirmationException::class);
+        $this->setExpectedException(RequiresConfirmationException::class);
 
         $this->sut->handleCommand($command);
     }

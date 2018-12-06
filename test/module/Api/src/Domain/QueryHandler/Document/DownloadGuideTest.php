@@ -24,7 +24,7 @@ class DownloadGuideTest extends QueryHandlerTestCase
 
     public function testHandleQueryTryingToGetIntoParent()
     {
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $this->sut->shouldReceive('setIsInline')->once()->with(true);
 

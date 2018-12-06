@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\CreateAlert;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Companies House CreateAlert command test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CreateAlertTest extends \PHPUnit\Framework\TestCase
+class CreateAlertTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

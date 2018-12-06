@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplicatio
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulRemainingPermitApplicationsTest extends \PHPUnit\Framework\TestCase
+class MarkSuccessfulRemainingPermitApplicationsTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

@@ -83,7 +83,7 @@ class LicenceEntityTest extends EntityTester
         $licence = $this->instantiate(Entity::class);
 
         if ($expectedException !== null) {
-            $this->expectException($expectedException);
+            $this->setExpectedException($expectedException);
         }
 
         $licence->updateSafetyDetails(

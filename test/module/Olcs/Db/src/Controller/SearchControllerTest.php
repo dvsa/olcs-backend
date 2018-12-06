@@ -4,13 +4,12 @@ namespace OlcsTest\Db\Controller;
 
 use Olcs\Db\Controller\SearchController;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Class SearchControllerTest
  * @package OlcsTest\Db\Controller
  */
-class SearchControllerTest extends TestCase
+class SearchControllerTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetList()
     {

@@ -133,7 +133,7 @@ class UpdateInspectionRequestTest extends CommandHandlerTestCase
 
     public function testHandleCommandNotFound()
     {
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $id = 123;
         $status = 'S';
@@ -159,7 +159,7 @@ class UpdateInspectionRequestTest extends CommandHandlerTestCase
 
     public function testHandleCommandInvalidStatusCode()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $id = 123;
         $status = 'foo';

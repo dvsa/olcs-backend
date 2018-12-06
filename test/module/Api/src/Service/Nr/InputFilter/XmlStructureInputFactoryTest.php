@@ -66,7 +66,7 @@ class XmlStructureInputFactoryTest extends TestCase
      */
     public function testCreateServiceMissingConfig($config, $exceptionName, $exceptionMessage)
     {
-        $this->expectException($exceptionName, $exceptionMessage);
+        $this->setExpectedException($exceptionName, $exceptionMessage);
         $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
 

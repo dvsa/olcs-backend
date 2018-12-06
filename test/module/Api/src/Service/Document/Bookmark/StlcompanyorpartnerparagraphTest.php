@@ -6,12 +6,11 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Stlcompanyorpartnerparagraph as Sut;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * StlcompanyorpartnerparagraphTest
  */
-class StlcompanyorpartnerparagraphTest extends TestCase
+class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

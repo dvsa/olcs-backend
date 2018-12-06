@@ -165,7 +165,7 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         $expectedErrors = [
             'application' =>  'A transport manager cannot be added to a restricted licence'
         ];
-        $this->expectException(ValidationException::class, var_export($expectedErrors, true));
+        $this->setExpectedException(ValidationException::class, var_export($expectedErrors, true));
 
         $command = Cmd::create(
             [
@@ -203,7 +203,7 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         $expectedErrors = [
             'application' =>  'The application ID is not valid'
         ];
-        $this->expectException(ValidationException::class, var_export($expectedErrors, true));
+        $this->setExpectedException(ValidationException::class, var_export($expectedErrors, true));
 
         $command = Cmd::create(
             [
@@ -229,7 +229,7 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
         $expectedErrors = [
             'application' =>  'The transport manager is already linked to this application'
         ];
-        $this->expectException(ValidationException::class, var_export($expectedErrors, true));
+        $this->setExpectedException(ValidationException::class, var_export($expectedErrors, true));
 
         $command = Cmd::create(
             [
@@ -275,7 +275,7 @@ class CreateForResponsibilitiesTest extends CommandHandlerTestCase
             'application' =>
                 'You can add a transport manager to a not submitted or under consideration application only'
         ];
-        $this->expectException(ValidationException::class, var_export($expectedErrors, true));
+        $this->setExpectedException(ValidationException::class, var_export($expectedErrors, true));
 
         $command = Cmd::create(
             [

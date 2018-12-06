@@ -8,6 +8,7 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PsvOperatingCentreReviewService;
 
 /**
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\PsvOperatingC
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PsvOperatingCentreReviewServiceTest extends \PHPUnit\Framework\TestCase
+class PsvOperatingCentreReviewServiceTest extends PHPUnit_Framework_TestCase
 {
 
     protected $sut;

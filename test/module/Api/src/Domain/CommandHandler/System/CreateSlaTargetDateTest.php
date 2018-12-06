@@ -106,7 +106,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
             'entityId' => 100
         ];
         $command = Command::create($params);
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
         $this->sut->handleCommand($command);
     }
 
@@ -136,7 +136,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
             ->once()
             ->andReturnNull();
 
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -151,7 +151,8 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
     private function getMockEntity($entityType, $entityId)
     {
         $mock = m::mock();
-        switch ($entityType) {
+        switch($entityType)
+        {
             case 'document':
                 $mock = m::mock(Document::class)->makePartial();
                 $mock->setId($entityId);

@@ -106,7 +106,7 @@ class CreateFinancialStandingRateTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->never();
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

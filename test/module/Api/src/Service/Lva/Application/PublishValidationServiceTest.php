@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -14,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class PublishValidationServiceTest extends TestCase
+class PublishValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
     /**
      * @var \Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService
