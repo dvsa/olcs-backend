@@ -161,7 +161,7 @@ class ReadLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithDifferentException()
     {
-        $this->expectException(\Exception::class);
+        $this->setExpectedException(\Exception::class);
 
         $entity = m::mock(Licence::class);
 

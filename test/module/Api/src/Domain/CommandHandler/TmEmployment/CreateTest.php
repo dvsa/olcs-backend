@@ -192,7 +192,7 @@ class CreateTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  * Class MissingReasonTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ShortNotice
  */
-class MissingReasonTest extends \PHPUnit\Framework\TestCase
+class MissingReasonTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * tests whether the short notice section exists correctly

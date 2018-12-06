@@ -8,7 +8,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\GeneratePermits;
  * Generate permits test
  *
  */
-class GeneratePermitsTest extends \PHPUnit\Framework\TestCase
+class GeneratePermitsTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

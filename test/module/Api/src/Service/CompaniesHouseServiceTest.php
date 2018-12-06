@@ -108,7 +108,7 @@ class CompaniesHouseServiceTest extends MockeryTestCase
         );
 
         //  check
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
 
         //  call
         $sut = (new CompaniesHouseService())->createService($this->mockSl);
@@ -123,7 +123,7 @@ class CompaniesHouseServiceTest extends MockeryTestCase
         );
 
         //  check
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
 
         $service = $this->setUpService(array('getNewGateway', 'getService'));
 
@@ -136,7 +136,7 @@ class CompaniesHouseServiceTest extends MockeryTestCase
 
     public function testGetListWithNameSearchErrorResponse()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
 
         $data = array(
             'type' => 'nameSearch',
@@ -185,7 +185,7 @@ XML;
 
     public function testGetListWithNumberSearchErrorResponse()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
 
         $data = array(
             'type' => 'numberSearch',
@@ -234,7 +234,7 @@ XML;
 
     public function testGetListWithCompanyDetailsErrorResponse()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class);
 
         $data = array(
             'type' => 'companyDetails',

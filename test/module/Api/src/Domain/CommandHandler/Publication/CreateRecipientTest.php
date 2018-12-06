@@ -91,7 +91,7 @@ class CreateRecipientTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithInvalidSubscriptionDetails()
     {
-        $this->expectException(Exception\ValidationException::class);
+        $this->setExpectedException(Exception\ValidationException::class);
 
         $data = [
             'sendAppDecision' => 'N',

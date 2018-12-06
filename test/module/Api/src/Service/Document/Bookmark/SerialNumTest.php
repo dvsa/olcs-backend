@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\SerialNum;
  *
  * @package Dvsa\OlcsTest\Api\Service\Document\Bookmark
  */
-class SerialNumTest extends \PHPUnit\Framework\TestCase
+class SerialNumTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

@@ -8,6 +8,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 
 /**
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateFeeTest extends \PHPUnit\Framework\TestCase
+class CreateFeeTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

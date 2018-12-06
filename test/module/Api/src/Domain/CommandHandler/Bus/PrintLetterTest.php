@@ -49,7 +49,7 @@ class PrintLetterTest extends CommandHandlerTestCase
             ->shouldReceive('fetchUsingId')->with($cmd)->once()->andReturnNull();
 
         //  expect
-        $this->expectException(NotFoundException::class, 'Bus registration not found');
+        $this->setExpectedException(NotFoundException::class, 'Bus registration not found');
 
         //  call
         $this->sut->handleCommand($cmd);
@@ -69,7 +69,7 @@ class PrintLetterTest extends CommandHandlerTestCase
             ->shouldReceive('fetchUsingId')->with($cmd)->once()->andReturn($mockBusReg);
 
         //  expect
-        $this->expectException(BadRequestException::class, 'Template not found for bus registration');
+        $this->setExpectedException(BadRequestException::class, 'Template not found for bus registration');
 
         //  call
         $this->sut->handleCommand($cmd);

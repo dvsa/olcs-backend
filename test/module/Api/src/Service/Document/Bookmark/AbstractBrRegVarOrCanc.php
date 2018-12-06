@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 /**
  * AbstractBrRegVarOrCanc test
  */
-class AbstractBrRegVarOrCanc extends \PHPUnit\Framework\TestCase
+class AbstractBrRegVarOrCanc extends \PHPUnit_Framework_TestCase
 {
     protected $new;
     protected $vary;
@@ -40,7 +40,7 @@ class AbstractBrRegVarOrCanc extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf($this->bookmarkClass, $bookmark);
 
         if ($expected === false) {
-            $this->expectException(
+            $this->setExpectedException(
                 \Exception::class,
                 'Failed to generate bookmark ' . $this->bookmarkClass
             );

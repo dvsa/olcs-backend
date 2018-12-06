@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Generate Licence Number Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GenerateLicenceNumberTest extends \PHPUnit\Framework\TestCase
+class GenerateLicenceNumberTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

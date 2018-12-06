@@ -4,13 +4,12 @@ namespace OlcsTest\Db\Service\Search;
 
 use Olcs\Db\Service\Search\ClientFactory;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Class ClientFactoryTest
  * @package OlcsTest\Db\Service\Search
  */
-class ClientFactoryTest extends TestCase
+class ClientFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateService()
     {
@@ -41,5 +40,6 @@ class ClientFactoryTest extends TestCase
         }
 
         $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match');
+
     }
 }

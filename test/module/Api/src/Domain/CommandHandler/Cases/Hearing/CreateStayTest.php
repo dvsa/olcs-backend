@@ -119,7 +119,7 @@ class CreateStayTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -155,7 +155,7 @@ class CreateStayTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -127,7 +127,7 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
     public function testInvalidPathException()
     {
         $path = 'unit_wrong_path';
-        $this->expectException(\Exception::class, sprintf(ImportUsersFromCsv::ERR_FILE_404, $path));
+        $this->setExpectedException(\Exception::class, sprintf(ImportUsersFromCsv::ERR_FILE_404, $path));
 
         $cmd = Cmd::create(
             [
@@ -145,7 +145,7 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
 
         $resFile->chmod(0);
 
-        $this->expectException(\Exception::class, sprintf(ImportUsersFromCsv::ERR_RES_FILE_CANT_OPEN, $resPath));
+        $this->setExpectedException(\Exception::class, sprintf(ImportUsersFromCsv::ERR_RES_FILE_CANT_OPEN, $resPath));
 
         $cmd = Cmd::create(
             [
@@ -160,7 +160,7 @@ class ImportUsersFromCsvTest extends CommandHandlerTestCase
     {
         $this->srcFile->chmod(0);
 
-        $this->expectException(
+        $this->setExpectedException(
             \Exception::class,
             sprintf(ImportUsersFromCsv::ERR_FILE_CANT_OPEN, $this->srcPath)
         );

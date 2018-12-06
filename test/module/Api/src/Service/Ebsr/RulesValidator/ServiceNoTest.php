@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
 /**
  * Class ServiceNoTest
  */
-class ServiceNoTest extends \PHPUnit\Framework\TestCase
+class ServiceNoTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * test isValid

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\CloseExpiredWindows;
  * Close expired windows test
  *
  */
-class CloseExpiredWindowsTest extends \PHPUnit\Framework\TestCase
+class CloseExpiredWindowsTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

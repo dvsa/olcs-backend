@@ -9,13 +9,14 @@ namespace Dvsa\OlcsTest\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Queue Retry command test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class RetryTest extends \PHPUnit\Framework\TestCase
+class RetryTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

@@ -4,12 +4,11 @@ namespace Dvsa\OlcsTest\GdsVerify\Data;
 
 use Dvsa\Olcs\GdsVerify\Data\Container;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Container  test
  */
-class ContainerTest extends TestCase
+class ContainerTest extends \PHPUnit_Framework_TestCase
 {
     public function testLogger()
     {

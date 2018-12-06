@@ -8,6 +8,7 @@
 
 namespace OlcsTest\Db\Controller;
 
+use PHPUnit_Framework_TestCase;
 use Zend\Http\Response;
 
 /**
@@ -15,7 +16,7 @@ use Zend\Http\Response;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class AbstractBasicRestServerControllerTest extends \PHPUnit\Framework\TestCase
+class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
 {
 
     private $controller;
@@ -29,13 +30,9 @@ class AbstractBasicRestServerControllerTest extends \PHPUnit\Framework\TestCase
     {
         // We may want to inject the ServiceLocator in the future
         $this->controller = $this->getMockForAbstractClass(
-            '\Olcs\Db\Controller\AbstractBasicRestServerController',
-            array(),
-            '',
-            true,
-            true,
-            true,
-            $methods // Mocked methods
+            '\Olcs\Db\Controller\AbstractBasicRestServerController', array(), '', true, true, true,
+            // Mocked methods
+            $methods
         );
     }
 

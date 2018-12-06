@@ -1239,7 +1239,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->with($fees)
             ->andReturn(0.01);
 
-        $this->expectException(
+        $this->setExpectedException(
             \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
             'ohnoes',
             500
@@ -1646,7 +1646,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(CreateOverpaymentFeeCmd::class, $opData, new Result());
 
-        $this->expectException(BadRequestException::class, 'invalid payment method: foo');
+        $this->setExpectedException(BadRequestException::class, 'invalid payment method: foo');
 
         $this->sut->handleCommand($command);
     }

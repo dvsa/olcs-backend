@@ -89,7 +89,7 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
 
     public function testHandleCommandDeleteHimself()
     {
-        $this->expectException(BadRequestException::class, 'You can not delete yourself');
+        $this->setExpectedException(BadRequestException::class, 'You can not delete yourself');
 
         $command = Cmd::create(
             [

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Nr\Filter\LicenceNumber;
  * @package Dvsa\OlcsTest\Api\Service\Nr\Filter
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class LicenceNumberTest extends \PHPUnit\Framework\TestCase
+class LicenceNumberTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests that if a community licence number pattern is found then we split out the part we need.

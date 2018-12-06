@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OpFaoName;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class OpFaoNameTest extends \PHPUnit\Framework\TestCase
+class OpFaoNameTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

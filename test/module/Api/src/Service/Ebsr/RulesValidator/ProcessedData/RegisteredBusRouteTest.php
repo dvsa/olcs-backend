@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  * Class RegisteredBusRouteTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData
  */
-class RegisteredBusRouteTest extends \PHPUnit\Framework\TestCase
+class RegisteredBusRouteTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * tests whether the bus route has a status of registered

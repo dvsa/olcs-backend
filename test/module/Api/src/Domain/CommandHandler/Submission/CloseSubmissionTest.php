@@ -84,7 +84,7 @@ class CloseSubmissionTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT)
             ->andReturn($submission);
 
-        $this->expectException(ForbiddenException::class);
+        $this->setExpectedException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }

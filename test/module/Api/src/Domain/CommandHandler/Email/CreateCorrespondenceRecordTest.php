@@ -162,7 +162,7 @@ class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
 
     public function testHandleCommandValidationError()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'licence' => 111,

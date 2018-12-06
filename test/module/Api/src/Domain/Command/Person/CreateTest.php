@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Person;
 
 use Dvsa\Olcs\Api\Domain\Command\Person\Create;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Create Person
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends \PHPUnit\Framework\TestCase
+class CreateTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

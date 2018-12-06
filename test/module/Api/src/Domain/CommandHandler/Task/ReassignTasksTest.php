@@ -169,7 +169,7 @@ class ReassignTasksTest extends CommandHandlerTestCase
 
     public function testHandleCommandFailTeamInvalid()
     {
-        $this->expectException(ValidationException::class, ReassignTasks::ERR_TEAM_INVALID);
+        $this->setExpectedException(ValidationException::class, ReassignTasks::ERR_TEAM_INVALID);
 
         $this->sut->handleCommand(
             Cmd::create(

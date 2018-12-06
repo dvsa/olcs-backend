@@ -66,7 +66,7 @@ class TransferToTest extends CommandHandlerTestCase
             ->andReturn($fromOrganisation);
         $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($fromOrganisation);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -999,14 +999,14 @@ class TransferToTest extends CommandHandlerTestCase
             ->andReturn($fromOrganisation);
         $this->repoMap['Organisation']->shouldReceive('fetchById')->with(12)->once()->andReturn($toOrganisation);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandWithException()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
         $data = [
             'id' => 12,
             'receivingOrganisation' => 999,

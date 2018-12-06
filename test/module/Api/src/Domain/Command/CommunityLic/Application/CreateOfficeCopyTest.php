@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\CommunityLic\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Application\CreateOfficeCopy;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Create Office Copy Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateOfficeCopyTest extends \PHPUnit\Framework\TestCase
+class CreateOfficeCopyTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

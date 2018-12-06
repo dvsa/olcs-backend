@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Bus;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Bus\PreviousVariationByRouteNo;
 
 /**
  * PreviousVariationByRouteNo test
  */
-class PreviousVariationByRouteNoTest extends \PHPUnit\Framework\TestCase
+class PreviousVariationByRouteNoTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

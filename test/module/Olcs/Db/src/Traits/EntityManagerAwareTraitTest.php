@@ -8,6 +8,7 @@
 
 namespace OlcsTest\Db\Service;
 
+use PHPUnit_Framework_TestCase;
 use Olcs\Db\Traits\EntityManagerAwareTrait;
 
 /**
@@ -15,7 +16,7 @@ use Olcs\Db\Traits\EntityManagerAwareTrait;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class EntityManagerAwareTraitTest extends \PHPUnit\Framework\TestCase
+class EntityManagerAwareTraitTest extends PHPUnit_Framework_TestCase
 {
     private $trait;
 

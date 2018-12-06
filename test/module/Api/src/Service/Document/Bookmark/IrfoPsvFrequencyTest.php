@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvFrequency as Sut;
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvFrequency
  */
-class IrfoPsvFrequencyTest extends \PHPUnit\Framework\TestCase
+class IrfoPsvFrequencyTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

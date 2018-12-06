@@ -44,7 +44,7 @@ class ValidationHandlerManagerTest extends MockeryTestCase
 
     public function testGetInvalid()
     {
-        $this->expectException(\Zend\ServiceManager\Exception\RuntimeException::class);
+        $this->setExpectedException(\Zend\ServiceManager\Exception\RuntimeException::class);
 
         $this->sut->setService('Foo', m::mock());
 

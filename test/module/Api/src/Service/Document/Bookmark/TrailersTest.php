@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Trailers;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class TrailersTest extends \PHPUnit\Framework\TestCase
+class TrailersTest extends \PHPUnit_Framework_TestCase
 {
     public function testRender()
     {

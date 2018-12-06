@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory;
 
@@ -16,7 +15,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory;
  * Class ToggleServiceFactoryTest
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ToggleServiceFactoryTest extends TestCase
+class ToggleServiceFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     public function testCreateService()
     {

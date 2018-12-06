@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\ContinuationDetail;
 
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\Process;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Process Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ProcessTest extends \PHPUnit\Framework\TestCase
+class ProcessTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

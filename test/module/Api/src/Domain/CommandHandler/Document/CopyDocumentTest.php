@@ -119,7 +119,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'targetId' => 1,
@@ -560,7 +560,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithWrongType()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'targetId' => 1,
@@ -574,7 +574,7 @@ class CopyDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithInvalidEntity()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'targetId' => 1,

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoTaName as Sut;
 /**
  * IrfoTaName test
  */
-class IrfoTaNameTest extends \PHPUnit\Framework\TestCase
+class IrfoTaNameTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

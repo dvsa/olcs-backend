@@ -9,7 +9,7 @@ use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class ClientFactoryTest extends \PHPUnit\Framework\TestCase
+class ClientFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider provideSetOptions
@@ -32,7 +32,8 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             try {
                 $sut->getOptions($mockSl, 'testkey');
             } catch (\Exception $e) {
-                if ($e->getMessage() == $expected->getMessage() &&
+                if (
+                    $e->getMessage() == $expected->getMessage() &&
                     get_class($e) == get_class($expected)
                 ) {
                     $passed = true;
@@ -82,7 +83,8 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             try {
                 $service = $sut->createService($mockSl);
             } catch (\Exception $e) {
-                if ($e->getMessage() == $expected->getMessage() &&
+                if (
+                    $e->getMessage() == $expected->getMessage() &&
                     get_class($e) == get_class($expected)
                 ) {
                     $passed = true;
@@ -104,6 +106,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
                 );
             }
         }
+
     }
 
     public function provideCreateService()

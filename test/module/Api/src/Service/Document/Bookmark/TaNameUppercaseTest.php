@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TaNameUppercase;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class TaNameUppercaseTest extends \PHPUnit\Framework\TestCase
+class TaNameUppercaseTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

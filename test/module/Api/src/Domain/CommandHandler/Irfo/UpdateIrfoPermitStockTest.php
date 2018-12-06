@@ -104,7 +104,7 @@ class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithMaxIdsCountExceeded()
     {
-        $this->expectException(Exception\ValidationException::class);
+        $this->setExpectedException(Exception\ValidationException::class);
 
         $data = [
             'ids' => array_fill(0, Sut::MAX_IDS_COUNT + 1, 'id'),

@@ -103,7 +103,7 @@ class UpdateSlaTargetDateTest extends CommandHandlerTestCase
         ];
         $command = Command::create($params);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
         $this->sut->handleCommand($command);
     }
 

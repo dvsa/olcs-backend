@@ -59,7 +59,7 @@ class TransactioningCommandHandlerTest extends MockeryTestCase
 
     public function testHandleCommandException()
     {
-        $this->expectException(\Exception::class);
+        $this->setExpectedException(\Exception::class);
 
         $command = m::mock(CommandInterface::class);
 
@@ -83,7 +83,7 @@ class TransactioningCommandHandlerTest extends MockeryTestCase
 
     public function testCheckEnabledExceptionPassedBack()
     {
-        $this->expectException(DisabledHandlerException::class);
+        $this->setExpectedException(DisabledHandlerException::class);
         $this->wrapped->shouldReceive('checkEnabled')->once()->andThrow(DisabledHandlerException::class);
         $this->sut->checkEnabled();
     }

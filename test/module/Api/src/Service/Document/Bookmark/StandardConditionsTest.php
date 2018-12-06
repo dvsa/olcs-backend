@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class StandardConditionsTest extends \PHPUnit\Framework\TestCase
+class StandardConditionsTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

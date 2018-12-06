@@ -3,11 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\IrhpPermit;
 
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\ReplacementIrhpPermit;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Close IRHP Permit Window Test
  */
-class ReplacementIrhpPermitTest extends \PHPUnit\Framework\TestCase
+class ReplacementIrhpPermitTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {
