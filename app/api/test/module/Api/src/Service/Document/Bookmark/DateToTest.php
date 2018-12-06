@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class DateToTest extends \PHPUnit\Framework\TestCase
+class DateToTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

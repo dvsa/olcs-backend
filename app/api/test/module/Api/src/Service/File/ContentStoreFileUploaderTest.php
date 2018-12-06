@@ -85,7 +85,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
     {
         $respBody = 'unit_RespBody';
 
-        $this->expectException(Exception::class, sprintf(ContentStoreFileUploader::ERR_UNABLE_UPLOAD, $respBody));
+        $this->setExpectedException(Exception::class, sprintf(ContentStoreFileUploader::ERR_UNABLE_UPLOAD, $respBody));
 
         $response = m::mock(Response::class);
         $response
@@ -102,7 +102,7 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testUploadFailMime()
     {
-        $this->expectException(MimeNotAllowedException::class);
+        $this->setExpectedException(MimeNotAllowedException::class);
 
         $response = m::mock(Response::class);
         $response

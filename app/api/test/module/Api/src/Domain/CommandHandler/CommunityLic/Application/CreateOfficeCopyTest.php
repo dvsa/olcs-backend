@@ -235,7 +235,7 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
 
     public function testHandleCommandOfficeCopyExists()
     {
-        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
 
         $licenceId = 1;
         $identifier = 2;

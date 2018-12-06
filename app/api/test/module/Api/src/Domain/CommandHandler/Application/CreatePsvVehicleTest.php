@@ -72,7 +72,7 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($application);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -349,5 +349,6 @@ class CreatePsvVehicleTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+
     }
 }

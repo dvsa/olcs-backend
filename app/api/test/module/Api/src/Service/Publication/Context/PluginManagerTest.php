@@ -31,7 +31,7 @@ class PluginManagerTest extends MockeryTestCase
         $invalidPlugin = new \stdClass();
 
         //  expect
-        $this->expectException(
+        $this->setExpectedException(
             \Zend\ServiceManager\Exception\RuntimeException::class,
             'stdClass should implement: ' . ContextInterface::class
         );

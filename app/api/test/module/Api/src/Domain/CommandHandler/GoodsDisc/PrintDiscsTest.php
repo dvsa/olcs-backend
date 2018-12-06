@@ -43,7 +43,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoDiscsToPrint()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
         $this->mockAuthService();
 
         $niFlag = 'N';
@@ -73,7 +73,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommandDecreasing()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
         $this->mockAuthService();
 
         $niFlag = 'N';
@@ -93,7 +93,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
         $this->repoMap['GoodsDisc']
             ->shouldReceive('fetchDiscsToPrint')
-            ->with($niFlag, $licenceType, $maxResults * DiscSequence::DISCS_ON_PAGE)
+            ->with($niFlag, $licenceType, $maxResults * DiscSequence::DISCS_ON_PAGE )
             ->andReturn(['disc1'])
             ->once()
             ->getMock();

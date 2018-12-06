@@ -7,13 +7,14 @@
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark as BookmarkNs;
+use PHPUnit_Framework_TestCase as TestCase;
 
 /**
  * Class
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-class S9RequestModeTest extends \PHPUnit\Framework\TestCase
+class S9RequestModeTest extends TestCase
 {
     public function testAlias()
     {

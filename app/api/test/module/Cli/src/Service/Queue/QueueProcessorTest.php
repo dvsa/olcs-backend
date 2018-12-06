@@ -158,7 +158,7 @@ class QueueProcessorTest extends MockeryTestCase
             ->with($item)
             ->andThrow(new \Doctrine\ORM\ORMException($exceptionMessage));
 
-        $this->expectException(\Doctrine\ORM\ORMException::class);
+        $this->setExpectedException(\Doctrine\ORM\ORMException::class);
 
         $this->sut->processNextItem($includeTypes, $excludeTypes);
     }
@@ -193,7 +193,7 @@ class QueueProcessorTest extends MockeryTestCase
             ->with($item)
             ->andThrow(new DBALException($exceptionMessage));
 
-        $this->expectException(DBALException::class);
+        $this->setExpectedException(DBALException::class);
 
         $this->sut->processNextItem($includeTypes, $excludeTypes);
     }

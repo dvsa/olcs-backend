@@ -68,7 +68,7 @@ class OrganisationTest extends RepositoryTestCase
             ->with(Organisation::class)
             ->andReturn($repo);
 
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $this->sut->fetchBusinessDetailsUsingId($command);
     }
@@ -338,7 +338,7 @@ class OrganisationTest extends RepositoryTestCase
             ->with(Organisation::class)
             ->andReturn($repo);
 
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $this->sut->getByCompanyOrLlpNo($companyNumber);
     }

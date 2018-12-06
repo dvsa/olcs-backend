@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
  * CreateIrhpPermitApplication Test
  *
  */
-class CreateIrhpPermitApplicationTest extends \PHPUnit\Framework\TestCase
+class CreateIrhpPermitApplicationTest extends \PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

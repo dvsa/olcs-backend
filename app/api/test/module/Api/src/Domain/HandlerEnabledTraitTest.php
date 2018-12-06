@@ -42,7 +42,7 @@ class HandlerEnabledTraitTest extends CommandHandlerTestCase
 
     public function testEnabledWithHandlerFqdnException()
     {
-        $this->expectException(DisabledHandlerException::class);
+        $this->setExpectedException(DisabledHandlerException::class);
 
         $this->mockedSmServices[ToggleService::class]
             ->shouldReceive('isEnabled')
@@ -78,7 +78,7 @@ class HandlerEnabledTraitTest extends CommandHandlerTestCase
      */
     public function testEnabledWithToggleConfigException($toggleConfig1, $toggleConfig2, $checkSecondToggle)
     {
-        $this->expectException(DisabledHandlerException::class);
+        $this->setExpectedException(DisabledHandlerException::class);
 
         $toggles = ['toggle1', 'toggle2'];
         $this->sut->setToggleConfig($toggles);

@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Licence;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Licence\PsvLicenceSurrenderList;
 
 /**
  * ContinuationNotSoughtList test
  */
-class PsvLicenceSurrenderListTest extends \PHPUnit\Framework\TestCase
+class PsvLicenceSurrenderListTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\Address;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class AddressTest extends \PHPUnit\Framework\TestCase
+class AddressTest extends \PHPUnit_Framework_TestCase
 {
 
     /**

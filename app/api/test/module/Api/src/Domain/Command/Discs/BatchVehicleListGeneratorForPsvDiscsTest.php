@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\BatchVehicleListGeneratorForPsvDiscs;
+use PHPUnit_Framework_TestCase;
 
 /**
  * BatchVehicleListGeneratorForPsvDiscs Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class BatchVehicleListGeneratorForPsvDiscsTest extends \PHPUnit\Framework\TestCase
+class BatchVehicleListGeneratorForPsvDiscsTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

@@ -232,7 +232,7 @@ class SystemParameterTest extends RepositoryTestCase
         $this->setupFetchValue(SystemParameterEntity::SYSTEM_DATA_RETENTION_USER, $value);
 
         if ($expected === 'EXCEPTION') {
-            $this->expectException(
+            $this->setExpectedException(
                 RuntimeException::class,
                 'System parameter "SYSTEM_DATA_RETENTION_USER" is not set'
             );

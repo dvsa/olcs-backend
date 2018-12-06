@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\UnlinkedTm;
 /**
  * @covers \Dvsa\Olcs\Api\Service\Document\Bookmark\UnlinkedTm
  */
-class UnlinkedTmTest extends \PHPUnit\Framework\TestCase
+class UnlinkedTmTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

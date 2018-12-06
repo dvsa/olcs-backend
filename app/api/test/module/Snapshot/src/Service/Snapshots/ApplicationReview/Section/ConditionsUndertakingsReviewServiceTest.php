@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ConditionsUndertakingsReviewService;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Condition;
 
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as Condition;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ConditionsUndertakingsReviewServiceTest extends \PHPUnit\Framework\TestCase
+class ConditionsUndertakingsReviewServiceTest extends PHPUnit_Framework_TestCase
 {
     protected $sut;
 

@@ -22,6 +22,7 @@ class Coverage implements TestListener
         $this->filter->addDirectoryToWhitelist(realpath(__DIR__ . '/../module/'));
 
         foreach ($this->filter->getWhitelist() as $file) {
+
             xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
             include_once($file);
             $fileData = xdebug_get_code_coverage();
@@ -42,115 +43,91 @@ class Coverage implements TestListener
     /**
      * An error occurred.
      *
-     * @param PHPUnit\Framework\Test $test
-     * @param Throwable $t
+     * @param PHPUnit_Framework_Test $test
+     * @param Exception $e
      * @param float $time
-     *
-     * @return void
      */
-    public function addError(PHPUnit\Framework\Test $test, Throwable $t, float $time): void
+    public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
-    }
 
-    /**
-     * Display a warning.
-     *
-     * @param PHPUnit\Framework\Test $test
-     * @param PHPUnit\Framework\Warning $e
-     * @param float $time
-     *
-     * @return void
-     */
-    public function addWarning(PHPUnit\Framework\Test $test, PHPUnit\Framework\Warning $e, float $time): void
-    {
     }
 
     /**
      * A failure occurred.
      *
-     * @param PHPUnit\Framework\Test $test
-     * @param PHPUnit\Framework\AssertionFailedError $e
+     * @param PHPUnit_Framework_Test $test
+     * @param PHPUnit_Framework_AssertionFailedError $e
      * @param float $time
-     *
-     * @return void
      */
-    public function addFailure(PHPUnit\Framework\Test $test, PHPUnit\Framework\AssertionFailedError $e, float $time): void
+    public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
     {
+
     }
 
     /**
      * Incomplete test.
      *
-     * @param PHPUnit\Framework\Test $test
-     * @param Throwable $e
+     * @param PHPUnit_Framework_Test $test
+     * @param Exception $e
      * @param float $time
-     *
-     * @return void
      */
-    public function addIncompleteTest(PHPUnit\Framework\Test $test, Throwable $e, float $time): void
+    public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+
     }
 
     /**
      * Risky test.
      *
-     * @param PHPUnit\Framework\Test $test
-     * @param Throwable $e
+     * @param PHPUnit_Framework_Test $test
+     * @param Exception $e
      * @param float $time
      * @since  Method available since Release 4.0.0
-     *
-     * @return void
      */
-    public function addRiskyTest(PHPUnit\Framework\Test $test, Throwable $e, float $time): void
+    public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+
     }
 
     /**
      * Skipped test.
      *
-     * @param PHPUnit\Framework\Test $test
-     * @param Throwable $e
+     * @param PHPUnit_Framework_Test $test
+     * @param Exception $e
      * @param float $time
      * @since  Method available since Release 3.0.0
-     *
-     * @return void
      */
-    public function addSkippedTest(PHPUnit\Framework\Test $test, Throwable $e, float $time): void
+    public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
     {
+
     }
 
     /**
      * A test suite started.
      *
-     * @param PHPUnit\Framework\TestSuite $suite
+     * @param PHPUnit_Framework_TestSuite $suite
      * @since  Method available since Release 2.2.0
-     *
-     * @return void
      */
-    public function startTestSuite(PHPUnit\Framework\TestSuite $suite): void
+    public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
     }
 
     /**
      * A test suite ended.
      *
-     * @param PHPUnit\Framework\TestSuite $suite
+     * @param PHPUnit_Framework_TestSuite $suite
      * @since  Method available since Release 2.2.0
-     *
-     * @return void
      */
-    public function endTestSuite(PHPUnit\Framework\TestSuite $suite): void
+    public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
     {
     }
 
     /**
      * A test started.
      *
-     * @param PHPUnit\Framework\Test $test
-     *
-     * @return void
+     * @param PHPUnit_Framework_Test $test
      */
-    public function startTest(PHPUnit\Framework\Test $test): void
+    public function startTest(PHPUnit_Framework_Test $test)
     {
         $id = get_class($test) . '::' . $test->getName();
 
@@ -167,13 +144,12 @@ class Coverage implements TestListener
     /**
      * A test ended.
      *
-     * @param PHPUnit\Framework\Test $test
+     * @param PHPUnit_Framework_Test $test
      * @param float                  $time
-     *
-     * @return void
      */
-    public function endTest(PHPUnit\Framework\Test $test, float $time): void
+    public function endTest(PHPUnit_Framework_Test $test, $time)
     {
+
     }
 
     public function __destruct()
@@ -190,8 +166,11 @@ class Coverage implements TestListener
         }
 
         foreach ($data as $file => $lines) {
+
             foreach ($lines as $k => $v) {
+
                 if ($v == CodeCoverage\Driver\Driver::LINE_EXECUTED) {
+
                     if (empty($this->formatData[$file][$k])) {
                         $this->formatData[$file][$k] = [];
                     }

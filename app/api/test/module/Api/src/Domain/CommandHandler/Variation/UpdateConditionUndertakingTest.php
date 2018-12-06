@@ -57,7 +57,7 @@ class UpdateConditionUndertakingTest extends CommandHandlerTestCase
         ];
         $command = Command::create($data);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

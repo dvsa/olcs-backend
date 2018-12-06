@@ -281,7 +281,7 @@ class UploadTest extends CommandHandlerTestCase
      */
     public function testHandleCommandInvalidEbsrMime()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'content' => base64_encode(self::BODY),
@@ -312,7 +312,7 @@ class UploadTest extends CommandHandlerTestCase
 
     public function testHandleCommandInvalidMime()
     {
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $data = [
             'content' => base64_encode(self::BODY),
@@ -346,7 +346,7 @@ class UploadTest extends CommandHandlerTestCase
 
     public function testHandleCommandError()
     {
-        $this->expectException(\Exception::class, 'any error');
+        $this->setExpectedException(\Exception::class, 'any error');
 
         $data = [
             'content' => base64_encode(self::BODY),

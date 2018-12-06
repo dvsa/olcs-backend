@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class BrNumDaysTest extends \PHPUnit\Framework\TestCase
+class BrNumDaysTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

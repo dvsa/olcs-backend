@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\AddressOfEstablishment;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class AddressOfEstablishmentTest extends \PHPUnit\Framework\TestCase
+class AddressOfEstablishmentTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationGoodsOcTotalAuthReviewService;
 
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationGo
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ApplicationGoodsOcTotalAuthReviewServiceTest extends \PHPUnit\Framework\TestCase
+class ApplicationGoodsOcTotalAuthReviewServiceTest extends PHPUnit_Framework_TestCase
 {
     protected $sut;
 

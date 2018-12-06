@@ -283,7 +283,7 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ->with($guid)
             ->andReturn($payment);
 
-        $this->expectException(ValidationException::class);
+        $this->setExpectedException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

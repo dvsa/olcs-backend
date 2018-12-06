@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntit
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class UndertakingsTest extends \PHPUnit\Framework\TestCase
+class UndertakingsTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

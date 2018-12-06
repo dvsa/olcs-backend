@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateConvictionsPenaltiesStatus;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Update Convictions Penalties Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateConvictionsPenaltiesStatusTest extends \PHPUnit\Framework\TestCase
+class UpdateConvictionsPenaltiesStatusTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

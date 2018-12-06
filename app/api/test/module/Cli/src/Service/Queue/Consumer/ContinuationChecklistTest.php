@@ -123,7 +123,7 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
             'ORM Exception'
         );
 
-        $this->expectException(\Doctrine\ORM\ORMException::class, 'ORM Exception');
+        $this->setExpectedException(\Doctrine\ORM\ORMException::class, 'ORM Exception');
 
         $this->sut->processMessage($item);
     }
@@ -144,7 +144,7 @@ class ContinuationChecklistTest extends AbstractConsumerTestCase
             'DBAL Exception'
         );
 
-        $this->expectException(DBALException::class, 'DBAL Exception');
+        $this->setExpectedException(DBALException::class, 'DBAL Exception');
 
         $this->sut->processMessage($item);
     }

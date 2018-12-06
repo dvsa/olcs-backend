@@ -99,7 +99,7 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
             ->with($mockApplication, 'TA')->once()->andReturn(['KEY' => 'MESSAGE']);
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -123,7 +123,7 @@ class UpdateTaxiPhvTest extends CommandHandlerTestCase
         $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreas')
             ->with($mockApplication, 'TA2')->once()->andReturn(['KEY' => 'MESSAGE']);
 
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

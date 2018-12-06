@@ -117,7 +117,7 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
 
     public function testExecuteInsertException()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->connection->shouldReceive('quote')->with(1102)->times(4)->andReturn("'1102'");
         $this->connection->shouldReceive('quote')->with(0)->times(4)->andReturn("'0'");

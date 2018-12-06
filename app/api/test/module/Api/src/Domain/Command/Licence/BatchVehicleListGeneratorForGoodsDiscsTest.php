@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\BatchVehicleListGeneratorForGoodsDiscs;
+use PHPUnit_Framework_TestCase;
 
 /**
  * BatchVehicleListGeneratorForGoodsDiscs Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class BatchVehicleListGeneratorForGoodsDiscsTest extends \PHPUnit\Framework\TestCase
+class BatchVehicleListGeneratorForGoodsDiscsTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

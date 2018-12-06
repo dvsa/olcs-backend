@@ -57,7 +57,7 @@ class ClientTest extends MockeryTestCase
     public function testGetCompanyProfileFailInvalidJson()
     {
         //  expect
-        $this->expectException(Exception::class, Client::ERR_INVALID_JSON);
+        $this->setExpectedException(Exception::class, Client::ERR_INVALID_JSON);
 
         //  call
         $response = new Response();
@@ -108,7 +108,7 @@ class ClientTest extends MockeryTestCase
     public function testGetCompanyProfileErrorResponse($statusCode, $content, $errClass, $errMsg)
     {
         //  expect
-        $this->expectException($errClass, $errMsg);
+        $this->setExpectedException($errClass, $errMsg);
 
         //  call
         $this->mockRequest->shouldReceive('setUri')->once()->with('BASE_URI/company/03127414')->andReturnSelf();

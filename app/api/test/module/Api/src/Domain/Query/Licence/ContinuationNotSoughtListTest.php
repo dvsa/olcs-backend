@@ -2,12 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Licence;
 
+use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Licence\ContinuationNotSoughtList;
 
 /**
  * ContinuationNotSoughtList test
  */
-class ContinuationNotSoughtListTest extends \PHPUnit\Framework\TestCase
+class ContinuationNotSoughtListTest extends PHPUnit_Framework_TestCase
 {
     public function testStructure()
     {

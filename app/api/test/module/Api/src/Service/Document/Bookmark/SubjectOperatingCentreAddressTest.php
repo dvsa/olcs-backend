@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\SubjectOperatingCentreAddress as Sut
 /**
  * SubjectOperatingCentreAddressTest
  */
-class SubjectOperatingCentreAddressTest extends \PHPUnit\Framework\TestCase
+class SubjectOperatingCentreAddressTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

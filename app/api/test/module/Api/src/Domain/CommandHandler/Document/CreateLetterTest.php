@@ -78,7 +78,8 @@ class CreateLetterTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->expectException(ValidationException::class, 'Error generating document');
+        //$this->setExpectedException(\Exception::class, 'Error generating document');
+        $this->setExpectedException(ValidationException::class, 'Error generating document');
         $queryData = ['details' => ['category' => '123', 'documentSubCategory' => '321']];
         $expectedQueryData = ['details' => ['category' => '123', 'documentSubCategory' => '321']];
 

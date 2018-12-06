@@ -54,7 +54,7 @@ class ExportToCsvTest extends MockeryTestCase
         fclose($fh);
 
         //  expect
-        $this->expectException(\Exception::class, ExportToCsv::ERR_CANT_CREATE_DIR . $this->fileName);
+        $this->setExpectedException(\Exception::class, ExportToCsv::ERR_CANT_CREATE_DIR . $this->fileName);
 
         //  call & check
         ExportToCsv::createFile($this->fileName);
@@ -67,7 +67,7 @@ class ExportToCsvTest extends MockeryTestCase
         mkdir($this->fileName, 0750, true);
 
         //  expect
-        $this->expectException(\Exception::class, ExportToCsv::ERR_CANT_CREATE_FILE . $this->fileName);
+        $this->setExpectedException(\Exception::class, ExportToCsv::ERR_CANT_CREATE_FILE . $this->fileName);
 
         //  call & check
         ExportToCsv::createFile($this->fileName);

@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Result Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ResultTest extends \PHPUnit\Framework\TestCase
+class ResultTest extends PHPUnit_Framework_TestCase
 {
     protected $sut;
 

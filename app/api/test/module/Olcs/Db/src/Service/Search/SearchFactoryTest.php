@@ -4,14 +4,13 @@ namespace OlcsTest\Db\Service\Search;
 
 use Olcs\Db\Service\Search\SearchFactory;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class SearchFactoryTest
  * @package OlcsTest\Db\Service\Search
  */
-class SearchFactoryTest extends TestCase
+class SearchFactoryTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateService()
     {

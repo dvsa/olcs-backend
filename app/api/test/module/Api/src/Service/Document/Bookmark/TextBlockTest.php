@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TextBlock;
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\TextBlock
  */
-class TextBlockTest extends \PHPUnit\Framework\TestCase
+class TextBlockTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQueryNull()
     {

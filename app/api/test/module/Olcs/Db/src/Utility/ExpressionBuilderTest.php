@@ -7,6 +7,7 @@
  */
 namespace OlcsTest\Db\Utility;
 
+use PHPUnit_Framework_TestCase;
 use Olcs\Db\Utility\ExpressionBuilder;
 use Doctrine\ORM\QueryBuilder;
 use \Doctrine\ORM\Query\Expr;
@@ -16,7 +17,7 @@ use \Doctrine\ORM\Query\Expr;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ExpressionBuilderTest extends \PHPUnit\Framework\TestCase
+class ExpressionBuilderTest extends PHPUnit_Framework_TestCase
 {
     protected $em;
     protected $qb;

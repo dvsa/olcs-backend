@@ -38,7 +38,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
 
     public function testDownloadFailExcNotFound()
     {
-        $this->expectException(NotFoundException::class);
+        $this->setExpectedException(NotFoundException::class);
 
         $path = '/unit_dir/unit_file1.pdf';
 

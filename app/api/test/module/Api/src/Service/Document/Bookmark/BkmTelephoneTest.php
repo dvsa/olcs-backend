@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmTelephone as Sut;
 /**
  * BkmTelephone bookmark test
  */
-class BkmTelephoneTest extends \PHPUnit\Framework\TestCase
+class BkmTelephoneTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmEmail as Sut;
 /**
  * BkmEmail bookmark test
  */
-class BkmEmailTest extends \PHPUnit\Framework\TestCase
+class BkmEmailTest extends \PHPUnit_Framework_TestCase
 {
     public function testGetQuery()
     {

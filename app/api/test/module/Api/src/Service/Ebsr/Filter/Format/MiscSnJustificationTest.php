@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
  * @covers Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class MiscSnJustificationTest extends \PHPUnit\Framework\TestCase
+class MiscSnJustificationTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider provideFilter

@@ -87,7 +87,7 @@ class OtherLicenceEntityTest extends EntityTester
         $disqualificationLength,
         $purchaseDate
     ) {
-        $this->expectException('\Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->setExpectedException('\Dvsa\Olcs\Api\Domain\Exception\ValidationException');
 
         if (!$previousLicenceType) {
             $mockPreviousLicenceType = null;
