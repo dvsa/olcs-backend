@@ -118,6 +118,7 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             'submission' => __DIR__ . '/../view/submission',
+            'permits' => __DIR__ . '/../view/permits',
         ]
     ],
     'file_uploader' => [
