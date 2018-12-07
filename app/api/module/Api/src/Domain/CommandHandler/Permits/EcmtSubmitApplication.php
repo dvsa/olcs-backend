@@ -16,6 +16,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
+use Dvsa\Olcs\Transfer\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
+use Zend\View\Model\ViewModel;
 
 /**
  * Submit the ECMT application
@@ -67,9 +69,19 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
         $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
 
+        $data = $this->createSnapshotData($application);
+        $view = new ViewModel();
+        $view->setTemplate('permits/application-snapshot');
+        $view->setVariable('data', $data);
+
+        $html = $this->getCommandHandler()->getServiceLocator()->get('ViewRenderer')->render($view);
+        $snapshotCmd = SnapshotCmd::create(['id' => $id, 'html' => $html]);
+
+        //$result->merge($this->handleSideEffectAsSystemUser($snapshotCmd));
+
         //queue the email confirming submission
         $result->merge(
-            $this->handleSideEffect($emailCmd)
+            $this->handleSideEffects([$emailCmd, $snapshotCmd])
         );
 
         return $result;
@@ -92,5 +104,25 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
             );
             $this->getRepo('IrhpCandidatePermit')->save($candidatePermit);
         }
+    }
+
+    /**
+     * @param object $application
+     */
+    private function createSnapshotData($application)
+    {
+        $data['permitType'] = $application->getPermitType()->getDescription();
+        $data['operator'] = $application->getLicence()->getOrganisation()->getName();
+        $data['ref'] = $application->getApplicationRef();
+        $data['licence'] = $application->getLicence()->getLicNo();
+        $data['emissions'] = $application->getEmissions();
+        $data['cabotage'] = $application->getCabotage();
+        $data['limited-permits'] = $application->getHasRestrictedCountries();
+        $data['number-required'] = $application->getPermitsRequired();
+        $data['trips'] = $application->getTrips();
+        $data['int-journeys'] = $application->getInternationalJourneys()->getDescription();
+        $data['goods'] = $application->getSectors()->getName();
+
+        return $data;
     }
 }

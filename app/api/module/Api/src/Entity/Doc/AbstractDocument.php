@@ -37,6 +37,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
      *     columns={"continuation_detail_id"}),
+ *        @ORM\Index(name="fk_document_ecmt_application_id_ecmt_application_id",
+     *     columns={"ecmt_application_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"})
  *    },
@@ -149,6 +151,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\Column(type="string", name="description", length=255, nullable=true)
      */
     protected $description;
+
+    /**
+     * Ecmt application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="ecmt_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $ecmtApplication;
 
     /**
      * Filename
@@ -702,6 +714,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the ecmt application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtApplication entity being set as the value
+     *
+     * @return Document
+     */
+    public function setEcmtApplication($ecmtApplication)
+    {
+        $this->ecmtApplication = $ecmtApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
+     */
+    public function getEcmtApplication()
+    {
+        return $this->ecmtApplication;
     }
 
     /**
