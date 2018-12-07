@@ -2203,4 +2203,42 @@ return array(
             )
         )
     ),
+    'question_text' => array(
+        'question_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Question',
+                'property' => 'questionText'
+            )
+        ),
+    ),
+    'application_step' => array(
+        'application_path_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ApplicationPath',
+                'property' => 'applicationStep'
+            )
+        ),
+    ),
+    'application_validation' => array(
+        'question_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Question',
+                'property' => 'applicationValidation'
+            )
+        ),
+        'application_step_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ApplicationStep',
+                'property' => 'applicationValidation'
+            )
+        ),
+    ),
+    'answer' => array(
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'answer'
+            )
+        ),
+    ),
 );
