@@ -7,7 +7,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use \Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Query\OrderedQueryInterface;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
@@ -45,7 +44,6 @@ class EcmtPermitApplication extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-
         if (method_exists($query, 'getStatus') && $query->getStatus() !== null) {
             $qb->andWhere(
                 $qb->expr()->eq($this->alias .'.status', ':status')
@@ -74,6 +72,12 @@ class EcmtPermitApplication extends AbstractRepository
             && (method_exists($query, 'getOrder') && $query->getOrder() !== null)) {
             $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
         }
+    }
+
+    protected function applyListJoins(QueryBuilder $qb)
+    {
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('fees');
     }
 
     /**
