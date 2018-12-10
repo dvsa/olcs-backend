@@ -174,6 +174,33 @@ class IrhpPermitEntityTest extends EntityTester
     }
 
     /**
+    * @dataProvider dpProceedToPrinted
+    */
+    public function testProceedToPrinted($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        if (!$expected) {
+            $this->expectException(ForbiddenException::class);
+        }
+
+        $this->sut->proceedToStatus(new RefData(Entity::STATUS_PRINTED));
+
+        $this->assertEquals(Entity::STATUS_PRINTED, $this->sut->getStatus()->getId());
+    }
+
+    public function dpProceedToPrinted()
+    {
+        return [
+            [Entity::STATUS_PENDING, false],
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, true],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    /**
     * @dataProvider dpProceedToError
     */
     public function testProceedToError($statusId, $expected)
