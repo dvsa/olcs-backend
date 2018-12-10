@@ -17,7 +17,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 {
     protected $repoServiceName = 'DigitalSignature';
 
-    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication', 'Licence', 'Surrender'];
+    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication', 'Licence'];
 
     /** @var  \Dvsa\Olcs\GdsVerify\Service\GdsVerify */
     private $gdsVerifyService;
@@ -253,14 +253,10 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
     private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $licenceId)
     {
-        /**
-         * @var Entity\Surrender
-         */
-        $surrender =  $surrender = $this->getRepo('Surrender')->fetchOneByLicence($licenceId);
         $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
             [
                 'digitalSignature' => $digitalSignature,
-                'id' => $surrender->getId(),
+                'id' => $licenceId,
                 'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED,
                 'signatureType' => Entity\System\RefData::SIG_DIGITAL_SIGNATURE
             ]
