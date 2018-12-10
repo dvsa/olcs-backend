@@ -31,7 +31,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
  *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
  *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_fee_ecmt_permit_application_id", columns={"ecmt_permit_application_id"})
+ *        @ORM\Index(name="fk_fee_ecmt_permit_application_id", columns={"ecmt_permit_application_id"}),
+ *        @ORM\Index(name="ix_fee_irhp_permit_application_id", columns={"irhp_permit_application_id"})
  *    }
  * )
  */
@@ -193,6 +194,16 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoPsvAuth;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpPermitApplication;
 
     /**
      * Last modified by
@@ -684,6 +695,30 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getIrfoPsvAuth()
     {
         return $this->irfoPsvAuth;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication $irhpPermitApplication entity being set as the value
+     *
+     * @return Fee
+     */
+    public function setIrhpPermitApplication($irhpPermitApplication)
+    {
+        $this->irhpPermitApplication = $irhpPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     */
+    public function getIrhpPermitApplication()
+    {
+        return $this->irhpPermitApplication;
     }
 
     /**

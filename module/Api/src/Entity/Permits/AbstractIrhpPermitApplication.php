@@ -29,7 +29,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_application_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_monthly_ecmt_permit_application1",
+     *     columns={"monthly_ecmt_permit_application_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_removals_ecmt_permit_application1",
+     *     columns={"removals_ecmt_permit_application_id"})
  *    }
  * )
  */
@@ -37,6 +41,27 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     inversedBy="irhpPermitApplications",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="irhp_application_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $countrys;
 
     /**
      * Created by
@@ -68,7 +93,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      *     fetch="LAZY",
      *     inversedBy="irhpPermitApplications"
      * )
-     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
      */
     protected $ecmtPermitApplication;
 
@@ -124,6 +149,21 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $licence;
 
     /**
+     * Monthly ecmt permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\MonthlyEcmtPermitApplication
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\MonthlyEcmtPermitApplication",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinColumn(name="monthly_ecmt_permit_application_id",
+     *     referencedColumnName="id",
+     *     nullable=true)
+     */
+    protected $monthlyEcmtPermitApplication;
+
+    /**
      * Permits required
      *
      * @var int
@@ -140,6 +180,21 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="text", name="properties", nullable=true)
      */
     protected $properties;
+
+    /**
+     * Removals ecmt permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\RemovalsEcmtPermitApplication
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\RemovalsEcmtPermitApplication",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinColumn(name="removals_ecmt_permit_application_id",
+     *     referencedColumnName="id",
+     *     nullable=true)
+     */
+    protected $removalsEcmtPermitApplication;
 
     /**
      * Sectors
@@ -221,8 +276,72 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      */
     public function initCollections()
     {
+        $this->countrys = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
     }
 
     /**
@@ -430,6 +549,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     }
 
     /**
+     * Set the monthly ecmt permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\MonthlyEcmtPermitApplication $monthlyEcmtPermitApplication entity being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setMonthlyEcmtPermitApplication($monthlyEcmtPermitApplication)
+    {
+        $this->monthlyEcmtPermitApplication = $monthlyEcmtPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the monthly ecmt permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\MonthlyEcmtPermitApplication
+     */
+    public function getMonthlyEcmtPermitApplication()
+    {
+        return $this->monthlyEcmtPermitApplication;
+    }
+
+    /**
      * Set the permits required
      *
      * @param int $permitsRequired new value being set
@@ -475,6 +618,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * Set the removals ecmt permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\RemovalsEcmtPermitApplication $removalsEcmtPermitApplication entity being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRemovalsEcmtPermitApplication($removalsEcmtPermitApplication)
+    {
+        $this->removalsEcmtPermitApplication = $removalsEcmtPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the removals ecmt permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\RemovalsEcmtPermitApplication
+     */
+    public function getRemovalsEcmtPermitApplication()
+    {
+        return $this->removalsEcmtPermitApplication;
     }
 
     /**

@@ -195,4 +195,6 @@ return [
     'Question' => 'Generic',
     'Answer' => 'Generic',
     'QuestionText' => 'Generic',
+    'MonthlyEcmtPermitApplication' => 'Permits',
+    'RemovalsEcmtPermitApplication' => 'Permits',
 ];

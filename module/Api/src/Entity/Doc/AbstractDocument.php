@@ -36,7 +36,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
-     *     columns={"continuation_detail_id"})
+     *     columns={"continuation_detail_id"}),
+ *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
+     *     columns={"irhp_permit_application_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -186,6 +188,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoOrganisation;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpPermitApplication;
 
     /**
      * Is external
@@ -786,6 +798,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getIrfoOrganisation()
     {
         return $this->irfoOrganisation;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication $irhpPermitApplication entity being set as the value
+     *
+     * @return Document
+     */
+    public function setIrhpPermitApplication($irhpPermitApplication)
+    {
+        $this->irhpPermitApplication = $irhpPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     */
+    public function getIrhpPermitApplication()
+    {
+        return $this->irhpPermitApplication;
     }
 
     /**

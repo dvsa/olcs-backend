@@ -35,7 +35,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"description","category_id","sub_category_id"}),
  *        @ORM\Index(name="ix_task_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_task_ecmt_permit_application_id",
-     *     columns={"ecmt_permit_application_id"})
+     *     columns={"ecmt_permit_application_id"}),
+ *        @ORM\Index(name="ix_task_irhp_permit_application_id",
+     *     columns={"irhp_permit_application_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_task_olbs_key", columns={"olbs_key"})
@@ -189,6 +191,16 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      * @ORM\JoinColumn(name="irfo_organisation_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoOrganisation;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpPermitApplication;
 
     /**
      * Is closed
@@ -633,6 +645,30 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     public function getIrfoOrganisation()
     {
         return $this->irfoOrganisation;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication $irhpPermitApplication entity being set as the value
+     *
+     * @return Task
+     */
+    public function setIrhpPermitApplication($irhpPermitApplication)
+    {
+        $this->irhpPermitApplication = $irhpPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     */
+    public function getIrhpPermitApplication()
+    {
+        return $this->irhpPermitApplication;
     }
 
     /**

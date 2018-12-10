@@ -117,6 +117,19 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $irfoPsvAuths;
 
     /**
+     * Irhp permit application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $irhpPermitApplications;
+
+    /**
      * Irhp permit stock range
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -197,6 +210,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
         $this->ecmtApplications = new ArrayCollection();
         $this->constraints = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
+        $this->irhpPermitApplications = new ArrayCollection();
         $this->irhpPermitStockRanges = new ArrayCollection();
     }
 
@@ -486,6 +500,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     {
         if ($this->irfoPsvAuths->contains($irfoPsvAuths)) {
             $this->irfoPsvAuths->removeElement($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrhpPermitApplications($irhpPermitApplications)
+    {
+        $this->irhpPermitApplications = $irhpPermitApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitApplications()
+    {
+        return $this->irhpPermitApplications;
+    }
+
+    /**
+     * Add a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being added
+     *
+     * @return Country
+     */
+    public function addIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($irhpPermitApplications instanceof ArrayCollection) {
+            $this->irhpPermitApplications = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitApplications->toArray(),
+                    $irhpPermitApplications->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->add($irhpPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->removeElement($irhpPermitApplications);
         }
 
         return $this;
