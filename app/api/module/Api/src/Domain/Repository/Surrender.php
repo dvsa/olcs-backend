@@ -12,4 +12,9 @@ class Surrender extends AbstractRepository
     {
         return parent::fetchByX('licence', [$licenceId, $hydrateMode]);
     }
+
+    public function fetchOneByLicenceId($licenceId, $hydrateMode = Query::HYDRATE_OBJECT)
+    {
+        return parent::fetchOneByX('licence', [$licenceId, $hydrateMode]);
+    }
 }
