@@ -136,7 +136,7 @@ class LicenceTest extends CommandHandlerTestCase
         $this->repoMap['Publication']->shouldReceive('fetchLatestForTrafficAreaAndType')->with('T', 'A&D')->once()
             ->andReturn($publication);
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }

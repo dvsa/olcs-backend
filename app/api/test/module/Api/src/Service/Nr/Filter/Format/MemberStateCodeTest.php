@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode;
 /**
  * @covers \Dvsa\Olcs\Api\Service\Nr\Filter\Format\MemberStateCode
  */
-class MemberStateCodeTest extends \PHPUnit_Framework_TestCase
+class MemberStateCodeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dpTestFilter

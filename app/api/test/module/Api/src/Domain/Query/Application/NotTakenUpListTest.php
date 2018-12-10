@@ -2,13 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Query\Application;
 
-use PHPUnit_Framework_TestCase;
 use Dvsa\Olcs\Api\Domain\Query\Application\NotTakenUpList;
 
 /**
  * NotTakenUpList test
  */
-class NotTakenUpListTest extends PHPUnit_Framework_TestCase
+class NotTakenUpListTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

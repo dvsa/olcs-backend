@@ -23,7 +23,7 @@ class ImageBookmarkTest extends MockeryTestCase
         $sut->setFileStore($mockFs);
 
         //  expect
-        static::setExpectedException(
+        static::expectException(
             \RuntimeException::class,
             'Image path /templates/Image/' . $name . '.jpg does not exist'
         );

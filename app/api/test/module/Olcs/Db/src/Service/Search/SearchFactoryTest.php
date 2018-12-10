@@ -10,7 +10,7 @@ use ZfcRbac\Service\AuthorizationService;
  * Class SearchFactoryTest
  * @package OlcsTest\Db\Service\Search
  */
-class SearchFactoryTest extends \PHPUnit_Framework_TestCase
+class SearchFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateService()
     {

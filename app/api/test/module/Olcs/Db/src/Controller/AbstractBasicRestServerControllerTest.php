@@ -8,7 +8,6 @@
 
 namespace OlcsTest\Db\Controller;
 
-use PHPUnit_Framework_TestCase;
 use Zend\Http\Response;
 
 /**
@@ -16,7 +15,7 @@ use Zend\Http\Response;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class AbstractBasicRestServerControllerTest extends PHPUnit_Framework_TestCase
+class AbstractBasicRestServerControllerTest extends \PHPUnit\Framework\TestCase
 {
 
     private $controller;

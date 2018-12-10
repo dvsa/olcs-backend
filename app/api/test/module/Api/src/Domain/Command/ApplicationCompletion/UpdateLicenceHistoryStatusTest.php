@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateLicenceHistoryStatus;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Licence History Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateLicenceHistoryStatusTest extends PHPUnit_Framework_TestCase
+class UpdateLicenceHistoryStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

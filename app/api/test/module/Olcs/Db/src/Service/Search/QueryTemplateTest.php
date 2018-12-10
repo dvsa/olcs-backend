@@ -12,7 +12,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     public function testQueryTemplateMissing()
     {
-        $this->setExpectedException(\RuntimeException::class, "Query template file 'foo.json' is missing");
+        $this->expectException(\RuntimeException::class, "Query template file 'foo.json' is missing");
         $sut = new QueryTemplate('foo.json', 'bar');
         // prevent unused variable violation
         unset($sut);

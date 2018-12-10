@@ -95,7 +95,7 @@ class ApplicationOrganisationPersonTest extends RepositoryTestCase
                 ->getMock()
         );
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
         $this->sut->fetchForApplicationAndPerson(34, 76);
     }
@@ -144,7 +144,7 @@ class ApplicationOrganisationPersonTest extends RepositoryTestCase
                 ->getMock()
         );
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
         $this->sut->fetchForApplicationAndOriginalPerson(34, 76);
     }

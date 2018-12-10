@@ -149,7 +149,7 @@ class ReprintTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->setExpectedException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
 
         $licenceId = 1;
         $communityLicenceIds = [10];

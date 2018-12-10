@@ -83,7 +83,7 @@ class LicenceEntityTest extends EntityTester
         $licence = $this->instantiate(Entity::class);
 
         if ($expectedException !== null) {
-            $this->setExpectedException($expectedException);
+            $this->expectException($expectedException);
         }
 
         $licence->updateSafetyDetails(
@@ -973,7 +973,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider testCanHaveVariationProvider
+     * @dataProvider dpCanHaveVariationProvider
      */
     public function testCanHaveVariation($status, $expected)
     {
@@ -985,7 +985,7 @@ class LicenceEntityTest extends EntityTester
         $this->assertEquals($licence->canHaveVariation(), $expected);
     }
 
-    public function testCanHaveVariationProvider()
+    public function dpCanHaveVariationProvider()
     {
         return [
             [
@@ -1476,7 +1476,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider testIsExpiredDataProvider
+     * @dataProvider dpIsExpiredDataProvider
      *
      * @param bool     $expected   Is Expiring
      * @param DateTime $expiryDate Licence expiry date
@@ -1489,7 +1489,7 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($expected, $licence->isExpired());
     }
 
-    public function testIsExpiredDataProvider()
+    public function dpIsExpiredDataProvider()
     {
         return [
             'Null expiry date' => [false, null],
@@ -1504,7 +1504,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider testIsExpiringDataProvider
+     * @dataProvider dpIsExpiringDataProvider
      *
      * @param bool     $expected   Is Expiring
      * @param DateTime $expiryDate Licence expiry date
@@ -1519,7 +1519,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider testIsExpiringDataProvider
+     * @dataProvider dpIsExpiringDataProvider
      *
      * @param bool     $expected   Is Expiring
      * @param DateTime $expiryDate Licence expiry date
@@ -1548,7 +1548,7 @@ class LicenceEntityTest extends EntityTester
         $this->assertSame($expected, $licence->isExpiring());
     }
 
-    public function testIsExpiringDataProvider()
+    public function dpIsExpiringDataProvider()
     {
         return [
             '-2 years 4 monsth' => [false, (new DateTime())->sub(new \DateInterval('P2Y4M'))],

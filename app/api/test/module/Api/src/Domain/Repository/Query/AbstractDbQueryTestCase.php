@@ -125,7 +125,7 @@ abstract class AbstractDbQueryTestCase extends MockeryTestCase
         // add generic params
         $expectedParams['currentUserId'] = 1;
 
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->connection->shouldReceive('executeQuery')
             ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)

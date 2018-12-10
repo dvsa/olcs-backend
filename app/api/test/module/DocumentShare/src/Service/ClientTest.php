@@ -115,7 +115,7 @@ class ClientTest extends MockeryTestCase
         static::assertFalse(is_file($filePath));
 
         //  expect
-        $this->setExpectedException(\Exception::class, 'simulate_err');
+        $this->expectException(\Exception::class, 'simulate_err');
 
         //  call & check
         $this->sut->read('test');

@@ -423,7 +423,7 @@ class BusTest extends RepositoryTestCase
      *
      * @return array
      */
-    public function testLatestUsingRegNoProvider()
+    public function dpLatestUsingRegNoProvider()
     {
         $withResult = [
             0 => m::mock(BusReg::class)

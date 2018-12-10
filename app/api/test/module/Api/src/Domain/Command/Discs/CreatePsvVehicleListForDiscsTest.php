@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs;
-use PHPUnit_Framework_TestCase;
 
 /**
  * CreatePsvVehicleListForDiscs Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreatePsvVehicleListForDiscsTest extends PHPUnit_Framework_TestCase
+class CreatePsvVehicleListForDiscsTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

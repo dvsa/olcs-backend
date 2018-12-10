@@ -174,7 +174,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
             'Error generating the PDF TEMP_FILE.rtf : TEST MESSAGE'
         );
@@ -212,7 +212,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
             'Error generating the PDF TEMP_FILE.rtf : Timeout'
         );
@@ -264,7 +264,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
             'Error generating the PDF : OUTPUT PDF'
         );
@@ -292,7 +292,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
             'PDF file does not exist : TEMP_FILE.pdf'
         );
@@ -320,7 +320,7 @@ class PrintJobTest extends CommandHandlerTestCase
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class,
             'Error executing lpr command : OUTPUT LPR'
         );
@@ -566,7 +566,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with('IDENTIFIER')->once()
             ->andReturn(null);
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
             "Can't find document"
         );
@@ -581,7 +581,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $team = new \Dvsa\Olcs\Api\Entity\User\Team();
         $this->mockUser->setTeam($team);
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\Exception::class,
             'Cannot find printer for User LOGIN_ID'
         );

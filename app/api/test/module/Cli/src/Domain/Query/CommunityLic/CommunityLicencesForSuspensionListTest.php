@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Query\CommunityLic\CommunityLicencesForSuspensionList;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CommunityLicencesForSuspensionListTest extends \PHPUnit_Framework_TestCase
+class CommunityLicencesForSuspensionListTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {
