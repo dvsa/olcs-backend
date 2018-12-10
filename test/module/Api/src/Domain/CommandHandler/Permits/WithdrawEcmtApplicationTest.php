@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\WithdrawEcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -34,33 +35,62 @@ class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             EcmtPermitApplication::STATUS_WITHDRAWN,
-            EcmtPermitApplication::WITHDRAWN_REASON_BY_USER
+            EcmtPermitApplication::WITHDRAWN_REASON_BY_USER,
+            EcmtPermitApplication::WITHDRAWN_REASON_UNPAID,
+            EcmtPermitApplication::WITHDRAWN_REASON_DECLINED,
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpReasonProvider
+     */
+    public function testHandleCommand($withdrawReason, $emailSentTimes)
     {
         $applicationId = 1;
-        $command = Cmd::create(['id' => $applicationId]);
+        $feeId1 = 2;
+        $feeId2 = 3;
+
+        $cmdData = [
+            'id' => $applicationId,
+            'reason' => $withdrawReason
+        ];
+        $command = Cmd::create($cmdData);
 
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('withdraw')->with(
             $this->refData[EcmtPermitApplication::STATUS_WITHDRAWN],
-            $this->refData[EcmtPermitApplication::WITHDRAWN_REASON_BY_USER]
+            $this->refData[$withdrawReason]
         )->once();
 
-        $fee_1 = m::mock(Fee::class);
-        $fee_1->shouldReceive('getId')->andReturn(1);
-        $fees = [$fee_1];
-        $application->shouldReceive('getOutstandingFees')->andReturn($fees);
+        $fee1 = m::mock(Fee::class);
+        $fee1->shouldReceive('getId')->once()->withNoArgs()->andReturn($feeId1);
+        $fee2 = m::mock(Fee::class);
+        $fee2->shouldReceive('getId')->once()->withNoArgs()->andReturn($feeId2);
+        $fees = [$fee1, $fee2];
 
-        $taskResult = new Result();
+        $application->shouldReceive('getOutstandingFees')->once()->withNoArgs()->andReturn($fees);
+
         $this->expectedSideEffect(
             CancelFee::class,
-            [ 'id' => 1],
-            $taskResult
+            [ 'id' => $feeId1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            CancelFee::class,
+            [ 'id' => $feeId2],
+            new Result()
+        );
+
+        $this->expectedEmailQueueSideEffect(
+            SendEcmtAutomaticallyWithdrawn::class,
+            ['id' => $applicationId],
+            $applicationId,
+            new Result(),
+            null,
+            $emailSentTimes
         );
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
@@ -80,5 +110,14 @@ class WithdrawEcmtApplicationTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function dpReasonProvider()
+    {
+        return [
+            [EcmtPermitApplication::WITHDRAWN_REASON_BY_USER, 0],
+            [EcmtPermitApplication::WITHDRAWN_REASON_DECLINED, 0],
+            [EcmtPermitApplication::WITHDRAWN_REASON_UNPAID, 1],
+        ];
     }
 }

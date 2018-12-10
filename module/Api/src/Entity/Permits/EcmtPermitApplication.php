@@ -62,6 +62,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
     const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
 
+    const WITHDRAWN_REASON_UNPAID = 'permits_app_withdraw_not_paid';
     const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
     const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
 
@@ -766,7 +767,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function canBeWithdrawn()
     {
-        return $this->isUnderConsideration();
+        return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
     }
 
     /**
@@ -848,6 +849,34 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         return $this->getPermitIntensityOfUse() * $interJourneysDecValue;
     }
 
+    /**
+     * Is there an overdue issue fee for this application?
+     *
+     * @return bool
+     */
+    public function issueFeeOverdue()
+    {
+        $timeToPay = new \DateInterval('P10D');
+        $cutoff = new \DateTime();
+        $cutoff->sub($timeToPay);
+
+        $criteria = Criteria::create();
+        $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
+        $criteria->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        $matchedFees = $this->getFees()->matching($criteria);
+
+        /**
+         * @var Fee $fee
+         */
+        foreach ($matchedFees as $fee) {
+            if ($fee->isOutstanding() && $fee->getFeeType()->isEcmtIssue()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Get Latest Outstanding Ecmt Application Fee
@@ -860,6 +889,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
+        /** @var Fee $fee */
         foreach ($this->getFees()->matching($criteria) as $fee) {
             if ($fee->isOutstanding()
                 && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
@@ -878,6 +908,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     {
         $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
         $fees = [];
+
+        /** @var Fee $fee */
         foreach ($this->getFees() as $fee) {
             if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
                 $fees[] = $fee;

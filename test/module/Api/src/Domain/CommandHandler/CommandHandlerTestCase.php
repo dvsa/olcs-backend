@@ -228,7 +228,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $queueType,
         array $options = [],
         $result = null,
-        $processAfterDate = null
+        $processAfterDate = null,
+        $times = 1
     ) {
         if ($result === null) {
             $result = new Result();
@@ -242,7 +243,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             'processAfterDate' => $processAfterDate
         ];
 
-        $this->expectedSideEffect(CreateQueueCmd::class, $data, $result);
+        $this->expectedSideEffect(CreateQueueCmd::class, $data, $result, $times);
     }
 
     /**
@@ -259,7 +260,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         array $cmdData,
         $entityId,
         $result,
-        $processAfterDate = null
+        $processAfterDate = null,
+        $times = 1
     ) {
         $emailOptions = [
             'commandClass' => $emailCmdClass,
@@ -274,13 +276,13 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             'processAfterDate' => $processAfterDate
         ];
 
-        $this->expectedSideEffect(CreateQueueCmd::class, $emailData, $result);
+        $this->expectedSideEffect(CreateQueueCmd::class, $emailData, $result, $times);
     }
 
-    public function expectedSideEffect($class, $data, $result)
+    public function expectedSideEffect($class, $data, $result, $times = 1)
     {
         $this->commandHandler->shouldReceive('handleCommand')
-            ->once()
+            ->times($times)
             ->with(m::type($class), false)
             ->andReturnUsing(
                 function (CommandInterface $command) use ($class, $data, $result) {
@@ -290,7 +292,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             );
     }
 
-    public function expectedSideEffectAsSystemUser($class, $data, $result)
+    public function expectedSideEffectAsSystemUser($class, $data, $result, $times = 1)
     {
         $this->pidIdentityProvider
             ->shouldReceive('setMasqueradedAsSystemUser')
@@ -299,7 +301,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
             ->with(false)
             ->getMock();
 
-        $this->expectedSideEffect($class, $data, $result);
+        $this->expectedSideEffect($class, $data, $result, $times);
     }
 
     public function expectedSideEffectThrowsException($class, $data, $exception)
