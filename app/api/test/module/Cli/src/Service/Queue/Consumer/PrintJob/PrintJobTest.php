@@ -24,6 +24,61 @@ class PrintJobTest extends AbstractConsumerTestCase
     protected $sut;
 
     /**
+    * @dataProvider dpGetCommandData
+    */
+    public function testGetCommandData($itemId, $entityId, $options, $expected)
+    {
+        $item = new QueueEntity();
+        $item->setId($itemId);
+        $item->setEntityId($entityId);
+        $item->setOptions(json_encode($options));
+
+        $this->assertEquals($expected, $this->sut->getCommandData($item));
+    }
+
+    public function dpGetCommandData()
+    {
+        return [
+            'with list of documents' => [
+                'itemId' => 1,
+                'entityId' => null,
+                'options' => ['jobName' => 'JOB_NAME', 'documents' => [101, 102], 'userId' => 200, 'copies' => 5],
+                'expected' => [
+                    'id' => 1,
+                    'title' => 'JOB_NAME',
+                    'documents' => [101, 102],
+                    'user' => 200,
+                    'copies' => 5,
+                ],
+            ],
+            'with one document' => [
+                'itemId' => 1,
+                'entityId' => null,
+                'options' => ['jobName' => 'JOB_NAME', 'documents' => [101]],
+                'expected' => [
+                    'id' => 1,
+                    'title' => 'JOB_NAME',
+                    'documents' => [101],
+                    'user' => null,
+                    'copies' => null,
+                ],
+            ],
+            'with one document - backward compatibility' => [
+                'itemId' => 1,
+                'entityId' => 101,
+                'options' => ['jobName' => 'JOB_NAME'],
+                'expected' => [
+                    'id' => 1,
+                    'title' => 'JOB_NAME',
+                    'documents' => [101],
+                    'user' => null,
+                    'copies' => null,
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Tests that print job retries correctly
      */
     public function testProcessMessageHandlesNotReadyException()
@@ -56,7 +111,7 @@ class PrintJobTest extends AbstractConsumerTestCase
         $cmdData = [
             'id' => $itemId,
             'title' => $jobName,
-            'document' => $entityId,
+            'documents' => [$entityId],
             'user' => $userId,
             'copies' => null,
         ];

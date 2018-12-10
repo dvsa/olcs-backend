@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\ProceedToStatus;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\GeneratePermits;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\GeneratePermits as GeneratePermitsHandler;
@@ -148,6 +149,75 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
     /**
      * @expectedException Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @expectedExceptionMessage Permits generation failed with error: Permits printing failed.
+     */
+    public function testHandleButIssueWithPermitsPrinting()
+    {
+        $ids = [1, 2, 3];
+        $userId = 456;
+        $permitDocs = [101, 102, 103];
+        $letterDocs = [201, 202, 203];
+
+        $cmdData = [
+            'ids' => $ids,
+            'user' => $userId,
+        ];
+
+        $command = GeneratePermits::create($cmdData);
+
+        $this->mockTransationMngr
+            ->shouldReceive('beginTransaction')
+            ->times(3)
+            ->shouldReceive('commit')
+            ->times(2)
+            ->shouldReceive('rollback')
+            ->once();
+
+        $this->expectedSideEffect(
+            ProceedToStatus::class,
+            [
+                'ids' => $ids,
+                'status' => IrhpPermit::STATUS_PRINTING,
+            ],
+            (new Result())->addMessage('Permits proceeded to Printing')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocuments::class,
+            [
+                'ids' => $ids,
+            ],
+            (new Result())
+                ->addId('permit', $permitDocs)
+                ->addId('coveringLetter', $letterDocs)
+                ->addMessage('Docs generated')
+        );
+
+        $this->expectedSideEffectThrowsException(
+            Enqueue::class,
+            [
+                'type' => Queue::TYPE_PERMIT_PRINT,
+                'documents' => $permitDocs,
+                'jobName' => 'Permits',
+                'user' => $userId,
+            ],
+            new RuntimeException('Permits printing failed.')
+        );
+
+        $this->expectedSideEffect(
+            ProceedToStatus::class,
+            [
+                'ids' => $ids,
+                'status' => IrhpPermit::STATUS_ERROR,
+            ],
+            (new Result())->addMessage('Permits proceeded to Error')
+        );
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      * @expectedExceptionMessage Permits generation failed with error: Letter printing failed.
      */
     public function testHandleButIssueWithLetterPrinting()
@@ -190,6 +260,17 @@ class GeneratePermitsTest extends CommandHandlerTestCase
                 ->addId('permit', $permitDocs)
                 ->addId('coveringLetter', $letterDocs)
                 ->addMessage('Docs generated')
+        );
+
+        $this->expectedSideEffect(
+            Enqueue::class,
+            [
+                'type' => Queue::TYPE_PERMIT_PRINT,
+                'documents' => $permitDocs,
+                'jobName' => 'Permits',
+                'user' => $userId,
+            ],
+            (new Result())->addMessage('Permits scheduled for printing')
         );
 
         $this->expectedSideEffectThrowsException(
@@ -259,6 +340,17 @@ class GeneratePermitsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Enqueue::class,
             [
+                'type' => Queue::TYPE_PERMIT_PRINT,
+                'documents' => $permitDocs,
+                'jobName' => 'Permits',
+                'user' => $userId,
+            ],
+            (new Result())->addMessage('Permits scheduled for printing')
+        );
+
+        $this->expectedSideEffect(
+            Enqueue::class,
+            [
                 'documentId' => $letterDocs[0],
                 'jobName' => 'Permit covering letter',
                 'user' => $userId,
@@ -284,6 +376,15 @@ class GeneratePermitsTest extends CommandHandlerTestCase
             (new Result())->addMessage(sprintf('Letter %d scheduled for printing', $letterDocs[2]))
         );
 
+        $this->expectedSideEffect(
+            ProceedToStatus::class,
+            [
+                'ids' => $ids,
+                'status' => IrhpPermit::STATUS_PRINTED,
+            ],
+            (new Result())->addMessage('Permits proceeded to Printed')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -294,9 +395,11 @@ class GeneratePermitsTest extends CommandHandlerTestCase
             'messages' => [
                 'Permits proceeded to Printing',
                 'Docs generated',
+                'Permits scheduled for printing',
                 sprintf('Letter %d scheduled for printing', $letterDocs[0]),
                 sprintf('Letter %d scheduled for printing', $letterDocs[1]),
                 sprintf('Letter %d scheduled for printing', $letterDocs[2]),
+                'Permits proceeded to Printed',
                 'Permits generated',
             ]
         ];
@@ -349,11 +452,31 @@ class GeneratePermitsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Enqueue::class,
             [
+                'type' => Queue::TYPE_PERMIT_PRINT,
+                'documents' => [$permitDocs],
+                'jobName' => 'Permits',
+                'user' => $userId,
+            ],
+            (new Result())->addMessage('Permits scheduled for printing')
+        );
+
+        $this->expectedSideEffect(
+            Enqueue::class,
+            [
                 'documentId' => $letterDocs,
                 'jobName' => 'Permit covering letter',
                 'user' => $userId,
             ],
             (new Result())->addMessage(sprintf('Letter %d scheduled for printing', $letterDocs))
+        );
+
+        $this->expectedSideEffect(
+            ProceedToStatus::class,
+            [
+                'ids' => $ids,
+                'status' => IrhpPermit::STATUS_PRINTED,
+            ],
+            (new Result())->addMessage('Permits proceeded to Printed')
         );
 
         $result = $this->sut->handleCommand($command);
@@ -366,7 +489,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
             'messages' => [
                 'Permits proceeded to Printing',
                 'Docs generated',
+                'Permits scheduled for printing',
                 sprintf('Letter %d scheduled for printing', $letterDocs),
+                'Permits proceeded to Printed',
                 'Permits generated',
             ]
         ];

@@ -29,9 +29,21 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
 
     const DEF_PRINT_COPIES_CNT = 1;
 
+    const TEMP_DIR = '/tmp/';
+    const TEMP_FILE_PREFIX = 'PrintJob';
+
     protected $repoServiceName = 'Document';
 
     protected $extraRepos = ['User', 'SystemParameter', 'Printer'];
+
+    /** @var string */
+    private $destination;
+
+    /** @var string */
+    private $filesPrefix;
+
+    /** @var int */
+    private $stubPrintToLicenceId;
 
     /**
      * Handle Command
@@ -53,51 +65,58 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             $username = 'Anonymous';
         }
 
-        /* @var $document Document */
-        $document = $this->getRepo('Document')->fetchById($command->getDocument());
+        // set the common file prefix
+        $this->filesPrefix = self::TEMP_FILE_PREFIX . '-' . $command->getId() . '-';
 
-        // get destination ie the CUPS print queue name
-        if ($user !== null && $user->getTeam()) {
-            $printer = $this->findPrinterForUserAndDocument($user, $document);
-            $destination = $printer->getPrinterName();
-        } else {
-            // If user does NOT have a team, they must be selfserve. Therefore get Printer from system parameter
-            $destination = $this->getSelfserveUserPrinter();
-        }
-
-        // This config allows us to override the username on the environments that use the CUPS PDF print driver
-        // This is needed as the username has to exist on the CUPS box so that the PDF file can be created
-        if ($this->getConfigUser() !== false) {
-            $username = $this->getConfigUser();
-        }
-
-        // if the destination (queue name) is TESTING-STUB-LICENCE:n then attach it to a licence
-        // This allows testing without have to actually connect to multiple printers/queues
-        if (strpos($destination, 'TESTING-STUB-LICENCE:') === 0) {
-            $licenceId = (int) substr($destination, strlen('TESTING-STUB-LICENCE:'));
-
-            $this->stubPrint($document, $licenceId);
-
-            $this->result->addMessage('Printed successfully (stub to licence '. $licenceId .')');
-
-            return $this->result;
-        }
-
-        $file = $this->getUploader()->download($document->getIdentifier());
-        if ($file === null) {
-            throw new Exception('Can\'t find document');
-        }
+        $pdfFiles = [];
 
         try {
-            $fileName = $this->createTmpFile($file, $command->getId(), basename($document->getFilename()));
+            foreach ($command->getDocuments() as $docId) {
+                /* @var $document Document */
+                $document = $this->getRepo('Document')->fetchById($docId);
 
-            $this->printFile($fileName, basename($fileName), $destination, $username, $command->getCopies());
+                // get destination ie the CUPS print queue name
+                $destination = $this->getDestination($document, $user);
+
+                // This allows testing without have to actually connect to multiple printers/queues
+                if (isset($this->stubPrintToLicenceId)) {
+                    $this->stubPrint($document, $this->stubPrintToLicenceId);
+                    continue;
+                }
+
+                // download the document
+                $file = $this->getUploader()->download($document->getIdentifier());
+                if ($file === null) {
+                    throw new Exception('Can\'t find document');
+                }
+
+                // create a temp file
+                $fileName = $this->createTmpFile($file, $this->filesPrefix, basename($document->getFilename()));
+
+                // unset no longer needed vars
+                unset($file, $document);
+
+                // convert to pdf
+                $pdfFiles[] = $this->convertToPdf($fileName);
+            }
+
+            if (!empty($pdfFiles)) {
+                // merge all pdf files into one
+                $pdfFile = $this->mergeFiles($pdfFiles);
+
+                // print the pdf
+                $this->printFile($pdfFile, basename($pdfFile), $destination, $username, $command->getCopies());
+            }
         } finally {
             // if something goes wrong, still delete temp files
-            $this->deleteTempFiles($fileName);
+            $this->deleteTempFiles();
         }
 
-        $this->result->addMessage('Printed successfully');
+        $this->result->addMessage(
+            isset($this->stubPrintToLicenceId)
+            ? 'Printed successfully (stub to licence '. $this->stubPrintToLicenceId .')'
+            : 'Printed successfully'
+        );
 
         return $this->result;
     }
@@ -115,7 +134,7 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      */
     protected function createTmpFile(File $file, $prefix = '', $fileSuffix = '')
     {
-        $tmpFile = str_replace(' ', '_', '/tmp/' . $prefix . '-' . uniqid() . '-' . $fileSuffix);
+        $tmpFile = str_replace(' ', '_', self::TEMP_DIR . $prefix . uniqid() . '-' . $fileSuffix);
 
         if (file_put_contents($tmpFile, trim($file->getContent()))) {
             return $tmpFile;
@@ -155,27 +174,62 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
     /**
      * Delete temporary files, RTF and PDF
      *
-     * @param string $fileName File name of the rtf file
-     *
      * @return void
      */
-    protected function deleteTempFiles($fileName)
+    protected function deleteTempFiles()
     {
-        // remove temporary rtf file
-        if (file_exists($fileName)) {
-            unlink($fileName);
+        if (!empty($this->filesPrefix)) {
+            // remove temporary rtf|pdf files
+            $pattern = self::TEMP_DIR . $this->filesPrefix . '*.{rtf,pdf}';
+            $files = glob($pattern, GLOB_BRACE);
+
+            if (is_array($files)) {
+                array_map('unlink', $files);
+            }
         }
-        // remove temporary pdf file
-        $pdfFilename = str_replace('.rtf', '.pdf', $fileName);
-        if (file_exists($pdfFilename)) {
-            unlink($pdfFilename);
+    }
+
+    /**
+     * Merge a list of files
+     *
+     * @param array $files List of files to merge
+     *
+     * @return string
+     * @throws NotReadyException
+     * @throws RuntimeException
+     */
+    protected function mergeFiles(array $files)
+    {
+        if (sizeof($files) === 1) {
+            // there is only one file on the list - return it
+            return $files[0];
         }
+
+        $pdfOutput = self::TEMP_DIR . $this->filesPrefix . 'print.pdf';
+
+        // send to pdf merge tool
+        // 2>&1 redirect STDERR to STDOUT so that any errors are included in $output
+        $command = sprintf(
+            'pdfunite %s %s 2>&1',
+            implode(' ', array_map('escapeshellarg', $files)),
+            escapeshellarg($pdfOutput)
+        );
+
+        $this->executeCommand($command, $output, $result);
+
+        if ($result !== 0) {
+            $exception = new NotReadyException('Error executing pdfunite command : ' . implode("\n", $output));
+            $exception->setRetryAfter(60);
+            throw $exception;
+        }
+
+        return $pdfOutput;
     }
 
     /**
      * Print a file
      *
-     * @param string $fileName    RTF file to print
+     * @param string $pdfFile     PDF file to print
      * @param string $jobTitle    Job name
      * @param string $destination Destination print queue
      * @param string $username    Username of person printing
@@ -185,20 +239,24 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
      * @throws NotReadyException
      * @throws RuntimeException
      */
-    protected function printFile($fileName, $jobTitle, $destination, $username, $copies)
+    protected function printFile($pdfFile, $jobTitle, $destination, $username, $copies)
     {
         $printServer = $this->getConfigPrintServer();
         if ($printServer === false) {
             throw new RuntimeException('print.server is not set in config');
         }
 
-        $pdfFile = $this->convertToPdf($fileName);
-
         // Check the PDF file was created
         if (!$this->fileExists($pdfFile)) {
             $exception = new NotReadyException('PDF file does not exist : ' . $pdfFile);
             $exception->setRetryAfter(60);
             throw $exception;
+        }
+
+        // This config allows us to override the username on the environments that use the CUPS PDF print driver
+        // This is needed as the username has to exist on the CUPS box so that the PDF file can be created
+        if ($this->getConfigUser() !== false) {
+            $username = $this->getConfigUser();
         }
 
         // send to CUPS server
@@ -219,6 +277,38 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
             $exception->setRetryAfter(60);
             throw $exception;
         }
+    }
+
+    /**
+     * Get destination
+     *
+     * @param Document $document Document
+     * @param User     $user     User
+     *
+     * @return string
+     * @throws Exception
+     */
+    protected function getDestination(Document $document, User $user = null)
+    {
+        // this method assumes that all documents in one message have the same destination
+        if (!isset($this->destination)) {
+            // get destination ie the CUPS print queue name
+            if ($user !== null && $user->getTeam()) {
+                $printer = $this->findPrinterForUserAndDocument($user, $document);
+                $this->destination = $printer->getPrinterName();
+            } else {
+                // If user does NOT have a team, they must be selfserve. Therefore get Printer from system parameter
+                $this->destination = $this->getSelfserveUserPrinter();
+            }
+
+            // if the destination (queue name) is TESTING-STUB-LICENCE:n then attach it to a licence
+            // This allows testing without have to actually connect to multiple printers/queues
+            if (strpos($this->destination, 'TESTING-STUB-LICENCE:') === 0) {
+                $this->stubPrintToLicenceId = (int) substr($this->destination, strlen('TESTING-STUB-LICENCE:'));
+            }
+        }
+
+        return $this->destination;
     }
 
     /**

@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -62,8 +63,14 @@ final class GeneratePermits extends AbstractCommandHandler implements ToggleRequ
             // generate documents
             $docs = $this->generateDocuments($ids);
 
+            // print permits
+            $this->printPermits($docs['permits'], $userId);
+
             // print covering letters
             $this->printLetters($docs['letters'], $userId);
+
+            // proceed to printed
+            $this->proceedToStatus($ids, IrhpPermitEntity::STATUS_PRINTED);
 
             // commit db transaction
             $this->transMngr->commit();
@@ -155,6 +162,27 @@ final class GeneratePermits extends AbstractCommandHandler implements ToggleRequ
             'permits' => $permits,
             'letters' => $letters,
         ];
+    }
+
+    /**
+     * Print permits
+     *
+     * @param array $docs   List of permits to be printed
+     * @param int   $userId Id of user who scheduled printing
+     *
+     * @return void
+     */
+    private function printPermits(array $docs, $userId)
+    {
+        $printQueue = EnqueueFileCommand::create(
+            [
+                'type' => Queue::TYPE_PERMIT_PRINT,
+                'documents' => $docs,
+                'jobName' => 'Permits',
+                'user' => $userId,
+            ]
+        );
+        $this->result->merge($this->handleSideEffect($printQueue));
     }
 
     /**
