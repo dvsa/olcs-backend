@@ -315,6 +315,9 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         );
 
 
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicence')->once()->with(65)->andReturn(
+            (new Surrender())->setId(65)
+        );
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,
             [
