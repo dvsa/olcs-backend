@@ -20,10 +20,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="application_step",
  *    indexes={
- *        @ORM\Index(name="fk_application_path_steps_application_paths1_idx",
-     *     columns={"application_path_id"}),
- *        @ORM\Index(name="fk_application_path_steps_questions1_idx", columns={"question_id"}),
- *        @ORM\Index(name="fk_application_step_application_step1_idx", columns={"parent_id"})
+ *        @ORM\Index(name="ix_application_step_application_path_id", columns={"application_path_id"}),
+ *        @ORM\Index(name="ix_application_step_question_id", columns={"question_id"}),
+ *        @ORM\Index(name="ix_application_step_parent_id", columns={"parent_id"}),
+ *        @ORM\Index(name="fk_application_step_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_application_step_last_modified_by_user_id",
+     *     columns={"last_modified_by"})
  *    }
  * )
  */
@@ -58,9 +60,10 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Created by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="created_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
@@ -97,9 +100,10 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Last modified by
      *
-     * @var int
+     * @var \Dvsa\Olcs\Api\Entity\User\User
      *
-     * @ORM\Column(type="integer", name="last_modified_by", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User", fetch="LAZY")
+     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true)
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
@@ -280,7 +284,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Set the created by
      *
-     * @param int $createdBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
      * @return ApplicationStep
      */
@@ -294,7 +298,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Get the created by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getCreatedBy()
     {
@@ -382,7 +386,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Set the last modified by
      *
-     * @param int $lastModifiedBy new value being set
+     * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
      * @return ApplicationStep
      */
@@ -396,7 +400,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Get the last modified by
      *
-     * @return int
+     * @return \Dvsa\Olcs\Api\Entity\User\User
      */
     public function getLastModifiedBy()
     {
