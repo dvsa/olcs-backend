@@ -75,7 +75,7 @@ class UpdateTest extends CommandHandlerTestCase
         $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
 
         $this->repoMap['Surrender']
-            ->shouldReceive('fetchOneByLicenceId')
+            ->shouldReceive('fetchByLicenceId')
             ->andReturn($surrenderEntity)
             ->once();
 
