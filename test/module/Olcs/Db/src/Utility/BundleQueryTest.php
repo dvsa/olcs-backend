@@ -10,14 +10,13 @@ namespace OlcsTest\Db\Utility;
 use OlcsTest\Bootstrap;
 use Olcs\Db\Utility\BundleQuery;
 use Mockery as m;
-use PHPUnit_Framework_TestCase;
 
 /**
  * BundleQuery Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class BundleQueryTest extends PHPUnit_Framework_TestCase
+class BundleQueryTest extends \PHPUnit\Framework\TestCase
 {
     protected $qb;
     protected $sm;
@@ -49,6 +48,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @group bundle_query
+     * @doesNotPerformAssertions
      */
     public function testBuildWithoutChildren()
     {
@@ -62,6 +62,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @group bundle_query
+     * @doesNotPerformAssertions
      */
     public function testBuildWithChildren()
     {
@@ -245,6 +246,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @group bundle_query
+     * @doesNotPerformAssertions
      */
     public function testBuildWithSimpleChild()
     {
@@ -289,6 +291,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @group bundle_query
+     * @doesNotPerformAssertions
      */
     public function testBuildWithSimpleChildRequired()
     {
@@ -329,6 +332,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @group bundle_query
+     * @doesNotPerformAssertions
      */
     public function testBuildWithSimpleChildRequireNone()
     {
@@ -378,6 +382,7 @@ class BundleQueryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @group bundle_query
+     * @doesNotPerformAssertions
      */
     public function testBuildWithSimpleChildWithSortOrder()
     {

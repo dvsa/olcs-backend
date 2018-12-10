@@ -44,7 +44,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAttemptToUpdateRemovalDate()
     {
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $data = [
             'removalDate' => '2015-01-01'
@@ -60,7 +60,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAttemptToUpdateRemovalDateOnActiveRecord()
     {
-        $this->setExpectedException(BadRequestException::class);
+        $this->expectException(BadRequestException::class);
 
         $data = [
             'removalDate' => '2015-01-01',
@@ -84,7 +84,7 @@ class UpdateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAttemptToUpdateRemovedRecord()
     {
-        $this->setExpectedException(BadRequestException::class);
+        $this->expectException(BadRequestException::class);
 
         $data = [
             'specifiedDate' => '2015-01-01',

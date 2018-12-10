@@ -200,13 +200,13 @@ class SubmissionEntityTest extends EntityTester
     public function testReopenError()
     {
         $this->sut->setClosedDate(null);
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $this->sut->reopen();
     }
     public function testCloseError()
     {
         $this->sut->setClosedDate('YYYY-MM-DD');
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $this->sut->close();
     }
 }

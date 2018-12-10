@@ -66,7 +66,7 @@ class SlaTargetDateEntityTest extends EntityTester
 
     public function testConstructExceptionNotFound()
     {
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         new Entity(new Entities\System\RefData(), null);
     }

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class InterimUnlinkedTmTest extends \PHPUnit_Framework_TestCase
+class InterimUnlinkedTmTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TaAddressPhone;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class TaAddressPhoneTest extends \PHPUnit_Framework_TestCase
+class TaAddressPhoneTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

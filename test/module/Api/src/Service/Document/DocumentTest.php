@@ -10,7 +10,7 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document
  */
-class DocumentTest extends \PHPUnit_Framework_TestCase
+class DocumentTest extends \PHPUnit\Framework\TestCase
 {
     /** @var  Document */
     private $sut;

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
 /**
  * Address formatter test
  */
-class AddressTest extends \PHPUnit_Framework_TestCase
+class AddressTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

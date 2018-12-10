@@ -110,7 +110,7 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      */
     public function endTest(\PHPUnit_Framework_Test $test, $time)
     {
-        if (!$test instanceof \PHPUnit_Framework_TestCase) return;
+        if (!$test instanceof \PHPUnit\Framework\TestCase) return;
         $time = $this->toMilliseconds($time);
         $threshold = $this->getSlowThreshold($test);
         if ($this->isSlow($time, $threshold)) {
@@ -155,10 +155,10 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
     /**
      * Stores a test as slow.
      *
-     * @param \PHPUnit_Framework_TestCase $test
+     * @param \PHPUnit\Framework\TestCase $test
      * @param int                         $time Test execution time in milliseconds
      */
-    protected function addSlowTest(\PHPUnit_Framework_TestCase $test, $time)
+    protected function addSlowTest(\PHPUnit\Framework\TestCase $test, $time)
     {
         $label = $this->makeLabel($test);
         $this->slow[$label] = $time;
@@ -185,10 +185,10 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
     /**
      * Label for describing a test.
      *
-     * @param \PHPUnit_Framework_TestCase $test
+     * @param \PHPUnit\Framework\TestCase $test
      * @return string
      */
-    protected function makeLabel(\PHPUnit_Framework_TestCase $test)
+    protected function makeLabel(\PHPUnit\Framework\TestCase $test)
     {
         return sprintf('%s:%s', get_class($test), $test->getName());
     }
@@ -268,10 +268,10 @@ class SpeedTrapListener implements \PHPUnit_Framework_TestListener
      * public function testLongRunningProcess() {}
      * </code>
      *
-     * @param \PHPUnit_Framework_TestCase $test
+     * @param \PHPUnit\Framework\TestCase $test
      * @return int
      */
-    protected function getSlowThreshold(\PHPUnit_Framework_TestCase $test)
+    protected function getSlowThreshold(\PHPUnit\Framework\TestCase $test)
     {
         $ann = $test->getAnnotations();
         return isset($ann['method']['slowThreshold'][0]) ? $ann['method']['slowThreshold'][0] : $this->slowThreshold;

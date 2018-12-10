@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter;
 /**
  * Time formatter test
  */
-class TimeTest extends \PHPUnit_Framework_TestCase
+class TimeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider nameProvider

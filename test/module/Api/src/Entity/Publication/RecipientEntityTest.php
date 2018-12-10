@@ -44,7 +44,7 @@ class RecipientEntityTest extends EntityTester
 
     public function testUpdateWithInvalidSubscriptionDetails()
     {
-        $this->setExpectedException(Exception\ValidationException::class);
+        $this->expectException(Exception\ValidationException::class);
 
         $isObjector = 'Y';
         $contactName = 'test me';

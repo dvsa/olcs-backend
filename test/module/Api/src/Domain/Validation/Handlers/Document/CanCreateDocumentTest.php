@@ -175,7 +175,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         if ($valid) {
             $this->assertTrue($this->sut->isValid($dto));
         } else {
-            $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+            $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
             $this->sut->isValid($dto);
         }
     }
@@ -230,7 +230,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         if ($valid) {
             $this->assertTrue($this->sut->isValid($dto));
         } else {
-            $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+            $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
             $this->sut->isValid($dto);
         }
     }
