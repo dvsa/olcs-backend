@@ -314,12 +314,11 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             }
         );
 
-
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,
             [
                 'signatureType' => RefData::SIG_DIGITAL_SIGNATURE,
-                'licence' => 65,
+                'id' => 65,
                 'status' => Surrender::SURRENDER_STATUS_SIGNED,
                 'digitalSignature' => ''
             ],
