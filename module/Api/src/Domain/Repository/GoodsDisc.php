@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Doctrine\ORM\Query;
@@ -260,5 +261,29 @@ class GoodsDisc extends AbstractRepository
                     'isCopy' => 0,
                 ]
             );
+    }
+
+    public function countForLicence($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select('count(gd)')
+            ->innerJoin($this->alias . '.licenceVehicle', 'lv')
+            ->innerJoin('lv.licence', 'lvl')
+            ->where($qb->expr()->eq('lvl.id', ':id'))
+            ->groupBy('lvl.id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1);
+
+
+        try {
+            $count = $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $exception) {
+            $count = 0;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+
+        return ['discCount' => $count];
     }
 }
