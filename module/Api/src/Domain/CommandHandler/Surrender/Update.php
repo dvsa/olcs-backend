@@ -20,9 +20,7 @@ final class Update extends AbstractSurrenderCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         /** @var SurrenderEntity $surrender */
-        $surrender = $this->getRepo()->fetchByLicenceId($command->getLicence(), Query::HYDRATE_OBJECT);
-
-
+        $surrender = $this->getRepo()->fetchOneByLicenceId($command->getId(), Query::HYDRATE_OBJECT);
 
         if ($command->getCommunityLicenceDocumentStatus()) {
             $communityLicDocumentStatus = $this->getRepo()->getRefdataReference($command->getCommunityLicenceDocumentStatus());
