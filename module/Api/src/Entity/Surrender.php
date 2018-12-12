@@ -37,7 +37,7 @@ class Surrender extends AbstractSurrender
     const SURRENDER_STATUS_SUBMITTED='surr_sts_submitted';
     const SURRENDER_STATUS_SIGNED='surr_sts_signed';
     const SURRENDER_STATUS_APPROVED='surr_sts_approved';
-    const SURRENDER_DOC_STATUS_DESTROYED='doc_status_destroyed';
-    const SURRENDER_DOC_STATUS_LOST='doc_status_lost';
-    const SURRENDER_DOC_STATUS_STOLEN='doc_status_stolen';
+    const SURRENDER_DOC_STATUS_DESTROYED='doc_sts_destroyed';
+    const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
+    const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
 }
