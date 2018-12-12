@@ -22,6 +22,7 @@ return [
     QueryHandler\Permits\ValidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,
