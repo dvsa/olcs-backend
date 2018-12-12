@@ -328,7 +328,6 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)
             ->shouldReceive('setStatus')
             ->once()
-            ->with(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
             ->getMock();
 
 
