@@ -255,7 +255,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     {
         $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
             [
-                'digitalSignature' => $digitalSignature,
+                'digitalSignature' => $digitalSignature->getId(),
                 'id' => $licenceId,
                 'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED,
                 'signatureType' => Entity\System\RefData::SIG_DIGITAL_SIGNATURE
