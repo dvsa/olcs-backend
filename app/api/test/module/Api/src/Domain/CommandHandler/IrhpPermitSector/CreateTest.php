@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Sectors as SectorsRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
-use Dvsa\Olcs\Transfer\Query\Permits\SectorsList;
+use Dvsa\Olcs\Transfer\Query\Permits\Sectors;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateCmd;
 use Mockery as m;
@@ -52,7 +52,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->repoMap['Sectors']
             ->shouldReceive('fetchList')
             ->once()
-            ->with(m::type(SectorsList::class), Query::HYDRATE_OBJECT)
+            ->with(m::type(Sectors::class), Query::HYDRATE_OBJECT)
             ->andReturn($sectorResults);
 
         $this->repoMap['IrhpPermitSectorQuota']

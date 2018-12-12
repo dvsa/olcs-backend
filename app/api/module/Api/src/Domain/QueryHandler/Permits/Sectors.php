@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-class SectorsList extends AbstractListQueryHandler implements ToggleRequiredInterface
+class Sectors extends AbstractListQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
