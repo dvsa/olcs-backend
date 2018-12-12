@@ -267,7 +267,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
          */
         $licenceRepo = $this->getRepo('Licence');
         $licence = $licenceRepo->fetchById($licenceId);
-        $licence->setStatus(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION);
+        $licence->setStatus($this->getRepo()->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
         return $result;
     }
