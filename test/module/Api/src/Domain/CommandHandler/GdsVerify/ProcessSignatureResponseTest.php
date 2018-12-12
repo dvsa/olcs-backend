@@ -331,13 +331,18 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             ->with(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
             ->getMock();
 
-        $licence->shouldReceive('save')->once();
+
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
             ->with(65)
             ->once()
             ->andReturn($licence);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('save')
+            ->with($licence)
+            ->once();
 
         $this->sut->handleCommand($command);
     }
