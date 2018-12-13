@@ -65,7 +65,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="end_date", nullable=true)
+     * @ORM\Column(type="datetime", name="end_date", nullable=false)
      */
     protected $endDate;
 
@@ -119,7 +119,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      *
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", name="start_date", nullable=true)
+     * @ORM\Column(type="datetime", name="start_date", nullable=false)
      */
     protected $startDate;
 
