@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Sectors as SectorsRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\Sectors;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors as SectorsEntity;
 use Dvsa\Olcs\Transfer\Query\Permits\Sectors;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateCmd;
@@ -37,8 +37,8 @@ class CreateTest extends CommandHandlerTestCase
         $stockId = 999;
         $stockEntity = m::mock(IrhpPermitStock::class);
 
-        $sector1 = m::mock(Sectors::class);
-        $sector2 = m::mock(Sectors::class);
+        $sector1 = m::mock(SectorsEntity::class);
+        $sector2 = m::mock(SectorsEntity::class);
         $sectorResults = [$sector1, $sector2];
 
         $command = CreateCmd::create(['id' => $stockId]);
