@@ -655,4 +655,25 @@ class BatchController extends AbstractConsoleController
             );
         }
     }
+
+    /**
+     * Refresh intensity of use and application score of all candidate permits in stock
+     *
+     * @return ConsoleModel
+     */
+    public function refreshCandidatePermitValuesAction()
+    {
+        if (!$this->params('stock-id')) {
+            $this->writeVerboseMessages('Parameter stockid is required');
+            return $this->handleExitStatus(0);
+        }
+
+        $params = ['stockId' => $this->params('stockid')];
+
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [CliCommand\Permits\RefreshCandidatePermitValues::create($params)]
+            )
+        );
+    }
 }

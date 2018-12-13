@@ -836,6 +836,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function getPermitIntensityOfUse()
     {
+        // TODO: this is where the IU calculation needs to change
         return $this->permitsRequired > 0 ? $this->trips / $this->permitsRequired : 0;
     }
 

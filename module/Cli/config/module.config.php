@@ -302,6 +302,15 @@ return [
                         ],
                     ],
                 ],
+                'refresh-candidate-permit-values' => [
+                    'options' => [
+                        'route' => 'refresh-candidate-permit-values <stock-id> [--verbose|-v]',
+                        'defaults' => [
+                            'controller' => Cli\Controller\BatchController::class,
+                            'action' => 'refreshCandidatePermitValues',
+                        ]
+                    ]
+                ],
             ]
         ]
     ],

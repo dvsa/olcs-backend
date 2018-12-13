@@ -1146,4 +1146,6 @@ return [
         CommandHandlerCli\Permits\UploadScoringLog::class,
     CommandCli\Permits\GeneratePermits::class =>
         CommandHandlerCli\Permits\GeneratePermits::class,
+    CommandCli\Permits\RefreshCandidatePermitValues::class =>
+        CommandHandlerCli\Permits\RefreshCandidatePermitValues::class
 ];

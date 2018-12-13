@@ -111,6 +111,8 @@ class Module implements ConsoleUsageProviderInterface
                 '<close-expired-window> [--since=<date>]',
                 'action to perform, ie \'close-expired-window\' to close all recently expired windows',
             ],
+            'refresh-candidate-permit-values <stock-id> [--verbose|-v]' =>
+                'Refresh application scores and intensity of use on candidate permits'
         ];
     }
 

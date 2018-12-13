@@ -70,4 +70,21 @@ class IrhpCandidatePermitEntityTest extends EntityTester
         $candidatePermit->applyRange($range);
         $this->assertSame($range, $candidatePermit->getIrhpPermitRange());
     }
+
+    public function testRefreshApplicationScoreAndIntensityOfUse()
+    {
+        $permitApplicationScore = 0.87;
+        $permitIntensityOfUse = 0.65;
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication->shouldReceive('getPermitApplicationScore')
+            ->andReturn($permitApplicationScore);
+        $irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
+            ->andReturn($permitIntensityOfUse);
+
+        $candidatePermit = Entity::createNew($irhpPermitApplication);
+        $candidatePermit->refreshApplicationScoreAndIntensityOfUse();
+        $this->assertEquals($permitApplicationScore, $candidatePermit->getApplicationScore());
+        $this->assertEquals($permitIntensityOfUse, $candidatePermit->getIntensityOfUse());
+    }
 }

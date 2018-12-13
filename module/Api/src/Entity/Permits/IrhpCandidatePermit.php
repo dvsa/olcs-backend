@@ -85,4 +85,13 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     {
         $this->irhpPermitRange = $range;
     }
+
+    /**
+     * Refresh the application score and intensity of use from the associated application
+     */
+    public function refreshApplicationScoreAndIntensityOfUse()
+    {
+        $this->applicationScore = $this->irhpPermitApplication->getPermitApplicationScore();
+        $this->intensityOfUse = $this->irhpPermitApplication->getPermitIntensityOfUse();
+    }
 }

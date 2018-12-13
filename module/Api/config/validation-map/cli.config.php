@@ -30,6 +30,7 @@ return [
     CliCommandHandler\Permits\CloseExpiredWindows::class => IsSystemUser::class,
     CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\WithdrawUnpaidEcmt::class => IsSystemUser::class,
+    CliCommandHandler\Permits\RefreshCandidatePermitValues::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
 
     //  api commands

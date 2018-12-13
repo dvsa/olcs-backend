@@ -282,4 +282,24 @@ class IrhpCandidatePermit extends AbstractRepository
             ->getQuery()
             ->getScalarResult();
     }
+
+    /**
+     * Returns the candidate permits in the specified stock
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function getInStock($stockId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->setParameter(1, $stockId)
+            ->getQuery()
+            ->getResult();
+    }
 }

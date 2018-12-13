@@ -610,4 +610,51 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             $this->sut->fetchScoringReport($stockId)
         );
     }
+
+    public function testGetInStock()
+    {
+        $stockId = 7;
+
+        $expectedResult = [
+            m::mock(IrhpCandidatePermitEntity::class),
+            m::mock(IrhpCandidatePermitEntity::class),
+            m::mock(IrhpCandidatePermitEntity::class),
+        ];
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $stockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($expectedResult);
+
+        $this->assertEquals(
+            $expectedResult,
+            $this->sut->getInStock($stockId)
+        );
+    }
 }
