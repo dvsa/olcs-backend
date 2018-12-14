@@ -258,7 +258,10 @@ class GoodsDiscTest extends RepositoryTestCase
         $stmt->shouldReceive('rowCount')->with()->once()->andReturn($rowCount);
 
         $this->expectQueryWithData(
-            'LicenceVehicle\CeaseDiscsForLicenceVehicle', ['licenceVehicle' => $lvId], [], $stmt
+            'LicenceVehicle\CeaseDiscsForLicenceVehicle',
+            ['licenceVehicle' => $lvId],
+            [],
+            $stmt
         );
 
         $this->assertSame($rowCount, $this->sut->ceaseDiscsForLicenceVehicle($lvId));
