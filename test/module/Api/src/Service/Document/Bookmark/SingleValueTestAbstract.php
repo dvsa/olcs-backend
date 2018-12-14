@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
-abstract class SingleValueTestAbstract extends \PHPUnit_Framework_TestCase
+abstract class SingleValueTestAbstract extends \PHPUnit\Framework\TestCase
 {
     /**
      * Implement this in the child class

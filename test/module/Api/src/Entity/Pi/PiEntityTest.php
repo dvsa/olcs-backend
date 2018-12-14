@@ -680,7 +680,7 @@ class PiEntityTest extends EntityTester
 
 
     /**
-     * @dataProvider testGetHearingDateProvider
+     * @dataProvider dpGetHearingDateProvider
      *
      * @param string $hearingDate
      * @param string $isAdjourned
@@ -702,7 +702,7 @@ class PiEntityTest extends EntityTester
     /**
      * @return array
      */
-    public function testGetHearingDateProvider()
+    public function dpGetHearingDateProvider()
     {
         $date = '2015-12-25';
 

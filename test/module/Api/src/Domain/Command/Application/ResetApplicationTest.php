@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Application Completion Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ResetApplicationTest extends PHPUnit_Framework_TestCase
+class ResetApplicationTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

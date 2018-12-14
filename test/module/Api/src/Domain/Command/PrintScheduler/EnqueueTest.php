@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\PrintScheduler;
 
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Enqueue
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class EnqueueTest extends PHPUnit_Framework_TestCase
+class EnqueueTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

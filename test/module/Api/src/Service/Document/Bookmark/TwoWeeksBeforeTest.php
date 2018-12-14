@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TwoWeeksBefore;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TwoWeeksBeforeTest extends \PHPUnit_Framework_TestCase
+class TwoWeeksBeforeTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

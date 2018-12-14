@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\ContactNumber;
 /**
  * ContactDetails Test
  */
-class ContactNumberTest extends \PHPUnit_Framework_TestCase
+class ContactNumberTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dataProvider

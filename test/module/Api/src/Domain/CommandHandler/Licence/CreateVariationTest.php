@@ -96,7 +96,7 @@ class CreateVariationTest extends CommandHandlerTestCase
                         $this->refData[ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION],
                         $app->getStatus()
                     );
-                    $this->assertNull(null, $app->getVariationType());
+                    $this->assertNull($app->getVariationType());
                 }
             );
 
@@ -409,7 +409,7 @@ class CreateVariationTest extends CommandHandlerTestCase
 
     public function testHandleCommandVariationException()
     {
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ForbiddenException::class);
 
         $data = [
             'id' => 111,

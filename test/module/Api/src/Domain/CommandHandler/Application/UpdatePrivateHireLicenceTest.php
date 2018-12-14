@@ -120,7 +120,7 @@ class UpdatePrivateHireLicenceTest extends CommandHandlerTestCase
         $this->mockedSmServices['TrafficAreaValidator']->shouldReceive('validateForSameTrafficAreasWithPostcode')
             ->with($mockApplication, 'S1 4QT')->once()->andReturn(['CODE' => 'MESSAGE']);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $this->sut->handleCommand($command);
     }
 }

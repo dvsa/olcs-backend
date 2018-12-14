@@ -464,7 +464,7 @@ class CreateFeeTest extends CommandHandlerTestCase
 
         $command = Cmd::create([]);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->validate($command, $feeType);
     }
@@ -487,7 +487,7 @@ class CreateFeeTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->validate($command, $feeType);
     }

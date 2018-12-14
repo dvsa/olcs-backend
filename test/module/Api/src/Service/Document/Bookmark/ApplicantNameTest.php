@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\ApplicantName;
 /**
  * Applicant name test
  */
-class ApplicantNameTest extends \PHPUnit_Framework_TestCase
+class ApplicantNameTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

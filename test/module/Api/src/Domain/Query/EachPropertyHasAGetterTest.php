@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Query;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark;
 
-class EachPropertyHasAGetterTest extends \PHPUnit_Framework_TestCase
+class EachPropertyHasAGetterTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dataProvider

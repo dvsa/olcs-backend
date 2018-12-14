@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Document;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\DispatchDocument;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Create Document Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class DispatchDocumentTest extends PHPUnit_Framework_TestCase
+class DispatchDocumentTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {
