@@ -6,6 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\NoResultException;
@@ -79,13 +80,13 @@ class GoodsDisc extends AbstractRepository
                     //isInterm = 1
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
-                        $qb->expr()->eq($this->alias. '.isInterim', 1),
+                        $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
                     // isInterm = 0
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
-                        $qb->expr()->eq($this->alias. '.isInterim', 0),
+                        $qb->expr()->eq($this->alias . '.isInterim', 0),
                         $qb->expr()->eq('lvllt.id', ':licenceLicenceType')
                     )
                 )
@@ -105,7 +106,7 @@ class GoodsDisc extends AbstractRepository
                     $qb->expr()->andX(
                         // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
-                        $qb->expr()->eq($this->alias. '.isInterim', 1),
+                        $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvagp.id', ':operatorType'),
                         $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
@@ -113,7 +114,7 @@ class GoodsDisc extends AbstractRepository
                     $qb->expr()->andX(
                         // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
-                        $qb->expr()->eq($this->alias. '.isInterim', 0),
+                        $qb->expr()->eq($this->alias . '.isInterim', 0),
                         $qb->expr()->eq('lvlgp.id', ':operatorType1'),
                         $qb->expr()->eq('lvllt.id', ':licenceLicenceType')
                     )
@@ -128,7 +129,6 @@ class GoodsDisc extends AbstractRepository
 
             $qb->setParameter('operatorType1', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
             $qb->setParameter('licenceLicenceType', $licenceType);
-
         }
         $qb->andWhere($qb->expr()->in('lvl.status', ':activeStatuses'));
         $qb->setParameter('activeStatuses', $activeStatuses);
