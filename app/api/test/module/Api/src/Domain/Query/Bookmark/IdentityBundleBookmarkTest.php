@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Query\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark;
 
-class IdentityBundleBookmarkTest extends \PHPUnit_Framework_TestCase
+class IdentityBundleBookmarkTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dataProvider

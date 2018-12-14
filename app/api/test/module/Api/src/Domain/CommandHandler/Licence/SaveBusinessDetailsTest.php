@@ -87,7 +87,7 @@ class SaveBusinessDetailsTest extends CommandHandlerTestCase
         $this->mockIsGranted(Permission::INTERNAL_USER, false);
 
         //  expect
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         //  call
         $this->sut->handleCommand($command);

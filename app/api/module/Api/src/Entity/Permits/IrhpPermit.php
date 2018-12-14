@@ -143,6 +143,9 @@ class IrhpPermit extends AbstractIrhpPermit
             case self::STATUS_PRINTING:
                 $this->proceedToPrinting($status);
                 break;
+            case self::STATUS_PRINTED:
+                $this->proceedToPrinted($status);
+                break;
             case self::STATUS_ERROR:
                 $this->proceedToError($status);
                 break;
@@ -187,6 +190,28 @@ class IrhpPermit extends AbstractIrhpPermit
             throw new ForbiddenException(
                 sprintf(
                     'The permit is not in the correct state to proceed to printing (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to printed
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToPrinted(RefData $status)
+    {
+        if (!$this->isPrinting()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to proceed to printed (%s)',
                     $this->status->getId()
                 )
             );

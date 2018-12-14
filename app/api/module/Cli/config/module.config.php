@@ -387,6 +387,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AcceptScoring::class,
             Queue::TYPE_PERMIT_GENERATE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GeneratePermits::class,
+            Queue::TYPE_PERMIT_PRINT
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,

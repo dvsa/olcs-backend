@@ -9,7 +9,7 @@ use Mockery as m;
  * Class ClientFactoryTest
  * @package OlcsTest\Db\Service\Search
  */
-class ClientFactoryTest extends \PHPUnit_Framework_TestCase
+class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateService()
     {

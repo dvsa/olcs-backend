@@ -90,7 +90,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
     public function testHandleCommandFailedValidator()
     {
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $command = m::mock(CommandInterface::class)->makePartial();
         $command->shouldReceive('getArrayCopy')->twice()->andReturn(['foo' => 'bar']);
@@ -110,7 +110,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
     public function testHandleCommandInvalid()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $command = m::mock(CommandInterface::class)->makePartial();
 

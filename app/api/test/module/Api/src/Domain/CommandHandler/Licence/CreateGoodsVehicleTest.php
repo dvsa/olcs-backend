@@ -40,7 +40,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithoutSpaces()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 111

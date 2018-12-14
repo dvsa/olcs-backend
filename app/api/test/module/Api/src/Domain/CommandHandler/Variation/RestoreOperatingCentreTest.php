@@ -99,7 +99,7 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
             ->with(11)
             ->andReturn($aoc);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -135,7 +135,7 @@ class RestoreOperatingCentreTest extends CommandHandlerTestCase
             ->with(11)
             ->andReturn($loc);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 
 return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\SectorsList::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,

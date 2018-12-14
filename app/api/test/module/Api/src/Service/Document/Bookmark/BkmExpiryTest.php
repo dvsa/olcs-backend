@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmExpiry as Sut;
 /**
  * BkmExpiry Test
  */
-class BkmExpiryTest extends \PHPUnit_Framework_TestCase
+class BkmExpiryTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

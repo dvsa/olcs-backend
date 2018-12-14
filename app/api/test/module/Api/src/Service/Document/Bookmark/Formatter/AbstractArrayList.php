@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class AbstractArrayList extends \PHPUnit_Framework_TestCase
+class AbstractArrayList extends \PHPUnit\Framework\TestCase
 {
     const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FORMATTER_CLASS_NAME';
     const ARRAY_FIELD = '';

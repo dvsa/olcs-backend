@@ -547,7 +547,7 @@ class TransportManagerEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider testHasReputeCheckDataProvider
+     * @dataProvider dpHasReputeCheckDataProvider
      *
      * @param string|null $forename
      * @param string|null $familyName
@@ -581,7 +581,7 @@ class TransportManagerEntityTest extends EntityTester
      *
      * @return array
      */
-    public function testHasReputeCheckDataProvider()
+    public function dpHasReputeCheckDataProvider()
     {
         $forename = 'forename';
         $familyName = 'family name';

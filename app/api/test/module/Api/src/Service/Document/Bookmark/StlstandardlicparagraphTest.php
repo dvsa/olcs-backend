@@ -13,7 +13,7 @@ use Mockery as m;
 /**
  * StlstandardlicparagraphTest
  */
-class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
+class StlstandardlicparagraphTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQueryLicence()
     {
@@ -64,7 +64,7 @@ class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderDataProvider
+     * @dataProvider dpRenderDataProvider
      */
     public function testRender($expectSnippet, $licenceTypeId)
     {
@@ -81,7 +81,7 @@ class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testRenderDataProvider()
+    public function dpRenderDataProvider()
     {
         return [
             [true, Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL],
@@ -92,7 +92,7 @@ class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderCaseDataDataProvider
+     * @dataProvider dpRenderCaseDataDataProvider
      */
     public function testRenderCaseData($expectSnippet, $data)
     {
@@ -109,7 +109,7 @@ class StlstandardlicparagraphTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testRenderCaseDataDataProvider()
+    public function dpRenderCaseDataDataProvider()
     {
         return [
             [

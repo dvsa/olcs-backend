@@ -813,7 +813,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ->andReturn(false)
             ->getMock();
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
         $command = CreateOperatingCentre::create($data);
         $this->sut->validate($entity, $command, true);
 

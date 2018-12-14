@@ -67,7 +67,7 @@ class WorkshopTest extends RepositoryTestCase
             ->with(Workshop::class)
             ->andReturn($repo);
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->sut->fetchUsingId($command, Query::HYDRATE_OBJECT, 1);
     }

@@ -81,7 +81,7 @@ class SendInternationalGoodsTest extends CommandHandlerTestCase
 
     public function testNoEmailThrowException()
     {
-        $this->setExpectedException(
+        $this->expectException(
             \InvalidArgumentException::class,
             'No email specified for international GV report'
         );

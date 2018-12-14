@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType;
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType
  */
-class StatementContactTypeTest extends \PHPUnit_Framework_TestCase
+class StatementContactTypeTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

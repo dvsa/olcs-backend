@@ -8,7 +8,7 @@ use Zend\Log\Writer\Noop;
 /**
  * GdsVerifyTest test
  */
-class GdsVerifyTest extends \PHPUnit_Framework_TestCase
+class GdsVerifyTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateService()
     {
@@ -156,7 +156,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
 
         $samlResponse = file_get_contents(__DIR__ .'/saml-response.txt');
 
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Cannot decrypt the SAML Assertion');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Cannot decrypt the SAML Assertion');
         $sut->getAttributesFromResponse($samlResponse);
     }
 
@@ -204,7 +204,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
 
         $samlResponse = file_get_contents(__DIR__ .'/saml-response.txt');
 
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'SAML Assertion signature error');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'SAML Assertion signature error');
         @$sut->getAttributesFromResponse($samlResponse);
     }
 
@@ -239,7 +239,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
     public function testGetSignatureKeyMissing()
     {
         $sut = new GdsVerify();
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Signature key is not set');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Signature key is not set');
         $sut->getSignatureKey();
     }
 
@@ -255,7 +255,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
     public function testLoadSignatureKeyFileNotExists()
     {
         $sut = new GdsVerify();
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Signature key file not found');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Signature key file not found');
         $sut->loadSignatureKey('a-file-that-does-not-exist.txt');
     }
 
@@ -271,14 +271,14 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
     public function testLoadEncryptionKeyFileNotExists()
     {
         $sut = new GdsVerify();
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Encryption key file not found');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Encryption key file not found');
         $sut->loadEncryptionKey('a-file-that-does-not-exist.txt');
     }
 
     public function testGetMatchingServiceAdapterMetadataMissing()
     {
         $sut = new GdsVerify();
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'MatchingServiceAdapter metadata not set');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'MatchingServiceAdapter metadata not set');
         $sut->getMatchingServiceAdapterMetadata();
     }
 
@@ -308,7 +308,7 @@ class GdsVerifyTest extends \PHPUnit_Framework_TestCase
     public function testGetEntityIdentifierMissing()
     {
         $sut = new GdsVerify();
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Entity identifier is not specified');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'Entity identifier is not specified');
         $sut->getEntityIdentifier();
     }
 

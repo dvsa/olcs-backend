@@ -74,7 +74,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandAlreadyExists()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -122,7 +122,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationSelfserve()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
+        $this->expectException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -160,7 +160,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationSelfserveIdentifyDuplicates()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
+        $this->expectException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -200,7 +200,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternal()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
+        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -260,7 +260,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternalIdentifyDuplicates()
     {
-        $this->setExpectedException(RequiresConfirmationException::class, '["OB12345678","APP-'.self::LIC_ID.'"]');
+        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-'.self::LIC_ID.'"]');
 
         $data = [
             'licence' => self::LIC_ID,
@@ -812,7 +812,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandForApplicationWithException()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -842,7 +842,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandForApplicationWithExceptionAlternative()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licence' => self::LIC_ID,

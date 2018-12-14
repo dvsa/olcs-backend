@@ -364,7 +364,7 @@ class FeeTypeTest extends RepositoryTestCase
 
     public function testGetLatestIrfoFeeTypeForUnknownEntity()
     {
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $feeTypeFeeType = new RefData('feeTypefeeType');
 

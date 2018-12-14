@@ -10,14 +10,13 @@ namespace Dvsa\OlcsTest\Api\Domain\Command\InspectionRequest;
 use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Create From Grant Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateFromGrantTest extends PHPUnit_Framework_TestCase
+class CreateFromGrantTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {
