@@ -372,5 +372,22 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->assertSame(83, $this->sut->createDiscsForLicence(1502));
     }
 
+    public function testCountForLicence()
+    {
+        $licenceId = 1;
 
+        $qb = $this->createMockQb('{QUERY}');
+
+        $qb->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn(1);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->sut->countForLicence($licenceId);
+
+        $expectedQuery = '{QUERY} SELECT count(gd) INNER JOIN gd.licenceVehicle lv INNER JOIN lv.licence lvl AND lvl.id = [['. $licenceId . ']] GROUP BY lvl.id LIMIT 1';
+
+        self::assertEquals($expectedQuery, $this->query);
+    }
 }
