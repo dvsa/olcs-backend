@@ -71,6 +71,14 @@ class UpdateTest extends CommandHandlerTestCase
             $surrenderEntity->shouldReceive('setSignatureType')->once();
         }
 
+        if (array_key_exists('licenceDocumentInfo', $data)) {
+            $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->once();
+        }
+
+        if (array_key_exists('communityLicenceDocumentInfo', $data)) {
+            $surrenderEntity->shouldReceive('setCommunityLicenceDocumentInfo')->once();
+        }
+
 
         $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
 
@@ -108,14 +116,16 @@ class UpdateTest extends CommandHandlerTestCase
                     'discStolenInfo' => 'text',
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
                     'status' => 'surr_sts_comm_lic_docs_complete',
-                    'signatureType' =>'TEST'
+                    'signatureType' => 'sig_physical_signature',
+                    'licenceDocumentInfo' => 'some licence doc info',
+                    'communityLicenceDocumentInfo' => 'some community licence doc info'
                 ]
             ],
             'case_02' => [
                 [
                     'licence' => 11,
                     'status' => 'surr_sts_comm_lic_docs_complete',
-                    'signatureType' =>'TEST'
+                    'signatureType' => 'sig_digital_signature'
                 ]
             ],
             'case_03' => [
