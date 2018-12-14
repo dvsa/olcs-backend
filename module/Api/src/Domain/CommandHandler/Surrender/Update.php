@@ -4,15 +4,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
 final class Update extends AbstractSurrenderCommandHandler
 {
-
     /**
-     * @param Cmd $command
+     * @param CommandInterface $command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -69,6 +67,13 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setSignatureType($command->getSignatureType());
         }
 
+        if ($command->getLicenceDocumentInfo() !== null) {
+            $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
+        }
+
+        if ($command->getCommunityLicenceDocumentInfo() !== null) {
+            $surrender->setCommunityLicenceDocumentInfo($command->getCommunityLicenceDocumentInfo());
+        }
 
         $this->getRepo()->save($surrender);
 
