@@ -32,7 +32,7 @@ class GetListTest extends QueryHandlerTestCase
         $data = [];
         $query = Qry::create($data);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleQuery($query);
     }
@@ -42,7 +42,7 @@ class GetListTest extends QueryHandlerTestCase
         $data = ['application' => 234, 'licence' => 237];
         $query = Qry::create($data);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleQuery($query);
     }

@@ -14,7 +14,7 @@ use Dvsa\Olcs\Cli\Domain\Command\CreateViExtractFiles;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateViExtractFilesTest extends \PHPUnit_Framework_TestCase
+class CreateViExtractFilesTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

@@ -41,7 +41,7 @@ class AddressTest extends MockeryTestCase
     public function testFetchByPostcodeWithoutResults()
     {
         //  expect
-        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
+        $this->expectException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
 
         //  call
         $postcode = 'AB1 1AB';
@@ -81,7 +81,7 @@ class AddressTest extends MockeryTestCase
     public function testFetchAdminAreaByPostcodeWithoutResults()
     {
         //  expect
-        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
+        $this->expectException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
 
         //  call
         $postcode = 'AB1 1AB';
@@ -123,7 +123,7 @@ class AddressTest extends MockeryTestCase
     public function testFetchTrafficAreaByPostcodeWithoutRecords()
     {
         //  expect
-        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
+        $this->expectException(Exception::class, Address::ERR_INVALID_RESP_BY_POSTCODE);
 
         //  call
         $postcode = 'AB1 1AB';
@@ -237,7 +237,7 @@ class AddressTest extends MockeryTestCase
         $response->setStatusCode(Response::STATUS_CODE_404);
         $response->setContent('');
 
-        $this->setExpectedException(Exception::class, Address::ERR_INVALID_RESP_BY_UPRN);
+        $this->expectException(Exception::class, Address::ERR_INVALID_RESP_BY_UPRN);
 
         $this->client->shouldReceive('setUri')
             ->once()

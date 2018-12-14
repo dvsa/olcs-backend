@@ -93,7 +93,7 @@ class DeletePrinterTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $command = Cmd::create(
             [

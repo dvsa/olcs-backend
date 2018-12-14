@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TcSignature;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class TcSignatureTest extends \PHPUnit_Framework_TestCase
+class TcSignatureTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

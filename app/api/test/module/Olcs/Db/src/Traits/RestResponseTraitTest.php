@@ -7,7 +7,6 @@
  */
 namespace OlcsTest\Db\Service;
 
-use PHPUnit_Framework_TestCase;
 use Zend\Http\Response;
 
 /**
@@ -15,7 +14,7 @@ use Zend\Http\Response;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class RestResponseTraitTest extends PHPUnit_Framework_TestCase
+class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

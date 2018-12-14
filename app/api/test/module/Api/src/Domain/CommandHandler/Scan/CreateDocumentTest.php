@@ -35,7 +35,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandInvalidMime()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'content' => base64_encode('<html></html>')
@@ -48,7 +48,7 @@ class CreateDocumentTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithoutScan()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'content' => base64_encode($this->validPdf),

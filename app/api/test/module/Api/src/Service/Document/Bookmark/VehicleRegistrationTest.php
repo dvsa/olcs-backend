@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\VehicleRegistration;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class VehicleRegistrationTest extends \PHPUnit_Framework_TestCase
+class VehicleRegistrationTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

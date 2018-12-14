@@ -67,7 +67,7 @@ class UpdatePsvVehiclesTest extends CommandHandlerTestCase
             ->with($application)
             ->andReturn($licenceVehicles);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

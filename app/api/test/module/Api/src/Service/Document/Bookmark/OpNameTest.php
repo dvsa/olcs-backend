@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OpName;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class OpNameTest extends \PHPUnit_Framework_TestCase
+class OpNameTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
@@ -19,36 +19,36 @@ class OpNameTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
-    public function testRenderValidDataProvider()
+    public function dpRenderValidDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 "Testing Test Limited\nT/A: Trading Test Limited",
-                array(
-                    'organisation' => array(
+                [
+                    'organisation' => [
                         'name' => 'Testing Test Limited',
-                        'tradingNames' => array(
-                            array(
+                        'tradingNames' => [
+                            [
                                 'name' => 'Trading Test Limited'
-                            )
-                        ),
-                    )
-                )
-            ),
-            array(
+                            ]
+                        ],
+                    ]
+                ]
+            ],
+            [
                 "Testing Test Limited",
-                array(
-                    'organisation' => array(
+                [
+                    'organisation' => [
                         'name' => 'Testing Test Limited',
-                        'tradingNames' => array(),
-                    )
-                )
-            )
-        );
+                        'tradingNames' => [],
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
-     * @dataProvider testRenderValidDataProvider
+     * @dataProvider dpRenderValidDataProvider
      */
     public function testRender($expected, $results)
     {

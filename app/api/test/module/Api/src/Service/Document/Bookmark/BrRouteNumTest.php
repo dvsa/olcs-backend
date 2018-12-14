@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrRouteNum;
 /**
  * Br Route Num test
  */
-class BrRouteNumTest extends \PHPUnit_Framework_TestCase
+class BrRouteNumTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

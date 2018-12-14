@@ -115,7 +115,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn([]);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);
 
         $this->sut->fetchDetails(self::APP_ID);
     }

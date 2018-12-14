@@ -57,7 +57,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 11,
@@ -137,7 +137,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 11,
@@ -167,7 +167,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 11,
@@ -197,7 +197,7 @@ class UpdateBusinessTypeTest extends CommandHandlerTestCase
             ->with(Permission::INTERNAL_USER, null)
             ->andReturn(false);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 11,

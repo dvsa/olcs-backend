@@ -4,12 +4,11 @@ namespace Dvsa\OlcsTest\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use PHPUnit_Framework_TestCase;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Command\Queue\Failed
  */
-class FailedTest extends PHPUnit_Framework_TestCase
+class FailedTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

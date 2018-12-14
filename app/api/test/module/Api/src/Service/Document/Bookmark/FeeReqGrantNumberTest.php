@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\FeeReqGrantNumber;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class FeeReqGrantNumberTest extends \PHPUnit_Framework_TestCase
+class FeeReqGrantNumberTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

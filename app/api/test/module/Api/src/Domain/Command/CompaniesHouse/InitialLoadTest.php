@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\CompaniesHouse;
 
 use Dvsa\Olcs\Api\Domain\Command\CompaniesHouse\InitialLoad;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Companies House InitialLoad command test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class InitialLoadTest extends PHPUnit_Framework_TestCase
+class InitialLoadTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

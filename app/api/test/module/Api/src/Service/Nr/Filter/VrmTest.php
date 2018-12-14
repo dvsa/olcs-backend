@@ -17,7 +17,7 @@ class VrmTest extends MockeryTestCase
     /**
      * test filter()
      *
-     * @dataProvider testFilterProvider
+     * @dataProvider dpFilterProvider
      * @param string $initialValue
      * @param string $expectedResult
      */
@@ -36,11 +36,11 @@ class VrmTest extends MockeryTestCase
     }
 
     /**
-     * Dat provider for testFilterProvider
+     * Data provider for testFilter
      *
      * @return array
      */
-    public function testFilterProvider()
+    public function dpFilterProvider()
     {
         return [
             ['icZs', '1CZS'],

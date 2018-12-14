@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Pay Fee Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PayFeeTest extends PHPUnit_Framework_TestCase
+class PayFeeTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

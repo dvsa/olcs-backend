@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TaAddress;
  * @author Nick Payne <nick.payne@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class TaAddressTest extends \PHPUnit_Framework_TestCase
+class TaAddressTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test getQuery

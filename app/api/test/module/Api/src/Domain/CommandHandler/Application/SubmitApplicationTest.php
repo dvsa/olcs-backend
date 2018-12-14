@@ -712,7 +712,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, self::VERSION)
             ->andReturn($application);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
