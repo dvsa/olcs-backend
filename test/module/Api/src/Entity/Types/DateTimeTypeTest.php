@@ -9,7 +9,7 @@ use \Mockery as m;
 /**
  * @covers Dvsa\Olcs\Api\Entity\Types\DateTimeType
  */
-class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
+class DateTimeTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DateTimeType
@@ -51,7 +51,7 @@ class DateTimeTypeTest extends \PHPUnit_Framework_TestCase
     {
         $value = '00000';
 
-        $this->setExpectedException(
+        $this->expectException(
             \Doctrine\DBAL\Types\ConversionException::class,
             'Could not convert database value "' . $value . '" to Doctrine Type datetime. Expected format: d-m-Y H:i:s'
         );

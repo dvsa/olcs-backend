@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Generate Batch Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class GenerateBatchTest extends PHPUnit_Framework_TestCase
+class GenerateBatchTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

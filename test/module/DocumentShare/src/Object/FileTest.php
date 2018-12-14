@@ -8,7 +8,7 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @covers \Dvsa\Olcs\DocumentShare\Data\Object\File
  */
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit\Framework\TestCase
 {
     /** @var  \org\bovigo\vfs\vfsStreamDirectory */
     private $vfs;
@@ -86,7 +86,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testSetContentFromDsStreamExcStream404()
     {
-        $this->setExpectedException(\Exception::class, File::ERR_CANT_OPEN_DOWNLOAD_STREAM);
+        $this->expectException(\Exception::class, File::ERR_CANT_OPEN_DOWNLOAD_STREAM);
 
         $res = vfsStream::newFile('res')
             ->at($this->vfs)
@@ -99,7 +99,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 
     public function testSetContentFromDsStreamExcRes404()
     {
-        $this->setExpectedException(\Exception::class, File::ERR_CANT_OPEN_RES);
+        $this->expectException(\Exception::class, File::ERR_CANT_OPEN_RES);
 
         $stream = vfsStream::newFile('stream')
             ->at($this->vfs)

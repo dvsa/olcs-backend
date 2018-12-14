@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  * Class EndDateTest
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator
  */
-class EndDateTest extends \PhpUnit_Framework_TestCase
+class EndDateTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider dpIsValid

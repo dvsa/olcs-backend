@@ -63,7 +63,7 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $this->mockedSmServices[Service\GdsVerify::class]->shouldReceive('getAttributesFromResponse')
             ->with('SAML')->once()->andReturn($attributes);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
         $this->sut->handleCommand($command);
     }
 
@@ -314,7 +314,6 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             }
         );
 
-
         $this->expectedSideEffect(
             \Dvsa\Olcs\Transfer\Command\Surrender\Update::class,
             [
@@ -329,16 +328,20 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
         $licence = m::mock(Licence::class)
             ->shouldReceive('setStatus')
             ->once()
-            ->with(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION)
             ->getMock();
 
-        $licence->shouldReceive('save')->once();
+
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
             ->with(65)
             ->once()
             ->andReturn($licence);
+
+        $this->repoMap['Licence']
+            ->shouldReceive('save')
+            ->with($licence)
+            ->once();
 
         $this->sut->handleCommand($command);
     }

@@ -255,19 +255,20 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     {
         $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
             [
-                'digitalSignature' => $digitalSignature,
+                'digitalSignature' => $digitalSignature->getId(),
                 'id' => $licenceId,
                 'status' => Entity\Surrender::SURRENDER_STATUS_SIGNED,
-                'signatureType' => Entity\System\RefData::SIG_DIGITAL_SIGNATURE
+                'signatureType' => $this->getRepo()->getRefdataReference(Entity\System\RefData::SIG_DIGITAL_SIGNATURE)
             ]
         ));
 
         /**
          * @var Entity\Licence\Licence $licence
          */
-        $licence = $this->getRepo('Licence')->fetchById($licenceId);
-        $licence->setStatus(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION);
-        $licence->save();
+        $licenceRepo = $this->getRepo('Licence');
+        $licence = $licenceRepo->fetchById($licenceId);
+        $licence->setStatus($this->getRepo()->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
+        $licenceRepo->save($licence);
         return $result;
     }
 }

@@ -2196,7 +2196,7 @@ class BusRegEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider testGetPublicationSectionForGrantEmailProvider
+     * @dataProvider dpGetPublicationSectionForGrantEmailProvider
      *
      * @param string $status
      * @param string $revertStatus
@@ -2215,7 +2215,7 @@ class BusRegEntityTest extends EntityTester
         $this->assertEquals($section, $entity->getPublicationSectionForGrantEmail());
     }
 
-    public function testGetPublicationSectionForGrantEmailProvider()
+    public function dpGetPublicationSectionForGrantEmailProvider()
     {
         return [
             [Entity::STATUS_REGISTERED, Entity::STATUS_NEW, 'Y', PublicationSection::BUS_NEW_SHORT_SECTION],

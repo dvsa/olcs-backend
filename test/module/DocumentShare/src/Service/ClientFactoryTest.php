@@ -9,7 +9,7 @@ use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class ClientFactoryTest extends \PHPUnit_Framework_TestCase
+class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideSetOptions

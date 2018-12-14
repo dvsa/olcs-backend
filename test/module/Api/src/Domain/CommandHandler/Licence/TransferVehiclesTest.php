@@ -48,7 +48,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
     public function testHandleCommandWillExceed()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 111,
@@ -80,7 +80,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithOverlappingSingle()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 111,
@@ -128,7 +128,7 @@ class TransferVehiclesTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithOverlappingMultiple()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'id' => 111,

@@ -9,7 +9,7 @@ use Olcs\XmlTools\Filter\MapXmlFile;
  * Class ComplianceEpisodeXmlTest
  * @package Dvsa\OlcsTest\Api\Service\Nr\Mapping
  */
-class ComplianceEpisodeXmlTest extends \PHPUnit_Framework_TestCase
+class ComplianceEpisodeXmlTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * loads in erru test templates from /module/Api/data/nr/ folder, tests correct data retrieval/mapping

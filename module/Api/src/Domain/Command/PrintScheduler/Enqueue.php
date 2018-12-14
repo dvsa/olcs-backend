@@ -9,7 +9,14 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class Enqueue extends AbstractCommand
 {
+    // kept for backward compatibility only
     protected $documentId;
+
+    /** @var array */
+    protected $documents = [];
+
+    /** @var string */
+    protected $type;
 
     protected $jobName;
 
@@ -28,6 +35,26 @@ final class Enqueue extends AbstractCommand
     public function getDocumentId()
     {
         return $this->documentId;
+    }
+
+    /**
+     * Get the list of document ids to be printed
+     *
+     * @return array
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Get queue type to enqueue as
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**

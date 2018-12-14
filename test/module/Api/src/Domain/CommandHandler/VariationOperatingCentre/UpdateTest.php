@@ -102,7 +102,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($aoc);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -144,7 +144,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->with(111)
             ->andReturn($loc);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -71,7 +71,7 @@ class S3FileTest extends MockeryTestCase
         );
         $sut->shouldReceive('deleteFile')->with('EMAIL_FILE')->once();
 
-        $this->setExpectedException(RuntimeException::class, "Cannot send mail to S3 : OUTPUT 1");
+        $this->expectException(RuntimeException::class, "Cannot send mail to S3 : OUTPUT 1");
 
         $sut->send($mockMessage);
     }

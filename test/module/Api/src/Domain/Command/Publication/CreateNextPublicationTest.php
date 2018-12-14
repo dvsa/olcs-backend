@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Publication;
 
 use Dvsa\Olcs\Api\Domain\Command\Publication\CreateNextPublication;
-use PHPUnit_Framework_TestCase;
 
 /**
  * CreateNextPublicationTest
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class CreateNextPublicationTest extends PHPUnit_Framework_TestCase
+class CreateNextPublicationTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

@@ -241,7 +241,7 @@ class CasesTest extends RepositoryTestCase
 
         $results = null;
 
-        $this->setExpectedException(Exception\NotFoundException::class);
+        $this->expectException(Exception\NotFoundException::class);
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('getQuery->getResult')->andReturn($results);

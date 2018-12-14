@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\PrintDiscs;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Print Discs Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PrintDiscsTest extends PHPUnit_Framework_TestCase
+class PrintDiscsTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

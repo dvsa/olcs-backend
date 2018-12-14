@@ -37,7 +37,7 @@ class EmailTest extends MockeryTestCase
 
     public function testCreateServiceMissingConfig()
     {
-        $this->setExpectedException(\Zend\Mail\Exception\RuntimeException::class);
+        $this->expectException(\Zend\Mail\Exception\RuntimeException::class);
 
         $config = [];
 
@@ -318,7 +318,7 @@ class EmailTest extends MockeryTestCase
      */
     public function testToFromAddressException($fromEmail, $fromName, $toEmail, $exceptionMessage)
     {
-        $this->setExpectedException(EmailNotSentException::class, $exceptionMessage);
+        $this->expectException(EmailNotSentException::class, $exceptionMessage);
 
         $this->sut->send(
             $fromEmail,
