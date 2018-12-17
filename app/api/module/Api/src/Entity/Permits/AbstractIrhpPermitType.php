@@ -101,15 +101,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $name;
 
     /**
-     * Permit type properties
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="permit_type_properties", nullable=true)
-     */
-    protected $permitTypeProperties;
-
-    /**
      * Version
      *
      * @var int
@@ -297,30 +288,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set the permit type properties
-     *
-     * @param string $permitTypeProperties new value being set
-     *
-     * @return IrhpPermitType
-     */
-    public function setPermitTypeProperties($permitTypeProperties)
-    {
-        $this->permitTypeProperties = $permitTypeProperties;
-
-        return $this;
-    }
-
-    /**
-     * Get the permit type properties
-     *
-     * @return string
-     */
-    public function getPermitTypeProperties()
-    {
-        return $this->permitTypeProperties;
     }
 
     /**
