@@ -422,7 +422,7 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $qb = $this->createMockQb();
 
-        $ex = new \Exception('test Exception');
+        $ex = new \Exception('testException');
         $qb->shouldReceive('getQuery')
             ->once()
             ->andReturn($qb)
@@ -433,7 +433,7 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $this->expectException('test Exception');
+        $this->expectExceptionMessage('testException');
 
         $this->sut->countForLicence($licenceId);
     }
