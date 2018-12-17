@@ -54,7 +54,6 @@ class UpdateTest extends CommandHandlerTestCase
                 if (array_key_exists('licenceDocumentInfo', $data)) {
                     $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->once();
                 }
-
             }
         }
         if (array_key_exists('status', $data)) {
@@ -140,6 +139,7 @@ class UpdateTest extends CommandHandlerTestCase
                 [
                     'licence' => 11,
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
+                    'licenceDocumentInfo' => null,
                 ]
             ],
         ];
