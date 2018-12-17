@@ -415,4 +415,26 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->assertSame(['discCount' => 0], $this->sut->countForLicence($licenceId));
     }
+
+    public function testCountForLicenceException()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+
+        $ex = new \Exception('test Exception');
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($ex);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->expectException('test Exception');
+
+        $this->sut->countForLicence($licenceId);
+    }
 }
