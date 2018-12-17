@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
+use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -34,10 +36,7 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setDigitalSignature($digitalSignature);
         }
 
-        if ($command->getLicenceDocumentStatus()) {
-            $licenceDocumentStatus = $this->getRepo()->getRefdataReference($command->getLicenceDocumentStatus());
-            $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
-        }
+        $this->setContentByStatus($command, $surrender);
 
         if ($command->getStatus()) {
             $status = $this->getRepo()->getRefdataReference($command->getStatus());
@@ -68,10 +67,6 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setSignatureType($command->getSignatureType());
         }
 
-        if ($command->getLicenceDocumentInfo() !== null) {
-            $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
-        }
-
         if ($command->getCommunityLicenceDocumentInfo() !== null) {
             $surrender->setCommunityLicenceDocumentInfo($command->getCommunityLicenceDocumentInfo());
         }
@@ -84,5 +79,24 @@ final class Update extends AbstractSurrenderCommandHandler
         return $this->result;
     }
 
-//    private function check
+    /**
+     * @param CommandInterface $command
+     * @param SurrenderEntity  $surrender
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function setContentByStatus(CommandInterface $command, SurrenderEntity $surrender): void
+    {
+        if ($command->getLicenceDocumentStatus()) {
+            $licenceDocumentStatus = $this->getRepo()->getRefdataReference($command->getLicenceDocumentStatus());
+            $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
+        }
+        if ($command->getLicenceDocumentInfo() !== null) {
+            if ($command->getLicenceDocumentStatus() !== Surrender::SURRENDER_DOC_STATUS_DESTROYED) {
+                $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
+            } else {
+                $surrender->setLicenceDocumentInfo(null);
+            }
+        }
+    }
 }
