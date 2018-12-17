@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\View\ViVhlView;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ViVhlViewTest extends \PHPUnit_Framework_TestCase
+class ViVhlViewTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ViVhlView

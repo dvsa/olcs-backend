@@ -7,7 +7,7 @@ use Dvsa\Olcs\GdsVerify\Data\Metadata\Federation;
 /**
  * Federation test
  */
-class FederationTest extends \PHPUnit_Framework_TestCase
+class FederationTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSsoUrl()
     {

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoSignature as Sut;
 /**
  * IrfoSignature Test
  */
-class IrfoSignatureTest extends \PHPUnit_Framework_TestCase
+class IrfoSignatureTest extends \PHPUnit\Framework\TestCase
 {
     public function testRender()
     {

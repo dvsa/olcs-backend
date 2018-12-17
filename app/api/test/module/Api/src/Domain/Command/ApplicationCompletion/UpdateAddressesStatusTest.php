@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateAddressesStatus;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Addresses Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateAddressesStatusTest extends PHPUnit_Framework_TestCase
+class UpdateAddressesStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

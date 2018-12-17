@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPackTransaction;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Txc Inbox PDF Test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ProcessPackTransactionTest extends PHPUnit_Framework_TestCase
+class ProcessPackTransactionTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

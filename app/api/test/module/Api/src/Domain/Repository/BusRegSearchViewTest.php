@@ -62,7 +62,7 @@ class BusRegSearchViewTest extends RepositoryTestCase
 
         $qb->shouldReceive('getQuery->getResult')->with()->once()->andReturn([]);
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->sut->fetchByRegNo('REG0001');
     }

@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateConditionsUndertakingsStatus;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Conditions Undertakings Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateConditionsUndertakingsStatusTest extends PHPUnit_Framework_TestCase
+class UpdateConditionsUndertakingsStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

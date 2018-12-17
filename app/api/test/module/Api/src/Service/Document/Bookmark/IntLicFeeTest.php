@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IntLicFee;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class IntLicFeeTest extends \PHPUnit_Framework_TestCase
+class IntLicFeeTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

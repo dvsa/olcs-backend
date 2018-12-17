@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
-use PHPUnit_Framework_TestCase as TestCase;
+use \PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class RegistrationTest

@@ -63,7 +63,7 @@ class MessageConsumerManagerTest extends MockeryTestCase
 
     public function testValidatePluginInvalid()
     {
-        $this->setExpectedException('\Zend\ServiceManager\Exception\RuntimeException');
+        $this->expectException('\Zend\ServiceManager\Exception\RuntimeException');
 
         $plugin = m::mock();
 

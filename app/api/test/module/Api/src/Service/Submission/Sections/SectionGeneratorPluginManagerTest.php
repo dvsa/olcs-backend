@@ -30,7 +30,7 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
         $invalidPlugin = new \stdClass();
 
         //  expect
-        $this->setExpectedException(
+        $this->expectException(
             \Zend\ServiceManager\Exception\RuntimeException::class,
             'stdClass should implement: ' . SectionGeneratorInterface::class
         );

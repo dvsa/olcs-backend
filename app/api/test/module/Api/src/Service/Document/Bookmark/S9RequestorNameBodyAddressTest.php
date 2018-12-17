@@ -7,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark as BookmarkNs;
-use PHPUnit_Framework_TestCase as TestCase;
+use \PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class

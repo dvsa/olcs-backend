@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulSectorPermitApplicationsTest extends \PHPUnit_Framework_TestCase
+class MarkSuccessfulSectorPermitApplicationsTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

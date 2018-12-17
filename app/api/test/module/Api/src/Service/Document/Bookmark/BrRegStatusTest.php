@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
 /**
  * BrRegStatus test
  */
-class BrRegStatusTest extends \PHPUnit_Framework_TestCase
+class BrRegStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

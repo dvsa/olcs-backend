@@ -220,7 +220,7 @@ class ProcessToRevokeCurtailSuspendTest extends CommandHandlerTestCase
         $this->repoMap['LicenceStatusRule']->shouldReceive('fetchRevokeCurtailSuspend')->once()
             ->andReturn($licenceStatueRules);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }

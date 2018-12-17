@@ -43,7 +43,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoDiscsToPrint()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->mockAuthService();
 
         $niFlag = 'N';
@@ -73,7 +73,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommandDecreasing()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->mockAuthService();
 
         $niFlag = 'N';

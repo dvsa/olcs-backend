@@ -42,7 +42,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommandNoDiscsToPrint()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $niFlag = 'N';
         $licenceType = 'ltyp_r';
@@ -71,7 +71,7 @@ class PrintDiscsTest extends CommandHandlerTestCase
 
     public function testHandleCommandDecreasing()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
         $maxPages = 1;
         $licenceType = 'ltyp_r';
         $startNumber = 1;
