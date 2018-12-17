@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -392,5 +393,26 @@ class GoodsDiscTest extends RepositoryTestCase
         $expectedQuery = '{QUERY} SELECT count(gd) INNER JOIN gd.licenceVehicle lv INNER JOIN lv.licence lvl AND lvl.id = [['. $licenceId . ']] GROUP BY lvl.id LIMIT 1';
 
         self::assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testCountForLicenceNoResult()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+        $exception = new NoResultException();
+
+
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($exception);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->assertSame(['discCount' => 0], $this->sut->countForLicence($licenceId));
     }
 }
