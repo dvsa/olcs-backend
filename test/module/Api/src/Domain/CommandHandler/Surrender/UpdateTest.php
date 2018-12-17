@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
@@ -47,6 +48,14 @@ class UpdateTest extends CommandHandlerTestCase
         }
         if (array_key_exists('licenceDocumentStatus', $data)) {
             $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
+            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED) {
+                $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
+            } else {
+                if (array_key_exists('licenceDocumentInfo', $data)) {
+                    $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->once();
+                }
+
+            }
         }
         if (array_key_exists('status', $data)) {
             $surrenderEntity->shouldReceive('setStatus')->once();
@@ -71,9 +80,6 @@ class UpdateTest extends CommandHandlerTestCase
             $surrenderEntity->shouldReceive('setSignatureType')->once();
         }
 
-        if (array_key_exists('licenceDocumentInfo', $data)) {
-            $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->once();
-        }
 
         if (array_key_exists('communityLicenceDocumentInfo', $data)) {
             $surrenderEntity->shouldReceive('setCommunityLicenceDocumentInfo')->once();
@@ -115,9 +121,9 @@ class UpdateTest extends CommandHandlerTestCase
                     'discStolen' => '2',
                     'discStolenInfo' => 'text',
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
+                    'licenceDocumentInfo' => 'some licence doc info',
                     'status' => 'surr_sts_comm_lic_docs_complete',
                     'signatureType' => 'sig_physical_signature',
-                    'licenceDocumentInfo' => 'some licence doc info',
                     'communityLicenceDocumentInfo' => 'some community licence doc info'
                 ]
             ],
@@ -125,7 +131,9 @@ class UpdateTest extends CommandHandlerTestCase
                 [
                     'licence' => 11,
                     'status' => 'surr_sts_comm_lic_docs_complete',
-                    'signatureType' => 'sig_digital_signature'
+                    'signatureType' => 'sig_digital_signature',
+                    'licenceDocumentStatus' => 'doc_sts_stolen',
+                    'licenceDocumentInfo' => 'some licence doc info',
                 ]
             ],
             'case_03' => [
