@@ -48,7 +48,7 @@ class UpdateTest extends CommandHandlerTestCase
         }
         if (array_key_exists('licenceDocumentStatus', $data)) {
             $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
-            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED) {
+            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
                 $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
             } else {
                 if (array_key_exists('licenceDocumentInfo', $data)) {
