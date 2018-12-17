@@ -29,7 +29,7 @@ class DateTypeTest extends MockeryTestCase
     {
         $value = '1146711721';
 
-        $this->setExpectedException(
+        $this->expectException(
             \Doctrine\DBAL\Types\ConversionException::class,
             'Could not convert database value "' . $value . '" to Doctrine Type date. Expected format: d-m-Y'
         );

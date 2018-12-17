@@ -51,7 +51,7 @@ class ImapTest extends TestCase
         $sl = new \Zend\ServiceManager\ServiceManager();
         $sl->setService('Config', []);
 
-        $this->setExpectedException('Zend\Mail\Exception\RuntimeException', 'No mailbox config found');
+        $this->expectException('Zend\Mail\Exception\RuntimeException', 'No mailbox config found');
 
         $this->imapService->createService($sl);
     }
@@ -76,7 +76,7 @@ class ImapTest extends TestCase
 
         $this->imapService->createService($sl);
 
-        $this->setExpectedException('Zend\Mail\Exception\RuntimeException', 'No config found for mailbox \'bar\'');
+        $this->expectException('Zend\Mail\Exception\RuntimeException', 'No config found for mailbox \'bar\'');
 
         $this->imapService->connect('bar');
     }

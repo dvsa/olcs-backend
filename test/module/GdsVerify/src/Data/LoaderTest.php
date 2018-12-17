@@ -8,7 +8,7 @@ use Mockery as m;
 /**
  * Loader test
  */
-class LoaderTest extends \PHPUnit_Framework_TestCase
+class LoaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstructorNoCache()
     {
@@ -77,7 +77,7 @@ class LoaderTest extends \PHPUnit_Framework_TestCase
         $sut = new Loader();
         $sut->setHttpClient($mockHttpClient);
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\GdsVerify\Exception::class,
             'Error getting metadata document http:/foo.bar'
         );

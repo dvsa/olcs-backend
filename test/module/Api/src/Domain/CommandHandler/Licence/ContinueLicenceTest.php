@@ -89,7 +89,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         $this->repoMap['ContinuationDetail']->shouldReceive('fetchForLicence')->with(717)->once()
             ->andReturn([]);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }

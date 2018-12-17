@@ -123,7 +123,7 @@ class CreateIrfoPermitStockTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithInvalidSerialNoStartEnd()
     {
-        $this->setExpectedException(Exception\ValidationException::class);
+        $this->expectException(Exception\ValidationException::class);
 
         $data = [
             'serialNoStart' => 100,
@@ -137,7 +137,7 @@ class CreateIrfoPermitStockTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithInvalidSerialNoMaxDiffExceeded()
     {
-        $this->setExpectedException(Exception\ValidationException::class);
+        $this->expectException(Exception\ValidationException::class);
 
         $serialNoStart = 100;
         $data = [

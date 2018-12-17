@@ -109,6 +109,8 @@ abstract class EntityTester extends MockeryTestCase
      */
     public function testGetDates($expected, $dateTime)
     {
+        $hasAssert = false;
+
         $classToTestName = $this->getClassToTestName();
 
         $dateProperties = ['createdOn', 'lastModifiedOn', 'deletedDate'];
@@ -119,7 +121,12 @@ abstract class EntityTester extends MockeryTestCase
                 $getMethod = 'get'. $property;
                 $entity->$setMethod($dateTime);
                 $this->assertEquals($expected, $entity->$getMethod(true));
+                $hasAssert = true;
             }
+        }
+
+        if (!$hasAssert) {
+            $this->markTestSkipped(vsprintf('Does not have any of the following properties: %s', $dateProperties));
         }
     }
 

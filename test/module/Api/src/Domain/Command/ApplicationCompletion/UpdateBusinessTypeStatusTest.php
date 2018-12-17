@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateBusinessTypeStatus;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Business Type Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateBusinessTypeStatusTest extends PHPUnit_Framework_TestCase
+class UpdateBusinessTypeStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

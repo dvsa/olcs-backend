@@ -51,7 +51,7 @@ class UpdateTest extends CommandHandlerTestCase
         ];
         $command = Command::create($data);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

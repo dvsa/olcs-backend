@@ -8,14 +8,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateFinancialEvidenceStatus;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Update Financial Evidence Status Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateFinancialEvidenceStatusTest extends PHPUnit_Framework_TestCase
+class UpdateFinancialEvidenceStatusTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

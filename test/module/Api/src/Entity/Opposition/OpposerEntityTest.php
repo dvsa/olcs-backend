@@ -62,7 +62,7 @@ class OpposerEntityTest extends EntityTester
 
     public function testUpdateException()
     {
-        $this->setExpectedException(
+        $this->expectException(
             InvalidArgumentException::class, 'Environmental objections must specify a type of opposer'
         );
 

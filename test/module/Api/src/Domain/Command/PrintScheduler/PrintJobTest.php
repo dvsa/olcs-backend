@@ -3,12 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\PrintScheduler;
 
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\PrintJob;
-use PHPUnit_Framework_TestCase;
 
 /**
  * PrintJob Test
  */
-class PrintJobTest extends PHPUnit_Framework_TestCase
+class PrintJobTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

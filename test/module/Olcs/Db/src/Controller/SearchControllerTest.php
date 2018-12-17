@@ -9,7 +9,7 @@ use Mockery as m;
  * Class SearchControllerTest
  * @package OlcsTest\Db\Controller
  */
-class SearchControllerTest extends \PHPUnit_Framework_TestCase
+class SearchControllerTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetList()
     {

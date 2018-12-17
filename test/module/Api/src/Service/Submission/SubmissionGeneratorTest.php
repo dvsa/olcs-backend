@@ -50,7 +50,7 @@ class SubmissionGeneratorTest extends MockeryTestCase
 
         $mockCase->shouldReceive('isTm')->andReturn(false);
 
-        $this->setExpectedException('Exception', 'Invalid submission type');
+        $this->expectException('Exception', 'Invalid submission type');
 
         $sut->generateSubmission($mockSubmission, $sections);
     }

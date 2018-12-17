@@ -10,7 +10,7 @@ use Mockery as m;
 /**
  * StlcompanyorpartnerparagraphTest
  */
-class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
+class StlcompanyorpartnerparagraphTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
@@ -35,7 +35,7 @@ class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderPartnershipsDataProvider
+     * @dataProvider dpRenderPartnershipsDataProvider
      */
     public function testRenderPartnerships($organisationTypeId)
     {
@@ -49,7 +49,7 @@ class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
         $this->assertStringStartsWith('It is important that a partner who can speak and', $bookmark->render());
     }
 
-    public function testRenderPartnershipsDataProvider()
+    public function dpRenderPartnershipsDataProvider()
     {
         return [
             [Organisation::ORG_TYPE_PARTNERSHIP],
@@ -58,7 +58,7 @@ class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderOthersDataProvider
+     * @dataProvider dpRenderOthersDataProvider
      */
     public function testRenderOthers($organisationTypeId)
     {
@@ -68,7 +68,7 @@ class StlcompanyorpartnerparagraphTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($bookmark->render());
     }
 
-    public function testRenderOthersDataProvider()
+    public function dpRenderOthersDataProvider()
     {
         return [
             [Organisation::ORG_TYPE_SOLE_TRADER],

@@ -40,7 +40,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testLockWithoutApplication()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->sut->lock(m::mock(Licence::class), 1);
     }
@@ -53,7 +53,7 @@ class ApplicationTest extends RepositoryTestCase
             ->with($entity, LockMode::OPTIMISTIC, 1)
             ->andThrow(OptimisticLockException::class);
 
-        $this->setExpectedException(VersionConflictException::class);
+        $this->expectException(VersionConflictException::class);
 
         $this->sut->lock($entity, 1);
     }
@@ -70,7 +70,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testSaveWithoutApplication()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->sut->save(m::mock(Licence::class));
     }
@@ -90,7 +90,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testDeleteWithoutApplication()
     {
-        $this->setExpectedException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->sut->delete(m::mock(Licence::class));
     }
@@ -190,7 +190,7 @@ class ApplicationTest extends RepositoryTestCase
             ->with(Application::class)
             ->andReturn($repo);
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->sut->fetchUsingId($command, Query::HYDRATE_OBJECT, 1);
     }
@@ -465,7 +465,7 @@ class ApplicationTest extends RepositoryTestCase
     {
         $applicationId = 1;
 
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);

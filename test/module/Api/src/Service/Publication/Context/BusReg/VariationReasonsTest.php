@@ -21,7 +21,7 @@ class VariationReasonsTest extends MockeryTestCase
      * Tests bus reg variation reasons filter
      *
      * @group publicationFilter
-     * @dataProvider testProvideDataProvider
+     * @dataProvider dpProvideDataProvider
      *
      * @param ArrayCollection $variationReasons
      * @param string $expectedString
@@ -45,7 +45,7 @@ class VariationReasonsTest extends MockeryTestCase
         $this->assertEquals($expectedOutput, $sut->provide($publication, new \ArrayObject()));
     }
 
-    public function testProvideDataProvider()
+    public function dpProvideDataProvider()
     {
         $reason1 = 'reason 1';
         $reason2 = 'reason 2';

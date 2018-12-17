@@ -91,7 +91,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithChangeWhenNotAllowed()
     {
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $data = [
             'licenceType' => LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
@@ -120,7 +120,7 @@ class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithSrChangeWithoutPermission()
     {
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $data = [
             'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,

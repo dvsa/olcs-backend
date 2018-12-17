@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvFrequency as Sut;
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoPsvFrequency
  */
-class IrfoPsvFrequencyTest extends \PHPUnit_Framework_TestCase
+class IrfoPsvFrequencyTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
@@ -18,7 +18,7 @@ class IrfoPsvFrequencyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderValidDataProvider
+     * @dataProvider dpRenderValidDataProvider
      */
     public function testRender($results, $expected)
     {
@@ -28,7 +28,7 @@ class IrfoPsvFrequencyTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $bookmark->render());
     }
 
-    public function testRenderValidDataProvider()
+    public function dpRenderValidDataProvider()
     {
         return [
             [

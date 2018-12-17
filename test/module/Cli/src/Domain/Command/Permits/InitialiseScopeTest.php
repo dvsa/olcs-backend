@@ -9,7 +9,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope;
  *
  * @author Jason de Jonge <jason.de-jonge@capgemini.co.uk>
  */
-class InitialiseScopeTest extends \PHPUnit_Framework_TestCase
+class InitialiseScopeTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {
