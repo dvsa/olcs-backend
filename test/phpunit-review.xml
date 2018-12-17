@@ -39,10 +39,10 @@
             <directory>./module/Olcs</directory>
         </testsuite>
         <testsuite name="OLD Scanning">
-            <directory>./module/Scanning</directory>./Re
+            <directory>./module/Scanning</directory>
         </testsuite>
         <testsuite name="GdsVerify">
-            <directory>./module/GdsVerify</directory>./Re
+            <directory>./module/GdsVerify</directory>
         </testsuite>
     </testsuites>
     <filter>
