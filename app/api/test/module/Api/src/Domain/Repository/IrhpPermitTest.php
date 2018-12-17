@@ -155,6 +155,37 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testFetchListForReadyToPrintWithStock()
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = ReadyToPrint::create(['irhpPermitStock' => 100]);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'INNER JOIN m.irhpPermitRange ipr '
+            . 'INNER JOIN ipr.irhpPermitStock ips '
+            . 'AND ips.id = [[100]] '
+            . 'AND m.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'ORDER BY m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
     public function testFetchListForReadyToPrintConfirm()
     {
         $this->setUpSut(IrhpPermit::class, true);

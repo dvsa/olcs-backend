@@ -7,6 +7,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Mockery as m;
 
@@ -91,5 +92,37 @@ class IrhpPermitStockTest extends RepositoryTestCase
                 $expectedResult,
                 $this->sut->getNextIrhpPermitStockByPermitType($permitType, $date, Query::HYDRATE_ARRAY)
             );
+    }
+
+    public function testFetchReadyToPrint()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchReadyToPrint());
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ips, ipt, rd '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ipt.name rd '
+            . 'INNER JOIN ips.irhpPermitRanges ipr '
+            . 'INNER JOIN ipr.irhpPermits ip '
+            . 'AND ip.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'ORDER BY rd.displayOrder ASC '
+            . 'ORDER BY ips.validFrom ASC';
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }
