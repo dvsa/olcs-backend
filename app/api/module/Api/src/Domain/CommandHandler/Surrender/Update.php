@@ -20,6 +20,7 @@ final class Update extends AbstractSurrenderCommandHandler
         /** @var SurrenderEntity $surrender */
         $surrender = $this->getRepo()->fetchOneByLicenceId($command->getId(), Query::HYDRATE_OBJECT);
 
+        /** @var \Dvsa\Olcs\Transfer\Command\Surrender\Update $command */
         if ($command->getCommunityLicenceDocumentStatus()) {
             $communityLicDocumentStatus = $this->getRepo()->getRefdataReference($command->getCommunityLicenceDocumentStatus());
             $surrender->setCommunityLicenceDocumentStatus($communityLicDocumentStatus);
@@ -82,4 +83,6 @@ final class Update extends AbstractSurrenderCommandHandler
 
         return $this->result;
     }
+
+//    private function check
 }
