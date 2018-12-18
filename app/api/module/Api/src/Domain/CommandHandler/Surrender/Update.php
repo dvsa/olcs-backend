@@ -4,15 +4,15 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
+use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
 final class Update extends AbstractSurrenderCommandHandler
 {
-
     /**
-     * @param Cmd $command
+     * @param CommandInterface $command
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -22,6 +22,7 @@ final class Update extends AbstractSurrenderCommandHandler
         /** @var SurrenderEntity $surrender */
         $surrender = $this->getRepo()->fetchOneByLicenceId($command->getId(), Query::HYDRATE_OBJECT);
 
+        /** @var \Dvsa\Olcs\Transfer\Command\Surrender\Update $command */
         if ($command->getCommunityLicenceDocumentStatus()) {
             $communityLicDocumentStatus = $this->getRepo()->getRefdataReference($command->getCommunityLicenceDocumentStatus());
             $surrender->setCommunityLicenceDocumentStatus($communityLicDocumentStatus);
@@ -35,10 +36,7 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setDigitalSignature($digitalSignature);
         }
 
-        if ($command->getLicenceDocumentStatus()) {
-            $licenceDocumentStatus = $this->getRepo()->getRefdataReference($command->getLicenceDocumentStatus());
-            $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
-        }
+        $this->setContentByStatus($command, $surrender);
 
         if ($command->getStatus()) {
             $status = $this->getRepo()->getRefdataReference($command->getStatus());
@@ -69,6 +67,9 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setSignatureType($command->getSignatureType());
         }
 
+        if ($command->getCommunityLicenceDocumentInfo() !== null) {
+            $surrender->setCommunityLicenceDocumentInfo($command->getCommunityLicenceDocumentInfo());
+        }
 
         $this->getRepo()->save($surrender);
 
@@ -76,5 +77,26 @@ final class Update extends AbstractSurrenderCommandHandler
         $this->result->addMessage('Surrender successfully updated.');
 
         return $this->result;
+    }
+
+    /**
+     * @param CommandInterface $command
+     * @param SurrenderEntity  $surrender
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    private function setContentByStatus(CommandInterface $command, SurrenderEntity $surrender): void
+    {
+
+        $surrender->setLicenceDocumentInfo(null);
+
+        if ($command->getLicenceDocumentStatus() !== null) {
+            $licenceDocumentStatus = $this->getRepo()->getRefdataReference($command->getLicenceDocumentStatus());
+            $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
+        }
+        if ($command->getLicenceDocumentInfo() !== null &&
+            in_array($command->getLicenceDocumentStatus(), [Surrender::SURRENDER_DOC_STATUS_LOST, Surrender::SURRENDER_DOC_STATUS_STOLEN])) {
+                $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
+        }
     }
 }
