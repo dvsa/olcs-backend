@@ -87,18 +87,15 @@ final class Update extends AbstractSurrenderCommandHandler
      */
     private function setContentByStatus(CommandInterface $command, SurrenderEntity $surrender): void
     {
+
+        $surrender->setLicenceDocumentInfo(null);
         if ($command->getLicenceDocumentStatus() !== null) {
             $licenceDocumentStatus = $this->getRepo()->getRefdataReference($command->getLicenceDocumentStatus());
             $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
         }
-        if ($command->getLicenceDocumentInfo() !== null ||
-            $command->getLicenceDocumentStatus() === Surrender::SURRENDER_DOC_STATUS_DESTROYED
-        ) {
-            if ($command->getLicenceDocumentStatus() !== Surrender::SURRENDER_DOC_STATUS_DESTROYED) {
+        if ($command->getLicenceDocumentInfo() !== null &&
+            in_array($command->getLicenceDocumentStatus(), [Surrender::SURRENDER_DOC_STATUS_LOST, Surrender::SURRENDER_DOC_STATUS_STOLEN])) {
                 $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
-            } else {
-                $surrender->setLicenceDocumentInfo(null);
-            }
         }
     }
 }

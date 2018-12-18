@@ -138,8 +138,7 @@ class UpdateTest extends CommandHandlerTestCase
             'case_03' => [
                 [
                     'licence' => 11,
-                    'licenceDocumentStatus' => 'doc_sts_destroyed',
-                    'licenceDocumentInfo' => null,
+                    'licenceDocumentStatus' => 'doc_sts_destroyed'
                 ]
             ],
         ];
