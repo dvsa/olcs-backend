@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
+use Composer\Command\Command;
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -81,13 +82,34 @@ final class Update extends AbstractSurrenderCommandHandler
 
     /**
      * @param CommandInterface $command
-     * @param SurrenderEntity  $surrender
+     * @param SurrenderEntity $surrender
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function setContentByStatus(CommandInterface $command, SurrenderEntity $surrender): void
     {
+        switch ($command->getStatus()) {
+            case Surrender::SURRENDER_STATUS_DISCS_COMPLETE:
+                $this->clearDiscFields($surrender);
+                break;
+            case Surrender::SURRENDER_STATUS_LIC_DOCS_COMPLETE:
+                $this->setLicenceDocumentStatusAndInfo($command, $surrender);
+                break;
+        }
+    }
 
+
+    protected function clearDiscFields(SurrenderEntity $surrender)
+    {
+        $surrender->setDiscDestroyed(56);
+        $surrender->setDiscLost(67);
+        $surrender->setDiscLostInfo('garvage');
+        $surrender->setDiscStolen(34);
+        $surrender->setDiscStolenInfo('trash');
+    }
+
+    private function setLicenceDocumentStatusAndInfo(CommandInterface $command, SurrenderEntity $surrender): void
+    {
         $surrender->setLicenceDocumentInfo(null);
 
         if ($command->getLicenceDocumentStatus() !== null) {
@@ -95,8 +117,14 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
         }
         if ($command->getLicenceDocumentInfo() !== null &&
-            in_array($command->getLicenceDocumentStatus(), [Surrender::SURRENDER_DOC_STATUS_LOST, Surrender::SURRENDER_DOC_STATUS_STOLEN])) {
-                $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
+            in_array(
+                $command->getLicenceDocumentStatus(),
+                [
+                    Surrender::SURRENDER_DOC_STATUS_LOST,
+                    Surrender::SURRENDER_DOC_STATUS_STOLEN
+                ]
+            )) {
+            $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
         }
     }
 }
