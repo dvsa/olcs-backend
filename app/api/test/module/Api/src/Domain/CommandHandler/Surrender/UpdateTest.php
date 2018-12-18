@@ -46,13 +46,16 @@ class UpdateTest extends CommandHandlerTestCase
         if (array_key_exists('digitalSignature', $data)) {
             $surrenderEntity->shouldReceive('setDigitalSignature')->once();
         }
+        $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
         if (array_key_exists('licenceDocumentStatus', $data)) {
             $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
-            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
-                $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
+            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED
+                && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
+                $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->twice();
             } else {
                 if (array_key_exists('licenceDocumentInfo', $data)) {
-                    $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->once();
+
+                    $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with($data['licenceDocumentInfo'])->once();
                 }
             }
         }
@@ -120,7 +123,6 @@ class UpdateTest extends CommandHandlerTestCase
                     'discStolen' => '2',
                     'discStolenInfo' => 'text',
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
-                    'licenceDocumentInfo' => 'some licence doc info',
                     'status' => 'surr_sts_comm_lic_docs_complete',
                     'signatureType' => 'sig_physical_signature',
                     'communityLicenceDocumentInfo' => 'some community licence doc info'
@@ -139,6 +141,13 @@ class UpdateTest extends CommandHandlerTestCase
                 [
                     'licence' => 11,
                     'licenceDocumentStatus' => 'doc_sts_destroyed'
+                ]
+            ],
+            'case_03' => [
+                [
+                    'licence' => 11,
+                    'licenceDocumentStatus' => 'doc_sts_lost',
+                    'licenceDocumentInfo' => 'some licence doc info'
                 ]
             ],
         ];

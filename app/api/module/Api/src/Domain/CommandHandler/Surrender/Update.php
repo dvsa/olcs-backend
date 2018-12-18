@@ -89,6 +89,7 @@ final class Update extends AbstractSurrenderCommandHandler
     {
 
         $surrender->setLicenceDocumentInfo(null);
+
         if ($command->getLicenceDocumentStatus() !== null) {
             $licenceDocumentStatus = $this->getRepo()->getRefdataReference($command->getLicenceDocumentStatus());
             $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
