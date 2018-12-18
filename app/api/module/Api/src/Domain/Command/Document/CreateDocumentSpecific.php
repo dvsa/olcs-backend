@@ -57,6 +57,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $user;
 
+    protected $ecmtApplication;
+
     /**
      * Get filename
      *
@@ -285,5 +287,15 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Get ecmt application
+     *
+     * @return int
+     */
+    public function getEcmtApplication()
+    {
+        return $this->ecmtApplication;
     }
 }

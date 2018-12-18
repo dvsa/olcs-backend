@@ -1088,8 +1088,8 @@ return [
     Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
 
     // ECMT Permit Create HTML Snapshot
-    TransferCommand\EcmtPermitApplication\StoreEcmtPermitApplicationSnapshot::class =>
-        CommandHandler\EcmtPermitApplication\StoreEcmtPermitApplicationSnapshot::class,
+    TransferCommand\Permits\StoreEcmtPermitApplicationSnapshot::class =>
+        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
 
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
