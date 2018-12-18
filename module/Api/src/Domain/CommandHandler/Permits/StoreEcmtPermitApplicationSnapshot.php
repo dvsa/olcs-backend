@@ -63,6 +63,7 @@ final class StoreEcmtPermitApplicationSnapshot extends AbstractCommandHandler im
             'isScan' => false,
             'filename' => $name .'.html',
             'description' => $name,
+            'ecmtApplication' => $ecmtPermitApplication->getId(),
         ];
 
         return $this->handleSideEffect(Upload::create($data));
