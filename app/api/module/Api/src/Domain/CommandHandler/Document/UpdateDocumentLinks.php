@@ -81,9 +81,7 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
         $value = $command->{$getter}();
 
         if ($value !== null) {
-
             $this->result->addMessage('Document linked to ' . $suffix . ': ' . $value);
-
             $reference = $this->getRepo()->getReference($entity, $value);
             $document->{$setter}($reference);
         }
