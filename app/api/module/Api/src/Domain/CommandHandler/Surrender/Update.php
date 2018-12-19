@@ -4,8 +4,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -95,7 +93,7 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setLicenceDocumentStatus($licenceDocumentStatus);
         }
         if ($command->getLicenceDocumentInfo() !== null &&
-            in_array($command->getLicenceDocumentStatus(), [Surrender::SURRENDER_DOC_STATUS_LOST, Surrender::SURRENDER_DOC_STATUS_STOLEN])) {
+            in_array($command->getLicenceDocumentStatus(), [SurrenderEntity::SURRENDER_DOC_STATUS_LOST, SurrenderEntity::SURRENDER_DOC_STATUS_STOLEN])) {
                 $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
         }
     }
