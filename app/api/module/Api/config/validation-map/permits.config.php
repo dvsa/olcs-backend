@@ -66,5 +66,5 @@ return [
     CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\QueueAcceptScoring::class => NotIsAnonymousUser::class,
 
-    CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class => NotIsAnonymousUser::class,
+    CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class => Permits\CanEditPermitAppWithId::class,
 ];

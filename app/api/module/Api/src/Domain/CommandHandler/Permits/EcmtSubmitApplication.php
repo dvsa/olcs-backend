@@ -106,9 +106,10 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
     }
 
     /**
-     * @param object $application
+     * @param EcmtPermitApplication $application
+     * @return array
      */
-    private function createSnapshotData($application)
+    private function createSnapshotData(EcmtPermitApplication $application)
     {
         $data['permitType'] = $application->getPermitType()->getDescription();
         $data['operator'] = $application->getLicence()->getOrganisation()->getName();
