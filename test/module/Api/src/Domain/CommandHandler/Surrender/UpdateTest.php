@@ -4,8 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update as Sut;
-use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
@@ -49,7 +47,7 @@ class UpdateTest extends CommandHandlerTestCase
         $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
         if (array_key_exists('licenceDocumentStatus', $data)) {
             $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
-            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED
+            if ($data['licenceDocumentStatus'] == SurrenderEntity::SURRENDER_DOC_STATUS_DESTROYED
                 && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
                 $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
             } else {
