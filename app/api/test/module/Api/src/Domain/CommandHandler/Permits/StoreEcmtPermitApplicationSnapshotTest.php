@@ -7,6 +7,7 @@ use Dvsa\Olcs\Transfer\Command\Permits\StoreEcmtPermitApplicationSnapshot as Cmd
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\Licence;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -36,9 +37,12 @@ class StoreEcmtPermitApplicationSnapshotTest extends CommandHandlerTestCase
 
         /** @var EcmtPermitApplication $ecmtPermitApplication */
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getId')->andReturn('703');
 
         $ecmtPermitApplication->shouldReceive('getId')->andReturn('3');
         $ecmtPermitApplication->shouldReceive('getApplicationRef')->andReturn('OG9654321 / 3');
+        $ecmtPermitApplication->shouldReceive('getLicence')->andReturn($licence);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($ecmtPermitApplication);
 
@@ -50,6 +54,7 @@ class StoreEcmtPermitApplicationSnapshotTest extends CommandHandlerTestCase
             'isScan' => false,
             'filename' => 'Permit Application OG9654321 / 3 Snapshot (app submitted).html',
             'description' => 'Permit Application OG9654321 / 3 Snapshot (app submitted)',
+            'licence' => 703,
             'ecmtApplication' => 3,
         ];
         $this->expectedSideEffect(Upload::class, $params, new Result());

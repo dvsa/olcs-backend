@@ -115,9 +115,9 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $data['operator'] = $application->getLicence()->getOrganisation()->getName();
         $data['ref'] = $application->getApplicationRef();
         $data['licence'] = $application->getLicence()->getLicNo();
-        $data['emissions'] =  ($application->getEmissions() === 1) ? 'Yes' : 'No';
-        $data['cabotage'] = ($application->getCabotage() === 1) ? 'Yes' : 'No';
-        $data['limited-permits'] = ($application->getHasRestrictedCountries() === 1) ? 'Yes' : 'No';
+        $data['emissions'] =  (int) $application->getEmissions() === 1 ? 'Yes' : 'No';
+        $data['cabotage'] = (int) $application->getCabotage() === 1 ? 'Yes' : 'No';
+        $data['limited-permits'] = (int) $application->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
         $data['number-required'] = $application->getPermitsRequired();
         $data['trips'] = $application->getTrips();
         $data['int-journeys'] = $application->getInternationalJourneys()->getDescription();
