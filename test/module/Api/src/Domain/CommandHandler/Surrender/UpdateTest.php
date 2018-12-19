@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update as Sut;
-use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
@@ -45,8 +44,17 @@ class UpdateTest extends CommandHandlerTestCase
         if (array_key_exists('digitalSignature', $data)) {
             $surrenderEntity->shouldReceive('setDigitalSignature')->once();
         }
+        $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
         if (array_key_exists('licenceDocumentStatus', $data)) {
             $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
+            if ($data['licenceDocumentStatus'] == SurrenderEntity::SURRENDER_DOC_STATUS_DESTROYED
+                && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
+                $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
+            } else {
+                if (array_key_exists('licenceDocumentInfo', $data)) {
+                    $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with($data['licenceDocumentInfo'])->once();
+                }
+            }
         }
         if (array_key_exists('status', $data)) {
             $surrenderEntity->shouldReceive('setStatus')->once();
@@ -69,6 +77,11 @@ class UpdateTest extends CommandHandlerTestCase
 
         if (array_key_exists('signatureType', $data)) {
             $surrenderEntity->shouldReceive('setSignatureType')->once();
+        }
+
+
+        if (array_key_exists('communityLicenceDocumentInfo', $data)) {
+            $surrenderEntity->shouldReceive('setCommunityLicenceDocumentInfo')->once();
         }
 
 
@@ -108,20 +121,30 @@ class UpdateTest extends CommandHandlerTestCase
                     'discStolenInfo' => 'text',
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
                     'status' => 'surr_sts_comm_lic_docs_complete',
-                    'signatureType' =>'TEST'
+                    'signatureType' => 'sig_physical_signature',
+                    'communityLicenceDocumentInfo' => 'some community licence doc info'
                 ]
             ],
             'case_02' => [
                 [
                     'licence' => 11,
                     'status' => 'surr_sts_comm_lic_docs_complete',
-                    'signatureType' =>'TEST'
+                    'signatureType' => 'sig_digital_signature',
+                    'licenceDocumentStatus' => 'doc_sts_stolen',
+                    'licenceDocumentInfo' => 'some licence doc info',
                 ]
             ],
             'case_03' => [
                 [
                     'licence' => 11,
-                    'licenceDocumentStatus' => 'doc_sts_destroyed',
+                    'licenceDocumentStatus' => 'doc_sts_destroyed'
+                ]
+            ],
+            'case_04' => [
+                [
+                    'licence' => 11,
+                    'licenceDocumentStatus' => 'doc_sts_lost',
+                    'licenceDocumentInfo' => 'some licence doc info'
                 ]
             ],
         ];
