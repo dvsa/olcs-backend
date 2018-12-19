@@ -75,7 +75,7 @@
         "qandidate/toggle": "^1.1"
     },
     "require-dev": {
-        "olcs/olcs-devtools": "dev-master",
+        "olcs/olcs-devtools": "4.195a",
         "mikey179/vfsStream": "~1.4.0",
         "phpstan/phpstan-shim": "^0.10.5",
         "phpstan/phpstan-mockery": "^0.10.2",
