@@ -19,7 +19,8 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
  * StoreEcmtPermitApplicationSnapshot
  */
 final class StoreEcmtPermitApplicationSnapshot extends AbstractCommandHandler implements
-    TransactionedInterface, ToggleRequiredInterface
+    TransactionedInterface,
+    ToggleRequiredInterface
 {
 
     use ToggleAwareTrait;
@@ -70,6 +71,7 @@ final class StoreEcmtPermitApplicationSnapshot extends AbstractCommandHandler im
             'isScan' => false,
             'filename' => $name .'.html',
             'description' => $name,
+            'licence' => $ecmtPermitApplication->getLicence()->getId(),
             'ecmtApplication' => $ecmtPermitApplication->getId(),
         ];
 
