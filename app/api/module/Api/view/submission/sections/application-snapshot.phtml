@@ -1,4 +1,4 @@
-<?php $title = 'Application for ' . $data['permitType'] . ' Permit'; ?>
+<?php $title = 'Application for ' . $this->escapeHtml($data['permitType']); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -216,42 +216,42 @@
 
         <div class="printable__header">
             <h1><?php echo $title; ?></h1>
-            <h2><?php echo $data['operator']; ?> <?php echo $data['ref']; ?></h2>
+            <h2><?php echo $this->escapeHtml($data['operator']); ?> <?php echo $this->escapeHtml($data['ref']); ?></h2>
             <a class="hide-print" href="javascript:window.print()">Print this page</a>
         </div>
 
         <div class="printable__section">
             <dl>
                 <dt>Licence selected</dt>
-                <dd><?php echo $data['licence']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['licence']); ?></dd>
             </dl>
             <dl>
                 <dt>I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with Euro 6 emissions standards.</dt>
-                <dd><?php echo $data['emissions']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['emissions']); ?></dd>
             </dl>
             <dl>
                 <dt>I confirm that I will not undertake any cabotage journeys using an ECMT permit.</dt>
-                <dd><?php echo $data['cabotage']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['cabotage']); ?></dd>
             </dl>
             <dl>
                 <dt>In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?</dt>
-                <dd><?php echo $data['limited-permits']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['limited-permits']); ?></dd>
             </dl>
             <dl>
                 <dt>How many permits do you require for this licence?</dt>
-                <dd><?php echo $data['number-required']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['number-required']); ?></dd>
             </dl>
             <dl>
                 <dt>How many international trips did you make in the last 12 months using this licence?</dt>
-                <dd><?php echo $data['trips']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['trips']); ?></dd>
             </dl>
             <dl>
                 <dt>In the last 12 months, what percentage of international trips did you make using this licence?</dt>
-                <dd><?php echo $data['int-journeys']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['int-journeys']); ?></dd>
             </dl>
             <dl>
                 <dt>Select one sector you mainly transport goods in using this licence</dt>
-                <dd><?php echo $data['goods']; ?></dd>
+                <dd><?php echo $this->escapeHtml($data['goods']); ?></dd>
             </dl>
         </div>
 

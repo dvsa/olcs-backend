@@ -34,7 +34,7 @@ class StoreEcmtPermitApplicationSnapshotTest extends CommandHandlerTestCase
         ];
         $command = Cmd::create($data);
 
-        /** @var EcmtPermitApplication $savedEcmtPermitApplication */
+        /** @var EcmtPermitApplication $ecmtPermitApplication */
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
 
         $ecmtPermitApplication->shouldReceive('getId')->andReturn('3');
@@ -43,7 +43,7 @@ class StoreEcmtPermitApplicationSnapshotTest extends CommandHandlerTestCase
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($ecmtPermitApplication);
 
         $params = [
-            'content' => base64_encode(trim('HTML')),
+            'content' => 'SFRNTA==', // 'HTML' base 64 encoded
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION,
             'isExternal' => false,
