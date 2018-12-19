@@ -46,20 +46,29 @@ class UpdateTest extends CommandHandlerTestCase
         if (array_key_exists('digitalSignature', $data)) {
             $surrenderEntity->shouldReceive('setDigitalSignature')->once();
         }
-        $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
-        if (array_key_exists('licenceDocumentStatus', $data)) {
-            $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
-            if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED
-                && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
-                $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
-            } else {
-                if (array_key_exists('licenceDocumentInfo', $data)) {
-                    $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with($data['licenceDocumentInfo'])->once();
-                }
-            }
-        }
+
         if (array_key_exists('status', $data)) {
             $surrenderEntity->shouldReceive('setStatus')->once();
+            if ($data['status'] == 'surr_sts_discs_complete') {
+                $surrenderEntity->shouldReceive('setDiscDestroyed')->with(null)->once();
+                $surrenderEntity->shouldReceive('setDiscLost')->with(null)->once();
+                $surrenderEntity->shouldReceive('setDiscLostInfo')->with(null)->once();
+                $surrenderEntity->shouldReceive('setDiscStolen')->with(null)->once();
+                $surrenderEntity->shouldReceive('setDiscStolenInfo')->with(null)->once();
+            } elseif ($data['status'] == 'surr_sts_lic_docs_complete') {
+                if (array_key_exists('licenceDocumentStatus', $data)) {
+                    $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
+                    $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
+                    if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED
+                        && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
+                        $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
+                    } else {
+                        if (array_key_exists('licenceDocumentInfo', $data)) {
+                            $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with($data['licenceDocumentInfo'])->once();
+                        }
+                    }
+                }
+            }
         }
         if (array_key_exists('discDestroyed', $data)) {
             $surrenderEntity->shouldReceive('setDiscDestroyed')->once();
@@ -139,16 +148,25 @@ class UpdateTest extends CommandHandlerTestCase
             'case_03' => [
                 [
                     'licence' => 11,
-                    'licenceDocumentStatus' => 'doc_sts_destroyed'
+                    'licenceDocumentStatus' => 'doc_sts_destroyed',
+                    'status' => 'surr_sts_lic_docs_complete'
                 ]
             ],
             'case_04' => [
                 [
                     'licence' => 11,
                     'licenceDocumentStatus' => 'doc_sts_lost',
-                    'licenceDocumentInfo' => 'some licence doc info'
+                    'licenceDocumentInfo' => 'some licence doc info',
+                    'status' => 'surr_sts_lic_docs_complete'
                 ]
             ],
+            'case_05' => [
+                [
+                    'licence' => 11,
+                    'status' => 'surr_sts_discs_complete',
+                    'discDestroyed' => '1'
+                ]
+            ]
         ];
         return $data;
     }

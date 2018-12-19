@@ -2,13 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
-use Composer\Command\Command;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Doctrine\ORM\Query;
 
 final class Update extends AbstractSurrenderCommandHandler
 {
@@ -98,14 +95,13 @@ final class Update extends AbstractSurrenderCommandHandler
         }
     }
 
-
     protected function clearDiscFields(SurrenderEntity $surrender)
     {
-        $surrender->setDiscDestroyed(56);
-        $surrender->setDiscLost(67);
-        $surrender->setDiscLostInfo('garvage');
-        $surrender->setDiscStolen(34);
-        $surrender->setDiscStolenInfo('trash');
+        $surrender->setDiscDestroyed(null);
+        $surrender->setDiscLost(null);
+        $surrender->setDiscLostInfo(null);
+        $surrender->setDiscStolen(null);
+        $surrender->setDiscStolenInfo(null);
     }
 
     private function setLicenceDocumentStatusAndInfo(CommandInterface $command, SurrenderEntity $surrender): void
