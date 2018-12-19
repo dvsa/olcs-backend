@@ -10,10 +10,15 @@ use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\View\Model\ViewModel;
+use Dvsa\Olcs\Transfer\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
+
 use Mockery as m;
 
 class EcmtSubmitApplicationTest extends CommandHandlerTestCase
@@ -28,6 +33,13 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
 
         $this->sut = new EcmtSubmitApplication();
 
+        $viewRendererService = m::mock(\Zend\View\Renderer\RendererInterface::class);
+        $viewRendererService->shouldReceive('render')->with(m::type(ViewModel::class))->andReturn('HTML');
+
+        $this->mockedSmServices = [
+            'ViewRenderer' => $viewRendererService
+        ];
+
         parent::setUp();
     }
 
@@ -35,7 +47,8 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             EcmtPermitApplication::STATUS_UNDER_CONSIDERATION,
-            EcmtPermitApplication::PERMIT_TYPE
+            EcmtPermitApplication::PERMIT_TYPE,
+            EcmtPermitApplication::INTER_JOURNEY_MORE_90
         ];
 
         $this->references = [
@@ -72,8 +85,52 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $ecmtPermitApplication->shouldReceive('getPermitsRequired')
             ->andReturn(3);
 
+        $permitType = $this->refData[EcmtPermitApplication::PERMIT_TYPE];
+        $ecmtPermitApplication->shouldReceive('getPermitType')
+            ->andReturn($permitType);
+
         $ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
+
+        $licence = m::mock(Licence::class);
+        $organisation = m::mock(Organisation::class);
+
+        $licence->shouldReceive('getOrganisation')
+            ->andReturn($organisation);
+
+        $licence->shouldReceive('getLicNo')
+            ->andReturn('OB666666');
+
+
+        $organisation->shouldReceive('getName')
+            ->andReturn('Organisation Name');
+
+        $ecmtPermitApplication->shouldReceive('getLicence')
+            ->andReturn($licence);
+
+        $ecmtPermitApplication->shouldReceive('getEmissions')
+            ->andReturn(1);
+
+        $ecmtPermitApplication->shouldReceive('getCabotage')
+            ->andReturn(0);
+
+        $ecmtPermitApplication->shouldReceive('getHasRestrictedCountries')
+            ->andReturn(0);
+
+        $ecmtPermitApplication->shouldReceive('getTrips')
+            ->andReturn(12);
+
+        $ecmtPermitApplication->shouldReceive('getInternationalJourneys')
+            ->andReturn($this->refData[EcmtPermitApplication::INTER_JOURNEY_MORE_90]);
+
+        $ecmtPermitApplication->shouldReceive('getApplicationRef')
+            ->andReturn('OB666666 / 3');
+
+        $sector = m::mock(Sectors::class);
+        $sector->shouldReceive('getName')->andReturn('Metal');
+
+        $ecmtPermitApplication->shouldReceive('getSectors')
+            ->andReturn($sector);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)
@@ -86,6 +143,17 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->ordered();
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')->times(3);
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $this->expectedSideEffect(
+            SnapshotCmd::class,
+            [
+                'id' => 129,
+                'html' => 'HTML'
+            ],
+            $result1
+        );
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtAppSubmitted::class,
@@ -107,7 +175,8 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
-                'Permit application updated'
+                'Permit application updated',
+                'Snapshot created'
             ],
             $result->getMessages()
         );
