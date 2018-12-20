@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update as Sut;
-use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
@@ -48,17 +47,17 @@ class UpdateTest extends CommandHandlerTestCase
 
         if (array_key_exists('status', $data)) {
             $surrenderEntity->shouldReceive('setStatus')->once();
-            if ($data['status'] == 'surr_sts_discs_complete') {
+            if ($data['status'] == SurrenderEntity::SURRENDER_STATUS_DISCS_COMPLETE) {
                 $surrenderEntity->shouldReceive('setDiscDestroyed')->with(null)->once();
                 $surrenderEntity->shouldReceive('setDiscLost')->with(null)->once();
                 $surrenderEntity->shouldReceive('setDiscLostInfo')->with(null)->once();
                 $surrenderEntity->shouldReceive('setDiscStolen')->with(null)->once();
                 $surrenderEntity->shouldReceive('setDiscStolenInfo')->with(null)->once();
-            } elseif ($data['status'] == 'surr_sts_lic_docs_complete') {
+            } elseif ($data['status'] == SurrenderEntity::SURRENDER_STATUS_LIC_DOCS_COMPLETE) {
                 if (array_key_exists('licenceDocumentStatus', $data)) {
                     $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
                     $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
-                    if ($data['licenceDocumentStatus'] == Surrender::SURRENDER_DOC_STATUS_DESTROYED
+                    if ($data['licenceDocumentStatus'] == SurrenderEntity::SURRENDER_DOC_STATUS_DESTROYED
                         && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
                         $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
                     } else {
