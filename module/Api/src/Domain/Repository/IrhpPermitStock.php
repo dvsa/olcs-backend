@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
 /**
  * IrhpPermitStock
@@ -15,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 class IrhpPermitStock extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    protected $alias = 'ips';
 
     /**
      * Retrieves the Irhp Permit Stock
@@ -52,5 +55,28 @@ class IrhpPermitStock extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    /**
+     * Returns list of stocks ready to print
+     *
+     * @return array
+     */
+    public function fetchReadyToPrint()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias, 'ipt', 'rd')
+            ->innerJoin($this->alias . '.irhpPermitType', 'ipt')
+            ->innerJoin('ipt.name', 'rd')
+            ->innerJoin($this->alias . '.irhpPermitRanges', 'ipr')
+            ->innerJoin('ipr.irhpPermits', 'ip')
+            ->Where($qb->expr()->in('ip.status', ':statuses'))
+            ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
+            ->orderBy('rd.displayOrder', 'ASC')
+            ->orderBy($this->alias . '.validFrom', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 }

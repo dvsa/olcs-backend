@@ -74,16 +74,15 @@ class IrhpPermit extends AbstractRepository
                 ->setParameter('ecmtId', $query->getId());
             $qb->orderBy($this->alias . '.permitNumber', 'DESC');
         } elseif ($query instanceof ReadyToPrint) {
+            if ($query->getIrhpPermitStock() != null) {
+                $qb->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
+                    ->innerJoin('ipr.irhpPermitStock', 'ips')
+                    ->andWhere($qb->expr()->eq('ips.id', ':stockId'))
+                    ->setParameter('stockId', $query->getIrhpPermitStock());
+            }
+
             $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
-                ->setParameter(
-                    'statuses',
-                    [
-                        Entity::STATUS_PENDING,
-                        Entity::STATUS_AWAITING_PRINTING,
-                        Entity::STATUS_PRINTING,
-                        Entity::STATUS_ERROR,
-                    ]
-                );
+                ->setParameter('statuses', Entity::$readyToPrintStatuses);
             $qb->orderBy($this->alias . '.permitNumber', 'ASC');
         } elseif ($query instanceof ReadyToPrintConfirm) {
             $qb->andWhere($qb->expr()->in($this->alias . '.id', ':ids'))

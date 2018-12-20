@@ -551,6 +551,7 @@ return [
     TransferQuery\IrhpPermitJurisdiction\GetList::class => QueryHandler\IrhpPermitJurisdiction\GetList::class,
 
     // Permit Printing
+    TransferQuery\Permits\ReadyToPrintStock::class => QueryHandler\Permits\ReadyToPrintStock::class,
     TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
     TransferQuery\Permits\ReadyToPrintConfirm::class => QueryHandler\Permits\ReadyToPrintConfirm::class,
 
