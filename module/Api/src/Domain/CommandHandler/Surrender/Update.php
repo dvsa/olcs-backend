@@ -116,8 +116,8 @@ final class Update extends AbstractSurrenderCommandHandler
             in_array(
                 $command->getLicenceDocumentStatus(),
                 [
-                    Surrender::SURRENDER_DOC_STATUS_LOST,
-                    Surrender::SURRENDER_DOC_STATUS_STOLEN
+                    SurrenderEntity::SURRENDER_DOC_STATUS_LOST,
+                    SurrenderEntity::SURRENDER_DOC_STATUS_STOLEN
                 ]
             )) {
             $surrender->setLicenceDocumentInfo($command->getLicenceDocumentInfo());
