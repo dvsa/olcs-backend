@@ -86,10 +86,10 @@ final class Update extends AbstractSurrenderCommandHandler
     private function setContentByStatus(CommandInterface $command, SurrenderEntity $surrender): void
     {
         switch ($command->getStatus()) {
-            case Surrender::SURRENDER_STATUS_DISCS_COMPLETE:
+            case SurrenderEntity::SURRENDER_STATUS_DISCS_COMPLETE:
                 $this->clearDiscFields($surrender);
                 break;
-            case Surrender::SURRENDER_STATUS_LIC_DOCS_COMPLETE:
+            case SurrenderEntity::SURRENDER_STATUS_LIC_DOCS_COMPLETE:
                 $this->setLicenceDocumentStatusAndInfo($command, $surrender);
                 break;
         }
