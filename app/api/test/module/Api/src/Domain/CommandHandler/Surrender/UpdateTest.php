@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;

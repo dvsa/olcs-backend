@@ -42,6 +42,15 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     use ProcessDateTrait;
 
     /**
+     * Community licence document info
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="community_licence_document_info", length=65535, nullable=true)
+     */
+    protected $communityLicenceDocumentInfo;
+
+    /**
      * Community licence document status
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -170,6 +179,15 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     protected $licence;
 
     /**
+     * Licence document info
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="licence_document_info", length=65535, nullable=true)
+     */
+    protected $licenceDocumentInfo;
+
+    /**
      * Licence document status
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -208,6 +226,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Set the community licence document info
+     *
+     * @param string $communityLicenceDocumentInfo new value being set
+     *
+     * @return Surrender
+     */
+    public function setCommunityLicenceDocumentInfo($communityLicenceDocumentInfo)
+    {
+        $this->communityLicenceDocumentInfo = $communityLicenceDocumentInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get the community licence document info
+     *
+     * @return string
+     */
+    public function getCommunityLicenceDocumentInfo()
+    {
+        return $this->communityLicenceDocumentInfo;
+    }
 
     /**
      * Set the community licence document status
@@ -531,6 +573,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the licence document info
+     *
+     * @param string $licenceDocumentInfo new value being set
+     *
+     * @return Surrender
+     */
+    public function setLicenceDocumentInfo($licenceDocumentInfo)
+    {
+        $this->licenceDocumentInfo = $licenceDocumentInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get the licence document info
+     *
+     * @return string
+     */
+    public function getLicenceDocumentInfo()
+    {
+        return $this->licenceDocumentInfo;
     }
 
     /**
