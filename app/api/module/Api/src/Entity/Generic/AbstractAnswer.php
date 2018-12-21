@@ -32,22 +32,85 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     use ProcessDateTrait;
 
     /**
-     * Array
+     * Ans array
      *
      * @var string
      *
-     * @ORM\Column(type="text", name="array", nullable=true)
+     * @ORM\Column(type="text", name="ans_array", nullable=true)
      */
-    protected $array;
+    protected $ansArray;
 
     /**
-     * Boolean
+     * Ans boolean
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="boolean", nullable=true)
+     * @ORM\Column(type="boolean", name="ans_boolean", nullable=true)
      */
-    protected $boolean;
+    protected $ansBoolean;
+
+    /**
+     * Ans date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="ans_date", nullable=true)
+     */
+    protected $ansDate;
+
+    /**
+     * Ans datetime
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="ans_datetime", nullable=true)
+     */
+    protected $ansDatetime;
+
+    /**
+     * Ans decimal
+     *
+     * @var float
+     *
+     * @ORM\Column(type="decimal", name="ans_decimal", precision=18, scale=4, nullable=true)
+     */
+    protected $ansDecimal;
+
+    /**
+     * Ans filename
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ans_filename", length=255, nullable=true)
+     */
+    protected $ansFilename;
+
+    /**
+     * Ans integer
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="ans_integer", nullable=true)
+     */
+    protected $ansInteger;
+
+    /**
+     * Ans string
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="ans_string", length=255, nullable=true)
+     */
+    protected $ansString;
+
+    /**
+     * Ans text
+     *
+     * @var string
+     *
+     * @ORM\Column(type="text", name="ans_text", nullable=true)
+     */
+    protected $ansText;
 
     /**
      * Created by
@@ -70,33 +133,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $createdOn;
 
     /**
-     * Date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="date", name="date", nullable=true)
-     */
-    protected $date;
-
-    /**
-     * Datetime
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="datetime", nullable=true)
-     */
-    protected $datetime;
-
-    /**
-     * Decimal
-     *
-     * @var float
-     *
-     * @ORM\Column(type="decimal", name="decimal", precision=18, scale=4, nullable=true)
-     */
-    protected $decimal;
-
-    /**
      * Document id
      *
      * @var int
@@ -104,15 +140,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      * @ORM\Column(type="integer", name="document_id", nullable=true)
      */
     protected $documentId;
-
-    /**
-     * Filename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="filename", length=255, nullable=true)
-     */
-    protected $filename;
 
     /**
      * Identifier - Id
@@ -124,15 +151,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
-
-    /**
-     * Integer
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="integer", nullable=true)
-     */
-    protected $integer;
 
     /**
      * Irhp permit application
@@ -179,24 +197,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $questionText;
 
     /**
-     * String
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="string", length=255, nullable=true)
-     */
-    protected $string;
-
-    /**
-     * Text
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="text", nullable=true)
-     */
-    protected $text;
-
-    /**
      * Version
      *
      * @var int
@@ -207,51 +207,231 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $version = 1;
 
     /**
-     * Set the array
+     * Set the ans array
      *
-     * @param string $array new value being set
+     * @param string $ansArray new value being set
      *
      * @return Answer
      */
-    public function setArray($array)
+    public function setAnsArray($ansArray)
     {
-        $this->array = $array;
+        $this->ansArray = $ansArray;
 
         return $this;
     }
 
     /**
-     * Get the array
+     * Get the ans array
      *
      * @return string
      */
-    public function getArray()
+    public function getAnsArray()
     {
-        return $this->array;
+        return $this->ansArray;
     }
 
     /**
-     * Set the boolean
+     * Set the ans boolean
      *
-     * @param boolean $boolean new value being set
+     * @param boolean $ansBoolean new value being set
      *
      * @return Answer
      */
-    public function setBoolean($boolean)
+    public function setAnsBoolean($ansBoolean)
     {
-        $this->boolean = $boolean;
+        $this->ansBoolean = $ansBoolean;
 
         return $this;
     }
 
     /**
-     * Get the boolean
+     * Get the ans boolean
      *
      * @return boolean
      */
-    public function getBoolean()
+    public function getAnsBoolean()
     {
-        return $this->boolean;
+        return $this->ansBoolean;
+    }
+
+    /**
+     * Set the ans date
+     *
+     * @param \DateTime $ansDate new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsDate($ansDate)
+    {
+        $this->ansDate = $ansDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getAnsDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->ansDate);
+        }
+
+        return $this->ansDate;
+    }
+
+    /**
+     * Set the ans datetime
+     *
+     * @param \DateTime $ansDatetime new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsDatetime($ansDatetime)
+    {
+        $this->ansDatetime = $ansDatetime;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans datetime
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getAnsDatetime($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->ansDatetime);
+        }
+
+        return $this->ansDatetime;
+    }
+
+    /**
+     * Set the ans decimal
+     *
+     * @param float $ansDecimal new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsDecimal($ansDecimal)
+    {
+        $this->ansDecimal = $ansDecimal;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans decimal
+     *
+     * @return float
+     */
+    public function getAnsDecimal()
+    {
+        return $this->ansDecimal;
+    }
+
+    /**
+     * Set the ans filename
+     *
+     * @param string $ansFilename new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsFilename($ansFilename)
+    {
+        $this->ansFilename = $ansFilename;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans filename
+     *
+     * @return string
+     */
+    public function getAnsFilename()
+    {
+        return $this->ansFilename;
+    }
+
+    /**
+     * Set the ans integer
+     *
+     * @param int $ansInteger new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsInteger($ansInteger)
+    {
+        $this->ansInteger = $ansInteger;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans integer
+     *
+     * @return int
+     */
+    public function getAnsInteger()
+    {
+        return $this->ansInteger;
+    }
+
+    /**
+     * Set the ans string
+     *
+     * @param string $ansString new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsString($ansString)
+    {
+        $this->ansString = $ansString;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans string
+     *
+     * @return string
+     */
+    public function getAnsString()
+    {
+        return $this->ansString;
+    }
+
+    /**
+     * Set the ans text
+     *
+     * @param string $ansText new value being set
+     *
+     * @return Answer
+     */
+    public function setAnsText($ansText)
+    {
+        $this->ansText = $ansText;
+
+        return $this;
+    }
+
+    /**
+     * Get the ans text
+     *
+     * @return string
+     */
+    public function getAnsText()
+    {
+        return $this->ansText;
     }
 
     /**
@@ -309,90 +489,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the date
-     *
-     * @param \DateTime $date new value being set
-     *
-     * @return Answer
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
-     * Get the date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->date);
-        }
-
-        return $this->date;
-    }
-
-    /**
-     * Set the datetime
-     *
-     * @param \DateTime $datetime new value being set
-     *
-     * @return Answer
-     */
-    public function setDatetime($datetime)
-    {
-        $this->datetime = $datetime;
-
-        return $this;
-    }
-
-    /**
-     * Get the datetime
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDatetime($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->datetime);
-        }
-
-        return $this->datetime;
-    }
-
-    /**
-     * Set the decimal
-     *
-     * @param float $decimal new value being set
-     *
-     * @return Answer
-     */
-    public function setDecimal($decimal)
-    {
-        $this->decimal = $decimal;
-
-        return $this;
-    }
-
-    /**
-     * Get the decimal
-     *
-     * @return float
-     */
-    public function getDecimal()
-    {
-        return $this->decimal;
-    }
-
-    /**
      * Set the document id
      *
      * @param int $documentId new value being set
@@ -417,30 +513,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the filename
-     *
-     * @param string $filename new value being set
-     *
-     * @return Answer
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
-
-        return $this;
-    }
-
-    /**
-     * Get the filename
-     *
-     * @return string
-     */
-    public function getFilename()
-    {
-        return $this->filename;
-    }
-
-    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -462,30 +534,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set the integer
-     *
-     * @param int $integer new value being set
-     *
-     * @return Answer
-     */
-    public function setInteger($integer)
-    {
-        $this->integer = $integer;
-
-        return $this;
-    }
-
-    /**
-     * Get the integer
-     *
-     * @return int
-     */
-    public function getInteger()
-    {
-        return $this->integer;
     }
 
     /**
@@ -588,54 +636,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     public function getQuestionText()
     {
         return $this->questionText;
-    }
-
-    /**
-     * Set the string
-     *
-     * @param string $string new value being set
-     *
-     * @return Answer
-     */
-    public function setString($string)
-    {
-        $this->string = $string;
-
-        return $this;
-    }
-
-    /**
-     * Get the string
-     *
-     * @return string
-     */
-    public function getString()
-    {
-        return $this->string;
-    }
-
-    /**
-     * Set the text
-     *
-     * @param string $text new value being set
-     *
-     * @return Answer
-     */
-    public function setText($text)
-    {
-        $this->text = $text;
-
-        return $this;
-    }
-
-    /**
-     * Get the text
-     *
-     * @return string
-     */
-    public function getText()
-    {
-        return $this->text;
     }
 
     /**
