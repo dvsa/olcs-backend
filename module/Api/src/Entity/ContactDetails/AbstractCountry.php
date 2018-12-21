@@ -139,6 +139,15 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $isEcmtState = 0;
 
     /**
+     * Is eea state
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_eea_state", nullable=false, options={"default": 0})
+     */
+    protected $isEeaState = 0;
+
+    /**
      * Is member state
      *
      * @var string
@@ -576,6 +585,30 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function getIsEcmtState()
     {
         return $this->isEcmtState;
+    }
+
+    /**
+     * Set the is eea state
+     *
+     * @param boolean $isEeaState new value being set
+     *
+     * @return Country
+     */
+    public function setIsEeaState($isEeaState)
+    {
+        $this->isEeaState = $isEeaState;
+
+        return $this;
+    }
+
+    /**
+     * Get the is eea state
+     *
+     * @return boolean
+     */
+    public function getIsEeaState()
+    {
+        return $this->isEeaState;
     }
 
     /**
