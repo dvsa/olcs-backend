@@ -32,7 +32,7 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
         $surrender = $this->getRepo('Surrender')->fetchOneByLicence($licenceId, Query::HYDRATE_OBJECT);
         return $this->result(
             $surrender,
-            ['licence', 'status', 'licenceDocumentStatus', 'communityLicenceDocumentStatus'],
+            ['licence', 'status', 'licenceDocumentStatus', 'communityLicenceDocumentStatus', 'digitalSignature'],
             [
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures()
             ]
