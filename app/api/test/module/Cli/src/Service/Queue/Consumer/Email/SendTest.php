@@ -91,7 +91,8 @@ class SendTest extends AbstractConsumerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Queue\Retry::class,
             [
                 'item' => $item,
-                'retryAfter' => 900
+                'retryAfter' => 900,
+                'lastError' => $message,
             ],
             new Result(),
             false
@@ -212,7 +213,7 @@ class SendTest extends AbstractConsumerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             [
                 'item' => $item,
-                'lastError' => 'Maximum attempts exceeded',
+                'lastError' => QueueEntity::ERR_MAX_ATTEMPTS,
             ],
             new Result(),
             false
@@ -221,7 +222,7 @@ class SendTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Failed to process message: 99 ' . $options . ' Maximum attempts exceeded',
+            'Failed to process message: 99 ' . $options . ' ' . QueueEntity::ERR_MAX_ATTEMPTS,
             $result
         );
     }

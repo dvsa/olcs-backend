@@ -33,7 +33,7 @@ class ReportDownload extends AbstractConsumer
     public function processMessage(QueueEntity $item)
     {
         if ($item->getAttempts() > self::MAX_ATTEMPTS) {
-            return $this->failed($item, 'Maximum attempts exceeded');
+            return $this->failed($item, QueueEntity::ERR_MAX_ATTEMPTS);
         }
 
         $options = (array) json_decode($item->getOptions());

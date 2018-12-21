@@ -85,7 +85,7 @@ abstract class AbstractConsumer implements MessageConsumerInterface, ServiceLoca
      */
     protected function retry(QueueEntity $item, $retryAfter, $reason = null)
     {
-        $command = RetryCmd::create(['item' => $item, 'retryAfter' => $retryAfter]);
+        $command = RetryCmd::create(['item' => $item, 'retryAfter' => $retryAfter, 'lastError' => $reason]);
         $this->handleSideEffectCommand($command);
 
         $description = 'Requeued message';
