@@ -64,7 +64,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
     public function processMessage(QueueEntity $item)
     {
         if (!empty($this->maxAttempts) && $item->getAttempts() > $this->maxAttempts) {
-            return $this->failed($item, 'Maximum attempts exceeded');
+            return $this->failed($item, QueueEntity::ERR_MAX_ATTEMPTS);
         }
 
         $commandClass = $this->getCommandName($item);
@@ -103,7 +103,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
 
     /**
      * Method to handle the Service Manager exception. Default to failed.
-     * 
+     *
      * @param QueueEntity $item queue item
      * @param \Exception  $e    exception
      *

@@ -20,10 +20,14 @@ class RetryTest extends \PHPUnit\Framework\TestCase
     public function testStructure()
     {
         $item = new QueueEntity();
-        $command = Retry::create(['item' => $item, 'retryAfter' => 60]);
+        $command = Retry::create(['item' => $item, 'retryAfter' => 60, 'lastError' => 'last error']);
 
         $this->assertSame($item, $command->getItem());
         $this->assertEquals(60, $command->getRetryAfter());
-        $this->assertEquals(['item' => $item, 'retryAfter' => 60], $command->getArrayCopy());
+        $this->assertEquals('last error', $command->getLastError());
+        $this->assertEquals(
+            ['item' => $item, 'retryAfter' => 60, 'lastError' => 'last error'],
+            $command->getArrayCopy()
+        );
     }
 }
