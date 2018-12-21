@@ -534,6 +534,7 @@ return [
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
 
     // IRHP Permit Type
+    TransferQuery\IrhpPermitType\ById::class => QueryHandler\IrhpPermitType\ById::class,
     TransferQuery\IrhpPermitType\GetList::class => QueryHandler\IrhpPermitType\GetList::class,
 
     // IRHP Permit Window
