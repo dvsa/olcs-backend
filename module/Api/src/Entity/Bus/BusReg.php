@@ -1311,7 +1311,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         });
 
 
-        if (!empty(additional)) {
+        if (!empty($additional)) {
             return $this->serviceNo . '(' . implode(',', $additional) . ')';
         }
 
