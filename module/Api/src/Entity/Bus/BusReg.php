@@ -1303,13 +1303,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             $additional[] = $otherService->getServiceNo();
         }
         //strip out any empty string values except 0
-        $additional = array_filter($additional, function ($x) {
-            if ((int) $x === 0) {
-                return true;
-            }
-            $x = trim($x);
-            return empty($x);
-        });
+        $additional = array_filter($additional, 'strlen');
 
 
         if (!empty($additional)) {
