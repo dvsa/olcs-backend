@@ -4,7 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocatePermits as AllocatePermitsCmd;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -22,7 +24,7 @@ use DateTime;
  */
 final class AllocatePermits extends AbstractCommandHandler implements ToggleRequiredInterface
 {
-    use ToggleAwareTrait;
+    use QueueAwareTrait, ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
@@ -54,11 +56,20 @@ final class AllocatePermits extends AbstractCommandHandler implements ToggleRequ
         );
         $this->getRepo()->save($ecmtPermitApplication);
 
-        $result = new Result();
-        $result->addId('ecmtPermitApplication', $ecmtPermitApplicationId);
-        $result->addMessage('Permit allocation complete for ECMT application');
+        $this->result->merge(
+            $this->handleSideEffect(
+                $this->emailQueue(
+                    SendEcmtIssued::class,
+                    [ 'id' => $ecmtPermitApplicationId ],
+                    $ecmtPermitApplicationId
+                )
+            )
+        );
 
-        return $result;
+        $this->result->addId('ecmtPermitApplication', $ecmtPermitApplicationId);
+        $this->result->addMessage('Permit allocation complete for ECMT application');
+
+        return $this->result;
     }
 
     /**
