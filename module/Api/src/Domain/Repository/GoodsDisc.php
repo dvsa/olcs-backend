@@ -127,7 +127,6 @@ class GoodsDisc extends AbstractRepository
 
             $qb->setParameter('operatorType1', LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE);
             $qb->setParameter('licenceLicenceType', $licenceType);
-
         }
         $qb->andWhere($qb->expr()->in('lvl.status', ':activeStatuses'));
         $qb->setParameter('activeStatuses', $activeStatuses);
