@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
@@ -187,7 +188,6 @@ class GoodsDiscTest extends RepositoryTestCase
     }
 
 
-
     public function testSetPrintingOn()
     {
         $discs = [1, 2];
@@ -258,7 +258,10 @@ class GoodsDiscTest extends RepositoryTestCase
         $stmt->shouldReceive('rowCount')->with()->once()->andReturn($rowCount);
 
         $this->expectQueryWithData(
-            'LicenceVehicle\CeaseDiscsForLicenceVehicle', ['licenceVehicle' => $lvId], [], $stmt
+            'LicenceVehicle\CeaseDiscsForLicenceVehicle',
+            ['licenceVehicle' => $lvId],
+            [],
+            $stmt
         );
 
         $this->assertSame($rowCount, $this->sut->ceaseDiscsForLicenceVehicle($lvId));
@@ -371,6 +374,4 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->assertSame(83, $this->sut->createDiscsForLicence(1502));
     }
-
-
 }
