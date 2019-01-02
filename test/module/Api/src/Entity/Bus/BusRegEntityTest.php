@@ -2397,7 +2397,7 @@ class BusRegEntityTest extends EntityTester
         $otherServiceNo4 = new BusRegOtherServiceEntity(new Entity(), $serviceNo4);
         $serviceNo = '123';
 
-        $otherServiceNumbers = new ArrayCollection([$otherServiceNo1, $otherServiceNo2]);
+        $otherServiceNumbers = new ArrayCollection([$otherServiceNo1, $otherServiceNo2,$otherServiceNo3, $otherServiceNo4]);
         $expectedFormatted = $serviceNo . '(' . $serviceNo1 . ',' . $serviceNo2 . ','.$serviceNo3.')';
 
         return [
