@@ -68,6 +68,7 @@ class IrhpPermitStock extends AbstractRepository
 
         $qb
             ->select($this->alias, 'ipt', 'rd')
+            ->distinct()
             ->innerJoin($this->alias . '.irhpPermitType', 'ipt')
             ->innerJoin('ipt.name', 'rd')
             ->innerJoin($this->alias . '.irhpPermitRanges', 'ipr')
@@ -77,6 +78,6 @@ class IrhpPermitStock extends AbstractRepository
             ->orderBy('rd.displayOrder', 'ASC')
             ->orderBy($this->alias . '.validFrom', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }
