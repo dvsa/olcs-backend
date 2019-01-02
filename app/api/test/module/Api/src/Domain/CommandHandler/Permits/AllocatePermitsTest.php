@@ -4,6 +4,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtIssued;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocatePermits;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
@@ -124,6 +126,16 @@ class AllocatePermitsTest extends CommandHandlerTestCase
                 return true;
             }));
 
+        $emailResult = new Result();
+        $emailResult->addMessage('Issuing email sent');
+
+        $this->expectedEmailQueueSideEffect(
+            SendEcmtIssued::class,
+            ['id' => $ecmtPermitApplicationId],
+            $ecmtPermitApplicationId,
+            $emailResult
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(6, $permitSaveCount);
@@ -133,6 +145,7 @@ class AllocatePermitsTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
+                'Issuing email sent',
                 'Permit allocation complete for ECMT application'
             ],
             $result->getMessages()
