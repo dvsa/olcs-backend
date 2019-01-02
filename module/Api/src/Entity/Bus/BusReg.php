@@ -1307,7 +1307,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             if ((int) $x === 0) {
                 return true;
             }
-            return empty(trim($x));
+            $x = trim($x);
+            return empty($x);
         });
 
 
