@@ -105,6 +105,7 @@ return [
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
+    TransferQuery\Licence\GoodsDiscCount::class => QueryHandler\Licence\GoodsDiscCount::class,
     TransferQuery\Licence\GoodsVehicles::class => QueryHandler\Licence\GoodsVehicles::class,
     TransferQuery\Licence\GoodsVehiclesExport::class => QueryHandler\Licence\GoodsVehiclesExport::class,
     TransferQuery\Licence\OtherActiveLicences::class => QueryHandler\Licence\OtherActiveLicences::class,
@@ -533,6 +534,7 @@ return [
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
 
     // IRHP Permit Type
+    TransferQuery\IrhpPermitType\ById::class => QueryHandler\IrhpPermitType\ById::class,
     TransferQuery\IrhpPermitType\GetList::class => QueryHandler\IrhpPermitType\GetList::class,
 
     // IRHP Permit Window
@@ -622,6 +624,7 @@ return [
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
+    TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\LastOpenWindow::class => QueryHandler\Permits\LastOpenWindow::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,

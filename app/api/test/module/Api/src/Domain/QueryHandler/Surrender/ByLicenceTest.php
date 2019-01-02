@@ -29,7 +29,19 @@ class ByLicenceTest extends QueryHandlerTestCase
         $this->repoMap['SystemParameter']->shouldReceive(
             'getDisableGdsVerifySignatures'
         )->andReturn(true);
-        $expected = new Result($surrender, ['licence'], ['disableSignatures' => true]);
+        $expected = new Result(
+            $surrender,
+            [
+                'licence',
+                'status',
+                'licenceDocumentStatus',
+                'communityLicenceDocumentStatus',
+                'digitalSignature'
+            ],
+            [
+                'disableSignatures' => true
+            ]
+        );
         $this->assertEquals($expected, $this->sut->handleQuery($query));
     }
 }

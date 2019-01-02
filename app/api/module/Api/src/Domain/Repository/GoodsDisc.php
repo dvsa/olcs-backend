@@ -6,8 +6,10 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Doctrine\ORM\Query;
@@ -78,13 +80,13 @@ class GoodsDisc extends AbstractRepository
                     //isInterm = 1
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
-                        $qb->expr()->eq($this->alias. '.isInterim', 1),
+                        $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
                     // isInterm = 0
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
-                        $qb->expr()->eq($this->alias. '.isInterim', 0),
+                        $qb->expr()->eq($this->alias . '.isInterim', 0),
                         $qb->expr()->eq('lvllt.id', ':licenceLicenceType')
                     )
                 )
@@ -104,7 +106,7 @@ class GoodsDisc extends AbstractRepository
                     $qb->expr()->andX(
                         // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
-                        $qb->expr()->eq($this->alias. '.isInterim', 1),
+                        $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvagp.id', ':operatorType'),
                         $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
@@ -112,7 +114,7 @@ class GoodsDisc extends AbstractRepository
                     $qb->expr()->andX(
                         // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
-                        $qb->expr()->eq($this->alias. '.isInterim', 0),
+                        $qb->expr()->eq($this->alias . '.isInterim', 0),
                         $qb->expr()->eq('lvlgp.id', ':operatorType1'),
                         $qb->expr()->eq('lvllt.id', ':licenceLicenceType')
                     )
@@ -259,5 +261,29 @@ class GoodsDisc extends AbstractRepository
                     'isCopy' => 0,
                 ]
             );
+    }
+
+    public function countForLicence($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select('count(gd)')
+            ->innerJoin($this->alias . '.licenceVehicle', 'lv')
+            ->innerJoin('lv.licence', 'lvl')
+            ->where($qb->expr()->eq('lvl.id', ':id'))
+            ->groupBy('lvl.id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1);
+
+
+        try {
+            $count = $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $exception) {
+            $count = 0;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+
+        return ['discCount' => $count];
     }
 }
