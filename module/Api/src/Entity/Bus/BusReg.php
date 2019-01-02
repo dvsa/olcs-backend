@@ -1304,7 +1304,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         }
         //strip out any empty string values except 0
         $additional = array_filter($additional, function ($x) {
-            if ($x === 0 || $x === "0" || $x === '0') {
+            if ((int) $x === 0) {
                 return true;
             }
             return (bool)trim($x);
