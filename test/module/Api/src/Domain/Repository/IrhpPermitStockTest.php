@@ -109,7 +109,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchReadyToPrint());
 
         $expectedQuery = 'BLAH '
-            . 'SELECT ips, ipt, rd '
+            . 'SELECT ips, ipt, rd DISTINCT '
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ipt.name rd '
             . 'INNER JOIN ips.irhpPermitRanges ipr '
