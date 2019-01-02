@@ -41,12 +41,12 @@ class IrhpPermitStock extends AbstractRepository
             ->from(Entity::class, 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->where($query->expr()->andX(
-                $query->expr()->gte('ips.validFrom', '?1'),
+                $query->expr()->lte('?1', 'ips.validTo'),
                 $query->expr()->eq('ipt.name', '?2')
             ))
             ->setParameter(1, $date)
             ->setParameter(2, $permitType)
-            ->orderBy('ips.validTo', 'ASC')
+            ->orderBy('ips.validFrom', 'ASC')
             ->getQuery()
             ->getResult($hydrationMode);
 
