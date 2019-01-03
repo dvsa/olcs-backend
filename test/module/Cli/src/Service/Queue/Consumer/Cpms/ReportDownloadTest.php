@@ -95,7 +95,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
             \Dvsa\Olcs\Api\Domain\Command\Queue\Failed::class,
             [
                 'item' => $item,
-                'lastError' =>  'Maximum attempts exceeded',
+                'lastError' =>  QueueEntity::ERR_MAX_ATTEMPTS,
             ],
             new Result(),
             false
@@ -104,7 +104,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
         $result = $this->sut->processMessage($item);
 
         $this->assertEquals(
-            'Failed to process message: 99 {"reference":"OLCS-1234-ABCD"} Maximum attempts exceeded',
+            'Failed to process message: 99 {"reference":"OLCS-1234-ABCD"} ' . QueueEntity::ERR_MAX_ATTEMPTS,
             $result
         );
     }
@@ -130,7 +130,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
 
         $this->expectCommand(
             \Dvsa\Olcs\Api\Domain\Command\Queue\Retry::class,
-            ['item' => $item, 'retryAfter' => 60],
+            ['item' => $item, 'retryAfter' => 60, 'lastError' => $exceptionMessage],
             new Result(),
             false
         );

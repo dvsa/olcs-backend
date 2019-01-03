@@ -40,7 +40,7 @@ class RetryTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $item = new QueueEntity();
-        $command = Cmd::create(['item' => $item, 'retryAfter' => 60]);
+        $command = Cmd::create(['item' => $item, 'retryAfter' => 60, 'lastError' => 'last error']);
 
         $processAfter = new DateTime();
         $processAfter->add(new \DateInterval('PT60S'));
@@ -57,5 +57,6 @@ class RetryTest extends CommandHandlerTestCase
 
         $this->assertEquals(QueueEntity::STATUS_QUEUED, $item->getStatus()->getId());
         $this->assertEquals($expectedProcessAfter, $item->getProcessAfterDate()->format(\DateTime::W3C));
+        $this->assertEquals('last error', $item->getLastError());
     }
 }

@@ -122,7 +122,8 @@ class PrintJobTest extends AbstractConsumerTestCase
             RetryCmd::class,
             [
                 'item' => $item,
-                'retryAfter' => $retryAfter
+                'retryAfter' => $retryAfter,
+                'lastError' => $message,
             ],
             new Result(),
             false
