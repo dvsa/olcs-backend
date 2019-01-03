@@ -37,7 +37,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
      *     columns={"continuation_detail_id"}),
- *        @ORM\Index(name="fk_document_ecmt_application_id_ecmt_application_id",
+ *        @ORM\Index(name="fk_document_ecmt_permit_app_id_ecmt_permit_app_id",
      *     columns={"ecmt_application_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"})
@@ -153,14 +153,14 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $description;
 
     /**
-     * Ecmt application
+     * Ecmt permit application
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
-     * @ORM\JoinColumn(name="ecmt_application_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
      */
-    protected $ecmtApplication;
+    protected $ecmtPermitApplication;
 
     /**
      * Filename
@@ -717,27 +717,27 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the ecmt application
+     * Set the ecmt permit application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtApplication entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtPermitApplication entity being set as the value
      *
      * @return Document
      */
-    public function setEcmtApplication($ecmtApplication)
+    public function setEcmtPermitApplication($ecmtPermitApplication)
     {
-        $this->ecmtApplication = $ecmtApplication;
+        $this->ecmtPermitApplication = $ecmtPermitApplication;
 
         return $this;
     }
 
     /**
-     * Get the ecmt application
+     * Get the ecmt permit application
      *
      * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      */
-    public function getEcmtApplication()
+    public function getEcmtPermitApplication()
     {
-        return $this->ecmtApplication;
+        return $this->ecmtPermitApplication;
     }
 
     /**
