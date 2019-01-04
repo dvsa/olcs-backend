@@ -1087,10 +1087,6 @@ return [
     // Irhp Permit Create
     Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
 
-    // ECMT Permit Create HTML Snapshot
-    TransferCommand\Permits\StoreEcmtPermitApplicationSnapshot::class =>
-        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
-
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
 
@@ -1125,6 +1121,9 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+    // Create HTML Snapshot
+    Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
+        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,

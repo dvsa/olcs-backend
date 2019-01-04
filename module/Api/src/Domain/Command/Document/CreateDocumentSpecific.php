@@ -57,7 +57,7 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $user;
 
-    protected $ecmtApplication;
+    protected $ecmtPermitApplication;
 
     /**
      * Get filename
@@ -290,12 +290,12 @@ class CreateDocumentSpecific extends AbstractCommand
     }
 
     /**
-     * Get ecmt application
+     * Get ecmt permit application
      *
      * @return int
      */
-    public function getEcmtApplication()
+    public function getEcmtPermitApplication()
     {
-        return $this->ecmtApplication;
+        return $this->ecmtPermitApplication;
     }
 }
