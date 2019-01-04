@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Zend\View\Model\ViewModel;
-use Dvsa\Olcs\Transfer\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
+use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
 
 use Mockery as m;
 
