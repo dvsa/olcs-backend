@@ -54,8 +54,8 @@ class StoreEcmtPermitApplicationSnapshotTest extends CommandHandlerTestCase
             'isScan' => false,
             'filename' => 'Permit Application OG9654321 / 3 Snapshot (app submitted).html',
             'description' => 'Permit Application OG9654321 / 3 Snapshot (app submitted)',
-            'licence' => 703,
-            'ecmtApplication' => 3,
+            'licence' => '703',
+            'ecmtApplication' => null,
         ];
         $this->expectedSideEffect(Upload::class, $params, new Result());
 

@@ -132,6 +132,21 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $ecmtPermitApplication->shouldReceive('getSectors')
             ->andReturn($sector);
 
+        $data['permitType'] = $ecmtPermitApplication->getPermitType()->getDescription();
+        $data['operator'] = $ecmtPermitApplication->getLicence()->getOrganisation()->getName();
+        $data['ref'] = $ecmtPermitApplication->getApplicationRef();
+        $data['licence'] = $ecmtPermitApplication->getLicence()->getLicNo();
+        $data['emissions'] =  (int) $ecmtPermitApplication->getEmissions() === 1 ? 'Yes' : 'No';
+        $data['cabotage'] = (int) $ecmtPermitApplication->getCabotage() === 1 ? 'Yes' : 'No';
+        $data['limited-permits'] = (int) $ecmtPermitApplication->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+        $data['number-required'] = $ecmtPermitApplication->getPermitsRequired();
+        $data['trips'] = $ecmtPermitApplication->getTrips();
+        $data['int-journeys'] = $ecmtPermitApplication->getInternationalJourneys()->getDescription();
+        $data['goods'] = $ecmtPermitApplication->getSectors()->getName();
+
+        $ecmtPermitApplication->shouldReceive('returnSnapshotData')
+            ->andReturn($data);
+
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with($ecmtPermitApplicationId)
             ->andReturn($ecmtPermitApplication);
