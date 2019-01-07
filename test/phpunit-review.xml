@@ -39,10 +39,10 @@
             <directory>./module/Olcs</directory>
         </testsuite>
         <testsuite name="OLD Scanning">
-            <directory>./module/Scanning</directory>./Re
+            <directory>./module/Scanning</directory>
         </testsuite>
         <testsuite name="GdsVerify">
-            <directory>./module/GdsVerify</directory>./Re
+            <directory>./module/GdsVerify</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -74,5 +74,17 @@
     </filter>
     <listeners>
         <listener class="Coverage" file="./Coverage.php" />
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
+            <arguments>
+                <array>
+                    <element key="slowThreshold">
+                        <integer>500</integer>
+                    </element>
+                    <element key="reportLength">
+                        <integer>5</integer>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
     </listeners>
 </phpunit>

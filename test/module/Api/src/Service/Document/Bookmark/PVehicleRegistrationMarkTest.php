@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\PVehicleRegistrationMark;
 /**
  * PVehicleRegistrationMark Test
  */
-class PVehicleRegistrationMarkTest extends \PHPUnit_Framework_TestCase
+class PVehicleRegistrationMarkTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

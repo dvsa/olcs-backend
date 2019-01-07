@@ -7,6 +7,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Mockery as m;
 
@@ -31,7 +32,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
-        $gteFunc = m::mock(Func::class);
+        $lteFunc = m::mock(Func::class);
         $eqFunc = m::mock(Func::class);
         $andXFunc = m::mock(Func::class);
 
@@ -41,14 +42,14 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->andReturn($expr);
 
         $expr->shouldReceive('andX')
-            ->with($gteFunc, $eqFunc)
+            ->with($lteFunc, $eqFunc)
             ->once()
             ->andReturn($andXFunc);
 
-        $expr->shouldReceive('gte')
-            ->with('ips.validFrom', '?1')
+        $expr->shouldReceive('lte')
+            ->with('?1', 'ips.validTo')
             ->once()
-            ->andReturn($gteFunc)
+            ->andReturn($lteFunc)
             ->shouldReceive('eq')
             ->with('ipt.name', '?2')
             ->once()
@@ -79,7 +80,7 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('orderBy')
-            ->with('ips.validTo', 'ASC')
+            ->with('ips.validFrom', 'ASC')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getResult')
@@ -91,5 +92,37 @@ class IrhpPermitStockTest extends RepositoryTestCase
                 $expectedResult,
                 $this->sut->getNextIrhpPermitStockByPermitType($permitType, $date, Query::HYDRATE_ARRAY)
             );
+    }
+
+    public function testFetchReadyToPrint()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchReadyToPrint());
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ips, ipt, rd DISTINCT '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ipt.name rd '
+            . 'INNER JOIN ips.irhpPermitRanges ipr '
+            . 'INNER JOIN ipr.irhpPermits ip '
+            . 'AND ip.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'ORDER BY rd.displayOrder ASC '
+            . 'ORDER BY ips.validFrom ASC';
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

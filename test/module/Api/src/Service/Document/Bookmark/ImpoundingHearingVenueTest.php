@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\ImpoundingHearingVenue;
 /**
  * Impounding Hearing Venue Test
  */
-class ImpoundingHearingVenueTest extends \PHPUnit_Framework_TestCase
+class ImpoundingHearingVenueTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

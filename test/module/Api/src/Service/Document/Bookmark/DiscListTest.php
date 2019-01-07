@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class DiscListTest extends \PHPUnit_Framework_TestCase
+class DiscListTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

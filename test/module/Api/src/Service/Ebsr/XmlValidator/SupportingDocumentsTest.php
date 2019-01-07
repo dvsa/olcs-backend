@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr\XmlValidator;
 
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit_Framework_TestCase as TestCase;
+use \PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class SupportingDocumentsTest

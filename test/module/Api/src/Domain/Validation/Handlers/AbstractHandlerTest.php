@@ -57,7 +57,7 @@ class AbstractHandlerTest extends AbstractHandlerTestCase
 
     public function testCallMissing()
     {
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $user = $this->mockUser();
 

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrfoTaName as Sut;
 /**
  * IrfoTaName test
  */
-class IrfoTaNameTest extends \PHPUnit_Framework_TestCase
+class IrfoTaNameTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
@@ -18,7 +18,7 @@ class IrfoTaNameTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderValidDataProvider
+     * @dataProvider dpRenderValidDataProvider
      */
     public function testRender($results, $expected)
     {
@@ -28,7 +28,7 @@ class IrfoTaNameTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $bookmark->render());
     }
 
-    public function testRenderValidDataProvider()
+    public function dpRenderValidDataProvider()
     {
         return [
             [

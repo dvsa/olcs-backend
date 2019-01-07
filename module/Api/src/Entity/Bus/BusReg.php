@@ -702,7 +702,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
             $interval = new \DateInterval('P' . $busRules->getCancellationPeriod() . 'D');
 
 
-
             //this rule applies until the day AFTER the cancellation period
             //so for a 90 day cancellation period, short notice applies until the 91st day
             if ($effectiveDate->setTime(0, 0) <= $lastDateTime->add($interval)->setTime(0, 0)) {
@@ -1303,6 +1302,9 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         foreach ($this->otherServices as $otherService) {
             $additional[] = $otherService->getServiceNo();
         }
+        //strip out any empty string values except 0
+        $additional = array_filter($additional, 'strlen');
+
 
         if (!empty($additional)) {
             return $this->serviceNo . '(' . implode(',', $additional) . ')';

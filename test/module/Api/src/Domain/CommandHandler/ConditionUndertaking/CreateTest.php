@@ -66,7 +66,7 @@ class CreateTest extends CommandHandlerTestCase
             ['attachedTo' => 'cat_oc']
         );
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->sut->handleCommand($command);
     }
 
@@ -76,7 +76,7 @@ class CreateTest extends CommandHandlerTestCase
             []
         );
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
         $this->sut->handleCommand($command);
     }
 

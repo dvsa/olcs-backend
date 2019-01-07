@@ -7,6 +7,7 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -258,7 +259,10 @@ class GoodsDiscTest extends RepositoryTestCase
         $stmt->shouldReceive('rowCount')->with()->once()->andReturn($rowCount);
 
         $this->expectQueryWithData(
-            'LicenceVehicle\CeaseDiscsForLicenceVehicle', ['licenceVehicle' => $lvId], [], $stmt
+            'LicenceVehicle\CeaseDiscsForLicenceVehicle',
+            ['licenceVehicle' => $lvId],
+            [],
+            $stmt
         );
 
         $this->assertSame($rowCount, $this->sut->ceaseDiscsForLicenceVehicle($lvId));
@@ -372,5 +376,65 @@ class GoodsDiscTest extends RepositoryTestCase
         $this->assertSame(83, $this->sut->createDiscsForLicence(1502));
     }
 
+    public function testCountForLicence()
+    {
+        $licenceId = 1;
 
+        $qb = $this->createMockQb('{QUERY}');
+
+        $qb->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn(1);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->sut->countForLicence($licenceId);
+
+        $expectedQuery = '{QUERY} SELECT count(gd) INNER JOIN gd.licenceVehicle lv INNER JOIN lv.licence lvl AND lvl.id = [['. $licenceId . ']] GROUP BY lvl.id LIMIT 1';
+
+        self::assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testCountForLicenceNoResult()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+        $exception = new NoResultException();
+
+
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($exception);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->assertSame(['discCount' => 0], $this->sut->countForLicence($licenceId));
+    }
+
+    public function testCountForLicenceException()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+
+        $ex = new \Exception('testException');
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($ex);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->expectExceptionMessage('testException');
+
+        $this->sut->countForLicence($licenceId);
+    }
 }

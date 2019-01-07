@@ -60,7 +60,7 @@ class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
             ->with(Entity\User\Permission::SELFSERVE_USER, null)
             ->andReturn(true);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -88,7 +88,7 @@ class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
             ->with(Entity\User\Permission::SELFSERVE_USER, null)
             ->andReturn(false);
 
-        $this->setExpectedException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -117,7 +117,7 @@ class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
             ->with(Entity\User\Permission::SELFSERVE_USER, null)
             ->andReturn(false);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -101,15 +103,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $name;
 
     /**
-     * Permit type properties
-     *
-     * @var string
-     *
-     * @ORM\Column(type="text", name="permit_type_properties", nullable=true)
-     */
-    protected $permitTypeProperties;
-
-    /**
      * Version
      *
      * @var int
@@ -118,6 +111,38 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Irhp permit stock
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock",
+     *     mappedBy="irhpPermitType"
+     * )
+     */
+    protected $irhpPermitStocks;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->irhpPermitStocks = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -300,30 +325,6 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     }
 
     /**
-     * Set the permit type properties
-     *
-     * @param string $permitTypeProperties new value being set
-     *
-     * @return IrhpPermitType
-     */
-    public function setPermitTypeProperties($permitTypeProperties)
-    {
-        $this->permitTypeProperties = $permitTypeProperties;
-
-        return $this;
-    }
-
-    /**
-     * Get the permit type properties
-     *
-     * @return string
-     */
-    public function getPermitTypeProperties()
-    {
-        return $this->permitTypeProperties;
-    }
-
-    /**
      * Set the version
      *
      * @param int $version new value being set
@@ -345,6 +346,69 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the irhp permit stock
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being set as the value
+     *
+     * @return IrhpPermitType
+     */
+    public function setIrhpPermitStocks($irhpPermitStocks)
+    {
+        $this->irhpPermitStocks = $irhpPermitStocks;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit stocks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitStocks()
+    {
+        return $this->irhpPermitStocks;
+    }
+
+    /**
+     * Add a irhp permit stocks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being added
+     *
+     * @return IrhpPermitType
+     */
+    public function addIrhpPermitStocks($irhpPermitStocks)
+    {
+        if ($irhpPermitStocks instanceof ArrayCollection) {
+            $this->irhpPermitStocks = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitStocks->toArray(),
+                    $irhpPermitStocks->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitStocks->contains($irhpPermitStocks)) {
+            $this->irhpPermitStocks->add($irhpPermitStocks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit stocks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being removed
+     *
+     * @return IrhpPermitType
+     */
+    public function removeIrhpPermitStocks($irhpPermitStocks)
+    {
+        if ($this->irhpPermitStocks->contains($irhpPermitStocks)) {
+            $this->irhpPermitStocks->removeElement($irhpPermitStocks);
+        }
+
+        return $this;
     }
 
     /**
@@ -382,7 +446,11 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }

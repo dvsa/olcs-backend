@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\Sectors;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors as SectorsEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as StockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Sectors as SectorsRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Transfer\Query\Permits\SectorsList;
+use Dvsa\Olcs\Transfer\Query\Permits\Sectors;
 
 /**
  * Create IRHP permit sectors (called as a side effect of stock creation)
@@ -56,10 +56,10 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
          */
         $stock = $stockRepo->fetchUsingId($command);
 
-        $sectorsListQry = SectorsList::create([]);
+        $sectorsListQry = Sectors::create([]);
         $sectorsList = $sectorsRepo->fetchList($sectorsListQry, Query::HYDRATE_OBJECT);
 
-        /** @var Sectors $sector */
+        /** @var SectorsEntity $sector */
         foreach ($sectorsList as $sector) {
             $sectorQuota = IrhpPermitSectorQuota::create($sector, $stock);
             $irhpPermitSectorQuotaRepo->save($sectorQuota);

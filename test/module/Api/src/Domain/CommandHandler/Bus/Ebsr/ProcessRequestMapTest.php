@@ -334,7 +334,7 @@ class ProcessRequestMapTest extends CommandHandlerTestCase
      */
     public function testHandleCommandMissingEbsrPack($fileProcessorException)
     {
-        $this->setExpectedException(TransxchangeException::class, ProcessRequestMap::MISSING_PACK_FILE_ERROR);
+        $this->expectException(TransxchangeException::class, ProcessRequestMap::MISSING_PACK_FILE_ERROR);
 
         $config = [
             'ebsr' => [

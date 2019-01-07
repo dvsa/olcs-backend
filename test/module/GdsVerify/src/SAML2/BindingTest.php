@@ -8,7 +8,7 @@ use Mockery as m;
 /**
  * Binding test
  */
-class BindingTest extends \PHPUnit_Framework_TestCase
+class BindingTest extends \PHPUnit\Framework\TestCase
 {
     public function testSend()
     {
@@ -41,6 +41,9 @@ class BindingTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($sut->receive());
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testProcessResponse()
     {
         // Difficult to test

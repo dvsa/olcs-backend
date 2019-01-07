@@ -27,6 +27,11 @@ final class Retry extends AbstractCommand
     protected $retryAfter;
 
     /**
+     * @var string
+     */
+    protected $lastError;
+
+    /**
      * @return Dvsa\Olcs\Api\Entity\Queue
      */
     public function getItem()
@@ -42,5 +47,15 @@ final class Retry extends AbstractCommand
     public function getRetryAfter()
     {
         return $this->retryAfter;
+    }
+
+    /**
+     * Returns last error message
+     *
+     * @return string
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
     }
 }

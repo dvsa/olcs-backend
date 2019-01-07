@@ -3,14 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\EnqueueContinuationNotSought;
-use PHPUnit_Framework_TestCase;
 
 /**
  * Enqueue CNS Test
  *
  * @author Alex Peshkov <alex.peshkov@vltech.co.uk>
  */
-class EnqueueContinuationNotSoughtTest extends PHPUnit_Framework_TestCase
+class EnqueueContinuationNotSoughtTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

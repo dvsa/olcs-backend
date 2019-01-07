@@ -24,7 +24,7 @@ class TmCaseDecisionTest extends RepositoryTestCase
         $this->setUpSut(Repo::class);
     }
 
-    public function testFetchLatestUsingCaseDataProvider()
+    public function dpFetchLatestUsingCaseDataProvider()
     {
         return [
             'Decision exists' => [
@@ -39,7 +39,7 @@ class TmCaseDecisionTest extends RepositoryTestCase
     }
 
     /**
-     * @dataProvider testFetchLatestUsingCaseDataProvider
+     * @dataProvider dpFetchLatestUsingCaseDataProvider
      */
     public function testFetchLatestUsingCase($expected, $mockResult)
     {

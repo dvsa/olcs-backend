@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\OpDetails;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class OpDetailsTest extends \PHPUnit_Framework_TestCase
+class OpDetailsTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
@@ -32,60 +32,60 @@ class OpDetailsTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRenderValidDataProvider()
+    public function dpRenderValidDataProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 "Mr Testy Test\nTesting Test Limited\nT/A: Trading Test Limited \n" .
                 "Test\nTest Place\nTest\nTesting\ntest",
-                array(
-                    'organisation' => array(
+                [
+                    'organisation' => [
                         'name' => 'Testing Test Limited',
-                    ),
-                    'tradingNames' => array(
-                        array(
+                    ],
+                    'tradingNames' => [
+                        [
                             'name' => 'Trading Test Limited'
-                        )
-                    ),
-                    'correspondenceCd' => array(
+                        ]
+                    ],
+                    'correspondenceCd' => [
                         'fao' => 'Mr Testy Test',
-                        'address' => array(
+                        'address' => [
                             'addressLine1' => 'Test',
                             'addressLine2' => 'Test Place',
                             'addressLine3' => '',
                             'addressLine4' => 'Test',
                             'town' => 'Testing',
                             'postcode' => 'test'
-                        )
-                    )
-                )
-            ),
-            array(
+                        ]
+                    ]
+                ]
+            ],
+            [
                 "Testing Test Limited\n" .
                 "Test\nTest Place\nTest\nTesting\ntest",
-                array(
-                    'organisation' => array(
+                [
+                    'organisation' => [
                         'name' => 'Testing Test Limited',
-                    ),
-                    'tradingNames' => array(),
-                    'correspondenceCd' => array(
+                    ],
+                    'tradingNames' => [],
+                    'correspondenceCd' => [
                         'fao' => '',
-                        'address' => array(
+                        'address' => [
                             'addressLine1' => 'Test',
                             'addressLine2' => 'Test Place',
                             'addressLine3' => '',
                             'addressLine4' => 'Test',
                             'town' => 'Testing',
                             'postcode' => 'test'
-                        )
-                    )
-                )
-            )
-        );
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 
     /**
-     * @dataProvider testRenderValidDataProvider
+     * @dataProvider dpRenderValidDataProvider
      */
     public function testRender($expected, $results)
     {

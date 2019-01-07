@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\View\TaskSearchView;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class TaskSearchViewTest extends \PHPUnit_Framework_TestCase
+class TaskSearchViewTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TaskSearchView

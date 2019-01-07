@@ -97,6 +97,9 @@ class Queue extends AbstractQueue
         self::TYPE_ACCEPT_ECMT_SCORING,
     ];
 
+    // Errors
+    const ERR_MAX_ATTEMPTS = 'Maximum attempts exceeded';
+
     /**
      * Increment attempts
      *

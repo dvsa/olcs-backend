@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceVehicleMediumLimit;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class LicenceVehicleMediumLimitTest extends \PHPUnit_Framework_TestCase
+class LicenceVehicleMediumLimitTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
