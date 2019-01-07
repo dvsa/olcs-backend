@@ -3,7 +3,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
-
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -12,6 +11,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
 
+    protected $extraRepos = ['Licence'];
     /**
      * @param CommandInterface $command
      *
