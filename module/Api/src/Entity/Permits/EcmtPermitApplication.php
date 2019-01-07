@@ -1003,4 +1003,26 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
 
         return $mappings[$this->source->getId()];
     }
+
+    /**
+     *
+     * Return data required for the creation of a HTML snapshot
+     * @return array
+     */
+    public function returnSnapshotData()
+    {
+        $data['permitType'] = $this->getPermitType()->getDescription();
+        $data['operator'] = $this->getLicence()->getOrganisation()->getName();
+        $data['ref'] = $this->getApplicationRef();
+        $data['licence'] = $this->getLicence()->getLicNo();
+        $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
+        $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
+        $data['limited-permits'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+        $data['number-required'] = $this->getPermitsRequired();
+        $data['trips'] = $this->getTrips();
+        $data['int-journeys'] = $this->getInternationalJourneys()->getDescription();
+        $data['goods'] = $this->getSectors()->getName();
+
+        return $data;
+    }
 }
