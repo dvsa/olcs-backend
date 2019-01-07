@@ -7,7 +7,7 @@ use Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter;
 /**
  * MatchingServiceAdapter test
  */
-class MatchingServiceAdapterTest extends \PHPUnit_Framework_TestCase
+class MatchingServiceAdapterTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetSigningCertificate()
     {
@@ -45,7 +45,7 @@ class MatchingServiceAdapterTest extends \PHPUnit_Framework_TestCase
     public function testGetSigningCertificateGeneralError()
     {
         $metadata = $this->getSut('msa-meta-missing-cert1.xml');
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\GdsVerify\Exception::class,
             'Matching Service Adapter signing certificate not found : Undefined offset: 0'
         );
@@ -55,7 +55,7 @@ class MatchingServiceAdapterTest extends \PHPUnit_Framework_TestCase
     public function testGetSigningCertificateNoSiginingCerts()
     {
         $metadata = $this->getSut('msa-meta-missing-cert2.xml');
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\GdsVerify\Exception::class,
             'Matching Service Adapter signing certificate not found'
         );
@@ -74,7 +74,7 @@ class MatchingServiceAdapterTest extends \PHPUnit_Framework_TestCase
     public function testGetSsoUrlGeneralError()
     {
         $metadata = $this->getSut('msa-meta-missing-sso2.xml');
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\GdsVerify\Exception::class,
             'SSO URL not found in metadata : Undefined offset: 0'
         );
@@ -84,7 +84,7 @@ class MatchingServiceAdapterTest extends \PHPUnit_Framework_TestCase
     public function testGetSsoUrlMissing()
     {
         $metadata = $this->getSut('msa-meta-missing-sso1.xml');
-        $this->setExpectedException(\Dvsa\Olcs\GdsVerify\Exception::class, 'SSO URL not found in metadata');
+        $this->expectException(\Dvsa\Olcs\GdsVerify\Exception::class, 'SSO URL not found in metadata');
         $metadata->getSsoUrl();
     }
 

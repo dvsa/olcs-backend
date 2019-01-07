@@ -8,7 +8,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
  * Upload scoring log test
  *
  */
-class UploadScoringLogTest extends \PHPUnit_Framework_TestCase
+class UploadScoringLogTest extends \PHPUnit\Framework\TestCase
 {
     public function testStructure()
     {

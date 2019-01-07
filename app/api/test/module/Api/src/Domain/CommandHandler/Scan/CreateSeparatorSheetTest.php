@@ -99,7 +99,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -116,7 +116,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -124,7 +124,7 @@ class CreateSeparatorSheetTest extends CommandHandlerTestCase
     public function testHandleCommandNoEntityForCategory()
     {
         $sut = m::mock(CommandHandler::class)->makePartial();
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
         $sut->getEntityTypeForCategory(-1);
     }
 

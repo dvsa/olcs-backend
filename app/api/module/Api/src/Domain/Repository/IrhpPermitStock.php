@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
 /**
  * IrhpPermitStock
@@ -15,6 +16,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 class IrhpPermitStock extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    protected $alias = 'ips';
 
     /**
      * Retrieves the Irhp Permit Stock
@@ -38,12 +41,12 @@ class IrhpPermitStock extends AbstractRepository
             ->from(Entity::class, 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->where($query->expr()->andX(
-                $query->expr()->gte('ips.validFrom', '?1'),
+                $query->expr()->lte('?1', 'ips.validTo'),
                 $query->expr()->eq('ipt.name', '?2')
             ))
             ->setParameter(1, $date)
             ->setParameter(2, $permitType)
-            ->orderBy('ips.validTo', 'ASC')
+            ->orderBy('ips.validFrom', 'ASC')
             ->getQuery()
             ->getResult($hydrationMode);
 
@@ -52,5 +55,29 @@ class IrhpPermitStock extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    /**
+     * Returns list of stocks ready to print
+     *
+     * @return array
+     */
+    public function fetchReadyToPrint()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias, 'ipt', 'rd')
+            ->distinct()
+            ->innerJoin($this->alias . '.irhpPermitType', 'ipt')
+            ->innerJoin('ipt.name', 'rd')
+            ->innerJoin($this->alias . '.irhpPermitRanges', 'ipr')
+            ->innerJoin('ipr.irhpPermits', 'ip')
+            ->Where($qb->expr()->in('ip.status', ':statuses'))
+            ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
+            ->orderBy('rd.displayOrder', 'ASC')
+            ->orderBy($this->alias . '.validFrom', 'ASC');
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }

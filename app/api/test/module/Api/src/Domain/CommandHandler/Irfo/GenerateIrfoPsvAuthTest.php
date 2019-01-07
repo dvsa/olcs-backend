@@ -112,7 +112,7 @@ class GenerateIrfoPsvAuthTest extends CommandHandlerTestCase
                 );
             }
         } else {
-            $this->setExpectedException(Exception\BadRequestException::class);
+            $this->expectException(Exception\BadRequestException::class);
         }
 
         $result = $this->sut->handleCommand($command);

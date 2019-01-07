@@ -117,7 +117,7 @@ class DeleteEntitiesTest extends CommandHandlerTestCase
         $this->repoMap['SystemParameter']->shouldReceive('getDisableDataRetentionDelete')->with()->once()
             ->andReturn(true);
 
-        $this->setExpectedException(BadRequestException::class, 'Disabled by System Parameter');
+        $this->expectException(BadRequestException::class, 'Disabled by System Parameter');
         $this->sut->handleCommand($command);
     }
 }

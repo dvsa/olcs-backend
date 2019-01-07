@@ -1,6 +1,10 @@
 <?php
 
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestListener;
+use PHPUnit\Framework\TestSuite;
+use PHPUnit\Framework\Test;
+use PHPUnit\Framework\Warning;
 use SebastianBergmann\CodeCoverage;
 
 class Coverage implements TestListener
@@ -22,7 +26,6 @@ class Coverage implements TestListener
         $this->filter->addDirectoryToWhitelist(realpath(__DIR__ . '/../module/'));
 
         foreach ($this->filter->getWhitelist() as $file) {
-
             xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
             include_once($file);
             $fileData = xdebug_get_code_coverage();
@@ -41,93 +44,114 @@ class Coverage implements TestListener
     }
 
     /**
-     * An error occurred.
+     * add error
      *
-     * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
-     * @param float $time
+     * @param Test      $test test
+     * @param Throwable $t    warning
+     * @param float     $time time
+     *
+     * @return void
      */
-    public function addError(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addError(Test $test, \Throwable $t, float $time): void
     {
-
     }
 
     /**
-     * A failure occurred.
+     * add warning
      *
-     * @param PHPUnit_Framework_Test $test
-     * @param PHPUnit_Framework_AssertionFailedError $e
-     * @param float $time
+     * @param Test    $test test
+     * @param Warning $e    warning
+     * @param float   $time time
+     *
+     * @return void
      */
-    public function addFailure(PHPUnit_Framework_Test $test, PHPUnit_Framework_AssertionFailedError $e, $time)
+    public function addWarning(Test $test, Warning $e, float $time): void
     {
-
     }
 
     /**
-     * Incomplete test.
+     * add failure
      *
-     * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
-     * @param float $time
+     * @param Test                 $test test
+     * @param AssertionFailedError $e    error
+     * @param float                $time time
+     *
+     * @return void
      */
-    public function addIncompleteTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addFailure(Test $test, AssertionFailedError $e, float $time): void
     {
+    }
 
+
+    /**
+     * add incomplete test
+     *
+     * @param Test      $test test
+     * @param Throwable $t    throwable
+     * @param float     $time time
+     *
+     * @return void
+     */
+    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void
+    {
     }
 
     /**
-     * Risky test.
+     * add risky test
      *
-     * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
-     * @param float $time
-     * @since  Method available since Release 4.0.0
+     * @param Test      $test test
+     * @param Throwable $t    throwable
+     * @param float     $time time
+     *
+     * @return void
      */
-    public function addRiskyTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addRiskyTest(Test $test, \Throwable $t, float $time): void
     {
-
     }
 
     /**
-     * Skipped test.
+     * add skipped test
      *
-     * @param PHPUnit_Framework_Test $test
-     * @param Exception $e
-     * @param float $time
-     * @since  Method available since Release 3.0.0
+     * @param Test      $test test
+     * @param Throwable $t    throwable
+     * @param float     $time time
+     *
+     * @return void
      */
-    public function addSkippedTest(PHPUnit_Framework_Test $test, Exception $e, $time)
+    public function addSkippedTest(Test $test, \Throwable $t, float $time): void
     {
-
     }
 
     /**
      * A test suite started.
      *
-     * @param PHPUnit_Framework_TestSuite $suite
-     * @since  Method available since Release 2.2.0
+     * @param TestSuite $suite suite
+     *
+     * @return void
      */
-    public function startTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function startTestSuite(TestSuite $suite): void
     {
     }
 
     /**
      * A test suite ended.
      *
-     * @param PHPUnit_Framework_TestSuite $suite
-     * @since  Method available since Release 2.2.0
+     * @param TestSuite $suite suite
+     *
+     * @return void
      */
-    public function endTestSuite(PHPUnit_Framework_TestSuite $suite)
+    public function endTestSuite(TestSuite $suite): void
     {
     }
 
     /**
      * A test started.
      *
-     * @param PHPUnit_Framework_Test $test
+     * @param Test $test test
+     *
+     * @return void
      */
-    public function startTest(PHPUnit_Framework_Test $test)
+    public function startTest(Test $test): void
     {
         $id = get_class($test) . '::' . $test->getName();
 
@@ -144,12 +168,13 @@ class Coverage implements TestListener
     /**
      * A test ended.
      *
-     * @param PHPUnit_Framework_Test $test
-     * @param float                  $time
+     * @param Test  $test test
+     * @param float $time time
+     *
+     * @retun void
      */
-    public function endTest(PHPUnit_Framework_Test $test, $time)
+    public function endTest(Test $test, float $time): void
     {
-
     }
 
     public function __destruct()
@@ -166,11 +191,8 @@ class Coverage implements TestListener
         }
 
         foreach ($data as $file => $lines) {
-
             foreach ($lines as $k => $v) {
-
                 if ($v == CodeCoverage\Driver\Driver::LINE_EXECUTED) {
-
                     if (empty($this->formatData[$file][$k])) {
                         $this->formatData[$file][$k] = [];
                     }
@@ -191,14 +213,11 @@ class Coverage implements TestListener
     }
 
     /**
-     * Returns the lines of a source file that should be ignored.
+     * @param string $filename filename
      *
-     * @param  string                     $filename
      * @return array
-     * @throws PHP_CodeCoverage_Exception
-     * @since  Method available since Release 2.0.0
      */
-    private function getLinesToBeIgnored($filename)
+    private function getLinesToBeIgnored(string $filename)
     {
         $ignoredLines = [];
 
@@ -350,9 +369,9 @@ class Coverage implements TestListener
     /**
      * Applies the "ignored lines" filtering.
      *
-     * @param array $data
+     * @return void
      */
-    private function applyIgnoredLinesFilter()
+    private function applyIgnoredLinesFilter(): void
     {
         foreach (array_keys($this->formatData) as $filename) {
             foreach ($this->getLinesToBeIgnored($filename) as $line) {

@@ -67,7 +67,7 @@ class MyAccountTest extends QueryHandlerTestCase
 
     public function testHandleQueryThrowsNotFoundException()
     {
-        $this->setExpectedException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn(null);

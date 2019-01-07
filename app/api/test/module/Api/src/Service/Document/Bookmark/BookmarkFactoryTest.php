@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TextBlock;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class BookmarkFactoryTest extends \PHPUnit_Framework_TestCase
+class BookmarkFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function testLocate()
     {

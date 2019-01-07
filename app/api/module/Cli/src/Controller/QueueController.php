@@ -8,6 +8,7 @@
  */
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Olcs\Logging\Log\Logger;
 use Zend\Mvc\Controller\AbstractConsoleController;
 use Zend\View\Model\ConsoleModel;
 
@@ -62,12 +63,28 @@ class QueueController extends AbstractConsoleController
                 $response = $service->processNextItem($includeTypes, $excludeTypes);
             } catch (\Doctrine\ORM\ORMException $e) {
                 // If ORMException such as "Entity Manager Closed" exit script as they will fail
-                $this->getConsole()->writeLine('ORM Error: '.$e->getMessage());
+                $content = 'ORM Error: '.$e->getMessage();
+
+                Logger::log(
+                    \Zend\Log\Logger::ERR,
+                    'Failed to process next item in the queue',
+                    ['errorLevel' => 1, 'content' => $content]
+                );
+
+                $this->getConsole()->writeLine($content);
                 $model = new ConsoleModel();
                 $model->setErrorLevel(1);
                 return $model;
             } catch (\Exception $e) {
-                $this->getConsole()->writeLine('Error: '.$e->getMessage());
+                $content = 'Error: '.$e->getMessage();
+
+                Logger::log(
+                    \Zend\Log\Logger::ERR,
+                    'Failed to process next item in the queue',
+                    ['errorLevel' => 1, 'content' => $content]
+                );
+
+                $this->getConsole()->writeLine($content);
                 // continue with the next item
                 continue;
             }

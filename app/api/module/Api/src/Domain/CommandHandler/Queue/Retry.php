@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 /**
@@ -23,6 +22,10 @@ final class Retry extends AbstractCommandHandler implements TransactionedInterfa
     protected $repoServiceName = 'Queue';
 
     /**
+     * Handle command
+     *
+     * @param \Dvsa\Olcs\Api\Domain\Command\Queue\Retry $command Command
+     *
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
@@ -33,6 +36,7 @@ final class Retry extends AbstractCommandHandler implements TransactionedInterfa
         $item = $command->getItem();
         $item->setStatus($this->getRepo()->getRefdataReference(QueueEntity::STATUS_QUEUED));
         $item->setProcessAfterDate($processAfter);
+        $item->setLastError($command->getLastError());
         $this->getRepo()->save($item);
 
         $result = new Result();

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\UnlinkedTm;
 /**
  * @covers \Dvsa\Olcs\Api\Service\Document\Bookmark\UnlinkedTm
  */
-class UnlinkedTmTest extends \PHPUnit_Framework_TestCase
+class UnlinkedTmTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {
@@ -18,7 +18,7 @@ class UnlinkedTmTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\Dvsa\Olcs\Transfer\Query\QueryInterface::class, $query);
     }
 
-    public function testRenderValidDataProvider()
+    public function dpRenderValidDataProvider()
     {
         return [
             [
@@ -87,7 +87,7 @@ class UnlinkedTmTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider testRenderValidDataProvider
+     * @dataProvider dpRenderValidDataProvider
      */
     public function testRender($expected, $results)
     {

@@ -67,15 +67,14 @@ class UpdateTmNysiisNameTest extends AbstractConsumerTestCase
             'id' => $entityId
         ];
 
-        $this->expectCommandException(
-            UpdateNysiisCmd::class, $cmdData, NysiisException::class, $message, $retryAfter
-        );
+        $this->expectCommandException(UpdateNysiisCmd::class, $cmdData, NysiisException::class, $message, $retryAfter);
 
         $this->expectCommand(
             RetryCmd::class,
             [
                 'item' => $item,
-                'retryAfter' => $retryAfter
+                'retryAfter' => $retryAfter,
+                'lastError' => $message,
             ],
             new Result(),
             false

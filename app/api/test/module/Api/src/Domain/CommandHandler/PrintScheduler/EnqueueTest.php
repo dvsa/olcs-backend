@@ -73,7 +73,7 @@ class EnqueueTest extends CommandHandlerTestCase
         $user->setTeam($team);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')->andReturn($user);
 
-        $this->setExpectedException(
+        $this->expectException(
             \Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class,
             'Failed to generate document as there are no printer settings for the current user'
         );

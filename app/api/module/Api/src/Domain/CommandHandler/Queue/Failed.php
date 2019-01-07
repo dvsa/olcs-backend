@@ -18,7 +18,7 @@ final class Failed extends AbstractCommandHandler implements TransactionedInterf
 
     /**
      * Handle command
-     * 
+     *
      * @param \Dvsa\Olcs\Api\Domain\Command\Queue\Failed $command Command
      *
      * @return Result
@@ -31,8 +31,16 @@ final class Failed extends AbstractCommandHandler implements TransactionedInterf
         $entity = $command->getItem()
             ->setStatus(
                 $repo->getRefdataReference(QueueEntity::STATUS_FAILED)
-            )
-            ->setLastError($command->getLastError());
+            );
+
+        $error = $command->getLastError();
+
+        if ($error === QueueEntity::ERR_MAX_ATTEMPTS) {
+            // keep the existing error as well
+            $error .= ': ' . $entity->getLastError();
+        }
+        $entity->setLastError(trim($error));
+
         $repo->save($entity);
 
         $queueId = $entity->getId();

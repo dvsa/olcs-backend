@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 
 return [
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\SectorsList::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
@@ -22,6 +22,7 @@ return [
     QueryHandler\Permits\ValidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,
@@ -32,6 +33,7 @@ return [
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrintStock::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,

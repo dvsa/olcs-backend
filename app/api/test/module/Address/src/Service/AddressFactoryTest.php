@@ -32,7 +32,7 @@ class AddressFactoryTest extends MockeryTestCase
 
     public function testCreateServiceWithoutConfig()
     {
-        $this->setExpectedException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $config = [];
 

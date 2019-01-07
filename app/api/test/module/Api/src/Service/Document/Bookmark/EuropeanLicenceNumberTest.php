@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\EuropeanLicenceNumber;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class EuropeanLicenceNumberTest extends \PHPUnit_Framework_TestCase
+class EuropeanLicenceNumberTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

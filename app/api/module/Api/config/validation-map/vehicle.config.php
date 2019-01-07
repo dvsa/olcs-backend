@@ -46,6 +46,7 @@ return [
     QueryHandler\Application\VehicleDeclaration::class   => CanAccessApplicationWithId::class,
     QueryHandler\LicenceVehicle\LicenceVehicle::class    => LicenceVehicleById::class,
     QueryHandler\LicenceVehicle\PsvLicenceVehicle::class => LicenceVehicleById::class,
+    QueryHandler\Licence\GoodsDiscCount::class            => CanAccessLicenceWithId::class,
     QueryHandler\Licence\GoodsVehicles::class            => CanAccessLicenceWithId::class,
     QueryHandler\Licence\GoodsVehiclesExport::class      => CanAccessLicenceWithId::class,
     QueryHandler\Licence\PsvVehicles::class              => CanAccessLicenceWithId::class,

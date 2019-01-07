@@ -11,7 +11,7 @@ use Mockery as m;
  * @package Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SubmissionResultTest extends \PHPUnit_Framework_TestCase
+class SubmissionResultTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Tests filter

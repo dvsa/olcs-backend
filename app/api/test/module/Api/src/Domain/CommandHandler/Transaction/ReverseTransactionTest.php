@@ -282,7 +282,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->with('MY-REFERENCE', FeeEntity::METHOD_CHEQUE, [$fee], [])
             ->andThrow(new \Dvsa\Olcs\Api\Service\CpmsResponseException('ohnoes'));
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -294,7 +294,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn(false)
             ->getMock();
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->validate($transaction);
     }
@@ -308,7 +308,7 @@ class ReverseTransactionTest extends CommandHandlerTestCase
             ->andReturn(false)
             ->getMock();
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->validate($transaction);
     }

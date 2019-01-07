@@ -41,7 +41,7 @@ class DeleteApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }
@@ -62,7 +62,7 @@ class DeleteApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
 
-        $this->setExpectedException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }

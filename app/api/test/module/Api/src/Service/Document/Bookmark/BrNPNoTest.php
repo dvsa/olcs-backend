@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrNPNo;
 /**
  * Br N P No test
  */
-class BrNPNoTest extends \PHPUnit_Framework_TestCase
+class BrNPNoTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetQuery()
     {

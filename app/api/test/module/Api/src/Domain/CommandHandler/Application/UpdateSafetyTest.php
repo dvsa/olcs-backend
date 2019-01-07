@@ -69,7 +69,7 @@ class UpdateSafetyTest extends CommandHandlerTestCase
             ->with($command, Query::HYDRATE_OBJECT, 1)
             ->andReturn($application);
 
-        $this->setExpectedException(ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         $this->sut->handleCommand($command);
     }

@@ -2179,6 +2179,14 @@ return array(
             )
         )
     ),
+    'irhp_permit_stock' => array(
+        'irhp_permit_type_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitType',
+                'property' => 'irhpPermitStock'
+            )
+        )
+    ),
     'irhp_permit_window' => array(
         'irhp_permit_stock_id' => array(
             'inversedBy' => array(
