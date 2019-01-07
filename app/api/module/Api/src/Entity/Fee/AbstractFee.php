@@ -31,7 +31,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_fee_irfo_gv_permit_id", columns={"irfo_gv_permit_id"}),
  *        @ORM\Index(name="ix_fee_fee_status", columns={"fee_status"}),
  *        @ORM\Index(name="ix_fee_irfo_psv_auth_id", columns={"irfo_psv_auth_id"}),
- *        @ORM\Index(name="fk_fee_ecmt_permit_application_id", columns={"ecmt_permit_application_id"})
+ *        @ORM\Index(name="fk_fee_ecmt_permit_application_id", columns={"ecmt_permit_application_id"}),
+ *        @ORM\Index(name="ix_fee_irhp_application_id", columns={"irhp_application_id"})
  *    }
  * )
  */
@@ -193,6 +194,16 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      * @ORM\JoinColumn(name="irfo_psv_auth_id", referencedColumnName="id", nullable=true)
      */
     protected $irfoPsvAuth;
+
+    /**
+     * Irhp application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpApplication;
 
     /**
      * Last modified by
@@ -684,6 +695,30 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
     public function getIrfoPsvAuth()
     {
         return $this->irfoPsvAuth;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication entity being set as the value
+     *
+     * @return Fee
+     */
+    public function setIrhpApplication($irhpApplication)
+    {
+        $this->irhpApplication = $irhpApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 
     /**
