@@ -69,7 +69,8 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
         $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
 
-        $data = $this->createSnapshotData($application);
+        $data = $application->returnSnapshotData();
+
         $view = new ViewModel();
         $view->setTemplate('sections/ecmt-permit-application-snapshot');
 
@@ -103,26 +104,5 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
             );
             $this->getRepo('IrhpCandidatePermit')->save($candidatePermit);
         }
-    }
-
-    /**
-     * @param EcmtPermitApplication $application
-     * @return array
-     */
-    private function createSnapshotData(EcmtPermitApplication $application)
-    {
-        $data['permitType'] = $application->getPermitType()->getDescription();
-        $data['operator'] = $application->getLicence()->getOrganisation()->getName();
-        $data['ref'] = $application->getApplicationRef();
-        $data['licence'] = $application->getLicence()->getLicNo();
-        $data['emissions'] =  (int) $application->getEmissions() === 1 ? 'Yes' : 'No';
-        $data['cabotage'] = (int) $application->getCabotage() === 1 ? 'Yes' : 'No';
-        $data['limited-permits'] = (int) $application->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
-        $data['number-required'] = $application->getPermitsRequired();
-        $data['trips'] = $application->getTrips();
-        $data['int-journeys'] = $application->getInternationalJourneys()->getDescription();
-        $data['goods'] = $application->getSectors()->getName();
-
-        return $data;
     }
 }
