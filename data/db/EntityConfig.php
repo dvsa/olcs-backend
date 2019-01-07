@@ -2156,6 +2156,12 @@ return array(
                 'property' => 'irhpPermitApplication'
             )
         ),
+        'irhp_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpApplication',
+                'property' => 'irhpPermitApplication'
+            )
+        ),
     ),
     'irhp_permit' => array(
         'irhp_candidate_permit_id' => array(
