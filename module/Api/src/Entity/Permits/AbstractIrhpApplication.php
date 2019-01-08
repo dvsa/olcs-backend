@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -159,6 +161,38 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Irhp permit application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
+     *     mappedBy="irhpApplication"
+     * )
+     */
+    protected $irhpPermitApplications;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->irhpPermitApplications = new ArrayCollection();
+    }
 
     /**
      * Set the checked answers
@@ -491,6 +525,69 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the irhp permit application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setIrhpPermitApplications($irhpPermitApplications)
+    {
+        $this->irhpPermitApplications = $irhpPermitApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitApplications()
+    {
+        return $this->irhpPermitApplications;
+    }
+
+    /**
+     * Add a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being added
+     *
+     * @return IrhpApplication
+     */
+    public function addIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($irhpPermitApplications instanceof ArrayCollection) {
+            $this->irhpPermitApplications = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitApplications->toArray(),
+                    $irhpPermitApplications->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->add($irhpPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeIrhpPermitApplications($irhpPermitApplications)
+    {
+        if ($this->irhpPermitApplications->contains($irhpPermitApplications)) {
+            $this->irhpPermitApplications->removeElement($irhpPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the createdOn field on persist
      *
      * @ORM\PrePersist
@@ -525,7 +622,11 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     {
         foreach ($properties as $property) {
             if (property_exists($this, $property)) {
-                $this->$property = null;
+                if ($this->$property instanceof Collection) {
+                    $this->$property = new ArrayCollection(array());
+                } else {
+                    $this->$property = null;
+                }
             }
         }
     }
