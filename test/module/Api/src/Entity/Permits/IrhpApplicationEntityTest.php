@@ -7,13 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
@@ -61,7 +61,9 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('hasMadeDeclaration')
             ->andReturn(false)
             ->shouldReceive('isNotYetSubmitted')
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('isReadyForNoOfPermits')
+            ->andReturn(false);
 
         $this->assertSame(
             [
@@ -73,6 +75,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
+                'isReadyForNoOfPermits' => false,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -105,32 +108,6 @@ class IrhpApplicationEntityTest extends EntityTester
             $organisation,
             $this->sut->getRelatedOrganisation()
         );
-    }
-
-    /**
-     * @dataProvider dpTestIsNotYetSubmitted
-     */
-    public function testIsNotYetSubmitted($status, $expected)
-    {
-        $this->sut->setStatus(new RefData($status));
-        $this->assertSame($expected, $this->sut->isNotYetSubmitted());
-    }
-
-    public function dpTestIsNotYetSubmitted()
-    {
-        return [
-            [IrhpInterface::STATUS_CANCELLED, false],
-            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
-            [IrhpInterface::STATUS_WITHDRAWN, false],
-            [IrhpInterface::STATUS_AWAITING_FEE, false],
-            [IrhpInterface::STATUS_FEE_PAID, false],
-            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
-            [IrhpInterface::STATUS_ISSUED, false],
-            [IrhpInterface::STATUS_ISSUING, false],
-            [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
-        ];
     }
 
     /**
@@ -247,6 +224,76 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     public function dpTestCanBeCancelled()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsNotYetSubmitted
+     */
+    public function testIsNotYetSubmitted($status, $expectedNotYetSubmitted)
+    {
+        $statusRefData = m::mock(RefData::class);
+        $statusRefData->shouldReceive('getId')
+            ->andReturn($status);
+
+        $irhpApplication = new Entity();
+        $irhpApplication->setStatus($statusRefData);
+
+        $this->assertEquals(
+            $expectedNotYetSubmitted,
+            $irhpApplication->isNotYetSubmitted()
+        );
+    }
+
+    public function dpIsNotYetSubmitted()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false]
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeUpdated
+     */
+    public function testCanBeUpdated($status, $expectedCanBeUpdated)
+    {
+        $statusRefData = m::mock(RefData::class);
+        $statusRefData->shouldReceive('getId')
+            ->andReturn($status);
+
+        $irhpApplication = new Entity();
+        $irhpApplication->setStatus($statusRefData);
+
+        $this->assertEquals(
+            $expectedCanBeUpdated,
+            $irhpApplication->canBeUpdated()
+        );
+    }
+
+    public function dpCanBeUpdated()
     {
         return [
             [IrhpInterface::STATUS_CANCELLED, false],
@@ -409,6 +456,55 @@ class IrhpApplicationEntityTest extends EntityTester
             'multiple IRHP fees - multiple outstanding' => [
                 'fees' => new ArrayCollection([$paidIrhpAppFee, $outstandingIrhpAppFee, $outstandingIrhpIssueFee]),
                 'expected' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsReadyForNoOfPermits
+     */
+    public function testIsReadyForNoOfPermits(
+        $canBeUpdated,
+        $irhpPermitApplications,
+        $expectedIsReadyForNoOfPermits
+    ) {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->andReturn($canBeUpdated);
+
+        $irhpApplication->setIrhpPermitApplications(
+            new ArrayCollection($irhpPermitApplications)
+        );
+
+        $this->assertEquals(
+            $expectedIsReadyForNoOfPermits,
+            $irhpApplication->isReadyForNoOfPermits()
+        );
+    }
+
+    public function dpIsReadyForNoOfPermits()
+    {
+        return [
+            [
+                true,
+                [m::mock(IrhpPermitApplication::class), m::mock(IrhpPermitApplication::class)],
+                true
+            ],
+            [
+                true,
+                [],
+                false
+            ],
+            [
+                false,
+                [m::mock(IrhpPermitApplication::class), m::mock(IrhpPermitApplication::class)],
+                false
+            ],
+            [
+                false,
+                [],
+                false
             ],
         ];
     }
@@ -667,5 +763,33 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
             ],
         ];
+    }
+
+    public function testResetCheckAnswersAndDeclarationSuccess()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->andReturn(true);
+
+        $irhpApplication->setDeclaration(true);
+        $irhpApplication->setCheckedAnswers(true);
+
+        $irhpApplication->resetCheckAnswersAndDeclaration();
+        $this->assertFalse($irhpApplication->getDeclaration());
+        $this->assertFalse($irhpApplication->getCheckedAnswers());
+    }
+
+    public function testResetCheckAnswersAndDeclarationFail()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->andReturn(false);
+
+        $irhpApplication->setDeclaration(true);
+        $irhpApplication->setCheckedAnswers(true);
+
+        $irhpApplication->resetCheckAnswersAndDeclaration();
+        $this->assertTrue($irhpApplication->getDeclaration());
+        $this->assertTrue($irhpApplication->getCheckedAnswers());
     }
 }
