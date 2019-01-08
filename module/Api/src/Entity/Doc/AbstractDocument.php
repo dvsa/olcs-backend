@@ -37,10 +37,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_document_statement_id", columns={"statement_id"}),
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
      *     columns={"continuation_detail_id"}),
- *        @ORM\Index(name="fk_document_ecmt_permit_app_id_ecmt_permit_app_id",
-     *     columns={"ecmt_application_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
-     *     columns={"irhp_application_id"})
+     *     columns={"irhp_application_id"}),
+ *        @ORM\Index(name="fk_document_ecmt_permit_app_id_ecmt_permit_app_id",
+     *     columns={"ecmt_permit_application_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
