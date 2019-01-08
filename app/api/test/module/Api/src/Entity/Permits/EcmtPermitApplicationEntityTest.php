@@ -976,7 +976,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $applicationRef = $licNo . ' / ' . $id;
         $orgName = 'org name';
         $permitTypeDesc = 'permit type desc';
-        $internationalJourneysDesc = 'permit type desc';
+        $internationalJourneysDesc = 'international journey desc';
         $sectorName = 'sector name';
 
         $sectors = m::mock(Sectors::class);
