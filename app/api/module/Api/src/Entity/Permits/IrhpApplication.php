@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
  * IrhpApplication Entity
@@ -19,7 +20,17 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class IrhpApplication extends AbstractIrhpApplication
+class IrhpApplication extends AbstractIrhpApplication implements OrganisationProviderInterface
 {
+    /**
+     * Get the organisation
+     *
+     * @return OrganisationEntity
+     */
+    public function getRelatedOrganisation()
+    {
+        return $this->getLicence()->getOrganisation();
+    }
+
 
 }
