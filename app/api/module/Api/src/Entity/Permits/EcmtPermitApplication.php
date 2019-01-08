@@ -108,7 +108,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * @param Licence $licence Licence
      * @param string|null $dateReceived
      * @param Sectors|null $sectors
-     * @param array $countrys
+     * @param ArrayCollection $countrys
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
@@ -125,7 +125,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         Licence $licence,
         string $dateReceived = null,
         Sectors $sectors = null,
-        $countrys = [],
+        ArrayCollection $countrys,
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
@@ -1017,10 +1017,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $data['licence'] = $this->getLicence()->getLicNo();
         $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
         $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
-        $data['limited-permits'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
-        $data['number-required'] = $this->getPermitsRequired();
+        $data['limitedCountries'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+        $data['permitsRequired'] = $this->getPermitsRequired();
         $data['trips'] = $this->getTrips();
-        $data['int-journeys'] = $this->getInternationalJourneys()->getDescription();
+        $data['internationalJourneys'] = $this->getInternationalJourneys()->getDescription();
         $data['goods'] = $this->getSectors()->getName();
 
         return $data;
