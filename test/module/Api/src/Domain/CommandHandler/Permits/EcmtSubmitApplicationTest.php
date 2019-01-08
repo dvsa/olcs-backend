@@ -26,15 +26,11 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
-        $this->mockRepo('IrhpPermitWindow', IrhpPermitWindow::class);
-        $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
-        $this->mockRepo('IrhpPermitApplication', IrhpPermitApplication::class);
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermit::class);
 
         $this->sut = new EcmtSubmitApplication();
 
         $viewRendererService = m::mock(\Zend\View\Renderer\RendererInterface::class);
-        $viewRendererService->shouldReceive('render')->with(m::type(ViewModel::class))->andReturn('HTML');
 
         $this->mockedSmServices = [
             'ViewRenderer' => $viewRendererService
@@ -47,17 +43,6 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             EcmtPermitApplication::STATUS_UNDER_CONSIDERATION,
-            EcmtPermitApplication::PERMIT_TYPE,
-            EcmtPermitApplication::INTER_JOURNEY_MORE_90
-        ];
-
-        $this->references = [
-            IrhpPermitWindow::class => [
-                1 => m::mock(IrhpPermitWindow::class),
-            ],
-            IrhpPermitRange::class => [
-                2 => m::mock(IrhpPermitRange::class),
-            ]
         ];
 
         parent::initReferences();
@@ -66,6 +51,11 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $ecmtPermitApplicationId = 129;
+        $permitsRequired = 2;
+        $intensityOfUse = 3;
+        $applicationScore = 4;
+        $viewData = ['data'];
+        $renderedHtml = '<html>HTML</html>';
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('submit')
@@ -77,77 +67,32 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
         $irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
-            ->andReturn(3);
+            ->once()
+            ->withNoArgs()
+            ->andReturn($intensityOfUse);
 
         $irhpPermitApplication->shouldReceive('getPermitApplicationScore')
-            ->andReturn(3);
+            ->once()
+            ->withNoArgs()
+            ->andReturn($applicationScore);
 
         $ecmtPermitApplication->shouldReceive('getPermitsRequired')
-            ->andReturn(3);
-
-        $permitType = $this->refData[EcmtPermitApplication::PERMIT_TYPE];
-        $ecmtPermitApplication->shouldReceive('getPermitType')
-            ->andReturn($permitType);
+            ->once()
+            ->withNoArgs()
+            ->andReturn($permitsRequired);
 
         $ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->once()
+            ->withNoArgs()
             ->andReturn($irhpPermitApplication);
 
-        $licence = m::mock(Licence::class);
-        $organisation = m::mock(Organisation::class);
-
-        $licence->shouldReceive('getOrganisation')
-            ->andReturn($organisation);
-
-        $licence->shouldReceive('getLicNo')
-            ->andReturn('OB666666');
-
-
-        $organisation->shouldReceive('getName')
-            ->andReturn('Organisation Name');
-
-        $ecmtPermitApplication->shouldReceive('getLicence')
-            ->andReturn($licence);
-
-        $ecmtPermitApplication->shouldReceive('getEmissions')
-            ->andReturn(1);
-
-        $ecmtPermitApplication->shouldReceive('getCabotage')
-            ->andReturn(0);
-
-        $ecmtPermitApplication->shouldReceive('getHasRestrictedCountries')
-            ->andReturn(0);
-
-        $ecmtPermitApplication->shouldReceive('getTrips')
-            ->andReturn(12);
-
-        $ecmtPermitApplication->shouldReceive('getInternationalJourneys')
-            ->andReturn($this->refData[EcmtPermitApplication::INTER_JOURNEY_MORE_90]);
-
-        $ecmtPermitApplication->shouldReceive('getApplicationRef')
-            ->andReturn('OB666666 / 3');
-
-        $sector = m::mock(Sectors::class);
-        $sector->shouldReceive('getName')->andReturn('Metal');
-
-        $ecmtPermitApplication->shouldReceive('getSectors')
-            ->andReturn($sector);
-
-        $data['permitType'] = $ecmtPermitApplication->getPermitType()->getDescription();
-        $data['operator'] = $ecmtPermitApplication->getLicence()->getOrganisation()->getName();
-        $data['ref'] = $ecmtPermitApplication->getApplicationRef();
-        $data['licence'] = $ecmtPermitApplication->getLicence()->getLicNo();
-        $data['emissions'] =  (int) $ecmtPermitApplication->getEmissions() === 1 ? 'Yes' : 'No';
-        $data['cabotage'] = (int) $ecmtPermitApplication->getCabotage() === 1 ? 'Yes' : 'No';
-        $data['limited-permits'] = (int) $ecmtPermitApplication->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
-        $data['number-required'] = $ecmtPermitApplication->getPermitsRequired();
-        $data['trips'] = $ecmtPermitApplication->getTrips();
-        $data['int-journeys'] = $ecmtPermitApplication->getInternationalJourneys()->getDescription();
-        $data['goods'] = $ecmtPermitApplication->getSectors()->getName();
-
         $ecmtPermitApplication->shouldReceive('returnSnapshotData')
-            ->andReturn($data);
+            ->once()
+            ->withNoArgs()
+            ->andReturn($viewData);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
+            ->once()
             ->with($ecmtPermitApplicationId)
             ->andReturn($ecmtPermitApplication);
 
@@ -157,15 +102,40 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')->times(3);
+        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
+            ->times($permitsRequired)
+            ->with(IrhpCandidatePermit::class)
+            ->andReturnUsing(
+                function (IrhpCandidatePermit $irhpCandidatePermit) use ($irhpPermitApplication, $intensityOfUse, $applicationScore) {
+                    $this->assertEquals($irhpPermitApplication, $irhpCandidatePermit->getIrhpPermitApplication());
+                    $this->assertEquals(floatval($intensityOfUse), $irhpCandidatePermit->getIntensityOfUse());
+                    $this->assertEquals(floatval($applicationScore), $irhpCandidatePermit->getApplicationScore());
+
+                    return $irhpCandidatePermit;
+                }
+            );
+
+        $this->mockedSmServices['ViewRenderer']->shouldReceive('render')
+            ->once()
+            ->with(m::type(ViewModel::class))
+            ->andReturnUsing(
+                function (ViewModel $viewModel) use ($viewData, $renderedHtml) {
+                    $expectedViewVariables = ['data' => $viewData];
+
+                    $this->assertEquals('sections/ecmt-permit-application-snapshot', $viewModel->getTemplate());
+                    $this->assertEquals($expectedViewVariables, $viewModel->getVariables()->getArrayCopy());
+
+                    return $renderedHtml;
+                }
+            );
 
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
             SnapshotCmd::class,
             [
-                'id' => 129,
-                'html' => 'HTML'
+                'id' => $ecmtPermitApplicationId,
+                'html' => $renderedHtml
             ],
             $result1
         );
@@ -179,6 +149,8 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
+            ->once()
+            ->withNoArgs()
             ->andReturn($ecmtPermitApplicationId);
 
         $result = $this->sut->handleCommand($command);
