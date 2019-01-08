@@ -27,9 +27,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"})
- *    },
- *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uniqueStock", columns={"irhp_permit_type_id","valid_from","valid_to"})
  *    }
  * )
  */

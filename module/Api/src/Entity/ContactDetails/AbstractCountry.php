@@ -143,7 +143,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="is_eea_state", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="is_eea_state", nullable=true, options={"default": 0})
      */
     protected $isEeaState = 0;
 
