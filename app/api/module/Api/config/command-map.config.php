@@ -1080,6 +1080,10 @@ return [
     TransferCommand\Surrender\Update::class => CommandHandler\Surrender\Update::class,
     TransferCommand\Surrender\Delete::class => CommandHandler\Surrender\Delete::class,
     TransferCommand\Surrender\SubmitForm::class => CommandHandler\Surrender\SubmitForm::class,
+
+    // Permits - IRHP application
+    TransferCommand\IrhpApplication\UpdateMultipleNoOfPermits::class => CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class,
+
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
     TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,

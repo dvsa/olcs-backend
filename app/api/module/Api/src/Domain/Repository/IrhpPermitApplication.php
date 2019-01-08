@@ -15,4 +15,17 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class IrhpPermitApplication extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    public function getByIrhpApplicationWithStockInfo($irhpApplicationId)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('ipa as irhpPermitApplication, ips.validTo as validTo, IDENTITY(ips.country) as countryId')
+            ->from(Entity::class, 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipw.irhpPermitStock', 'ips')
+            ->where('IDENTITY(ipa.irhpApplication) = ?1')
+            ->setParameter(1, $irhpApplicationId)
+            ->getQuery()
+            ->getResult();
+    }
 }
