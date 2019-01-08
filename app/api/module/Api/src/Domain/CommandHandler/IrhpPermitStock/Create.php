@@ -4,17 +4,16 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as StockRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitJurisdiction\Create as CreateDevolvedQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
-use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Create as CreateStockCmd;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
@@ -25,22 +24,31 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 final class Create extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
 {
     use ToggleAwareTrait;
+    use IrhpPermitStockTrait;
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
 
+    /**
+     * @param CommandInterface $command
+     * @return Result
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command): Result
     {
-        /**
-         * @var StockRepo      $stockRepo
-         * @var CreateStockCmd $command
-         */
-        $stockRepo = $this->getRepo('IrhpPermitStock');
+        // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
+        $this->duplicateStockCheck($command);
 
-        $permitType = $stockRepo->getReference(IrhpPermitType::class, $command->getPermitType());
+        $irhpPermitType = $this->getRepo('IrhpPermitStock')->getReference(IrhpPermitTypeEntity::class, $command->getIrhpPermitType());
+        $country = null;
+        if ($command->getIrhpPermitType() === IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            $country = $this->getRepo('IrhpPermitStock')->getReference(Country::class, $command->getCountry());
+        }
 
         $stock = StockEntity::create(
-            $permitType,
+            $irhpPermitType,
+            $country,
             $command->getValidFrom(),
             $command->getValidTo(),
             $command->getInitialStock(),
@@ -48,7 +56,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         );
 
         try {
-            $stockRepo->save($stock);
+            $this->getRepo('IrhpPermitStock')->save($stock);
         } catch (\Exception $e) {
             throw new ValidationException(['You cannot create a duplicate stock']);
         }

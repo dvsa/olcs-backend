@@ -125,4 +125,57 @@ class IrhpPermitStockTest extends RepositoryTestCase
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+
+    public function testGetPermitStockCountByTypeDate()
+    {
+        $permitCount = 0;
+        $permitTypeId = 1;
+        $validFrom = '2020-01-01';
+        $validTo = '2020-12-31';
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('count(ips.id)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitStockEntity::class, 'ips')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ips.irhpPermitType = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ips.validFrom = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ips.validTo = ?3')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $permitTypeId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $validFrom)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(3, $validTo)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($permitCount);
+
+        $this->assertEquals(
+            $permitCount,
+            $this->sut->getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
+        );
+    }
 }

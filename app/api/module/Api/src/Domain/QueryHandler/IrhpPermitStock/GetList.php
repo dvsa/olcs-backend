@@ -21,6 +21,7 @@ class GetList extends AbstractListQueryHandler implements ToggleRequiredInterfac
     protected $bundle = [
         'irhpPermitType'=> ['name'],
         'irhpPermitRanges',
-        'irhpPermitWindows'
+        'irhpPermitWindows',
+        'country'
     ];
 }
