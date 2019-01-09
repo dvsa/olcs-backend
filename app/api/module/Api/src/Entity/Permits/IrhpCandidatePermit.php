@@ -72,7 +72,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
 
         $randomFactor = stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
 
-        $this->randomizedScore = abs($randomFactor) * $this->applicationScore;
+        $this->randomizedScore = $randomFactor * $this->applicationScore;
         $this->randomFactor = $randomFactor;
     }
 
