@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
@@ -55,6 +56,30 @@ class IrhpPermitStock extends AbstractRepository
         }
 
         return $results[0];
+    }
+
+    public function getAllValidStockByPermitType($permitType, $hydrationMode = Query::HYDRATE_OBJECT)
+    {
+        $query = $this->getEntityManager()->createQueryBuilder();
+        $date = new DateTime();
+
+        $results = $query->select('ips')
+            ->from(Entity::class, 'ips')
+            ->where($query->expr()->andX(
+                $query->expr()->lt('?1', 'ips.validTo'),
+                $query->expr()->eq('ips.irhpPermitType', '?2')
+            ))
+            ->setParameter(1, $date)
+            ->setParameter(2, $permitType)
+            ->orderBy('ips.validFrom', 'ASC')
+            ->getQuery()
+            ->getResult($hydrationMode);
+
+        if (empty($results)) {
+            throw new NotFoundException('No stock available.');
+        }
+
+        return $results;
     }
 
     /**

@@ -32,20 +32,33 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $dateTime = m::mock(DateTime::class);
 
+        $irhpPermitStock = 1;
+
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
+        $andXFunc = m::mock(Func::class);
+        $eqFunc = m::mock(Func::class);
         $betweenFunc = m::mock(Func::class);
 
         $expr = m::mock(Expr::class);
-        $expr->shouldReceive('between')
-            ->with('?1', 'ipw.startDate', 'ipw.endDate')
-            ->once()
-            ->andReturn($betweenFunc);
 
         $queryBuilder->shouldReceive('expr')
-            ->once()
             ->andReturn($expr);
+
+        $expr->shouldReceive('andX')
+            ->with($eqFunc, $betweenFunc)
+            ->once()
+            ->andReturn($andXFunc);
+
+        $expr->shouldReceive('eq')
+            ->with('?1', 'ipw.irhpPermitStock')
+            ->once()
+            ->andReturn($eqFunc)
+            ->shouldReceive('between')
+            ->with('?2', 'ipw.startDate', 'ipw.endDate')
+            ->once()
+            ->andReturn($betweenFunc);
 
         $queryBuilder->shouldReceive('select')
             ->with('ipw')
@@ -55,12 +68,16 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(IrhpPermitWindowEntity::class, 'ipw')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('add')
-            ->with('where', $betweenFunc)
+            ->shouldReceive('where')
+            ->with($andXFunc)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(1, $dateTime)
+            ->with(1, $irhpPermitStock)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $dateTime)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getResult')
@@ -70,7 +87,7 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $this->assertEquals(
             $expectedResult,
-            $this->sut->fetchOpenWindows($dateTime)
+            $this->sut->fetchOpenWindows($irhpPermitStock, $dateTime)
         );
     }
 
@@ -80,20 +97,33 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $dateTime = m::mock(DateTime::class);
 
+        $irhpPermitStock = 1;
+
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
-        $ltFunc = m::mock(Func::class);
+        $andXFunc = m::mock(Func::class);
+        $eqFunc = m::mock(Func::class);
+        $gtFunc = m::mock(Func::class);
 
         $expr = m::mock(Expr::class);
-        $expr->shouldReceive('lt')
-            ->with('ipw.endDate', '?1')
-            ->once()
-            ->andReturn($ltFunc);
 
         $queryBuilder->shouldReceive('expr')
-            ->once()
             ->andReturn($expr);
+
+        $expr->shouldReceive('andX')
+            ->with($eqFunc, $gtFunc)
+            ->once()
+            ->andReturn($andXFunc);
+
+        $expr->shouldReceive('eq')
+            ->with('?1', 'ipw.irhpPermitStock')
+            ->once()
+            ->andReturn($eqFunc)
+            ->shouldReceive('gt')
+            ->with('?2', 'ipw.endDate')
+            ->once()
+            ->andReturn($gtFunc);
 
         $queryBuilder->shouldReceive('select')
             ->with('ipw')
@@ -103,8 +133,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(IrhpPermitWindowEntity::class, 'ipw')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('add')
-            ->with('where', $ltFunc)
+            ->shouldReceive('where')
+            ->with($andXFunc)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('orderBy')
@@ -112,20 +142,24 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(1, $dateTime)
+            ->with(1, $irhpPermitStock)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $dateTime)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setMaxResults')
             ->with(1)
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('getQuery->getOneOrNullResult')
+            ->shouldReceive('getQuery->getResult')
             ->once()
             ->andReturn($expectedResult);
 
         $this->assertEquals(
             $expectedResult,
-            $this->sut->fetchLastOpenWindow($dateTime)
+            $this->sut->fetchLastOpenWindow($irhpPermitStock, $dateTime)
         );
     }
 
