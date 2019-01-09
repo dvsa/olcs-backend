@@ -970,7 +970,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $emissionsResult,
         $countries,
         $countriesResult
-    ){
+    ) {
         $licNo = 'OB1234567';
         $id = 1111;
         $applicationRef = $licNo . ' / ' . $id;
