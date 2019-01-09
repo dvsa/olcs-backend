@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
@@ -32,5 +34,28 @@ class IrhpApplication extends AbstractIrhpApplication implements OrganisationPro
         return $this->getLicence()->getOrganisation();
     }
 
-
+    /**
+     * @param RefData $source
+     * @param RefData $status
+     * @param RefData $irhpPermitType
+     * @param RefData $licence
+     * @param string|null $dateReceived
+     * @return IrhpApplication
+     */
+    public static function createNew(
+        RefData $source,
+        RefData $status,
+        IrhpPermitType $irhpPermitType,
+        Licence $licence,
+        string $dateReceived = null
+    )
+    {
+        $irhpApplication = new self();
+        $irhpApplication->source = $source;
+        $irhpApplication->status = $status;
+        $irhpApplication->irhpPermitType = $irhpPermitType;
+        $irhpApplication->licence = $licence;
+        $irhpApplication->dateReceived = static::processDate($dateReceived);
+        return $irhpApplication;
+    }
 }

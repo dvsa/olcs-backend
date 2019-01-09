@@ -987,6 +987,10 @@ return [
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
 
+    // Transfer - IRHP Permit Application
+    TransferCommand\IrhpPermitApplication\Create::class =>
+    CommandHandler\IrhpPermitApplication\Create::class,
+
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
@@ -1085,7 +1089,7 @@ return [
     TransferCommand\Permits\CreateFullPermitApplication::class => CommandHandler\Permits\CreateFullPermitApplication::class,
 
     // Irhp Permit Create
-    Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
+    Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\Create::class,
 
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
