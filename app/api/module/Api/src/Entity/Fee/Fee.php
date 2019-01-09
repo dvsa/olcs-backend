@@ -152,6 +152,25 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
+     * Returns true if the accrual rule for this fee type can be earlier than the fee invoice date
+     *
+     * @return bool
+     */
+    public function isAccrualBeforeInvoiceDatePermitted()
+    {
+        $rule = $this->getFeeType()->getAccrualRule()->getId();
+        return in_array(
+            $rule,
+            [
+                self::ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS,
+                self::ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS,
+                self::ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS,
+                self::ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS,
+            ]
+        );
+    }
+
+    /**
      * Is the Accrual rule date before the invoice date
      *
      * @return boolean
@@ -362,7 +381,8 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             'ruleDateBeforeInvoice' => $this->isRuleBeforeInvoiceDate(),
             'isExpiredForLicence' => $this->isExpiredForLicence(),
             'isOutstanding' => $this->isOutstanding(),
-            'isEcmtIssuingFee' => $this->isEcmtIssuingFee()
+            'isEcmtIssuingFee' => $this->isEcmtIssuingFee(),
+            'isAccrualBeforeInvoiceDatePermitted' => $this->isAccrualBeforeInvoiceDatePermitted()
         ];
     }
 
