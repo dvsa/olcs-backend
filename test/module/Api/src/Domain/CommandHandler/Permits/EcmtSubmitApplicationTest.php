@@ -98,7 +98,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
             ->times($permitsRequired)
-            ->with(IrhpCandidatePermit::class)
+            ->with(m::type(IrhpCandidatePermit::class))
             ->andReturnUsing(
                 function (IrhpCandidatePermit $irhpCandidatePermit) use ($irhpPermitApplication, $intensityOfUse, $applicationScore) {
                     $this->assertEquals($irhpPermitApplication, $irhpCandidatePermit->getIrhpPermitApplication());
