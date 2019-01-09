@@ -2,8 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\SectionableInterface;
+use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
 
 /**
  * IrhpApplication Entity
@@ -20,65 +27,75 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  *    }
  * )
  */
-class IrhpApplication extends AbstractIrhpApplication implements OrganisationProviderInterface
+class IrhpApplication extends AbstractIrhpApplication implements
+    IrhpInterface,
+    OrganisationProviderInterface,
+    SectionableInterface
 {
-    /**
-     * @todo this needs to be much more robust, not least because how we store certain data is going to change
-     */
+    use SectionTrait;
+
     const SECTIONS = [
-        'licence' => 'fieldIsNotNull',
-        'countries' => 'countriesPopulated',
-        'permitsRequired' => 'fieldIsInt',
+        'licence' => [
+            'validator' => 'fieldIsNotNull',
+        ],
+        'countries' => [
+            'validator' => 'countriesPopulated',
+        ],
+        'permitsRequired' => [
+            'validator' => 'permitsRequiredPopulated',
+            'validateIf' => [
+                'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            ],
+        ],
+        'checkedAnswers' => [
+            'validator' => 'fieldIsAgreed',
+            'validateIf' => [
+                'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            ],
+        ],
+        'declaration' => [
+            'validator' => 'fieldIsAgreed',
+            'validateIf' => [
+                'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            ],
+        ],
     ];
-
-    const SECTION_COMPLETION_CANNOT_START = 'section_sts_csy';
-    const SECTION_COMPLETION_NOT_STARTED = 'section_sts_nys';
-    const SECTION_COMPLETION_COMPLETED = 'section_sts_com';
-
-    /**
-     * @param string $field field being checked
-     *
-     * @return bool
-     */
-    private function fieldIsNotNull($field)
-    {
-        return $this->$field !== null;
-    }
-
-    /**
-     * @param string $field field being checked
-     *
-     * @return bool
-     */
-    private function fieldIsInt($field)
-    {
-        return is_int($this->$field);
-    }
-
-    /**
-     * Checks an array collection has records
-     *
-     * @param string $field field being checked
-     *
-     * @return bool
-     */
-    private function collectionHasRecord($field)
-    {
-        return (bool)$this->$field->count();
-    }
 
     /**
      * This is a custom validator for the countries field
-     * It isn't completely dynamic because it's assumed that
-     * this won't be needed in the futuree
      *
      * @param string $field field being checked
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function countriesPopulated($field)
     {
         return $this->collectionHasRecord('irhpPermitApplications');
+    }
+
+    /**
+     * This is a custom validator for the permitsRequired field
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    private function permitsRequiredPopulated($field)
+    {
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->getIrhpPermitApplications() as $irhpPermitApplication) {
+            if (!$irhpPermitApplication->hasPermitsRequired()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -90,44 +107,14 @@ class IrhpApplication extends AbstractIrhpApplication implements OrganisationPro
     {
         return [
             'applicationRef' => $this->getApplicationRef(),
-            'canBeCancelled' => false, //$this->canBeCancelled(),
-            'canBeSubmitted' => false, //$this->canBeSubmitted(),
-            'hasOutstandingFees' => false, //$this->hasOutstandingFees(),
-            'sectionCompletion' => $this->getSectionCompletion(self::SECTIONS),
-            'hasCheckedAnswers' => false, //$this->hasCheckedAnswers(),
-            'hasMadeDeclaration' => false, //$this->hasMadeDeclaration(),
-            'isNotYetSubmitted' => true, //$this->isNotYetSubmitted(),
+            'canBeCancelled' => $this->canBeCancelled(),
+            'canBeSubmitted' => $this->canBeSubmitted(),
+            'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'sectionCompletion' => $this->getSectionCompletion(),
+            'hasCheckedAnswers' => $this->hasCheckedAnswers(),
+            'hasMadeDeclaration' => $this->hasMadeDeclaration(),
+            'isNotYetSubmitted' => $this->isNotYetSubmitted(),
         ];
-    }
-
-    /**
-     * @todo this needs to be much more robust, not least because how we store certain data is going to change
-     */
-    protected function getSectionCompletion($sections)
-    {
-        $sectionCompletion = [];
-        $totalCompleted = 0;
-        $totalSections = count($sections);
-
-        foreach ($sections as $field => $validator) {
-            //default field to not started
-            $status = self::SECTION_COMPLETION_NOT_STARTED;
-            $fieldCompleted = $this->$validator($field);
-
-            //if field completed, increment the completed number, and set the status
-            if ($fieldCompleted) {
-                $totalCompleted++;
-                $status = self::SECTION_COMPLETION_COMPLETED;
-            }
-
-            $sectionCompletion[$field] = $status;
-        }
-
-        $sectionCompletion['totalSections'] = $totalSections;
-        $sectionCompletion['totalCompleted'] = $totalCompleted;
-        $sectionCompletion['allCompleted'] = ($totalSections === $totalCompleted);
-
-        return $sectionCompletion;
     }
 
     /**
@@ -148,5 +135,126 @@ class IrhpApplication extends AbstractIrhpApplication implements OrganisationPro
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotYetSubmitted()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_NOT_YET_SUBMITTED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnderConsideration()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_UNDER_CONSIDERATION;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAwaitingFee()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_AWAITING_FEE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFeePaid()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_FEE_PAID;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive()
+    {
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee()
+            || $this->isFeePaid();
+    }
+
+    /**
+     * Whether the permit application can be cancelled
+     *
+     * @return bool
+     */
+    public function canBeCancelled()
+    {
+        return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Have the answers been checked
+     *
+     * @return bool
+     */
+    public function hasCheckedAnswers()
+    {
+        return $this->fieldIsAgreed('checkedAnswers');
+    }
+
+    /**
+     * Have the answers been checked
+     *
+     * @return bool
+     */
+    public function hasMadeDeclaration()
+    {
+        return $this->fieldIsAgreed('declaration');
+    }
+
+    /**
+     * Whether the application can be submitted
+     *
+     * @return bool
+     */
+    public function canBeSubmitted()
+    {
+        if (!$this->isNotYetSubmitted()) {
+            return false;
+        }
+
+        $sections = $this->getSectionCompletion();
+
+        if (!$sections['allCompleted']) {
+            return false;
+        }
+
+        return $this->getLicence()->canMakeIrhpApplication($this->getIrhpPermitType(), $this);
+    }
+
+    /**
+     * Whether the application has any outstanding fees
+     *
+     * @return bool
+     */
+    public function hasOutstandingFees()
+    {
+        return ($this->getLatestOutstandingIrhpApplicationFee() !== null);
+    }
+
+    /**
+     * Get Latest Outstanding Irhp Application Fee
+     *
+     * @return FeeEntity|null
+     */
+    public function getLatestOutstandingIrhpApplicationFee()
+    {
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
+        $criteria = Criteria::create()
+            ->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        /** @var FeeEntity $fee */
+        foreach ($this->getFees()->matching($criteria) as $fee) {
+            if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
+                return $fee;
+            }
+        }
+        return null;
     }
 }

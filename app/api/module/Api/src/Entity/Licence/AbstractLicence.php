@@ -624,6 +624,15 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     protected $gracePeriods;
 
     /**
+     * Irhp application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", mappedBy="licence")
+     */
+    protected $irhpApplications;
+
+    /**
      * Operating centre
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -759,6 +768,7 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
         $this->ecmtApplications = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->gracePeriods = new ArrayCollection();
+        $this->irhpApplications = new ArrayCollection();
         $this->operatingCentres = new ArrayCollection();
         $this->readAudits = new ArrayCollection();
         $this->licenceStatusRules = new ArrayCollection();
@@ -2719,6 +2729,69 @@ abstract class AbstractLicence implements BundleSerializableInterface, JsonSeria
     {
         if ($this->gracePeriods->contains($gracePeriods)) {
             $this->gracePeriods->removeElement($gracePeriods);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being set as the value
+     *
+     * @return Licence
+     */
+    public function setIrhpApplications($irhpApplications)
+    {
+        $this->irhpApplications = $irhpApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpApplications()
+    {
+        return $this->irhpApplications;
+    }
+
+    /**
+     * Add a irhp applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being added
+     *
+     * @return Licence
+     */
+    public function addIrhpApplications($irhpApplications)
+    {
+        if ($irhpApplications instanceof ArrayCollection) {
+            $this->irhpApplications = new ArrayCollection(
+                array_merge(
+                    $this->irhpApplications->toArray(),
+                    $irhpApplications->toArray()
+                )
+            );
+        } elseif (!$this->irhpApplications->contains($irhpApplications)) {
+            $this->irhpApplications->add($irhpApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being removed
+     *
+     * @return Licence
+     */
+    public function removeIrhpApplications($irhpApplications)
+    {
+        if ($this->irhpApplications->contains($irhpApplications)) {
+            $this->irhpApplications->removeElement($irhpApplications);
         }
 
         return $this;
