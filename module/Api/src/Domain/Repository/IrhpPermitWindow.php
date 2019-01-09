@@ -23,17 +23,16 @@ class IrhpPermitWindow extends AbstractRepository
      *
      * @return array
      */
-    public function fetchOpenWindows(DateTime $currentDateTime)
+    public function fetchOpenWindows(int $irhpPermitStock, DateTime $currentDateTime)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->select('ipw')
             ->from(Entity::class, 'ipw')
-            ->add(
-                'where',
-                $qb->expr()->between('?1', 'ipw.startDate', 'ipw.endDate')
-            )
-            ->setParameter(1, $currentDateTime)
+            ->where($qb->expr()->eq('?1', 'ipw.irhpPermitStock'))
+            ->andWhere($qb->expr()->between('?2', 'ipw.startDate', 'ipw.endDate'))
+            ->setParameter(1, $irhpPermitStock)
+            ->setParameter(2, $currentDateTime)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
     }
@@ -46,21 +45,20 @@ class IrhpPermitWindow extends AbstractRepository
      *
      * @return array|null
      */
-    public function fetchLastOpenWindow(DateTime $currentDateTime)
+    public function fetchLastOpenWindow(int $irhpPermitStock, DateTime $currentDateTime)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->select('ipw')
             ->from(Entity::class, 'ipw')
-            ->add(
-                'where',
-                $qb->expr()->lt('ipw.endDate', '?1')
-            )
+            ->where($qb->expr()->eq('?1', 'ipw.irhpPermitStock'))
+            ->andWhere($qb->expr()->gt('?2', 'ipw.endDate'))
             ->orderBy('ipw.endDate', 'DESC')
-            ->setParameter(1, $currentDateTime)
+            ->setParameter(1, $irhpPermitStock)
+            ->setParameter(2, $currentDateTime)
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
     /**

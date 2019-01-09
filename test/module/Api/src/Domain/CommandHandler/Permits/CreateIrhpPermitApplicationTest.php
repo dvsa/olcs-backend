@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication as CreateIrhpPermitApplicationCmd;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateIrhpPermitApplication as CreateIrhpPermitApplicationHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\Create as CreateIrhpPermitApplicationHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
