@@ -739,6 +739,7 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('isExpiredForLicence')->once()->andReturn('unit_ExpiredForLicence')
             ->shouldReceive('isOutstanding')->once()->andReturn('unit_isOutstanding')
             ->shouldReceive('isEcmtIssuingFee')->once()->andReturn('unit_isEcmtIssuing')
+            ->shouldReceive('isAccrualBeforeInvoiceDatePermitted')->once()->andReturn('unit_isAccrualBeforeInvoiceDatePermitted')
             ->getMock();
 
         static::assertEquals(
@@ -749,7 +750,8 @@ class FeeEntityTest extends EntityTester
                 'ruleDateBeforeInvoice' => 'unit_RuleDateBeforeInvoice',
                 'isExpiredForLicence' => 'unit_ExpiredForLicence',
                 'isOutstanding' => 'unit_isOutstanding',
-                'isEcmtIssuingFee' => 'unit_isEcmtIssuing'
+                'isEcmtIssuingFee' => 'unit_isEcmtIssuing',
+                'isAccrualBeforeInvoiceDatePermitted' => 'unit_isAccrualBeforeInvoiceDatePermitted'
             ],
             $sut->getCalculatedBundleValues()
         );
