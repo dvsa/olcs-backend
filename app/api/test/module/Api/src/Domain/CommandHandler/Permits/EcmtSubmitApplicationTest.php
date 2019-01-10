@@ -116,7 +116,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
                 function (ViewModel $viewModel) use ($viewData, $renderedHtml) {
                     $expectedViewVariables = ['data' => $viewData];
 
-                    $this->assertEquals('sections/ecmt-permit-application-snapshot', $viewModel->getTemplate());
+                    $this->assertEquals('ecmt-permit-application-snapshot', $viewModel->getTemplate());
                     $this->assertEquals($expectedViewVariables, $viewModel->getVariables()->getArrayCopy());
 
                     return $renderedHtml;
