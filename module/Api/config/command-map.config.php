@@ -1121,6 +1121,9 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+    // Create HTML Snapshot
+    Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
+        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,

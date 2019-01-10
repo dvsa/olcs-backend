@@ -38,7 +38,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
      *     columns={"continuation_detail_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
-     *     columns={"irhp_application_id"})
+     *     columns={"irhp_application_id"}),
+ *        @ORM\Index(name="fk_document_ecmt_permit_app_id_ecmt_permit_app_id",
+     *     columns={"ecmt_permit_application_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -149,6 +151,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\Column(type="string", name="description", length=255, nullable=true)
      */
     protected $description;
+
+    /**
+     * Ecmt permit application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $ecmtPermitApplication;
 
     /**
      * Filename
@@ -702,6 +714,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the ecmt permit application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $ecmtPermitApplication entity being set as the value
+     *
+     * @return Document
+     */
+    public function setEcmtPermitApplication($ecmtPermitApplication)
+    {
+        $this->ecmtPermitApplication = $ecmtPermitApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecmt permit application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
+     */
+    public function getEcmtPermitApplication()
+    {
+        return $this->ecmtPermitApplication;
     }
 
     /**

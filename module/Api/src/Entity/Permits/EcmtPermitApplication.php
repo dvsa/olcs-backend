@@ -108,7 +108,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * @param Licence $licence Licence
      * @param string|null $dateReceived
      * @param Sectors|null $sectors
-     * @param array $countrys
+     * @param ArrayCollection $countrys
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
@@ -125,7 +125,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         Licence $licence,
         string $dateReceived = null,
         Sectors $sectors = null,
-        $countrys = [],
+        ArrayCollection $countrys,
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
@@ -1002,5 +1002,27 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         ];
 
         return $mappings[$this->source->getId()];
+    }
+
+    /**
+     *
+     * Return data required for the creation of a HTML snapshot
+     * @return array
+     */
+    public function returnSnapshotData()
+    {
+        $data['permitType'] = $this->getPermitType()->getDescription();
+        $data['operator'] = $this->getLicence()->getOrganisation()->getName();
+        $data['ref'] = $this->getApplicationRef();
+        $data['licence'] = $this->getLicence()->getLicNo();
+        $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
+        $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
+        $data['limitedCountries'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+        $data['permitsRequired'] = $this->getPermitsRequired();
+        $data['trips'] = $this->getTrips();
+        $data['internationalJourneys'] = $this->getInternationalJourneys()->getDescription();
+        $data['goods'] = $this->getSectors()->getName();
+
+        return $data;
     }
 }
