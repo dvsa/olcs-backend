@@ -16,6 +16,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
+use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
+use Zend\View\Model\ViewModel;
 
 /**
  * Submit the ECMT application
@@ -67,9 +69,19 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
         $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
 
+        $data = $application->returnSnapshotData();
+
+        $view = new ViewModel();
+        $view->setTemplate('ecmt-permit-application-snapshot');
+
+        $view->setVariable('data', $data);
+
+        $html = $this->getCommandHandler()->getServiceLocator()->get('ViewRenderer')->render($view);
+        $snapshotCmd = SnapshotCmd::create(['id' => $id, 'html' => $html]);
+
         //queue the email confirming submission
         $result->merge(
-            $this->handleSideEffect($emailCmd)
+            $this->handleSideEffects([$emailCmd, $snapshotCmd])
         );
 
         return $result;
