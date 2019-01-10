@@ -72,7 +72,7 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $data = $application->returnSnapshotData();
 
         $view = new ViewModel();
-        $view->setTemplate('sections/ecmt-permit-application-snapshot');
+        $view->setTemplate('ecmt-permit-application-snapshot');
 
         $view->setVariable('data', $data);
 
