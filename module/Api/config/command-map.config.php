@@ -989,7 +989,11 @@ return [
 
     // Transfer - IRHP Permit Application
     TransferCommand\IrhpPermitApplication\Create::class =>
-    CommandHandler\IrhpPermitApplication\Create::class,
+        CommandHandler\IrhpPermitApplication\Create::class,
+
+    // Transfer - IRHP Update Licence
+    TransferCommand\IrhpApplication\UpdateLicence::class =>
+        CommandHandler\IrhpApplication\UpdateLicence::class,
 
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
