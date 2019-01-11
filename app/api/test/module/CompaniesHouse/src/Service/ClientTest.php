@@ -35,6 +35,7 @@ class ClientTest extends MockeryTestCase
         $this->sut = new Client();
         $this->sut->setBaseUri('BASE_URI');
         $this->sut->setHttpClient($this->mockHttpClient);
+        $this->sut->setRateLimit(0);
     }
 
     public function testGetCompanyProfile()
@@ -85,7 +86,7 @@ class ClientTest extends MockeryTestCase
         $officersResponse->setContent('{"items": {"0":{"name":"Bob"}, "1":{"name":"Dave"}}}');
 
         $this->mockHttpClient
-            ->shouldReceive('getRequest')->with()->once()->andReturn($this->mockRequest)
+            ->shouldReceive('getRequest')->once()->andReturn($this->mockRequest)
             ->shouldReceive('send')->andReturn($companyResponse, $officersResponse);
 
         static::assertEquals(
