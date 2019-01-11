@@ -29,8 +29,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->references = [
             IrhpPermitType::class => [
-                1 => m::mock(IrhpPermitType::class),
-                3 => m::mock(IrhpPermitType::class)
+                1 => m::mock(IrhpPermitType::class)
             ],
             Licence::class => [
                 2 => m::mock(Licence::class),
