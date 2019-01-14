@@ -7,10 +7,10 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Dvsa\Olcs\Api\Entity\System\DiscSequence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -252,5 +252,67 @@ class PsvDiscTest extends RepositoryTestCase
         $this->dbQueryService->shouldReceive('get')->with('Discs\CreatePsvDiscs')->andReturn($query);
 
         $this->sut->createPsvDiscs(321, 99, true);
+    }
+
+    public function testCountForLicence()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb('{QUERY}');
+
+        $qb->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn(1);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->sut->countForLicence($licenceId);
+
+        $expectedQuery = '{QUERY} SELECT count(psv) AND psv.licence = [['. $licenceId . ']] AND psv.ceasedDate IS NULL GROUP BY psv.licence LIMIT 1';
+
+        self::assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testCountForLicenceNoResult()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+        $exception = new NoResultException();
+
+
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($exception);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->assertSame(['discCount' => 0], $this->sut->countForLicence($licenceId));
+    }
+
+    public function testCountForLicenceException()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+
+        $ex = new \Exception('testException');
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($ex);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->expectExceptionMessage('testException');
+
+        $this->sut->countForLicence($licenceId);
     }
 }
