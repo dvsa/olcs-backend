@@ -87,7 +87,7 @@ class PsvDiscTest extends RepositoryTestCase
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('psv')->once()->andReturn($mockQb);
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn(['result']);
 
-        $this->sut->fetchDiscsToPrint($licenceType,$maxPages * DiscSequence::DISCS_ON_PAGE);
+        $this->sut->fetchDiscsToPrint($licenceType, $maxPages * DiscSequence::DISCS_ON_PAGE);
     }
 
     public function testSetPrintingOn()
