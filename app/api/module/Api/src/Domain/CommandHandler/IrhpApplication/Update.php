@@ -45,10 +45,9 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
 
         $this->getRepo()->save($application);
 
-        $result = new Result();
-        $result->addId('irhpApplication', $application->getId());
-        $result->addMessage('IRHP application updated');
+        $this->result->addId('irhpApplication', $application->getId());
+        $this->result->addMessage('IRHP application updated');
 
-        return $result;
+        return $this->result;
     }
 }
