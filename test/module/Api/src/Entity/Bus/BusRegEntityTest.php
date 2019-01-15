@@ -2397,8 +2397,13 @@ class BusRegEntityTest extends EntityTester
         $otherServiceNo4 = new BusRegOtherServiceEntity(new Entity(), $serviceNo4);
         $serviceNo = '123';
 
-        $otherServiceNumbers = new ArrayCollection([$otherServiceNo1, $otherServiceNo2,$otherServiceNo3, $otherServiceNo4]);
-        $expectedFormatted = $serviceNo . '(' . $serviceNo1 . ',' . $serviceNo2 . ','.$serviceNo3.')';
+        $otherServiceNumbers = new ArrayCollection([
+            $otherServiceNo1,
+            $otherServiceNo2,
+            $otherServiceNo3,
+            $otherServiceNo4
+        ]);
+        $expectedFormatted = $serviceNo . '(' . $serviceNo1 . ',' . $serviceNo2 . ',' . $serviceNo3 . ')';
 
         return [
             [$serviceNo, new ArrayCollection(), $serviceNo],
@@ -3115,6 +3120,79 @@ class BusRegEntityTest extends EntityTester
             Entity::STATUS_CNS,
             Entity::STATUS_CANCELLED,
             Entity::STATUS_EXPIRED,
+        ];
+    }
+
+    /**
+     * @param $effectiveDate
+     * @param $receivedDate
+     * @param $serviceNo
+     * @param $start
+     * @param $finish
+     * @param $expected
+     *
+     * @dataProvider dpTestIsGrantableBasedOnRequiredFields
+     */
+    public function testIsGrantableBasedOnRequiredFields(
+        $effectiveDate,
+        $receivedDate,
+        $serviceNo,
+        $start,
+        $finish,
+        $expected
+    ) {
+        $this->entity->setTimetableAcceptable('Y');
+        $this->entity->setMapSupplied('Y');
+        $this->entity->setTrcConditionChecked('Y');
+        $this->entity->setCopiedToLaPte('Y');
+        $this->entity->setLaShortNote('Y');
+        $this->entity->setApplicationSigned('Y');
+        $this->entity->addBusServiceTypes('service type');
+        $this->entity->addTrafficAreas('traffic area');
+        $this->entity->addLocalAuthoritys('local authority');
+
+        $this->entity->setEffectiveDate($effectiveDate);
+        $this->entity->setReceivedDate($receivedDate);
+        $this->entity->setServiceNo($serviceNo);
+        $this->entity->setStartPoint($start);
+        $this->entity->setFinishPoint($finish);
+
+        $busNoticePeriod = new BusNoticePeriodEntity();
+        $busNoticePeriod->setId(BusNoticePeriodEntity::NOTICE_PERIOD_OTHER);
+        $this->entity->setBusNoticePeriod($busNoticePeriod);
+
+        $this->entity->setStatus(new RefDataEntity(Entity::STATUS_NEW));
+
+        $this->assertSame($expected, $this->entity->isGrantable());
+    }
+
+    public function dpTestIsGrantableBasedOnRequiredFields()
+    {
+        return [
+            'case_01' => [
+                'effectiveDate' => '2016-12-25',
+                'receivedDate' => '2016-12-25',
+                'serviceNo' => '',
+                'start' => 'Leeds',
+                'finish' => 'London',
+                'expected' => false
+            ],
+            'case_02' => [
+                'effectiveDate' => '2016-12-25',
+                'receivedDate' => '2016-12-25',
+                'serviceNo' => '0',
+                'start' => 'Leeds',
+                'finish' => 'London',
+                'expected' => true
+            ],
+            'case_03' => [
+                'effectiveDate' => '2016-12-25',
+                'receivedDate' => '2016-12-25',
+                'serviceNo' => '1239a',
+                'start' => 'Leeds',
+                'finish' => 'London',
+                'expected' => true
+            ]
         ];
     }
 }
