@@ -9,18 +9,18 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCheckAnswers as UpdateCheckAnswersCmd;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\Update as UpdateCmd;
 
 /**
  * Update checked answers information
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-final class UpdateCheckAnswers extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Update extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     /**
@@ -35,10 +35,14 @@ final class UpdateCheckAnswers extends AbstractCommandHandler implements ToggleR
     {
         /**
          * @var IrhpApplication $application
-         * @var UpdateCheckAnswersCmd    $command
+         * @var UpdateCmd    $command
          */
         $application = $this->getRepo()->fetchById($command->getId());
-        //$application->setCheckedAnswers(true);
+
+        if (!empty($command->getCheckedAnswers())) {
+            $application->setCheckedAnswers($command->getCheckedAnswers());
+        }
+
 
         $this->getRepo()->save($application);
 
