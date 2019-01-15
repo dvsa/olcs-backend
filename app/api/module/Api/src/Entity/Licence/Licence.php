@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -152,6 +154,48 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         /** @var EcmtPermitApplication $application */
         foreach ($this->ecmtApplications as $application) {
             if ($exclude instanceof EcmtPermitApplication && $application->getId() === $exclude->getId()) {
+                continue;
+            }
+
+            if ($application->isActive()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check whether the licence can make an IRHP application of specific type
+     *
+     * @param IrhpPermitType       $type    type to be checked
+     * @param IrhpApplication|null $exclude application to exclude
+     *
+     * @return bool
+     */
+    public function canMakeIrhpApplication(IrhpPermitType $type, ?IrhpApplication $exclude = null)
+    {
+        return !$this->hasActiveIrhpApplication($type, $exclude) && $this->isEligibleForPermits();
+    }
+
+    /**
+     * Check whether the licence has active IRHP application of specific type
+     *
+     * @param IrhpPermitType       $type    type to be checked
+     * @param IrhpApplication|null $exclude application to exclude
+     *
+     * @return bool
+     */
+    public function hasActiveIrhpApplication(IrhpPermitType $type, ?IrhpApplication $exclude = null)
+    {
+        /** @var IrhpApplication $application */
+        foreach ($this->getIrhpApplications() as $application) {
+            if ($exclude instanceof IrhpApplication && $application->getId() === $exclude->getId()) {
+                continue;
+            }
+
+            if ($application->getIrhpPermitType()->getId() !== $type->getId()) {
+                // only consider the type requested
                 continue;
             }
 

@@ -106,4 +106,14 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
         return $this->getIrhpCandidatePermits()->matching($criteria);
     }
+
+    /**
+     * Has permits required populated
+     *
+     * @return bool
+     */
+    public function hasPermitsRequired()
+    {
+        return $this->permitsRequired !== null;
+    }
 }
