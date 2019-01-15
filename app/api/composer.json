@@ -53,7 +53,7 @@
         "doctrine/doctrine-orm-module": "~0.10.0",
         "doctrine/annotations": "^1.2.3",
         "doctrine/collections": "~1.4.0",
-        "gedmo/doctrine-extensions": "~2.4.36",
+        "gedmo/doctrine-extensions": "~2.3.12",
         "oro/doctrine-extensions": "^1.2",
         "ruflin/Elastica": "~5.1",
         "olcs/companies-house": "dev-develop",
