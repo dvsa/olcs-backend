@@ -127,7 +127,11 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence",
+     *     fetch="LAZY",
+     *     inversedBy="irhpApplications"
+     * )
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
@@ -163,6 +167,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $version = 1;
 
     /**
+     * Fee
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Fee\Fee", mappedBy="irhpApplication")
+     */
+    protected $fees;
+
+    /**
      * Irhp permit application
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -191,6 +204,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
+        $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
     }
 
@@ -522,6 +536,69 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the fee
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setFees($fees)
+    {
+        $this->fees = $fees;
+
+        return $this;
+    }
+
+    /**
+     * Get the fees
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getFees()
+    {
+        return $this->fees;
+    }
+
+    /**
+     * Add a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     *
+     * @return IrhpApplication
+     */
+    public function addFees($fees)
+    {
+        if ($fees instanceof ArrayCollection) {
+            $this->fees = new ArrayCollection(
+                array_merge(
+                    $this->fees->toArray(),
+                    $fees->toArray()
+                )
+            );
+        } elseif (!$this->fees->contains($fees)) {
+            $this->fees->add($fees);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a fees
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeFees($fees)
+    {
+        if ($this->fees->contains($fees)) {
+            $this->fees->removeElement($fees);
+        }
+
+        return $this;
     }
 
     /**

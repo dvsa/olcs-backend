@@ -20,6 +20,8 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Publication\Publication;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -2391,5 +2393,195 @@ class LicenceEntityTest extends EntityTester
         $licence->setOrganisation($organisation);
 
         $this->assertSame($organisation, $licence->getRelatedOrganisation());
+    }
+
+    /**
+     * @dataProvider dpTestCanMakeIrhpApplication
+     */
+    public function testCanMakeIrhpApplication(
+        $irhpPermitType,
+        $irhpApplications,
+        $exclude,
+        $isEligibleForPermits,
+        $expected
+    ) {
+        /** @var IrhpPermitType $type */
+        $type = m::mock(IrhpPermitType::class)->makePartial();
+        $type->shouldReceive('getId')->andReturn($irhpPermitType);
+
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('isEligibleForPermits')->andReturn($isEligibleForPermits);
+        $licence->shouldReceive('getIrhpApplications')->andReturn($irhpApplications);
+
+        $this->assertEquals($expected, $licence->canMakeIrhpApplication($type, $exclude));
+    }
+
+    public function dpTestCanMakeIrhpApplication()
+    {
+        $activeBilateralIrhpApp = m::mock(IrhpApplication::class);
+        $activeBilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(10)
+            ->shouldReceive('isActive')
+            ->andReturn(true)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $inactiveBilateralIrhpApp = m::mock(IrhpApplication::class);
+        $inactiveBilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(11)
+            ->shouldReceive('isActive')
+            ->andReturn(false)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $activeMultilateralIrhpApp = m::mock(IrhpApplication::class);
+        $activeMultilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(20)
+            ->shouldReceive('isActive')
+            ->andReturn(true)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $inactiveMultilateralIrhpApp = m::mock(IrhpApplication::class);
+        $inactiveMultilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(21)
+            ->shouldReceive('isActive')
+            ->andReturn(false)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        return [
+            'no IRHP apps - not eligible for permits' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection(),
+                'exclude' => null,
+                'isEligibleForPermits' => false,
+                'expected' => false,
+            ],
+            'no IRHP apps - eligible for permits' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection(),
+                'exclude' => null,
+                'isEligibleForPermits' => true,
+                'expected' => true,
+            ],
+            'all inactive IRHP apps - eligible for permits' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$inactiveMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
+                'exclude' => null,
+                'isEligibleForPermits' => true,
+                'expected' => true,
+            ],
+            'active IRHP app of different type - eligible for permits' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
+                'exclude' => null,
+                'isEligibleForPermits' => true,
+                'expected' => true,
+            ],
+            'active IRHP app of the same type - eligible for permits' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
+                'exclude' => null,
+                'isEligibleForPermits' => true,
+                'expected' => false,
+            ],
+            'active IRHP app of the same type but excluded - eligible for permits' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
+                'exclude' => $activeBilateralIrhpApp,
+                'isEligibleForPermits' => true,
+                'expected' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestHasActiveIrhpApplication
+     */
+    public function testHasActiveIrhpApplication(
+        $irhpPermitType,
+        $irhpApplications,
+        $exclude,
+        $expected
+    ) {
+        /** @var IrhpPermitType $type */
+        $type = m::mock(IrhpPermitType::class)->makePartial();
+        $type->shouldReceive('getId')->andReturn($irhpPermitType);
+
+        /** @var Entity $licence */
+        $licence = m::mock(Entity::class)->makePartial();
+        $licence->shouldReceive('getIrhpApplications')->andReturn($irhpApplications);
+
+        $this->assertEquals($expected, $licence->hasActiveIrhpApplication($type, $exclude));
+    }
+
+    public function dpTestHasActiveIrhpApplication()
+    {
+        $activeBilateralIrhpApp = m::mock(IrhpApplication::class);
+        $activeBilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(10)
+            ->shouldReceive('isActive')
+            ->andReturn(true)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $inactiveBilateralIrhpApp = m::mock(IrhpApplication::class);
+        $inactiveBilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(11)
+            ->shouldReceive('isActive')
+            ->andReturn(false)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $activeMultilateralIrhpApp = m::mock(IrhpApplication::class);
+        $activeMultilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(20)
+            ->shouldReceive('isActive')
+            ->andReturn(true)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $inactiveMultilateralIrhpApp = m::mock(IrhpApplication::class);
+        $inactiveMultilateralIrhpApp->shouldReceive('getId')
+            ->andReturn(21)
+            ->shouldReceive('isActive')
+            ->andReturn(false)
+            ->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        return [
+            'no IRHP apps' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection(),
+                'exclude' => null,
+                'expected' => false,
+            ],
+            'all inactive IRHP apps' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$inactiveMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
+                'exclude' => null,
+                'expected' => false,
+            ],
+            'active IRHP app of different type' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $inactiveBilateralIrhpApp]),
+                'exclude' => null,
+                'expected' => false,
+            ],
+            'active IRHP app of the same type' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
+                'exclude' => null,
+                'expected' => true,
+            ],
+            'active IRHP app of the same type but excluded' => [
+                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'irhpApplications' => new ArrayCollection([$activeMultilateralIrhpApp, $activeBilateralIrhpApp]),
+                'exclude' => $activeBilateralIrhpApp,
+                'expected' => false,
+            ],
+        ];
     }
 }
