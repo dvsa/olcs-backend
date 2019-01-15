@@ -34,6 +34,21 @@ class Client
     protected $baseUri;
 
     /**
+     * @var float
+     */
+    protected $rateLimit = self::WAIT_SEC_BETWEEN_REQUESTS;
+
+    /**
+     * Sets the rate limit for the getData() method
+     *
+     * @param float $limit The rate limit
+     */
+    public function setRateLimit($limit)
+    {
+        $this->rateLimit = $limit;
+    }
+
+    /**
      * Set client to company house Api
      *
      * @param \Zend\Http\Client $httpClient Http Client to CP Api
@@ -126,8 +141,8 @@ class Client
     protected function getData($resourcePath)
     {
         //  check if last request to CH Api was make less then WAIT_BETWEEN_REQUESTS, then set timeout
-        if (microtime(true) - self::$lastCall < self::WAIT_SEC_BETWEEN_REQUESTS) {
-            usleep(self::WAIT_SEC_BETWEEN_REQUESTS * 1E6);
+        if (microtime(true) - self::$lastCall < $this->rateLimit) {
+            usleep($this->rateLimit * 1E6);
         }
 
         self::$lastCall = microtime(true);
@@ -154,7 +169,6 @@ class Client
             if ($statusCode === \Zend\Http\Response::STATUS_CODE_429) {
                 $reason = self::ERR_RATE_LIMIT_EXCEED;
                 $exceptionClass = RateLimitException::class;
-
             } elseif ($statusCode === \Zend\Http\Response::STATUS_CODE_404) {
                 //  set common reason and exception class
                 $reason = self::ERR_SERVICE_NOT_RESPOND;
@@ -174,12 +188,10 @@ class Client
                         $exceptionClass = NotFoundException::class;
                     }
                 }
-
             } else {
                 $reason = $response->getBody();
                 $exceptionClass = ServiceException::class;
             }
-
         } elseif (json_last_error() !== JSON_ERROR_NONE) {
             $reason = self::ERR_INVALID_JSON;
             $exceptionClass = ServiceException::class;
