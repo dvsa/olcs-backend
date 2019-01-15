@@ -43,7 +43,6 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
             $application->setCheckedAnswers($command->getCheckedAnswers());
         }
 
-
         $this->getRepo()->save($application);
 
         $result = new Result();
