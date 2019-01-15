@@ -134,4 +134,12 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertTrue($successfulIrhpCandidatePermits->contains($candidatePermit3));
         $this->assertEquals(2, $successfulIrhpCandidatePermits->count());
     }
+
+    public function testHasPermitsRequired()
+    {
+        $this->assertFalse($this->sut->hasPermitsRequired());
+
+        $this->sut->setPermitsRequired(0);
+        $this->assertTrue($this->sut->hasPermitsRequired());
+    }
 }

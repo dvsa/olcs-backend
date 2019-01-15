@@ -1251,6 +1251,12 @@ return array(
                 'property' => 'fee'
             )
         ),
+        'irhp_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpApplication',
+                'property' => 'fee'
+            )
+        ),
     ),
     'ebsr_submission_result' => array(
         'email_authority' => array(
@@ -2132,6 +2138,14 @@ return array(
             'inversedBy' => array(
                 'entity' => 'Licence',
                 'property' => 'ecmtApplication'
+            )
+        ),
+    ),
+    'irhp_application' => array(
+        'licence_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Licence',
+                'property' => 'irhpApplication'
             )
         ),
     ),
