@@ -39,7 +39,7 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
          */
         $application = $this->getRepo()->fetchById($command->getId());
 
-        if (!empty($command->getCheckedAnswers())) {
+        if (!empty($command->getCheckedAnswers()) && $application->isNotYetSubmitted()) {
             $application->setCheckedAnswers($command->getCheckedAnswers());
         }
 
