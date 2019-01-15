@@ -200,7 +200,11 @@ abstract class AbstractFee implements BundleSerializableInterface, JsonSerializa
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
+     *     fetch="LAZY",
+     *     inversedBy="fees"
+     * )
      * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
      */
     protected $irhpApplication;
