@@ -68,7 +68,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
     /**
      * Get num of successful permit applications
-     **
+     *
      * @return int
      */
     public function countPermitsAwarded()
@@ -78,7 +78,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
     /**
      * Get num of valid permits
-     **
+     *
      * @return int
      */
     public function countValidPermits()
@@ -94,7 +94,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
     /**
      * Get candidate permits marked as successful
-     **
+     *
      * @return array
      */
     public function getSuccessfulIrhpCandidatePermits()
@@ -115,5 +115,17 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public function hasPermitsRequired()
     {
         return $this->permitsRequired !== null;
+    }
+
+    /**
+     * Sets the permits required within the stock associated with this entity
+     *
+     * @param int $permitsRequired
+     */
+    public function updatePermitsRequired($permitsRequired)
+    {
+        if (!is_null($this->irhpApplication) && $this->irhpApplication->canBeUpdated()) {
+            $this->permitsRequired = $permitsRequired;
+        }
     }
 }

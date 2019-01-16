@@ -55,5 +55,6 @@ return [
         'canEditPermitApp' => Validators\CanEditPermitApp::class,
         'isLicenceSurrenderable' => Validators\IsLicenceSurrenderable::class,
         'canAccessIrhpApplicationWithId' => Validators\CanAccessIrhpApplicationWithId::class,
+        'canEditIrhpApplicationWithId' => Validators\CanEditIrhpApplicationWithId::class,
     ]
 ];

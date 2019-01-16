@@ -114,6 +114,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
         ];
     }
 
@@ -256,5 +257,41 @@ class IrhpApplication extends AbstractIrhpApplication implements
             }
         }
         return null;
+    }
+
+    /**
+     * Returns true if the application is in a state where the number of permits can be specified against each
+     * relevant stock (i.e. one or more instances of IrhpPermitApplication have already been created against this
+     * IrhpApplication)
+     *
+     * @return bool
+     */
+    public function isReadyForNoOfPermits()
+    {
+        $canBeUpdated = $this->canBeUpdated();
+        $hasIrhpPermitApplications = count($this->irhpPermitApplications) > 0;
+
+        return $canBeUpdated && $hasIrhpPermitApplications;
+    }
+
+    /**
+     * Whether the application can be updated
+     *
+     * @return bool
+     */
+    public function canBeUpdated()
+    {
+        return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Reset the checked answers and declaration sections to a value representing 'not completed'
+     */
+    public function resetCheckAnswersAndDeclaration()
+    {
+        if ($this->canBeUpdated()) {
+            $this->declaration = false;
+            $this->checkedAnswers = false;
+        }
     }
 }
