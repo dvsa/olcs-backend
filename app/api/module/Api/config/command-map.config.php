@@ -1133,7 +1133,7 @@ return [
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
 
     // IrhpApplication update
-    TransferCommand\IrhpApplication\Update::class => CommandHandler\IrhpApplication\Update::class,
+    TransferCommand\IrhpApplication\UpdateCheckAnswers::class => CommandHandler\IrhpApplication\UpdateCheckAnswers::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,

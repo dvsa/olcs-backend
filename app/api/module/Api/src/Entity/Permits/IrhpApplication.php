@@ -200,6 +200,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Update checkedAnswers to true
+     *
+     * @return bool
+     */
+    public function updateCheckAnswers()
+    {
+        return $this->checkedAnswers = true;
+    }
+
+    /**
      * Have the answers been checked
      *
      * @return bool
