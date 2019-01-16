@@ -16,7 +16,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 class AbstractUpdateDefinedValue extends AbstractCommandHandler
 {
     protected $repoServiceName = 'changeMe';
-    protected $recordName = 'Record';
     protected $entityMethodName = 'changeMe';
     protected $definedValue = 'changeMe';
     protected $isRefData = false;
@@ -52,8 +51,8 @@ class AbstractUpdateDefinedValue extends AbstractCommandHandler
         //save the record
         $repo->save($recordObject);
 
-        $this->result->addId($this->recordName, $recordObject->getId());
-        $this->result->addMessage($this->recordName . ' updated');
+        $this->result->addId($this->repoServiceName, $recordObject->getId());
+        $this->result->addMessage($this->repoServiceName . ' updated');
 
         return $this->result;
     }
