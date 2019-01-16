@@ -202,7 +202,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Update checkedAnswers to true
      *
-     * @return bool
      */
     public function updateCheckAnswers()
     {
