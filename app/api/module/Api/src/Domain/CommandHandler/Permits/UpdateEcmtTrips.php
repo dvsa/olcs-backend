@@ -18,7 +18,6 @@ final class UpdateEcmtTrips extends AbstractUpdateCommandHandler implements Togg
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $recordName = 'ECMT permit application';
     protected $commandMethodName = 'getEcmtTrips';
     protected $entityMethodName = 'updateTrips';
 }

@@ -18,7 +18,6 @@ final class UpdateEcmtCheckAnswers extends AbstractUpdateDefinedValue implements
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-    protected $recordName = 'ECMT permit application';
     protected $entityMethodName = 'setCheckedAnswers';
     protected $definedValue = true;
 }
