@@ -205,6 +205,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function updateCheckAnswers()
     {
+        if (!$this->isNotYetSubmitted()) {
+            throw new ForbiddenException('This application is already submitted');
+        }
         return $this->checkedAnswers = true;
     }
 
