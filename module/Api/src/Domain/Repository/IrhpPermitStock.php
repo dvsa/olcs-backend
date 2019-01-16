@@ -80,4 +80,27 @@ class IrhpPermitStock extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    /**
+     * Returns the count of permit stocks for a type and validity period
+     *
+     * @param int $permitTypeId
+     * @param string $validFrom
+     * @param string $validTo
+     * @return int
+     */
+    public function getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(ips.id)')
+            ->from(Entity::class, 'ips')
+            ->where('ips.irhpPermitType = ?1')
+            ->andWhere('ips.validFrom = ?2')
+            ->andWhere('ips.validTo = ?3')
+            ->setParameter(1, $permitTypeId)
+            ->setParameter(2, $validFrom)
+            ->setParameter(3, $validTo)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
