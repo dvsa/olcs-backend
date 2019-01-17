@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -36,6 +37,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     use SectionTrait;
 
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
+    const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
 
     const SECTIONS = [
         'licence' => [
@@ -263,7 +265,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function hasOutstandingFees()
     {
-        return ($this->getLatestOutstandingIrhpApplicationFee() !== null);
+        return $this->getLatestOutstandingIrhpApplicationFee() !== null;
     }
 
     /**
@@ -320,5 +322,45 @@ class IrhpApplication extends AbstractIrhpApplication implements
             $this->declaration = false;
             $this->checkedAnswers = false;
         }
+    }
+
+    /**
+     * Mark Declaration field as true
+     *
+     * @return bool
+     * @throws ForbiddenException
+     */
+    public function makeDeclaration()
+    {
+        if (!$this->canMakeDeclaration()) {
+            throw new ForbiddenException(self::ERR_CANT_MAKE_DECLARATION);
+        }
+        return $this->declaration = true;
+    }
+
+    /**
+     * Whether declaration can be be updated
+     *
+     * @return bool
+     */
+    public function canMakeDeclaration()
+    {
+        return $this->canBeUpdated() && $this->isFieldReadyToComplete('declaration');
+    }
+
+    /**
+     * Submit Application - Placeholder method to allow Declaration Page redirects to work for testing.
+     * Todo: Update this method with actual logic to check values/throw exceptions/update status based on AC
+     *
+     * @return bool
+     * @throws ValidationException
+     */
+    public function submitApplication()
+    {
+        if (!$this->canBeSubmitted()) {
+            throw new ValidationException(['Application cannot be submitted']);
+        }
+
+        return true;
     }
 }

@@ -824,4 +824,27 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertTrue($irhpApplication->getDeclaration());
         $this->assertTrue($irhpApplication->getCheckedAnswers());
     }
+
+    public function testMakeDeclaration()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canMakeDeclaration')
+            ->andReturn(true);
+
+        $irhpApplication->makeDeclaration();
+
+        $this->assertTrue($irhpApplication->getDeclaration());
+    }
+
+    public function testMakeDeclarationFail()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_MAKE_DECLARATION);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canMakeDeclaration')
+            ->andReturn(false);
+
+        $irhpApplication->makeDeclaration();
+    }
 }
