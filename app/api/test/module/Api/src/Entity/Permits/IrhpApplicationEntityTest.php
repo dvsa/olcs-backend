@@ -52,6 +52,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
             ->andReturn(false)
+            ->shouldReceive('canBeUpdated')
+            ->andReturn(true)
             ->shouldReceive('hasOutstandingFees')
             ->andReturn(false)
             ->shouldReceive('getSectionCompletion')
@@ -63,19 +65,23 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('isNotYetSubmitted')
             ->andReturn(true)
             ->shouldReceive('isReadyForNoOfPermits')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('canCheckAnswers')
+            ->andReturn(true);;
 
         $this->assertSame(
             [
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
                 'canBeSubmitted' => false,
+                'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
                 'sectionCompletion' => [],
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
                 'isReadyForNoOfPermits' => false,
+                'canCheckAnswers' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
