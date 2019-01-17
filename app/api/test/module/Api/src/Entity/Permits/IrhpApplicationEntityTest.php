@@ -768,10 +768,9 @@ class IrhpApplicationEntityTest extends EntityTester
     public function testUpdateCheckAnswers()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('isNotYetSubmitted')
+        $irhpApplication->shouldReceive('canCheckeAnswers')
             ->andReturn(true);
-        $irhpApplication->shouldReceive('hasCheckedAnswers')
-            ->andReturn(true);
+
         $irhpApplication->setCheckedAnswers(false);
         $irhpApplication->updateCheckAnswers();
         $this->assertTrue($irhpApplication->getCheckedAnswers());
@@ -804,4 +803,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertTrue($irhpApplication->getDeclaration());
         $this->assertTrue($irhpApplication->getCheckedAnswers());
     }
+
+
 }

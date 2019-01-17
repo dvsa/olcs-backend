@@ -136,4 +136,17 @@ trait SectionTrait
             ? SectionableInterface::SECTION_COMPLETION_COMPLETED
             : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
     }
+
+    /**
+     * Checks if particular field validates
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     */
+    private function isFieldReadyToComplete($field)
+    {
+        $this->validateField($field);
+        return $this->sectionCompletion[$field] !== SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+    }
 }
