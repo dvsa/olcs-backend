@@ -56,4 +56,14 @@ class AbstractUpdateDefinedValue extends AbstractCommandHandler
 
         return $this->result;
     }
+
+    /**
+     * To facilitate unit testing only
+     *
+     * @return bool
+     */
+    public function isRefData()
+    {
+        return $this->isRefData;
+    }
 }
