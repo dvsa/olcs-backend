@@ -310,7 +310,7 @@ class FeeType extends AbstractRepository
      * @return Entity
      * @throws Exception\NotFoundException
      */
-    public function getLatestForEcmtPermit($productReference)
+    public function getLatestByProductReference($productReference)
     {
         $qb = $this->createQueryBuilder();
         $qb->andWhere($qb->expr()->eq('ft.productReference', ':productReference'));

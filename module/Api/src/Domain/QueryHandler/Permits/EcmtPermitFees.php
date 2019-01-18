@@ -27,7 +27,7 @@ class EcmtPermitFees extends AbstractQueryHandler implements ToggleRequiredInter
 
         $result = [];
         foreach ($query->getProductReferences() as $feeProductReference) {
-            $result['fee'][$feeProductReference] = $repo->getLatestForEcmtPermit($feeProductReference);
+            $result['fee'][$feeProductReference] = $repo->getLatestByProductReference($feeProductReference);
         }
 
         return $result;
