@@ -58,6 +58,10 @@ class RefData extends AbstractRefData
     const PERMIT_APP_STATUS_ISSUING = 'permit_app_issuing';
     const PERMIT_APP_STATUS_VALID = 'permit_app_valid';
 
+    const SURRENDER_DOC_STATUS_DESTROYED='doc_sts_destroyed';
+    const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
+    const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
+
     /**
      * RefData constructor.
      *
