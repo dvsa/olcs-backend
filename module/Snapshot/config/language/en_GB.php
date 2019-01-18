@@ -352,5 +352,23 @@ return [
     'continuations.people-empty-table-message.org_t_pa' => 'There are no responsible people recorded on your licence',
     'continuations.people-empty-table-message.org_t_rc' => 'There are no directors recorded on your licence',
     'continuations.people-empty-table-message.org_t_st' => 'There is no owner recorded on your licence',
+
+    // Surrender snapshot translations
+    'surrender-review-title' => 'Digital surrender form',
+    'surrender-review-licence' => 'Licence details',
+    'surrender-review-current-discs' => 'Current discs',
+    'surrender-review-documentation' => 'Documentation',
+    'surrender-review-declaration' => 'Declarations',
+    'surrender-review-licence-number' => 'Licence number',
+    'surrender-review-licence-holder' => 'Name of licence holder',
+    'surrender-review-licence-trading-name' => 'Trading name (if any)',
+    'surrender-review-licence-correspondence-address' => 'Correspondence address',
+    'surrender-review-additional-information' => 'Additional information',
+    'surrender-review-current-discs-destroyed' => 'Number destroyed',
+    'surrender-review-current-discs-lost' => 'Number Lost',
+    'surrender-review-current-discs-stolen' => 'Number stolen',
+    'surrender-review-documentation-operator-licence' => 'Operator licence',
+    'surrender-review-documentation-community-licence' => 'Community licence and all Certified copies',
+
     // Potentially unused translations
 ];
