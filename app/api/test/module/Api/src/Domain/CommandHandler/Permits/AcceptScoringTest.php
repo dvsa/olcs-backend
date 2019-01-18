@@ -75,7 +75,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $feeType->shouldReceive('getFixedValue')
             ->andReturn($feeTypeFixedValue);
 
-        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
             ->with('IRHP_GV_ECMT_100_PERMIT_FEE')
             ->andReturn($feeType);
 
