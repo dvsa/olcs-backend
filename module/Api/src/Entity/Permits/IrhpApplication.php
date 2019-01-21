@@ -12,6 +12,8 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
@@ -135,6 +137,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canCheckAnswers' => $this->canCheckAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
             'permitsRequired' => $this->getPermitsRequired(),
+            'canUpdateCountries' => $this->canUpdateCountries(),
         ];
     }
 
@@ -260,6 +263,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Whether countries can be updated
+     *
+     * @return bool
+     */
+    public function canUpdateCountries()
+    {
+        return $this->canBeUpdated()
+            && $this->getIrhpPermitType()->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
+            && $this->isFieldReadyToComplete('countries');
+    }
+
+    /**
      * Update checkedAnswers to true
      *
      * @throws ForbiddenException
@@ -273,7 +288,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether checkedAnswers can be be updated
+     * Whether checkedAnswers can be updated
      *
      * @return bool
      */
