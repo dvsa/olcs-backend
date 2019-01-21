@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -52,6 +53,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
             ->andReturn(false)
+            ->shouldReceive('canBeUpdated')
+            ->andReturn(true)
             ->shouldReceive('hasOutstandingFees')
             ->andReturn(false)
             ->shouldReceive('getSectionCompletion')
@@ -63,19 +66,23 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('isNotYetSubmitted')
             ->andReturn(true)
             ->shouldReceive('isReadyForNoOfPermits')
-            ->andReturn(false);
+            ->andReturn(false)
+            ->shouldReceive('canCheckAnswers')
+            ->andReturn(true);
 
         $this->assertSame(
             [
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
                 'canBeSubmitted' => false,
+                'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
                 'sectionCompletion' => [],
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
                 'isReadyForNoOfPermits' => false,
+                'canCheckAnswers' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -763,6 +770,31 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
             ],
         ];
+    }
+
+    public function testUpdateCheckAnswers()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canCheckAnswers')
+            ->once()
+            ->andReturn(true);
+
+        $irhpApplication->setCheckedAnswers(false);
+        $irhpApplication->updateCheckAnswers();
+        $this->assertTrue($irhpApplication->getCheckedAnswers());
+    }
+
+    public function testUpdateCheckAnswersException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canCheckAnswers')
+            ->once()
+            ->andReturn(false);
+
+        $irhpApplication->updateCheckAnswers();
     }
 
     public function testResetCheckAnswersAndDeclarationSuccess()

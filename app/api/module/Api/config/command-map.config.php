@@ -1132,6 +1132,9 @@ return [
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
 
+    // IrhpApplication update
+    TransferCommand\IrhpApplication\UpdateCheckAnswers::class => CommandHandler\IrhpApplication\UpdateCheckAnswers::class,
+
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,
     TransferCommand\Permits\QueueAcceptScoring::class => CommandHandler\Permits\QueueAcceptScoring::class,

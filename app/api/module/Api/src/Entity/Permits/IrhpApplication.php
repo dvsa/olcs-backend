@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * IrhpApplication Entity
@@ -33,6 +34,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     SectionableInterface
 {
     use SectionTrait;
+
+    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
 
     const SECTIONS = [
         'licence' => [
@@ -109,12 +112,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
+            'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
             'sectionCompletion' => $this->getSectionCompletion(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
+            'canCheckAnswers' => $this->canCheckAnswers(),
         ];
     }
 
@@ -197,6 +202,28 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function hasCheckedAnswers()
     {
         return $this->fieldIsAgreed('checkedAnswers');
+    }
+
+    /**
+     * Update checkedAnswers to true
+     *
+     */
+    public function updateCheckAnswers()
+    {
+        if (!$this->canCheckAnswers()) {
+            throw new ForbiddenException(self::ERR_CANT_CHECK_ANSWERS);
+        }
+        return $this->checkedAnswers = true;
+    }
+
+    /**
+     * Whether checkedAnswers can be be updated
+     *
+     * @return bool
+     */
+    public function canCheckAnswers()
+    {
+        return $this->canBeUpdated() && $this->isFieldReadyToComplete('checkedAnswers');
     }
 
     /**
