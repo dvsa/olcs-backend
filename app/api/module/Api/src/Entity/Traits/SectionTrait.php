@@ -144,7 +144,7 @@ trait SectionTrait
      *
      * @return bool
      */
-    private function isFieldReadyToComplete($field)
+    protected function isFieldReadyToComplete($field)
     {
         $this->validateField($field);
         return $this->sectionCompletion[$field] !== SectionableInterface::SECTION_COMPLETION_CANNOT_START;
