@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -67,7 +68,7 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('isReadyForNoOfPermits')
             ->andReturn(false)
             ->shouldReceive('canCheckAnswers')
-            ->andReturn(true);;
+            ->andReturn(true);
 
         $this->assertSame(
             [
@@ -775,11 +776,25 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('canCheckAnswers')
+            ->once()
             ->andReturn(true);
 
         $irhpApplication->setCheckedAnswers(false);
         $irhpApplication->updateCheckAnswers();
         $this->assertTrue($irhpApplication->getCheckedAnswers());
+    }
+
+    public function testUpdateCheckAnswersException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canCheckAnswers')
+            ->once()
+            ->andReturn(false);
+
+        $irhpApplication->updateCheckAnswers();
     }
 
     public function testResetCheckAnswersAndDeclarationSuccess()
@@ -809,6 +824,4 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertTrue($irhpApplication->getDeclaration());
         $this->assertTrue($irhpApplication->getCheckedAnswers());
     }
-
-
 }

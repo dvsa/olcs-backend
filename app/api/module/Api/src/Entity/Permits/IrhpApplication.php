@@ -35,6 +35,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
 {
     use SectionTrait;
 
+    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
+
     const SECTIONS = [
         'licence' => [
             'validator' => 'fieldIsNotNull',
@@ -209,7 +211,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function updateCheckAnswers()
     {
         if (!$this->canCheckAnswers()) {
-            throw new ForbiddenException('The sections of the application have not been completed.');
+            throw new ForbiddenException(self::ERR_CANT_CHECK_ANSWERS);
         }
         return $this->checkedAnswers = true;
     }
