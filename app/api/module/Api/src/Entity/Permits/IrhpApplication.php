@@ -122,6 +122,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'canCheckAnswers' => $this->canCheckAnswers(),
+            'canMakeDeclaration' => $this->canMakeDeclaration()
         ];
     }
 
@@ -265,7 +266,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function hasOutstandingFees()
     {
-        return $this->getLatestOutstandingIrhpApplicationFee() !== null;
+        return true; //$this->getLatestOutstandingIrhpApplicationFee() !== null;
     }
 
     /**
