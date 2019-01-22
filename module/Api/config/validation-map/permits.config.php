@@ -14,6 +14,8 @@ return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ActiveApplication::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpApplication\GetList::class => CanAccessOrganisationWithOrganisation::class,
+    QueryHandler\IrhpApplication\MaxStockPermits::class => CanAccessLicenceWithLicence::class,
+    QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
