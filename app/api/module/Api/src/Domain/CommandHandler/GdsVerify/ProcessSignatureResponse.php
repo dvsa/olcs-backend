@@ -9,6 +9,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\GdsVerify;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 
 /**
  * ProcessResponse
@@ -96,6 +98,8 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             $this->result->addMessage($result);
 
             $this->result->addMessage('Digital Signature added to surrender' . $command->getLicence());
+
+            $this->result->merge($this->createSurrenderTask($command->getLicence()));
         }
 
         return $this->result;
@@ -270,5 +274,19 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $licence->setStatus($this->getRepo()->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
         return $result;
+    }
+
+    private function createSurrenderTask($licId)
+    {
+        $taskData = [
+            'category' => Category::CATEGORY_APPLICATION,
+            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
+            'description' => 'Digital surrender',
+            'isClosed' => 'N',
+            'urgent' => 'N',
+            'licence' => $licId,
+        ];
+
+        return $this->handleSideEffect(CreateTask::create($taskData));
     }
 }
