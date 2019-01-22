@@ -48,6 +48,8 @@ final class CreateTask extends AbstractCommand
 
     protected $transportManager;
 
+    protected $surrender;
+
     protected $irfoOrganisation;
 
     protected $ecmtPermitApplication;
@@ -188,5 +190,13 @@ final class CreateTask extends AbstractCommand
     public function getAssignedByUser()
     {
         return $this->assignedByUser;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSurrender()
+    {
+        return $this->surrender;
     }
 }
