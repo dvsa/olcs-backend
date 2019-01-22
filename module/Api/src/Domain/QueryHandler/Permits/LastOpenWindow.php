@@ -3,9 +3,11 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Transfer\Query\Permits\LastOpenWindow as LastOpenWindowQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -32,30 +34,33 @@ class LastOpenWindow extends AbstractQueryHandler implements ToggleRequiredInter
      *
      * @return array
      * @throws NotFoundException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $query->getCurrentDateTime());
 
-        /** @var IrhpPermitType $irhpPermitType */
-        $irhpPermitType = $this->getRepo('IrhpPermitType')->fetchById($query->getPermitType());
+        /** @var IrhpPermitWindowRepo $irhpPermitWindowRepo */
+        $irhpPermitWindowRepo = $this->getRepo();
 
-        if (!($irhpPermitType instanceof IrhpPermitType)) {
-            throw new NotFoundException('Permit type not found.');
-        }
+        /** @var IrhpPermitTypeRepo $irhpPermitTypeRepo */
+        $irhpPermitTypeRepo = $this->getRepo('IrhpPermitType');
 
-        /** @var IrhpPermitStock $irhpPermitStockRepo */
+        /** @var IrhpPermitStockRepo $irhpPermitStockRepo */
         $irhpPermitStockRepo = $this->getRepo('IrhpPermitStock');
+
+        /** @var IrhpPermitTypeEntity $irhpPermitType */
+        $irhpPermitType = $irhpPermitTypeRepo->fetchById($query->getPermitType());
 
         $stocks = $irhpPermitStockRepo->fetchByIrhpPermitType($irhpPermitType->getId());
 
         $lastOpenWindow = [];
 
+        /** @var IrhpPermitStockEntity $stock */
         foreach ($stocks as $stock) {
-            /** @var IrhpPermitWindow $window */
-            $window = $this->getRepo()->fetchLastOpenWindow($stock->getId(), $date);
+            $window = $irhpPermitWindowRepo->fetchLastOpenWindow($stock->getId(), $date);
 
-            if (empty($lastOpenWindow) || $window->getEndDate() > $lastOpenWindow->getEndDate()) {
+            if (empty($lastOpenWindow) || $window['endDate'] > $lastOpenWindow['endDate']) {
                 $lastOpenWindow = $window;
             }
         }
