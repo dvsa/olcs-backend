@@ -15,6 +15,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse as Cmd;
 use Dvsa\Olcs\GdsVerify\Service;
 use Dvsa\Olcs\GdsVerify;
+use Dvsa\Olcs\Api\Entity\System\Category;
 
 /**
  * ProcessSignatureResponseTest
@@ -325,12 +326,24 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
+            [
+                'category' => Category::CATEGORY_APPLICATION,
+                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
+                'description' => 'Digital surrender',
+                'isClosed' => 'N',
+                'urgent' => 'N',
+                'licence' => $command->getLicence()
+            ],
+            new Result()
+        );
+
+
         $licence = m::mock(Licence::class)
             ->shouldReceive('setStatus')
             ->once()
             ->getMock();
-
-
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
