@@ -4,13 +4,15 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
@@ -32,10 +34,12 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 class IrhpApplication extends AbstractIrhpApplication implements
     IrhpInterface,
     OrganisationProviderInterface,
-    SectionableInterface
+    SectionableInterface,
+    CancelableInterface
 {
     use SectionTrait;
 
+    const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
 
@@ -139,7 +143,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get the organisation
      *
-     * @return OrganisationEntity
+     * @return Organisation
      */
     public function getRelatedOrganisation()
     {
@@ -188,6 +192,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Cancel an application
+     *
+     * @param RefData $refData cancellation status
+     *
+     * @return void
+     */
+    public function cancel(RefData $cancelStatus)
+    {
+        if (!$this->canBeCancelled()) {
+            throw new ForbiddenException(self::ERR_CANT_CANCEL);
+        }
+
+        $this->status = $cancelStatus;
+    }
+
+    /**
      * Whether the permit application can be cancelled
      *
      * @return bool
@@ -210,6 +230,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Update checkedAnswers to true
      *
+     * @throws ForbiddenException
      */
     public function updateCheckAnswers()
     {
@@ -257,6 +278,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $this->getLicence()->canMakeIrhpApplication($this->getIrhpPermitType(), $this);
+    }
+
+    /**
+     * @todo implement in olcs-22944
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        return [];
     }
 
     /**

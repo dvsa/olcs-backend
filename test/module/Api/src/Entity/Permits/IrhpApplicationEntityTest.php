@@ -249,6 +249,50 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * Tests cancelling an application
+     */
+    public function testCancel()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setStatus(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
+        $this->assertEquals(IrhpInterface::STATUS_CANCELLED, $entity->getStatus()->getId());
+    }
+
+    /**
+     * @dataProvider dpCancelException
+     */
+    public function testCancelException($status)
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CANCEL);
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setStatus(new RefData($status));
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
+    }
+
+    /**
+     * Pass array of app status to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpCancelException()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
+            [IrhpInterface::STATUS_DECLINED],
+        ];
+    }
+
+    /**
      * @dataProvider dpTestCanBeCancelled
      */
     public function testCanBeCancelled($status, $expected)
