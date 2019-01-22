@@ -380,6 +380,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Reset application answers - sets properties to null, or calls individual update methods in more important cases
+     */
+    public function clearAnswers()
+    {
+        // @todo Clear all sections for the permit type
+    }
+
+    /**
+     * @param Licence $licence
+     *
+     * @return void
+     */
+    public function updateLicence(Licence $licence)
+    {
+        $this->licence = $licence;
+        $this->clearAnswers();
+    }
+
+    /**
      * @param RefData $source
      * @param RefData $status
      * @param RefData $irhpPermitType

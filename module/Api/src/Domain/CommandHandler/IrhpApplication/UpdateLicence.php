@@ -55,22 +55,21 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
             throw new ForbiddenException(self::LICENCE_ORG_MSG);
         }
 
-//        if (!$licence->canMakeIrhpApplication($application)) {
-//            $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
-//            throw new ForbiddenException($message);
-//        }
+        if (!$licence->canMakeIrhpApplication($application->getIrhpPermitType())) {
+            $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
+            throw new ForbiddenException($message);
+        }
 
         // Update the licence but reset the previously answers questions to NULL
         $application->updateLicence($licence);
-        // @Todo: Cancel fees when licence updated
-//        $fees = $application->getFees();
+        $fees = $application->getFees();
 
         /** @var Fee $fee */
-//        foreach ($fees as $fee) {
-//            if ($fee->isOutstanding()) {
-//                $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
-//            }
-//        }
+        foreach ($fees as $fee) {
+            if ($fee->isOutstanding()) {
+                $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
+            }
+        }
 
         $this->getRepo()->save($application);
         $result->addId('irhpApplication', $application->getId());
