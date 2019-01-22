@@ -36,7 +36,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_task_submission_id", columns={"submission_id"}),
  *        @ORM\Index(name="ix_task_ecmt_permit_application_id",
      *     columns={"ecmt_permit_application_id"}),
- *        @ORM\Index(name="ix_task_irhp_application_id", columns={"irhp_application_id"})
+ *        @ORM\Index(name="ix_task_irhp_application_id", columns={"irhp_application_id"}),
+ *        @ORM\Index(name="ix_task_surrender_id", columns={"surrender_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_task_olbs_key", columns={"olbs_key"})
@@ -268,6 +269,16 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=true)
      */
     protected $submission;
+
+    /**
+     * Surrender
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Surrender
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Surrender", fetch="LAZY")
+     * @ORM\JoinColumn(name="surrender_id", referencedColumnName="id", nullable=true)
+     */
+    protected $surrender;
 
     /**
      * Transport manager
@@ -842,6 +853,30 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Set the surrender
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Surrender $surrender entity being set as the value
+     *
+     * @return Task
+     */
+    public function setSurrender($surrender)
+    {
+        $this->surrender = $surrender;
+
+        return $this;
+    }
+
+    /**
+     * Get the surrender
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Surrender
+     */
+    public function getSurrender()
+    {
+        return $this->surrender;
     }
 
     /**
