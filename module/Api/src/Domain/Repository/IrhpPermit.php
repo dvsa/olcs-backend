@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
@@ -11,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use PDO;
 
 /**
  * IRHP Permit
@@ -145,5 +148,45 @@ class IrhpPermit extends AbstractRepository
             ->setParameter(1, $permitNumber)
             ->setParameter(2, $permitRange)
             ->getQuery()->execute();
+    }
+
+    /**
+     * Returns the number of live permits for each stock belonging to the specified licence
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function getLivePermitCountsGroupedByStock($licenceId)
+    {
+        $liveStatuses = [
+            Entity::STATUS_PENDING,
+            Entity::STATUS_AWAITING_PRINTING,
+            Entity::STATUS_PRINTING,
+            Entity::STATUS_PRINTED
+        ];
+
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select ips.id AS irhpPermitStockId, ' .
+            'count(ip.id) AS irhpPermitCount ' .
+            'from irhp_permit ip ' .
+            'right join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
+            'and ip.status in (?) ' .
+            'inner join irhp_application ia ON ipa.irhp_application_id = ia.id ' .
+            'inner join irhp_permit_window ipw ON ipa.irhp_permit_window_id = ipw.id ' .
+            'inner join irhp_permit_stock ips ON ipw.irhp_permit_stock_id = ips.id ' .
+            'where ia.licence_id = ? ' .
+            'group BY ips.id',
+            [
+                $liveStatuses,
+                $licenceId
+            ],
+            [
+                Connection::PARAM_STR_ARRAY,
+                PDO::PARAM_INT
+            ]
+        );
+
+        return $statement->fetchAll();
     }
 }

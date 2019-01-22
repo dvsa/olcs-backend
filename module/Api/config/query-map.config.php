@@ -620,6 +620,9 @@ return [
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
     TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
     TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
+    TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
+    TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
+        QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
