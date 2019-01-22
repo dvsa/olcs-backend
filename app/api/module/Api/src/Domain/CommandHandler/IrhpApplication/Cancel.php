@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCancelApplicationHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -9,15 +9,15 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * Create an ECMT Permit application
+ * Cancel an IRHP permit application
  *
- * @author Jason de Jonge
+ * @author Ian Linday <ian@hemera-business-services.co.uk>
  */
-final class CancelEcmtPermitApplication extends AbstractCancelApplicationHandler implements ToggleRequiredInterface
+final class Cancel extends AbstractCancelApplicationHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
-    protected $repoServiceName = 'EcmtPermitApplication';
+    protected $repoServiceName = 'IrhpApplication';
     protected $cancelStatus = IrhpInterface::STATUS_CANCELLED;
 }
