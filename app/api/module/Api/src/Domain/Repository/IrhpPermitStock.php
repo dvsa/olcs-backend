@@ -106,10 +106,7 @@ class IrhpPermitStock extends AbstractRepository
     }
 
     /**
-     * Fetch by UserName|Login
-     *
-     * @param string $login UserName|Login
-     *
+     * @param $irhpPermitType
      * @return array
      */
     public function fetchByIrhpPermitType($irhpPermitType)
