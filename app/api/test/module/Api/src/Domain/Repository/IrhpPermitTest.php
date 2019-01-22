@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
@@ -12,6 +13,7 @@ use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Mockery as m;
+use PDO;
 
 /**
  * IRHP Permit test
@@ -323,5 +325,63 @@ class IrhpPermitTest extends RepositoryTestCase
             . 'ORDER BY ipa.id ASC '
             . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testGetLivePermitCountsGroupedByStock()
+    {
+        $licenceId = 47;
+
+        $livePermitCounts = [
+            [
+                'irhpPermitStockId' => 7,
+                'irhpPermitCount' => 8
+            ],
+            [
+                'irhpPermitStockId' => 5,
+                'irhpPermitCount' => 12
+            ]
+        ];
+
+        $statement = m::mock(Statement::class);
+        $statement->shouldReceive('fetchAll')
+            ->once()
+            ->andReturn($livePermitCounts);
+
+        $connection = m::mock(Connection::class);
+        $connection->shouldReceive('executeQuery')
+            ->with(
+                'select ips.id AS irhpPermitStockId, ' .
+                'count(ip.id) AS irhpPermitCount ' .
+                'from irhp_permit ip ' .
+                'right join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
+                'and ip.status in (?) ' .
+                'inner join irhp_application ia ON ipa.irhp_application_id = ia.id ' .
+                'inner join irhp_permit_window ipw ON ipa.irhp_permit_window_id = ipw.id ' .
+                'inner join irhp_permit_stock ips ON ipw.irhp_permit_stock_id = ips.id ' .
+                'where ia.licence_id = ? ' .
+                'group BY ips.id',
+                [
+                    [
+                        IrhpPermitEntity::STATUS_PENDING,
+                        IrhpPermitEntity::STATUS_AWAITING_PRINTING,
+                        IrhpPermitEntity::STATUS_PRINTING,
+                        IrhpPermitEntity::STATUS_PRINTED
+                    ],
+                    $licenceId
+                ],
+                [
+                    Connection::PARAM_STR_ARRAY,
+                    PDO::PARAM_INT
+                ]
+            )
+            ->once()
+            ->andReturn($statement);
+
+        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
+
+        $this->assertEquals(
+            $livePermitCounts,
+            $this->sut->getLivePermitCountsGroupedByStock($licenceId)
+        );
     }
 }
