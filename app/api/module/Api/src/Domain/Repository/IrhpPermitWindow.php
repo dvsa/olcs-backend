@@ -19,9 +19,10 @@ class IrhpPermitWindow extends AbstractRepository
     /**
      * Returns an array of IrhpPermitWindow objects that are open as of the specified date and time
      *
+     * @param int $irhpPermitStock
      * @param DateTime $currentDateTime
      *
-     * @return array
+     * @return mixed
      */
     public function fetchOpenWindows(int $irhpPermitStock, DateTime $currentDateTime)
     {
@@ -43,9 +44,10 @@ class IrhpPermitWindow extends AbstractRepository
      * Returns the IrhpPermitWindow that was most recently open prior to the specified date and time, or null if there
      * were no windows open prior to the specified date
      *
+     * @param int $irhpPermitStock
      * @param DateTime $currentDateTime
      *
-     * @return array|null
+     * @return mixed
      */
     public function fetchLastOpenWindow(int $irhpPermitStock, DateTime $currentDateTime)
     {
@@ -62,7 +64,7 @@ class IrhpPermitWindow extends AbstractRepository
             ->setParameter(2, $currentDateTime)
             ->setMaxResults(1)
             ->getQuery()
-            ->getResult();
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
     /**

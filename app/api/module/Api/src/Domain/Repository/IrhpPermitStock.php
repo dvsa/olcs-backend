@@ -58,30 +58,6 @@ class IrhpPermitStock extends AbstractRepository
         return $results[0];
     }
 
-    public function getAllValidStockByPermitType($permitType, $hydrationMode = Query::HYDRATE_OBJECT)
-    {
-        $query = $this->getEntityManager()->createQueryBuilder();
-        $date = new DateTime();
-
-        $results = $query->select('ips')
-            ->from(Entity::class, 'ips')
-            ->where($query->expr()->andX(
-                $query->expr()->lt('?1', 'ips.validTo'),
-                $query->expr()->eq('ips.irhpPermitType', '?2')
-            ))
-            ->setParameter(1, $date)
-            ->setParameter(2, $permitType)
-            ->orderBy('ips.validFrom', 'ASC')
-            ->getQuery()
-            ->getResult($hydrationMode);
-
-        if (empty($results)) {
-            throw new NotFoundException('No stock available.');
-        }
-
-        return $results;
-    }
-
     /**
      * Returns list of stocks ready to print
      *
@@ -127,5 +103,17 @@ class IrhpPermitStock extends AbstractRepository
             ->setParameter(3, $validTo)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Fetch by UserName|Login
+     *
+     * @param string $login UserName|Login
+     *
+     * @return array
+     */
+    public function fetchByIrhpPermitType($irhpPermitType)
+    {
+        return $this->fetchByX('irhpPermitType', [$irhpPermitType]);
     }
 }
