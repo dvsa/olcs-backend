@@ -266,7 +266,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function hasOutstandingFees()
     {
-        return true; //$this->getLatestOutstandingIrhpApplicationFee() !== null;
+        return $this->getLatestOutstandingIrhpApplicationFee() !== null;
     }
 
     /**
