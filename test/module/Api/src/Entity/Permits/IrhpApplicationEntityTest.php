@@ -48,26 +48,52 @@ class IrhpApplicationEntityTest extends EntityTester
     public function testGetCalculatedBundleValues()
     {
         $this->sut->shouldReceive('getApplicationRef')
+            ->once()
+            ->withNoArgs()
             ->andReturn('appRef')
             ->shouldReceive('canBeCancelled')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('canBeUpdated')
+            ->once()
+            ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('hasOutstandingFees')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('getSectionCompletion')
+            ->once()
+            ->withNoArgs()
             ->andReturn([])
             ->shouldReceive('hasCheckedAnswers')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('hasMadeDeclaration')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isNotYetSubmitted')
+            ->once()
+            ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('isReadyForNoOfPermits')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('canCheckAnswers')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true)
+            ->shouldReceive('canMakeDeclaration')
+            ->once()
+            ->withNoArgs()
             ->andReturn(true);
 
         $this->assertSame(
@@ -83,6 +109,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isNotYetSubmitted' => true,
                 'isReadyForNoOfPermits' => false,
                 'canCheckAnswers' => true,
+                'canMakeDeclaration' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
