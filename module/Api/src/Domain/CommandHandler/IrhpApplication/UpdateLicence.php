@@ -43,8 +43,6 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         /** @var IrhpApplication $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
@@ -72,9 +70,9 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
         }
 
         $this->getRepo()->save($application);
-        $result->addId('irhpApplication', $application->getId());
-        $result->addMessage('IrhpApplication Licence Updated successfully');
+        $this->result->addId('irhpApplication', $application->getId());
+        $this->result->addMessage('IrhpApplication Licence Updated successfully');
 
-        return $result;
+        return $this->result;
     }
 }

@@ -106,10 +106,10 @@ class IrhpPermitStock extends AbstractRepository
     }
 
     /**
-     * @param $irhpPermitType
+     * @param int $irhpPermitType
      * @return array
      */
-    public function fetchByIrhpPermitType($irhpPermitType)
+    public function fetchByIrhpPermitType(int $irhpPermitType)
     {
         return $this->fetchByX('irhpPermitType', [$irhpPermitType]);
     }
