@@ -59,6 +59,8 @@ class CreateTest extends CommandHandlerTestCase
 
         $command = CreateCmd::create($cmdData);
 
+        $irhpApplication = null;
+
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
             ->with(m::type(IrhpApplication::class))
