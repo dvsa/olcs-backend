@@ -83,6 +83,16 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(true)
+            ->shouldReceive('isValid')
+            ->andReturn(false)
+            ->shouldReceive('isFeePaid')
+            ->andReturn(false)
+            ->shouldReceive('isIssueInProgress')
+            ->andReturn(false)
+            ->shouldReceive('isAwaitingFee')
+            ->andReturn(false)
+            ->shouldReceive('isUnderConsideration')
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -94,7 +104,9 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('canMakeDeclaration')
             ->once()
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getPermitsRequired')
+            ->andReturn(0);
 
         $this->assertSame(
             [
@@ -107,9 +119,15 @@ class IrhpApplicationEntityTest extends EntityTester
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
+                'isValid' => false,
+                'isFeePaid' => false,
+                'isIssueInProgress' => false,
+                'isAwaitingFee' => false,
+                'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
+                'permitsRequired' => 0,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -142,6 +160,32 @@ class IrhpApplicationEntityTest extends EntityTester
             $organisation,
             $this->sut->getRelatedOrganisation()
         );
+    }
+
+    /**
+     * @dataProvider dpTestIsValid
+     */
+    public function testIsValid($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isValid());
+    }
+
+    public function dpTestIsValid()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, true],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
     }
 
     /**
@@ -217,6 +261,32 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsIssueInProgress
+     */
+    public function testIsIssueInProgress($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isIssueInProgress());
+    }
+
+    public function dpTestIsIssueInProgress()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
             [IrhpInterface::STATUS_DECLINED, false],
         ];
@@ -873,5 +943,46 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false);
 
         $irhpApplication->makeDeclaration();
+    }
+
+    /**
+     * @dataProvider dptestGetPermitsRequired
+     */
+    public function testGetPermitsRequired($irhpPermitApplications, $expected)
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+
+        $irhpApplication->setIrhpPermitApplications(
+            new ArrayCollection($irhpPermitApplications)
+        );
+
+        $this->assertSame($expected, $irhpApplication->getPermitsRequired());
+    }
+
+    public function dpTestGetPermitsRequired()
+    {
+        $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class)->makePartial();
+
+        $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitAppWithPermits->setPermitsRequired(10);
+
+        return [
+            'One Irhp Permit Application, 0 permits required' => [
+                [$irhpPermitAppWithoutPermits],
+                0
+            ],
+            'One Irhp Permit Application, 10 permits required' => [
+                [$irhpPermitAppWithPermits],
+                10
+            ],
+            'Two Irhp Permit Applications, 10 permits required on one and 0 on the other' => [
+                [$irhpPermitAppWithPermits, $irhpPermitAppWithoutPermits],
+                10
+            ],
+            'Two Irhp Permit Applications, 10 permits required on both' => [
+                [$irhpPermitAppWithPermits, $irhpPermitAppWithPermits],
+                20
+            ]
+        ];
     }
 }
