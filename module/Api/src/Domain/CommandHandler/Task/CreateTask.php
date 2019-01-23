@@ -374,6 +374,15 @@ final class CreateTask extends AbstractCommandHandler
             );
         }
 
+        if ($command->getSurrender() !== null) {
+            $task->setSurrender(
+                $this->getRepo()->getReference(
+                    \Dvsa\Olcs\Api\Entity\Surrender::class,
+                    $command->getSurrender()
+                )
+            );
+        }
+
         if ($command->getIrfoOrganisation() !== null) {
             $task->setIrfoOrganisation(
                 $this->getRepo()->getReference(
