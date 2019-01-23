@@ -6,9 +6,9 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *    }
  * )
  */
-class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface
+class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface, CancelableInterface
 {
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
