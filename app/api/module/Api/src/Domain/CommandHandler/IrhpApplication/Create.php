@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as Cmd;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Create Irhp Permit Application
