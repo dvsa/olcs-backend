@@ -120,9 +120,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'isValid' => $this->isValid(),
+            'isFeePaid' => $this->isFeePaid(),
+            'isIssueInProgress' => $this->isIssueInProgress(),
+            'isAwaitingFee' => $this->isAwaitingFee(),
+            'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'canCheckAnswers' => $this->canCheckAnswers(),
-            'canMakeDeclaration' => $this->canMakeDeclaration()
+            'canMakeDeclaration' => $this->canMakeDeclaration(),
+            'permitsRequired' => $this->getPermitsRequired(),
         ];
     }
 
@@ -144,6 +150,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_VALID;
     }
 
     /**
@@ -176,6 +190,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isFeePaid()
     {
         return $this->status->getId() === IrhpInterface::STATUS_FEE_PAID;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIssueInProgress()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_ISSUING;
     }
 
     /**
@@ -363,5 +385,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return true;
+    }
+
+    /**
+     * Gets the total number of Permits Required for the IRHP Permit Applications
+     *
+     * @return integer
+     */
+    public function getPermitsRequired()
+    {
+        $applications = $this->irhpPermitApplications;
+        $total = 0;
+
+        foreach ($applications as $app) {
+            $total += is_null($app->getPermitsRequired()) ? 0 : $app->getPermitsRequired();
+        }
+
+        return $total;
     }
 }
