@@ -68,6 +68,11 @@ class PrintJob extends AbstractCommandHandler implements UploaderAwareInterface,
         // set the common file prefix
         $this->filesPrefix = self::TEMP_FILE_PREFIX . '-' . $command->getId() . '-';
 
+        // reset the object's properties before processing
+        // the queue runner reuses the same object during the execution
+        $this->destination = null;
+        $this->stubPrintToLicenceId = null;
+
         $pdfFiles = [];
 
         try {
