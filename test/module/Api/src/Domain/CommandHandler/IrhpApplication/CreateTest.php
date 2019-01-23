@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -40,8 +41,8 @@ class CreateTest extends CommandHandlerTestCase
         ];
 
         $this->refData = [
-            CreateHandler::SOURCE_SELFSERVE,
-            CreateHandler::STATUS_NOT_YET_SUBMITTED,
+            IrhpInterface::SOURCE_SELFSERVE,
+            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
         ];
 
         parent::initReferences();

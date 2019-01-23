@@ -60,13 +60,11 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
 
         // Update the licence but reset the previously answers questions to NULL
         $application->updateLicence($licence);
-        $fees = $application->getFees();
+        $fees = $application->getOutstandingFees();
 
         /** @var Fee $fee */
         foreach ($fees as $fee) {
-            if ($fee->isOutstanding()) {
-                $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
-            }
+            $this->result->merge($this->handleSideEffect(CancelFee::create(['id' => $fee->getId()])));
         }
 
         $this->getRepo()->save($application);
