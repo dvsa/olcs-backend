@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
@@ -376,6 +377,49 @@ class IrhpApplication extends AbstractIrhpApplication implements
             $this->declaration = false;
             $this->checkedAnswers = false;
         }
+    }
+
+    /**
+     * Reset application answers - sets properties to null, or calls individual update methods in more important cases
+     */
+    public function clearAnswers()
+    {
+        // @todo Clear all sections for the permit type
+    }
+
+    /**
+     * @param Licence $licence
+     *
+     * @return void
+     */
+    public function updateLicence(Licence $licence)
+    {
+        $this->licence = $licence;
+        $this->clearAnswers();
+    }
+
+    /**
+     * @param RefData $source
+     * @param RefData $status
+     * @param RefData $irhpPermitType
+     * @param RefData $licence
+     * @param string|null $dateReceived
+     * @return IrhpApplication
+     */
+    public static function createNew(
+        RefData $source,
+        RefData $status,
+        IrhpPermitType $irhpPermitType,
+        Licence $licence,
+        string $dateReceived = null
+    ) {
+        $irhpApplication = new self();
+        $irhpApplication->source = $source;
+        $irhpApplication->status = $status;
+        $irhpApplication->irhpPermitType = $irhpPermitType;
+        $irhpApplication->licence = $licence;
+        $irhpApplication->dateReceived = static::processDate($dateReceived);
+        return $irhpApplication;
     }
 
     /**

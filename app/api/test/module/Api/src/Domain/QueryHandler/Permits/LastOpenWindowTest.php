@@ -3,12 +3,16 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\LastOpenWindow;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use DateTime;
 
 class LastOpenWindowTest extends QueryHandlerTestCase
 {
@@ -16,28 +20,77 @@ class LastOpenWindowTest extends QueryHandlerTestCase
     {
         $this->sut = new LastOpenWindow();
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
+        $this->mockRepo('IrhpPermitType', IrhpPermitTypeRepo::class);
+        $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
 
         parent::setUp();
     }
 
+    public function initReferences()
+    {
+        $this->references = [
+            IrhpPermitType::class => [
+                1 => m::mock(IrhpPermitType::class)
+            ],
+            IrhpPermitStock::class => [
+                100 => m::mock(IrhpPermitStock::class),
+                200 => m::mock(IrhpPermitStock::class)
+            ]
+        ];
+
+        parent::initReferences();
+    }
+
     public function testHandleQuery()
     {
-        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        /** @var IrhpPermitType $irhpPermitType */
+        $irhpPermitType = $this->references[IrhpPermitType::class][1];
 
-        $dateTimeAsString = '2018-04-01 14:30:00';
+        $stocks = $this->references[IrhpPermitStock::class];
+
+        $tomorrow = new DateTime('tomorrow');
+        $oneHourAgo = new DateTime('-1 hour');
+
+        $irhpPermitWindowA['endDate'] = $tomorrow->format('Y-m-d H:i:s');
+        $irhpPermitWindowA['irhpPermitStock'] = $stocks[100];
+
+        $irhpPermitWindowB['endDate'] = $oneHourAgo->format('Y-m-d H:i:s');
+        $irhpPermitWindowB['irhpPermitStock'] = $stocks[200];
+
+        $now = new DateTime('now');
+        $nowString = $now->format('Y-m-d H:i:s');
 
         $query = m::mock(QueryInterface::class);
         $query->shouldReceive('getCurrentDateTime')
-            ->andReturn($dateTimeAsString);
+            ->andReturn($nowString);
+
+        $query->shouldReceive('getPermitType')
+            ->andReturn(1);
+
+        $this->repoMap['IrhpPermitType']
+            ->shouldReceive('fetchById')
+            ->with(1)
+            ->andReturn($irhpPermitType);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('fetchByIrhpPermitType')
+            ->with(1)
+            ->andReturn($stocks);
 
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindow')
-            ->with(m::on(function ($dateTime) use ($dateTimeAsString) {
-                return ($dateTime->format('Y-m-d H:i:s') == $dateTimeAsString);
+            ->with(100, m::on(function ($dateTime) use ($nowString) {
+                return ($dateTime->format('Y-m-d H:i:s') == $nowString);
             }))
-            ->andReturn($irhpPermitWindow);
+            ->andReturn($irhpPermitWindowA);
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindow')
+            ->with(200, m::on(function ($dateTime) use ($nowString) {
+                return ($dateTime->format('Y-m-d H:i:s') == $nowString);
+            }))
+            ->andReturn($irhpPermitWindowB);
 
         $this->assertEquals(
-            ['result' => $irhpPermitWindow],
+            ['lastOpenWindow' => $irhpPermitWindowA],
             $this->sut->handleQuery($query)
         );
     }

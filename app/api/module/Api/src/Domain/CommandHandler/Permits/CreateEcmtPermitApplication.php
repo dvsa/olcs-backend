@@ -29,7 +29,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock', 'Licence'];
+    protected $extraRepos = ['Licence'];
 
     /**
      * Handle command
@@ -59,24 +59,6 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
 
         $this->result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $this->result->addMessage('ECMT Permit Application created successfully');
-
-        $stock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(
-            EcmtPermitApplication::PERMIT_TYPE,
-            new DateTime()
-        );
-
-        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stock->getId());
-
-        $this->result->merge(
-            $this->handleSideEffect(
-                CreateIrhpPermitApplication::create(
-                    [
-                        'window' => $window->getId(),
-                        'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
-                    ]
-                )
-            )
-        );
 
         return $this->result;
     }

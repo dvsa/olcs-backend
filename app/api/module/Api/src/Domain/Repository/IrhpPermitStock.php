@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
@@ -102,5 +103,14 @@ class IrhpPermitStock extends AbstractRepository
             ->setParameter(3, $validTo)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @param int $irhpPermitType
+     * @return array
+     */
+    public function fetchByIrhpPermitType(int $irhpPermitType)
+    {
+        return $this->fetchByX('irhpPermitType', [$irhpPermitType]);
     }
 }
