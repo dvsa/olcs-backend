@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
@@ -35,6 +37,24 @@ class SubmitForm extends AbstractSurrenderCommandHandler
         $licence = $licenceRepo->fetchById($command->getId());
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
-        return $result;
+
+        $this->result->addMessage($result);
+        $this->result->merge($this->createSurrenderTask($command->getId()));
+
+        return $this->result;
+    }
+
+    private function createSurrenderTask($licId)
+    {
+        $taskData = [
+            'category' => Category::CATEGORY_APPLICATION,
+            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
+            'description' => 'Digital surrender',
+            'isClosed' => 'N',
+            'urgent' => 'N',
+            'licence' => $licId,
+        ];
+
+        return $this->handleSideEffect(CreateTask::create($taskData));
     }
 }

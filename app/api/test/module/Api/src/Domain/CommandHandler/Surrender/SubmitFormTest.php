@@ -10,6 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Surrender\SubmitForm as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\SubmitForm as sut;
 use Mockery as m;
+use Dvsa\Olcs\Api\Entity\System\Category;
 
 class SubmitFormTest extends CommandHandlerTestCase
 {
@@ -50,6 +51,19 @@ class SubmitFormTest extends CommandHandlerTestCase
                 'signatureType' => RefData::SIG_PHYSICAL_SIGNATURE,
                 'id' => 65,
                 'status' => Surrender::SURRENDER_STATUS_SIGNED,
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
+            [
+                'category' => Category::CATEGORY_APPLICATION,
+                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
+                'description' => 'Digital surrender',
+                'isClosed' => 'N',
+                'urgent' => 'N',
+                'licence' => $command->getId()
             ],
             new Result()
         );

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -47,35 +48,68 @@ class IrhpApplicationEntityTest extends EntityTester
     public function testGetCalculatedBundleValues()
     {
         $this->sut->shouldReceive('getApplicationRef')
+            ->once()
+            ->withNoArgs()
             ->andReturn('appRef')
             ->shouldReceive('canBeCancelled')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeUpdated')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true)
             ->shouldReceive('hasOutstandingFees')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('getSectionCompletion')
+            ->once()
+            ->withNoArgs()
             ->andReturn([])
             ->shouldReceive('hasCheckedAnswers')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('hasMadeDeclaration')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false)
             ->shouldReceive('isNotYetSubmitted')
+            ->once()
+            ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('isReadyForNoOfPermits')
-            ->andReturn(false);
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('canCheckAnswers')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true)
+            ->shouldReceive('canMakeDeclaration')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true);
 
         $this->assertSame(
             [
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
                 'canBeSubmitted' => false,
+                'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
                 'sectionCompletion' => [],
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
                 'isReadyForNoOfPermits' => false,
+                'canCheckAnswers' => true,
+                'canMakeDeclaration' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -765,6 +799,31 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testUpdateCheckAnswers()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canCheckAnswers')
+            ->once()
+            ->andReturn(true);
+
+        $irhpApplication->setCheckedAnswers(false);
+        $irhpApplication->updateCheckAnswers();
+        $this->assertTrue($irhpApplication->getCheckedAnswers());
+    }
+
+    public function testUpdateCheckAnswersException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CHECK_ANSWERS);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canCheckAnswers')
+            ->once()
+            ->andReturn(false);
+
+        $irhpApplication->updateCheckAnswers();
+    }
+
     public function testResetCheckAnswersAndDeclarationSuccess()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
@@ -791,5 +850,28 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpApplication->resetCheckAnswersAndDeclaration();
         $this->assertTrue($irhpApplication->getDeclaration());
         $this->assertTrue($irhpApplication->getCheckedAnswers());
+    }
+
+    public function testMakeDeclaration()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canMakeDeclaration')
+            ->andReturn(true);
+
+        $irhpApplication->makeDeclaration();
+
+        $this->assertTrue($irhpApplication->getDeclaration());
+    }
+
+    public function testMakeDeclarationFail()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_MAKE_DECLARATION);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('canMakeDeclaration')
+            ->andReturn(false);
+
+        $irhpApplication->makeDeclaration();
     }
 }
