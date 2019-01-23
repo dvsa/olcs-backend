@@ -19,21 +19,23 @@ class IrhpPermitWindow extends AbstractRepository
     /**
      * Returns an array of IrhpPermitWindow objects that are open as of the specified date and time
      *
+     * @param int $irhpPermitStock
      * @param DateTime $currentDateTime
      *
-     * @return array
+     * @return mixed
      */
-    public function fetchOpenWindows(DateTime $currentDateTime)
+    public function fetchOpenWindows(int $irhpPermitStock, DateTime $currentDateTime)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->select('ipw')
             ->from(Entity::class, 'ipw')
-            ->add(
-                'where',
-                $qb->expr()->between('?1', 'ipw.startDate', 'ipw.endDate')
-            )
-            ->setParameter(1, $currentDateTime)
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('?1', 'ipw.irhpPermitStock'),
+                $qb->expr()->between('?2', 'ipw.startDate', 'ipw.endDate')
+            ))
+            ->setParameter(1, $irhpPermitStock)
+            ->setParameter(2, $currentDateTime)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
     }
@@ -42,25 +44,27 @@ class IrhpPermitWindow extends AbstractRepository
      * Returns the IrhpPermitWindow that was most recently open prior to the specified date and time, or null if there
      * were no windows open prior to the specified date
      *
+     * @param int $irhpPermitStock
      * @param DateTime $currentDateTime
      *
-     * @return array|null
+     * @return mixed
      */
-    public function fetchLastOpenWindow(DateTime $currentDateTime)
+    public function fetchLastOpenWindow(int $irhpPermitStock, DateTime $currentDateTime)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->select('ipw')
             ->from(Entity::class, 'ipw')
-            ->add(
-                'where',
-                $qb->expr()->lt('ipw.endDate', '?1')
-            )
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('?1', 'ipw.irhpPermitStock'),
+                $qb->expr()->gt('?2', 'ipw.endDate')
+            ))
             ->orderBy('ipw.endDate', 'DESC')
-            ->setParameter(1, $currentDateTime)
+            ->setParameter(1, $irhpPermitStock)
+            ->setParameter(2, $currentDateTime)
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
     /**

@@ -987,6 +987,14 @@ return [
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
 
+    // Transfer - IRHP Permit Application
+    TransferCommand\IrhpApplication\Create::class =>
+        CommandHandler\IrhpApplication\Create::class,
+
+    // Transfer - IRHP Update Licence
+    TransferCommand\IrhpApplication\UpdateLicence::class =>
+        CommandHandler\IrhpApplication\UpdateLicence::class,
+
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
