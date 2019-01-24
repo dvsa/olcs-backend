@@ -397,13 +397,23 @@ class IrhpApplicationEntityTest extends EntityTester
     public function testIsCancelled($status, $expected)
     {
         $this->sut->setStatus(new RefData($status));
-        $this->assertSame($expected, $this->sut->isIssueInProgress());
+        $this->assertSame($expected, $this->sut->isCancelled());
     }
 
     public function dpTestIsCancelled()
     {
         return [
-            [IrhpInterface::STATUS_CANCELLED, false]
+            [IrhpInterface::STATUS_CANCELLED, true],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
