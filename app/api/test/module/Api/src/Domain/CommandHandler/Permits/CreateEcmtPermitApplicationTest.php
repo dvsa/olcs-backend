@@ -28,6 +28,8 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateEcmtPermitApplicationHandler();
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
+        $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
+        $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
@@ -47,6 +49,8 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $licenceId = 100;
+        $stockId = 200;
+        $windowId = 300;
         $ecmtPermitApplicationId = 400;
 
         $cmdData = [
@@ -76,6 +80,35 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
                 }
             );
 
+        $stock = m::mock(IrhpPermitStock::class);
+        $stock->shouldReceive('getId')
+            ->andReturn($stockId);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('getNextIrhpPermitStockByPermitType')
+            ->with(EcmtPermitApplication::PERMIT_TYPE, m::type(DateTime::class))
+            ->once()
+            ->andReturn($stock);
+
+        $window = m::mock(IrhpPermitWindow::class);
+        $window->shouldReceive('getId')
+            ->andReturn($windowId);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchLastOpenWindowByStockId')
+            ->with($stockId)
+            ->once()
+            ->andReturn($window);
+
+        $this->expectedSideEffect(
+            CreateIrhpPermitApplication::class,
+            [
+                'window' => $windowId,
+                'ecmtPermitApplication' => $ecmtPermitApplicationId,
+            ],
+            (new Result())->addMessage('IRHP Permit Application created')
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertInstanceOf(EcmtPermitApplication::class, $ecmtPermitApplication);
@@ -103,6 +136,7 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
             ],
             'messages' => [
                 'ECMT Permit Application created successfully',
+                'IRHP Permit Application created',
             ]
         ];
 
