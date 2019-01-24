@@ -766,44 +766,45 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @dataProvider dpTestGetOutstandingFees
-     */
-    public function testGetOutstandingFees($fees, $expected)
-    {
-        $this->sut->setFees($fees);
-
-        $this->assertSame($expected, $this->sut->getOutstandingFees());
-    }
-
-    public function dpTestGetOutstandingFees()
+    public function testGetOutstandingFees()
     {
         $outstandingIrhpAppFee = m::mock(Fee::class);
-        $outstandingIrhpAppFee->shouldReceive('isOutstanding')
-            ->andReturn(true)
-            ->shouldReceive('getFeeType->getFeeType->getId')
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
             ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
 
         $outstandingIrhpIssueFee = m::mock(Fee::class);
-        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')
-            ->andReturn(true)
-            ->shouldReceive('getFeeType->getFeeType->getId')
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
             ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
 
         $notOutstandingIrhpAppFee = m::mock(Fee::class);
-        $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')
-            ->andReturn(false);
+        $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')->never();
 
         $notOutstandingIrhpIssueFee = m::mock(Fee::class);
-        $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')
-            ->andReturn(false);
+        $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')->never();
 
-        return [
-            [
-                [$outstandingIrhpAppFee, $outstandingIrhpIssueFee, $notOutstandingIrhpAppFee, $notOutstandingIrhpIssueFee],
-                [$outstandingIrhpAppFee, $outstandingIrhpIssueFee],
-            ]
+        $allFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee,
+            $notOutstandingIrhpAppFee,
+            $notOutstandingIrhpIssueFee
         ];
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($allFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
     }
 
     /**
