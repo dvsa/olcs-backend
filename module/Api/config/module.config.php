@@ -344,6 +344,7 @@ return [
             'EcmtPermitApplication' => RepositoryFactory::class,
             'IrhpPermitApplication' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
+            'IrhpApplicationView' => RepositoryFactory::class,
             'IrhpCandidatePermit' => RepositoryFactory::class,
             'IrhpPermit' => RepositoryFactory::class,
             'IrhpPermitJurisdictionQuota' => RepositoryFactory::class,
