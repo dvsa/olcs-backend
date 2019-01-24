@@ -131,6 +131,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isAwaitingFee' => $this->isAwaitingFee(),
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
+            'isCancelled' => $this->isCancelled(),
             'canCheckAnswers' => $this->canCheckAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
             'permitsRequired' => $this->getPermitsRequired(),
@@ -212,6 +213,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee()
             || $this->isFeePaid();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_CANCELLED;
     }
 
     /**
@@ -304,16 +313,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * @todo implement in olcs-22944
-     *
-     * @return array
-     */
-    public function getOutstandingFees()
-    {
-        return [];
-    }
-
-    /**
      * Whether the application has any outstanding fees
      *
      * @return bool
@@ -341,6 +340,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
             }
         }
         return null;
+    }
+
+    /**
+     * Get All Outstanding IRHP Application Fees
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
+        $fees = [];
+
+        /** @var Fee $fee */
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
+                $fees[] = $fee;
+            }
+        }
+        return $fees;
     }
 
     /**

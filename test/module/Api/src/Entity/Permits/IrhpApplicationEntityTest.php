@@ -93,6 +93,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('isUnderConsideration')
             ->andReturn(false)
+            ->shouldReceive('isCancelled')
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -125,6 +127,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isAwaitingFee' => false,
                 'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
+                'isCancelled' => false,
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
@@ -376,6 +379,32 @@ class IrhpApplicationEntityTest extends EntityTester
         return [
             [IrhpInterface::STATUS_CANCELLED, false],
             [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsCancelled
+     */
+    public function testIsCancelled($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isCancelled());
+    }
+
+    public function dpTestIsCancelled()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, true],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
             [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
             [IrhpInterface::STATUS_WITHDRAWN, false],
             [IrhpInterface::STATUS_AWAITING_FEE, false],
@@ -735,6 +764,47 @@ class IrhpApplicationEntityTest extends EntityTester
                 'expected' => $outstandingIrhpIssueFee,
             ],
         ];
+    }
+
+    public function testGetOutstandingFees()
+    {
+        $outstandingIrhpAppFee = m::mock(Fee::class);
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
+
+        $outstandingIrhpIssueFee = m::mock(Fee::class);
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+
+        $notOutstandingIrhpAppFee = m::mock(Fee::class);
+        $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
+        $notOutstandingIrhpIssueFee = m::mock(Fee::class);
+        $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
+        $allFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee,
+            $notOutstandingIrhpAppFee,
+            $notOutstandingIrhpIssueFee
+        ];
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($allFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
     }
 
     /**
