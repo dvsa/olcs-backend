@@ -781,23 +781,27 @@ class IrhpApplicationEntityTest extends EntityTester
         $outstandingIrhpAppFee = m::mock(Fee::class);
         $outstandingIrhpAppFee->shouldReceive('isOutstanding')
             ->andReturn(true)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-02-01'))
             ->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
 
         $outstandingIrhpIssueFee = m::mock(Fee::class);
         $outstandingIrhpIssueFee->shouldReceive('isOutstanding')
             ->andReturn(true)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-04-01'))
             ->shouldReceive('getFeeType->getFeeType->getId')
             ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
 
+        $notOutstandingIrhpAppFee = m::mock(Fee::class);
+        $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')
+            ->andReturn(false);
+
+        $notOutstandingIrhpIssueFee = m::mock(Fee::class);
+        $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')
+            ->andReturn(false);
+
         return [
-            'outstanding IRHP app fees' => [
-                'fees' => [$outstandingIrhpAppFee, $outstandingIrhpIssueFee],
-                'expected' => [$outstandingIrhpAppFee, $outstandingIrhpIssueFee],
+            [
+                [$outstandingIrhpAppFee, $outstandingIrhpIssueFee, $notOutstandingIrhpAppFee, $notOutstandingIrhpIssueFee],
+                [$outstandingIrhpAppFee, $outstandingIrhpIssueFee],
             ]
         ];
     }
