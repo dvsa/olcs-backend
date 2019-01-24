@@ -38,6 +38,7 @@ return [
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\UpdateDeclaration::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\SubmitApplication::class => Permits\CanEditIrhpApplicationWithId::class,
