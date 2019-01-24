@@ -81,13 +81,13 @@ class LastOpenWindowTest extends QueryHandlerTestCase
             ->with(100, m::on(function ($dateTime) use ($nowString) {
                 return ($dateTime->format('Y-m-d H:i:s') == $nowString);
             }))
-            ->andReturn($irhpPermitWindowA);
+            ->andReturn([$irhpPermitWindowA]);
 
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindow')
             ->with(200, m::on(function ($dateTime) use ($nowString) {
                 return ($dateTime->format('Y-m-d H:i:s') == $nowString);
             }))
-            ->andReturn($irhpPermitWindowB);
+            ->andReturn([$irhpPermitWindowB]);
 
         $this->assertEquals(
             ['lastOpenWindow' => $irhpPermitWindowA],

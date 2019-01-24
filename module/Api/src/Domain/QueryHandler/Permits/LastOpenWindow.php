@@ -60,7 +60,7 @@ class LastOpenWindow extends AbstractQueryHandler implements ToggleRequiredInter
         foreach ($stocks as $stock) {
             $window = $irhpPermitWindowRepo->fetchLastOpenWindow($stock->getId(), $date)[0];
 
-            if (isset($lastOpenWindow)) {
+            if (isset($lastOpenWindow['endDate'])) {
                 if (strtotime($window['endDate']) > strtotime($lastOpenWindow['endDate'])) {
                     $lastOpenWindow = $window;
                 }
