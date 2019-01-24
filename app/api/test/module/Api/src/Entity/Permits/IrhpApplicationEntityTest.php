@@ -93,6 +93,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('isUnderConsideration')
             ->andReturn(false)
+            ->shouldReceive('isCancelled')
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -125,6 +127,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isAwaitingFee' => false,
                 'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
+                'isCancelled' => false,
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
@@ -385,6 +388,22 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
             [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsCancelled
+     */
+    public function testIsCancelled($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isIssueInProgress());
+    }
+
+    public function dpTestIsCancelled()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false]
         ];
     }
 
@@ -734,6 +753,42 @@ class IrhpApplicationEntityTest extends EntityTester
                 'fees' => new ArrayCollection([$paidIrhpAppFee, $outstandingIrhpAppFee, $outstandingIrhpIssueFee]),
                 'expected' => $outstandingIrhpIssueFee,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetOutstandingFees
+     */
+    public function testGetOutstandingFees($fees, $expected)
+    {
+        $this->sut->setFees($fees);
+
+        $this->assertSame($expected, $this->sut->getOutstandingFees());
+    }
+
+    public function dpTestGetOutstandingFees()
+    {
+        $outstandingIrhpAppFee = m::mock(Fee::class);
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')
+            ->andReturn(true)
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new DateTime('2018-02-01'))
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
+
+        $outstandingIrhpIssueFee = m::mock(Fee::class);
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')
+            ->andReturn(true)
+            ->shouldReceive('getInvoicedDate')
+            ->andReturn(new DateTime('2018-04-01'))
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+
+        return [
+            'outstanding IRHP app fees' => [
+                'fees' => [$outstandingIrhpAppFee, $outstandingIrhpIssueFee],
+                'expected' => [$outstandingIrhpAppFee, $outstandingIrhpIssueFee],
+            ]
         ];
     }
 
