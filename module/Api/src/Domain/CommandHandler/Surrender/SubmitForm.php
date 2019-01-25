@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
@@ -39,6 +40,9 @@ class SubmitForm extends AbstractSurrenderCommandHandler
         $licenceRepo->save($licence);
 
         $this->result->addMessage($result);
+
+        $this->result->merge($this->handleSideEffect(Snapshot::create(['id' => $command->getId()])));
+
         $this->result->merge($this->createSurrenderTask($command->getId()));
 
         return $this->result;
