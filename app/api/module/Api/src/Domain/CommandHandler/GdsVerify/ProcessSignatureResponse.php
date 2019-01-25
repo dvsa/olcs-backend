@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\GdsVerify;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 
 /**
  * ProcessResponse
@@ -98,6 +99,8 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
             $this->result->addMessage($result);
 
             $this->result->addMessage('Digital Signature added to surrender' . $command->getLicence());
+
+            $this->result->merge($this->handleSideEffect(Snapshot::create(['id' => $command->getLicence()])));
 
             $this->result->merge($this->createSurrenderTask($command->getLicence()));
         }

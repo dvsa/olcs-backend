@@ -4,11 +4,13 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
 class DocumentationReviewService extends AbstractReviewService
 {
     /**
      * @param Surrender $surrender
+     *
      * @return array|mixed
      */
     public function getConfigFromData(Surrender $surrender)
@@ -33,29 +35,33 @@ class DocumentationReviewService extends AbstractReviewService
 
         if ($status->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
             $config[] = [
-                    'label' => 'surrender-review-additional-information',
-                    'value' => $surrender->getLicenceDocumentInfo()
+                'label' => 'surrender-review-additional-information',
+                'value' => $surrender->getLicenceDocumentInfo()
             ];
         }
         return $config;
     }
 
+    // todo - fix: only work when licence is SI
     protected function getCommunityLicenceConfig(Surrender $surrender): array
     {
-        $status = $surrender->getCommunityLicenceDocumentStatus();
-        $config = [
-            [
-                'label' => 'surrender-review-documentation-community-licence',
-                'value' => $status->getDescription()
-            ]
-        ];
+        if ($surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
 
-        if ($status->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
-            $config[] = [
-                'label' => 'surrender-review-additional-information',
-                'value' => $surrender->getCommunityLicenceDocumentInfo()
+            $status = $surrender->getCommunityLicenceDocumentStatus();
+            $config = [
+                [
+                    'label' => 'surrender-review-documentation-community-licence',
+                    'value' => $status->getDescription()
+                ]
             ];
+
+            if ($status->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
+                $config[] = [
+                    'label' => 'surrender-review-additional-information',
+                    'value' => $surrender->getCommunityLicenceDocumentInfo()
+                ];
+            }
+            return $config;
         }
-        return $config;
     }
 }

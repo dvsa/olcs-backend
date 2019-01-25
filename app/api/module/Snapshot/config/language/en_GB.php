@@ -256,6 +256,7 @@ return [
     'undertakings_owners_signature' => 'Owner\'s signature',
     'undertakings_responsiblepersons_signature' => 'A responsible person\'s signature',
     'tm-review-return-address' => 'Office of the Traffic Commissioner, The Central Licensing Office, Hillcrest House 386 Harehills Lane, Leeds, LS9 6NF',
+    'surrender-application-return-address' => 'Office of the Traffic Commissioner, The Central Licensing Office, Hillcrest House 386 Harehills Lane, Leeds, LS9 6NF',
     'tm-review-declaration' => 'Declaration',
     'directors-signature' => 'Director\'s signature',
     'partners-signature' => 'Partner\'s signature',
