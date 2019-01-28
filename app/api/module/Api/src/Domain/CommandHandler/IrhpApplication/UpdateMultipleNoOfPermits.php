@@ -2,13 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Command\Permits\UpdateMultipleNoOfPermits as UpdateMultipleNoOfPermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\GenerateApplicationFee as GenerateApplicationFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee as RegenerateIssueFeeCmd;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits as UpdateMultipleNoOfPermitsCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
@@ -41,6 +44,12 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
 
         $irhpApplicationRepo = $this->getRepo();
         $irhpApplication = $irhpApplicationRepo->fetchById($irhpApplicationId);
+
+        if (!$irhpApplication->isReadyForNoOfPermits()) {
+            throw new ForbiddenException('IRHP application is not ready for number of permits');
+        }
+
+        $irhpApplication->storePermitsRequired();
         $irhpApplication->resetCheckAnswersAndDeclaration();
         $irhpApplicationRepo->saveOnFlush($irhpApplication);
 
@@ -66,6 +75,18 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
         }
 
         $irhpPermitApplicationRepo->flushAll();
+
+        $feeCommands = [
+            GenerateApplicationFeeCmd::create(['id' => $irhpApplicationId])
+        ];
+
+        if ($irhpApplication->hasPermitsRequiredChanged()) {
+            $feeCommands[] = RegenerateIssueFeeCmd::create(['id' => $irhpApplicationId]);
+        }
+
+        $this->result->merge(
+            $this->handleSideEffects($feeCommands)
+        );
 
         $this->result->addId('irhpApplication', $irhpApplicationId);
         $this->result->addMessage(

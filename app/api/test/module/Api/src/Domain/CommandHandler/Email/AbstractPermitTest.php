@@ -84,7 +84,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $applicationFee = '10.00';
         $feeTypeEntity = m::mock(FeeType::class);
 
-        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
             ->once()
             ->with(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF)
             ->andReturn($feeTypeEntity);
@@ -179,7 +179,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $applicationFee = '10.00';
         $feeTypeEntity = m::mock(FeeType::class);
 
-        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
             ->once()
             ->with(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF)
             ->andReturn($feeTypeEntity);

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -17,7 +18,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
-use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
 /**
  * IrhpApplication Entity
@@ -74,6 +74,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ],
         ],
     ];
+
+    /** @var int|null */
+    private $storedPermitsRequired;
 
     /**
      * This is a custom validator for the countries field
@@ -334,17 +337,44 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function hasOutstandingFees()
     {
-        return $this->getLatestOutstandingIrhpApplicationFee() !== null;
+        $fee = $this->getLatestOutstandingFeeByTypes(
+            [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE]
+        );
+
+        return $fee !== null;
     }
 
     /**
-     * Get Latest Outstanding Irhp Application Fee
+     * Whether the application has any outstanding application fees
+     *
+     * @return bool
+     */
+    public function hasOutstandingApplicationFee()
+    {
+        $applicationFee = $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
+
+        return $applicationFee !== null;
+    }
+
+    /**
+     * Return the latest issue fee, or none if no issue fee is present
+     *
+     * @return Fee|null
+     */
+    public function getLatestOutstandingIssueFee()
+    {
+        return $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_ISSUE]);
+    }
+
+    /**
+     * Get latest outstanding fee by types
+     *
+     * @param array $feeTypeIds
      *
      * @return FeeEntity|null
      */
-    public function getLatestOutstandingIrhpApplicationFee()
+    private function getLatestOutstandingFeeByTypes($feeTypeIds)
     {
-        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
@@ -510,5 +540,45 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $total;
+    }
+
+    /**
+     * Calculates and stores the total number of permits required by this application. Intended to be used in
+     * conjunction with hasPermitsRequiredChanged
+     */
+    public function storePermitsRequired()
+    {
+        $this->storedPermitsRequired = $this->getPermitsRequired();
+    }
+
+    /**
+     * Whether the total permits required has changed since the last call to storePermitsRequired. Can be used
+     * to determine whether the issue fee needs to be regenerated
+     *
+     * @return bool
+     */
+    public function hasPermitsRequiredChanged()
+    {
+        return $this->getPermitsRequired() != $this->storedPermitsRequired;
+    }
+
+    /**
+     * Whether the issue fee can be created or replaced
+     *
+     * @return bool
+     */
+    public function canCreateOrReplaceIssueFee()
+    {
+        return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether the application fee can be created
+     *
+     * @return bool
+     */
+    public function canCreateApplicationFee()
+    {
+        return $this->isNotYetSubmitted();
     }
 }
