@@ -34,11 +34,11 @@ class Generator extends AbstractGenerator
         );
     }
 
-    protected function getLicenceDetailsSection(Surrender $licence)
+    protected function getLicenceDetailsSection(Surrender $surrender)
     {
         return [
             'header' => 'surrender-review-licence',
-            'config' => $this->getServiceLocator()->get(LicenceDetailsService::class)->getConfigFromData($licence)
+            'config' => $this->getServiceLocator()->get(LicenceDetailsService::class)->getConfigFromData($surrender)
         ];
     }
 
