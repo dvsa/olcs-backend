@@ -20,4 +20,5 @@ interface IrhpInterface
     const STATUS_DECLINED = 'permit_app_declined';
 
     const SOURCE_SELFSERVE = 'app_source_selfserve';
+    const SOURCE_INTERNAL = 'app_source_internal';
 }
