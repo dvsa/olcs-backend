@@ -106,7 +106,6 @@ class GeneratorTest extends MockeryTestCase
         ];
 
         $this->assertSame($expected, $variables);
-
     }
 
     protected function setServices($surrender)

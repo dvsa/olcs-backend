@@ -32,7 +32,6 @@ class DocumentationReviewService extends AbstractReviewService
         }
 
         if ($surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
-
             $items[] =
                 [
                     'label' => 'surrender-review-documentation-community-licence',
