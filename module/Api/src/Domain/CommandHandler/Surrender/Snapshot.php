@@ -51,9 +51,6 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
             'isScan' => false,
             'licence' => $licId,
             'surrender' => $surrenderId,
-//            'additionalEntities' => ['surrender'],
-//            'additionalCopy' => true
-
         ];
 
         return $this->handleSideEffect(Upload::create($data));
