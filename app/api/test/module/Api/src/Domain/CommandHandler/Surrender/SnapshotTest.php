@@ -68,6 +68,5 @@ class SnapshotTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals($expected, $result->toArray());
-
     }
 }
