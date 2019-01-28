@@ -48,7 +48,7 @@ trait PermitEmailTrait
             'applicationFee' => str_replace(
                 '.00',
                 '',
-                $this->getRepo('FeeType')->getLatestForEcmtPermit(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)->getAmount()
+                $this->getRepo('FeeType')->getLatestByProductReference(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)->getAmount()
             ),
         ];
 

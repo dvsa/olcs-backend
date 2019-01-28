@@ -232,7 +232,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
      */
     private function getCreateIssueFeeCommand(EcmtPermitApplication $ecmtPermitApplication)
     {
-        $feeType = $this->getRepo('FeeType')->getLatestForEcmtPermit(self::ISSUE_FEE_PRODUCT_REFERENCE);
+        $feeType = $this->getRepo('FeeType')->getLatestByProductReference(self::ISSUE_FEE_PRODUCT_REFERENCE);
         $permitsAwarded = $ecmtPermitApplication->getPermitsAwarded();
 
         $feeDescription = sprintf(
