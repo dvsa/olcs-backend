@@ -344,7 +344,8 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
             Snapshot::class,
             [
                 'id' =>$command->getLicence()
-            ]
+            ],
+            new Result()
         );
 
 
