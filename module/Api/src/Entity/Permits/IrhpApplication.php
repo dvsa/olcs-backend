@@ -4,13 +4,16 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 
@@ -32,10 +35,12 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 class IrhpApplication extends AbstractIrhpApplication implements
     IrhpInterface,
     OrganisationProviderInterface,
-    SectionableInterface
+    SectionableInterface,
+    CancelableInterface
 {
     use SectionTrait;
 
+    const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
 
@@ -120,9 +125,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'isValid' => $this->isValid(),
+            'isFeePaid' => $this->isFeePaid(),
+            'isIssueInProgress' => $this->isIssueInProgress(),
+            'isAwaitingFee' => $this->isAwaitingFee(),
+            'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
+            'isCancelled' => $this->isCancelled(),
             'canCheckAnswers' => $this->canCheckAnswers(),
-            'canMakeDeclaration' => $this->canMakeDeclaration()
+            'canMakeDeclaration' => $this->canMakeDeclaration(),
+            'permitsRequired' => $this->getPermitsRequired(),
         ];
     }
 
@@ -139,11 +151,19 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get the organisation
      *
-     * @return OrganisationEntity
+     * @return Organisation
      */
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_VALID;
     }
 
     /**
@@ -181,10 +201,42 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * @return bool
      */
+    public function isIssueInProgress()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_ISSUING;
+    }
+
+    /**
+     * @return bool
+     */
     public function isActive()
     {
         return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee()
             || $this->isFeePaid();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCancelled()
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_CANCELLED;
+    }
+
+    /**
+     * Cancel an application
+     *
+     * @param RefData $refData cancellation status
+     *
+     * @return void
+     */
+    public function cancel(RefData $cancelStatus)
+    {
+        if (!$this->canBeCancelled()) {
+            throw new ForbiddenException(self::ERR_CANT_CANCEL);
+        }
+
+        $this->status = $cancelStatus;
     }
 
     /**
@@ -210,6 +262,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Update checkedAnswers to true
      *
+     * @throws ForbiddenException
      */
     public function updateCheckAnswers()
     {
@@ -290,6 +343,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Get All Outstanding IRHP Application Fees
+     *
+     * @return array
+     */
+    public function getOutstandingFees()
+    {
+        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
+        $fees = [];
+
+        /** @var Fee $fee */
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
+                $fees[] = $fee;
+            }
+        }
+        return $fees;
+    }
+
+    /**
      * Returns true if the application is in a state where the number of permits can be specified against each
      * relevant stock (i.e. one or more instances of IrhpPermitApplication have already been created against this
      * IrhpApplication)
@@ -323,6 +395,49 @@ class IrhpApplication extends AbstractIrhpApplication implements
             $this->declaration = false;
             $this->checkedAnswers = false;
         }
+    }
+
+    /**
+     * Reset application answers - sets properties to null, or calls individual update methods in more important cases
+     */
+    public function clearAnswers()
+    {
+        // @todo Clear all sections for the permit type
+    }
+
+    /**
+     * @param Licence $licence
+     *
+     * @return void
+     */
+    public function updateLicence(Licence $licence)
+    {
+        $this->licence = $licence;
+        $this->clearAnswers();
+    }
+
+    /**
+     * @param RefData $source
+     * @param RefData $status
+     * @param RefData $irhpPermitType
+     * @param RefData $licence
+     * @param string|null $dateReceived
+     * @return IrhpApplication
+     */
+    public static function createNew(
+        RefData $source,
+        RefData $status,
+        IrhpPermitType $irhpPermitType,
+        Licence $licence,
+        string $dateReceived = null
+    ) {
+        $irhpApplication = new self();
+        $irhpApplication->source = $source;
+        $irhpApplication->status = $status;
+        $irhpApplication->irhpPermitType = $irhpPermitType;
+        $irhpApplication->licence = $licence;
+        $irhpApplication->dateReceived = static::processDate($dateReceived);
+        return $irhpApplication;
     }
 
     /**
@@ -363,5 +478,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return true;
+    }
+
+    /**
+     * Gets the total number of Permits Required for the IRHP Permit Applications
+     *
+     * @return integer
+     */
+    public function getPermitsRequired()
+    {
+        $applications = $this->irhpPermitApplications;
+        $total = 0;
+
+        foreach ($applications as $app) {
+            $total += is_null($app->getPermitsRequired()) ? 0 : $app->getPermitsRequired();
+        }
+
+        return $total;
     }
 }
