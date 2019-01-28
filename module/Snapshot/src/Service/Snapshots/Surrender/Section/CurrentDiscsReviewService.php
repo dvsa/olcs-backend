@@ -59,4 +59,3 @@ class CurrentDiscsReviewService extends AbstractReviewService
         ];
     }
 }
-

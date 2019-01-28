@@ -8,7 +8,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use OlcsTest\Bootstrap;
 
-class DeclarationReviewServiceTest extends  MockeryTestCase
+class DeclarationReviewServiceTest extends MockeryTestCase
 {
     use \Dvsa\Olcs\Snapshot\Service\Snapshots\FormatReviewDataTrait;
 
@@ -23,9 +23,7 @@ class DeclarationReviewServiceTest extends  MockeryTestCase
         $this->sut->setServiceLocator($this->sm);
     }
 
-    public function testGetConfigFromData(
-
-    )
+    public function testGetConfigFromData()
     {
         $mockEntity = m::mock(Surrender::class);
 
