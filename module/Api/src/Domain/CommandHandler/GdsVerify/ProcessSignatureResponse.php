@@ -277,9 +277,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $licence->setStatus($this->getRepo()->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
 
-
-        $this->handleSideEffect(\Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot::create(['id' => $licenceId]));
-        return $result;
+         return $result;
     }
 
     private function createSurrenderTask($licId)
