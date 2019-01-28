@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -35,6 +36,40 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->sut = new Entity(m::mock(\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication::class));
 
         parent::setUp();
+    }
+
+    public function testCreateNew()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+
+        $irhpPermitApplication = Entity::createNew(
+            $irhpPermitWindow,
+            $licence,
+            $ecmtPermitApplication
+        );
+
+        $this->assertSame($irhpPermitWindow, $irhpPermitApplication->getIrhpPermitWindow());
+        $this->assertSame($licence, $irhpPermitApplication->getLicence());
+        $this->assertSame($ecmtPermitApplication, $irhpPermitApplication->getEcmtPermitApplication());
+        $this->assertNull($irhpPermitApplication->getIrhpApplication());
+    }
+
+    public function testCreateNewForIrhpApplication()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+
+        $irhpPermitApplication = Entity::createNewForIrhpApplication(
+            $irhpApplication,
+            $irhpPermitWindow
+        );
+
+        $this->assertSame($irhpApplication, $irhpPermitApplication->getIrhpApplication());
+        $this->assertSame($irhpPermitWindow, $irhpPermitApplication->getIrhpPermitWindow());
+        $this->assertNull($irhpPermitApplication->getEcmtPermitApplication());
+        $this->assertNull($irhpPermitApplication->getLicence());
     }
 
     public function testGetCalculatedBundleValues()

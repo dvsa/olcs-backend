@@ -1090,6 +1090,7 @@ return [
     TransferCommand\Surrender\SubmitForm::class => CommandHandler\Surrender\SubmitForm::class,
 
     // Permits - IRHP application
+    TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,
     TransferCommand\IrhpApplication\UpdateMultipleNoOfPermits::class => CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class,
     TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
     TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
