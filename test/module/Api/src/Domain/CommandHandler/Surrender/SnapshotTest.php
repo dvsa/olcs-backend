@@ -12,31 +12,62 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot as Command;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Mockery as m;
+use Doctrine\ORM\Query;
 
 class SnapshotTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
         $this->sut = new Snapshot();
-        $this->mockRepo('Snapshot', Repository\TransportManagerApplication::class);
+        $this->mockRepo('Surrender', Repository\Surrender::class);
 
         $this->mockedSmServices[Generator::class] = m::mock(Generator::class);
 
         parent::setUp();
     }
 
-    public function testHandleCommand($tmaStatus, $expectedString)
+    public function testHandleCommand()
     {
         $command = Command::create(['id' => 111]);
 
         $mockSurrenderEntity = m::mock(Surrender::class);
 
-        $this->mockedSmServices[Generator::class]->shouldReceive('generate')
+        $this->mockedSmServices->shouldReceive('generate')
             ->once()
             ->with($mockSurrenderEntity)
             ->andReturn('<markup>');
 
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchOneByLicenceId')
+            ->with($command->getId(), Query::HYDRATE_OBJECT)
+            ->andReturn($mockSurrenderEntity);
 
+        $result = new Result();
+        $result->addMessage('Upload');
+
+        $data = [
+            'content' => base64_encode(trim('<markup>')),
+            'filename' => 'Surrender Snapshot.html',
+            'category' => Category::CATEGORY_APPLICATION,
+            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
+            'isExternal' => false,
+            'isScan' => false,
+            'licence' => 111,
+            'surrender' => 222,
+        ];
+
+        $this->expectedSideEffect(Upload::class, $data, $result);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'Snapshot generated',
+                'Upload'
+            ]
+        ];
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals($expected, $result->toArray());
 
     }
 }
