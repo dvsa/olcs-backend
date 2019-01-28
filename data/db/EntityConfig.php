@@ -2205,6 +2205,12 @@ return array(
                 'entity' => 'IrhpPermitType',
                 'property' => 'irhpPermitStock'
             )
+        ),
+        'country_id' => array(
+            'inversedBy' => array(
+                'entity' => 'Country',
+                'property' => 'irhpPermitStock'
+            )
         )
     ),
     'irhp_permit_window' => array(

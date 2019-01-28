@@ -39,7 +39,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function setUp()
     {
-        $this->sut = m::mock(Entity::class)->makePartial();
+        $this->sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->sut->initCollections();
 
         parent::setUp();
@@ -108,7 +108,13 @@ class IrhpApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('getPermitsRequired')
-            ->andReturn(0);
+            ->once()
+            ->withNoArgs()
+            ->andReturn(0)
+            ->shouldReceive('canUpdateCountries')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true);
 
         $this->assertSame(
             [
@@ -131,6 +137,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
+                'canUpdateCountries' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -552,6 +559,56 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isNotYetSubmitted' => true,
                 'allSectionsCompleted' => true,
                 'canMakeIrhpApplication' => true,
+                'expected' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestCanUpdateCountries
+     */
+    public function testCanUpdateCountries($canBeUpdated, $irhpPermitTypeId, $isFieldReadyToComplete, $expected)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->sut->shouldReceive('canBeUpdated')
+            ->andReturn($canBeUpdated)
+            ->shouldReceive('getIrhpPermitType')
+            ->andReturn($irhpPermitType)
+            ->shouldReceive('isFieldReadyToComplete')
+            ->with('countries')
+            ->andReturn($isFieldReadyToComplete);
+
+        $this->assertSame($expected, $this->sut->canUpdateCountries());
+    }
+
+    public function dpTestCanUpdateCountries()
+    {
+        return [
+            'cannot be updated' => [
+                'canBeUpdated' => false,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'isFieldReadyToComplete' => true,
+                'expected' => false,
+            ],
+            'incorrect type' => [
+                'canBeUpdated' => true,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'isFieldReadyToComplete' => true,
+                'expected' => false,
+            ],
+            'the field not ready to complete' => [
+                'canBeUpdated' => true,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'isFieldReadyToComplete' => false,
+                'expected' => false,
+            ],
+            'can be updated' => [
+                'canBeUpdated' => true,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'isFieldReadyToComplete' => true,
                 'expected' => true,
             ],
         ];

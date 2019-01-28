@@ -44,7 +44,11 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermitStocks"
+     * )
      * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=true)
      */
     protected $country;

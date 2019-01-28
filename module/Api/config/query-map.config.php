@@ -625,6 +625,7 @@ return [
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\Permits\EcmtApplicationByLicence::class => QueryHandler\Permits\EcmtApplicationByLicence::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
+    TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
