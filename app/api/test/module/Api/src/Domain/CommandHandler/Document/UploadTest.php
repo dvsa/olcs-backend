@@ -74,6 +74,9 @@ class UploadTest extends CommandHandlerTestCase
             ],
             Entity\Organisation\Organisation::class => [
                 666 => m::mock(Entity\Organisation\Organisation::class),
+            ],
+            Entity\Surrender::class => [
+                777 => m::mock(Entity\Surrender::class),
             ]
         ];
 
@@ -193,6 +196,11 @@ class UploadTest extends CommandHandlerTestCase
                 'irfoOrganisation',
                 666,
                 Entity\Organisation\Organisation::class
+            ],
+            [
+                'surrender',
+                777,
+                Entity\Surrender::class
             ]
         ];
     }
