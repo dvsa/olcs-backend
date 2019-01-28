@@ -83,6 +83,18 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(true)
+            ->shouldReceive('isValid')
+            ->andReturn(false)
+            ->shouldReceive('isFeePaid')
+            ->andReturn(false)
+            ->shouldReceive('isIssueInProgress')
+            ->andReturn(false)
+            ->shouldReceive('isAwaitingFee')
+            ->andReturn(false)
+            ->shouldReceive('isUnderConsideration')
+            ->andReturn(false)
+            ->shouldReceive('isCancelled')
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -94,7 +106,9 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('canMakeDeclaration')
             ->once()
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getPermitsRequired')
+            ->andReturn(0);
 
         $this->assertSame(
             [
@@ -107,9 +121,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
+                'isValid' => false,
+                'isFeePaid' => false,
+                'isIssueInProgress' => false,
+                'isAwaitingFee' => false,
+                'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
+                'isCancelled' => false,
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
+                'permitsRequired' => 0,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -142,6 +163,32 @@ class IrhpApplicationEntityTest extends EntityTester
             $organisation,
             $this->sut->getRelatedOrganisation()
         );
+    }
+
+    /**
+     * @dataProvider dpTestIsValid
+     */
+    public function testIsValid($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isValid());
+    }
+
+    public function dpTestIsValid()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, true],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
     }
 
     /**
@@ -223,6 +270,32 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpTestIsIssueInProgress
+     */
+    public function testIsIssueInProgress($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isIssueInProgress());
+    }
+
+    public function dpTestIsIssueInProgress()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, true],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
      * @dataProvider dpTestIsActive
      */
     public function testIsActive($status, $expected)
@@ -249,6 +322,50 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * Tests cancelling an application
+     */
+    public function testCancel()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setStatus(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
+        $this->assertEquals(IrhpInterface::STATUS_CANCELLED, $entity->getStatus()->getId());
+    }
+
+    /**
+     * @dataProvider dpCancelException
+     */
+    public function testCancelException($status)
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_CANCEL);
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setStatus(new RefData($status));
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
+    }
+
+    /**
+     * Pass array of app status to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpCancelException()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
+            [IrhpInterface::STATUS_DECLINED],
+        ];
+    }
+
+    /**
      * @dataProvider dpTestCanBeCancelled
      */
     public function testCanBeCancelled($status, $expected)
@@ -262,6 +379,32 @@ class IrhpApplicationEntityTest extends EntityTester
         return [
             [IrhpInterface::STATUS_CANCELLED, false],
             [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsCancelled
+     */
+    public function testIsCancelled($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isCancelled());
+    }
+
+    public function dpTestIsCancelled()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, true],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
             [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
             [IrhpInterface::STATUS_WITHDRAWN, false],
             [IrhpInterface::STATUS_AWAITING_FEE, false],
@@ -623,6 +766,47 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testGetOutstandingFees()
+    {
+        $outstandingIrhpAppFee = m::mock(Fee::class);
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
+
+        $outstandingIrhpIssueFee = m::mock(Fee::class);
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+
+        $notOutstandingIrhpAppFee = m::mock(Fee::class);
+        $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
+        $notOutstandingIrhpIssueFee = m::mock(Fee::class);
+        $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
+        $allFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee,
+            $notOutstandingIrhpAppFee,
+            $notOutstandingIrhpIssueFee
+        ];
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($allFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
+    }
+
     /**
      * @dataProvider dpTestGetSectionCompletion
      */
@@ -873,5 +1057,46 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false);
 
         $irhpApplication->makeDeclaration();
+    }
+
+    /**
+     * @dataProvider dptestGetPermitsRequired
+     */
+    public function testGetPermitsRequired($irhpPermitApplications, $expected)
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+
+        $irhpApplication->setIrhpPermitApplications(
+            new ArrayCollection($irhpPermitApplications)
+        );
+
+        $this->assertSame($expected, $irhpApplication->getPermitsRequired());
+    }
+
+    public function dpTestGetPermitsRequired()
+    {
+        $irhpPermitAppWithoutPermits = m::mock(IrhpPermitApplication::class)->makePartial();
+
+        $irhpPermitAppWithPermits = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitAppWithPermits->setPermitsRequired(10);
+
+        return [
+            'One Irhp Permit Application, 0 permits required' => [
+                [$irhpPermitAppWithoutPermits],
+                0
+            ],
+            'One Irhp Permit Application, 10 permits required' => [
+                [$irhpPermitAppWithPermits],
+                10
+            ],
+            'Two Irhp Permit Applications, 10 permits required on one and 0 on the other' => [
+                [$irhpPermitAppWithPermits, $irhpPermitAppWithoutPermits],
+                10
+            ],
+            'Two Irhp Permit Applications, 10 permits required on both' => [
+                [$irhpPermitAppWithPermits, $irhpPermitAppWithPermits],
+                20
+            ]
+        ];
     }
 }

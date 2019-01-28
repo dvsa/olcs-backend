@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * IRHP Application
+ * IRHP Permit Application
  *
  */
 class GetList extends AbstractListQueryHandler implements ToggleRequiredInterface
