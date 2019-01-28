@@ -35,7 +35,7 @@ class SignatureReviewService extends AbstractReviewService
                 'markup-licence-surrender-signature-digital',
                 [
                     $signature->getSignatureName(),
-                    $signature->getDateOfBirth(),
+                    $this->formatDate($signature->getDateOfBirth()),
                     $this->formatDate($signature->getCreatedOn(true))
                 ]
             )
