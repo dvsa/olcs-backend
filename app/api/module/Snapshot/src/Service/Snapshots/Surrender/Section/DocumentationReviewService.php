@@ -17,15 +17,14 @@ class DocumentationReviewService extends AbstractReviewService
     {
 
         $items = [];
-        $status = $surrender->getLicenceDocumentStatus();
 
         $items[] =
             [
                 'label' => 'surrender-review-documentation-operator-licence',
-                'value' => $status->getDescription()
+                'value' => $surrender->getLicenceDocumentStatus()->getDescription()
             ];
 
-        if ($this->isDocDestoryed($status)) {
+        if ($surrender->getLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
             $items[] = [
                 'label' => 'surrender-review-additional-information',
                 'value' => $surrender->getLicenceDocumentInfo()
@@ -37,10 +36,10 @@ class DocumentationReviewService extends AbstractReviewService
             $items[] =
                 [
                     'label' => 'surrender-review-documentation-community-licence',
-                    'value' => $status->getDescription()
+                    'value' => $surrender->getCommunityLicenceDocumentStatus()->getDescription()
                 ];
 
-            if ($this->isDocDestoryed($status)) {
+            if ($surrender->getCommunityLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
                 $items[] =
                     [
                         'label' => 'surrender-review-additional-information',
@@ -54,10 +53,5 @@ class DocumentationReviewService extends AbstractReviewService
                 $items
             ]
         ];
-    }
-
-    private function isDocDestoryed($status)
-    {
-        return $status->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED;
     }
 }
