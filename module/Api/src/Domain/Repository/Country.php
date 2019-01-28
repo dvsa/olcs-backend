@@ -20,7 +20,6 @@ use DateTime;
 class Country extends AbstractRepository
 {
     protected $entity = Entity::class;
-    protected $alias = 'c';
 
     /**
      * Applies filters to list queries. Note we always ignore newly uploaded files until they've been fully submitted
@@ -78,7 +77,7 @@ class Country extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb
-            ->select('c')
+            ->select($this->alias)
             ->distinct()
             ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
@@ -88,7 +87,7 @@ class Country extends AbstractRepository
             ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
             ->setParameter('now', $now->format(DateTime::ISO8601))
             ->setParameter('type', $type)
-            ->orderBy('c.countryDesc', 'ASC');
+            ->orderBy($this->alias.'.countryDesc', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

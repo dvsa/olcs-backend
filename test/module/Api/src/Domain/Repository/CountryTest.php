@@ -75,14 +75,14 @@ class CountryTest extends RepositoryTestCase
         );
 
         $expectedQuery = 'BLAH '
-            . 'SELECT c DISTINCT '
-            . 'INNER JOIN c.irhpPermitStocks ips '
+            . 'SELECT m DISTINCT '
+            . 'INNER JOIN m.irhpPermitStocks ips '
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ips.irhpPermitWindows ipw '
             . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
             . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
             . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
-            . 'ORDER BY c.countryDesc ASC';
+            . 'ORDER BY m.countryDesc ASC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
