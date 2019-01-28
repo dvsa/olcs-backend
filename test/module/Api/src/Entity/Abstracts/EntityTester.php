@@ -180,7 +180,6 @@ abstract class EntityTester extends MockeryTestCase
             $entity->{'add' . $methodName}($collection);
 
             $this->assertEquals(5, count($entity->{'get' . $methodName}()));
-
         }
     }
 
