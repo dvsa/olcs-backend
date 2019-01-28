@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -337,6 +338,13 @@ class ProcessSignatureResponseTest extends CommandHandlerTestCase
                 'licence' => $command->getLicence()
             ],
             new Result()
+        );
+
+        $this->expectedSideEffect(
+            Snapshot::class,
+            [
+                'id' =>$command->getLicence()
+            ]
         );
 
 
