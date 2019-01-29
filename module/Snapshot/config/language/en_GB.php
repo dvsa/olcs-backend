@@ -366,10 +366,10 @@ return [
     'surrender-review-licence-correspondence-address' => 'Correspondence address',
     'surrender-review-additional-information' => 'Additional information',
     'surrender-review-current-discs-destroyed' => 'Number destroyed',
-    'surrender-review-current-discs-lost' => 'Number Lost',
+    'surrender-review-current-discs-lost' => 'Number lost',
     'surrender-review-current-discs-stolen' => 'Number stolen',
     'surrender-review-documentation-operator-licence' => 'Operator licence',
-    'surrender-review-documentation-community-licence' => 'Community licence and all Certified copies',
+    'surrender-review-documentation-community-licence' => 'Community licence and all certified copies',
 
     // Potentially unused translations
 ];
