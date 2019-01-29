@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot as Command;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Mockery as m;
 use Doctrine\ORM\Query;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class SnapshotTest extends CommandHandlerTestCase
 {
@@ -22,13 +23,12 @@ class SnapshotTest extends CommandHandlerTestCase
         $this->mockRepo('Surrender', Repository\Surrender::class);
 
         $this->mockedSmServices[Generator::class] = m::mock(Generator::class);
-        $this->mockedSmServices = [
-            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
-        ];
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class] = m::mock(\ZfcRbac\Service\AuthorizationService::class);
+
         parent::setUp();
     }
 
-    public function testHandleCommand()uplo
+    public function testHandleCommand()
     {
         $command = Command::create(['id' => 111]);
 
@@ -38,6 +38,8 @@ class SnapshotTest extends CommandHandlerTestCase
             ->once()
             ->with($mockSurrenderEntity)
             ->andReturn('<markup>');
+
+        $mockSurrenderEntity->shouldReceive('getId')->andReturn(222);
 
         $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')
             ->with($command->getId(), Query::HYDRATE_OBJECT)
