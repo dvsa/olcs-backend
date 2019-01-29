@@ -26,7 +26,7 @@ class SnapshotTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleCommand()
+    public function testHandleCommand()uplo
     {
         $command = Command::create(['id' => 111]);
 
