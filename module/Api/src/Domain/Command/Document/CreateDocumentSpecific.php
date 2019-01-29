@@ -27,6 +27,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $submission;
 
+    protected $surrender;
+
     protected $trafficArea;
 
     protected $transportManager;

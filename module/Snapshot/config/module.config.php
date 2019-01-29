@@ -83,6 +83,12 @@ return [
             'ContinuationReview\Finance' => ContinuationReview\FinanceReviewService::class,
             'ContinuationReview\ConditionsUndertakings' =>
                 ContinuationReview\ConditionsUndertakingsReviewService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class,
         ],
     ],
     'view_manager' => [
