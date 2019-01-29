@@ -20,25 +20,24 @@ class DocumentationReviewServiceTest extends MockeryTestCase
     }
 
 
+    /**
+     * @dataProvider dpTestGetConfigFromData
+     *
+     * @param $args
+     */
     public function testGetConfigFromData(
-        $licDocDescription,
-        $licDocStatus,
-        $licDocInfo,
-        $licenceType,
-        $commLicDescription,
-        $commLicStatus,
-        $commLicInfo,
+        $args,
         $expected
     ) {
         $mockEntity = m::mock(Surrender::class);
 
-        $mockEntity->shouldReceive('getLicenceDocumentStatus->getDescription')->andReturn($licDocDescription);
-        $mockEntity->shouldReceive('getLicenceDocumentStatus->getId')->andReturn($licDocStatus);
-        $mockEntity->shouldReceive('getLicenceDocumentInfo')->andReturn($licDocInfo);
-        $mockEntity->shouldReceive('getLicence->getLicenceType->getId')->andReturn($licenceType);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus')->andReturn($commLicDescription);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getId')->andReturn($commLicStatus);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentInfo')->andReturn($commLicInfo);
+        $mockEntity->shouldReceive('getLicenceDocumentStatus->getDescription')->andReturn($args['licDocDescription']);
+        $mockEntity->shouldReceive('getLicenceDocumentStatus->getId')->andReturn($args['licDocStatus']);
+        $mockEntity->shouldReceive('getLicenceDocumentInfo')->andReturn($args['licDocInfo']);
+        $mockEntity->shouldReceive('getLicence->getLicenceType->getId')->andReturn($args['licType']);
+        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getId')->andReturn($args['commLicStatus']);
+        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getDescription')->andReturn($args['commLicDescription']);
+        $mockEntity->shouldReceive('getCommunityLicenceDocumentInfo')->andReturn($args['commLicInfo']);
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($mockEntity));
     }
@@ -46,76 +45,90 @@ class DocumentationReviewServiceTest extends MockeryTestCase
     public function dpTestGetConfigFromData()
     {
         return [
-            [
-                'licDocDescription' => 'Document lost',
-                'licDocStatus' => RefData::SURRENDER_DOC_STATUS_LOST,
-                'licDocInfo' => 'got lost',
-                'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                'commLicDescription' => 'Document stolen',
-                'commLicStatus' => RefData::SURRENDER_DOC_STATUS_STOLEN,
-                'commLicInfo' => 'Document stolen',
-                'expectedResult' => [
+
+            0 => [
+                [
+                    'licDocDescription' => 'Document lost',
+                    'licDocStatus' => RefData::SURRENDER_DOC_STATUS_LOST,
+                    'licDocInfo' => 'Document lost',
+                    'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'commLicDescription' => 'Document stolen',
+                    'commLicStatus' => RefData::SURRENDER_DOC_STATUS_STOLEN,
+                    'commLicInfo' => 'Document stolen',
+                ],
+                [
+
                     'multiItems' => [
                         [
-                            'label' => 'surrender-review-documentation-operator-licence',
-                            'value' => 'Document lost'
-                        ],
-                        [
-                            'label' => 'surrender-review-additional-information',
-                            'value' => 'got lost'
-                        ],
-                        [
-                            'label' => 'surrender-review-documentation-community-licence',
-                            'value' => 'Document stolen'
-                        ],
-                        [
-                            'label' => 'surrender-review-additional-information',
-                            'value' => RefData::SURRENDER_DOC_STATUS_STOLEN
+                            [
+                                'label' => 'surrender-review-documentation-operator-licence',
+                                'value' => 'Document lost'
+                            ],
+                            [
+                                'label' => 'surrender-review-additional-information',
+                                'value' => 'Document lost'
+                            ],
+                            [
+                                'label' => 'surrender-review-documentation-community-licence',
+                                'value' => 'Document stolen'
+                            ],
+                            [
+                                'label' => 'surrender-review-additional-information',
+                                'value' => 'Document stolen'
+                            ]
                         ]
                     ]
                 ]
             ],
-            [
-                'licDocDescription' => 'Document destoryed',
-                'licDocStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
-                'licDocInfo' => 'got lost',
-                'licType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                'commLicDescription' => null,
-                'commLicStatus' => null,
-                'commLicInfo' => null,
-                'expectedResult' => [
+            1 => [
+                [
+                    'licDocDescription' => 'Document destroyed',
+                    'licDocStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
+                    'licDocInfo' => null,
+                    'licType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    'commLicDescription' => null,
+                    'commLicStatus' => null,
+                    'commLicInfo' => null,
+
+                ],
+                [
+
                     'multiItems' => [
                         [
-                            'label' => 'surrender-review-documentation-operator-licence',
-                            'value' => 'Document lost'
-                        ],
-                        [
-                            'label' => 'surrender-review-additional-information',
-                            'value' => 'got lost'
-                        ],
+                            [
+                                'label' => 'surrender-review-documentation-operator-licence',
+                                'value' => 'Document destroyed'
+                            ]
+                        ]
                     ]
                 ]
             ],
-            [
-                'licDocDescription' => 'Document destroyed',
-                'licDocStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
-                'licDocInfo' => null,
-                'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                'commLicDescription' => 'Document destroyed',
-                'commLicStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
-                'commLicInfo' => null,
-                'expectedResult' => [
+            2 => [
+                [
+                    'licDocDescription' => 'Document destroyed',
+                    'licDocStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
+                    'licDocInfo' => null,
+                    'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'commLicDescription' => 'Document destroyed',
+                    'commLicStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
+                    'commLicInfo' => null,
+                ],
+                [
+
                     'multiItems' => [
                         [
-                            'label' => 'surrender-review-documentation-operator-licence',
-                            'value' => 'Document destroyed'
-                        ],
-                        [
-                            'label' => 'surrender-review-documentation-community-licence',
-                            'value' => 'Document destroyed'
-                        ],
+                            [
+                                'label' => 'surrender-review-documentation-operator-licence',
+                                'value' => 'Document destroyed'
+                            ],
+                            [
+                                'label' => 'surrender-review-documentation-community-licence',
+                                'value' => 'Document destroyed'
+                            ],
+                        ]
                     ]
                 ]
+
             ]
         ];
     }
