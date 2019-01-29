@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 
@@ -43,6 +43,25 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         $IrhpPermitApplication->irhpApplication = $irhpApplication;
 
         return $IrhpPermitApplication;
+    }
+
+    /**
+     * createNewForIrhpApplication
+     *
+     * @param IrhpApplication  $irhpApplication  IRHP Application
+     * @param IrhpPermitWindow $irhpPermitWindow IRHP Permit Window
+     *
+     * @return IrhpPermitApplication
+     */
+    public static function createNewForIrhpApplication(
+        IrhpApplication $irhpApplication,
+        IrhpPermitWindow $irhpPermitWindow
+    ) {
+        $irhpPermitApplication = new self();
+        $irhpPermitApplication->irhpApplication = $irhpApplication;
+        $irhpPermitApplication->irhpPermitWindow = $irhpPermitWindow;
+
+        return $irhpPermitApplication;
     }
 
     public function getPermitIntensityOfUse()

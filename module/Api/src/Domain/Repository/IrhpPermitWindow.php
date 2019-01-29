@@ -15,6 +15,7 @@ use DateTime;
 class IrhpPermitWindow extends AbstractRepository
 {
     protected $entity = Entity::class;
+    protected $alias = 'ipw';
 
     /**
      * Returns an array of IrhpPermitWindow objects that are open as of the specified date and time
@@ -162,6 +163,36 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->lt($this->alias.'.endDate', ':periodEnd'))
             ->setParameter('periodStart', $clonedDateTime->modify($since)->setTime(0, 0, 0)->format(\DateTime::ISO8601))
             ->setParameter('periodEnd', $currentDateTime->format(\DateTime::ISO8601));
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all open windows for all the countries provided
+     *
+     * @param int      $type      Type
+     * @param array    $countries List of country ids to check for
+     * @param DateTime $now       Now
+     *
+     * @return array
+     */
+    public function fetchOpenWindowsByCountry($type, array $countries, DateTime $now)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias)
+            ->distinct()
+            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->innerJoin('ips.country', 'c')
+            ->where($qb->expr()->eq('ipt.id', ':type'))
+            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->in('c.id', ':countries'))
+            ->setParameter('type', $type)
+            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('countries', $countries);
 
         return $qb->getQuery()->getResult();
     }

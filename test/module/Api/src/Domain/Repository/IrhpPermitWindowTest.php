@@ -9,6 +9,7 @@ use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
 
 /**
@@ -247,8 +248,44 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchWindowsToBeClosed($now, '-2 days'));
 
         $expectedQuery = 'BLAH '
-            . 'AND m.endDate >= [[2018-10-23T00:00:00+0000]] '
-            . 'AND m.endDate < [[2018-10-25T13:21:10+0000]]';
+            . 'AND ipw.endDate >= [[2018-10-23T00:00:00+0000]] '
+            . 'AND ipw.endDate < [[2018-10-25T13:21:10+0000]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchOpenWindowsByCountry()
+    {
+        $now = new \DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenWindowsByCountry(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                ['DE', 'NL'],
+                $now
+            )
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw DISTINCT '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ips.country c '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND c.id IN [[["DE","NL"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
