@@ -142,7 +142,6 @@ abstract class EntityTester extends MockeryTestCase
     public function testGettersAndSetters()
     {
         foreach ($this->getGettersAndSetters() as $testCase) {
-
             list($methodName, $testValue) = $testCase;
 
             $classToTestName = $this->getClassToTestName();
@@ -156,7 +155,6 @@ abstract class EntityTester extends MockeryTestCase
     public function testAddMethods()
     {
         foreach ($this->getAddMethods() as $methodName) {
-
             if ($methodName == null) {
                 $this->assertTrue(true); // Just mark the test as passed as there are no methods to test
                 continue;
@@ -182,7 +180,6 @@ abstract class EntityTester extends MockeryTestCase
             $entity->{'add' . $methodName}($collection);
 
             $this->assertEquals(5, count($entity->{'get' . $methodName}()));
-
         }
     }
 

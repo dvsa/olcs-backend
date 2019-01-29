@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -55,6 +57,25 @@ class SubmitFormTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $surrenderEntity = m::mock(Surrender::class);
+
+        $this->repoMap['Surrender']
+            ->shouldReceive('fetchOneByLicenceId')
+            ->with($command->getId(), Query::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn($surrenderEntity);
+
+        $surrenderEntity->shouldReceive('getId')
+            ->andReturn(5);
+
+        $this->expectedSideEffect(
+            Snapshot::class,
+            [
+                'id' => $command->getId()
+            ],
+            new Result()
+        );
+
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask::class,
             [
@@ -63,10 +84,12 @@ class SubmitFormTest extends CommandHandlerTestCase
                 'description' => 'Digital surrender',
                 'isClosed' => 'N',
                 'urgent' => 'N',
-                'licence' => $command->getId()
+                'licence' => $command->getId(),
+                'surrender' => 5
             ],
             new Result()
         );
+
 
         $licence = m::mock(Licence::class)
             ->shouldReceive('setStatus')

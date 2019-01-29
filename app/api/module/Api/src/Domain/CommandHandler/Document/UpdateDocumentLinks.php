@@ -62,6 +62,7 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
         $this->maybeLinkDocument($document, $command, Entity\OperatingCentre\OperatingCentre::class, 'OperatingCentre');
         $this->maybeLinkDocument($document, $command, Entity\Licence\ContinuationDetail::class, 'ContinuationDetail');
         $this->maybeLinkDocument($document, $command, Entity\Permits\EcmtPermitApplication::class, 'EcmtPermitApplication');
+        $this->maybeLinkDocument($document, $command, Entity\Surrender::class, 'Surrender');
     }
 
     /**
