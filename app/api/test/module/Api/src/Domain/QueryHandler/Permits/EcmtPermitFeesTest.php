@@ -26,10 +26,10 @@ class EcmtPermitFeesTest extends QueryHandlerTestCase
         $feeType1 = m::mock(FeeType::class);
         $feeType2 = m::mock(FeeType::class);
 
-        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
             ->with($feeProductReference1)
             ->andReturn($feeType1);
-        $this->repoMap['FeeType']->shouldReceive('getLatestForEcmtPermit')
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
             ->with($feeProductReference2)
             ->andReturn($feeType2);
 
