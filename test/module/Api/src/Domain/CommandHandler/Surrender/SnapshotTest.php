@@ -22,7 +22,9 @@ class SnapshotTest extends CommandHandlerTestCase
         $this->mockRepo('Surrender', Repository\Surrender::class);
 
         $this->mockedSmServices[Generator::class] = m::mock(Generator::class);
-
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
+        ];
         parent::setUp();
     }
 
@@ -32,12 +34,12 @@ class SnapshotTest extends CommandHandlerTestCase
 
         $mockSurrenderEntity = m::mock(Surrender::class);
 
-        $this->mockedSmServices->shouldReceive('generate')
+        $this->mockedSmServices[Generator::class]->shouldReceive('generate')
             ->once()
             ->with($mockSurrenderEntity)
             ->andReturn('<markup>');
 
-        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchOneByLicenceId')
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')
             ->with($command->getId(), Query::HYDRATE_OBJECT)
             ->andReturn($mockSurrenderEntity);
 
