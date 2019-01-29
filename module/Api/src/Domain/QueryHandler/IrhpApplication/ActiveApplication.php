@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\ActiveApplication as ActiveApplicationQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Retrieve active IRHP application by licence and permit type
