@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots;
 
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
 trait FormatReviewDataTrait
 {
@@ -17,7 +18,7 @@ trait FormatReviewDataTrait
      */
     protected function formatDate($date, $format = 'd M Y')
     {
-        if ($date instanceof \DateTime) {
+        if ($date instanceof DateTime) {
             return $date->format($format);
         }
 
