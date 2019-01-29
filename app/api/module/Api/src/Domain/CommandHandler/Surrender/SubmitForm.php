@@ -10,6 +10,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
+use Doctrine\ORM\Query;
 
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
@@ -43,12 +44,16 @@ class SubmitForm extends AbstractSurrenderCommandHandler
 
         $this->result->merge($this->handleSideEffect(Snapshot::create(['id' => $command->getId()])));
 
-        $this->result->merge($this->createSurrenderTask($command->getId()));
+        /** @var $surrender \Dvsa\Olcs\Api\Entity\Surrender */
+        $surrender = $this->getRepo()->fetchOneByLicenceId($command->getId(), Query::HYDRATE_OBJECT);
+        $surrenderId = $surrender->getId();
+
+        $this->result->merge($this->createSurrenderTask($command->getId(), $surrenderId));
 
         return $this->result;
     }
 
-    private function createSurrenderTask($licId)
+    private function createSurrenderTask($licId, $surrenderId)
     {
         $taskData = [
             'category' => Category::CATEGORY_APPLICATION,
@@ -57,6 +62,7 @@ class SubmitForm extends AbstractSurrenderCommandHandler
             'isClosed' => 'N',
             'urgent' => 'N',
             'licence' => $licId,
+            'surrender' => $surrenderId
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));
