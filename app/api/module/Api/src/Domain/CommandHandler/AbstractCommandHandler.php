@@ -42,7 +42,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class 1§AbstractCommandHandler implements CommandHandlerInterface, FactoryInterface
+abstract class AbstractCommandHandler implements CommandHandlerInterface, FactoryInterface
 {
     use HandlerEnabledTrait;
 
