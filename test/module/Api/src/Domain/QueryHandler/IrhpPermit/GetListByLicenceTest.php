@@ -9,7 +9,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\AbstractListQueryHandlerTest;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 
 /**
- * GetList Test
+ * GetListByLicence Test
  */
 class GetListByLicenceTest extends AbstractListQueryHandlerTest
 {

@@ -101,7 +101,7 @@ class IrhpPermit extends AbstractRepository
                 ->setParameter('ecmtId', $query->getEcmtPermitApplication());
         }
 
-        if (($query instanceof GetListByLicence) && ($query->getLicence() != null)) {
+        if (($query instanceof GetListByLicence) && ($query->getLicence() !== null)) {
             $qb->innerJoin('ipa.irhpApplication', 'ia')
                 ->innerJoin('ipa.irhpPermitWindow', 'ipw')
                 ->innerJoin('ipw.irhpPermitStock', 'ips')
