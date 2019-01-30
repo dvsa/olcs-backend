@@ -58,14 +58,18 @@ class LastOpenWindow extends AbstractQueryHandler implements ToggleRequiredInter
 
         /** @var IrhpPermitStockEntity $stock */
         foreach ($stocks as $stock) {
-            $window = $irhpPermitWindowRepo->fetchLastOpenWindow($stock->getId(), $date)[0];
+            $window = $irhpPermitWindowRepo->fetchLastOpenWindow($stock->getId(), $date);
 
-            if (isset($lastOpenWindow['endDate'])) {
-                if (strtotime($window['endDate']) > strtotime($lastOpenWindow['endDate'])) {
+            if (isset($window[0])) {
+                $window = $window[0];
+
+                if (isset($lastOpenWindow['endDate'])) {
+                    if (strtotime($window['endDate']) > strtotime($lastOpenWindow['endDate'])) {
+                        $lastOpenWindow = $window;
+                    }
+                } else {
                     $lastOpenWindow = $window;
                 }
-            } else {
-                $lastOpenWindow = $window;
             }
         }
 
