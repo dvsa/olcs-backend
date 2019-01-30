@@ -52,4 +52,13 @@ class IrhpApplication extends AbstractRepository
 
         return array_column($licenceRows, 'id');
     }
+
+    /**
+     * @param int $licence
+     * @return array
+     */
+    public function fetchByLicence(int $licence)
+    {
+        return $this->fetchByX('licence', [$licence]);
+    }
 }
