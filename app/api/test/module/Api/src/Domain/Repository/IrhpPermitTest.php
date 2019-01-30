@@ -257,30 +257,29 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->setUpSut(IrhpPermit::class, true);
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
 
-        //$qb = $this->createMockQb('BLAH');
-        //$this->mockCreateQueryBuilder($qb);
-
-        $qb = m::mock(QueryBuilder::class);
+        $qb = $this->createMockQb('BLAH');
         $this->mockCreateQueryBuilder($qb);
 
-        $qb->shouldReceive('modifyQuery')->once()->andReturnSelf()
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipa.irhpPermitWindow', 'ipw')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ipw.irhpPermitStock', 'ips')->once()->andReturnSelf()
-            ->shouldReceive('with')->with('ips.country', 'ipc')->once()->andReturnSelf()
-            ->shouldReceive('orderBy')->with('ipc.countryDesc', 'ASC')->once()->andReturnSelf()
-            ->shouldReceive('addOrderBy')->with('m.expiryDate', 'ASC')->once()->andReturnSelf()
-            ->shouldReceive('addOrderBy')->with('ipa.id', 'ASC')->once()->andReturnSelf()
-            ->shouldReceive('addOrderBy')->with('m.permitNumber', 'ASC')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $query = GetListByLicence::create(['licence' => 7, 'page' => 1, 'limit' => 10]);
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
-            . 'ORDER BY ipc.countryDesc ASC, m.expiryDate ASC, ipa.id ASC, m.permitNumber ASC';
+            . 'INNER JOIN ipa.irhpApplication ia '
+            . 'INNER JOIN ipa.irhpPermitWindow ipw '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.country ipc '
+            . 'AND ia.licence = [[7]] '
+            . 'AND ipa.irhpApplication IS NOT NULL '
+            . 'ORDER BY ipc.countryDesc ASC '
+            . 'ORDER BY m.expiryDate ASC '
+            . 'ORDER BY ipa.id ASC '
+            . 'ORDER BY m.permitNumber ASC';
         $this->assertEquals($expectedQuery, $this->query);
     }
 }
