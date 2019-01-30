@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Mockery as m;
@@ -249,5 +250,37 @@ class IrhpPermitTest extends RepositoryTestCase
             [],
             $this->sut->fetchByNumberAndRange($permitNumber, $rangeId)
         );
+    }
+
+    public function testFetchListForDashboard()
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        //$qb = $this->createMockQb('BLAH');
+        //$this->mockCreateQueryBuilder($qb);
+
+        $qb = m::mock(QueryBuilder::class);
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('modifyQuery')->once()->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpApplication', 'ia')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipa.irhpPermitWindow', 'ipw')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ipw.irhpPermitStock', 'ips')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('ips.country', 'ipc')->once()->andReturnSelf()
+            ->shouldReceive('orderBy')->with('ipc.countryDesc', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('addOrderBy')->with('m.expiryDate', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('addOrderBy')->with('ipa.id', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('addOrderBy')->with('m.permitNumber', 'ASC')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = GetListByLicence::create(['licence' => 7, 'page' => 1, 'limit' => 10]);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'ORDER BY ipc.countryDesc ASC, m.expiryDate ASC, ipa.id ASC, m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }
