@@ -41,6 +41,7 @@ class Surrender extends AbstractSurrender implements ContextProviderInterface
     const SURRENDER_DOC_STATUS_DESTROYED='doc_sts_destroyed';
     const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
     const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
+    const SURRENDER_WITHDRAWN='surr_sts_withdrawn';
 
     public function getContextValue()
     {
