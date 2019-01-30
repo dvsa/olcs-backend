@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
@@ -98,6 +99,21 @@ class IrhpPermit extends AbstractRepository
         if (($query instanceof GetListByEcmtId) && ($query->getEcmtPermitApplication() != null)) {
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getEcmtPermitApplication());
+        }
+
+        if (($query instanceof GetListByLicence) && ($query->getLicence() != null)) {
+            $qb->innerJoin('ipa.irhpApplication', 'ia')
+                ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+                ->innerJoin('ipw.irhpPermitStock', 'ips')
+                ->innerJoin('ips.country', 'ipc')
+                ->andWhere($qb->expr()->eq('ia.licence', ':licenceId'))
+                ->setParameter('licenceId', $query->getLicence())
+                ->andWhere($qb->expr()->isNotNull('ipa.irhpApplication'));
+
+            $qb->orderBy('ipc.countryDesc', 'ASC');
+            $qb->addOrderBy($this->alias . '.expiryDate', 'ASC');
+            $qb->addOrderBy('ipa.id', 'ASC');
+            $qb->addOrderBy($this->alias . '.permitNumber', 'ASC');
         }
     }
 
