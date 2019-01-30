@@ -74,4 +74,47 @@ class ActiveApplicationTest extends QueryHandlerTestCase
         $this->assertEquals($irhpPermitType, $result['irhpPermitType']['id']);
         $this->assertEquals($licence, $result['licence']['id']);
     }
+
+    public function testNull() {
+        $licence = 1;
+        $irhpPermitType = 2;
+
+        $query = $this->qryClass::create(['licence' => $licence, 'irhpPermitType' => $irhpPermitType]);
+
+        $resultArray = [];
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchByLicence')
+            ->with($licence)
+            ->once()
+            ->andReturn($resultArray);
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testDifferentType()
+    {
+        $licence = 1;
+        $irhpPermitType = 2;
+
+        $query = $this->qryClass::create(['licence' => $licence, 'irhpPermitType' => $irhpPermitType]);
+
+        $mockEntity = m::mock($this->entityClass);
+
+        $mockEntity->shouldReceive('getIrhpPermitType->getId')->andReturn(3);
+
+        $mockEntity->shouldReceive('isActive')->andReturn(true);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchByLicence')
+            ->with($licence)
+            ->once()
+            ->andReturn([$mockEntity]);
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals(null, $result);
+    }
 }
