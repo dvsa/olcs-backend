@@ -6,6 +6,8 @@ return [
         'client' => [
             'baseuri' => '',
             'workspace' => '',
+            'username' => '',
+            'password' => ''
         ]
     ],
     'service_manager' => [
