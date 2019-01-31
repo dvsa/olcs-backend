@@ -2,12 +2,12 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
-use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
+use League\Flysystem\Filesystem;
+use League\Flysystem\WebDAV\WebDAVAdapter;
 use RuntimeException;
+use Sabre\DAV\Client as WebDAVClient;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\Http\Client as HttpClient;
-use Zend\Http\Request;
 
 /**
  * Class ClientFactory
@@ -17,7 +17,10 @@ class ClientFactory implements FactoryInterface
     /**
      * @var array
      */
-    protected $options;
+    private $options;
+
+    /** @var ServiceLocatorInterface */
+    private $serviceLocator;
 
     /**
      * Create service
@@ -29,7 +32,10 @@ class ClientFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $clientOptions = $this->getOptions($serviceLocator, 'client');
+        $this->serviceLocator = $serviceLocator;
+
+        $clientOptions = $this->getOptions('client');
+
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
@@ -38,41 +44,36 @@ class ClientFactory implements FactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        $options = $this->getOptions($serviceLocator, 'http');
-        $httpClient = new HttpClient();
-        $httpClient->setOptions($options);
+        $webDAVClient = new WebDAVClient([
+            'baseUri' => $clientOptions['baseuri'],
+            'username' => $clientOptions['username'],
+            'password' => $clientOptions['password']
+        ]);
 
-        $wrapper = new ClientAdapterLoggingWrapper();
-        $wrapper->wrapAdapter($httpClient);
-        $wrapper->setShouldLogData(false);
+        $adapter = new WebDAVAdapter($webDAVClient, $clientOptions['workspace']);
+        $fileSystem = new Filesystem($adapter);
 
-        $client = new Client(
-            $httpClient,
-            $clientOptions['baseuri'],
-            $clientOptions['workspace']
-        );
+        $client = new Client($fileSystem);
 
         if (isset($clientOptions['uuid'])) {
             $client->setUuid($clientOptions['uuid']);
         }
 
         return $client;
-
     }
 
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl  Service Manager
      * @param string                  $key Key
      *
      * @return \Zend\Stdlib\AbstractOptions
      * @throws \RuntimeException
      */
-    public function getOptions(ServiceLocatorInterface $sl, $key)
+    private function getOptions($key)
     {
         if (is_null($this->options)) {
-            $options = $sl->get('Configuration');
+            $options = $this->serviceLocator->get('Configuration');
             $this->options = isset($options['document_share']) ? $options['document_share'] : array();
         }
 
