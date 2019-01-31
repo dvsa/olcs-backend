@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 
 /**
  * Surrender Entity
@@ -26,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class Surrender extends AbstractSurrender
+class Surrender extends AbstractSurrender implements ContextProviderInterface
 {
     const SURRENDER_STATUS_START='surr_sts_start';
     const SURRENDER_STATUS_CONTACTS_COMPLETE='surr_sts_contacts_complete';
@@ -40,4 +41,10 @@ class Surrender extends AbstractSurrender
     const SURRENDER_DOC_STATUS_DESTROYED='doc_sts_destroyed';
     const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
     const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
+    const SURRENDER_WITHDRAWN='surr_sts_withdrawn';
+
+    public function getContextValue()
+    {
+        return $this->getId();
+    }
 }

@@ -39,7 +39,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function setUp()
     {
-        $this->sut = m::mock(Entity::class)->makePartial();
+        $this->sut = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->sut->initCollections();
 
         parent::setUp();
@@ -93,6 +93,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('isUnderConsideration')
             ->andReturn(false)
+            ->shouldReceive('isCancelled')
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -106,7 +108,13 @@ class IrhpApplicationEntityTest extends EntityTester
             ->withNoArgs()
             ->andReturn(true)
             ->shouldReceive('getPermitsRequired')
-            ->andReturn(0);
+            ->once()
+            ->withNoArgs()
+            ->andReturn(0)
+            ->shouldReceive('canUpdateCountries')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true);
 
         $this->assertSame(
             [
@@ -125,9 +133,11 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isAwaitingFee' => false,
                 'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
+                'isCancelled' => false,
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
+                'canUpdateCountries' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -389,6 +399,32 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpTestIsCancelled
+     */
+    public function testIsCancelled($status, $expected)
+    {
+        $this->sut->setStatus(new RefData($status));
+        $this->assertSame($expected, $this->sut->isCancelled());
+    }
+
+    public function dpTestIsCancelled()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, true],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
      * @dataProvider dpIsNotYetSubmitted
      */
     public function testIsNotYetSubmitted($status, $expectedNotYetSubmitted)
@@ -529,80 +565,50 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestHasOutstandingFees
+     * @dataProvider dpTestCanUpdateCountries
      */
-    public function testHasOutstandingFees($fees, $expected)
+    public function testCanUpdateCountries($canBeUpdated, $irhpPermitTypeId, $isFieldReadyToComplete, $expected)
     {
-        $this->sut->setFees($fees);
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn($irhpPermitTypeId);
 
-        $this->assertSame($expected, $this->sut->hasOutstandingFees());
+        $this->sut->shouldReceive('canBeUpdated')
+            ->andReturn($canBeUpdated)
+            ->shouldReceive('getIrhpPermitType')
+            ->andReturn($irhpPermitType)
+            ->shouldReceive('isFieldReadyToComplete')
+            ->with('countries')
+            ->andReturn($isFieldReadyToComplete);
+
+        $this->assertSame($expected, $this->sut->canUpdateCountries());
     }
 
-    public function dpTestHasOutstandingFees()
+    public function dpTestCanUpdateCountries()
     {
-        $outstandingIrhpAppFee = m::mock(Fee::class);
-        $outstandingIrhpAppFee->shouldReceive('isOutstanding')
-            ->andReturn(true)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-02-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
-
-        $paidIrhpAppFee = m::mock(Fee::class);
-        $paidIrhpAppFee->shouldReceive('isOutstanding')
-            ->andReturn(false)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-03-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
-
-        $outstandingIrhpIssueFee = m::mock(Fee::class);
-        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')
-            ->andReturn(true)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-04-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
-
-        $paidIrhpIssueFee = m::mock(Fee::class);
-        $paidIrhpIssueFee->shouldReceive('isOutstanding')
-            ->andReturn(false)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-05-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
-
         return [
-            'no fees' => [
-                'fees' => new ArrayCollection(),
+            'cannot be updated' => [
+                'canBeUpdated' => false,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'isFieldReadyToComplete' => true,
                 'expected' => false,
             ],
-            'outstanding IRHP app fee' => [
-                'fees' => new ArrayCollection([$outstandingIrhpAppFee]),
-                'expected' => true,
-            ],
-            'paid IRHP app fee' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee]),
+            'incorrect type' => [
+                'canBeUpdated' => true,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'isFieldReadyToComplete' => true,
                 'expected' => false,
             ],
-            'outstanding IRHP issue fee' => [
-                'fees' => new ArrayCollection([$outstandingIrhpIssueFee]),
-                'expected' => true,
-            ],
-            'paid IRHP issue fee' => [
-                'fees' => new ArrayCollection([$paidIrhpIssueFee]),
+            'the field not ready to complete' => [
+                'canBeUpdated' => true,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'isFieldReadyToComplete' => false,
                 'expected' => false,
             ],
-            'multiple IRHP fees - all paid' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee, $paidIrhpIssueFee]),
-                'expected' => false,
-            ],
-            'multiple IRHP fees - some outstanding' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee, $outstandingIrhpAppFee, $paidIrhpIssueFee]),
-                'expected' => true,
-            ],
-            'multiple IRHP fees - multiple outstanding' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee, $outstandingIrhpAppFee, $outstandingIrhpIssueFee]),
+            'can be updated' => [
+                'canBeUpdated' => true,
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'isFieldReadyToComplete' => true,
                 'expected' => true,
             ],
         ];
@@ -658,83 +664,331 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestGetLatestOutstandingIrhpApplicationFee
+     * @dataProvider dpHasOutstandingFees
      */
-    public function testGetLatestOutstandingIrhpApplicationFee($fees, $expected)
+    public function testHasOutstandingFees($feesData, $expectedResult)
     {
-        $this->sut->setFees($fees);
+        $this->sut->setFees(
+            $this->createFeesArrayCollectionFromArrayData($feesData)
+        );
 
-        $this->assertSame($expected, $this->sut->getLatestOutstandingIrhpApplicationFee());
+        $this->assertEquals($expectedResult, $this->sut->hasOutstandingFees());
     }
 
-    public function dpTestGetLatestOutstandingIrhpApplicationFee()
+    public function dpHasOutstandingFees()
+    {
+        return [
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedResult' => false
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_DUP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ]
+                ],
+                'expectedResult' => false
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ]
+                ],
+                'expectedResult' => true
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ]
+                ],
+                'expectedResult' => false
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedResult' => true
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider dpHasOutstandingApplicationFee
+     */
+    public function testHasOutstandingApplicationFee($feesData, $expectedResult)
+    {
+        $this->sut->setFees(
+            $this->createFeesArrayCollectionFromArrayData($feesData)
+        );
+
+        $this->assertEquals($expectedResult, $this->sut->hasOutstandingApplicationFee());
+    }
+
+    public function dpHasOutstandingApplicationFee()
+    {
+        return [
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedResult' => false
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedResult' => false
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSVAR
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ]
+                ],
+                'expectedResult' => false
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ]
+                ],
+                'expectedResult' => true
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetLatestOutstandingIssueFee
+     */
+    public function testGetLatestOutstandingIssueFee($feesData, $expectedIndex)
+    {
+        $fees = $this->createFeesArrayCollectionFromArrayData($feesData);
+        $this->sut->setFees($fees);
+
+        $latestOutstandingIssueFee = $this->sut->getLatestOutstandingIssueFee();
+
+        if (is_null($expectedIndex)) {
+            $this->assertNull($latestOutstandingIssueFee);
+        }
+
+        $this->assertSame($fees[$expectedIndex], $latestOutstandingIssueFee);
+    }
+
+    public function dpGetLatestOutstandingIssueFee()
+    {
+        return [
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSVAR
+                    ]
+                ],
+                'expectedIndex' => null
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 1
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+        ];
+    }
+
+    private function createFeesArrayCollectionFromArrayData($feesData)
+    {
+        $fees = [];
+        foreach ($feesData as $feeData) {
+            $fee = m::mock(Fee::class);
+            $fee->shouldReceive('isOutstanding')
+                ->andReturn($feeData['isOutstanding'])
+                ->shouldReceive('getInvoicedDate')
+                ->andReturn(new DateTime($feeData['invoicedDate']))
+                ->shouldReceive('getFeeType->getFeeType->getId')
+                ->andReturn($feeData['feeTypeId']);
+
+            $fees[] = $fee;
+        }
+
+        return new ArrayCollection($fees);
+    }
+
+    public function testGetOutstandingFees()
     {
         $outstandingIrhpAppFee = m::mock(Fee::class);
-        $outstandingIrhpAppFee->shouldReceive('isOutstanding')
-            ->andReturn(true)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-02-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
-
-        $paidIrhpAppFee = m::mock(Fee::class);
-        $paidIrhpAppFee->shouldReceive('isOutstanding')
-            ->andReturn(false)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-03-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
             ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
 
         $outstandingIrhpIssueFee = m::mock(Fee::class);
-        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')
-            ->andReturn(true)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-04-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
             ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
 
-        $paidIrhpIssueFee = m::mock(Fee::class);
-        $paidIrhpIssueFee->shouldReceive('isOutstanding')
-            ->andReturn(false)
-            ->shouldReceive('getInvoicedDate')
-            ->andReturn(new DateTime('2018-05-01'))
-            ->shouldReceive('getFeeType->getFeeType->getId')
-            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+        $notOutstandingIrhpAppFee = m::mock(Fee::class);
+        $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')->never();
 
-        return [
-            'no fees' => [
-                'fees' => new ArrayCollection(),
-                'expected' => null,
-            ],
-            'outstanding IRHP app fee' => [
-                'fees' => new ArrayCollection([$outstandingIrhpAppFee]),
-                'expected' => $outstandingIrhpAppFee,
-            ],
-            'paid IRHP app fee' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee]),
-                'expected' => null,
-            ],
-            'outstanding IRHP issue fee' => [
-                'fees' => new ArrayCollection([$outstandingIrhpIssueFee]),
-                'expected' => $outstandingIrhpIssueFee,
-            ],
-            'paid IRHP issue fee' => [
-                'fees' => new ArrayCollection([$paidIrhpIssueFee]),
-                'expected' => null,
-            ],
-            'multiple IRHP fees - all paid' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee, $paidIrhpIssueFee]),
-                'expected' => null,
-            ],
-            'multiple IRHP fees - some outstanding' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee, $outstandingIrhpAppFee, $paidIrhpIssueFee]),
-                'expected' => $outstandingIrhpAppFee,
-            ],
-            'multiple IRHP fees - multiple outstanding' => [
-                'fees' => new ArrayCollection([$paidIrhpAppFee, $outstandingIrhpAppFee, $outstandingIrhpIssueFee]),
-                'expected' => $outstandingIrhpIssueFee,
-            ],
+        $notOutstandingIrhpIssueFee = m::mock(Fee::class);
+        $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
+        $allFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee,
+            $notOutstandingIrhpAppFee,
+            $notOutstandingIrhpIssueFee
         ];
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($allFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
     }
 
     /**
@@ -1028,5 +1282,96 @@ class IrhpApplicationEntityTest extends EntityTester
                 20
             ]
         ];
+    }
+
+    public function testCanCreateOrReplaceIssueFeeTrue()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->andReturn(true);
+
+        $this->assertTrue($irhpApplication->canCreateOrReplaceIssueFee());
+    }
+
+    public function testCanCreateOrReplaceIssueFeeFalse()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->andReturn(false);
+
+        $this->assertFalse($irhpApplication->canCreateOrReplaceIssueFee());
+    }
+
+    public function testCanCreateApplicationFeeTrue()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->andReturn(true);
+
+        $this->assertTrue($irhpApplication->canCreateApplicationFee());
+    }
+
+    public function testCanCreateApplicationFeeFalse()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->andReturn(false);
+
+        $this->assertFalse($irhpApplication->canCreateApplicationFee());
+    }
+
+    public function testHasPermitsRequiredChanged()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApplication1->setPermitsRequired(12);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApplication2->setPermitsRequired(24);
+
+        $irhpApplication = new Entity();
+        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication1);
+        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication2);
+
+        $irhpApplication->storePermitsRequired();
+
+        $irhpPermitApplication2->setPermitsRequired(36);
+
+        $this->assertTrue($irhpApplication->hasPermitsRequiredChanged());
+    }
+
+    public function testHasPermitsRequiredChangedNoChange()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApplication1->setPermitsRequired(12);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApplication2->setPermitsRequired(24);
+
+        $irhpApplication = new Entity();
+        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication1);
+        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication2);
+
+        $irhpApplication->storePermitsRequired();
+
+        $this->assertFalse($irhpApplication->hasPermitsRequiredChanged());
+    }
+
+    public function testHasPermitsRequiredChangedNullToNumeric()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApplication1->setPermitsRequired(null);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApplication2->setPermitsRequired(24);
+
+        $irhpApplication = new Entity();
+        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication1);
+        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication2);
+
+        $irhpApplication->storePermitsRequired();
+
+        $irhpPermitApplication1->setPermitsRequired(36);
+
+        $this->assertTrue($irhpApplication->hasPermitsRequiredChanged());
     }
 }

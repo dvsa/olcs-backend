@@ -36,7 +36,8 @@ class ByLicenceTest extends QueryHandlerTestCase
                 'status',
                 'licenceDocumentStatus',
                 'communityLicenceDocumentStatus',
-                'digitalSignature'
+                'digitalSignature',
+                'signatureType'
             ],
             [
                 'disableSignatures' => true
