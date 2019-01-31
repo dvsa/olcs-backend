@@ -562,6 +562,7 @@ return [
     TransferQuery\IrhpPermit\GetListByEcmtId::class => QueryHandler\IrhpPermit\GetListByEcmtId::class,
     TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
+    TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
 
     // IRHP Candidate Permits
     TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
@@ -617,6 +618,7 @@ return [
     // Permits
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
     TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
+    TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
@@ -625,6 +627,7 @@ return [
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\Permits\EcmtApplicationByLicence::class => QueryHandler\Permits\EcmtApplicationByLicence::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
+    TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,

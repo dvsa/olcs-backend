@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Mockery as m;
@@ -249,5 +250,36 @@ class IrhpPermitTest extends RepositoryTestCase
             [],
             $this->sut->fetchByNumberAndRange($permitNumber, $rangeId)
         );
+    }
+
+    public function testFetchListForDashboard()
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = GetListByLicence::create(['licence' => 7, 'page' => 1, 'limit' => 10]);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'INNER JOIN ipa.irhpApplication ia '
+            . 'INNER JOIN ipa.irhpPermitWindow ipw '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.country ipc '
+            . 'AND ia.licence = [[7]] '
+            . 'AND ipa.irhpApplication IS NOT NULL '
+            . 'ORDER BY ipc.countryDesc ASC '
+            . 'ORDER BY m.expiryDate ASC '
+            . 'ORDER BY ipa.id ASC '
+            . 'ORDER BY m.permitNumber ASC';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

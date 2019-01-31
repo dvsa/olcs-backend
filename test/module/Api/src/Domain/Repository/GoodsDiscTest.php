@@ -390,7 +390,7 @@ class GoodsDiscTest extends RepositoryTestCase
 
         $this->sut->countForLicence($licenceId);
 
-        $expectedQuery = '{QUERY} SELECT count(gd) INNER JOIN gd.licenceVehicle lv INNER JOIN lv.licence lvl AND lvl.id = [['. $licenceId . ']] AND lv.removalDate IS NULL GROUP BY lvl.id LIMIT 1';
+        $expectedQuery = '{QUERY} SELECT count(gd) INNER JOIN gd.licenceVehicle lv AND lv.licence = [[' . $licenceId . ']] AND gd.ceasedDate IS NULL LIMIT 1';
 
         self::assertEquals($expectedQuery, $this->query);
     }

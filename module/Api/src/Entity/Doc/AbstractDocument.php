@@ -40,7 +40,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"}),
  *        @ORM\Index(name="fk_document_ecmt_permit_app_id_ecmt_permit_app_id",
-     *     columns={"ecmt_permit_application_id"})
+     *     columns={"ecmt_permit_application_id"}),
+ *        @ORM\Index(name="ix_document_surrender_id", columns={"surrender_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -355,6 +356,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="submission_id", referencedColumnName="id", nullable=true)
      */
     protected $submission;
+
+    /**
+     * Surrender
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Surrender
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Surrender", fetch="LAZY")
+     * @ORM\JoinColumn(name="surrender_id", referencedColumnName="id", nullable=true)
+     */
+    protected $surrender;
 
     /**
      * Traffic area
@@ -1206,6 +1217,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getSubmission()
     {
         return $this->submission;
+    }
+
+    /**
+     * Set the surrender
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Surrender $surrender entity being set as the value
+     *
+     * @return Document
+     */
+    public function setSurrender($surrender)
+    {
+        $this->surrender = $surrender;
+
+        return $this;
+    }
+
+    /**
+     * Get the surrender
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Surrender
+     */
+    public function getSurrender()
+    {
+        return $this->surrender;
     }
 
     /**

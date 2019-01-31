@@ -100,4 +100,29 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
             throw $e;
         }
     }
+
+    /**
+     * Mark an entity for later deleting to the database using flushAll
+     *
+     * @param mixed $entity Entity to delete
+     *
+     * @return void
+     * @throws Exception\RuntimeException
+     * @throws \Exception
+     */
+    public function deleteOnFlush($entity)
+    {
+        if (!($entity instanceof $this->entity)) {
+            throw new Exception\RuntimeException(
+                'This repository can only deleteOnFlush entities of type ' . $this->entity
+            );
+        }
+
+        try {
+            $this->getEntityManager()->remove($entity);
+        } catch (\Exception $e) {
+            \Olcs\Logging\Log\Logger::crit($e->getMessage());
+            throw $e;
+        }
+    }
 }

@@ -18,4 +18,12 @@ class SurrenderEntityTest extends EntityTester
      * @var string
      */
     protected $entityClass = Entity::class;
+
+    public function testGetContextValue()
+    {
+        $entity = new Entity();
+        $entity->setId(190);
+
+        $this->assertEquals(190, $entity->getContextValue());
+    }
 }

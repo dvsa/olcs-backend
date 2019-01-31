@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Surrender;
 
 /**
  * Naming Service Aware Trait
@@ -69,6 +70,10 @@ trait NamingServiceAwareTrait
 
         if (!empty($data['continuationDetail'])) {
             return $this->getRepo()->getReference(ContinuationDetail::class, $data['continuationDetail']);
+        }
+
+        if (!empty($data['surrender'])) {
+            return $this->getRepo()->getReference(Surrender::class, $data['surrender']);
         }
 
         return null;

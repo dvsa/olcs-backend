@@ -14,4 +14,5 @@ return [
     CommandHandler\IrhpPermit\CreateReplacement::class => IsSideEffect::class,
     QueryHandler\IrhpPermit\ByPermitNumber::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpPermitRange\ByPermitNumber::class => NotIsAnonymousUser::class,
+    QueryHandler\IrhpPermit\GetListByLicence::class => NotIsAnonymousUser::class,
 ];

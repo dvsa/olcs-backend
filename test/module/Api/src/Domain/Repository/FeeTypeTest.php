@@ -87,14 +87,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        $qb
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ftft.id', 'ASC')
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ft.effectiveFrom', 'DESC');
-
         $this->em
             ->shouldReceive('getReference')->with(ApplicationEntity::class, $applicationId)
             ->andReturn($mockApplication);
@@ -111,11 +103,13 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
-         . ' AND ft.isMiscellaneous = [[0]]'
-         . ' AND ft.feeType IN ["APP","VAR","GRANT","GRANTINT"]'
-         . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
-         . ' AND ft.licenceType = [[LICENCE_TYPE]]';
+            . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
+            . ' AND ft.isMiscellaneous = [[0]]'
+            . ' AND ft.feeType IN ["APP","VAR","GRANT","GRANTINT"]'
+            . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
+            . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+            . ' ORDER BY ftft.id ASC'
+            . ' ORDER BY ft.effectiveFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -149,14 +143,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        $qb
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ftft.id', 'ASC')
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ft.effectiveFrom', 'DESC');
-
         $this->em
             ->shouldReceive('getReference')->with(LicenceEntity::class, $licenceId)
             ->andReturn($mockLicence);
@@ -173,9 +159,11 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
-         . ' AND ft.feeType IN ["CONT"]'
-         . ' AND ft.licenceType = [[LICENCE_TYPE]]';
+            . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
+            . ' AND ft.feeType IN ["CONT"]'
+            . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+            . ' ORDER BY ftft.id ASC'
+            . ' ORDER BY ft.effectiveFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -203,14 +191,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        $qb
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ftft.id', 'ASC')
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ft.effectiveFrom', 'DESC');
-
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
 
@@ -222,9 +202,11 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
-         . ' AND ft.isMiscellaneous = [[0]]'
-         . ' AND ft.feeType IN ["IRFOGVPERMIT","IRFOPSVANN","IRFOPSVAPP","IRFOPSVCOPY"]';
+            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+            . ' AND ft.isMiscellaneous = [[0]]'
+            . ' AND ft.feeType IN ["IRFOGVPERMIT","IRFOPSVANN","IRFOPSVAPP","IRFOPSVCOPY"]'
+            . ' ORDER BY ftft.id ASC'
+            . ' ORDER BY ft.effectiveFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -252,14 +234,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        $qb
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ftft.id', 'ASC')
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ft.effectiveFrom', 'DESC');
-
         $this->em
             ->shouldReceive('getReference')->with(LicenceEntity::class, 99)
             ->andReturn($mockLicence);
@@ -276,9 +250,11 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
-         . ' AND ft.isMiscellaneous = [[0]]'
-         . ' AND ft.feeType IN ["BUSAPP","BUSVAR"]';
+            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+            . ' AND ft.isMiscellaneous = [[0]]'
+            . ' AND ft.feeType IN ["BUSAPP","BUSVAR"]'
+            . ' ORDER BY ftft.id ASC'
+            . ' ORDER BY ft.effectiveFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -304,14 +280,6 @@ class FeeTypeTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf();
 
-        $qb
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ftft.id', 'ASC')
-            ->shouldReceive('addOrderBy')
-            ->once()
-            ->with('ft.effectiveFrom', 'DESC');
-
         $this->sut->shouldReceive('fetchPaginatedList')
             ->andReturn(['RESULTS']);
 
@@ -323,8 +291,10 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-         . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
-         . ' AND ft.isMiscellaneous = [[1]]';
+            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
+            . ' AND ft.isMiscellaneous = [[1]]'
+            . ' ORDER BY ftft.id ASC'
+            . ' ORDER BY ft.effectiveFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -343,7 +313,6 @@ class FeeTypeTest extends RepositoryTestCase
         $this->sut->shouldReceive('fetchLatestForIrfo')->andReturn(['foo']);
 
         $this->assertEquals($this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType), ['foo']);
-
     }
 
     public function testGetLatestIrfoFeeTypeForPsvAuth()

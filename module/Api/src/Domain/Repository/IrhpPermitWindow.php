@@ -15,25 +15,28 @@ use DateTime;
 class IrhpPermitWindow extends AbstractRepository
 {
     protected $entity = Entity::class;
+    protected $alias = 'ipw';
 
     /**
      * Returns an array of IrhpPermitWindow objects that are open as of the specified date and time
      *
+     * @param int $irhpPermitStock
      * @param DateTime $currentDateTime
      *
-     * @return array
+     * @return mixed
      */
-    public function fetchOpenWindows(DateTime $currentDateTime)
+    public function fetchOpenWindows(int $irhpPermitStock, DateTime $currentDateTime)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->select('ipw')
             ->from(Entity::class, 'ipw')
-            ->add(
-                'where',
-                $qb->expr()->between('?1', 'ipw.startDate', 'ipw.endDate')
-            )
-            ->setParameter(1, $currentDateTime)
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('?1', 'ipw.irhpPermitStock'),
+                $qb->expr()->between('?2', 'ipw.startDate', 'ipw.endDate')
+            ))
+            ->setParameter(1, $irhpPermitStock)
+            ->setParameter(2, $currentDateTime)
             ->getQuery()
             ->getResult(Query::HYDRATE_ARRAY);
     }
@@ -42,25 +45,27 @@ class IrhpPermitWindow extends AbstractRepository
      * Returns the IrhpPermitWindow that was most recently open prior to the specified date and time, or null if there
      * were no windows open prior to the specified date
      *
+     * @param int $irhpPermitStock
      * @param DateTime $currentDateTime
      *
-     * @return array|null
+     * @return mixed
      */
-    public function fetchLastOpenWindow(DateTime $currentDateTime)
+    public function fetchLastOpenWindow(int $irhpPermitStock, DateTime $currentDateTime)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
         return $qb->select('ipw')
             ->from(Entity::class, 'ipw')
-            ->add(
-                'where',
-                $qb->expr()->lt('ipw.endDate', '?1')
-            )
+            ->where($qb->expr()->andX(
+                $qb->expr()->eq('?1', 'ipw.irhpPermitStock'),
+                $qb->expr()->gt('?2', 'ipw.endDate')
+            ))
             ->orderBy('ipw.endDate', 'DESC')
-            ->setParameter(1, $currentDateTime)
+            ->setParameter(1, $irhpPermitStock)
+            ->setParameter(2, $currentDateTime)
             ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
+            ->getResult(Query::HYDRATE_ARRAY);
     }
 
     /**
@@ -158,6 +163,36 @@ class IrhpPermitWindow extends AbstractRepository
             ->andWhere($qb->expr()->lt($this->alias.'.endDate', ':periodEnd'))
             ->setParameter('periodStart', $clonedDateTime->modify($since)->setTime(0, 0, 0)->format(\DateTime::ISO8601))
             ->setParameter('periodEnd', $currentDateTime->format(\DateTime::ISO8601));
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all open windows for all the countries provided
+     *
+     * @param int      $type      Type
+     * @param array    $countries List of country ids to check for
+     * @param DateTime $now       Now
+     *
+     * @return array
+     */
+    public function fetchOpenWindowsByCountry($type, array $countries, DateTime $now)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias)
+            ->distinct()
+            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->innerJoin('ips.country', 'c')
+            ->where($qb->expr()->eq('ipt.id', ':type'))
+            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->in('c.id', ':countries'))
+            ->setParameter('type', $type)
+            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('countries', $countries);
 
         return $qb->getQuery()->getResult();
     }
