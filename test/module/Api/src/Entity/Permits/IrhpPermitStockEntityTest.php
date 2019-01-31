@@ -43,7 +43,10 @@ class IrhpPermitStockEntityTest extends EntityTester
         $updateInitialStock = 1401;
         $status = m::mock(RefData::class);
 
-        $entity = Entity::create($irhpPermitType, $validFrom, $validTo, $initialStock, $status);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn(3);
+
+        $entity = Entity::create($irhpPermitType, null, $validFrom, $validTo, $initialStock, $status);
 
         $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
@@ -51,7 +54,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($initialStock, $entity->getInitialStock());
         $this->assertEquals($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, $updateValidFrom, $updateValidTo, $updateInitialStock);
+        $entity->update($irhpPermitType, null, $updateValidFrom, $updateValidTo, $updateInitialStock);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
@@ -63,16 +66,21 @@ class IrhpPermitStockEntityTest extends EntityTester
         $statusDescription = 'status description';
 
         $status = m::mock(RefData::class);
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
         $status->shouldReceive('getDescription')
             ->andReturn($statusDescription);
 
         $stock = Entity::create(
-            m::mock(IrhpPermitType::class),
+            $irhpPermitType,
+            null,
             '2019-01-01',
             '2019-02-01',
             1400,
             $status
         );
+
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn(3);
 
         $this->assertEquals(
             $statusDescription,
@@ -86,14 +94,19 @@ class IrhpPermitStockEntityTest extends EntityTester
     public function testCanDelete($data, $expected)
     {
         $status = m::mock(RefData::class);
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
 
         $stock = Entity::create(
-            m::mock(IrhpPermitType::class),
+            $irhpPermitType,
+            null,
             '2019-01-01',
             '2019-02-01',
             1400,
             $status
         );
+
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn(3);
 
         $stock->setIrhpPermitRanges($data['irhpPermitRanges']);
         $stock->setIrhpPermitWindows($data['irhpPermitWindows']);
@@ -1104,12 +1117,17 @@ class IrhpPermitStockEntityTest extends EntityTester
 
     private function createEntityWithStatus($status)
     {
-        return Entity::create(
-            m::mock(IrhpPermitType::class),
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+        $irhpStockEntity = Entity::create(
+            $irhpPermitType,
+            null,
             '2019-01-01',
             '2019-02-01',
             1400,
             $status
         );
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn(3);
+        return($irhpStockEntity);
     }
 }

@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
@@ -201,7 +202,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         return [
             'hasInforceLicences' => $this->hasInforceLicences(),
             // @Todo Change below to accept multiple permit types for reusable application journey
-            'eligibleEcmtLicences' => $this->getEligibleEcmtLicences(),
+            'eligibleLicences' => $this->getEligibleLicences(),
             'hasAvailableLicences' => $this->hasAvailableLicences()
         ];
     }
@@ -599,7 +600,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      **
      * @return array
      */
-    public function getEligibleEcmtLicences()
+    public function getEligibleLicences()
     {
         $criteria = Criteria::create();
         $criteria->where(
@@ -633,6 +634,10 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         $licences = $this->getLicences()->matching($criteria);
 
+        $irhpPermitType = new IrhpPermitType();
+
+        $irhpPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
         $licencesArr = [];
 
         /** @var LicenceEntity $licence */
@@ -644,7 +649,8 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 'totAuthVehicles' => $licence->getTotAuthVehicles(),
                 'licenceType' => $licence->getLicenceType(),
                 'restricted' => $licence->getLicenceType() === LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                'canMakeEcmtApplication' => $licence->canMakeEcmtApplication()
+                'canMakeEcmtApplication' => $licence->canMakeEcmtApplication(),
+                'canMakeBilateralApplication' => $licence->canMakeIrhpApplication($irhpPermitType)
             ];
         }
 
@@ -658,7 +664,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function hasAvailableLicences()
     {
-        foreach ($this->getEligibleEcmtLicences()['result'] as $licence) {
+        foreach ($this->getEligibleLicences()['result'] as $licence) {
             if ($licence['canMakeEcmtApplication']) {
                 return true;
             }

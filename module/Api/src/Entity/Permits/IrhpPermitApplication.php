@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 
@@ -32,15 +32,36 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
         Licence $licence,
-        EcmtPermitApplication $ecmtPermitApplication
+        EcmtPermitApplication $ecmtPermitApplication = null,
+        IrhpApplication $irhpApplication = null
     ) {
         $IrhpPermitApplication = new self();
 
         $IrhpPermitApplication->irhpPermitWindow = $IrhpPermitWindow;
         $IrhpPermitApplication->licence = $licence;
         $IrhpPermitApplication->ecmtPermitApplication = $ecmtPermitApplication;
+        $IrhpPermitApplication->irhpApplication = $irhpApplication;
 
         return $IrhpPermitApplication;
+    }
+
+    /**
+     * createNewForIrhpApplication
+     *
+     * @param IrhpApplication  $irhpApplication  IRHP Application
+     * @param IrhpPermitWindow $irhpPermitWindow IRHP Permit Window
+     *
+     * @return IrhpPermitApplication
+     */
+    public static function createNewForIrhpApplication(
+        IrhpApplication $irhpApplication,
+        IrhpPermitWindow $irhpPermitWindow
+    ) {
+        $irhpPermitApplication = new self();
+        $irhpPermitApplication->irhpApplication = $irhpApplication;
+        $irhpPermitApplication->irhpPermitWindow = $irhpPermitWindow;
+
+        return $irhpPermitApplication;
     }
 
     public function getPermitIntensityOfUse()
@@ -68,7 +89,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
     /**
      * Get num of successful permit applications
-     **
+     *
      * @return int
      */
     public function countPermitsAwarded()
@@ -78,7 +99,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
     /**
      * Get num of valid permits
-     **
+     *
      * @return int
      */
     public function countValidPermits()
@@ -94,7 +115,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
 
     /**
      * Get candidate permits marked as successful
-     **
+     *
      * @return array
      */
     public function getSuccessfulIrhpCandidatePermits()
@@ -105,5 +126,27 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         );
 
         return $this->getIrhpCandidatePermits()->matching($criteria);
+    }
+
+    /**
+     * Has permits required populated
+     *
+     * @return bool
+     */
+    public function hasPermitsRequired()
+    {
+        return $this->permitsRequired !== null;
+    }
+
+    /**
+     * Sets the permits required within the stock associated with this entity
+     *
+     * @param int $permitsRequired
+     */
+    public function updatePermitsRequired($permitsRequired)
+    {
+        if (!is_null($this->irhpApplication) && $this->irhpApplication->canBeUpdated()) {
+            $this->permitsRequired = $permitsRequired;
+        }
     }
 }

@@ -6,9 +6,9 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *    }
  * )
  */
-class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface
+class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface, CancelableInterface
 {
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
@@ -108,7 +108,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      * @param Licence $licence Licence
      * @param string|null $dateReceived
      * @param Sectors|null $sectors
-     * @param array $countrys
+     * @param ArrayCollection $countrys
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
@@ -125,7 +125,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         Licence $licence,
         string $dateReceived = null,
         Sectors $sectors = null,
-        $countrys = [],
+        ArrayCollection $countrys,
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
@@ -1002,5 +1002,27 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         ];
 
         return $mappings[$this->source->getId()];
+    }
+
+    /**
+     *
+     * Return data required for the creation of a HTML snapshot
+     * @return array
+     */
+    public function returnSnapshotData()
+    {
+        $data['permitType'] = $this->getPermitType()->getDescription();
+        $data['operator'] = $this->getLicence()->getOrganisation()->getName();
+        $data['ref'] = $this->getApplicationRef();
+        $data['licence'] = $this->getLicence()->getLicNo();
+        $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
+        $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
+        $data['limitedCountries'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+        $data['permitsRequired'] = $this->getPermitsRequired();
+        $data['trips'] = $this->getTrips();
+        $data['internationalJourneys'] = $this->getInternationalJourneys()->getDescription();
+        $data['goods'] = $this->getSectors()->getName();
+
+        return $data;
     }
 }

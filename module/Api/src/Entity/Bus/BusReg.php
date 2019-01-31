@@ -852,7 +852,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         ];
 
         foreach ($nonEmptyFields as $field) {
-            if (empty($this->$field)) {
+            if (is_null($this->$field) || $this->$field === "") {
                 return false;
             }
         }

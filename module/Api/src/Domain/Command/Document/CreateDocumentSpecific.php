@@ -27,6 +27,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $submission;
 
+    protected $surrender;
+
     protected $trafficArea;
 
     protected $transportManager;
@@ -56,6 +58,8 @@ class CreateDocumentSpecific extends AbstractCommand
     protected $metadata;
 
     protected $user;
+
+    protected $ecmtPermitApplication;
 
     /**
      * Get filename
@@ -285,5 +289,15 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Get ecmt permit application
+     *
+     * @return int
+     */
+    public function getEcmtPermitApplication()
+    {
+        return $this->ecmtPermitApplication;
     }
 }

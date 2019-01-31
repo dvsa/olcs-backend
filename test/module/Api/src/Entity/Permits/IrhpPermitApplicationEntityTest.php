@@ -4,8 +4,12 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 
 /**
@@ -34,6 +38,40 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         parent::setUp();
     }
 
+    public function testCreateNew()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+
+        $irhpPermitApplication = Entity::createNew(
+            $irhpPermitWindow,
+            $licence,
+            $ecmtPermitApplication
+        );
+
+        $this->assertSame($irhpPermitWindow, $irhpPermitApplication->getIrhpPermitWindow());
+        $this->assertSame($licence, $irhpPermitApplication->getLicence());
+        $this->assertSame($ecmtPermitApplication, $irhpPermitApplication->getEcmtPermitApplication());
+        $this->assertNull($irhpPermitApplication->getIrhpApplication());
+    }
+
+    public function testCreateNewForIrhpApplication()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+
+        $irhpPermitApplication = Entity::createNewForIrhpApplication(
+            $irhpApplication,
+            $irhpPermitWindow
+        );
+
+        $this->assertSame($irhpApplication, $irhpPermitApplication->getIrhpApplication());
+        $this->assertSame($irhpPermitWindow, $irhpPermitApplication->getIrhpPermitWindow());
+        $this->assertNull($irhpPermitApplication->getEcmtPermitApplication());
+        $this->assertNull($irhpPermitApplication->getLicence());
+    }
+
     public function testGetCalculatedBundleValues()
     {
         $this->assertSame(
@@ -44,7 +82,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             $this->sut->getCalculatedBundleValues()
         );
     }
-
 
     public function testCountValidPermits()
     {
@@ -133,5 +170,68 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertTrue($successfulIrhpCandidatePermits->contains($candidatePermit1));
         $this->assertTrue($successfulIrhpCandidatePermits->contains($candidatePermit3));
         $this->assertEquals(2, $successfulIrhpCandidatePermits->count());
+    }
+
+    public function testHasPermitsRequired()
+    {
+        $this->assertFalse($this->sut->hasPermitsRequired());
+
+        $this->sut->setPermitsRequired(0);
+        $this->assertTrue($this->sut->hasPermitsRequired());
+    }
+
+    public function testUpdatePermitsRequired()
+    {
+        $irhpPermitApplication = Entity::createNew(
+            m::mock(IrhpPermitWindow::class),
+            m::mock(Licence::class),
+            m::mock(EcmtPermitApplication::class)
+        );
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->andReturn(true);
+
+        $irhpPermitApplication->setPermitsRequired(44);
+        $irhpPermitApplication->setIrhpApplication($irhpApplication);
+
+        $irhpPermitApplication->updatePermitsRequired(4);
+        $this->assertEquals(4, $irhpPermitApplication->getPermitsRequired());
+    }
+
+    public function testUpdatePermitsRequiredCannotBeUpdated()
+    {
+        $irhpPermitApplication = Entity::createNew(
+            m::mock(IrhpPermitWindow::class),
+            m::mock(Licence::class),
+            m::mock(EcmtPermitApplication::class)
+        );
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('canBeUpdated')
+            ->andReturn(false);
+
+        $irhpPermitApplication->setPermitsRequired(44);
+        $irhpPermitApplication->setIrhpApplication($irhpApplication);
+
+        $irhpPermitApplication->updatePermitsRequired(4);
+        $this->assertEquals(44, $irhpPermitApplication->getPermitsRequired());
+    }
+
+    public function testUpdatePermitsRequiredNotApplicable()
+    {
+        $irhpPermitApplication = Entity::createNew(
+            m::mock(IrhpPermitWindow::class),
+            m::mock(Licence::class),
+            m::mock(EcmtPermitApplication::class)
+        );
+        $irhpPermitApplication->setPermitsRequired(44);
+
+        $irhpPermitApplication->updatePermitsRequired(4);
+
+        $this->assertEquals(
+            44,
+            $irhpPermitApplication->getPermitsRequired()
+        );
     }
 }

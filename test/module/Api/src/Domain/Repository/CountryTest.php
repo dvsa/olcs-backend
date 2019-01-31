@@ -2,9 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
 
 /**
@@ -51,5 +53,37 @@ class CountryTest extends RepositoryTestCase
             $idsAndDescriptions,
             $this->sut->fetchIdsAndDescriptions()
         );
+    }
+
+    public function testFetchAvailableCountriesForIrhpApplication()
+    {
+        $now = new DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchAvailableCountriesForIrhpApplication(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, $now)
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT m DISTINCT '
+            . 'INNER JOIN m.irhpPermitStocks ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ips.irhpPermitWindows ipw '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'ORDER BY m.countryDesc ASC';
+
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

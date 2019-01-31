@@ -25,10 +25,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_stock_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"})
+ *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"})
  *    },
  *    uniqueConstraints={
- *        @ORM\UniqueConstraint(name="uniqueStock", columns={"irhp_permit_type_id","valid_from","valid_to"})
+ *        @ORM\UniqueConstraint(name="uniqueStock",
+     *     columns={"irhp_permit_type_id","country_id","valid_from","valid_to"})
  *    }
  * )
  */
@@ -36,6 +38,20 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+
+    /**
+     * Country
+     *
+     * @var \Dvsa\Olcs\Api\Entity\ContactDetails\Country
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermitStocks"
+     * )
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=true)
+     */
+    protected $country;
 
     /**
      * Created by
@@ -218,6 +234,30 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
         $this->irhpPermitRanges = new ArrayCollection();
         $this->irhpPermitSectorQuotas = new ArrayCollection();
         $this->irhpPermitWindows = new ArrayCollection();
+    }
+
+    /**
+     * Set the country
+     *
+     * @param \Dvsa\Olcs\Api\Entity\ContactDetails\Country $country entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get the country
+     *
+     * @return \Dvsa\Olcs\Api\Entity\ContactDetails\Country
+     */
+    public function getCountry()
+    {
+        return $this->country;
     }
 
     /**

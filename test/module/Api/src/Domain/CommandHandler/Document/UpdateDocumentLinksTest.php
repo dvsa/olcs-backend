@@ -37,6 +37,9 @@ class UpdateDocumentLinksTest extends CommandHandlerTestCase
         $this->references = [
             Entity\Application\Application::class => [
                 123 => m::mock(Entity\Application\Application::class)
+            ],
+            Entity\Surrender::class => [
+                777 => m::mock(Entity\Surrender::class),
             ]
         ];
         parent::initReferences();
@@ -46,7 +49,8 @@ class UpdateDocumentLinksTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 111,
-            'application' => 123
+            'application' => 123,
+            'surrender' => 777
         ];
 
         $command = Cmd::create($data);
@@ -66,7 +70,8 @@ class UpdateDocumentLinksTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Document linked to Application: 123'
+                'Document linked to Application: 123',
+                'Document linked to Surrender: 777'
             ]
         ];
 

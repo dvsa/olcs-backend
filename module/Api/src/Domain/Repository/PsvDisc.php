@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as Entity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -175,5 +175,27 @@ class PsvDisc extends AbstractRepository
         $rawQuery = $this->getDbQueryManager()->get('Discs\CreatePsvDiscs');
 
         return $rawQuery->executeInsert($licenceId, $howMany, $isCopy);
+    }
+
+    public function countForLicence($id)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select('count(psv)')
+            ->where($qb->expr()->eq($this->alias . '.licence', ':id'))
+            ->andWhere($qb->expr()->isNull($this->alias . '.ceasedDate'))
+            ->groupBy('psv.licence')
+            ->setParameter('id', $id)
+            ->setMaxResults(1);
+
+        try {
+            $count = $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $exception) {
+            $count = 0;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+
+        return ['discCount' => $count];
     }
 }

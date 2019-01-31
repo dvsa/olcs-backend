@@ -118,6 +118,7 @@ return [
     'view_manager' => [
         'template_path_stack' => [
             'submission' => __DIR__ . '/../view/submission',
+            'permits' => __DIR__ . '/../view/permits',
         ]
     ],
     'file_uploader' => [
@@ -342,6 +343,7 @@ return [
             'EcmtPermits' => RepositoryFactory::class,
             'EcmtPermitApplication' => RepositoryFactory::class,
             'IrhpPermitApplication' => RepositoryFactory::class,
+            'IrhpApplication' => RepositoryFactory::class,
             'IrhpCandidatePermit' => RepositoryFactory::class,
             'IrhpPermit' => RepositoryFactory::class,
             'IrhpPermitJurisdictionQuota' => RepositoryFactory::class,
@@ -350,6 +352,7 @@ return [
             'IrhpPermitType' => RepositoryFactory::class,
             'IrhpPermitWindow' => RepositoryFactory::class,
             'IrhpPermitRange' => RepositoryFactory::class,
+            'IrhpApplication' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

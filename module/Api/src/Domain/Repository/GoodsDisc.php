@@ -269,9 +269,8 @@ class GoodsDisc extends AbstractRepository
 
         $qb->select('count(gd)')
             ->innerJoin($this->alias . '.licenceVehicle', 'lv')
-            ->innerJoin('lv.licence', 'lvl')
-            ->where($qb->expr()->eq('lvl.id', ':id'))
-            ->groupBy('lvl.id')
+            ->where($qb->expr()->eq('lv.licence', ':id'))
+            ->andWhere($qb->expr()->isNull($this->alias . '.ceasedDate'))
             ->setParameter('id', $id)
             ->setMaxResults(1);
 

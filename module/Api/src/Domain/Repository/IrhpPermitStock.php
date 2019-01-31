@@ -7,6 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
@@ -79,5 +80,37 @@ class IrhpPermitStock extends AbstractRepository
             ->orderBy($this->alias . '.validFrom', 'ASC');
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    /**
+     * Returns the count of permit stocks for a type and validity period
+     *
+     * @param int $permitTypeId
+     * @param string $validFrom
+     * @param string $validTo
+     * @return int
+     */
+    public function getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('count(ips.id)')
+            ->from(Entity::class, 'ips')
+            ->where('ips.irhpPermitType = ?1')
+            ->andWhere('ips.validFrom = ?2')
+            ->andWhere('ips.validTo = ?3')
+            ->setParameter(1, $permitTypeId)
+            ->setParameter(2, $validFrom)
+            ->setParameter(3, $validTo)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param int $irhpPermitType
+     * @return array
+     */
+    public function fetchByIrhpPermitType(int $irhpPermitType)
+    {
+        return $this->fetchByX('irhpPermitType', [$irhpPermitType]);
     }
 }

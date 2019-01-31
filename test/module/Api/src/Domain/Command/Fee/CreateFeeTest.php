@@ -34,7 +34,8 @@ class CreateFeeTest extends \PHPUnit\Framework\TestCase
             'irfoFeeExempt' => 'Y',
             'waiveReason' => 'testing',
             'quantity' => 2,
-            'ecmtPermitApplication' => null
+            'ecmtPermitApplication' => null,
+            'irhpApplication' => 34
         ];
 
         $command = CreateFee::create($data);
@@ -54,6 +55,7 @@ class CreateFeeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('testing', $command->getWaiveReason());
         $this->assertEquals(2, $command->getQuantity());
         $this->assertEquals(null, $command->getEcmtPermitApplication());
+        $this->assertEquals(34, $command->getIrhpApplication());
         $this->assertEquals(
             [
                 'application' => 111,
@@ -70,7 +72,8 @@ class CreateFeeTest extends \PHPUnit\Framework\TestCase
                 'irfoFeeExempt' => 'Y',
                 'waiveReason' => 'testing',
                 'quantity' => 2,
-                'ecmtPermitApplication' => null
+                'ecmtPermitApplication' => null,
+                'irhpApplication' => 34,
             ],
             $command->getArrayCopy()
         );

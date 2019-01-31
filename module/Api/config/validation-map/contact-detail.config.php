@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
     QueryHandler\ContactDetail\CountryList::class => NoValidationRequired::class,
+    QueryHandler\ContactDetail\CountrySelectList::class => NoValidationRequired::class,
     QueryHandler\ContactDetail\ContactDetailsList::class => IsInternalUser::class,
     //  phone numbers
     QueryHandler\ContactDetail\PhoneContact\GetList::class => IsInternalUser::class,

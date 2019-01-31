@@ -61,6 +61,8 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
         $this->maybeLinkDocument($document, $command, Entity\Tm\TransportManager::class, 'TransportManager');
         $this->maybeLinkDocument($document, $command, Entity\OperatingCentre\OperatingCentre::class, 'OperatingCentre');
         $this->maybeLinkDocument($document, $command, Entity\Licence\ContinuationDetail::class, 'ContinuationDetail');
+        $this->maybeLinkDocument($document, $command, Entity\Permits\EcmtPermitApplication::class, 'EcmtPermitApplication');
+        $this->maybeLinkDocument($document, $command, Entity\Surrender::class, 'Surrender');
     }
 
     /**
@@ -80,9 +82,7 @@ final class UpdateDocumentLinks extends AbstractCommandHandler implements Transa
         $value = $command->{$getter}();
 
         if ($value !== null) {
-
             $this->result->addMessage('Document linked to ' . $suffix . ': ' . $value);
-
             $reference = $this->getRepo()->getReference($entity, $value);
             $document->{$setter}($reference);
         }

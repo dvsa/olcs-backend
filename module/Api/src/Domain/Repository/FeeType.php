@@ -175,9 +175,6 @@ class FeeType extends AbstractRepository
         );
         $qb->setParameter('effectiveFrom', $date);
 
-        $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
-        $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
-
         // NOTE we can't do the required group by with DQL here so it's done in
         // the query handler
 
@@ -240,6 +237,9 @@ class FeeType extends AbstractRepository
             // fee_type.licence_type = <current application licence type>; AND
             $this->addLicenceTypeClause($qb, $application->getLicenceType());
         }
+
+        $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
+        $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
     }
 
     /**
@@ -310,7 +310,7 @@ class FeeType extends AbstractRepository
      * @return Entity
      * @throws Exception\NotFoundException
      */
-    public function getLatestForEcmtPermit($productReference)
+    public function getLatestByProductReference($productReference)
     {
         $qb = $this->createQueryBuilder();
         $qb->andWhere($qb->expr()->eq('ft.productReference', ':productReference'));

@@ -9,6 +9,7 @@ use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
 
 /**
@@ -32,20 +33,33 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $dateTime = m::mock(DateTime::class);
 
+        $irhpPermitStock = 1;
+
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
+        $andXFunc = m::mock(Func::class);
+        $eqFunc = m::mock(Func::class);
         $betweenFunc = m::mock(Func::class);
 
         $expr = m::mock(Expr::class);
-        $expr->shouldReceive('between')
-            ->with('?1', 'ipw.startDate', 'ipw.endDate')
-            ->once()
-            ->andReturn($betweenFunc);
 
         $queryBuilder->shouldReceive('expr')
-            ->once()
             ->andReturn($expr);
+
+        $expr->shouldReceive('andX')
+            ->with($eqFunc, $betweenFunc)
+            ->once()
+            ->andReturn($andXFunc);
+
+        $expr->shouldReceive('eq')
+            ->with('?1', 'ipw.irhpPermitStock')
+            ->once()
+            ->andReturn($eqFunc)
+            ->shouldReceive('between')
+            ->with('?2', 'ipw.startDate', 'ipw.endDate')
+            ->once()
+            ->andReturn($betweenFunc);
 
         $queryBuilder->shouldReceive('select')
             ->with('ipw')
@@ -55,12 +69,16 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(IrhpPermitWindowEntity::class, 'ipw')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('add')
-            ->with('where', $betweenFunc)
+            ->shouldReceive('where')
+            ->with($andXFunc)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(1, $dateTime)
+            ->with(1, $irhpPermitStock)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $dateTime)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('getQuery->getResult')
@@ -70,7 +88,7 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $this->assertEquals(
             $expectedResult,
-            $this->sut->fetchOpenWindows($dateTime)
+            $this->sut->fetchOpenWindows($irhpPermitStock, $dateTime)
         );
     }
 
@@ -80,20 +98,33 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $dateTime = m::mock(DateTime::class);
 
+        $irhpPermitStock = 1;
+
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
-        $ltFunc = m::mock(Func::class);
+        $andXFunc = m::mock(Func::class);
+        $eqFunc = m::mock(Func::class);
+        $gtFunc = m::mock(Func::class);
 
         $expr = m::mock(Expr::class);
-        $expr->shouldReceive('lt')
-            ->with('ipw.endDate', '?1')
-            ->once()
-            ->andReturn($ltFunc);
 
         $queryBuilder->shouldReceive('expr')
-            ->once()
             ->andReturn($expr);
+
+        $expr->shouldReceive('andX')
+            ->with($eqFunc, $gtFunc)
+            ->once()
+            ->andReturn($andXFunc);
+
+        $expr->shouldReceive('eq')
+            ->with('?1', 'ipw.irhpPermitStock')
+            ->once()
+            ->andReturn($eqFunc)
+            ->shouldReceive('gt')
+            ->with('?2', 'ipw.endDate')
+            ->once()
+            ->andReturn($gtFunc);
 
         $queryBuilder->shouldReceive('select')
             ->with('ipw')
@@ -103,8 +134,8 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(IrhpPermitWindowEntity::class, 'ipw')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('add')
-            ->with('where', $ltFunc)
+            ->shouldReceive('where')
+            ->with($andXFunc)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('orderBy')
@@ -112,20 +143,24 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(1, $dateTime)
+            ->with(1, $irhpPermitStock)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $dateTime)
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setMaxResults')
             ->with(1)
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('getQuery->getOneOrNullResult')
+            ->shouldReceive('getQuery->getResult')
             ->once()
             ->andReturn($expectedResult);
 
         $this->assertEquals(
             $expectedResult,
-            $this->sut->fetchLastOpenWindow($dateTime)
+            $this->sut->fetchLastOpenWindow($irhpPermitStock, $dateTime)
         );
     }
 
@@ -213,8 +248,44 @@ class IrhpPermitWindowTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchWindowsToBeClosed($now, '-2 days'));
 
         $expectedQuery = 'BLAH '
-            . 'AND m.endDate >= [[2018-10-23T00:00:00+0000]] '
-            . 'AND m.endDate < [[2018-10-25T13:21:10+0000]]';
+            . 'AND ipw.endDate >= [[2018-10-23T00:00:00+0000]] '
+            . 'AND ipw.endDate < [[2018-10-25T13:21:10+0000]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchOpenWindowsByCountry()
+    {
+        $now = new \DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenWindowsByCountry(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                ['DE', 'NL'],
+                $now
+            )
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw DISTINCT '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ips.country c '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'AND c.id IN [[["DE","NL"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
