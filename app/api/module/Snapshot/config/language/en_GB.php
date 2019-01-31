@@ -256,6 +256,7 @@ return [
     'undertakings_owners_signature' => 'Owner\'s signature',
     'undertakings_responsiblepersons_signature' => 'A responsible person\'s signature',
     'tm-review-return-address' => 'Office of the Traffic Commissioner, The Central Licensing Office, Hillcrest House 386 Harehills Lane, Leeds, LS9 6NF',
+    'surrender-application-return-address' => 'Office of the Traffic Commissioner, The Central Licensing Office, Hillcrest House 386 Harehills Lane, Leeds, LS9 6NF',
     'tm-review-declaration' => 'Declaration',
     'directors-signature' => 'Director\'s signature',
     'partners-signature' => 'Partner\'s signature',
@@ -352,5 +353,23 @@ return [
     'continuations.people-empty-table-message.org_t_pa' => 'There are no responsible people recorded on your licence',
     'continuations.people-empty-table-message.org_t_rc' => 'There are no directors recorded on your licence',
     'continuations.people-empty-table-message.org_t_st' => 'There is no owner recorded on your licence',
+
+    // Surrender snapshot translations
+    'surrender-review-title' => 'Digital surrender form',
+    'surrender-review-licence' => 'Licence details',
+    'surrender-review-current-discs' => 'Current discs',
+    'surrender-review-documentation' => 'Documentation',
+    'surrender-review-declaration' => 'Declarations',
+    'surrender-review-licence-number' => 'Licence number',
+    'surrender-review-licence-holder' => 'Name of licence holder',
+    'surrender-review-licence-trading-name' => 'Trading name (if any)',
+    'surrender-review-licence-correspondence-address' => 'Correspondence address',
+    'surrender-review-additional-information' => 'Additional information',
+    'surrender-review-current-discs-destroyed' => 'Number destroyed',
+    'surrender-review-current-discs-lost' => 'Number lost',
+    'surrender-review-current-discs-stolen' => 'Number stolen',
+    'surrender-review-documentation-operator-licence' => 'Operator licence',
+    'surrender-review-documentation-community-licence' => 'Community licence and all certified copies',
+
     // Potentially unused translations
 ];

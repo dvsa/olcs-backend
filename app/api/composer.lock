@@ -4,22 +4,22 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "eb9b8bfe0c8f13ef6844ec46022b53a5",
-    "content-hash": "0da6d290b55e8637c7872c320b000205",
+    "hash": "03f6fa364d518c44c12d3ff70d2674f2",
+    "content-hash": "dcc3499e164d88a53219a666ae399a44",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.1.5",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b"
+                "reference": "69eae9e613afc24c9282517bf84eb9e16b59d730"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-469f65355b034b21c9c755e2d46ff2c06164567b-zip-b371a0.tar",
-                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b",
-                "shasum": "e89aad5992c7719118ced46ee89d58d511bb091a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-69eae9e613afc24c9282517bf84eb9e16b59d730-zip-cc8d7c.tar",
+                "reference": "69eae9e613afc24c9282517bf84eb9e16b59d730",
+                "shasum": "d16bed439448095d77f89661041f42a949cd2390"
             },
             "require": {
                 "php": ">=5.4"
@@ -59,7 +59,7 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2018-09-26 16:18:17"
+            "time": "2019-01-29 06:15:22"
         },
         {
             "name": "behat/transliterator",
@@ -354,33 +354,39 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.8.1",
+            "version": "v2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "f68c297ce6455e8fd794aa8ffaf9fa458f6ade66"
+                "reference": "30e33f60f64deec87df728c02b107f82cdafad9d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-common-f68c297ce6455e8fd794aa8ffaf9fa458f6ade66-zip-95cb82.tar",
-                "reference": "f68c297ce6455e8fd794aa8ffaf9fa458f6ade66",
-                "shasum": "ca2c16622ae7188a6d4f8c56d249bd1d02839dea"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-common-30e33f60f64deec87df728c02b107f82cdafad9d-zip-1830b6.tar",
+                "reference": "30e33f60f64deec87df728c02b107f82cdafad9d",
+                "shasum": "a65c429cc184d5b51a72a81cf9b6256b53d1e62a"
             },
             "require": {
-                "doctrine/annotations": "1.*",
-                "doctrine/cache": "1.*",
-                "doctrine/collections": "1.*",
-                "doctrine/inflector": "1.*",
-                "doctrine/lexer": "1.*",
-                "php": "~7.1"
+                "doctrine/annotations": "^1.0",
+                "doctrine/cache": "^1.0",
+                "doctrine/collections": "^1.0",
+                "doctrine/event-manager": "^1.0",
+                "doctrine/inflector": "^1.0",
+                "doctrine/lexer": "^1.0",
+                "doctrine/persistence": "^1.1",
+                "doctrine/reflection": "^1.0",
+                "php": "^7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.7"
+                "doctrine/coding-standard": "^1.0",
+                "phpunit/phpunit": "^6.3",
+                "squizlabs/php_codesniffer": "^3.0",
+                "symfony/phpunit-bridge": "^4.0.5"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8.x-dev"
+                    "dev-master": "2.10.x-dev"
                 }
             },
             "autoload": {
@@ -412,18 +418,20 @@
                 {
                     "name": "Johannes Schmitt",
                     "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
                 }
             ],
-            "description": "Common Library for Doctrine projects",
-            "homepage": "http://www.doctrine-project.org",
+            "description": "PHP Doctrine Common project is a library that provides additional functionality that other Doctrine projects depend on such as better reflection support, persistence interfaces, proxies, event system and much more.",
+            "homepage": "https://www.doctrine-project.org/projects/common.html",
             "keywords": [
-                "annotations",
-                "collections",
-                "eventmanager",
-                "persistence",
-                "spl"
+                "common",
+                "doctrine",
+                "php"
             ],
-            "time": "2017-08-31 08:43:38"
+            "time": "2018-11-21 01:24:55"
         },
         {
             "name": "doctrine/dbal",
@@ -500,17 +508,17 @@
         },
         {
             "name": "doctrine/doctrine-module",
-            "version": "0.10.1",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineModule.git",
-                "reference": "8684c0bbee97d2d1477a9ac802e8b9df307671df"
+                "reference": "ade6c1667283e3d8131d40e79c427b8a8100e7d3"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-doctrine-module-8684c0bbee97d2d1477a9ac802e8b9df307671df-zip-799ad0.tar",
-                "reference": "8684c0bbee97d2d1477a9ac802e8b9df307671df",
-                "shasum": "25013abb7b44af7f18515f5ad9b7e3021ff9a59f"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-doctrine-module-ade6c1667283e3d8131d40e79c427b8a8100e7d3-zip-8be3ea.tar",
+                "reference": "ade6c1667283e3d8131d40e79c427b8a8100e7d3",
+                "shasum": "681970aec0a753256a2e114f6221ea0ac1cf8185"
             },
             "require": {
                 "doctrine/cache": "~1.5",
@@ -574,27 +582,27 @@
                 "module",
                 "zf2"
             ],
-            "time": "2016-03-21 23:55:21"
+            "time": "2016-03-21 22:50:01"
         },
         {
             "name": "doctrine/doctrine-orm-module",
-            "version": "0.9.2",
+            "version": "0.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineORMModule.git",
-                "reference": "847db36f0f7ef8d940414e433e8b241aa601a6a7"
+                "reference": "50808eb795d00aac6a551023b1bb379de054f9b5"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-doctrine-orm-module-847db36f0f7ef8d940414e433e8b241aa601a6a7-zip-01eccf.tar",
-                "reference": "847db36f0f7ef8d940414e433e8b241aa601a6a7",
-                "shasum": "8a2f68ac11c05245e5a4d8ef22f3649cb5159764"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-doctrine-orm-module-50808eb795d00aac6a551023b1bb379de054f9b5-zip-e91d1b.tar",
+                "reference": "50808eb795d00aac6a551023b1bb379de054f9b5",
+                "shasum": "d57749559fe5eb19419e19eb60e882423d223461"
             },
             "require": {
                 "doctrine/dbal": ">=2.4,<2.7",
-                "doctrine/doctrine-module": "~0.8",
+                "doctrine/doctrine-module": "~1.0",
                 "doctrine/orm": ">=2.5,<2.7",
-                "php": ">=5.4",
+                "php": "^5.5 || ^7.0",
                 "symfony/console": "~2.5|~3.0",
                 "zendframework/zend-mvc": "~2.3",
                 "zendframework/zend-servicemanager": "~2.3",
@@ -652,7 +660,81 @@
                 "orm",
                 "zf2"
             ],
-            "time": "2015-10-05 23:06:08"
+            "time": "2016-03-22 00:43:08"
+        },
+        {
+            "name": "doctrine/event-manager",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/event-manager.git",
+                "reference": "a520bc093a0170feeb6b14e9d83f3a14452e64b3"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-event-manager-a520bc093a0170feeb6b14e9d83f3a14452e64b3-zip-5b2ee9.tar",
+                "reference": "a520bc093a0170feeb6b14e9d83f3a14452e64b3",
+                "shasum": "5457b987c0e7f85da6896740ea07decdb9bd8ea5"
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "conflict": {
+                "doctrine/common": "<2.9@dev"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^4.0",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\": "lib/Doctrine/Common"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "Doctrine Event Manager component",
+            "homepage": "https://www.doctrine-project.org/projects/event-manager.html",
+            "keywords": [
+                "event",
+                "eventdispatcher",
+                "eventmanager"
+            ],
+            "time": "2018-06-11 11:59:03"
         },
         {
             "name": "doctrine/inflector",
@@ -831,38 +913,40 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.14",
+            "version": "v2.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754"
+                "reference": "434820973cadf2da2d66e7184be370084cc32ca8"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-orm-810a7baf81462a5ddf10e8baa8cb94b6eec02754-zip-dacf13.tar",
-                "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754",
-                "shasum": "5a202086501b0481157e58042e78eb9d0de28c88"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-orm-434820973cadf2da2d66e7184be370084cc32ca8-zip-ebc83c.tar",
+                "reference": "434820973cadf2da2d66e7184be370084cc32ca8",
+                "shasum": "8549ee7c9ab0a9858aed074bf978a3ad474f2673"
             },
             "require": {
-                "doctrine/cache": "~1.4",
-                "doctrine/collections": "~1.2",
-                "doctrine/common": ">=2.5-dev,<2.9-dev",
-                "doctrine/dbal": ">=2.5-dev,<2.7-dev",
-                "doctrine/instantiator": "^1.0.1",
+                "doctrine/annotations": "~1.5",
+                "doctrine/cache": "~1.6",
+                "doctrine/collections": "^1.4",
+                "doctrine/common": "^2.7.1",
+                "doctrine/dbal": "^2.6",
+                "doctrine/instantiator": "~1.1",
                 "ext-pdo": "*",
-                "php": ">=5.4",
-                "symfony/console": "~2.5|~3.0|~4.0"
+                "php": "^7.1",
+                "symfony/console": "~3.0|~4.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "symfony/yaml": "~2.3|~3.0|~4.0"
+                "doctrine/coding-standard": "^1.0",
+                "phpunit/phpunit": "^6.5",
+                "squizlabs/php_codesniffer": "^3.2",
+                "symfony/yaml": "~3.4|~4.0"
             },
             "suggest": {
                 "symfony/yaml": "If you want to use YAML Metadata Mapping Driver"
             },
             "bin": [
-                "bin/doctrine",
-                "bin/doctrine.php"
+                "bin/doctrine"
             ],
             "type": "library",
             "extra": {
@@ -871,8 +955,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\ORM\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\ORM\\": "lib/Doctrine/ORM"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -895,6 +979,10 @@
                 {
                     "name": "Jonathan Wage",
                     "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
                 }
             ],
             "description": "Object-Relational-Mapper for PHP",
@@ -903,7 +991,164 @@
                 "database",
                 "orm"
             ],
-            "time": "2017-12-17 02:57:51"
+            "time": "2018-11-20 23:46:46"
+        },
+        {
+            "name": "doctrine/persistence",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/persistence.git",
+                "reference": "c0f1c17602afc18b4cbd8e1c8125f264c9cf7d38"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-persistence-c0f1c17602afc18b4cbd8e1c8125f264c9cf7d38-zip-c839d7.tar",
+                "reference": "c0f1c17602afc18b4cbd8e1c8125f264c9cf7d38",
+                "shasum": "9403bdd6de72355615e1b4570c2cd36daf035edc"
+            },
+            "require": {
+                "doctrine/annotations": "^1.0",
+                "doctrine/cache": "^1.0",
+                "doctrine/collections": "^1.0",
+                "doctrine/event-manager": "^1.0",
+                "doctrine/reflection": "^1.0",
+                "php": "^7.1"
+            },
+            "conflict": {
+                "doctrine/common": "<2.10@dev"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^5.0",
+                "phpstan/phpstan": "^0.8",
+                "phpunit/phpunit": "^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\": "lib/Doctrine/Common"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "The Doctrine Persistence project is a set of shared interfaces and functionality that the different Doctrine object mappers share.",
+            "homepage": "https://doctrine-project.org/projects/persistence.html",
+            "keywords": [
+                "mapper",
+                "object",
+                "odm",
+                "orm",
+                "persistence"
+            ],
+            "time": "2018-11-21 00:33:13"
+        },
+        {
+            "name": "doctrine/reflection",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doctrine/reflection.git",
+                "reference": "02538d3f95e88eb397a5f86274deb2c6175c2ab6"
+            },
+            "dist": {
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-reflection-02538d3f95e88eb397a5f86274deb2c6175c2ab6-zip-5a5077.tar",
+                "reference": "02538d3f95e88eb397a5f86274deb2c6175c2ab6",
+                "shasum": "e51fd380ab385bbff0b7697a93bf1d30c5241332"
+            },
+            "require": {
+                "doctrine/annotations": "^1.0",
+                "ext-tokenizer": "*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^4.0",
+                "doctrine/common": "^2.8",
+                "phpstan/phpstan": "^0.9.2",
+                "phpstan/phpstan-phpunit": "^0.9.4",
+                "phpunit/phpunit": "^7.0",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Common\\": "lib/Doctrine/Common"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Roman Borschel",
+                    "email": "roman@code-factory.org"
+                },
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Guilherme Blanco",
+                    "email": "guilhermeblanco@gmail.com"
+                },
+                {
+                    "name": "Jonathan Wage",
+                    "email": "jonwage@gmail.com"
+                },
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com"
+                },
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com"
+                }
+            ],
+            "description": "Doctrine Reflection component",
+            "homepage": "https://www.doctrine-project.org/projects/reflection.html",
+            "keywords": [
+                "reflection"
+            ],
+            "time": "2018-06-14 14:45:07"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -1238,11 +1483,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.197a",
+            "version": "dev-release/4.199a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "d939371b30bc7ed8d1b78effbf15cc72047aa111"
+                "reference": "6901d371c44bccf1a819b7de3a399af533399358"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1254,15 +1499,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2019-01-06 14:30:51"
+            "time": "2019-01-31 15:57:50"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.197a",
+            "version": "dev-release/4.199a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "81262de6da6cfd3ea6946e0ad2ca933505b279e1"
+                "reference": "b1339ec6b7b5f89a190a785887d896d2eb022c6e"
             },
             "require": {
                 "php": ">=5.4",
@@ -1309,15 +1554,15 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2019-01-06 14:30:46"
+            "time": "2019-01-31 15:57:45"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.197a",
+            "version": "dev-release/4.199a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "2a661713a9f98257ca83ee7af5fb966b7842cbf6"
+                "reference": "db3c4928a1fe5fe4e54afac2395238b98d07d698"
             },
             "require": {
                 "php": ">=5.4",
@@ -1358,15 +1603,15 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-01-06 14:32:39"
+            "time": "2019-01-31 15:59:46"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.197a",
+            "version": "dev-release/4.199a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "7b7255b98f9be5167d04c3ec1f5d76ed88130a47"
+                "reference": "a7bd13bfff1fbf5c25069f3c9622ee0458f0d945"
             },
             "require": {
                 "php": ">=5.4",
@@ -1376,7 +1621,7 @@
                 "johnkary/phpunit-speedtrap": "^3.0",
                 "mockery/mockery": "^1.2.0",
                 "olcs/olcs-devtools": "dev-master",
-                "olcs/olcs-logging": "dev-release/4.197a",
+                "olcs/olcs-logging": "dev-release/4.199a",
                 "phpstan/phpstan-mockery": "^0.10.2",
                 "phpstan/phpstan-shim": "^0.10.5"
             },
@@ -1407,15 +1652,15 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2019-01-06 14:33:25"
+            "time": "2019-01-31 16:00:34"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.197a",
+            "version": "dev-release/4.199a",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "27a10ced276174aea2e66f30b728df98d8c8bdb1"
+                "reference": "4d22f3013bde7aea32f77c2f35745c78fd728f4d"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1459,7 +1704,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2019-01-06 14:30:02"
+            "time": "2019-01-31 15:56:57"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -1596,17 +1841,17 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "42603ce3f42a27f7e14e54feab95db7b680ad473"
+                "reference": "8ebfcadbf30524aeb75b2c446bc2519d5b321478"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpseclib-phpseclib-42603ce3f42a27f7e14e54feab95db7b680ad473-zip-097520.tar",
-                "reference": "42603ce3f42a27f7e14e54feab95db7b680ad473",
-                "shasum": "62fbf6fd114c82d1d989259fd0e7066fc9564681"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpseclib-phpseclib-8ebfcadbf30524aeb75b2c446bc2519d5b321478-zip-3d8bcf.tar",
+                "reference": "8ebfcadbf30524aeb75b2c446bc2519d5b321478",
+                "shasum": "90454c471f5f56ed72a152641288c896a63bbeb0"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1684,7 +1929,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2018-12-16 17:45:25"
+            "time": "2019-01-27 19:37:29"
         },
         {
             "name": "psr/log",
@@ -1875,17 +2120,17 @@
         },
         {
             "name": "react/promise",
-            "version": "v2.7.0",
+            "version": "v2.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/promise.git",
-                "reference": "f4edc2581617431aea50430749db55cc3fc031b3"
+                "reference": "31ffa96f8d2ed0341a57848cbb84d88b89dd664d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/react-promise-f4edc2581617431aea50430749db55cc3fc031b3-zip-30aea3.tar",
-                "reference": "f4edc2581617431aea50430749db55cc3fc031b3",
-                "shasum": "ce4f2cca8f42396bac984f3d1d204c41e7f27de0"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/react-promise-31ffa96f8d2ed0341a57848cbb84d88b89dd664d-zip-b23a21.tar",
+                "reference": "31ffa96f8d2ed0341a57848cbb84d88b89dd664d",
+                "shasum": "f98d48da8fdd3625d66eae31751f005e81b190f2"
             },
             "require": {
                 "php": ">=5.4.0"
@@ -1917,7 +2162,7 @@
                 "promise",
                 "promises"
             ],
-            "time": "2018-06-13 15:59:06"
+            "time": "2019-01-07 21:25:54"
         },
         {
             "name": "robrichards/xmlseclibs",
@@ -1959,17 +2204,17 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "5.3.3",
+            "version": "5.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "afc663647c58e2533700ec4dcd2dee35b242caf0"
+                "reference": "e90badce02229505cd34a67beb6bb8bd10881b7f"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-afc663647c58e2533700ec4dcd2dee35b242caf0-zip-9a8164.tar",
-                "reference": "afc663647c58e2533700ec4dcd2dee35b242caf0",
-                "shasum": "4870fb93974c3a2a150691e4a7d5da7f9fd80560"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-e90badce02229505cd34a67beb6bb8bd10881b7f-zip-58c4f2.tar",
+                "reference": "e90badce02229505cd34a67beb6bb8bd10881b7f",
+                "shasum": "d37eaca94412bfcf19bc9139e5946b2d904f55c9"
             },
             "require": {
                 "elasticsearch/elasticsearch": "5.3.*",
@@ -2013,7 +2258,7 @@
                 "client",
                 "search"
             ],
-            "time": "2018-10-16 09:32:04"
+            "time": "2019-01-28 13:37:00"
         },
         {
             "name": "simplesamlphp/saml2",
@@ -2190,17 +2435,17 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.20",
+            "version": "v3.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "a2233f555ddf55e5600f386fba7781cea1cb82d3"
+                "reference": "26d7f23b9bd0b93bee5583e4d6ca5cb1ab31b186"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-a2233f555ddf55e5600f386fba7781cea1cb82d3-zip-46a2d0.tar",
-                "reference": "a2233f555ddf55e5600f386fba7781cea1cb82d3",
-                "shasum": "e069316febb00ad0ae0c51749251703f74bdf253"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-26d7f23b9bd0b93bee5583e4d6ca5cb1ab31b186-zip-867356.tar",
+                "reference": "26d7f23b9bd0b93bee5583e4d6ca5cb1ab31b186",
+                "shasum": "7f6fe8fcfeab824b580f4a78ddedf969475619df"
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8",
@@ -2242,7 +2487,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-27 12:43:10"
+            "time": "2019-01-01 13:45:19"
         },
         {
             "name": "symfony/filesystem",
@@ -2296,17 +2541,17 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.20",
+            "version": "v3.4.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "6cf2be5cbd0e87aa35c01f80ae0bf40b6798e442"
+                "reference": "3f2a2ab6315dd7682d4c16dcae1e7b95c8b8555e"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-finder-6cf2be5cbd0e87aa35c01f80ae0bf40b6798e442-zip-94a45f.tar",
-                "reference": "6cf2be5cbd0e87aa35c01f80ae0bf40b6798e442",
-                "shasum": "d84149f9502356000cf7bae7a6dc7768e04dd0e1"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-finder-3f2a2ab6315dd7682d4c16dcae1e7b95c8b8555e-zip-76bc18.tar",
+                "reference": "3f2a2ab6315dd7682d4c16dcae1e7b95c8b8555e",
+                "shasum": "6cc4312d2b3a83ffa3cb462d83e6d951e9683628"
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8"
@@ -2341,7 +2586,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2018-11-11 19:48:54"
+            "time": "2019-01-01 13:45:19"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -2388,7 +2633,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -2579,17 +2824,17 @@
         },
         {
             "name": "zendframework/zendxml",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendXml.git",
-                "reference": "267db6a2c431a08a8f8ff0f1f4c302a5ba6f5b99"
+                "reference": "eceab37a591c9e140772a1470338258857339e00"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendxml-267db6a2c431a08a8f8ff0f1f4c302a5ba6f5b99-zip-32bcfd.tar",
-                "reference": "267db6a2c431a08a8f8ff0f1f4c302a5ba6f5b99",
-                "shasum": "5d81b0d891b3f4b0f6eec63b2abec42e0d5e8af8"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendxml-eceab37a591c9e140772a1470338258857339e00-zip-020fc8.tar",
+                "reference": "eceab37a591c9e140772a1470338258857339e00",
+                "shasum": "565d5fa1244393a09481e72cd6cda9c6b173cecf"
             },
             "require": {
                 "php": "^5.6 || ^7.0"
@@ -2601,8 +2846,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev",
-                    "dev-develop": "1.2.x-dev"
+                    "dev-master": "1.2.x-dev",
+                    "dev-develop": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -2621,7 +2866,7 @@
                 "xml",
                 "zf"
             ],
-            "time": "2018-04-30 15:11:04"
+            "time": "2019-01-22 19:42:14"
         },
         {
             "name": "zf-commons/zfc-rbac",
@@ -3574,17 +3819,17 @@
         },
         {
             "name": "phpstan/phpstan-shim",
-            "version": "0.10.7",
+            "version": "0.10.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-shim.git",
-                "reference": "c40672ebaff00fd1cd3a2c6ef6b0be17756dae04"
+                "reference": "7f433a1af3a3e27bea056552e42411c9d9af9c8e"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpstan-phpstan-shim-c40672ebaff00fd1cd3a2c6ef6b0be17756dae04-zip-a6417d.tar",
-                "reference": "c40672ebaff00fd1cd3a2c6ef6b0be17756dae04",
-                "shasum": "a21ebcfb679c0ae8ed43bf7dc4d43bd4de19318f"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpstan-phpstan-shim-7f433a1af3a3e27bea056552e42411c9d9af9c8e-zip-5dcf31.tar",
+                "reference": "7f433a1af3a3e27bea056552e42411c9d9af9c8e",
+                "shasum": "2b5185ba73461e13a766fb9d454cfa05b94c2dd2"
             },
             "require": {
                 "php": "~7.1"
@@ -3614,7 +3859,7 @@
                 "MIT"
             ],
             "description": "PHPStan Phar distribution",
-            "time": "2018-12-28 14:05:16"
+            "time": "2019-01-08 10:03:03"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3922,17 +4167,17 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.1",
+            "version": "7.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f"
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpunit-c23d78776ad415d5506e0679723cb461d71f488f-zip-9c0c11.tar",
-                "reference": "c23d78776ad415d5506e0679723cb461d71f488f",
-                "shasum": "6c9957b0da2244bf99fc0fe0e7a69e35f1ae99dd"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpunit-7c89093bd00f7d5ddf0ab81dee04f801416b4944-zip-cfe951.tar",
+                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944",
+                "shasum": "156fa94239b4a175f88afde89fd66465a17ecf8c"
             },
             "require": {
                 "doctrine/instantiator": "^1.1",
@@ -4002,7 +4247,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-12-12 07:20:32"
+            "time": "2019-01-15 08:19:08"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4171,17 +4416,17 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f"
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-environment-febd209a219cea7b56ad799b30ebbea34b71eb8f-zip-74e836.tar",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f",
-                "shasum": "ab9e05e7d072afdf8fcb7895704c4b50145ed4de"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-environment-4a43e9af57b4afa663077b9bc85255dbc6e8a2bd-zip-11c9d5.tar",
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
+                "shasum": "18b9d21ac1411a3f132f42e8d21eb64cce0dcf3d"
             },
             "require": {
                 "php": "^7.1"
@@ -4217,7 +4462,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2018-11-25 09:31:21"
+            "time": "2019-01-28 15:26:03"
         },
         {
             "name": "sebastian/exporter",

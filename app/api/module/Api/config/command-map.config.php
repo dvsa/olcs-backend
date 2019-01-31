@@ -987,6 +987,14 @@ return [
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
 
+    // Transfer - IRHP Permit Application
+    TransferCommand\IrhpApplication\Create::class =>
+        CommandHandler\IrhpApplication\Create::class,
+
+    // Transfer - IRHP Update Licence
+    TransferCommand\IrhpApplication\UpdateLicence::class =>
+        CommandHandler\IrhpApplication\UpdateLicence::class,
+
     // Transfer - IRHP Permit Stock
     TransferCommand\IrhpPermitStock\Create::class =>
         CommandHandler\IrhpPermitStock\Create::class,
@@ -1079,6 +1087,17 @@ return [
     TransferCommand\Surrender\Create::class => CommandHandler\Surrender\Create::class,
     TransferCommand\Surrender\Update::class => CommandHandler\Surrender\Update::class,
     TransferCommand\Surrender\Delete::class => CommandHandler\Surrender\Delete::class,
+    TransferCommand\Surrender\SubmitForm::class => CommandHandler\Surrender\SubmitForm::class,
+    Command\Surrender\Snapshot::class => CommandHandler\Surrender\Snapshot::class,
+
+    // Permits - IRHP application
+    TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,
+    TransferCommand\IrhpApplication\UpdateMultipleNoOfPermits::class => CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class,
+    TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
+    TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
+    TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
+    Command\IrhpApplication\GenerateApplicationFee::class => CommandHandler\IrhpApplication\GenerateApplicationFee::class,
+    Command\IrhpApplication\RegenerateIssueFee::class => CommandHandler\IrhpApplication\RegenerateIssueFee::class,
 
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
@@ -1121,9 +1140,15 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+    // Create HTML Snapshot
+    Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
+        CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
+
+    // IrhpApplication update
+    TransferCommand\IrhpApplication\UpdateCheckAnswers::class => CommandHandler\IrhpApplication\UpdateCheckAnswers::class,
 
     // Permits - run/accept
     TransferCommand\Permits\QueueRunScoring::class => CommandHandler\Permits\QueueRunScoring::class,

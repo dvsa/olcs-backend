@@ -105,6 +105,7 @@ return [
     TransferQuery\Licence\Addresses::class => QueryHandler\Licence\Addresses::class,
     TransferQuery\Licence\TransportManagers::class => QueryHandler\Licence\TransportManagers::class,
     TransferQuery\Licence\PsvDiscs::class => QueryHandler\Licence\PsvDiscs::class,
+    TransferQuery\Licence\PsvDiscCount::class => QueryHandler\Licence\PsvDiscCount::class,
     TransferQuery\Licence\GoodsDiscCount::class => QueryHandler\Licence\GoodsDiscCount::class,
     TransferQuery\Licence\GoodsVehicles::class => QueryHandler\Licence\GoodsVehicles::class,
     TransferQuery\Licence\GoodsVehiclesExport::class => QueryHandler\Licence\GoodsVehiclesExport::class,
@@ -507,6 +508,7 @@ return [
     TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
 
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
+    TransferQuery\ContactDetail\CountrySelectList::class => QueryHandler\ContactDetail\CountrySelectList::class,
     TransferQuery\ContactDetail\ContactDetailsList::class => QueryHandler\ContactDetail\ContactDetailsList::class,
     TransferQuery\ContactDetail\PhoneContact\Get::class => QueryHandler\ContactDetail\PhoneContact\Get::class,
     TransferQuery\ContactDetail\PhoneContact\GetList::class => QueryHandler\ContactDetail\PhoneContact\GetList::class,
@@ -560,6 +562,7 @@ return [
     TransferQuery\IrhpPermit\GetListByEcmtId::class => QueryHandler\IrhpPermit\GetListByEcmtId::class,
     TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
+    TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
 
     // IRHP Candidate Permits
     TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
@@ -613,15 +616,18 @@ return [
     Query\Diagnostics\GenerateCheckFkIntegritySql::class => QueryHandler\Diagnostics\GenerateCheckFkIntegritySql::class,
 
     // Permits
+    TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
+    TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
+    TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
-    TransferQuery\Permits\EcmtCountriesList::class => QueryHandler\Permits\EcmtCountriesList::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
     TransferQuery\Permits\ById::class => QueryHandler\Permits\ById::class,
     TransferQuery\Permits\EcmtPermitFees::class => QueryHandler\Permits\EcmtPermitFees::class,
     TransferQuery\Permits\EcmtApplicationByLicence::class => QueryHandler\Permits\EcmtApplicationByLicence::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
+    TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,

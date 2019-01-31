@@ -153,6 +153,9 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb->shouldReceive('orderBy')
             ->andReturnUsing([$this, 'mockOrderBy']);
 
+        $this->qb->shouldReceive('addOrderBy')
+            ->andReturnUsing([$this, 'mockOrderBy']);
+
         $this->qb->shouldReceive('groupBy')
             ->andReturnUsing([$this, 'mockGroupBy']);
 

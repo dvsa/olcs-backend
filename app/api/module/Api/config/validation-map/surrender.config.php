@@ -12,5 +12,7 @@ return [
     CommandHandler\Surrender\Update::class                              => CanAccessLicenceWithId::class,
     CommandHandler\Surrender\Delete::class                              => CanDeleteSurrender::class,
     QueryHandler\Surrender\GetStatus::class                             => CanAccessLicenceWithId::class,
-    QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceWithId::class
+    QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceWithId::class,
+    CommandHandler\Surrender\SubmitForm::class                          => CanAccessLicenceWithId::class,
+    CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
 ];

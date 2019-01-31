@@ -139,6 +139,15 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $isEcmtState = 0;
 
     /**
+     * Is eea state
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_eea_state", nullable=false, options={"default": 0})
+     */
+    protected $isEeaState = 0;
+
+    /**
      * Is member state
      *
      * @var string
@@ -178,6 +187,15 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $version = 1;
 
     /**
+     * Irhp permit stock
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock", mappedBy="country")
+     */
+    protected $irhpPermitStocks;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -198,6 +216,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
         $this->constraints = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
         $this->irhpPermitStockRanges = new ArrayCollection();
+        $this->irhpPermitStocks = new ArrayCollection();
     }
 
     /**
@@ -579,6 +598,30 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     }
 
     /**
+     * Set the is eea state
+     *
+     * @param boolean $isEeaState new value being set
+     *
+     * @return Country
+     */
+    public function setIsEeaState($isEeaState)
+    {
+        $this->isEeaState = $isEeaState;
+
+        return $this;
+    }
+
+    /**
+     * Get the is eea state
+     *
+     * @return boolean
+     */
+    public function getIsEeaState()
+    {
+        return $this->isEeaState;
+    }
+
+    /**
      * Set the is member state
      *
      * @param string $isMemberState new value being set
@@ -678,6 +721,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the irhp permit stock
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrhpPermitStocks($irhpPermitStocks)
+    {
+        $this->irhpPermitStocks = $irhpPermitStocks;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permit stocks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermitStocks()
+    {
+        return $this->irhpPermitStocks;
+    }
+
+    /**
+     * Add a irhp permit stocks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being added
+     *
+     * @return Country
+     */
+    public function addIrhpPermitStocks($irhpPermitStocks)
+    {
+        if ($irhpPermitStocks instanceof ArrayCollection) {
+            $this->irhpPermitStocks = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermitStocks->toArray(),
+                    $irhpPermitStocks->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermitStocks->contains($irhpPermitStocks)) {
+            $this->irhpPermitStocks->add($irhpPermitStocks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permit stocks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrhpPermitStocks($irhpPermitStocks)
+    {
+        if ($this->irhpPermitStocks->contains($irhpPermitStocks)) {
+            $this->irhpPermitStocks->removeElement($irhpPermitStocks);
+        }
+
+        return $this;
     }
 
     /**

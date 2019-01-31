@@ -959,4 +959,89 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [false]
         ];
     }
+
+    /**
+     * @dataProvider dpReturnSnapshotData
+     */
+    public function testReturnSnapshotData(
+        $cabotage,
+        $cabotageResult,
+        $emissions,
+        $emissionsResult,
+        $countries,
+        $countriesResult
+    ) {
+        $licNo = 'OB1234567';
+        $id = 1111;
+        $applicationRef = $licNo . ' / ' . $id;
+        $orgName = 'org name';
+        $permitTypeDesc = 'permit type desc';
+        $internationalJourneysDesc = 'international journey desc';
+        $sectorName = 'sector name';
+
+        $sectors = m::mock(Sectors::class);
+        $sectors->shouldReceive('getName')->once()->withNoArgs()->andReturn($sectorName);
+        $sourceRefData = m::mock(RefData::class);
+        $statusRefData = m::mock(RefData::class);
+        $permitTypeRefData = m::mock(RefData::class);
+        $permitTypeRefData->shouldReceive('getDescription')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($permitTypeDesc);
+        $internationalJourneysRefData = m::mock(RefData::class);
+        $internationalJourneysRefData->shouldReceive('getDescription')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($internationalJourneysDesc);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')->twice()->withNoArgs()->andReturn($licNo);
+        $licence->shouldReceive('getOrganisation->getName')->once()->withNoArgs()->andReturn($orgName);
+        $dateReceived = '2017-12-25';
+        $declaration = 1;
+        $permitsRequired = 999;
+        $trips = 666;
+
+        $expectedData = [
+            'permitType' => $permitTypeDesc,
+            'operator' => $orgName,
+            'ref' => $applicationRef,
+            'licence' => $licNo,
+            'emissions' => $emissionsResult,
+            'cabotage' => $cabotageResult,
+            'limitedCountries' => $countriesResult,
+            'permitsRequired' => $permitsRequired,
+            'trips' => $trips,
+            'internationalJourneys' => $internationalJourneysDesc,
+            'goods' => $sectorName
+        ];
+
+        $application = Entity::createNewInternal(
+            $sourceRefData,
+            $statusRefData,
+            $permitTypeRefData,
+            $licence,
+            $dateReceived,
+            $sectors,
+            new ArrayCollection($countries),
+            $cabotage,
+            $declaration,
+            $emissions,
+            $permitsRequired,
+            $trips,
+            $internationalJourneysRefData
+        );
+
+        $application->setId($id);
+
+        $this->assertSame($expectedData, $application->returnSnapshotData());
+    }
+
+    public function dpReturnSnapshotData()
+    {
+        return [
+            [1, 'Yes', 0, 'No', ['GB'], 'Yes'],
+            [0, 'No', 1, 'Yes', [], 'No'],
+        ];
+    }
 }

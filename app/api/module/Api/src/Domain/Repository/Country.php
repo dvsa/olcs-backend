@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use DateTime;
 
 /**
  * Country
@@ -36,6 +37,12 @@ class Country extends AbstractRepository
             $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
         }
 
+        if (method_exists($query, 'getIsEeaState') && !empty($query->getIsEeaState())) {
+            $qb->andWhere($qb->expr()->in($this->alias . '.isEeaState', ':isEeaState'))
+                ->setParameter('isEeaState', $query->getIsEeaState());
+            $qb->addOrderBy($this->alias.'.countryDesc', 'ASC');
+        }
+
         if (method_exists($query, 'hasEcmtConstraints') && $query->hasEcmtConstraints()) {
             $this->getQueryBuilder()->with('constraints', 'c');
             $qb->andWhere($qb->expr()->isNotNull('c.id'));
@@ -55,5 +62,33 @@ class Country extends AbstractRepository
             ->from(Entity::class, 'c')
             ->getQuery()
             ->getScalarResult();
+    }
+
+    /**
+     * Returns list of countries with currently open windows
+     *
+     * @param int      $type Type
+     * @param DateTime $now  Now
+     *
+     * @return array
+     */
+    public function fetchAvailableCountriesForIrhpApplication($type, DateTime $now)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias)
+            ->distinct()
+            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->innerJoin('ips.irhpPermitWindows', 'ipw')
+            ->where($qb->expr()->eq('ipt.id', ':type'))
+            ->andWhere($qb->expr()->lte('ipw.startDate', ':now'))
+            ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
+            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('type', $type)
+            ->orderBy($this->alias.'.countryDesc', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 }

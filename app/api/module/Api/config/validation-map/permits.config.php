@@ -11,9 +11,11 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 
 return [
+    QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
+    QueryHandler\IrhpApplication\ActiveApplication::class => NotIsAnonymousUser::class,
+    QueryHandler\IrhpApplication\GetList::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\EcmtCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\Permits\ById::class => Permits\CanAccessPermitAppWithId::class,
@@ -22,6 +24,7 @@ return [
     QueryHandler\Permits\ValidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
+    QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
@@ -36,6 +39,16 @@ return [
     QueryHandler\Permits\ReadyToPrintStock::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
+    CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\UpdateCountries::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
+    CommandHandler\IrhpApplication\Create::class => CanAccessLicenceWithLicence::class,
+    CommandHandler\IrhpApplication\UpdateDeclaration::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\SubmitApplication::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\GenerateApplicationFee::class => IsSideEffect::class,
+    CommandHandler\IrhpApplication\RegenerateIssueFee::class => IsSideEffect::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\CancelEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
@@ -64,4 +77,6 @@ return [
     // TODO: these will need to be changed to IsInternalAdmin
     CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\QueueAcceptScoring::class => NotIsAnonymousUser::class,
+
+    CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class => Permits\CanEditPermitAppWithId::class,
 ];

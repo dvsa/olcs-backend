@@ -35,7 +35,7 @@ class UpdateTest extends CommandHandlerTestCase
         $initialStock = '1500';
 
         $cmdData = [
-            'permitType' => $permitType,
+            'irhpPermitType' => $permitType,
             'validFrom' => $validFrom,
             'validTo' => $validTo,
             'initialStock' => $initialStock
@@ -62,6 +62,12 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->with($command)
             ->andReturn($entity);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('getPermitStockCountByTypeDate')
+            ->once()
+            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'])
+            ->andReturn(0);
 
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('save')

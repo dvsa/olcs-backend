@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -31,11 +33,24 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
     const STATUS_ACCEPT_PREREQUISITE_FAIL = 'stock_accept_prereq_fail';
     const STATUS_ACCEPT_UNEXPECTED_FAIL = 'stock_accept_unexpected_fail';
 
-    public static function create($type, $validFrom, $validTo, $quota, RefData $status)
+    /**
+     * @param IrhpPermitType $type
+     * @param Country $country
+     * @param string $validFrom
+     * @param string $validTo
+     * @param int $quota
+     * @param RefData $status
+     * @return IrhpPermitStock
+     * @throws ValidationException
+     */
+    public static function create($type, $country, $validFrom, $validTo, $quota, RefData $status)
     {
+        static::validateCountry($type, $country);
+
         $instance = new self;
 
         $instance->irhpPermitType = $type;
+        $instance->country = $country;
         $instance->validFrom = static::processDate($validFrom, 'Y-m-d');
         $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
@@ -44,14 +59,40 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
         return $instance;
     }
 
-    public function update($type, $validFrom, $validTo, $quota)
+    /**
+     * @param IrhpPermitType $type
+     * @param Country $country
+     * @param string $validFrom
+     * @param string $validTo
+     * @param int $quota
+     * @return $this
+     * @throws ValidationException
+     */
+    public function update($type, $country, $validFrom, $validTo, $quota)
     {
+        static::validateCountry($type, $country);
+
         $this->irhpPermitType = $type;
+        $this->country = $country;
         $this->validFrom = static::processDate($validFrom, 'Y-m-d');
         $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
 
         return $this;
+    }
+
+    /**
+     * Enforces business logic that a Bilateral Permit MUST have a country specified
+     *
+     * @param $type IrhpPermitType
+     * @param $country
+     * @throws ValidationException
+     */
+    private static function validateCountry($type, $country)
+    {
+        if ($type->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL && $country === null) {
+            throw new ValidationException(['You must select a country for this permit type']);
+        }
     }
 
     /**

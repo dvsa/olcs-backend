@@ -29,7 +29,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="irhp_permit_type_ref_data_status_id_fk", columns={"status"}),
  *        @ORM\Index(name="fk_irhp_permit_application_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_application_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_application_irhp_application1",
+     *     columns={"irhp_application_id"})
  *    }
  * )
  */
@@ -68,7 +70,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      *     fetch="LAZY",
      *     inversedBy="irhpPermitApplications"
      * )
-     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
      */
     protected $ecmtPermitApplication;
 
@@ -82,6 +84,20 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * Irhp application
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
+     *     fetch="LAZY",
+     *     inversedBy="irhpPermitApplications"
+     * )
+     * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
+     */
+    protected $irhpApplication;
 
     /**
      * Irhp permit window
@@ -119,7 +135,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * @var \Dvsa\Olcs\Api\Entity\Licence\Licence
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Licence\Licence", fetch="LAZY")
-     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
 
@@ -325,6 +341,30 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication entity being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setIrhpApplication($irhpApplication)
+    {
+        $this->irhpApplication = $irhpApplication;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp application
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 
     /**

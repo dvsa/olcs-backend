@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateSectorQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitJurisdiction\Create as CreateJurisdictionQuotasCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
@@ -45,13 +46,19 @@ class CreateTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $cmdData = [
-            'permitType' => '2',
+            'irhpPermitType' => '2',
             'validFrom' => '2019-01-01',
             'validTo' => '2019-02-01',
             'initialStock' => '1500'
         ];
 
         $command = CreateCmd::create($cmdData);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('getPermitStockCountByTypeDate')
+            ->once()
+            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'])
+            ->andReturn(0);
 
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('save')
