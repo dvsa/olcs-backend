@@ -16,7 +16,7 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
 
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
     protected $repoServiceName = 'Surrender';
-    protected $extraRepos = ['SystemParameter'];
+    protected $extraRepos = ['SystemParameter', 'GoodsDisc', 'PsvDisc'];
 
     /**
      * handleQuery
@@ -34,7 +34,9 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
             $surrender,
             ['licence', 'status', 'licenceDocumentStatus', 'communityLicenceDocumentStatus', 'digitalSignature', 'signatureType'],
             [
-                'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures()
+                'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
+                'goodsDiscsOnLicence' => $this->getRepo('GoodsDisc')->countForLicence($query->getId()),
+                'psvDiscOnLicence' => $this->getRepo('PsvDisc')->countForLicence($query->getId())
             ]
         );
     }
