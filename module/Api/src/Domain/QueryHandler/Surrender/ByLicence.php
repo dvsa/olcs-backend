@@ -36,7 +36,7 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
             [
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
                 'goodsDiscsOnLicence' => $this->getRepo('GoodsDisc')->countForLicence($query->getId()),
-                'psvDiscOnLicence' => $this->getRepo('PsvDisc')->countForLicence($query->getId())
+                'psvDiscsOnLicence' => $this->getRepo('PsvDisc')->countForLicence($query->getId())
             ]
         );
     }
