@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -29,14 +30,17 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
     public function handleQuery(QueryInterface $query)
     {
         $licenceId = $query->getId();
+        /** @var Surrender $surrender */
         $surrender = $this->getRepo('Surrender')->fetchOneByLicence($licenceId, Query::HYDRATE_OBJECT);
+
         return $this->result(
             $surrender,
             ['licence', 'status', 'licenceDocumentStatus', 'communityLicenceDocumentStatus', 'digitalSignature', 'signatureType'],
             [
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
                 'goodsDiscsOnLicence' => $this->getRepo('GoodsDisc')->countForLicence($query->getId()),
-                'psvDiscsOnLicence' => $this->getRepo('PsvDisc')->countForLicence($query->getId())
+                'psvDiscsOnLicence' => $this->getRepo('PsvDisc')->countForLicence($query->getId()),
+                'addressLastModified' => $surrender->getLicence()->getCorrespondenceCd()->getAddress()->getLastModifiedOn()
             ]
         );
     }
