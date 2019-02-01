@@ -8,17 +8,17 @@
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.1.5",
+            "version": "v1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b"
+                "reference": "69eae9e613afc24c9282517bf84eb9e16b59d730"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-469f65355b034b21c9c755e2d46ff2c06164567b-zip-b371a0.tar",
-                "reference": "469f65355b034b21c9c755e2d46ff2c06164567b",
-                "shasum": "e89aad5992c7719118ced46ee89d58d511bb091a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-69eae9e613afc24c9282517bf84eb9e16b59d730-zip-cc8d7c.tar",
+                "reference": "69eae9e613afc24c9282517bf84eb9e16b59d730",
+                "shasum": "d16bed439448095d77f89661041f42a949cd2390"
             },
             "require": {
                 "php": ">=5.4"
@@ -58,7 +58,7 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2018-09-26T16:18:17+00:00"
+            "time": "2019-01-29T06:15:22+00:00"
         },
         {
             "name": "behat/transliterator",
@@ -1489,10 +1489,10 @@
                 "reference": "a63cc83d8a931b271be45148fa39ba7156782ffd"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a63cc83d8a931b271be45148fa39ba7156782ffd",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/league-flysystem-a63cc83d8a931b271be45148fa39ba7156782ffd-zip-3acdc8.tar",
                 "reference": "a63cc83d8a931b271be45148fa39ba7156782ffd",
-                "shasum": ""
+                "shasum": "dc14ec31f48563c2a01f39f3a62c3f7bbb8905c3"
             },
             "require": {
                 "ext-fileinfo": "*",
@@ -1573,10 +1573,10 @@
                 "reference": "b89c570d31a7963e6f990e1c1234877f6b1bdd50"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-webdav/zipball/b89c570d31a7963e6f990e1c1234877f6b1bdd50",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/league-flysystem-webdav-b89c570d31a7963e6f990e1c1234877f6b1bdd50-zip-a36cf7.tar",
                 "reference": "b89c570d31a7963e6f990e1c1234877f6b1bdd50",
-                "shasum": ""
+                "shasum": "490fb1823432eeb90062eb1fd44bb2906483ff26"
             },
             "require": {
                 "league/flysystem": "~1.0",
@@ -1617,7 +1617,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "68b9d212c85158d63cdc4bd0597f623ddd9104eb"
+                "reference": "373e4c0828b14bf549f1c3b6c14d83b22db446e5"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1629,7 +1629,7 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2019-01-07T06:55:26+00:00"
+            "time": "2019-01-31T21:06:51+00:00"
         },
         {
             "name": "olcs/olcs-logging",
@@ -1637,7 +1637,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "e519ef56bd69b593267a146bfee06c8f75869406"
+                "reference": "5b5be726795113011ab51d5ff9479e4f81a674eb"
             },
             "require": {
                 "php": ">=5.4",
@@ -1684,7 +1684,7 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2019-01-14T17:27:53+00:00"
+            "time": "2019-01-31T21:06:50+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
@@ -1692,7 +1692,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "f5a6400be124c91bac24f6bf7cee084495eddc19"
+                "reference": "b473f95a6241ee515c36977ab71d98be25b61cee"
             },
             "require": {
                 "php": ">=5.4",
@@ -1733,7 +1733,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-01-16T11:49:18+00:00"
+            "time": "2019-01-31T21:07:00+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -1741,7 +1741,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "975b8acb5ef48f40e3fce5f220e111623bede23e"
+                "reference": "da9d84fd66787567573852054d76080457452473"
             },
             "require": {
                 "php": ">=5.4",
@@ -1782,7 +1782,7 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2019-01-14T17:28:09+00:00"
+            "time": "2019-01-31T21:07:02+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
@@ -1790,7 +1790,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "a8a850478c4a753a1361efc61146f5bb8e897ffe"
+                "reference": "5bcdef73173e6d40dc78985e9d60e7f5e2423f9f"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1834,7 +1834,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2019-01-14T17:26:46+00:00"
+            "time": "2019-01-31T21:06:49+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -1971,17 +1971,17 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.13",
+            "version": "2.0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "42603ce3f42a27f7e14e54feab95db7b680ad473"
+                "reference": "8ebfcadbf30524aeb75b2c446bc2519d5b321478"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpseclib-phpseclib-42603ce3f42a27f7e14e54feab95db7b680ad473-zip-097520.tar",
-                "reference": "42603ce3f42a27f7e14e54feab95db7b680ad473",
-                "shasum": "62fbf6fd114c82d1d989259fd0e7066fc9564681"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpseclib-phpseclib-8ebfcadbf30524aeb75b2c446bc2519d5b321478-zip-3d8bcf.tar",
+                "reference": "8ebfcadbf30524aeb75b2c446bc2519d5b321478",
+                "shasum": "90454c471f5f56ed72a152641288c896a63bbeb0"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -2059,7 +2059,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2018-12-16T17:45:25+00:00"
+            "time": "2019-01-27T19:37:29+00:00"
         },
         {
             "name": "psr/log",
@@ -2334,17 +2334,17 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "5.3.4",
+            "version": "5.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "6d7c20e632e203bac4aaf8ae9df9802fbabb6453"
+                "reference": "e90badce02229505cd34a67beb6bb8bd10881b7f"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-6d7c20e632e203bac4aaf8ae9df9802fbabb6453-zip-060fa8.tar",
-                "reference": "6d7c20e632e203bac4aaf8ae9df9802fbabb6453",
-                "shasum": "b8ae78eafdd1543474f0157ef097ae0b3d4724c8"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/ruflin-elastica-e90badce02229505cd34a67beb6bb8bd10881b7f-zip-58c4f2.tar",
+                "reference": "e90badce02229505cd34a67beb6bb8bd10881b7f",
+                "shasum": "d37eaca94412bfcf19bc9139e5946b2d904f55c9"
             },
             "require": {
                 "elasticsearch/elasticsearch": "5.3.*",
@@ -2388,7 +2388,7 @@
                 "client",
                 "search"
             ],
-            "time": "2019-01-16T13:43:32+00:00"
+            "time": "2019-01-28T13:37:00+00:00"
         },
         {
             "name": "sabre/dav",
@@ -2399,10 +2399,10 @@
                 "reference": "a9780ce4f35560ecbd0af524ad32d9d2c8954b80"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/dav/zipball/a9780ce4f35560ecbd0af524ad32d9d2c8954b80",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sabre-dav-a9780ce4f35560ecbd0af524ad32d9d2c8954b80-zip-24c9cb.tar",
                 "reference": "a9780ce4f35560ecbd0af524ad32d9d2c8954b80",
-                "shasum": ""
+                "shasum": "cb35bd14248823ad17caff4461989bf0a277485e"
             },
             "require": {
                 "ext-ctype": "*",
@@ -2482,10 +2482,10 @@
                 "reference": "831d586f5a442dceacdcf5e9c4c36a4db99a3534"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/event/zipball/831d586f5a442dceacdcf5e9c4c36a4db99a3534",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sabre-event-831d586f5a442dceacdcf5e9c4c36a4db99a3534-zip-ba6061.tar",
                 "reference": "831d586f5a442dceacdcf5e9c4c36a4db99a3534",
-                "shasum": ""
+                "shasum": "716d6a17fb141b18d9eb4d10a0798829a820d711"
             },
             "require": {
                 "php": ">=5.5"
@@ -2539,10 +2539,10 @@
                 "reference": "acccec4ba863959b2d10c1fa0fb902736c5c8956"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/http/zipball/acccec4ba863959b2d10c1fa0fb902736c5c8956",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sabre-http-acccec4ba863959b2d10c1fa0fb902736c5c8956-zip-d96a4c.tar",
                 "reference": "acccec4ba863959b2d10c1fa0fb902736c5c8956",
-                "shasum": ""
+                "shasum": "4f1579ea583bd8b0160c898707b2ebe7bb19f9c6"
             },
             "require": {
                 "ext-ctype": "*",
@@ -2595,10 +2595,10 @@
                 "reference": "ada354d83579565949d80b2e15593c2371225e61"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/uri/zipball/ada354d83579565949d80b2e15593c2371225e61",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sabre-uri-ada354d83579565949d80b2e15593c2371225e61-zip-0d0436.tar",
                 "reference": "ada354d83579565949d80b2e15593c2371225e61",
-                "shasum": ""
+                "shasum": "dc77764411b4aa7b545aa38f4f267d8a4d65fe46"
             },
             "require": {
                 "php": ">=5.4.7"
@@ -2646,10 +2646,10 @@
                 "reference": "122cacbdea2c6133ac04db86ec05854beef75adf"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/vobject/zipball/122cacbdea2c6133ac04db86ec05854beef75adf",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sabre-vobject-122cacbdea2c6133ac04db86ec05854beef75adf-zip-0c95ce.tar",
                 "reference": "122cacbdea2c6133ac04db86ec05854beef75adf",
-                "shasum": ""
+                "shasum": "ceb7f35e4b712ab1aedae4d0b18726210b2cb03b"
             },
             "require": {
                 "ext-mbstring": "*",
@@ -2743,10 +2743,10 @@
                 "reference": "a367665f1df614c3b8fefc30a54de7cd295e444e"
             },
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sabre-io/xml/zipball/a367665f1df614c3b8fefc30a54de7cd295e444e",
+                "type": "tar",
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sabre-xml-a367665f1df614c3b8fefc30a54de7cd295e444e-zip-824e26.tar",
                 "reference": "a367665f1df614c3b8fefc30a54de7cd295e444e",
-                "shasum": ""
+                "shasum": "9b3c8ed2d66d641cc43c479f0009b1e3b02cb8c6"
             },
             "require": {
                 "ext-dom": "*",
@@ -3170,7 +3170,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -3361,17 +3361,17 @@
         },
         {
             "name": "zendframework/zendxml",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/ZendXml.git",
-                "reference": "267db6a2c431a08a8f8ff0f1f4c302a5ba6f5b99"
+                "reference": "eceab37a591c9e140772a1470338258857339e00"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendxml-267db6a2c431a08a8f8ff0f1f4c302a5ba6f5b99-zip-32bcfd.tar",
-                "reference": "267db6a2c431a08a8f8ff0f1f4c302a5ba6f5b99",
-                "shasum": "5d81b0d891b3f4b0f6eec63b2abec42e0d5e8af8"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/zendframework-zendxml-eceab37a591c9e140772a1470338258857339e00-zip-020fc8.tar",
+                "reference": "eceab37a591c9e140772a1470338258857339e00",
+                "shasum": "565d5fa1244393a09481e72cd6cda9c6b173cecf"
             },
             "require": {
                 "php": "^5.6 || ^7.0"
@@ -3383,8 +3383,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev",
-                    "dev-develop": "1.2.x-dev"
+                    "dev-master": "1.2.x-dev",
+                    "dev-develop": "1.3.x-dev"
                 }
             },
             "autoload": {
@@ -3403,7 +3403,7 @@
                 "xml",
                 "zf"
             ],
-            "time": "2018-04-30T15:11:04+00:00"
+            "time": "2019-01-22T19:42:14+00:00"
         },
         {
             "name": "zf-commons/zfc-rbac",
@@ -4953,17 +4953,17 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f"
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-environment-febd209a219cea7b56ad799b30ebbea34b71eb8f-zip-74e836.tar",
-                "reference": "febd209a219cea7b56ad799b30ebbea34b71eb8f",
-                "shasum": "ab9e05e7d072afdf8fcb7895704c4b50145ed4de"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-environment-4a43e9af57b4afa663077b9bc85255dbc6e8a2bd-zip-11c9d5.tar",
+                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
+                "shasum": "18b9d21ac1411a3f132f42e8d21eb64cce0dcf3d"
             },
             "require": {
                 "php": "^7.1"
@@ -4999,7 +4999,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2018-11-25T09:31:21+00:00"
+            "time": "2019-01-28T15:26:03+00:00"
         },
         {
             "name": "sebastian/exporter",
