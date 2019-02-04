@@ -15,9 +15,13 @@ trait FormatReviewDataTrait
      *
      * @return bool|string
      */
-    protected function formatDate(\DateTime $date, $format = 'd M Y')
+    protected function formatDate($date, $format = 'd M Y')
     {
-        return $date->format($format);
+        if ($date instanceof \DateTime) {
+            return $date->format($format);
+        }
+
+        return date($format, strtotime($date));
     }
 
     /**

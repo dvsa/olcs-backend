@@ -581,4 +581,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         return $this->isNotYetSubmitted();
     }
+
+    /**
+     * Updates date receive for application
+     * @param string $dateReceived application received date
+     */
+    public function updateDateReceived($dateReceived)
+    {
+        $this->dateReceived = $this->processDate($dateReceived);
+    }
 }
