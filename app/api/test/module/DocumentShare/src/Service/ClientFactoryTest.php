@@ -11,57 +11,7 @@ use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
  */
 class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @dataProvider provideSetOptions
-     * @param $config
-     * @param $expected
-     */
-    public function testGetOptions($config, $expected)
-    {
-        $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $mockSl
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('Configuration'))
-            ->willReturn($config);
-
-        $sut  = new ClientFactory();
-
-        if ($expected instanceof \Exception) {
-            $passed = false;
-            try {
-                $sut->getOptions($mockSl, 'testkey');
-            } catch (\Exception $e) {
-                if (
-                    $e->getMessage() == $expected->getMessage() &&
-                    get_class($e) == get_class($expected)
-                ) {
-                    $passed = true;
-                }
-            }
-
-            $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
-        } else {
-            $data = $sut->getOptions($mockSl, 'testkey');
-            $this->assertEquals($expected, $data);
-        }
-    }
-
-    public function provideSetOptions()
-    {
-
-        return array(
-            array(array(), new \RuntimeException('Options could not be found in "document_share.testkey".')),
-            array(
-                array('document_share'=>array()),
-                new \RuntimeException('Options could not be found in "document_share.testkey".')
-            ),
-            array(
-                array('document_share'=>array('testkey'=>array('foo'=>'bar'))),
-                array('foo'=>'bar')
-            )
-        );
-    }
+    private const TEST_BASEURI = "testdocument_share";
 
     /**
      * @dataProvider provideCreateService
@@ -81,7 +31,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         if ($expected instanceof \Exception) {
             $passed = false;
             try {
-                $service = $sut->createService($mockSl);
+                $sut->createService($mockSl);
             } catch (\Exception $e) {
                 if (
                     $e->getMessage() == $expected->getMessage() &&
@@ -93,20 +43,8 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 
             $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
         } else {
-            $service = $sut->createService($mockSl);
-
-            $this->assertInstanceOf('\Zend\Http\Client', $service->getHttpClient());
-            $this->assertEquals($config['document_share']['client']['workspace'], $service->getWorkspace());
-            $this->assertEquals($config['document_share']['client']['baseuri'], $service->getBaseUri());
-
-            if (isset($config['document_share']['client']['uuid'])) {
-                $this->assertEquals(
-                    $config['document_share']['client']['uuid'],
-                    $service->getUuid()
-                );
-            }
+            $sut->createService($mockSl);
         }
-
     }
 
     public function provideCreateService()
@@ -115,7 +53,9 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             'document_share' => array(
                 'http' => array(),
                 'client' => array(
-                    'workspace' => 'test'
+                    'workspace' => 'test',
+                    'username' => 'test',
+                    'password' => 'test'
                 )
             )
         );
@@ -124,7 +64,9 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             'document_share' => array(
                 'http' => array(),
                 'client' => array(
-                    'baseuri' => 'http://testdocument_share'
+                    'baseuri' => self::TEST_BASEURI,
+                    'username' => 'test',
+                    'password' => 'test'
                 )
             )
         );
@@ -133,19 +75,10 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             'document_share' => array(
                 'http' => array(),
                 'client' => array(
-                    'baseuri' => 'http://testdocument_share',
-                    'workspace' => 'test'
-                )
-            )
-        );
-
-        $configWithUuid = array(
-            'document_share' => array(
-                'http' => array(),
-                'client' => array(
-                    'baseuri' => 'http://testdocument_share',
+                    'baseuri' => self::TEST_BASEURI,
                     'workspace' => 'test',
-                    'uuid' => 'u1234'
+                    'username' => 'test',
+                    'password' => 'test'
                 )
             )
         );
@@ -161,9 +94,6 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             ),
             array(
                 $config
-            ),
-            array(
-                $configWithUuid
             )
         );
     }
