@@ -18,11 +18,11 @@ final class Delete extends AbstractSurrenderCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        $id = $command->getLicence();
+        $id = $command->getId();
 
         try {
             $this->getRepo()->delete(
-                $this->getRepo()->fetchByLicenceId($command->getLicence())
+                $this->getRepo()->fetchOneByLicenceId($id)
             );
             $this->result->addId('id' . $id, $id);
             $this->result->addMessage(sprintf('surrender for licence Id %d deleted', $id));
