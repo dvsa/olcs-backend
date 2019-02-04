@@ -55,10 +55,6 @@ class ClientFactory implements FactoryInterface
 
         $client = new Client($fileSystem);
 
-        if (isset($clientOptions['uuid'])) {
-            $client->setUuid($clientOptions['uuid']);
-        }
-
         return $client;
     }
 
