@@ -4,12 +4,14 @@ namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\Client;
+use Hamcrest\Core\IsTypeOf;
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
+use League\Flysystem\FilesystemInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
-use Zend\Http\Request;
 
 /**
  * @covers \Dvsa\Olcs\DocumentShare\Service\Client
@@ -22,8 +24,9 @@ class ClientTest extends MockeryTestCase
     /** @var  Client */
     protected $sut;
 
-    /** @var  MockObj | \Zend\Http\Client */
-    private $mockClient;
+    /** @var  m\MockInterface | FilesystemInterface */
+    private $mockFileSystem;
+
     /** @var  m\MockInterface|DsFile */
     private $mockFile;
 
@@ -32,14 +35,9 @@ class ClientTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->mockClient = $this->createMock(\Zend\Http\Client::class);
+        $this->mockFileSystem = m::mock(FilesystemInterface::class);
 
-        $this->sut = new Client(
-            $this->mockClient,
-            self::BASE_URI,
-            self::WORKSPACE
-        );
-        $this->sut->setUuid('UUID1');
+        $this->sut = new Client($this->mockFileSystem);
 
         $this->mockFile = m::mock(DsFile::class);
 
@@ -52,137 +50,46 @@ class ClientTest extends MockeryTestCase
         Logger::setLogger($this->logger);
     }
 
-    public function testGet()
-    {
-        static::assertEquals(self::BASE_URI, $this->sut->getBaseUri());
-        static::assertEquals(self::WORKSPACE, $this->sut->getWorkspace());
-    }
-
-    public function testReadOk()
+    public function testReadSuccess()
     {
         $expectContent = 'unit_ABCD1234';
-        $content = '{"content":"' . base64_encode($expectContent) . '"}';
+        $testPath = 'test';
+        $testStream = fopen('data://text/plain;base64,' . base64_encode($expectContent),'r');
 
-        $mockResponse = m::mock(\Zend\Http\Response::class)
-            ->shouldReceive('isSuccess')->once()->andReturn(true)
-            ->getMock();
+        $this->mockFileSystem->expects('readStream')->with($testPath)->andReturn($testStream);
 
-        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setMethod')->with(Request::METHOD_GET)->willReturnSelf();
-        $this->mockClient
-            ->expects(static::once())
-            ->method('setUri')
-            ->with(self::BASE_URI . '/content/' . self::WORKSPACE . '/test')
-            ->willReturnSelf();
-        $this->mockClient
-            ->expects(static::once())
-            ->method('setStream')
-            ->with(static::stringContains('/' . Client::DS_DOWNLOAD_FILE_PREFIX))
-            ->willReturnCallback(
-                function ($filePath) use ($content) {
-                    file_put_contents($filePath, $content);
+        $actual = $this->sut->read($testPath);
 
-                    return $this->mockClient;
-                }
-            );
-        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
-
-        //  call & check
-        $actual = $this->sut->read('test');
-
-        static::assertInstanceOf(DsFile::class, $actual);
-        static::assertEquals($expectContent, file_get_contents($actual->getResource()));
+        $this->assertInstanceOf(DsFile::class, $actual);
+        $this->assertEquals($expectContent, file_get_contents($actual->getResource()));
     }
 
-    public function testReadExceptionUnlink()
+
+    public function testReadFail()
     {
-        $filePath = null;
+        $testPath = 'test';
 
-        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
-        $this->mockClient
-            ->expects(static::once())
-            ->method('setStream')
-            ->willReturnCallback(
-                function ($arg) use (&$filePath) {
-                    $filePath = $arg;
-                    return $this->mockClient;
-                }
-            );
-        $this->mockClient->expects(static::once())->method('send')->willThrowException(new \Exception('simulate_err'));
+        $this->mockFileSystem->expects('readStream')->with($testPath)->andReturn(false);
 
-        static::assertFalse(is_file($filePath));
+        $actual = $this->sut->read($testPath);
 
-        //  expect
-        $this->expectException(\Exception::class, 'simulate_err');
-
-        //  call & check
-        $this->sut->read('test');
+        $this->assertEquals(false, $actual);
     }
 
-    public function testReadNullNotSuccess()
+
+    public function testReadFileNotFound()
     {
-        $mockResponse = m::mock(\Zend\Http\Response::class)
-            ->shouldReceive('isSuccess')->once()->andReturn(false)
-            ->shouldReceive('getStatusCode')->once()->andReturn(600)
-            ->getMock();
+        $testPath = 'test';
 
-        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
+        $this->mockFileSystem->expects('readStream')->with($testPath)->andThrow(new FileNotFoundException($testPath));
 
-        $this->logger
-            ->shouldReceive('log')
-            ->once()
-            ->with(\Zend\Log\Logger::ERR, Client::ERR_RESP_FAIL, []);
-
-        //  call & check
-        $actual = $this->sut->read('test');
-
-        static::assertEquals(null, $actual);
+        $actual = $this->sut->read($testPath);
+        $this->assertEquals(false, $actual);
     }
 
-    public function testReadNullProcessErr()
-    {
-        $content = '{"message":"unit_ErrMsg"}';
-
-        $mockResponse = m::mock(\Zend\Http\Response::class)
-            ->shouldReceive('isSuccess')->once()->andReturn(true)
-            ->getMock();
-
-        $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setUri')->willReturnSelf();
-        $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
-        $this->mockClient
-            ->expects(static::once())
-            ->method('setStream')
-            ->willReturnCallback(
-                function ($filePath) use ($content) {
-                    file_put_contents($filePath, $content);
-
-                    return $this->mockClient;
-                }
-            );
-        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
-
-        $this->logger
-            ->shouldReceive('log')
-            ->once()
-            ->with(\Zend\Log\Logger::INFO, 'unit_ErrMsg', []);
-
-        //  call & check
-        $actual = $this->sut->read('test');
-
-        static::assertEquals(null, $actual);
-    }
-
-    public function testWrite()
+    public function testWriteSuccess()
     {
         $expectPath = 'unit_Path';
-        $expectMime = 'unit_Mime';
         $expectContent = 'unit_ABCDE123';
 
         $res = vfsStream::newFile('res')
@@ -192,61 +99,88 @@ class ClientTest extends MockeryTestCase
 
         /** @var DsFile $mockFile */
         $mockFile = m::mock(DsFile::class)
-            ->shouldReceive('getMimeType')->once()->andReturn($expectMime)
             ->shouldReceive('getResource')->once()->andReturn($res)
             ->getMock();
 
-        $this->mockClient->expects(static::once())->method('setRequest')->willReturnCallback(
-            function (Request $request) {
-                $expectJson = '{"hubPath":"unit_Path","mime":"unit_Mime","content":"dW5pdF9BQkNERTEyMw=="}';
-
-                $this->assertSame(Request::METHOD_POST, $request->getMethod());
-
-                $this->assertEquals(strlen($expectJson), $request->getHeader('Content-Length')->getFieldValue());
-                $this->assertEquals('UUID1', $request->getHeader('uuid')->getFieldValue());
-                $this->assertEquals($expectJson, $request->getContent());
-
-                return $this->mockClient;
-            }
-        );
-        $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
+        $this->mockFileSystem->expects('writeStream')->with($expectPath, new IsTypeOf('resource'))->andReturn(true);
 
         $actual = $this->sut->write($expectPath, $mockFile);
 
-        static::assertEquals('EXPECTED', $actual);
+        static::assertEquals(true, $actual);
     }
 
-    /**
-     * @dataProvider dpRemove
-     */
-    public function testRemove($uri, $hard)
+    public function testWriteFail()
     {
-        $this->mockClient->expects(static::once())->method('setRequest')->willReturnCallback(
-            function (Request $request) use ($uri) {
-                $this->assertSame($uri, $request->getUri()->toString());
-                $this->assertSame(Request::METHOD_DELETE, $request->getMethod());
+        $expectPath = 'unit_Path';
+        $expectContent = 'unit_ABCDE123';
 
-                return $this->mockClient;
-            }
+        $res = vfsStream::newFile('res')
+            ->withContent($expectContent)
+            ->at(vfsStream::setup('temp'))
+            ->url();
+
+        /** @var DsFile $mockFile */
+        $mockFile = m::mock(DsFile::class)
+            ->shouldReceive('getResource')->once()->andReturn($res)
+            ->getMock();
+
+        $this->mockFileSystem->expects('writeStream')->with($expectPath, new IsTypeOf('resource'))->andReturn(false);
+
+        $actual = $this->sut->write($expectPath, $mockFile);
+
+        static::assertEquals(false, $actual);
+    }
+
+    public function testWriteFileAlreadyExists()
+    {
+        $expectPath = 'unit_Path';
+        $expectContent = 'unit_ABCDE123';
+
+        $res = vfsStream::newFile('res')
+            ->withContent($expectContent)
+            ->at(vfsStream::setup('temp'))
+            ->url();
+
+        /** @var DsFile $mockFile */
+        $mockFile = m::mock(DsFile::class)
+            ->shouldReceive('getResource')->once()->andReturn($res)
+            ->getMock();
+
+        $this->mockFileSystem->expects('writeStream')->with($expectPath, new IsTypeOf('resource'))->andThrow(
+            new FileExistsException($expectPath)
         );
-        $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
 
-        $result = $this->sut->remove('test', $hard);
+        $actual = $this->sut->write($expectPath, $mockFile);
 
-        static::assertEquals('EXPECTED', $result);
+        static::assertEquals(false, $actual);
     }
 
-    public function dpRemove()
+    public function testRemoveSuccess()
     {
-        return [
-            [
-                'uri' => 'http://testing/content/' . self::WORKSPACE . '/test',
-                'hard' => false,
-            ],
-            [
-                'uri' => 'http://testing/version/content/' . self::WORKSPACE . '/test',
-                'hard' => true,
-            ],
-        ];
+        $this->mockFileSystem->expects('delete')->with('testFileToUnlink')->andReturn(true);
+
+        $result = $this->sut->remove('testFileToUnlink');
+
+        static::assertEquals(true, $result);
+    }
+
+    public function testRemoveFail()
+    {
+        $this->mockFileSystem->expects('delete')->with('testFileToUnlink')->andReturn(false);
+
+        $result = $this->sut->remove('testFileToUnlink');
+
+        static::assertEquals(false, $result);
+    }
+
+    public function testRemoveFileNotFound()
+    {
+        $this->mockFileSystem->expects('delete')->with('testFileToUnlink')->andThrow(
+            new FileNotFoundException('test')
+        );
+
+        $result = $this->sut->remove('testFileToUnlink');
+
+        static::assertEquals(false, $result);
     }
 }

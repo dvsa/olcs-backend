@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Exception;
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Request;
@@ -32,9 +34,8 @@ class Client
      *
      * @param FilesystemInterface $filesystem File System
      */
-    public function __construct(
-        FilesystemInterface $filesystem
-    ) {
+    public function __construct(FilesystemInterface $filesystem)
+    {
         $this->filesystem = $filesystem;
     }
 
@@ -50,46 +51,42 @@ class Client
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
         try {
-            file_put_contents($tmpFileName, $this->filesystem->readStream($path));
+            $readStream = $this->filesystem->readStream($path);
+            file_put_contents($tmpFileName, $readStream);
 
             $file = new File();
-            $file->setContentFromDsStream($tmpFileName);
+            $file->setContentFromStream($tmpFileName);
 
             if ($file->getSize() !== 0) {
                 return $file;
             }
-
-            $data = (array) json_decode(file_get_contents($tmpFileName));
-        } catch (Exception $e) {
+        } catch (FileNotFoundException $e) {
             unset($file);
 
-            throw $e;
+            return false;
         } finally {
             if (is_file($tmpFileName)) {
                 unlink($tmpFileName);
             }
         }
 
-        //  process error message
-        $errMssg = (isset($data['message']) ? $data['message'] : false);
-        if ($errMssg !== false) {
-            Logger::logResponse(Response::STATUS_CODE_404, $errMssg);
-        }
-
-        return null;
+        return false;
     }
 
     /**
      * Remove file on storage
      *
      * @param string $path Path to file on storage
-     * @param bool   $hard Something
      *
      * @return bool
      */
-    public function remove($path, $hard = false)
+    public function remove($path)
     {
-        return $this->filesystem->delete($path);
+        try {
+            return $this->filesystem->delete($path);
+        } catch (FileNotFoundException $e) {
+            return false;
+        }
     }
 
     /**
@@ -106,10 +103,9 @@ class Client
         try {
             $fh = fopen($file->getResource(), 'rb');
 
-            //  set filter for auto base 64 encode on read from file
-            stream_filter_append($fh, 'convert.base64-encode', STREAM_FILTER_READ);
-
             return $this->filesystem->writeStream($path, $fh);
+        } catch (FileExistsException $e) {
+            return false;
         } finally {
             @fclose($fh);
         }
