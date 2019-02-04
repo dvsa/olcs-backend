@@ -542,6 +542,7 @@ return [
     // IRHP Permit Window
     TransferQuery\IrhpPermitWindow\ById::class => QueryHandler\IrhpPermitWindow\ById::class,
     TransferQuery\IrhpPermitWindow\GetList::class => QueryHandler\IrhpPermitWindow\GetList::class,
+    TransferQuery\IrhpPermitWindow\OpenByCountry::class => QueryHandler\IrhpPermitWindow\OpenByCountry::class,
 
     // IRHP Permit Range
     TransferQuery\IrhpPermitRange\ById::class => QueryHandler\IrhpPermitRange\ById::class,
