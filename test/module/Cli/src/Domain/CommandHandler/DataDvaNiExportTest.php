@@ -127,10 +127,10 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         );
 
         static::assertSame(
-            'LicenceNumber,LicenceType' . PHP_EOL .
-            '123455,test_type' . PHP_EOL .
-            '123456,test_type' . PHP_EOL.
-            '123457,test_type' . PHP_EOL,
+            'LicenceNumber,LicenceType' . "\n" .
+            '123455,test_type' . "\n" .
+            '123456,test_type' . "\n".
+            '123457,test_type' . "\n",
             file_get_contents($expectFile)
         );
     }
