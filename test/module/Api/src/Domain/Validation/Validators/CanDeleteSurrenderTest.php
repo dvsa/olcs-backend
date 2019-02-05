@@ -2,50 +2,77 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
-
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanDeleteSurrender;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanDeleteSurrender;
+use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class CanDeleteSurrenderTest extends MockeryTestCase
+class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
 {
+
+    /**
+     * @var CanDeleteSurrender
+     */
+    protected $sut;
+
+    public function setUp()
+    {
+        $this->sut = new CanDeleteSurrender();
+        parent::setUp();
+    }
+
     /**
      * @dataProvider provider
      */
-    public function testIsValid($isInternalUser, $isSystemUser, $expected)
+    public function testIsValid($surrender, $expected)
     {
-        $sut = m::mock(CanDeleteSurrender::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dto = m::mock(CommandInterface::class);
+        $statusEntity = m::mock(RefData::class);
+        $statusEntity->shouldReceive('getId')->andReturn($surrender['status']);
 
-        $sut->shouldReceive('isInternalUser')->with()->andReturn($isInternalUser);
-        $sut->shouldReceive('isSystemUser')->with()->andReturn($isSystemUser);
+        $surrenderEntity = m::mock(Surrender::class);
+        $surrenderEntity->shouldReceive('getStatus')->andReturn($statusEntity);
+        $surrenderEntity->shouldReceive('getCreatedOn')->andReturn($surrender['createdOn']);
+        $surrenderEntity->shouldReceive('getLastModifiedOn')->andReturn($surrender['lastModifiedOn']);
 
-        /** @var CanDeleteSurrender $sut */
-        $this->assertSame($expected, $sut->isValid($dto));
+        $repo = $this->mockRepo('Surrender');
+        $repo->shouldReceive('fetchOneByLicenceId')->with(1)->andReturn($surrenderEntity);
+
+        $this->assertSame($expected, $this->sut->isValid(1));
     }
 
     public function provider()
     {
         return [
-            'case_01' => [
-                'isInternalUser' => true,
-                'isSystemUser' => true,
+            'is_withdrawn' => [
+                'surrender' => [
+                    'status' => RefData::SURRENDER_STATUS_WITHDRAWN,
+                    'createdOn' => new \DateTime(),
+                    'lastModifiedOn' => new \DateTime()
+                ],
                 'expected' => true
             ],
-            'case_02' => [
-                'isInternalUser' => false,
-                'isSystemUser' => true,
+            'has_expired_created_on' => [
+                'surrender' => [
+                    'status' => RefData::SURRENDER_STATUS_COMM_LIC_DOCS_COMPLETE,
+                    'createdOn' => date_create('3 days ago'),
+                    'lastModifiedOn' => null
+                ],
                 'expected' => true
             ],
-            'case_03' => [
-                'isInternalUser' => true,
-                'isSystemUser' => false,
+            'has_expired_last_modified' => [
+                'surrender' => [
+                    'status' => RefData::SURRENDER_STATUS_COMM_LIC_DOCS_COMPLETE,
+                    'createdOn' => date_create('5 days ago'),
+                    'lastModifiedOn' => date_create('4 days ago')
+                ],
                 'expected' => true
             ],
-            'case_04' => [
-                'isInternalUser' => false,
-                'isSystemUser' => false,
+            'not_withdrawn_or_expired' => [
+                'surrender' => [
+                    'status' => RefData::SURRENDER_STATUS_DETAILS_CONFIRMED,
+                    'createdOn' => new \DateTime(),
+                    'lastModifiedOn' => new \DateTime()
+                ],
                 'expected' => false
             ],
         ];
