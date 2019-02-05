@@ -1374,4 +1374,12 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertTrue($irhpApplication->hasPermitsRequiredChanged());
     }
+
+    public function testUpdateDateReceived()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $dateString = '2019-01-01';
+        $irhpApplication->updateDateReceived('2019-01-01');
+        $this->assertEquals(new DateTime($dateString), $irhpApplication->getDateReceived());
+    }
 }
