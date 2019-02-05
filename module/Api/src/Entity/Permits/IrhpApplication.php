@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
@@ -447,7 +448,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function clearAnswers()
     {
-        // @todo Clear all sections for the permit type
+        if ($this->canBeUpdated()) {
+            $this->fees = new ArrayCollection();
+            $this->irhpPermitApplications = new ArrayCollection();
+            $this->resetCheckAnswersAndDeclaration();
+        }
     }
 
     /**
