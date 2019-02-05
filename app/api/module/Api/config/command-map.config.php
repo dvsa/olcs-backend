@@ -1108,6 +1108,9 @@ return [
     // Irhp Permit Create
     Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
 
+    // Irhp Permit Application Delete
+    TransferCommand\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
+
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
 
