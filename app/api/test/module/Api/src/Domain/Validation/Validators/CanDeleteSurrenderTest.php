@@ -77,5 +77,4 @@ class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
             ],
         ];
     }
-
 }

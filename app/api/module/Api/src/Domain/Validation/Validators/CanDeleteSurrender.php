@@ -37,5 +37,4 @@ class CanDeleteSurrender extends AbstractCanAccessEntity
     {
         return $this->surrender->getLastModifiedOn(true) ?? $this->surrender->getCreatedOn(true);
     }
-
 }
