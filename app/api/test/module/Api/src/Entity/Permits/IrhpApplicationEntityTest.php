@@ -1382,4 +1382,57 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpApplication->updateDateReceived('2019-01-01');
         $this->assertEquals(new DateTime($dateString), $irhpApplication->getDateReceived());
     }
+
+    public function testClearAnswers()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $this->assertFalse($entity->hasCheckedAnswers());
+        $this->assertFalse($entity->hasMadeDeclaration());
+        $this->assertEmpty($entity->getIrhpPermitApplications());
+
+        $entity->setIrhpPermitApplications(
+            new ArrayCollection(
+                [
+                    0 => m::mock(IrhpPermitApplication::class),
+                    1 => m::mock(IrhpPermitApplication::class),
+                ]
+            )
+        );
+        $entity->setCheckedAnswers(true);
+        $entity->setDeclaration(true);
+
+        $this->assertTrue($entity->hasCheckedAnswers());
+        $this->assertTrue($entity->hasMadeDeclaration());
+        $this->assertNotEmpty($entity->getIrhpPermitApplications());
+
+        $entity
+            ->shouldReceive('canBeUpdated')
+            ->andReturn(true);
+
+        $entity->clearAnswers();
+
+        $this->assertFalse($entity->hasCheckedAnswers());
+        $this->assertFalse($entity->hasMadeDeclaration());
+        $this->assertEmpty($entity->getIrhpPermitApplications());
+    }
+
+    public function testUpdateLicence()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $licenceA = m::mock(Licence::class);
+        $entity->setLicence($licenceA);
+
+        $this->assertEquals($licenceA, $entity->getLicence());
+
+        $entity
+            ->shouldReceive('canBeUpdated')
+            ->andReturn(true);
+
+        $licenceB = m::mock(Licence::class);
+        $entity->updateLicence($licenceB);
+
+        $this->assertEquals($licenceB, $entity->getLicence());
+    }
 }
