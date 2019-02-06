@@ -1435,4 +1435,107 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertEquals($licenceB, $entity->getLicence());
     }
+
+    /**
+     * @dataProvider dptestIsReadyForIssuing
+     */
+    public function testIsReadyForIssuing($hasOutstandingFees, $expectedResult)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('hasOutstandingFees')
+            ->andReturn($hasOutstandingFees);
+
+        $this->assertEquals($expectedResult, $entity->isReadyForIssuing());
+    }
+
+    public function dpTestIsReadyForIssuing()
+    {
+        return [
+            [false, true],
+            [true, false],
+        ];
+    }
+
+    public function testSubmit()
+    {
+        $status = m::mock(RefData::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(true);
+        $entity->shouldReceive('proceedToIssuing')
+            ->with($status)
+            ->once();
+
+        $entity->submit($status);
+    }
+
+    public function testSubmitException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_SUBMIT);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(false);
+        $entity->shouldReceive('proceedToIssuing')
+            ->never();
+
+        $entity->submit(m::mock(RefData::class));
+    }
+
+    public function testProceedToIssuing()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isReadyForIssuing')
+            ->andReturn(true);
+
+        $status = m::mock(RefData::class);
+
+        $entity->proceedToIssuing($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testProceedToIssuingException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_ISSUE);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isReadyForIssuing')
+            ->andReturn(false);
+
+        $entity->proceedToIssuing(m::mock(RefData::class));
+    }
+
+    public function testProceedToValid()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isIssueInProgress')
+            ->andReturn(true);
+
+        $status = m::mock(RefData::class);
+
+        $entity->proceedToValid($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testProceedToValidException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'This application is not in the correct state to proceed to valid (permit_app_declined)'
+        );
+
+        $oldStatus = m::mock(RefData::class);
+        $oldStatus->shouldReceive('getId')
+            ->andReturn('permit_app_declined');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setStatus($oldStatus);
+        $entity->shouldReceive('isIssueInProgress')
+            ->andReturn(false);
+
+        $entity->proceedToValid(m::mock(RefData::class));
+    }
 }
