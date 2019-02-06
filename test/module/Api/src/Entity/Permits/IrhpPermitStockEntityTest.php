@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
@@ -1129,5 +1130,50 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
         return($irhpStockEntity);
+    }
+
+    public function testGetNonReservedNonReplacementRangesOrderedByFromNo()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $firstExpectedRange = $this->createMockRange(false, false, 300);
+        $secondExpectedRange = $this->createMockRange(false, false, 420);
+        $thirdExpectedRange = $this->createMockRange(false, false, 500);
+
+        $irhpPermitRanges = new ArrayCollection(
+            [
+                $secondExpectedRange,
+                $this->createMockRange(false, true, 230),
+                $this->createMockRange(true, false, 100),
+                $this->createMockRange(true, true, 500),
+                $firstExpectedRange,
+                $thirdExpectedRange
+            ]
+        );
+
+        $entity->shouldReceive('getIrhpPermitRanges')
+            ->andReturn($irhpPermitRanges);
+
+        $result = $entity->getNonReservedNonReplacementRangesOrderedByFromNo();
+
+        $this->assertInstanceOf(ArrayCollection::class, $result);
+
+        $resultAsArray = array_values($result->toArray());
+        $this->assertSame($firstExpectedRange, $resultAsArray[0]);
+        $this->assertSame($secondExpectedRange, $resultAsArray[1]);
+        $this->assertSame($thirdExpectedRange, $resultAsArray[2]);
+    }
+
+    private function createMockRange($ssReserve, $lostReplacement, $fromNo)
+    {
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $irhpPermitRange->shouldReceive('getSsReserve')
+            ->andReturn($ssReserve);
+        $irhpPermitRange->shouldReceive('getLostReplacement')
+            ->andReturn($lostReplacement);
+        $irhpPermitRange->shouldReceive('getFromNo')
+            ->andReturn($fromNo);
+
+        return $irhpPermitRange;
     }
 }

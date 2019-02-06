@@ -105,6 +105,48 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
+    public function testGetAssignedPermitNumbersByRange()
+    {
+        $rangeId = 45;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $unflattenedPermitNumbers = [
+            ['permitNumber' => 4],
+            ['permitNumber' => 5],
+            ['permitNumber' => 7],
+            ['permitNumber' => 8],
+        ];
+
+        $flattenedPermitNumbers = [4, 5, 7, 8];
+
+        $queryBuilder->shouldReceive('select')
+            ->with('ip.permitNumber')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+           ->shouldReceive('where')
+            ->with('IDENTITY(ip.irhpPermitRange) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $rangeId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getScalarResult')
+            ->once()
+            ->andReturn($unflattenedPermitNumbers);
+
+        $this->assertEquals(
+            $flattenedPermitNumbers,
+            $this->sut->getAssignedPermitNumbersByRange($rangeId)
+        );
+    }
+
     public function testFetchListForValidEcmtPermits()
     {
         $this->setUpSut(IrhpPermit::class, true);
