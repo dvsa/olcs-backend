@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
-use Dvsa\Olcs\Transfer\Command\IrhpPermitApplication\Delete;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete;
 
 /**
  * Update IRHP Application Licence
