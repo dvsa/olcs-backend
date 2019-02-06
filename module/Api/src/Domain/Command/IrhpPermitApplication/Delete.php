@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication;
+namespace Dvsa\Olcs\Transfer\Command\IrhpPermitApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
 
@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class Delete extends AbstractIdOnlyCommand
 {
-
+    
 }
