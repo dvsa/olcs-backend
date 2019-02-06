@@ -449,7 +449,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function clearAnswers()
     {
         if ($this->canBeUpdated()) {
-            $this->fees = new ArrayCollection();
             $this->irhpPermitApplications = new ArrayCollection();
             $this->resetCheckAnswersAndDeclaration();
         }
