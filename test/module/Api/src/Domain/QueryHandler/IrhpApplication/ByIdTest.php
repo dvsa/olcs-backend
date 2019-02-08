@@ -20,6 +20,7 @@ class ByIdTest extends AbstractQueryByIdHandlerTest
     protected $bundle = [
         'licence' => ['trafficArea', 'organisation'],
         'irhpPermitType' => ['name'],
+        'fees' => ['feeType' => ['feeType'], 'feeStatus'],
         'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country']]],
     ];
     protected $qryClass = QryClass::class;
