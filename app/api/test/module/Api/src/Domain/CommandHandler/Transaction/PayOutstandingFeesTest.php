@@ -27,8 +27,6 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
-use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -541,7 +539,12 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
     }
 
-    public function testHandleCommandWithApplicationId()
+    /**
+     * Test handle command for various application types (licence app, ecmt, irhp)
+     *
+     * @dataProvider dpHandleForApplication
+     */
+    public function testHandleCommandWithApplicationId($applicationType, $feeServiceMethod)
     {
         // set up data
         $cpmsRedirectUrl = 'https://olcs-selfserve/foo';
@@ -549,32 +552,42 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
 
         $paymentId = 999; // payment to be created
 
-        $applicationFee = $this->getStubFee(99, 99.99);
-        $interimFee = $this->getStubFee(101, 99.99);
-        $fees = [$applicationFee, $interimFee];
+        $fee1 = $this->getStubFee(99, 99.99);
+        $fee2 = $this->getStubFee(101, 99.99);
+        $fees = [$fee1, $fee2];
+
+        $customerName = 'customer name';
+        $customerReference = 'customer reference';
+        $customerAddress = 'customer address';
 
         $data = [
-            'applicationId' => $applicationId,
+            'applicationId' => null,
+            'ecmtPermitApplicationId' => null,
+            'irhpApplication' => null,
             'cpmsRedirectUrl' => $cpmsRedirectUrl,
             'paymentMethod' => FeeEntity::METHOD_CARD_ONLINE,
-            'customerName' => 'foo',
-            'customerReference' => 'bar',
-            'address' => 'cake',
-        ];
-        $extraParams = [
-            'customer_name' => 'foo',
-            'customer_reference' => 'bar',
-            'customer_address' => 'cake'
+            'customerName' => $customerName,
+            'customerReference' => $customerReference,
+            'address' => $customerAddress,
+            'organisationId' => null,
         ];
 
+        $data[$applicationType] = $applicationId;
+
         $command = Cmd::create($data);
+
+        $extraParams = [
+            'customer_name' => $customerName,
+            'customer_reference' => $customerReference,
+            'customer_address' => $customerAddress
+        ];
 
         // expectations
         $this->repoMap['SystemParameter']->shouldReceive('getDisableSelfServeCardPayments')->with()->once()
             ->andReturn(false);
 
         $this->mockFeesHelperService
-            ->shouldReceive('getOutstandingFeesForApplication')
+            ->shouldReceive($feeServiceMethod)
             ->once()
             ->with($applicationId)
             ->andReturn($fees);
@@ -626,6 +639,24 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertEquals(PaymentEntity::STATUS_OUTSTANDING, $savedPayment->getStatus()->getId());
+    }
+
+    public function dpHandleForApplication()
+    {
+        return [
+            'licence application' => [
+                'applicationId',
+                'getOutstandingFeesForApplication',
+            ],
+            'ecmt application' => [
+                'ecmtPermitApplicationId',
+                'getOutstandingFeesForEcmtApplication',
+            ],
+            'irhp application' => [
+                'irhpApplication',
+                'getOutstandingFeesForIrhpApplication',
+            ],
+        ];
     }
 
     public function testHandleCommandCashPaymentWithOverpayment()
