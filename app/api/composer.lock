@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4a2deedb0aa1787ec5d9491c59370580",
+    "content-hash": "5ca1ec2d99353e7f994a666632f4f1c0",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -918,17 +918,17 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.6.2",
+            "version": "v2.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "d2b4dd71d2a276edd65d0c170375b445f8a4a4a8"
+                "reference": "434820973cadf2da2d66e7184be370084cc32ca8"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-orm-d2b4dd71d2a276edd65d0c170375b445f8a4a4a8-zip-0a750b.tar",
-                "reference": "d2b4dd71d2a276edd65d0c170375b445f8a4a4a8",
-                "shasum": "762954ce75d1a509edced44fac2685f26ea8ec4a"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/doctrine-orm-434820973cadf2da2d66e7184be370084cc32ca8-zip-ebc83c.tar",
+                "reference": "434820973cadf2da2d66e7184be370084cc32ca8",
+                "shasum": "8549ee7c9ab0a9858aed074bf978a3ad474f2673"
             },
             "require": {
                 "doctrine/annotations": "~1.5",
@@ -996,7 +996,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2018-07-12T20:47:13+00:00"
+            "time": "2018-11-20T23:46:46+00:00"
         },
         {
             "name": "doctrine/persistence",
