@@ -94,6 +94,29 @@ class IrhpPermitEntityTest extends EntityTester
         $this->assertSame($this->status, $this->sut->getStatus());
     }
 
+    public function testCreateForIrhpApplication()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $issueDate = m::mock(DateTime::class);
+        $status = m::mock(RefData::class);
+        $permitNumber = 473;
+
+        $entity = Entity::createForIrhpApplication(
+            $irhpPermitApplication,
+            $irhpPermitRange,
+            $issueDate,
+            $status,
+            $permitNumber
+        );
+
+        $this->assertSame($irhpPermitApplication, $entity->getIrhpPermitApplication());
+        $this->assertSame($irhpPermitRange, $entity->getIrhpPermitRange());
+        $this->assertSame($issueDate, $entity->getIssueDate());
+        $this->assertSame($status, $entity->getStatus());
+        $this->assertEquals($permitNumber, $entity->getPermitNumber());
+    }
+
     public function testGetPermitNumberWithPrefix()
     {
         $prefix = 'UK';
