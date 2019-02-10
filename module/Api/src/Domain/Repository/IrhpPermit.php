@@ -61,6 +61,26 @@ class IrhpPermit extends AbstractRepository
     }
 
     /**
+     * Returns an array of assigned permit numbers in the specified range
+     *
+     * @param int $rangeId
+     *
+     * @return array
+     */
+    public function getAssignedPermitNumbersByRange($rangeId)
+    {
+        $rows = $this->getEntityManager()->createQueryBuilder()
+            ->select('ip.permitNumber')
+            ->from(Entity::class, 'ip')
+            ->where('IDENTITY(ip.irhpPermitRange) = ?1')
+            ->setParameter(1, $rangeId)
+            ->getQuery()
+            ->getScalarResult();
+
+        return array_column($rows, 'permitNumber');
+    }
+
+    /**
      * Apply List Filters
      *
      * @param QueryBuilder   $qb    Doctrine Query Builder

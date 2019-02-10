@@ -98,6 +98,34 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
+     * Create new IrhpPermit during irhp permit application allocation
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param IrhpPermitRange $irhpPermitRange
+     * @param DateTime $issueDate
+     * @param RefData $status
+     * @param int $permitNumber
+     *
+     * @return IrhpPermit
+     */
+    public static function createForIrhpApplication(
+        IrhpPermitApplication $irhpPermitApplication,
+        IrhpPermitRange $irhpPermitRange,
+        DateTime $issueDate,
+        RefData $status,
+        $permitNumber
+    ) {
+        $irhpPermit = new self();
+        $irhpPermit->irhpPermitApplication = $irhpPermitApplication;
+        $irhpPermit->irhpPermitRange = $irhpPermitRange;
+        $irhpPermit->issueDate = $issueDate;
+        $irhpPermit->status = $status;
+        $irhpPermit->permitNumber = $permitNumber;
+
+        return $irhpPermit;
+    }
+
+    /**
      * @param RefData $status
      * @return $this
      */

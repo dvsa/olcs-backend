@@ -381,6 +381,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\ContinuationDigitalReminder::class,
             Queue::TYPE_PERMITS_ALLOCATE
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocatePermits::class,
+            Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\AllocateIrhpApplicationPermits::class,
             Queue::TYPE_RUN_ECMT_SCORING
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\RunScoring::class,
             Queue::TYPE_ACCEPT_ECMT_SCORING

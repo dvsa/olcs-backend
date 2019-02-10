@@ -46,6 +46,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
+    const ERR_CANT_SUBMIT = 'This application cannot be submitted';
+    const ERR_CANT_ISSUE = 'This application cannot be issued';
 
     const SECTIONS = [
         'licence' => [
@@ -515,18 +517,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Submit Application - Placeholder method to allow Declaration Page redirects to work for testing.
-     * Todo: Update this method with actual logic to check values/throw exceptions/update status based on AC
      *
-     * @return bool
-     * @throws ValidationException
+     * @throws ForbiddenException
      */
-    public function submitApplication()
+    public function submit(RefData $submitStatus)
     {
         if (!$this->canBeSubmitted()) {
-            throw new ValidationException(['Application cannot be submitted']);
+            throw new ForbiddenException(self::ERR_CANT_SUBMIT);
         }
 
-        return true;
+        $this->proceedToIssuing($submitStatus);
     }
 
     /**
@@ -593,5 +593,47 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function updateDateReceived($dateReceived)
     {
         $this->dateReceived = $this->processDate($dateReceived);
+    }
+
+    /**
+     * Whether we're able to issue permits for this application
+     *
+     * @return bool
+     */
+    public function isReadyForIssuing()
+    {
+        return !$this->hasOutstandingFees();
+    }
+
+    /**
+     * Proceeds the application from not yet submitted status to issuing status
+     *
+     * @param RefData $issuingStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToIssuing(RefData $issuingStatus)
+    {
+        if (!$this->isReadyForIssuing()) {
+            throw new ForbiddenException(self::ERR_CANT_ISSUE);
+        }
+
+        $this->status = $issuingStatus;
+    }
+
+    /**
+     * Proceeds the application from issuing status to valid status
+     *
+     * @param RefData $validStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToValid(RefData $validStatus)
+    {
+        if (!$this->isIssueInProgress()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+        }
+
+        $this->status = $validStatus;
     }
 }
