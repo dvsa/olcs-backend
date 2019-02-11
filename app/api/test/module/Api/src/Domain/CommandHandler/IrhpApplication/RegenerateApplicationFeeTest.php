@@ -6,7 +6,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\RegenerateIssueFee;
+use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\RegenerateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
@@ -17,13 +17,13 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-class RegenerateIssueFeeTest extends CommandHandlerTestCase
+class RegenerateApplicationFeeTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('FeeType', FeeTypeRepo::class);
-        $this->sut = new RegenerateIssueFee();
+        $this->sut = new RegenerateApplicationFee();
      
         parent::setUp();
     }
@@ -34,9 +34,9 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
         $existingFeeId = 78;
         $licenceId = 32;
         $permitsRequired = 14;
-        $feeDescription = 'Bilateral permits - 14 permits';
+        $feeDescription = 'Bilateral permits application fee - 14 permits';
         $feeTypeId = 103;
-        $feeTypeDescription = 'Bilateral permits';
+        $feeTypeDescription = 'Bilateral permits application fee';
         $feeTypeFixedValue = 150;
         $feeAmount = 2100;
 
@@ -47,9 +47,9 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('canCreateOrReplaceIssueFee')
+        $irhpApplication->shouldReceive('canCreateOrReplaceApplicationFee')
             ->andReturn(true);
-        $irhpApplication->shouldReceive('getLatestOutstandingIssueFee')
+        $irhpApplication->shouldReceive('getLatestOutstandingApplicationFee')
             ->andReturn($existingFee);
         $irhpApplication->shouldReceive('getLicence->getId')
             ->andReturn($licenceId);
@@ -69,7 +69,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
             ->andReturn($feeTypeFixedValue);
 
         $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
-            ->with('IRHP_GV_PERMIT_BILATERAL_ANN')
+            ->with('IRHP_GV_APP_BILATERAL_ANN')
             ->andReturn($feeType);
 
         $command = m::mock(CommandInterface::class);
@@ -96,7 +96,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
 
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
         $this->assertEquals(
-            ['Cancelled existing Issue fee', 'Created new Issue fee'],
+            ['Cancelled existing Application fee', 'Created new Application fee'],
             $result->getMessages()
         );
     }
@@ -106,18 +106,18 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
         $irhpApplicationId = 47;
         $licenceId = 32;
         $permitsRequired = 14;
-        $feeDescription = 'Bilateral permits - 14 permits';
+        $feeDescription = 'Bilateral permits application fee - 14 permits';
         $feeTypeId = 103;
-        $feeTypeDescription = 'Bilateral permits';
+        $feeTypeDescription = 'Bilateral permits application fee';
         $feeTypeFixedValue = 150;
         $feeAmount = 2100;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('canCreateOrReplaceIssueFee')
+        $irhpApplication->shouldReceive('canCreateOrReplaceApplicationFee')
             ->andReturn(true);
-        $irhpApplication->shouldReceive('getLatestOutstandingIssueFee')
+        $irhpApplication->shouldReceive('getLatestOutstandingApplicationFee')
             ->andReturn(null);
         $irhpApplication->shouldReceive('getLicence->getId')
             ->andReturn($licenceId);
@@ -137,7 +137,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
             ->andReturn($feeTypeFixedValue);
 
         $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
-            ->with('IRHP_GV_PERMIT_BILATERAL_ANN')
+            ->with('IRHP_GV_APP_BILATERAL_ANN')
             ->andReturn($feeType);
 
         $command = m::mock(CommandInterface::class);
@@ -159,7 +159,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
 
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
         $this->assertEquals(
-            ['Created new Issue fee'],
+            ['Created new Application fee'],
             $result->getMessages()
         );
     }
@@ -168,7 +168,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(
-            'IRHP application is not in the correct state to allow create/replace of Issue fee'
+            'IRHP application is not in the correct state to allow create/replace of Application fee'
         );
 
         $irhpApplicationId = 47;
@@ -176,7 +176,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('canCreateOrReplaceIssueFee')
+        $irhpApplication->shouldReceive('canCreateOrReplaceApplicationFee')
             ->andReturn(false);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
