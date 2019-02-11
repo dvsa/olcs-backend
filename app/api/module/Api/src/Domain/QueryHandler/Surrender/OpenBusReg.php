@@ -12,8 +12,6 @@ class OpenBusReg extends AbstractQueryHandler
 {
     protected $repoServiceName = 'BusRegSearchView';
 
-    protected $extraRepos = ['Licence'];
-
     /**
      * @return array
      */
@@ -23,12 +21,10 @@ class OpenBusReg extends AbstractQueryHandler
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
-        /* @var $licence \Dvsa\Olcs\Api\Entity\Licence\Licence */
-        $licence = $this->getRepo('Licence')->fetchById($query->getLicId());
-
+        $busRegs = $this->resultList($repo->fetchActiveByLicence($query->getId()));
         return [
-            'result' => $this->resultList($repo->fetchActiveByLicence($licence)),
-            'count' => $repo->fetchCount($query)
+            'results' => $busRegs,
+            'count' => count($busRegs)
         ];
     }
 }

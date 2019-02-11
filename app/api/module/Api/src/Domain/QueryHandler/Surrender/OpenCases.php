@@ -17,9 +17,10 @@ class OpenCases extends AbstractQueryHandler
          */
         $cases = $this->getRepo()->fetchOpenCasesForSurrender($query);
 
-        return [
-            'count' => count($cases),
-            'results'=>$this->resultList($cases)
-        ];
+
+            return [
+                'count' => count($cases),
+                'results' => $this->resultList($cases)
+            ];
     }
 }
