@@ -348,15 +348,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the application has any outstanding application fees
+     * Return the latest application fee, or none if no application fee is present
      *
-     * @return bool
+     * @return Fee|null
      */
-    public function hasOutstandingApplicationFee()
+    public function getLatestOutstandingApplicationFee()
     {
-        $applicationFee = $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
-
-        return $applicationFee !== null;
+        return $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
     }
 
     /**
@@ -577,11 +575,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the application fee can be created
+     * Whether the application fee can be created or replaced
      *
      * @return bool
      */
-    public function canCreateApplicationFee()
+    public function canCreateOrReplaceApplicationFee()
     {
         return $this->isNotYetSubmitted();
     }

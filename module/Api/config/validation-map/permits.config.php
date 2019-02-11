@@ -50,7 +50,7 @@ return [
     CommandHandler\IrhpApplication\Create::class => CanAccessLicenceWithLicence::class,
     CommandHandler\IrhpApplication\UpdateDeclaration::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\SubmitApplication::class => Permits\CanEditIrhpApplicationWithId::class,
-    CommandHandler\IrhpApplication\GenerateApplicationFee::class => IsSideEffect::class,
+    CommandHandler\IrhpApplication\RegenerateApplicationFee::class => IsSideEffect::class,
     CommandHandler\IrhpApplication\RegenerateIssueFee::class => IsSideEffect::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
