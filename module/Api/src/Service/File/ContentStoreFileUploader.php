@@ -67,7 +67,13 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function download($identifier)
     {
-        return $this->contentStoreClient->read($identifier);
+        $file = $this->contentStoreClient->read($identifier);
+
+        if ($file !== false) {
+            return $file;
+        }
+
+        return null;
     }
 
     /**
