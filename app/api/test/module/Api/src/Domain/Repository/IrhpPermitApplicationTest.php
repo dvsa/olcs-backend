@@ -43,7 +43,10 @@ class IrhpPermitApplicationTest extends RepositoryTestCase
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with('ipa as irhpPermitApplication, ips.validTo as validTo, IDENTITY(ips.country) as countryId')
+            ->with(
+                'ipa as irhpPermitApplication, ips.validTo as validTo, ips.id as stockId, ' .
+                'IDENTITY(ips.country) as countryId'
+            )
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')

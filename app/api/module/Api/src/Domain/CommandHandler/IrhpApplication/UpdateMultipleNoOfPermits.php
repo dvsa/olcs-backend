@@ -13,6 +13,8 @@ use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\GenerateApplicationFee as Gener
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee as RegenerateIssueFeeCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits as UpdateMultipleNoOfPermitsCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Query\IrhpApplication\MaxStockPermitsByApplication;
+use RuntimeException;
 
 /**
  * Update multiple no of permits
@@ -41,7 +43,6 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         $irhpApplicationId = $command->getId();
-
         $irhpApplicationRepo = $this->getRepo();
         $irhpApplication = $irhpApplicationRepo->fetchById($irhpApplicationId);
 
@@ -50,30 +51,52 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
         }
 
         $irhpApplication->storePermitsRequired();
-        $irhpApplication->resetCheckAnswersAndDeclaration();
-        $irhpApplicationRepo->saveOnFlush($irhpApplication);
 
         $irhpPermitApplicationRepo = $this->getRepo('IrhpPermitApplication');
         $rows = $irhpPermitApplicationRepo->getByIrhpApplicationWithStockInfo($command->getId());
         $commandCountries = $command->getPermitsRequired();
 
-        $updatedCount = 0;
+        $response = $this->handleQuery(
+            MaxStockPermitsByApplication::create(['id' => $irhpApplicationId])
+        );
+        $maxStockPermits = $response['result'];
+
         foreach ($rows as $row) {
             $countryId = $row['countryId'];
-            $irhpPermitApplication = $row['irhpPermitApplication'];
             $validToTimestamp = strtotime($row['validTo']);
             $year = date('Y', $validToTimestamp);
+            $maxPermits = $maxStockPermits[$row['stockId']];
 
-            if (isset($commandCountries[$countryId][$year]) && is_numeric($commandCountries[$countryId][$year])) {
-                $permitsRequired = intval($commandCountries[$countryId][$year]);
-                if ($permitsRequired >= 0) {
-                    $irhpPermitApplication->updatePermitsRequired($permitsRequired);
-                    $irhpPermitApplicationRepo->saveOnFlush($irhpPermitApplication);
-                    $updatedCount++;
+            $permitsRequired = 0;
+            if ($maxPermits > 0) {
+                if (isset($commandCountries[$countryId][$year]) && is_numeric($commandCountries[$countryId][$year])) {
+                    $permitsRequired = intval($commandCountries[$countryId][$year]);
+                    if (($permitsRequired < 0) || ($permitsRequired > $maxPermits)) {
+                        throw new RuntimeException(
+                            sprintf(
+                                'Out of range data for country %s in year %s - expected range 0 to %d but received %d',
+                                $countryId,
+                                $year,
+                                $maxPermits,
+                                $permitsRequired
+                            )
+                        );
+                    }
+                } else {
+                    throw new RuntimeException(
+                        sprintf('Missing data or incorrect type for country %s in year %s', $countryId, $year)
+                    );
                 }
             }
+
+            $irhpPermitApplication = $row['irhpPermitApplication'];
+            $irhpPermitApplication->updatePermitsRequired($permitsRequired);
+            $irhpPermitApplicationRepo->saveOnFlush($irhpPermitApplication);
         }
 
+
+        $irhpApplication->resetCheckAnswersAndDeclaration();
+        $irhpApplicationRepo->saveOnFlush($irhpApplication);
         $irhpPermitApplicationRepo->flushAll();
 
         $feeCommands = [
@@ -91,8 +114,7 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
         $this->result->addId('irhpApplication', $irhpApplicationId);
         $this->result->addMessage(
             sprintf(
-                'Updated %d of %d required permit counts for IRHP application',
-                $updatedCount,
+                'Updated %d required permit counts for IRHP application',
                 count($rows)
             )
         );
