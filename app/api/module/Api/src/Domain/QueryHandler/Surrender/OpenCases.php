@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-class BySurrenderedLicence extends AbstractQueryHandler
+class OpenCases extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Cases';
 
@@ -16,6 +16,10 @@ class BySurrenderedLicence extends AbstractQueryHandler
          * @var \Dvsa\Olcs\Api\Domain\Repository\Cases
          */
         $cases = $this->getRepo()->fetchOpenCasesForSurrender($query);
-        return $this->result($cases, []);
+
+        return [
+            'count' => count($cases),
+            'results'=>$this->resultList($cases)
+        ];
     }
 }
