@@ -204,7 +204,7 @@ class Cases extends AbstractRepository
         $expr = $qb->expr();
 
         $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
-            ->setParameter('byLicence', $query->getLicence());
+            ->setParameter('byLicence', $query->getId());
 
         $qb->andWhere(
             $expr->isNull($this->alias . '.closedDate')
@@ -220,6 +220,6 @@ class Cases extends AbstractRepository
             $this->lock($results[0], $version);
         }
 
-        return $results[0];
+        return $results;
     }
 }
