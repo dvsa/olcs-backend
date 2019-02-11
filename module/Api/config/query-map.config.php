@@ -656,5 +656,6 @@ return [
     //Digital Surrender
     TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class,
     TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class,
-    TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class
+    TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
+    TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
 ];
