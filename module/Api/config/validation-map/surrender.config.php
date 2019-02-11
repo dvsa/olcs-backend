@@ -4,6 +4,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanSurrenderLicence;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Surrender\Delete as CanDeleteSurrender;
 
 return [
@@ -14,4 +15,5 @@ return [
     QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceWithId::class,
     CommandHandler\Surrender\SubmitForm::class                          => CanAccessLicenceWithId::class,
     CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
+    QueryHandler\Surrender\OpenCases::class                             => CanAccessLicenceWithId::class
 ];
