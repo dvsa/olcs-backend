@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
@@ -233,5 +234,30 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             44,
             $irhpPermitApplication->getPermitsRequired()
         );
+    }
+
+    public function testGetRelatedOrganisationEcmt()
+    {
+        $org = m::mock(Organisation::class);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('getRelatedOrganisation')->once()->withNoArgs()->andReturn($org);
+
+        $entity = Entity::createNew($irhpPermitWindow, $licence, $ecmtPermitApplication);
+
+        $this->assertSame($org, $entity->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedOrganisationIrhp()
+    {
+        $org = m::mock(Organisation::class);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getRelatedOrganisation')->once()->withNoArgs()->andReturn($org);
+
+        $entity = Entity::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
+
+        $this->assertSame($org, $entity->getRelatedOrganisation());
     }
 }
