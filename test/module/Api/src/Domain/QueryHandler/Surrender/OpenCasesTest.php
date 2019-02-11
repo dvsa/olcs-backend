@@ -38,5 +38,4 @@ class OpenCasesTest extends QueryHandlerTestCase
             'results' => ['foo']
         ], $this->sut->handleQuery($query));
     }
-
 }
