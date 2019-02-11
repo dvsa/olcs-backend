@@ -203,7 +203,7 @@ class Cases extends AbstractRepository
         );
         $expr = $qb->expr();
 
-        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':byLicence'))
+        $qb->andWhere($expr->eq($this->alias . '.licence', ':byLicence'))
             ->setParameter('byLicence', $query->getId());
 
         $qb->andWhere(
@@ -211,15 +211,6 @@ class Cases extends AbstractRepository
         );
 
         $results = $qb->getQuery()->getResult($hydrateMode);
-
-        if (empty($results)) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-
-        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
-            $this->lock($results[0], $version);
-        }
-
         return $results;
     }
 }
