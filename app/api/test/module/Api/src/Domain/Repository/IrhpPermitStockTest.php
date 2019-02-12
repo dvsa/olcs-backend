@@ -178,4 +178,23 @@ class IrhpPermitStockTest extends RepositoryTestCase
             $this->sut->getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
         );
     }
+
+    public function testFetchAll()
+    {
+        $irhpPermitStocks = [
+            m::mock(IrhpPermitStockEntity::class),
+            m::mock(IrhpPermitStockEntity::class),
+        ];
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $queryBuilder->shouldReceive('getQuery->getResult')
+            ->andReturn($irhpPermitStocks);
+
+        $this->mockCreateQueryBuilder($queryBuilder);
+
+        $this->assertEquals(
+            $irhpPermitStocks,
+            $this->sut->fetchAll()
+        );
+    }
 }

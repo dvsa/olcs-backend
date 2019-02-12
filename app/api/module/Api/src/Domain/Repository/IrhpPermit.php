@@ -190,7 +190,7 @@ class IrhpPermit extends AbstractRepository
             'select ips.id AS irhpPermitStockId, ' .
             'count(ip.id) AS irhpPermitCount ' .
             'from irhp_permit ip ' .
-            'right join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
+            'inner join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
             'and ip.status in (?) ' .
             'inner join irhp_application ia ON ipa.irhp_application_id = ia.id ' .
             'inner join irhp_permit_window ipw ON ipa.irhp_permit_window_id = ipw.id ' .
