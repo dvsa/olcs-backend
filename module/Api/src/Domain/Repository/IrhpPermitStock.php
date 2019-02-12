@@ -113,4 +113,13 @@ class IrhpPermitStock extends AbstractRepository
     {
         return $this->fetchByX('irhpPermitType', [$irhpPermitType]);
     }
+
+    /**
+     * @return array
+     */
+    public function fetchAll()
+    {
+        $qb = $this->createQueryBuilder();
+        return $qb->getQuery()->getResult();
+    }
 }
