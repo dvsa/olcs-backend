@@ -5,8 +5,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as Entity;
 use DateTime;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 
 /**
  * Irhp Permit Type
@@ -38,5 +40,28 @@ class IrhpPermitType extends AbstractRepository
             ->orderBy('rd.displayOrder', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns list of types ready to print
+     *
+     * @return array
+     */
+    public function fetchReadyToPrint()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias, 'rd')
+            ->distinct()
+            ->innerJoin($this->alias.'.name', 'rd')
+            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin('ips.irhpPermitRanges', 'ipr')
+            ->innerJoin('ipr.irhpPermits', 'ip')
+            ->where($qb->expr()->in('ip.status', ':statuses'))
+            ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
+            ->orderBy('rd.description', 'ASC');
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }
