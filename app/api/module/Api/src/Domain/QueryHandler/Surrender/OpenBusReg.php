@@ -17,7 +17,6 @@ class OpenBusReg extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var SearchViewList $query */
         /** @var Repository $repo */
         $repo = $this->getRepo();
 
