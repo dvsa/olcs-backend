@@ -563,6 +563,7 @@ return [
 
     // IRHP Permits
     TransferQuery\IrhpPermit\GetListByEcmtId::class => QueryHandler\IrhpPermit\GetListByEcmtId::class,
+    TransferQuery\IrhpPermit\GetListByIrhpId::class => QueryHandler\IrhpPermit\GetListByIrhpId::class,
     TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
     TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
