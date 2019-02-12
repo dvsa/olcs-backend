@@ -9,15 +9,15 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
- * Get a list of permit stocks ready to print
+ * Get a list of permit types ready to print
  */
-class ReadyToPrintStock extends AbstractQueryHandler implements ToggleRequiredInterface
+class ReadyToPrintType extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
 
-    protected $repoServiceName = 'IrhpPermitStock';
+    protected $repoServiceName = 'IrhpPermitType';
 
     /**
      * Handle query
@@ -25,9 +25,10 @@ class ReadyToPrintStock extends AbstractQueryHandler implements ToggleRequiredIn
      * @param QueryInterface $query Query
      *
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function handleQuery(QueryInterface $query)
     {
-        return ['results' => $this->getRepo()->fetchReadyToPrint($query->getIrhpPermitType(), $query->getCountry())];
+        return ['results' => $this->getRepo()->fetchReadyToPrint()];
     }
 }

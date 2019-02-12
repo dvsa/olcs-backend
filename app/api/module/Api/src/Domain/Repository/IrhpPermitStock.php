@@ -61,23 +61,32 @@ class IrhpPermitStock extends AbstractRepository
     /**
      * Returns list of stocks ready to print
      *
+     * @param int    $irhpPermitTypeId Irhp Permit Type Id
+     * @param string $countryId        Country Id
+     *
      * @return array
      */
-    public function fetchReadyToPrint()
+    public function fetchReadyToPrint($irhpPermitTypeId, $countryId = null)
     {
         $qb = $this->createQueryBuilder();
 
         $qb
-            ->select($this->alias, 'ipt', 'rd')
+            ->select($this->alias)
             ->distinct()
-            ->innerJoin($this->alias . '.irhpPermitType', 'ipt')
-            ->innerJoin('ipt.name', 'rd')
             ->innerJoin($this->alias . '.irhpPermitRanges', 'ipr')
             ->innerJoin('ipr.irhpPermits', 'ip')
-            ->Where($qb->expr()->in('ip.status', ':statuses'))
+            ->where($qb->expr()->in('ip.status', ':statuses'))
+            ->andWhere($this->alias . '.irhpPermitType = :irhpPermitTypeId')
             ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
-            ->orderBy('rd.displayOrder', 'ASC')
-            ->orderBy($this->alias . '.validFrom', 'ASC');
+            ->setParameter('irhpPermitTypeId', $irhpPermitTypeId);
+
+        if (!empty($countryId)) {
+            $qb
+                ->andWhere($this->alias . '.country = :countryId')
+                ->setParameter('countryId', $countryId);
+        }
+
+        $qb->orderBy($this->alias . '.validFrom', 'DESC');
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }

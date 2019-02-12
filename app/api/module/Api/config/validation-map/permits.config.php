@@ -38,6 +38,8 @@ return [
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrintType::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrintCountry::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintStock::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
