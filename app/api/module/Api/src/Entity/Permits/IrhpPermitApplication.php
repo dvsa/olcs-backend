@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,7 +29,7 @@ use Doctrine\Common\Collections\Criteria;
  *    }
  * )
  */
-class IrhpPermitApplication extends AbstractIrhpPermitApplication
+class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface
 {
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
@@ -148,5 +150,19 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         if (!is_null($this->irhpApplication) && $this->irhpApplication->canBeUpdated()) {
             $this->permitsRequired = $permitsRequired;
         }
+    }
+
+    /**
+     * There are two possible types of parent application ECMT or IRHP
+     *
+     * @return Organisation
+     */
+    public function getRelatedOrganisation()
+    {
+        if ($this->ecmtPermitApplication instanceof EcmtPermitApplication) {
+            return $this->ecmtPermitApplication->getRelatedOrganisation();
+        }
+
+        return $this->irhpApplication->getRelatedOrganisation();
     }
 }
