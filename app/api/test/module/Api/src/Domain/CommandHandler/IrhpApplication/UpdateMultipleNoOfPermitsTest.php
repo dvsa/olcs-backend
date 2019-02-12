@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\GenerateApplicationFee;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
@@ -112,7 +112,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
             ->andReturn(true);
 
         $this->expectedSideEffect(
-            GenerateApplicationFee::class,
+            RegenerateApplicationFee::class,
             ['id' => $irhpApplicationId],
             new Result()
         );
@@ -272,12 +272,6 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
             ->ordered()
             ->globally()
             ->andReturn(false);
-
-        $this->expectedSideEffect(
-            GenerateApplicationFee::class,
-            ['id' => $irhpApplicationId],
-            new Result()
-        );
 
         $this->sut->shouldReceive('handleQuery')
             ->andReturnUsing(function ($query) use ($irhpApplicationId) {

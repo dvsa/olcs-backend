@@ -9,8 +9,8 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\GenerateApplicationFee as GenerateApplicationFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee as RegenerateIssueFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateApplicationFee as RegenerateApplicationFeeCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits as UpdateMultipleNoOfPermitsCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\MaxStockPermitsByApplication;
@@ -99,17 +99,16 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements
         $irhpApplicationRepo->saveOnFlush($irhpApplication);
         $irhpPermitApplicationRepo->flushAll();
 
-        $feeCommands = [
-            GenerateApplicationFeeCmd::create(['id' => $irhpApplicationId])
-        ];
-
         if ($irhpApplication->hasPermitsRequiredChanged()) {
-            $feeCommands[] = RegenerateIssueFeeCmd::create(['id' => $irhpApplicationId]);
+            $this->result->merge(
+                $this->handleSideEffects(
+                    [
+                        RegenerateApplicationFeeCmd::create(['id' => $irhpApplicationId]),
+                        RegenerateIssueFeeCmd::create(['id' => $irhpApplicationId])
+                    ]
+                )
+            );
         }
-
-        $this->result->merge(
-            $this->handleSideEffects($feeCommands)
-        );
 
         $this->result->addId('irhpApplication', $irhpApplicationId);
         $this->result->addMessage(
