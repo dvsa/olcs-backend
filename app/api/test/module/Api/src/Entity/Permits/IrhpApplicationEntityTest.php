@@ -67,6 +67,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('getOutstandingFeeAmount')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(0)
             ->shouldReceive('getSectionCompletion')
             ->once()
             ->withNoArgs()
@@ -123,6 +127,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
+                'outstandingFeeAmount' => 0,
                 'sectionCompletion' => [],
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
@@ -1009,6 +1014,34 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->setFees($fees);
 
         $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
+    }
+
+    public function testGetOutstandingFeeAmount()
+    {
+        $outstandingIrhpAppFee = m::mock(Fee::class);
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getGrossAmount')->once()->andReturn(25.56);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
+
+        $outstandingIrhpIssueFee = m::mock(Fee::class);
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getGrossAmount')->once()->andReturn(50);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($outstandingFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertEquals(75.56, $this->sut->getOutstandingFeeAmount());
     }
 
     /**

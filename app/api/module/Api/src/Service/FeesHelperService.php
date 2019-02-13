@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -25,6 +26,11 @@ class FeesHelperService implements FactoryInterface
      * @var \Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication
      */
     protected $ecmtApplicationRepo;
+
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\Repository\IrhpApplication
+     */
+    protected $irhpApplicationRepo;
 
     /**
      * @var \Dvsa\Olcs\Api\Domain\Repository\Fee
@@ -50,6 +56,7 @@ class FeesHelperService implements FactoryInterface
         // inject required repos
         $this->applicationRepo = $repoManager->get('Application');
         $this->ecmtApplicationRepo = $repoManager->get('EcmtPermitApplication');
+        $this->irhpApplicationRepo = $repoManager->get('IrhpApplication');
         $this->feeRepo = $repoManager->get('Fee');
         $this->feeTypeRepo = $repoManager->get('FeeType');
 
@@ -109,6 +116,21 @@ class FeesHelperService implements FactoryInterface
         }
 
         return $outstandingFees;
+    }
+
+    /**
+     * Get fees pertaining to an irhp application
+     *
+     * @param int $irhpApplicationId irhp application id
+     *
+     * @return array
+     */
+    public function getOutstandingFeesForIrhpApplication(int $irhpApplicationId): array
+    {
+        /** @var IrhpApplication $irhpApplication */
+        $irhpApplication = $this->irhpApplicationRepo->fetchById($irhpApplicationId);
+
+        return $irhpApplication->getOutstandingFees();
     }
 
     /**
