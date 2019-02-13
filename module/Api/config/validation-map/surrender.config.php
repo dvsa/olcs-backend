@@ -15,5 +15,7 @@ return [
     QueryHandler\Surrender\OpenBusReg::class                            => CanAccessLicenceWithId::class,
     CommandHandler\Surrender\SubmitForm::class                          => CanAccessLicenceWithId::class,
     CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
-    QueryHandler\Surrender\OpenCases::class                             => CanAccessLicenceWithId::class
+    QueryHandler\Surrender\OpenCases::class                             => CanAccessLicenceWithId::class,
+    CommandHandler\Surrender\Approve::class                             => CanAccessLicenceWithId::class,
+    CommandHandler\Surrender\Withdraw::class                             => CanAccessLicenceWithId::class
 ];
