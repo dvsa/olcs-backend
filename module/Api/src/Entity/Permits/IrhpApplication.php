@@ -129,6 +129,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
@@ -360,7 +361,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Return the latest issue fee, or none if no issue fee is present
      *
-     * @return Fee|null
+     * @return FeeEntity|null
      */
     public function getLatestOutstandingIssueFee()
     {
@@ -389,6 +390,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Return the amount of the outstanding fees (application + issue)
+     *
+     * @return float|int
+     */
+    public function getOutstandingFeeAmount()
+    {
+        $feeAmount = 0;
+        $outstandingFees = $this->getOutstandingFees();
+
+        /** @var FeeEntity $fee */
+        foreach ($outstandingFees as $fee) {
+            $feeAmount += $fee->getGrossAmount();
+        }
+
+        return $feeAmount;
+    }
+
+    /**
      * Get All Outstanding IRHP Application Fees
      *
      * @return array
@@ -398,7 +417,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
         $fees = [];
 
-        /** @var Fee $fee */
+        /** @var FeeEntity $fee */
         foreach ($this->getFees() as $fee) {
             if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
                 $fees[] = $fee;
