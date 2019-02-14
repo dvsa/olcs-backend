@@ -85,7 +85,7 @@ abstract class AbstractIrhpPermit implements BundleSerializableInterface, JsonSe
      *     fetch="LAZY",
      *     inversedBy="irhpPermits"
      * )
-     * @ORM\JoinColumn(name="irhp_candidate_permit_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="irhp_candidate_permit_id", referencedColumnName="id", nullable=true)
      */
     protected $irhpCandidatePermit;
 
