@@ -3,10 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\File;
 
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
-use Dvsa\Olcs\Api\Service\File\Exception;
-use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
+use Exception;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
@@ -85,33 +84,11 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
     {
         $respBody = 'unit_RespBody';
 
-        $this->expectException(Exception::class, sprintf(ContentStoreFileUploader::ERR_UNABLE_UPLOAD, $respBody));
-
-        $response = m::mock(Response::class);
-        $response
-            ->shouldReceive('isSuccess')->once()->andReturn(false)
-            ->shouldReceive('getStatusCode')->once()->andReturn(Response::STATUS_CODE_500)
-            ->shouldReceive('getBody')->once()->andReturn($respBody);
+        $this->expectException(Exception::class, ContentStoreFileUploader::ERR_UNABLE_UPLOAD);
 
         $this->mockContentStoreCli->shouldReceive('write')
             ->once()
-            ->andReturn($response);
-
-        $this->sut->upload(self::IDENTIFIER, new DsFile());
-    }
-
-    public function testUploadFailMime()
-    {
-        $this->expectException(MimeNotAllowedException::class);
-
-        $response = m::mock(Response::class);
-        $response
-            ->shouldReceive('isSuccess')->once()->andReturn(false)
-            ->shouldReceive('getStatusCode')->once()->andReturn(Response::STATUS_CODE_415);
-
-        $this->mockContentStoreCli->shouldReceive('write')
-            ->once()
-            ->andReturn($response);
+            ->andReturn(false);
 
         $this->sut->upload(self::IDENTIFIER, new DsFile());
     }

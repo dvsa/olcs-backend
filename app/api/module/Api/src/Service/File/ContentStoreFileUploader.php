@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\File;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
-use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -55,7 +54,7 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
             return $file;
         }
 
-        throw new \Exception(self::ERR_UNABLE_UPLOAD);
+        throw new Exception(self::ERR_UNABLE_UPLOAD);
     }
 
     /**
