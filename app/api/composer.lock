@@ -8,27 +8,27 @@
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.1.7",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "69eae9e613afc24c9282517bf84eb9e16b59d730"
+                "reference": "fab6ce7d2ccbe9574e4ade214091f0899e5dc858"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-69eae9e613afc24c9282517bf84eb9e16b59d730-zip-cc8d7c.tar",
-                "reference": "69eae9e613afc24c9282517bf84eb9e16b59d730",
-                "shasum": "d16bed439448095d77f89661041f42a949cd2390"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/beberlei-doctrineextensions-fab6ce7d2ccbe9574e4ade214091f0899e5dc858-zip-15c249.tar",
+                "reference": "fab6ce7d2ccbe9574e4ade214091f0899e5dc858",
+                "shasum": "998985429f2807b83ea80ce62c4bec86b17caf45"
             },
             "require": {
-                "php": ">=5.4"
+                "php": "^7.1"
             },
             "require-dev": {
-                "doctrine/orm": "^2.5",
-                "friendsofphp/php-cs-fixer": "^2.2.19",
+                "doctrine/orm": "^2.6",
+                "friendsofphp/php-cs-fixer": "^2.14",
                 "nesbot/carbon": "*",
-                "phpunit/phpunit": "^4.5",
-                "symfony/yaml": "^2.6",
+                "phpunit/phpunit": "^5.7",
+                "symfony/yaml": "^4.2",
                 "zf1/zend-date": "^1.12",
                 "zf1/zend-registry": "^1.12"
             },
@@ -58,7 +58,7 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2019-01-29T06:15:22+00:00"
+            "time": "2019-02-04T15:31:57+00:00"
         },
         {
             "name": "behat/transliterator",
@@ -1482,17 +1482,17 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.49",
+            "version": "1.0.50",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "a63cc83d8a931b271be45148fa39ba7156782ffd"
+                "reference": "dab4e7624efa543a943be978008f439c333f2249"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/league-flysystem-a63cc83d8a931b271be45148fa39ba7156782ffd-zip-3acdc8.tar",
-                "reference": "a63cc83d8a931b271be45148fa39ba7156782ffd",
-                "shasum": "dc14ec31f48563c2a01f39f3a62c3f7bbb8905c3"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/league-flysystem-dab4e7624efa543a943be978008f439c333f2249-zip-808f24.tar",
+                "reference": "dab4e7624efa543a943be978008f439c333f2249",
+                "shasum": "f91835d9c5b5f94c12f02f81528850ca1562bcb6"
             },
             "require": {
                 "ext-fileinfo": "*",
@@ -1562,7 +1562,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2018-11-23T23:41:29+00:00"
+            "time": "2019-02-01T08:50:36+00:00"
         },
         {
             "name": "league/flysystem-webdav",
@@ -1692,7 +1692,7 @@
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "648ed5da3ec23d247b03837f36b2c707c90ccf05"
+                "reference": "d4e77afe43b72f51fe1b539f69a5cd370b1e572f"
             },
             "require": {
                 "php": ">=5.4",
@@ -1733,7 +1733,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-02-04T10:52:05+00:00"
+            "time": "2019-02-12T15:03:15+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -2972,17 +2972,17 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.21",
+            "version": "v3.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "26d7f23b9bd0b93bee5583e4d6ca5cb1ab31b186"
+                "reference": "667a26c4dd6bc75c67f06bc9bcd015bdecc7cbb8"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-26d7f23b9bd0b93bee5583e4d6ca5cb1ab31b186-zip-867356.tar",
-                "reference": "26d7f23b9bd0b93bee5583e4d6ca5cb1ab31b186",
-                "shasum": "7f6fe8fcfeab824b580f4a78ddedf969475619df"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-667a26c4dd6bc75c67f06bc9bcd015bdecc7cbb8-zip-fb44dc.tar",
+                "reference": "667a26c4dd6bc75c67f06bc9bcd015bdecc7cbb8",
+                "shasum": "1c47471f9f7dbf9bb5acdf8b9c95a68f922d26c6"
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8",
@@ -3024,7 +3024,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-01T13:45:19+00:00"
+            "time": "2019-01-25T10:19:25+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -3078,17 +3078,17 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.21",
+            "version": "v3.4.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "3f2a2ab6315dd7682d4c16dcae1e7b95c8b8555e"
+                "reference": "7c0c627220308928e958a87c293108e5891cde1d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-finder-3f2a2ab6315dd7682d4c16dcae1e7b95c8b8555e-zip-76bc18.tar",
-                "reference": "3f2a2ab6315dd7682d4c16dcae1e7b95c8b8555e",
-                "shasum": "6cc4312d2b3a83ffa3cb462d83e6d951e9683628"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-finder-7c0c627220308928e958a87c293108e5891cde1d-zip-dae314.tar",
+                "reference": "7c0c627220308928e958a87c293108e5891cde1d",
+                "shasum": "a42e2de9745146d740a9b0385d6fcb8cd671f5a8"
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8"
@@ -3123,7 +3123,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-01-01T13:45:19+00:00"
+            "time": "2019-01-16T13:43:35+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -3669,17 +3669,17 @@
         },
         {
             "name": "mockery/mockery",
-            "version": "1.2.0",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mockery/mockery.git",
-                "reference": "100633629bf76d57430b86b7098cd6beb996a35a"
+                "reference": "0eb0b48c3f07b3b89f5169ce005b7d05b18cf1d2"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/mockery-mockery-100633629bf76d57430b86b7098cd6beb996a35a-zip-f18966.tar",
-                "reference": "100633629bf76d57430b86b7098cd6beb996a35a",
-                "shasum": "f9fa927d4f1749a208f1291597c47d0fa4d54874"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/mockery-mockery-0eb0b48c3f07b3b89f5169ce005b7d05b18cf1d2-zip-cdbcdc.tar",
+                "reference": "0eb0b48c3f07b3b89f5169ce005b7d05b18cf1d2",
+                "shasum": "fd96f9aca6a1f4a0839c124d5420d6501b529af9"
             },
             "require": {
                 "hamcrest/hamcrest-php": "~2.0",
@@ -3687,7 +3687,7 @@
                 "php": ">=5.6.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~5.7.10|~6.5|~7.0"
+                "phpunit/phpunit": "~5.7.10|~6.5|~7.0|~8.0"
             },
             "type": "library",
             "extra": {
@@ -3730,7 +3730,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2018-10-02T21:52:37+00:00"
+            "time": "2019-02-13T09:37:52+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -4704,17 +4704,17 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.2",
+            "version": "7.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944"
+                "reference": "2896657da5fb237bc316bdfc18c2650efeee0dc0"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpunit-7c89093bd00f7d5ddf0ab81dee04f801416b4944-zip-cfe951.tar",
-                "reference": "7c89093bd00f7d5ddf0ab81dee04f801416b4944",
-                "shasum": "156fa94239b4a175f88afde89fd66465a17ecf8c"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/phpunit-phpunit-2896657da5fb237bc316bdfc18c2650efeee0dc0-zip-058a44.tar",
+                "reference": "2896657da5fb237bc316bdfc18c2650efeee0dc0",
+                "shasum": "0133952a3feb122c72ef53f51d9eac212355c56a"
             },
             "require": {
                 "doctrine/instantiator": "^1.1",
@@ -4784,7 +4784,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-01-15T08:19:08+00:00"
+            "time": "2019-02-07T14:15:04+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4897,23 +4897,23 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "3.0.1",
+            "version": "3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "366541b989927187c4ca70490a35615d3fef2dce"
+                "reference": "720fcc7e9b5cf384ea68d9d930d480907a0c1a29"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-diff-366541b989927187c4ca70490a35615d3fef2dce-zip-2beeda.tar",
-                "reference": "366541b989927187c4ca70490a35615d3fef2dce",
-                "shasum": "7487f8e927c317954a5b69045be213f723809dc4"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-diff-720fcc7e9b5cf384ea68d9d930d480907a0c1a29-zip-e6ed91.tar",
+                "reference": "720fcc7e9b5cf384ea68d9d930d480907a0c1a29",
+                "shasum": "61a5a468d18477ecd105011abb24f4c6a79d1e02"
             },
             "require": {
                 "php": "^7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.0",
+                "phpunit/phpunit": "^7.5 || ^8.0",
                 "symfony/process": "^2 || ^3.3 || ^4"
             },
             "type": "library",
@@ -4949,32 +4949,35 @@
                 "unidiff",
                 "unified diff"
             ],
-            "time": "2018-06-10T07:54:39+00:00"
+            "time": "2019-02-04T06:01:07+00:00"
         },
         {
             "name": "sebastian/environment",
-            "version": "4.0.2",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd"
+                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-environment-4a43e9af57b4afa663077b9bc85255dbc6e8a2bd-zip-11c9d5.tar",
-                "reference": "4a43e9af57b4afa663077b9bc85255dbc6e8a2bd",
-                "shasum": "18b9d21ac1411a3f132f42e8d21eb64cce0dcf3d"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/sebastian-environment-6fda8ce1974b62b14935adc02a9ed38252eca656-zip-3e0220.tar",
+                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656",
+                "shasum": "8083806e19c58a57cc0eaf2368f69479bad2cee4"
             },
             "require": {
                 "php": "^7.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^7.4"
+                "phpunit/phpunit": "^7.5"
+            },
+            "suggest": {
+                "ext-posix": "*"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0-dev"
+                    "dev-master": "4.1-dev"
                 }
             },
             "autoload": {
@@ -4999,7 +5002,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2019-01-28T15:26:03+00:00"
+            "time": "2019-02-01T05:27:49+00:00"
         },
         {
             "name": "sebastian/exporter",

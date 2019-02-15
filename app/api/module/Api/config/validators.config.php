@@ -56,5 +56,6 @@ return [
         'isLicenceSurrenderable' => Validators\IsLicenceSurrenderable::class,
         'canAccessIrhpApplicationWithId' => Validators\CanAccessIrhpApplicationWithId::class,
         'canEditIrhpApplicationWithId' => Validators\CanEditIrhpApplicationWithId::class,
+        'canDeleteSurrender' => Validators\CanDeleteSurrender::class
     ]
 ];

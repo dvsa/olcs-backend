@@ -67,6 +67,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('getOutstandingFeeAmount')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(0)
             ->shouldReceive('getSectionCompletion')
             ->once()
             ->withNoArgs()
@@ -123,6 +127,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
+                'outstandingFeeAmount' => 0,
                 'sectionCompletion' => [],
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
@@ -757,64 +762,39 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpHasOutstandingApplicationFee
+     * @dataProvider dpGetLatestOutstandingApplicationFee
      */
-    public function testHasOutstandingApplicationFee($feesData, $expectedResult)
+    public function testGetLatestOutstandingApplicationFee($feesData, $expectedIndex)
     {
-        $this->sut->setFees(
-            $this->createFeesArrayCollectionFromArrayData($feesData)
-        );
+        $fees = $this->createFeesArrayCollectionFromArrayData($feesData);
+        $this->sut->setFees($fees);
 
-        $this->assertEquals($expectedResult, $this->sut->hasOutstandingApplicationFee());
+        $latestOutstandingIssueFee = $this->sut->getLatestOutstandingApplicationFee();
+
+        if (is_null($expectedIndex)) {
+            $this->assertNull($latestOutstandingIssueFee);
+        }
+
+        $this->assertSame($fees[$expectedIndex], $latestOutstandingIssueFee);
     }
 
-    public function dpHasOutstandingApplicationFee()
+    public function dpGetLatestOutstandingApplicationFee()
     {
         return [
             [
                 'fees' => [
                     [
                         'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
-                    ],
-                    [
-                        'invoicedDate' => '2019-01-04',
                         'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
-                    ]
-                ],
-                'expectedResult' => false
-            ],
-            [
-                'fees' => [
-                    [
-                        'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
                     ],
-                    [
-                        'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
-                    ]
-                ],
-                'expectedResult' => false
-            ],
-            [
-                'fees' => [
                     [
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => true,
                         'feeTypeId' => FeeType::FEE_TYPE_BUSVAR
-                    ],
-                    [
-                        'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
                     ]
                 ],
-                'expectedResult' => false
+                'expectedIndex' => null
             ],
             [
                 'fees' => [
@@ -824,12 +804,57 @@ class IrhpApplicationEntityTest extends EntityTester
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
                     ],
                     [
-                        'invoicedDate' => '2019-01-04',
+                        'invoicedDate' => '2019-01-08',
                         'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
                     ]
                 ],
-                'expectedResult' => true
+                'expectedIndex' => 1
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 0
             ],
         ];
     }
@@ -989,6 +1014,34 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->setFees($fees);
 
         $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
+    }
+
+    public function testGetOutstandingFeeAmount()
+    {
+        $outstandingIrhpAppFee = m::mock(Fee::class);
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getGrossAmount')->once()->andReturn(25.56);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
+
+        $outstandingIrhpIssueFee = m::mock(Fee::class);
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getGrossAmount')->once()->andReturn(50);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($outstandingFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertEquals(75.56, $this->sut->getOutstandingFeeAmount());
     }
 
     /**
@@ -1302,22 +1355,22 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertFalse($irhpApplication->canCreateOrReplaceIssueFee());
     }
 
-    public function testCanCreateApplicationFeeTrue()
+    public function testCanCreateOrReplaceApplicationFeeTrue()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('isNotYetSubmitted')
             ->andReturn(true);
 
-        $this->assertTrue($irhpApplication->canCreateApplicationFee());
+        $this->assertTrue($irhpApplication->canCreateOrReplaceApplicationFee());
     }
 
-    public function testCanCreateApplicationFeeFalse()
+    public function testCanCreateOrReplaceApplicationFeeFalse()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('isNotYetSubmitted')
             ->andReturn(false);
 
-        $this->assertFalse($irhpApplication->canCreateApplicationFee());
+        $this->assertFalse($irhpApplication->canCreateOrReplaceApplicationFee());
     }
 
     public function testHasPermitsRequiredChanged()
@@ -1381,5 +1434,161 @@ class IrhpApplicationEntityTest extends EntityTester
         $dateString = '2019-01-01';
         $irhpApplication->updateDateReceived('2019-01-01');
         $this->assertEquals(new DateTime($dateString), $irhpApplication->getDateReceived());
+    }
+
+    public function testClearAnswers()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $this->assertFalse($entity->hasCheckedAnswers());
+        $this->assertFalse($entity->hasMadeDeclaration());
+        $this->assertEmpty($entity->getIrhpPermitApplications());
+
+        $entity->setIrhpPermitApplications(
+            new ArrayCollection(
+                [
+                    0 => m::mock(IrhpPermitApplication::class),
+                    1 => m::mock(IrhpPermitApplication::class),
+                ]
+            )
+        );
+        $entity->setCheckedAnswers(true);
+        $entity->setDeclaration(true);
+
+        $this->assertTrue($entity->hasCheckedAnswers());
+        $this->assertTrue($entity->hasMadeDeclaration());
+        $this->assertNotEmpty($entity->getIrhpPermitApplications());
+
+        $entity
+            ->shouldReceive('canBeUpdated')
+            ->andReturn(true);
+
+        $entity->clearAnswers();
+
+        $this->assertFalse($entity->hasCheckedAnswers());
+        $this->assertFalse($entity->hasMadeDeclaration());
+        $this->assertEmpty($entity->getIrhpPermitApplications());
+    }
+
+    public function testUpdateLicence()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $licenceA = m::mock(Licence::class);
+        $entity->setLicence($licenceA);
+
+        $this->assertEquals($licenceA, $entity->getLicence());
+
+        $entity
+            ->shouldReceive('canBeUpdated')
+            ->andReturn(true);
+
+        $licenceB = m::mock(Licence::class);
+        $entity->updateLicence($licenceB);
+
+        $this->assertEquals($licenceB, $entity->getLicence());
+    }
+
+    /**
+     * @dataProvider dptestIsReadyForIssuing
+     */
+    public function testIsReadyForIssuing($hasOutstandingFees, $expectedResult)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('hasOutstandingFees')
+            ->andReturn($hasOutstandingFees);
+
+        $this->assertEquals($expectedResult, $entity->isReadyForIssuing());
+    }
+
+    public function dpTestIsReadyForIssuing()
+    {
+        return [
+            [false, true],
+            [true, false],
+        ];
+    }
+
+    public function testSubmit()
+    {
+        $status = m::mock(RefData::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(true);
+        $entity->shouldReceive('proceedToIssuing')
+            ->with($status)
+            ->once();
+
+        $entity->submit($status);
+    }
+
+    public function testSubmitException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_SUBMIT);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(false);
+        $entity->shouldReceive('proceedToIssuing')
+            ->never();
+
+        $entity->submit(m::mock(RefData::class));
+    }
+
+    public function testProceedToIssuing()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isReadyForIssuing')
+            ->andReturn(true);
+
+        $status = m::mock(RefData::class);
+
+        $entity->proceedToIssuing($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testProceedToIssuingException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_ISSUE);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isReadyForIssuing')
+            ->andReturn(false);
+
+        $entity->proceedToIssuing(m::mock(RefData::class));
+    }
+
+    public function testProceedToValid()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isIssueInProgress')
+            ->andReturn(true);
+
+        $status = m::mock(RefData::class);
+
+        $entity->proceedToValid($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testProceedToValidException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'This application is not in the correct state to proceed to valid (permit_app_declined)'
+        );
+
+        $oldStatus = m::mock(RefData::class);
+        $oldStatus->shouldReceive('getId')
+            ->andReturn('permit_app_declined');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setStatus($oldStatus);
+        $entity->shouldReceive('isIssueInProgress')
+            ->andReturn(false);
+
+        $entity->proceedToValid(m::mock(RefData::class));
     }
 }

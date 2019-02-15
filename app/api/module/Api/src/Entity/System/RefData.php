@@ -58,6 +58,17 @@ class RefData extends AbstractRefData
     const PERMIT_APP_STATUS_ISSUING = 'permit_app_issuing';
     const PERMIT_APP_STATUS_VALID = 'permit_app_valid';
 
+    //Surrenders
+    const SURRENDER_STATUS_START='surr_sts_start';
+    const SURRENDER_STATUS_CONTACTS_COMPLETE='surr_sts_contacts_complete';
+    const SURRENDER_STATUS_DISCS_COMPLETE='surr_sts_discs_complete';
+    const SURRENDER_STATUS_LIC_DOCS_COMPLETE='surr_sts_lic_docs_complete';
+    const SURRENDER_STATUS_COMM_LIC_DOCS_COMPLETE='surr_sts_comm_lic_docs_complete';
+    const SURRENDER_STATUS_DETAILS_CONFIRMED='surr_sts_details_confirmed';
+    const SURRENDER_STATUS_SUBMITTED='surr_sts_submitted';
+    const SURRENDER_STATUS_SIGNED='surr_sts_signed';
+    const SURRENDER_STATUS_WITHDRAWN='surr_sts_withdrawn';
+    const SURRENDER_STATUS_APPROVED='surr_sts_approved';
     const SURRENDER_DOC_STATUS_DESTROYED='doc_sts_destroyed';
     const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
     const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
