@@ -55,7 +55,7 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
             return $file;
         }
 
-        throw new Exception(self::ERR_UNABLE_UPLOAD);
+        throw new \Exception(self::ERR_UNABLE_UPLOAD);
     }
 
     /**
