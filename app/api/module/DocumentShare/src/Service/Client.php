@@ -7,9 +7,6 @@ use Exception;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
-use Olcs\Logging\Log\Logger;
-use Zend\Http\Request;
-use Zend\Http\Response;
 
 /**
  * Class Client
