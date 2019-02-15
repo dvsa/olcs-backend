@@ -1591,4 +1591,84 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $entity->proceedToValid(m::mock(RefData::class));
     }
+
+    public function testGetApplicationFeeTypeProductReferenceBilateral()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
+            $entity->getApplicationFeeTypeProductReference()
+        );
+    }
+
+    public function testGetApplicationFeeTypeProductReferenceUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->getApplicationFeeTypeProductReference();
+    }
+
+    public function testGetIssueFeeTypeProductReferenceBilateral()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
+            $entity->getIssueFeeTypeProductReference()
+        );
+    }
+
+    public function testGetIssueFeeTypeProductReferenceUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->getIssueFeeTypeProductReference();
+    }
+
+    public function testGetFeePerPermitBilateral()
+    {
+        $applicationFeeType = m::mock(FeeType::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
+            ->andReturn(60);
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->andReturn(20);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            80,
+            $entity->getFeePerPermit($applicationFeeType, $issueFeeType)
+        );
+    }
+
+    public function testGetFeePerPermitUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->getFeePerPermit(m::mock(FeeType::class), m::mock(FeeType::class));
+    }
 }
