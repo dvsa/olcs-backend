@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
@@ -31,19 +32,22 @@ class IrhpPermitWindowEntityTest extends EntityTester
         $updatedStartDate = '2019-11-01';
         $updatedEndDate = '2019-11-20';
         $updatedDaysForPayment = "30";
+        $emissionsCategory = m::mock(RefData::class);
 
-        $entity = Entity::create($irhpPermitStock, $startDate, $endDate, $daysForPayment);
+        $entity = Entity::create($irhpPermitStock, $emissionsCategory, $startDate, $endDate, $daysForPayment);
 
         $this->assertEquals($irhpPermitStock, $entity->getIrhpPermitStock());
         $this->assertEquals($startDate, $entity->getStartDate()->format('Y-m-d'));
         $this->assertEquals($endDate, $entity->getEndDate()->format('Y-m-d'));
         $this->assertEquals($daysForPayment, $entity->getDaysForPayment());
+        $this->assertSame($emissionsCategory, $entity->getEmissionsCategory());
 
-        $entity->update($irhpPermitStock, $updatedStartDate, $updatedEndDate, $updatedDaysForPayment);
+        $entity->update($irhpPermitStock, $emissionsCategory, $updatedStartDate, $updatedEndDate, $updatedDaysForPayment);
 
         $this->assertEquals($irhpPermitStock, $entity->getIrhpPermitStock());
         $this->assertEquals($updatedStartDate, $entity->getStartDate()->format('Y-m-d'));
         $this->assertEquals($updatedEndDate, $entity->getEndDate()->format('Y-m-d'));
         $this->assertEquals($updatedDaysForPayment, $entity->getDaysForPayment());
+        $this->assertSame($emissionsCategory, $entity->getEmissionsCategory());
     }
 }
