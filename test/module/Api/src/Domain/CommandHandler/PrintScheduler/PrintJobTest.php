@@ -551,6 +551,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
 
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\NotReadyException::class);
+        $this->expectExceptionMessage('Error executing pdfunite command : PDF MERGE ERROR');
 
         $result = $this->sut->handleCommand($command);
     }
