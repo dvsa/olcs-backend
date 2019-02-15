@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 
-class CanAccessLicenceForSurrender extends AbstractCanAccessEntity implements HandlerInterface
+class CanAccessLicenceForSurrender extends CanAccessLicence implements HandlerInterface
 {
     use LicenceStatusAwareTrait;
     use AuthAwareTrait;
@@ -20,9 +20,9 @@ class CanAccessLicenceForSurrender extends AbstractCanAccessEntity implements Ha
 
         $licence = $this->getRepo($this->repo)->fetchById($entityId);
 
-        if ($this->isExternalUser() && $this->NotBeenSurrendered($licence)) {
-            return $this->canAccessLicence($entityId);
+        if ($this->isExternalUser()) {
+            return $this->notBeenSurrendered($licence) ? parent::isValid($entityId):false;
         }
-        return $this->canAccessLicence($entityId);
+        return parent::isValid($entityId);
     }
 }
