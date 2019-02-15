@@ -3,12 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Mockery as m;
 
 /**
@@ -106,12 +106,10 @@ class IrhpPermitStockTest extends RepositoryTestCase
                 ->andReturn(['RESULTS'])
                 ->getMock()
         );
-        $this->assertEquals(['RESULTS'], $this->sut->fetchReadyToPrint());
+        $this->assertEquals(['RESULTS'], $this->sut->fetchReadyToPrint(IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT));
 
         $expectedQuery = 'BLAH '
-            . 'SELECT ips, ipt, rd DISTINCT '
-            . 'INNER JOIN ips.irhpPermitType ipt '
-            . 'INNER JOIN ipt.name rd '
+            . 'SELECT ips DISTINCT '
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'INNER JOIN ipr.irhpPermits ip '
             . 'AND ip.status IN [[['
@@ -120,12 +118,45 @@ class IrhpPermitStockTest extends RepositoryTestCase
                 . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
                 . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
             . ']]] '
-            . 'ORDER BY rd.displayOrder ASC '
-            . 'ORDER BY ips.validFrom ASC';
+            . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'ORDER BY ips.validFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
 
+    public function testFetchReadyToPrintBilateral()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchReadyToPrint(IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL, 'DE')
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ips DISTINCT '
+            . 'INNER JOIN ips.irhpPermitRanges ipr '
+            . 'INNER JOIN ipr.irhpPermits ip '
+            . 'AND ip.status IN [[['
+                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
+                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
+                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+            . ']]] '
+            . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ips.country = [[DE]] '
+            . 'ORDER BY ips.validFrom DESC';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 
     public function testGetPermitStockCountByTypeDate()
     {
@@ -176,6 +207,25 @@ class IrhpPermitStockTest extends RepositoryTestCase
         $this->assertEquals(
             $permitCount,
             $this->sut->getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
+        );
+    }
+
+    public function testFetchAll()
+    {
+        $irhpPermitStocks = [
+            m::mock(IrhpPermitStockEntity::class),
+            m::mock(IrhpPermitStockEntity::class),
+        ];
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $queryBuilder->shouldReceive('getQuery->getResult')
+            ->andReturn($irhpPermitStocks);
+
+        $this->mockCreateQueryBuilder($queryBuilder);
+
+        $this->assertEquals(
+            $irhpPermitStocks,
+            $this->sut->fetchAll()
         );
     }
 }

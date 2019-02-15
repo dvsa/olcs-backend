@@ -73,6 +73,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+        /** @var \Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees $command */
         $config = $this->getConfig();
         $pendingPaymentsTimeout = isset($config['cpms']['pending_payments_timeout'])
             ? $config['cpms']['pending_payments_timeout']
@@ -94,6 +95,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             $fees = $this->feesHelper->getOutstandingFeesForApplication($command->getApplicationId());
         } elseif (!empty($command->getEcmtPermitApplicationId())) {
             $fees = $this->feesHelper->getOutstandingFeesForEcmtApplication($command->getEcmtPermitApplicationId());
+        } elseif (!empty($command->getIrhpApplication())) {
+            $fees = $this->feesHelper->getOutstandingFeesForIrhpApplication($command->getIrhpApplication());
         } else {
             $fees = $this->getRepo('Fee')->fetchOutstandingFeesByIds($command->getFeeIds());
         }

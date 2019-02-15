@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -460,5 +461,21 @@ class IrhpPermitStock extends AbstractIrhpPermitStock
     private function isAcceptInProgress()
     {
         return $this->status->getId() == self::STATUS_ACCEPT_IN_PROGRESS;
+    }
+
+    /**
+     * Get non-reserved, non-replacement ranges relating to this stock ordered by from no
+     *
+     * @return array
+     */
+    public function getNonReservedNonReplacementRangesOrderedByFromNo()
+    {
+        $criteria = Criteria::create();
+
+        $criteria->where($criteria->expr()->eq('ssReserve', false))
+            ->andWhere($criteria->expr()->eq('lostReplacement', false))
+            ->orderBy(['fromNo' => Criteria::ASC]);
+
+        return $this->getIrhpPermitRanges()->matching($criteria);
     }
 }

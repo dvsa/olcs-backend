@@ -22,7 +22,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_stock_id"}),
  *        @ORM\Index(name="fk_irhp_permit_window_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_permit_window_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_permit_window_ref_data_id", columns={"emissions_category"})
  *    }
  * )
  */
@@ -59,6 +60,16 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      * @ORM\Column(type="integer", name="days_for_payment", nullable=true)
      */
     protected $daysForPayment;
+
+    /**
+     * Emissions category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=false)
+     */
+    protected $emissionsCategory;
 
     /**
      * End date
@@ -209,6 +220,30 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
     public function getDaysForPayment()
     {
         return $this->daysForPayment;
+    }
+
+    /**
+     * Set the emissions category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $emissionsCategory entity being set as the value
+     *
+     * @return IrhpPermitWindow
+     */
+    public function setEmissionsCategory($emissionsCategory)
+    {
+        $this->emissionsCategory = $emissionsCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the emissions category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getEmissionsCategory()
+    {
+        return $this->emissionsCategory;
     }
 
     /**

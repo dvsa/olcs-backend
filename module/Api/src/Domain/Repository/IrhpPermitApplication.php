@@ -19,7 +19,9 @@ class IrhpPermitApplication extends AbstractRepository
     public function getByIrhpApplicationWithStockInfo($irhpApplicationId)
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('ipa as irhpPermitApplication, ips.validTo as validTo, IDENTITY(ips.country) as countryId')
+            ->select(
+                'ipa as irhpPermitApplication, ips.validTo as validTo, ips.id as stockId, IDENTITY(ips.country) as countryId'
+            )
             ->from(Entity::class, 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
             ->innerJoin('ipw.irhpPermitStock', 'ips')

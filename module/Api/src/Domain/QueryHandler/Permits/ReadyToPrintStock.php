@@ -28,6 +28,6 @@ class ReadyToPrintStock extends AbstractQueryHandler implements ToggleRequiredIn
      */
     public function handleQuery(QueryInterface $query)
     {
-        return ['results' => $this->getRepo()->fetchReadyToPrint()];
+        return ['results' => $this->getRepo()->fetchReadyToPrint($query->getIrhpPermitType(), $query->getCountry())];
     }
 }
