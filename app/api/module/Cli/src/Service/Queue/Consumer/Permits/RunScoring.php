@@ -29,6 +29,11 @@ class RunScoring extends AbstractCommandConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        return ['id' => $item->getEntityId()];
+        $options = json_decode($item->getOptions(), true);
+
+        return [
+            'id' => $item->getEntityId(),
+            'deviation' => $options['deviation']
+        ];
     }
 }

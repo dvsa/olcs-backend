@@ -24,9 +24,10 @@ class RunScoringTest extends AbstractConsumerTestCase
     {
         $item = new QueueEntity();
         $item->setEntityId(135);
+        $item->setOptions(json_encode(['deviation' => 1.5]));
 
         $result = $this->sut->getCommandData($item);
 
-        $this->assertEquals(['id' => 135], $result);
+        $this->assertEquals(['id' => 135, 'deviation' => 1.5], $result);
     }
 }

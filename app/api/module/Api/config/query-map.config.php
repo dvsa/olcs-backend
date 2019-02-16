@@ -654,6 +654,7 @@ return [
     Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
+    Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
     // IRHP Permit - internal
 
