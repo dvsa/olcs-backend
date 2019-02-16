@@ -704,6 +704,9 @@ return [
     TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
 
+    // Domain - Report
+    TransferCommand\Report\Upload::class => CommandHandler\Report\Upload::class,
+
     // Domain - LicenceStatusRule
     Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
