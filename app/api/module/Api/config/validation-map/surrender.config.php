@@ -17,5 +17,6 @@ return [
     CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
     QueryHandler\Surrender\OpenCases::class                             => CanAccessLicenceWithId::class,
     CommandHandler\Surrender\Approve::class                             => CanAccessLicenceWithId::class,
-    CommandHandler\Surrender\Withdraw::class                             => CanAccessLicenceWithId::class
+    CommandHandler\Surrender\Withdraw::class                            => CanAccessLicenceWithId::class,
+    QueryHandler\Surrender\PreviousLicenceStatus::class                 => CanAccessLicenceWithId::class,
 ];
