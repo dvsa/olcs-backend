@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use DateTime;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateIrhpPermitApplicationPermit;
@@ -42,7 +43,8 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $irhpPermitRange1Id = 100;
         $irhpPermitRange1AssignedNumbers = [500, 501, 503];
-        $irhpPermitRange1 = $this->createMockRange($irhpPermitRange1Id, 500, 504, 5);
+        $irhpPermitRange1StockValidTo = m::mock(DateTime::class);
+        $irhpPermitRange1 = $this->createMockRange($irhpPermitRange1Id, 500, 504, 5, $irhpPermitRange1StockValidTo);
 
         $this->repoMap['IrhpPermit']->shouldReceive('getAssignedPermitNumbersByRange')
             ->with($irhpPermitRange1Id)
@@ -64,9 +66,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $irhpPermitRange1StockValidTo) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange1, $irhpPermit->getIrhpPermitRange());
+                $this->assertSame($irhpPermitRange1StockValidTo, $irhpPermit->getExpiryDate());
                 $this->assertEquals(502, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -90,7 +93,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $irhpPermitRange1Id = 101;
         $irhpPermitRange1AssignedNumbers = [504, 502, 500, 501, 503];
-        $irhpPermitRange1 = $this->createMockRange($irhpPermitRange1Id, 500, 504, 5);
+        $irhpPermitRange1 = $this->createMockRange($irhpPermitRange1Id, 500, 504, 5, m::mock(DateTime::class));
 
         $this->repoMap['IrhpPermit']->shouldReceive('getAssignedPermitNumbersByRange')
             ->with($irhpPermitRange1Id)
@@ -98,7 +101,8 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $irhpPermitRange2Id = 102;
         $irhpPermitRange2AssignedNumbers = [758, 757, 750, 751, 755];
-        $irhpPermitRange2 = $this->createMockRange($irhpPermitRange2Id, 750, 758, 9);
+        $irhpPermitRange2StockValidTo = m::mock(DateTime::class);
+        $irhpPermitRange2 = $this->createMockRange($irhpPermitRange2Id, 750, 758, 9, $irhpPermitRange2StockValidTo);
 
         $this->repoMap['IrhpPermit']->shouldReceive('getAssignedPermitNumbersByRange')
             ->with($irhpPermitRange2Id)
@@ -120,9 +124,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $irhpPermitRange2StockValidTo) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange2, $irhpPermit->getIrhpPermitRange());
+                $this->assertSame($irhpPermitRange2StockValidTo, $irhpPermit->getExpiryDate());
                 $this->assertEquals(752, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -149,7 +154,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $irhpPermitRange1Id = 101;
         $irhpPermitRange1AssignedNumbers = [504, 502, 500, 501, 503];
-        $irhpPermitRange1 = $this->createMockRange($irhpPermitRange1Id, 500, 504, 5);
+        $irhpPermitRange1 = $this->createMockRange($irhpPermitRange1Id, 500, 504, 5, m::mock(DateTime::class));
 
         $this->repoMap['IrhpPermit']->shouldReceive('getAssignedPermitNumbersByRange')
             ->with($irhpPermitRange1Id)
@@ -157,7 +162,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $irhpPermitRange2Id = 102;
         $irhpPermitRange2AssignedNumbers = [758, 757, 750, 751, 755, 752, 753, 754, 756];
-        $irhpPermitRange2 = $this->createMockRange($irhpPermitRange2Id, 750, 758, 9);
+        $irhpPermitRange2 = $this->createMockRange($irhpPermitRange2Id, 750, 758, 9, m::mock(DateTime::class));
 
         $this->repoMap['IrhpPermit']->shouldReceive('getAssignedPermitNumbersByRange')
             ->with($irhpPermitRange2Id)
@@ -184,7 +189,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $this->sut->handleCommand($command);
     }
 
-    private function createMockRange($id, $fromNo, $toNo, $size)
+    private function createMockRange($id, $fromNo, $toNo, $size, DateTime $stockValidTo)
     {
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $irhpPermitRange->shouldReceive('getId')
@@ -195,6 +200,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
             ->andReturn($toNo);
         $irhpPermitRange->shouldReceive('getSize')
             ->andReturn($size);
+
+        $irhpPermitRange->shouldReceive('getIrhpPermitStock->getValidTo')
+            ->with(true)
+            ->andReturn($stockValidTo);
 
         return $irhpPermitRange;
     }
