@@ -100,6 +100,14 @@ trait SectionTrait
     }
 
     /**
+     * Resets section completion on demand
+     */
+    public function resetSectionCompletion()
+    {
+        $this->populateSectionCompletion();
+    }
+
+    /**
      * Validate the field
      *
      * @param string $field field being validated

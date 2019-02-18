@@ -2,15 +2,19 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use PDO;
 
 /**
  * IRHP Permit
@@ -61,6 +65,26 @@ class IrhpPermit extends AbstractRepository
     }
 
     /**
+     * Returns an array of assigned permit numbers in the specified range
+     *
+     * @param int $rangeId
+     *
+     * @return array
+     */
+    public function getAssignedPermitNumbersByRange($rangeId)
+    {
+        $rows = $this->getEntityManager()->createQueryBuilder()
+            ->select('ip.permitNumber')
+            ->from(Entity::class, 'ip')
+            ->where('IDENTITY(ip.irhpPermitRange) = ?1')
+            ->setParameter(1, $rangeId)
+            ->getQuery()
+            ->getScalarResult();
+
+        return array_column($rows, 'permitNumber');
+    }
+
+    /**
      * Apply List Filters
      *
      * @param QueryBuilder   $qb    Doctrine Query Builder
@@ -99,6 +123,11 @@ class IrhpPermit extends AbstractRepository
         if (($query instanceof GetListByEcmtId) && ($query->getEcmtPermitApplication() != null)) {
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getEcmtPermitApplication());
+        }
+
+        if (($query instanceof GetListByIrhpId) && ($query->getIrhpApplication() != null)) {
+            $qb->andWhere($qb->expr()->eq('ipa.irhpApplication', ':irhpId'))
+                ->setParameter('irhpId', $query->getIrhpApplication());
         }
 
         if (($query instanceof GetListByLicence) && ($query->getLicence() !== null)) {
@@ -145,5 +174,45 @@ class IrhpPermit extends AbstractRepository
             ->setParameter(1, $permitNumber)
             ->setParameter(2, $permitRange)
             ->getQuery()->execute();
+    }
+
+    /**
+     * Returns the number of live permits for each stock belonging to the specified licence
+     *
+     * @param int $licenceId
+     *
+     * @return array
+     */
+    public function getLivePermitCountsGroupedByStock($licenceId)
+    {
+        $liveStatuses = [
+            Entity::STATUS_PENDING,
+            Entity::STATUS_AWAITING_PRINTING,
+            Entity::STATUS_PRINTING,
+            Entity::STATUS_PRINTED
+        ];
+
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select ips.id AS irhpPermitStockId, ' .
+            'count(ip.id) AS irhpPermitCount ' .
+            'from irhp_permit ip ' .
+            'inner join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
+            'and ip.status in (?) ' .
+            'inner join irhp_application ia ON ipa.irhp_application_id = ia.id ' .
+            'inner join irhp_permit_window ipw ON ipa.irhp_permit_window_id = ipw.id ' .
+            'inner join irhp_permit_stock ips ON ipw.irhp_permit_stock_id = ips.id ' .
+            'where ia.licence_id = ? ' .
+            'group BY ips.id',
+            [
+                $liveStatuses,
+                $licenceId
+            ],
+            [
+                Connection::PARAM_STR_ARRAY,
+                PDO::PARAM_INT
+            ]
+        );
+
+        return $statement->fetchAll();
     }
 }

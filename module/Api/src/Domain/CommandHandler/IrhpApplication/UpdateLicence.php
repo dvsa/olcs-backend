@@ -11,11 +11,12 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete;
 
 /**
  * Update IRHP Application Licence
@@ -56,6 +57,13 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
         if (!$licence->canMakeIrhpApplication($application->getIrhpPermitType())) {
             $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
             throw new ForbiddenException($message);
+        }
+
+        $irhpPermitApplications = $application->getIrhpPermitApplications();
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
+            $this->result->merge($this->handleSideEffect(Delete::create(['id' => $irhpPermitApplication->getId()])));
         }
 
         // Update the licence but reset the previously answers questions to NULL

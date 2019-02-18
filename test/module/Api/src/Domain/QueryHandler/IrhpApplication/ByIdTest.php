@@ -18,13 +18,10 @@ class ByIdTest extends AbstractQueryByIdHandlerTest
     protected $sutClass = IrhpApplicationByIdHandler::class;
     protected $sutRepo = 'IrhpApplication';
     protected $bundle = [
-        'licence' => ['trafficArea'],
+        'licence' => ['trafficArea', 'organisation'],
         'irhpPermitType' => ['name'],
-        'irhpPermitApplications' => [
-            'irhpPermitWindow' => [
-                'irhpPermitStock' => ['country']
-            ]
-        ],
+        'fees' => ['feeType' => ['feeType'], 'feeStatus'],
+        'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country']]],
     ];
     protected $qryClass = QryClass::class;
     protected $repoClass = IrhpApplicationRepo::class;

@@ -542,6 +542,7 @@ return [
     // IRHP Permit Window
     TransferQuery\IrhpPermitWindow\ById::class => QueryHandler\IrhpPermitWindow\ById::class,
     TransferQuery\IrhpPermitWindow\GetList::class => QueryHandler\IrhpPermitWindow\GetList::class,
+    TransferQuery\IrhpPermitWindow\OpenByCountry::class => QueryHandler\IrhpPermitWindow\OpenByCountry::class,
 
     // IRHP Permit Range
     TransferQuery\IrhpPermitRange\ById::class => QueryHandler\IrhpPermitRange\ById::class,
@@ -554,12 +555,15 @@ return [
     TransferQuery\IrhpPermitJurisdiction\GetList::class => QueryHandler\IrhpPermitJurisdiction\GetList::class,
 
     // Permit Printing
+    TransferQuery\Permits\ReadyToPrintType::class => QueryHandler\Permits\ReadyToPrintType::class,
+    TransferQuery\Permits\ReadyToPrintCountry::class => QueryHandler\Permits\ReadyToPrintCountry::class,
     TransferQuery\Permits\ReadyToPrintStock::class => QueryHandler\Permits\ReadyToPrintStock::class,
     TransferQuery\Permits\ReadyToPrint::class => QueryHandler\Permits\ReadyToPrint::class,
     TransferQuery\Permits\ReadyToPrintConfirm::class => QueryHandler\Permits\ReadyToPrintConfirm::class,
 
     // IRHP Permits
     TransferQuery\IrhpPermit\GetListByEcmtId::class => QueryHandler\IrhpPermit\GetListByEcmtId::class,
+    TransferQuery\IrhpPermit\GetListByIrhpId::class => QueryHandler\IrhpPermit\GetListByIrhpId::class,
     TransferQuery\IrhpPermit\GetList::class => QueryHandler\IrhpPermit\GetList::class,
     TransferQuery\IrhpPermit\ById::class => QueryHandler\IrhpPermit\ById::class,
     TransferQuery\IrhpPermit\GetListByLicence::class => QueryHandler\IrhpPermit\GetListByLicence::class,
@@ -618,7 +622,13 @@ return [
     // Permits
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
     TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
+    TransferQuery\IrhpApplication\GetAllByLicence::class => QueryHandler\IrhpApplication\GetAllByLicence::class,
+    TransferQuery\IrhpApplication\GetAllByOrganisation::class
+        => QueryHandler\IrhpApplication\GetAllByOrganisation::class,
     TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
+    TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
+    TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
+        QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
@@ -651,5 +661,7 @@ return [
 
     //Digital Surrender
     TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class,
-    TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class
+    TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class,
+    TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
+    TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
 ];

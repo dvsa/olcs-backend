@@ -96,7 +96,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
 
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
         $this->assertEquals(
-            ['Cancelled existing issue fee', 'Created new issue fee'],
+            ['Cancelled existing Issue fee', 'Created new Issue fee'],
             $result->getMessages()
         );
     }
@@ -159,7 +159,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
 
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
         $this->assertEquals(
-            ['Created new issue fee'],
+            ['Created new Issue fee'],
             $result->getMessages()
         );
     }
@@ -168,7 +168,7 @@ class RegenerateIssueFeeTest extends CommandHandlerTestCase
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(
-            'IRHP application is not in the correct state to allow create/replace of issue fee'
+            'IRHP application is not in the correct state to allow create/replace of Issue fee'
         );
 
         $irhpApplicationId = 47;

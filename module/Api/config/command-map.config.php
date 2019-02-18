@@ -1096,8 +1096,10 @@ return [
     TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
     TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
     TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
-    Command\IrhpApplication\GenerateApplicationFee::class => CommandHandler\IrhpApplication\GenerateApplicationFee::class,
+    Command\IrhpApplication\RegenerateApplicationFee::class => CommandHandler\IrhpApplication\RegenerateApplicationFee::class,
     Command\IrhpApplication\RegenerateIssueFee::class => CommandHandler\IrhpApplication\RegenerateIssueFee::class,
+    TransferCommand\IrhpApplication\CreateFull::class => CommandHandler\IrhpApplication\CreateFull::class,
+    TransferCommand\IrhpApplication\UpdateFull::class => CommandHandler\IrhpApplication\UpdateFull::class,
 
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,
@@ -1105,6 +1107,9 @@ return [
 
     // Irhp Permit Create
     Command\Permits\CreateIrhpPermitApplication::class => CommandHandler\Permits\CreateIrhpPermitApplication::class,
+
+    // Irhp Permit Application Delete
+    Command\IrhpPermitApplication\Delete::class => CommandHandler\IrhpPermitApplication\Delete::class,
 
     // Permits Cancel
     TransferCommand\Permits\CancelEcmtPermitApplication::class => CommandHandler\Permits\CancelEcmtPermitApplication::class,
@@ -1135,6 +1140,9 @@ return [
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
+    Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
+    Command\Permits\AllocateIrhpPermitApplicationPermit::class =>
+        CommandHandler\Permits\AllocateIrhpPermitApplicationPermit::class,
     Command\Permits\GeneratePermitDocuments::class => CommandHandler\Permits\GeneratePermitDocuments::class,
     TransferCommand\Permits\PrintPermits::class => CommandHandler\Permits\PrintPermits::class,
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
