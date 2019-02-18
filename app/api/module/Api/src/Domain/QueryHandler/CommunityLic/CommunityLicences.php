@@ -52,7 +52,7 @@ class CommunityLicences extends AbstractQueryHandler
             'count' =>  $repo->fetchCount($query),
             'count-unfiltered' => $repo->hasRows($unfilteredQuery),
             'totCommunityLicences' => $licence->getTotCommunityLicences(),
-            'officeCopy' => $this->result($officeCopy)
+            'officeCopy' => $this->result($officeCopy)->serialize()
         ];
     }
 }
