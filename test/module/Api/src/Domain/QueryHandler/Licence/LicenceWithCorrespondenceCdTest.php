@@ -8,7 +8,6 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Licence\LicenceWithCorrespondenceCd as Qry;
 
-
 class LicenceWithCorrespondenceCdTest extends QueryHandlerTestCase
 {
 
@@ -26,7 +25,7 @@ class LicenceWithCorrespondenceCdTest extends QueryHandlerTestCase
         $query = Qry::create($queryData);
 
         $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
-
+        $mockResult->shouldReceive('getTradingNames')->once()->andReturn([]);
         $this->repoMap['Licence']->shouldReceive('fetchUsingId')->with($query)->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
