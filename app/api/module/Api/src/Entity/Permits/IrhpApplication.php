@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
@@ -45,6 +46,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
+    const ERR_CANT_SUBMIT = 'This application cannot be submitted';
+    const ERR_CANT_ISSUE = 'This application cannot be issued';
 
     const SECTIONS = [
         'licence' => [
@@ -126,6 +129,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
@@ -345,21 +349,19 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the application has any outstanding application fees
+     * Return the latest application fee, or none if no application fee is present
      *
-     * @return bool
+     * @return Fee|null
      */
-    public function hasOutstandingApplicationFee()
+    public function getLatestOutstandingApplicationFee()
     {
-        $applicationFee = $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
-
-        return $applicationFee !== null;
+        return $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
     }
 
     /**
      * Return the latest issue fee, or none if no issue fee is present
      *
-     * @return Fee|null
+     * @return FeeEntity|null
      */
     public function getLatestOutstandingIssueFee()
     {
@@ -388,6 +390,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Return the amount of the outstanding fees (application + issue)
+     *
+     * @return float|int
+     */
+    public function getOutstandingFeeAmount()
+    {
+        $feeAmount = 0;
+        $outstandingFees = $this->getOutstandingFees();
+
+        /** @var FeeEntity $fee */
+        foreach ($outstandingFees as $fee) {
+            $feeAmount += $fee->getGrossAmount();
+        }
+
+        return $feeAmount;
+    }
+
+    /**
      * Get All Outstanding IRHP Application Fees
      *
      * @return array
@@ -397,7 +417,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
         $fees = [];
 
-        /** @var Fee $fee */
+        /** @var FeeEntity $fee */
         foreach ($this->getFees() as $fee) {
             if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
                 $fees[] = $fee;
@@ -447,7 +467,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function clearAnswers()
     {
-        // @todo Clear all sections for the permit type
+        if ($this->canBeUpdated()) {
+            $this->irhpPermitApplications = new ArrayCollection();
+            $this->resetCheckAnswersAndDeclaration();
+        }
     }
 
     /**
@@ -511,18 +534,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Submit Application - Placeholder method to allow Declaration Page redirects to work for testing.
-     * Todo: Update this method with actual logic to check values/throw exceptions/update status based on AC
      *
-     * @return bool
-     * @throws ValidationException
+     * @throws ForbiddenException
      */
-    public function submitApplication()
+    public function submit(RefData $submitStatus)
     {
         if (!$this->canBeSubmitted()) {
-            throw new ValidationException(['Application cannot be submitted']);
+            throw new ForbiddenException(self::ERR_CANT_SUBMIT);
         }
 
-        return true;
+        $this->proceedToIssuing($submitStatus);
     }
 
     /**
@@ -573,12 +594,63 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the application fee can be created
+     * Whether the application fee can be created or replaced
      *
      * @return bool
      */
-    public function canCreateApplicationFee()
+    public function canCreateOrReplaceApplicationFee()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Updates date receive for application
+     * @param string $dateReceived application received date
+     */
+    public function updateDateReceived($dateReceived)
+    {
+        $this->dateReceived = $this->processDate($dateReceived);
+    }
+
+    /**
+     * Whether we're able to issue permits for this application
+     *
+     * @return bool
+     */
+    public function isReadyForIssuing()
+    {
+        return !$this->hasOutstandingFees();
+    }
+
+    /**
+     * Proceeds the application from not yet submitted status to issuing status
+     *
+     * @param RefData $issuingStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToIssuing(RefData $issuingStatus)
+    {
+        if (!$this->isReadyForIssuing()) {
+            throw new ForbiddenException(self::ERR_CANT_ISSUE);
+        }
+
+        $this->status = $issuingStatus;
+    }
+
+    /**
+     * Proceeds the application from issuing status to valid status
+     *
+     * @param RefData $validStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToValid(RefData $validStatus)
+    {
+        if (!$this->isIssueInProgress()) {
+            throw new ForbiddenException('This application is not in the correct state to proceed to valid ('.$this->status->getId().')');
+        }
+
+        $this->status = $validStatus;
     }
 }

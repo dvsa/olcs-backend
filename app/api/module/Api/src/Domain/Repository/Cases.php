@@ -109,7 +109,7 @@ class Cases extends AbstractRepository
                 $qb->andWhere(
                     $expr->eq(self::$aliasTa . '.id', ':TRAFFIC_AREA')
                 )
-                ->setParameter('TRAFFIC_AREA', $trafficArea);
+                    ->setParameter('TRAFFIC_AREA', $trafficArea);
             }
         }
     }
@@ -178,5 +178,39 @@ class Cases extends AbstractRepository
         $queryBuilderHelper = $this->getQueryBuilder();
         $queryBuilderHelper->with('caseType', 'ct');
         $qb->addSelect('CONCAT(ct.description, ' . $this->alias . '.id) as HIDDEN caseType');
+    }
+
+    /**
+     * @param QueryInterface $query
+     * @param int            $hydrateMode
+     * @param null           $version
+     *
+     * @return mixed
+     * @throws Exception\NotFoundException
+     * @throws Exception\RuntimeException
+     * @throws Exception\VersionConflictException
+     */
+    public function fetchOpenCasesForSurrender(
+        QueryInterface $query,
+        $hydrateMode = Query::HYDRATE_OBJECT,
+        $version = null
+    ) {
+
+        $qb = $this->createQueryBuilder();
+        $this->buildDefaultListQuery(
+            $qb,
+            $query
+        );
+        $expr = $qb->expr();
+
+        $qb->andWhere($expr->eq($this->alias . '.licence', ':byLicence'))
+            ->setParameter('byLicence', $query->getId());
+
+        $qb->andWhere(
+            $expr->isNull($this->alias . '.closedDate')
+        );
+
+        $results = $qb->getQuery()->getResult($hydrateMode);
+        return $results;
     }
 }

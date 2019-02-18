@@ -7,8 +7,10 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use DateTime;
 
@@ -90,5 +92,31 @@ class Country extends AbstractRepository
             ->orderBy($this->alias.'.countryDesc', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns list of countries with ready to print permits
+     *
+     * @param int $irhpPermitTypeId Irhp Permit Type Id
+     *
+     * @return array
+     */
+    public function fetchReadyToPrint($irhpPermitTypeId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias)
+            ->distinct()
+            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin('ips.irhpPermitRanges', 'ipr')
+            ->innerJoin('ipr.irhpPermits', 'ip')
+            ->where($qb->expr()->in('ip.status', ':statuses'))
+            ->andWhere('ips.irhpPermitType = :irhpPermitTypeId')
+            ->setParameter('statuses', IrhpPermitEntity::$readyToPrintStatuses)
+            ->setParameter('irhpPermitTypeId', $irhpPermitTypeId)
+            ->orderBy($this->alias.'.countryDesc', 'ASC');
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }
