@@ -337,7 +337,6 @@ class EventHistoryTest extends RepositoryTestCase
 
 
         self::assertEquals($expectedResult, $result);
-
     }
 
     public function fetchPreviousLicenceStatusDataProvider()

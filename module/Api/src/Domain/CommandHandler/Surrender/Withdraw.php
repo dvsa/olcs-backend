@@ -1,9 +1,8 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
-
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -16,7 +15,8 @@ class Withdraw extends AbstractSurrenderCommandHandler
 
     /**
      * @param CommandInterface $command
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @return Result
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
