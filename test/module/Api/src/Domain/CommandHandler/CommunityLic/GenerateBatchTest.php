@@ -7,13 +7,13 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\GenerateBatch;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -33,6 +33,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $this->mockRepo('CommunityLic', Repository\CommunityLic::class);
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
 
         parent::setUp();
     }
@@ -40,12 +41,19 @@ class GenerateBatchTest extends CommandHandlerTestCase
     /**
      * @dataProvider licenceDataProvider
      */
-    public function testHandleCommand($isPsv, $niFlag, $template)
-    {
+    public function testHandleCommand(
+        $ukLicenceDisabled,
+        $isReprint,
+        $systemParam,
+        $isPsv,
+        $niFlag,
+        $template
+    ) {
         $licenceId = 1;
         $identifier = null;
         $communityLicenceIds = [10];
         $data = [
+            'isReprint' => $isReprint,
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
             'identifier' => $identifier
@@ -62,6 +70,12 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ->shouldReceive('getId')
             ->andReturn(1)
             ->getMock();
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('fetchValue')
+            ->once()
+            ->with($systemParam)
+            ->andReturn($ukLicenceDisabled);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
@@ -117,12 +131,19 @@ class GenerateBatchTest extends CommandHandlerTestCase
     /**
      * @dataProvider licenceDataProvider
      */
-    public function testHandleCommandApplication($isPsv, $niFlag, $template)
-    {
+    public function testHandleCommandApplication(
+        $ukLicenceDisabled,
+        $isReprint,
+        $systemParam,
+        $isPsv,
+        $niFlag,
+        $template
+    ) {
         $licenceId = 1;
         $identifier = 2;
         $communityLicenceIds = [10];
         $data = [
+            'isReprint' => $isReprint,
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
             'identifier' => $identifier
@@ -146,6 +167,12 @@ class GenerateBatchTest extends CommandHandlerTestCase
             ->shouldReceive('getLicence')
             ->andReturn($mockLicence)
             ->getMock();
+
+        $this->repoMap['SystemParameter']
+            ->shouldReceive('fetchValue')
+            ->once()
+            ->with($systemParam)
+            ->andReturn($ukLicenceDisabled);
 
         $this->repoMap['Application']
             ->shouldReceive('fetchById')
@@ -201,9 +228,102 @@ class GenerateBatchTest extends CommandHandlerTestCase
     public function licenceDataProvider()
     {
         return [
-            [true, 'N', 'PSV_European_Community_Licence'],
-            [false, 'Y', 'GV_NI_European_Community_Licence'],
-            [false, 'N', 'GV_GB_European_Community_Licence'],
+            'reprint of PSV with new template switched off' => [
+                1,
+                true,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
+                true,
+                'N',
+                'PSV_European_Community_Licence'
+            ],
+            'reprint of GV NI with new template switched off' => [
+                1,
+                true,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
+                false,
+                'Y',
+                'GV_NI_European_Community_Licence'
+            ],
+            'reprint of GV GB with new template switched off' => [
+                1,
+                true,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
+                false,
+                'N',
+                'GV_GB_European_Community_Licence'
+            ],
+            'new PSV with new template switched off' => [
+                1,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                true,
+                'N',
+                'PSV_European_Community_Licence'
+            ],
+            'new GV NI with new template switched off' => [
+                1,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                false,
+                'Y',
+                'GV_NI_European_Community_Licence'
+            ],
+            'new GV GB with new template switched off' => [
+                1,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                false,
+                'N',
+                'GV_GB_European_Community_Licence'
+            ],
+            'reprint PSV with new template switched on' => [
+                0,
+                true,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
+                true,
+                'N',
+                Document::GV_UK_COMMUNITY_LICENCE_PSV
+            ],
+            'reprint GV NI with new template switched on' => [
+                0,
+                true,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
+                false,
+                'Y',
+                Document::GV_UK_COMMUNITY_LICENCE_NI
+            ],
+            'reprint GV GB with new template switched on' => [
+                0,
+                true,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_REPRINT,
+                false,
+                'N',
+                Document::GV_UK_COMMUNITY_LICENCE_GB
+            ],
+            'new PSV with new template switched on' => [
+                0,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                true,
+                'N',
+                Document::GV_UK_COMMUNITY_LICENCE_PSV
+            ],
+            'new GV NI with new template switched on' => [
+                0,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                false,
+                'Y',
+                Document::GV_UK_COMMUNITY_LICENCE_NI
+            ],
+            'new GV GB with new template switched on' => [
+                0,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                false,
+                'N',
+                Document::GV_UK_COMMUNITY_LICENCE_GB
+            ],
         ];
     }
 }
