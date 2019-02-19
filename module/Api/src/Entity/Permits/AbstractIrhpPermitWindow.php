@@ -67,7 +67,7 @@ abstract class AbstractIrhpPermitWindow implements BundleSerializableInterface, 
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=true)
      */
     protected $emissionsCategory;
 
