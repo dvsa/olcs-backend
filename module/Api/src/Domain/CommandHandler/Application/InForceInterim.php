@@ -116,6 +116,7 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
             $this->result->addMessage(count($ids) . ' Community licence(s) activated');
 
             $data = [
+                'isReprint' => false,
                 'communityLicenceIds' => $ids,
                 'licence' => $application->getLicence()->getId(),
                 'identifier' => $application->getId()
