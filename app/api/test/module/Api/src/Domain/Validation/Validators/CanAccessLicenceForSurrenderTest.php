@@ -43,6 +43,10 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 $this->setIsGranted(Permission::SELFSERVE_USER, false);
                 $this->setIsValid('isOwner', [$entity], $isOwner);
                 break;
+            case 'internal-user-surrendered':
+                $this->setIsGranted(Permission::SELFSERVE_USER, false);
+                $this->setIsValid('isOwner', [$entity], $isOwner);
+                break;
         }
 
 
@@ -71,6 +75,12 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 Permission::INTERNAL_USER,
                 false,
                 Licence::LICENCE_STATUS_VALID,
+                true
+            ],
+            'internal-user-surrendered' => [
+                Permission::INTERNAL_USER,
+                false,
+                Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
                 true
             ]
         ];
