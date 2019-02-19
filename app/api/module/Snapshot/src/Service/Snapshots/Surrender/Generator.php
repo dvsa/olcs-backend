@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
@@ -62,10 +63,12 @@ class Generator extends AbstractGenerator
 
     protected function getCommunityLicenceSection(Surrender $surrender)
     {
-        return [
-            'header' => 'surrender-review-community-licence',
-            'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
-        ];
+        if ($surrender->getLicence()->getLicenceType() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+            return [
+                'header' => 'surrender-review-community-licence',
+                'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
+            ];
+        }
     }
 
 

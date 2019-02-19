@@ -19,21 +19,18 @@ class CommunityLicenceReviewService extends AbstractReviewService
      */
     public function getConfigFromData(Surrender $surrender)
     {
-        $items = [];
-        if ($surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+        $items[] =
+            [
+                'label' => 'surrender-review-documentation-community-licence',
+                'value' => $surrender->getCommunityLicenceDocumentStatus()->getDescription()
+            ];
+
+        if ($surrender->getCommunityLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
             $items[] =
                 [
-                    'label' => 'surrender-review-documentation-community-licence',
-                    'value' => $surrender->getCommunityLicenceDocumentStatus()->getDescription()
+                    'label' => 'surrender-review-additional-information',
+                    'value' => $surrender->getCommunityLicenceDocumentInfo()
                 ];
-
-            if ($surrender->getCommunityLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
-                $items[] =
-                    [
-                        'label' => 'surrender-review-additional-information',
-                        'value' => $surrender->getCommunityLicenceDocumentInfo()
-                    ];
-            }
         }
         return [
             'multiItems' => [

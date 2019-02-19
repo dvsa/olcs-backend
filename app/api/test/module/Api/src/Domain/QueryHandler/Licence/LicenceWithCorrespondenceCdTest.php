@@ -8,7 +8,6 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\Licence\LicenceWithCorrespondenceCd as Qry;
 
-
 class LicenceWithCorrespondenceCdTest extends QueryHandlerTestCase
 {
 

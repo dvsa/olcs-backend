@@ -47,7 +47,6 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
         $communityLicenceIds = $command->getCommunityLicenceIds();
 
         foreach ($communityLicenceIds as $id) {
-
             $query = [
                 'licence' => $licence->getId(),
                 'communityLic' => $id,
