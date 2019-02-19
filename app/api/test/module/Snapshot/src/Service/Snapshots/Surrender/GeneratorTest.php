@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 use Mockery as m;
@@ -34,7 +34,7 @@ class GeneratorTest extends MockeryTestCase
         $this->services = [
             LicenceDetailsService::class => m::mock(),
             CurrentDiscsReviewService::class => m::mock(),
-            DocumentationReviewService::class => m::mock(),
+            OperatorLicenceReviewService::class => m::mock(),
             DeclarationReviewService::class => m::mock(),
             SignatureReviewService::class => m::mock(),
             'ViewRenderer' => m::mock()
@@ -116,7 +116,7 @@ class GeneratorTest extends MockeryTestCase
         $this->services[CurrentDiscsReviewService::class]->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('currentDiscs');
 
-        $this->services[DocumentationReviewService::class]->shouldReceive('getConfigFromData')
+        $this->services[OperatorLicenceReviewService::class]->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('documentation');
 
         $this->services[DeclarationReviewService::class]->shouldReceive('getConfigFromData')
