@@ -3,8 +3,9 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
-
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class CommunityLicenceReviewService extends AbstractReviewService
 {

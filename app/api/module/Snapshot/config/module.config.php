@@ -89,6 +89,7 @@ return [
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService::class=>\Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService::class,
         ],
     ],
     'view_manager' => [
