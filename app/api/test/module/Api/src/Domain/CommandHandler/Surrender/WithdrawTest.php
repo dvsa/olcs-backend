@@ -21,10 +21,6 @@ class WithdrawTest extends CommandHandlerTestCase
      */
     protected $sut;
 
-    const LIC_ID = 111;
-
-    const STATUS_ID = 'lsts_valid';
-
     public function setUp()
     {
         $this->sut = new WithdrawHandler();
