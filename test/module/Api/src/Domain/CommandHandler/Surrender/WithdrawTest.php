@@ -48,9 +48,10 @@ class WithdrawTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
+        $licenceId = 111;
+
         $data = [
-            'id' => static::LIC_ID,
-            'status' => static::STATUS_ID
+            'id' => $licenceId,
         ];
 
         $command = WithdrawCommand::create($data);
@@ -58,24 +59,23 @@ class WithdrawTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             UpdateCommand::class,
             [
-                'id' => static::LIC_ID,
+                'id' => $licenceId,
                 'status' => RefData::SURRENDER_STATUS_WITHDRAWN,
             ],
             new Result()
         );
 
+        $this->queryHandler
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->andReturn(['status' => 'licence_status']);
+
         $licence = $this->getTestingLicence();
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
-            ->with(self::LIC_ID)
+            ->with($licenceId)
             ->once()
             ->andReturn($licence);
-
-        $this->repoMap['Surrender']
-            ->shouldReceive('getStatus')
-            ->with(static::STATUS_ID)
-            ->andReturn(m::mock(RefData::class));
-
 
         $this->repoMap['Licence']
             ->shouldReceive('save')
