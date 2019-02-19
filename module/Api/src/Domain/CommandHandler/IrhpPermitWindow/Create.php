@@ -5,6 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
@@ -36,17 +39,27 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
      */
     public function handleCommand(CommandInterface $command): Result
     {
+        /**
+         * @var CreateWindowCmd $command
+         */
         // If there are overlapping windows.
         if ($this->numberOfOverlappingWindows($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate()) > 0) {
             throw new ValidationException(['The dates overlap with another window for this Permit stock']);
         }
 
+        /** @var IrhpPermitStock $irhpPermitStock */
         $irhpPermitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
-        /**
-         * @var CreateWindowCmd $command
-         */
+
+        if ($irhpPermitStock->getIrhpPermitType()->isEcmtAnnual()
+            && $command->getEmissionsCategory() == IrhpPermitWindow::EMISSIONS_CATEGORY_NA_REF) {
+            throw new ValidationException(['Emissions Category: N/A not valid for Annual ECMT Stock']);
+        }
+
+        $emissionsCategory = $this->refData($command->getEmissionsCategory());
+
         $window = WindowEntity::create(
             $irhpPermitStock,
+            $emissionsCategory,
             $command->getStartDate(),
             $command->getEndDate(),
             $command->getDaysForPayment()
