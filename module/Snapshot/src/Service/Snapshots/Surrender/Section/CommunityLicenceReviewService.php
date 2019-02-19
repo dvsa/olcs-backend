@@ -1,36 +1,24 @@
 <?php
 
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
-use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
-class DocumentationReviewService extends AbstractReviewService
+use Dvsa\Olcs\Api\Entity\Surrender;
+
+class CommunityLicenceReviewService extends AbstractReviewService
 {
+
     /**
+     * Format the readonly config from the given record
+     *
      * @param Surrender $surrender
      *
-     * @return array|mixed
+     * @return mixed
      */
     public function getConfigFromData(Surrender $surrender)
     {
-
         $items = [];
-
-        $items[] =
-            [
-                'label' => 'surrender-review-documentation-operator-licence',
-                'value' => $surrender->getLicenceDocumentStatus()->getDescription()
-            ];
-
-        if ($surrender->getLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
-            $items[] = [
-                'label' => 'surrender-review-additional-information',
-                'value' => $surrender->getLicenceDocumentInfo()
-            ];
-        }
-
         if ($surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
             $items[] =
                 [
@@ -46,7 +34,6 @@ class DocumentationReviewService extends AbstractReviewService
                     ];
             }
         }
-
         return [
             'multiItems' => [
                 $items

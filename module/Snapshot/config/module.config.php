@@ -86,7 +86,7 @@ return [
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService::class,
-            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService::class,
+            Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService::class,
             Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class => \Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService::class,
         ],

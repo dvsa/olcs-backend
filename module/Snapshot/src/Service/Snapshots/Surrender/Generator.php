@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 
@@ -17,7 +17,8 @@ class Generator extends AbstractGenerator
         $sections = [
             $this->getLicenceDetailsSection($surrender),
             $this->getCurrentDiscsSection($surrender),
-            $this->getDocumentationSection($surrender),
+            $this->getOperatorLicenceDocumentationSection($surrender),
+            $this->getCommunityLicenceSection($surrender),
             $this->getDeclarationSection($surrender),
             $this->getSignatureSection($surrender)
         ];
@@ -50,13 +51,22 @@ class Generator extends AbstractGenerator
         ];
     }
 
-    protected function getDocumentationSection(Surrender $surrender)
+    protected function getOperatorLicenceDocumentationSection(Surrender $surrender)
     {
         return [
             'header' => 'surrender-review-documentation',
-            'config' => $this->getServiceLocator()->get(DocumentationReviewService::class)->getConfigFromData($surrender)
+            'config' => $this->getServiceLocator()->get(OperatorLicenceReviewService::class)->getConfigFromData($surrender)
         ];
     }
+
+    protected function getCommunityLicenceSection(Surrender $surrender)
+    {
+        return [
+            'header' => 'surrender-review-documentation',
+            'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
+        ];
+    }
+
 
     protected function getDeclarationSection(Surrender $surrender)
     {

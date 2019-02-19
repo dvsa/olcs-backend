@@ -5,18 +5,18 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
 class DocumentationReviewServiceTest extends MockeryTestCase
 {
-    /** @var DocumentationReviewService review service */
+    /** @var OperatorLicenceReviewService review service */
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new DocumentationReviewService();
+        $this->sut = new OperatorLicenceReviewService();
     }
 
 
