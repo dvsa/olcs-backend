@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender;
 
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
@@ -54,7 +55,7 @@ class Generator extends AbstractGenerator
     protected function getOperatorLicenceDocumentationSection(Surrender $surrender)
     {
         return [
-            'header' => 'surrender-review-documentation',
+            'header' => 'surrender-review-operator-licence',
             'config' => $this->getServiceLocator()->get(OperatorLicenceReviewService::class)->getConfigFromData($surrender)
         ];
     }
@@ -62,7 +63,7 @@ class Generator extends AbstractGenerator
     protected function getCommunityLicenceSection(Surrender $surrender)
     {
         return [
-            'header' => 'surrender-review-documentation',
+            'header' => 'surrender-review-community-licence',
             'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
         ];
     }

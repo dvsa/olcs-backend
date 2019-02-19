@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
@@ -35,6 +36,7 @@ class GeneratorTest extends MockeryTestCase
             LicenceDetailsService::class => m::mock(),
             CurrentDiscsReviewService::class => m::mock(),
             OperatorLicenceReviewService::class => m::mock(),
+            CommunityLicenceReviewService::class => m::mock(),
             DeclarationReviewService::class => m::mock(),
             SignatureReviewService::class => m::mock(),
             'ViewRenderer' => m::mock()
@@ -92,8 +94,12 @@ class GeneratorTest extends MockeryTestCase
                     'config' => 'currentDiscs'
                 ],
                 [
-                    'header' => 'surrender-review-documentation',
-                    'config' => 'documentation'
+                    'header' => 'surrender-review-operator-licence',
+                    'config' => 'Operator licence'
+                ],
+                [
+                    'header' => 'surrender-review-community-licence',
+                    'config' => 'Community licence'
                 ],
                 [
                     'header' => 'surrender-review-declaration',
@@ -117,7 +123,10 @@ class GeneratorTest extends MockeryTestCase
             ->once()->with($surrender)->andReturn('currentDiscs');
 
         $this->services[OperatorLicenceReviewService::class]->shouldReceive('getConfigFromData')
-            ->once()->with($surrender)->andReturn('documentation');
+            ->once()->with($surrender)->andReturn('Operator licence');
+
+        $this->services[CommunityLicenceReviewService::class]->shouldReceive('getConfigFromData')
+            ->once()->with($surrender)->andReturn('Community licence');
 
         $this->services[DeclarationReviewService::class]->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('declaration');
