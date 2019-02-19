@@ -35,8 +35,7 @@ abstract class AbstractVariationOcTotalAuthReviewService extends AbstractReviewS
         $changes = [];
 
         foreach ($this->getChangedKeys($data) as $key => $translationIndex) {
-
-            $message = $this->getValueChangedMessage($data, $key);
+            $message = ($data[$key] > 0) ? $this->getValueChangedMessage($data, $key) : null;
 
             if ($message !== null) {
                 $changes[] = [
