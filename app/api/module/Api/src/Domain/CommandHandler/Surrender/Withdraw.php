@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
+use Dvsa\Olcs\Transfer\Query\Surrender\PreviousLicenceStatus;
 
 class Withdraw extends AbstractSurrenderCommandHandler
 {
@@ -30,7 +31,8 @@ class Withdraw extends AbstractSurrenderCommandHandler
 
         /** @var Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($command->getId());
-        $status = $this->getRepo()->getRefdataReference($command->getStatus());
+        $previousStatus = $this->handleQuery(PreviousLicenceStatus::create(['id' => $command->getId()]));
+        $status = $this->getRepo()->getRefdataReference($previousStatus['status']);
         $licence->setStatus($status);
 
         $this->getRepo('Licence')->save($licence);
