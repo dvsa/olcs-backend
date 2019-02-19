@@ -22,4 +22,14 @@ class IrhpPermitType extends AbstractIrhpPermitType
     const IRHP_PERMIT_TYPE_ID_ECMT = 1;
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
+
+    /**
+     * Is this ECMT Annual
+     *
+     * @return bool
+     */
+    public function isEcmtAnnual()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_ECMT;
+    }
 }
