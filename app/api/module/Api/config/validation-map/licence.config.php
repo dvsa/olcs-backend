@@ -25,7 +25,7 @@ return [
     CommandHandler\Licence\Revoke::class => Misc\IsInternalEdit::class,
     CommandHandler\Licence\ResetToValid::class => Misc\IsInternalEdit::class,
     CommandHandler\Licence\PrintLicence::class => Misc\CanEditLicenceWithId::class,
-    CommandHandler\Licence\CreateVariation::class => Misc\CanEditLicenceWithId::class, //checked
+    CommandHandler\Licence\CreateVariation::class => Misc\CanEditLicenceWithId::class,
     CommandHandler\Licence\UpdateAddresses::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateBusinessDetails::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateOperatingCentres::class => Misc\CanAccessLicenceWithId::class,
