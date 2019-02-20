@@ -68,6 +68,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
 
         $generateBatchCmd = GenerateBatchCommand::create(
             [
+                'isReprint' => true,
                 'licence' => $licenceId,
                 'communityLicenceIds' => $ids,
                 'identifier' => $command->getApplication(),
@@ -135,7 +136,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
      *
      * @param array $data Community Licence data
      *
-     * @return CommunityLic
+     * @return CommunityLicEntity
      */
     private function createCommunityLicObject($data)
     {

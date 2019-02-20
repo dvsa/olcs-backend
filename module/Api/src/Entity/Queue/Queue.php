@@ -65,6 +65,7 @@ class Queue extends AbstractQueue
     const TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE = 'que_typ_irhp_permits_allocate';
     const TYPE_RUN_ECMT_SCORING = 'que_typ_run_ecmt_scoring';
     const TYPE_ACCEPT_ECMT_SCORING = 'que_typ_accept_ecmt_scoring';
+    const TYPE_COMM_LIC_BULK_REPRINT = 'que_typ_comm_lic_bulk_reprint';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -97,6 +98,7 @@ class Queue extends AbstractQueue
         self::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE,
         self::TYPE_RUN_ECMT_SCORING,
         self::TYPE_ACCEPT_ECMT_SCORING,
+        self::TYPE_COMM_LIC_BULK_REPRINT,
     ];
 
     // Errors
