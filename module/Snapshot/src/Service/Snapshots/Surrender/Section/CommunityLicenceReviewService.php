@@ -3,10 +3,14 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
+/**
+ * Class CommunityLicenceReviewService
+ *
+ * @package Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section
+ */
 class CommunityLicenceReviewService extends AbstractReviewService
 {
 
@@ -24,8 +28,8 @@ class CommunityLicenceReviewService extends AbstractReviewService
                 'label' => 'surrender-review-documentation-community-licence',
                 'value' => $surrender->getCommunityLicenceDocumentStatus()->getDescription()
             ];
-
-        if ($surrender->getCommunityLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
+        $communityLicenceStatus = $surrender->getCommunityLicenceDocumentStatus()->getId();
+        if ($communityLicenceStatus !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
             $items[] =
                 [
                     'label' => 'surrender-review-additional-information',
