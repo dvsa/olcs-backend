@@ -20,11 +20,13 @@ class Generator extends AbstractGenerator
             $this->getLicenceDetailsSection($surrender),
             $this->getCurrentDiscsSection($surrender),
             $this->getOperatorLicenceDocumentationSection($surrender),
-            $this->getCommunityLicenceSection($surrender),
             $this->getDeclarationSection($surrender),
             $this->getSignatureSection($surrender)
         ];
 
+        if ($surrender->getLicence()->getLicenceType() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+            array_splice($sections, 3, 0, [$this->getCommunityLicenceSection($surrender)]);
+        }
         return $this->generateReadonly(
             [
                 'reviewTitle' => 'surrender-review-title',
@@ -63,12 +65,11 @@ class Generator extends AbstractGenerator
 
     protected function getCommunityLicenceSection(Surrender $surrender)
     {
-        if ($surrender->getLicence()->getLicenceType() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
-            return [
-                'header' => 'surrender-review-community-licence',
-                'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
-            ];
-        }
+
+        return [
+            'header' => 'surrender-review-community-licence',
+            'config' => $this->getServiceLocator()->get(CommunityLicenceReviewService::class)->getConfigFromData($surrender)
+        ];
     }
 
 
