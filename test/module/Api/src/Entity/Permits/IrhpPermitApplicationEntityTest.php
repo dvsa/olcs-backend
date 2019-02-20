@@ -78,9 +78,72 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertSame(
             [
                 'permitsAwarded' => 0,
-                'validPermits' => 0
+                'validPermits' => 0,
+                'relatedApplication' => null,
             ],
             $this->sut->getCalculatedBundleValues()
+        );
+    }
+
+    public function testGetCalculatedBundleValuesForEcmtPermitApplication()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('serialize')
+            ->with(
+                [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ]
+            )
+            ->once()
+            ->andReturn(['EcmtPermitApplication']);
+
+        $irhpPermitApplication = Entity::createNew(
+            $irhpPermitWindow,
+            $licence,
+            $ecmtPermitApplication
+        );
+
+        $this->assertSame(
+            [
+                'permitsAwarded' => 0,
+                'validPermits' => 0,
+                'relatedApplication' => ['EcmtPermitApplication'],
+            ],
+            $irhpPermitApplication->getCalculatedBundleValues()
+        );
+    }
+
+    public function testGetCalculatedBundleValuesForIrhpApplication()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('serialize')
+            ->with(
+                [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ]
+            )
+            ->once()
+            ->andReturn(['IrhpApplication']);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+
+        $irhpPermitApplication = Entity::createNewForIrhpApplication(
+            $irhpApplication,
+            $irhpPermitWindow
+        );
+
+        $this->assertSame(
+            [
+                'permitsAwarded' => 0,
+                'validPermits' => 0,
+                'relatedApplication' => ['IrhpApplication'],
+            ],
+            $irhpPermitApplication->getCalculatedBundleValues()
         );
     }
 
@@ -259,5 +322,32 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity = Entity::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
 
         $this->assertSame($org, $entity->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedApplicationEcmt()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+
+        $entity = Entity::createNew($irhpPermitWindow, $licence, $ecmtPermitApplication);
+
+        $this->assertSame($ecmtPermitApplication, $entity->getRelatedApplication());
+    }
+
+    public function testGetRelatedApplicationIrhp()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpApplication = m::mock(IrhpApplication::class);
+
+        $entity = Entity::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
+
+        $this->assertSame($irhpApplication, $entity->getRelatedApplication());
+    }
+
+    public function testGetRelatedValuesWhenNothingIsLinked()
+    {
+        $this->assertNull($this->sut->getRelatedApplication());
+        $this->assertNull($this->sut->getRelatedOrganisation());
     }
 }
