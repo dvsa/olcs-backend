@@ -16,11 +16,21 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class GenerateBatch extends AbstractCommand
 {
+    public $isReprint;
+
     public $licence;
 
     public $communityLicenceIds;
 
     public $identifier;
+
+    /**
+     * @return bool
+     */
+    public function getIsReprint()
+    {
+        return $this->isReprint;
+    }
 
     public function getLicence()
     {
