@@ -73,6 +73,9 @@ class RefData extends AbstractRefData
     const SURRENDER_DOC_STATUS_LOST='doc_sts_lost';
     const SURRENDER_DOC_STATUS_STOLEN='doc_sts_stolen';
 
+    // Report
+    const REPORT_TYPE_COMM_LIC_BULK_REPRINT = 'rep_typ_comm_lic_bulk_reprint';
+
     /**
      * RefData constructor.
      *

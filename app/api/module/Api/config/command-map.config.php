@@ -704,6 +704,9 @@ return [
     TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
 
+    // Domain - Report
+    TransferCommand\Report\Upload::class => CommandHandler\Report\Upload::class,
+
     // Domain - LicenceStatusRule
     Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class
         => CommandHandler\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class,
@@ -1089,6 +1092,8 @@ return [
     TransferCommand\Surrender\Delete::class => CommandHandler\Surrender\Delete::class,
     TransferCommand\Surrender\SubmitForm::class => CommandHandler\Surrender\SubmitForm::class,
     Command\Surrender\Snapshot::class => CommandHandler\Surrender\Snapshot::class,
+    TransferCommand\Surrender\Approve::class => CommandHandler\Surrender\Approve::class,
+    TransferCommand\Surrender\Withdraw::class => CommandHandler\Surrender\Withdraw::class,
 
     // Permits - IRHP application
     TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,

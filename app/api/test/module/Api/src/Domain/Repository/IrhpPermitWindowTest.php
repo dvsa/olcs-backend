@@ -86,6 +86,9 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(Query::HYDRATE_ARRAY)
             ->andReturn($expectedResult);
 
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($queryBuilder)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
         $this->assertEquals(
             $expectedResult,
             $this->sut->fetchOpenWindows($irhpPermitStock, $dateTime)
@@ -157,6 +160,9 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->shouldReceive('getQuery->getResult')
             ->once()
             ->andReturn($expectedResult);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($queryBuilder)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
 
         $this->assertEquals(
             $expectedResult,
