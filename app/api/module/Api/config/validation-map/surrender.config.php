@@ -22,6 +22,3 @@ return [
     CommandHandler\Surrender\Withdraw::class                            => IsInternalUser::class,
     QueryHandler\Surrender\PreviousLicenceStatus::class                 => CanAccessLicenceWithId::class,
 ];
-
-   
-   
