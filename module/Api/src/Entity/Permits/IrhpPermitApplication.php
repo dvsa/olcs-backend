@@ -83,9 +83,18 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getCalculatedBundleValues()
     {
+        $relatedApplication = $this->getRelatedApplication();
+
         return [
             'permitsAwarded' => $this->countPermitsAwarded(),
-            'validPermits' => $this->countValidPermits()
+            'validPermits' => $this->countValidPermits(),
+            'relatedApplication' => isset($relatedApplication) ? $relatedApplication->serialize(
+                [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ]
+            ) : null,
         ];
     }
 
@@ -153,16 +162,30 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
-     * There are two possible types of parent application ECMT or IRHP
+     * Get related organisation
      *
-     * @return Organisation
+     * @return Organisation|null
      */
     public function getRelatedOrganisation()
     {
+        $relatedApplication = $this->getRelatedApplication();
+
+        return isset($relatedApplication) ? $relatedApplication->getRelatedOrganisation() : null;
+    }
+
+    /**
+     * There are two possible types of parent application ECMT or IRHP
+     *
+     * @return EcmtPermitApplication|IrhpApplication|null
+     */
+    public function getRelatedApplication()
+    {
         if ($this->ecmtPermitApplication instanceof EcmtPermitApplication) {
-            return $this->ecmtPermitApplication->getRelatedOrganisation();
+            return $this->ecmtPermitApplication;
+        } elseif ($this->irhpApplication instanceof IrhpApplication) {
+            return $this->irhpApplication;
         }
 
-        return $this->irhpApplication->getRelatedOrganisation();
+        return null;
     }
 }

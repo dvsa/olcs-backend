@@ -19,12 +19,6 @@ class ReadyToPrintConfirm extends AbstractListQueryHandler implements ToggleRequ
     protected $repoServiceName = 'IrhpPermit';
 
     protected $bundle = [
-        'irhpPermitApplication' => [
-            'ecmtPermitApplication' => [
-                'licence' => [
-                    'organisation'
-                ]
-            ]
-        ],
+        'irhpPermitApplication',
     ];
 }
