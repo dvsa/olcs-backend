@@ -5,18 +5,18 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
-class DocumentationReviewServiceTest extends MockeryTestCase
+class OperatorLicenceReviewServiceTest extends MockeryTestCase
 {
-    /** @var DocumentationReviewService review service */
+    /** @var OperatorLicenceReviewService review service */
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new DocumentationReviewService();
+        $this->sut = new OperatorLicenceReviewService();
     }
 
 
@@ -35,9 +35,6 @@ class DocumentationReviewServiceTest extends MockeryTestCase
         $mockEntity->shouldReceive('getLicenceDocumentStatus->getId')->andReturn($args['licDocStatus']);
         $mockEntity->shouldReceive('getLicenceDocumentInfo')->andReturn($args['licDocInfo']);
         $mockEntity->shouldReceive('getLicence->getLicenceType->getId')->andReturn($args['licType']);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getId')->andReturn($args['commLicStatus']);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getDescription')->andReturn($args['commLicDescription']);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentInfo')->andReturn($args['commLicInfo']);
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($mockEntity));
     }
@@ -52,9 +49,6 @@ class DocumentationReviewServiceTest extends MockeryTestCase
                     'licDocStatus' => RefData::SURRENDER_DOC_STATUS_LOST,
                     'licDocInfo' => 'Document lost',
                     'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                    'commLicDescription' => 'Document stolen',
-                    'commLicStatus' => RefData::SURRENDER_DOC_STATUS_STOLEN,
-                    'commLicInfo' => 'Document stolen',
                 ],
                 [
 
@@ -68,14 +62,6 @@ class DocumentationReviewServiceTest extends MockeryTestCase
                                 'label' => 'surrender-review-additional-information',
                                 'value' => 'Document lost'
                             ],
-                            [
-                                'label' => 'surrender-review-documentation-community-licence',
-                                'value' => 'Document stolen'
-                            ],
-                            [
-                                'label' => 'surrender-review-additional-information',
-                                'value' => 'Document stolen'
-                            ]
                         ]
                     ]
                 ]
@@ -109,9 +95,6 @@ class DocumentationReviewServiceTest extends MockeryTestCase
                     'licDocStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
                     'licDocInfo' => null,
                     'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                    'commLicDescription' => 'Document destroyed',
-                    'commLicStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
-                    'commLicInfo' => null,
                 ],
                 [
 
@@ -120,11 +103,7 @@ class DocumentationReviewServiceTest extends MockeryTestCase
                             [
                                 'label' => 'surrender-review-documentation-operator-licence',
                                 'value' => 'Document destroyed'
-                            ],
-                            [
-                                'label' => 'surrender-review-documentation-community-licence',
-                                'value' => 'Document destroyed'
-                            ],
+                            ]
                         ]
                     ]
                 ]
