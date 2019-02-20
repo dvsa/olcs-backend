@@ -17,5 +17,8 @@ return [
     QueryHandler\Surrender\OpenBusReg::class                            => IsInternalUser::class,
     CommandHandler\Surrender\SubmitForm::class                          => CanAccessLicenceForSurrender::class,
     CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
-    QueryHandler\Surrender\OpenCases::class                             => IsInternalUser::class
+    QueryHandler\Surrender\OpenCases::class                             => IsInternalUser::class,
+    CommandHandler\Surrender\Approve::class                             => IsInternalUser::class,
+    CommandHandler\Surrender\Withdraw::class                            => IsInternalUser::class,
+    QueryHandler\Surrender\PreviousLicenceStatus::class                 => CanAccessLicenceWithId::class,
 ];

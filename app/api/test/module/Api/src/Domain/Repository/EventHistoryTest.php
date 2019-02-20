@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\EventHistory as Repo;
 use Doctrine\ORM\QueryBuilder;
@@ -301,5 +303,99 @@ class EventHistoryTest extends RepositoryTestCase
             ->getMock();
 
         $this->assertEquals(['foo'], $this->sut->fetchByTask($taskId));
+    }
+
+    public function testFetchPreviousLicenceStatus()
+    {
+        $licenceId = 1;
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn(7);
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->sut->fetchPreviousLicenceStatus($licenceId);
+
+        $expectedQuery = 'QUERY SELECT eht.id INNER JOIN m.eventHistoryType eht INNER JOIN m.licence l AND eht.id IN [7,31,75] AND l.id = [[' . $licenceId . ']] ORDER BY m.eventDatetime DESC LIMIT 1';
+
+        $this->assertSame($expectedQuery, $this->query);
+    }
+
+    /**
+     * @dataProvider fetchPreviousLicenceStatusDataProvider
+     */
+    public function testFetchPreviousLicenceStatusReturn($eventTypeId, $expectedStatus)
+    {
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($eventTypeId);
+        $this->mockCreateQueryBuilder($qb);
+
+        $result = $this->sut->fetchPreviousLicenceStatus(1);
+        $expectedResult = ['status' => $expectedStatus];
+
+
+        self::assertEquals($expectedResult, $result);
+    }
+
+    public function fetchPreviousLicenceStatusDataProvider()
+    {
+        return [
+            'case_curtailed' => [
+                'eventTypeId' => 7,
+                'expectedStatus' => Licence::LICENCE_STATUS_CURTAILED
+            ],
+            'case_suspended' => [
+                'eventTypeId' => 31,
+                'expectedStatus' => Licence::LICENCE_STATUS_SUSPENDED
+            ],
+            'case_valid' => [
+                'eventTypeId' => 75,
+                'expectedStatus' => Licence::LICENCE_STATUS_VALID
+            ]
+        ];
+    }
+
+    public function testFetchPreviousLicenceStatusNoResult()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+        $exception = new NoResultException();
+
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($exception);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->assertSame(['status' => Licence::LICENCE_STATUS_VALID], $this->sut->fetchPreviousLicenceStatus($licenceId));
+    }
+
+    public function testFetchPreviousLicenceStatusException()
+    {
+        $licenceId = 1;
+
+        $qb = $this->createMockQb();
+
+        $ex = new \Exception('testException');
+        $qb->shouldReceive('getQuery')
+            ->once()
+            ->andReturn($qb)
+            ->getMock();
+        $qb->shouldReceive('getSingleScalarResult')
+            ->once()
+            ->andThrow($ex);
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->expectExceptionMessage('testException');
+
+        $this->sut->fetchPreviousLicenceStatus($licenceId);
     }
 }
