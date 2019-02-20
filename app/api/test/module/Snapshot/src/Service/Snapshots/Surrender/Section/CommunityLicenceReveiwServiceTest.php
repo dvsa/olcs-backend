@@ -3,9 +3,14 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender\Section;
 
+use Dvsa\Olcs\Api\Entity\Surrender;
+use \Mockery as m;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class CommunityLicenceReveiwServiceTest
+class CommunityLicenceReveiwServiceTest extends MockeryTestCase
 {
 
     /** @var CommunityLicenceReviewService review service */
@@ -26,12 +31,13 @@ class CommunityLicenceReveiwServiceTest
         $args,
         $expected
     ) {
+
         $mockEntity = m::mock(Surrender::class);
-
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getId')->andReturn($args['commLicStatus']);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getDescription')->andReturn($args['commLicDescription']);
-        $mockEntity->shouldReceive('getCommunityLicenceDocumentInfo')->andReturn($args['commLicInfo']);
-
+        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getDescription')->once()->andReturn($args['commLicDescription']);
+        $mockEntity->shouldReceive('getCommunityLicenceDocumentStatus->getId')->once()->andReturn($args['commLicStatus']);
+        if ($this->dataDescription() !== 'community_licence_destroyed') {
+            $mockEntity->shouldReceive('getCommunityLicenceDocumentInfo')->once()->andReturn($args['commLicInfo']);
+        }
         $this->assertEquals($expected, $this->sut->getConfigFromData($mockEntity));
     }
 
@@ -39,9 +45,9 @@ class CommunityLicenceReveiwServiceTest
     {
         return [
 
-            0 => [
+            'stolen_community_licence' => [
                 [
-                      'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
                     'commLicDescription' => 'Document stolen',
                     'commLicStatus' => RefData::SURRENDER_DOC_STATUS_STOLEN,
                     'commLicInfo' => 'Document stolen',
@@ -62,30 +68,7 @@ class CommunityLicenceReveiwServiceTest
                     ]
                 ]
             ],
-            1 => [
-                [
-                    'licDocDescription' => 'Document destroyed',
-                    'licDocStatus' => RefData::SURRENDER_DOC_STATUS_DESTROYED,
-                    'licDocInfo' => null,
-                    'licType' => Licence::LICENCE_TYPE_STANDARD_NATIONAL,
-                    'commLicDescription' => null,
-                    'commLicStatus' => null,
-                    'commLicInfo' => null,
-
-                ],
-                [
-
-                    'multiItems' => [
-                        [
-                            [
-                                'label' => 'surrender-review-documentation-operator-licence',
-                                'value' => 'Document destroyed'
-                            ]
-                        ]
-                    ]
-                ]
-            ],
-            2 => [
+            'community_licence_destroyed' => [
                 [
 
                     'licType' => Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,

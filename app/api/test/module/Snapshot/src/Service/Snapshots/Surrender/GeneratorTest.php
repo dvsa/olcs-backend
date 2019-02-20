@@ -59,6 +59,7 @@ class GeneratorTest extends MockeryTestCase
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')->andReturn('AB1234567');
         $licence->shouldReceive('getLicenceType')->andReturn($licenceType);
+
         $surrender = m::mock(Surrender::class);
         $surrender->shouldReceive('getLicence')->andReturn($licence);
 
