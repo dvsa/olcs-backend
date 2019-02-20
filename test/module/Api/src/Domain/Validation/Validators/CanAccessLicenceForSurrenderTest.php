@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicenceForSurrender;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use \Mockery as m;
 
@@ -52,6 +53,8 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
 
         $repo = $this->mockRepo('Licence');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
+        $repo2 = $this->mockRepo('Surrender');
+        $repo2->shouldReceive('fetchByLicenceId')->with(111)->andReturn(new Surrender());
         $this->assertEquals($expected, $this->sut->isValid($entity));
     }
 
