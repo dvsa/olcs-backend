@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
-class DocumentationReviewService extends AbstractReviewService
+class OperatorLicenceReviewService extends AbstractReviewService
 {
     /**
      * @param Surrender $surrender
@@ -30,23 +30,6 @@ class DocumentationReviewService extends AbstractReviewService
                 'value' => $surrender->getLicenceDocumentInfo()
             ];
         }
-
-        if ($surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
-            $items[] =
-                [
-                    'label' => 'surrender-review-documentation-community-licence',
-                    'value' => $surrender->getCommunityLicenceDocumentStatus()->getDescription()
-                ];
-
-            if ($surrender->getCommunityLicenceDocumentStatus()->getId() !== RefData::SURRENDER_DOC_STATUS_DESTROYED) {
-                $items[] =
-                    [
-                        'label' => 'surrender-review-additional-information',
-                        'value' => $surrender->getCommunityLicenceDocumentInfo()
-                    ];
-            }
-        }
-
         return [
             'multiItems' => [
                 $items

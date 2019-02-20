@@ -25,6 +25,7 @@ class OpenWindows extends AbstractQueryHandler implements ToggleRequiredInterfac
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpPermitType', 'IrhpPermitStock'];
+    protected $bundle = ['emissionsCategory'];
 
     /**
      * Handle query

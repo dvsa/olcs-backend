@@ -49,7 +49,7 @@ class CommunityLicencesTest extends QueryHandlerTestCase
             ->once()
             ->getMock();
 
-        $mockOfficeCopy = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+        $mockOfficeCopy = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)->shouldReceive('serialize')->andReturn(['item'])->getMock();
         $mockComLic = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)
             ->shouldReceive('serialize')
             ->once()
@@ -81,11 +81,10 @@ class CommunityLicencesTest extends QueryHandlerTestCase
             'result' => ['result'],
             'count' =>  15,
             'count-unfiltered' => 1,
-            'totCommunityLicences' => 2
+            'totCommunityLicences' => 2,
+            'officeCopy' => ['item']
         ];
-        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class, $result['officeCopy']);
 
-        unset($result['officeCopy']);
         $this->assertEquals($result, $expected);
     }
 }

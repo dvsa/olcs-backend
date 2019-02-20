@@ -629,6 +629,7 @@ return [
     TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
     TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
         QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
+    TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
@@ -664,4 +665,5 @@ return [
     TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class,
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
+    TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
 ];

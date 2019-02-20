@@ -100,6 +100,7 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             GenerateBatchCmd::class,
             [
+                'isReprint' => false,
                 'licence' => $licenceId,
                 'communityLicenceIds' => [111],
                 'identifier' => null
