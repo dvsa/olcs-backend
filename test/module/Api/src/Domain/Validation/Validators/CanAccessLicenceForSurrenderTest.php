@@ -20,12 +20,22 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
     /**
      * @dataProvider dpLicencePermissions
      */
-    public function testIsValidExternalUserLicenceOwner($permission, $isOwner, $licenceState, $expected)
-    {
+    public function testIsValidExternalUserLicenceOwner(
+        $permission,
+        $isOwner,
+        $licenceState,
+        $surrenderStatus,
+        $expected
+    ) {
         $this->setIsGranted($permission, true);
         $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Licence::class);
         $entity->shouldReceive('getId')->once()->andReturn(111);
+
+        $mockSurrender = m::mock(Surrender::class);
+
+
+        $this->getMockSurrender($mockSurrender, $surrenderStatus);
 
         switch ($this->dataDescription()) {
             case 'selfservice-user-owner':
@@ -48,13 +58,17 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 $this->setIsGranted(Permission::SELFSERVE_USER, false);
                 $this->setIsValid('isOwner', [$entity], $isOwner);
                 break;
+            case 'selfservice-user-surrender-submitted':
+                $this->setIsGranted(Permission::INTERNAL_USER, false);
+                $this->setIsValid('isOwner', [$entity], $isOwner);
+                $entity->shouldReceive('getStatus->getId')->once()->andReturn($licenceState);
         }
 
 
         $repo = $this->mockRepo('Licence');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
         $repo2 = $this->mockRepo('Surrender');
-        $repo2->shouldReceive('fetchByLicenceId')->with(111)->andReturn(new Surrender());
+        $repo2->shouldReceive('fetchByLicenceId')->with(111)->andReturn($mockSurrender);
         $this->assertEquals($expected, $this->sut->isValid($entity));
     }
 
@@ -65,12 +79,14 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 Permission::SELFSERVE_USER,
                 true,
                 Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
+                Surrender::SURRENDER_STATUS_APPROVED,
                 false
             ],
             'selfservice-user-owner-not-surrendered' => [
                 Permission::SELFSERVE_USER,
                 true,
                 Licence::LICENCE_STATUS_VALID,
+                Surrender::SURRENDER_STATUS_DISCS_COMPLETE,
                 true
 
             ],
@@ -78,14 +94,31 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 Permission::INTERNAL_USER,
                 false,
                 Licence::LICENCE_STATUS_VALID,
+                Surrender::SURRENDER_STATUS_COMM_LIC_DOCS_COMPLETE,
                 true
             ],
             'internal-user-surrendered' => [
                 Permission::INTERNAL_USER,
                 false,
                 Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
+                Surrender::SURRENDER_STATUS_SIGNED,
+                true
+            ],
+            'selfservice-user-surrender-submitted' => [
+                Permission::SELFSERVE_USER,
+                true,
+                Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
+                Surrender::SURRENDER_STATUS_SUBMITTED,
                 true
             ]
         ];
+    }
+
+    /**
+     * @param $mockSurrender
+     */
+    private function getMockSurrender($mockSurrender, $surrenderStatus): void
+    {
+        $mockSurrender->shouldReceive('getStatus->getId')->andReturn($surrenderStatus);
     }
 }

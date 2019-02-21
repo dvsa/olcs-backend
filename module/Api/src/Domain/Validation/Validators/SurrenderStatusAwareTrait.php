@@ -9,6 +9,6 @@ trait SurrenderStatusAwareTrait
 {
     protected function hasBeenSubmitted(Surrender $surrender)
     {
-        return $surrender->getStatus() === Surrender::SURRENDER_STATUS_SUBMITTED;
+        return $surrender->getStatus()->getId() === Surrender::SURRENDER_STATUS_SUBMITTED;
     }
 }
