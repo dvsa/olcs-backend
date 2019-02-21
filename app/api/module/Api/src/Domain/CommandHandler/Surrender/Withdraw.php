@@ -4,9 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
+use Dvsa\Olcs\Transfer\Command\Surrender\Delete as DeleteSurrender;
 use Dvsa\Olcs\Transfer\Query\Surrender\PreviousLicenceStatus;
 
 class Withdraw extends AbstractSurrenderCommandHandler
@@ -21,10 +20,9 @@ class Withdraw extends AbstractSurrenderCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = $this->handleSideEffect(UpdateSurrender::create(
+        $result = $this->handleSideEffect(DeleteSurrender::create(
             [
-                'id' => $command->getId(),
-                'status' => Surrender::SURRENDER_STATUS_WITHDRAWN
+                'id' => $command->getId()
             ]
         ));
         $this->result->addMessage($result);
