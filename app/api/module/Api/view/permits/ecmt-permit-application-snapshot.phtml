@@ -226,7 +226,7 @@
                 <dd><?php echo $this->escapeHtml($data['licence']); ?></dd>
             </dl>
             <dl>
-                <dt>I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with Euro 6 emissions standards.</dt>
+                <dt><?php echo $this->escapeHtml($data['emissionsQuestion']); ?></dt>
                 <dd><?php echo $this->escapeHtml($data['emissions']); ?></dd>
             </dl>
             <dl>
@@ -234,8 +234,14 @@
                 <dd><?php echo $this->escapeHtml($data['cabotage']); ?></dd>
             </dl>
             <dl>
-                <dt>In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?</dt>
-                <dd><?php echo $this->escapeHtml($data['limitedCountries']); ?></dd>
+                <dt><?php echo $this->escapeHtml($data['emissionsDeclaration']); ?></dt>
+                <dd><?php
+                    echo $this->escapeHtml($data['limitedCountries']);
+                    if ($data['limitedCountriesList']) {
+                        echo '<br />' . $this->escapeHtml($data['limitedCountriesList']);
+                    }
+                    ?>
+                </dd>
             </dl>
             <dl>
                 <dt>How many permits do you require for this licence?</dt>
@@ -258,7 +264,7 @@
         <div class="printable__section">
             <ul class="bullet">
                 <li>I have read the Guidance Notes (https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage) on how to use ECMT permits.</li>
-                <li>I understand if a permit is issued it may exclude travel to Austria, Greece, Hungary, Italy and Russia as there are limited numbers of permits for travel to these countries.</li>
+                <li>I understand if a permit is issued it may exclude travel to Austria, Greece, Hungary, Italy and Russia.</li>
                 <li>I understand that if a permit is issued I will be issued with a corresponding logbook which I must complete with full journey details before the start of a journey.</li>
                 <li>I understand that I must carry a permit and corresponding logbook for the entire outbound and return journey.</li>
             </ul>
