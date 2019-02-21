@@ -32,10 +32,6 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
         $entity = m::mock(Licence::class);
         $entity->shouldReceive('getId')->once()->andReturn(111);
 
-        $mockSurrender = m::mock(Surrender::class);
-
-
-        $this->getMockSurrender($mockSurrender, $surrenderStatus);
 
         switch ($this->dataDescription()) {
             case 'selfservice-user-owner':
@@ -68,7 +64,7 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
         $repo = $this->mockRepo('Licence');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
         $repo2 = $this->mockRepo('Surrender');
-        $repo2->shouldReceive('fetchByLicenceId')->with(111)->andReturn($mockSurrender);
+        $repo2->shouldReceive('fetchByLicenceId')->with(111)->andReturn(['status'=>['id'=>$surrenderStatus]]);
         $this->assertEquals($expected, $this->sut->isValid($entity));
     }
 

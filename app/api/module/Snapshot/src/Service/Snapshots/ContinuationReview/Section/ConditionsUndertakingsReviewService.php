@@ -30,6 +30,5 @@ class ConditionsUndertakingsReviewService extends AbstractReviewService
                 ],
             ]
         ];
-
     }
 }
