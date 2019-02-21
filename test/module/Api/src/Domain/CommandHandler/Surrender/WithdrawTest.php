@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateCommand;
+use Dvsa\Olcs\Transfer\Command\Surrender\Delete as DeleteCommand;
 use Dvsa\Olcs\Transfer\Command\Surrender\Withdraw as WithdrawCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -53,10 +53,9 @@ class WithdrawTest extends CommandHandlerTestCase
         $command = WithdrawCommand::create($data);
 
         $this->expectedSideEffect(
-            UpdateCommand::class,
+            DeleteCommand::class,
             [
-                'id' => $licenceId,
-                'status' => RefData::SURRENDER_STATUS_WITHDRAWN,
+                'id' => $licenceId
             ],
             new Result()
         );
