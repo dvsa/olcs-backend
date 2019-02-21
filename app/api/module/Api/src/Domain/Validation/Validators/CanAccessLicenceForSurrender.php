@@ -26,7 +26,7 @@ class CanAccessLicenceForSurrender extends CanAccessLicence implements HandlerIn
 
 
         if ($this->isExternalUser()) {
-            return $this->notBeenSurrendered($licence) && $this->hasNotBeenSubmitted($surrender) ? parent::isValid($entityId):false;
+            return $this->notBeenSurrendered($licence) || $this->hasBeenSubmitted($surrender) ? parent::isValid($entityId):false;
         }
         return parent::isValid($entityId);
     }
