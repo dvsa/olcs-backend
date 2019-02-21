@@ -24,7 +24,7 @@ class Generator extends AbstractGenerator
             $this->getSignatureSection($surrender)
         ];
 
-        if ($surrender->getLicence()->getLicenceType() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
+        if ($surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL) {
             array_splice($sections, 3, 0, [$this->getCommunityLicenceSection($surrender)]);
         }
         return $this->generateReadonly(
