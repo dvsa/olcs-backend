@@ -6,10 +6,12 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
+use Dvsa\Olcs\Api\Entity\Surrender;
 
 class CanAccessLicenceForSurrender extends CanAccessLicence implements HandlerInterface
 {
     use LicenceStatusAwareTrait;
+    use SurrenderStatusAwareTrait;
     use AuthAwareTrait;
 
     protected $repo = 'Licence';
@@ -20,8 +22,11 @@ class CanAccessLicenceForSurrender extends CanAccessLicence implements HandlerIn
 
         $licence = $this->getRepo($this->repo)->fetchById($entityId);
 
+        $surrender = $this->getRepo('Surrender')->fetchByLicenceId($entityId);
+
+
         if ($this->isExternalUser()) {
-            return $this->notBeenSurrendered($licence) ? parent::isValid($entityId):false;
+            return $this->notBeenSurrendered($licence) || $this->hasBeenSubmitted($surrender) ? parent::isValid($entityId):false;
         }
         return parent::isValid($entityId);
     }

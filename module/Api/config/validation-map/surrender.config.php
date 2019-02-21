@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicenceForSurrender;
 
 return [
     CommandHandler\Surrender\Create::class                              => CanSurrenderLicence::class,
-    CommandHandler\Surrender\Update::class                              => CanAccessLicenceWithId::class,
+    CommandHandler\Surrender\Update::class                              => CanAccessLicenceForSurrender::class,
     CommandHandler\Surrender\Delete::class                              => CanDeleteSurrender::class,
     QueryHandler\Surrender\GetStatus::class                             => CanAccessLicenceForSurrender::class,
     QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceForSurrender::class,
