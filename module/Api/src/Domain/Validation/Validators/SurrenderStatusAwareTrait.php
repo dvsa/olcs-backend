@@ -7,8 +7,8 @@ use Dvsa\Olcs\Api\Entity\Surrender;
 
 trait SurrenderStatusAwareTrait
 {
-    protected function hasNotBeenSubmitted(Surrender $surrender)
+    protected function hasBeenSubmitted(Surrender $surrender)
     {
-        return $surrender->getStatus() !== Surrender::SURRENDER_STATUS_SUBMITTED;
+        return $surrender->getStatus() === Surrender::SURRENDER_STATUS_SUBMITTED;
     }
 }
