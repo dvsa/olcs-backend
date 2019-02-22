@@ -1559,4 +1559,20 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
 
         return $totalChanges;
     }
+
+    /**
+     * Whether the status of this licence is one required for community licence reprint
+     *
+     * @return bool
+     */
+    public function hasStatusRequiredForCommunityLicenceReprint()
+    {
+        $eligibleStatusIds = [
+            self::LICENCE_STATUS_VALID,
+            self::LICENCE_STATUS_SUSPENDED,
+            self::LICENCE_STATUS_CURTAILED
+        ];
+
+        return in_array($this->getStatus()->getId(), $eligibleStatusIds);
+    }
 }
