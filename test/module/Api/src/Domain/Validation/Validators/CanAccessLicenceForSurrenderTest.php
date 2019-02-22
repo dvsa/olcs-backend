@@ -97,14 +97,14 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 Permission::INTERNAL_USER,
                 false,
                 Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
-                Surrender::SURRENDER_STATUS_SIGNED,
+                Surrender::SURRENDER_STATUS_SUBMITTED,
                 true
             ],
             'selfservice-user-surrender-submitted' => [
                 Permission::SELFSERVE_USER,
                 true,
                 Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
-                Surrender::SURRENDER_STATUS_SUBMITTED,
+                Surrender::SURRENDER_STATUS_SIGNED,
                 true
             ]
         ];
