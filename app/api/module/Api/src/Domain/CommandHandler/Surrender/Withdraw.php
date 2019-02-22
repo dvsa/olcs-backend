@@ -55,7 +55,7 @@ class Withdraw extends AbstractSurrenderCommandHandler
         $surrender = $this->getSurrender($this->licenceId);
         $tasks = $this->getRepo('Task')->fetchOpenTasksForSurrender($surrender->getId());
 
-        $taskIds = array_map(function (Task $task) {
+        $taskIds = array_map(function ($task) {
             return $task->getId();
         }, $tasks);
 

@@ -63,6 +63,6 @@ final class Create extends AbstractSurrenderCommandHandler
         $this->getRepo()->save($surrender);
 
         $this->result->addId('surrender', $surrender->getId());
-        $this->result->addMessage('Surrender successfully restarted after withdrawl.');
+        $this->result->addMessage('Surrender successfully restarted after being withdrawn.');
     }
 }

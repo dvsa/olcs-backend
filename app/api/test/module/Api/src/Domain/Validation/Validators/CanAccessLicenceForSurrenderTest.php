@@ -109,12 +109,4 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
             ]
         ];
     }
-
-    /**
-     * @param $mockSurrender
-     */
-    private function getMockSurrender($mockSurrender, $surrenderStatus): void
-    {
-        $mockSurrender->shouldReceive('getStatus->getId')->andReturn($surrenderStatus);
-    }
 }

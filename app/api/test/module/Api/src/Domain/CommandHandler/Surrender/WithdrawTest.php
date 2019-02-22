@@ -6,10 +6,15 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Withdraw as WithdrawHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\Surrender\Delete as DeleteCommand;
+use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearCommand;
+use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateCommand;
 use Dvsa\Olcs\Transfer\Command\Surrender\Withdraw as WithdrawCommand;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
@@ -26,6 +31,7 @@ class WithdrawTest extends CommandHandlerTestCase
         $this->sut = new WithdrawHandler();
         $this->mockRepo('Surrender', SurrenderRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockRepo('Task', TaskRepo::class);
         $this->refData = [];
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class)
@@ -46,24 +52,50 @@ class WithdrawTest extends CommandHandlerTestCase
     {
         $licenceId = 111;
 
-        $data = [
-            'id' => $licenceId,
-        ];
-
-        $command = WithdrawCommand::create($data);
+        $this->expectedSideEffect(
+            UpdateCommand::class,
+            [
+                'id' => $licenceId,
+                'status' => RefData::SURRENDER_STATUS_WITHDRAWN
+            ],
+            new Result()
+        );
 
         $this->expectedSideEffect(
-            DeleteCommand::class,
+            ClearCommand::class,
             [
                 'id' => $licenceId
             ],
             new Result()
         );
 
-        $this->queryHandler
-            ->shouldReceive('handleQuery')
+        $surrenderEntity = new SurrenderEntity();
+        $surrenderEntity->setId(1);
+
+        $this->repoMap['Surrender']
+            ->shouldReceive('fetchOneByLicenceId')
+            ->with($licenceId, 1)
             ->once()
-            ->andReturn(['status' => 'licence_status']);
+            ->andReturn($surrenderEntity);
+
+        $taskEntity = m::mock(TaskEntity::class);
+        $taskEntity->shouldReceive('getId')
+            ->once()
+            ->andReturn(11);
+
+        $this->repoMap['Task']
+            ->shouldReceive('fetchOpenTasksForSurrender')
+            ->with(1)
+            ->once()
+            ->andReturn([$taskEntity]);
+
+        $this->expectedSideEffect(
+            CloseTasks::class,
+            [
+                'ids' => [11]
+            ],
+            new Result()
+        );
 
         $licence = $this->getTestingLicence();
         $this->repoMap['Licence']
@@ -77,6 +109,12 @@ class WithdrawTest extends CommandHandlerTestCase
             ->with(m::type(LicenceEntity::class))
             ->once();
 
+        $this->queryHandler
+            ->shouldReceive('handleQuery')
+            ->once()
+            ->andReturn(['status' => 'licence_status']);
+
+        $command = WithdrawCommand::create(['id' => $licenceId]);
         $this->sut->handleCommand($command);
     }
 }
