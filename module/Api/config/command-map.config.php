@@ -1094,6 +1094,7 @@ return [
     Command\Surrender\Snapshot::class => CommandHandler\Surrender\Snapshot::class,
     TransferCommand\Surrender\Approve::class => CommandHandler\Surrender\Approve::class,
     TransferCommand\Surrender\Withdraw::class => CommandHandler\Surrender\Withdraw::class,
+    Command\Surrender\Clear::class => CommandHandler\Surrender\Clear::class,
 
     // Permits - IRHP application
     TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,
