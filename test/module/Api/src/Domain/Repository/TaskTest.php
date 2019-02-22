@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\Repository\Task
@@ -276,6 +276,49 @@ class TaskTest extends RepositoryTestCase
         $this->assertEquals(
             ['result'],
             $this->sut->fetchOpenedTasksForLicences($licenceIds, $categoryId, $subCategoryId, $description)
+        );
+    }
+
+    public function testFetchOpenTasksForSurrender()
+    {
+        $surrenderId = 1;
+        $qb = m::mock(QueryBuilder::class);
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('expr->eq')
+            ->with('m.surrender', ':surrenderId')
+            ->once()
+            ->andReturn('EXPR1');
+
+        $qb->shouldReceive('where')
+            ->with('EXPR1')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('setParameter')
+            ->with('surrenderId', $surrenderId)
+            ->once()
+            ->andReturnSelf();
+
+        $qb->shouldReceive('expr->eq')
+            ->with('m.isClosed', ':isClosed')
+            ->once()
+            ->andReturn('EXPR2');
+
+        $qb->shouldReceive('andWhere')
+            ->with('EXPR2')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('setParameter')
+            ->with('isClosed', 0)
+            ->once()
+            ->andReturnSelf();
+
+        $qb->shouldReceive('getQuery->getResult')
+            ->andReturn(['result']);
+
+        $this->assertSame(
+            ['result'],
+            $this->sut->fetchOpenTasksForSurrender($surrenderId)
         );
     }
 }
