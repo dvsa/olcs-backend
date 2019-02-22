@@ -46,7 +46,7 @@ class ClearTest extends CommandHandlerTestCase
 
         $this->repoMap['Surrender']
             ->shouldReceive('save')
-            ->with(m::type(SurrenderEntity::class))
+            ->with($surrenderEntity)
             ->once();
 
         $command = ClearCommand::create(['id' => 111]);
