@@ -64,7 +64,8 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
             $printQueue = EnqueueFileCommand::create(
                 [
                     'documentId' => $docId,
-                    'jobName' => 'Community Licence'
+                    'jobName' => 'Community Licence',
+                    'user' => $command->getUser(),
                 ]
             );
 
