@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareTrait;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class IsLicenceSurrenderable extends AbstractValidator implements AuthAwareInterface, RepositoryManagerAwareInterface
 {
@@ -29,7 +30,7 @@ class IsLicenceSurrenderable extends AbstractValidator implements AuthAwareInter
 
         $existingSurrender = $this->getRepo('Surrender')->fetchByLicenceId($licenceId);
 
-        if (count($existingSurrender) > 0) {
+        if (count($existingSurrender) > 0 && $existingSurrender[0]->getStatus() === RefData::SURRENDER_STATUS_WITHDRAWN) {
             throw new ForbiddenException('A surrender record already exists for this licence');
         }
 
