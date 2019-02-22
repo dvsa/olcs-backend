@@ -306,6 +306,17 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Returns the emissions category defined against the IrhpPermitWindow
+     *
+     * @return string
+     */
+    public function getWindowEmissionsCategory()
+    {
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        return $irhpPermitApplication->getIrhpPermitWindow()->getEmissionsCategory()->getId();
+    }
+
+    /**
      * Proceeds the application from under consideration to awaiting fee during the accept scoring process
      *
      * @param RefData $awaitingFeeStatus
@@ -370,7 +381,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
-            'hasOutstandingFees' => $this->hasOutstandingFees()
+            'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'windowEmissionsCategory' => $this->getWindowEmissionsCategory()
         ];
     }
 

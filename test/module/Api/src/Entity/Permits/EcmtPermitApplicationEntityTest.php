@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -1043,5 +1044,18 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [1, 'Yes', 0, 'No', ['GB'], 'Yes'],
             [0, 'No', 1, 'Yes', [], 'No'],
         ];
+    }
+
+    public function testGetWindowEmissionsCategory()
+    {
+        $entity = $this->createApplication();
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
+            ->andReturn(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF);
+
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, $entity->getWindowEmissionsCategory());
     }
 }
