@@ -178,4 +178,14 @@ class CommunityLic extends AbstractCommunityLic
             'currentWithdrawal' => $this->getCurrentWithdrawal()
         ];
     }
+
+    /**
+     * Whether the community licence is active
+     *
+     * @return bool
+     */
+    public function isActive()
+    {
+        return ($this->getStatus()->getId() === self::STATUS_ACTIVE);
+    }
 }

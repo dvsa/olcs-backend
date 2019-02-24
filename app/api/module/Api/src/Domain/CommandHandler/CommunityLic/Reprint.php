@@ -72,6 +72,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
                 'licence' => $licenceId,
                 'communityLicenceIds' => $ids,
                 'identifier' => $command->getApplication(),
+                'user' => $command->getUser(),
             ]
         );
         $result->merge($this->handleSideEffect($generateBatchCmd));
