@@ -22,9 +22,9 @@ class CanConfirmSurrender extends AbstractCanAccessEntity implements HandlerInte
     public function isValid($dto)
     {
         $entityId = $dto->getId();
-        $this->surrender = $this->getRepo($this->repo)->fetchOneByLicenceId($entityId);
+        $surrender = $this->getRepo($this->repo)->fetchOneByLicenceId($entityId);
 
-        if ($this->surrender->getStatus()->getId() === RefData::SURRENDER_STATUS_SIGNED) {
+        if ($surrender->getStatus()->getId() === RefData::SURRENDER_STATUS_SIGNED) {
             return parent::isValid($entityId);
         }
 
