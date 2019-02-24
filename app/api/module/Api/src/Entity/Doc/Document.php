@@ -59,7 +59,9 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_NI = 1433; // /tempates/NI/CNS_Letter_to_operator.rtf
 
     const GV_UK_COMMUNITY_LICENCE_GB = 'UK_licence_for_the_Community_GV_GB';
+    const GV_UK_COMMUNITY_LICENCE_GB_COVER_LETTER = 'UK_licence_for_the_Community_Cover_Letter_GV_GB';
     const GV_UK_COMMUNITY_LICENCE_NI = 'UK_licence_for_the_Community_GV_NI';
+    const GV_UK_COMMUNITY_LICENCE_NI_COVER_LETTER = 'UK_licence_for_the_Community_Cover_Letter_GV_NI';
     const GV_UK_COMMUNITY_LICENCE_PSV = 'PSV_certified_copy';
 
     /**
