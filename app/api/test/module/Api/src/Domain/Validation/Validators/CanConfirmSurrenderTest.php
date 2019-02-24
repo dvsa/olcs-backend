@@ -3,7 +3,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
-
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanConfirmSurrender;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
