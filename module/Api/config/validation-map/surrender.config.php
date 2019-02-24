@@ -10,17 +10,18 @@ use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessLicenceForSurrender;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanConfirmSurrender;
 
 return [
+    CommandHandler\Surrender\Approve::class                             => IsInternalUser::class,
+    CommandHandler\Surrender\Clear::class                               => IsInternalUser::class,
     CommandHandler\Surrender\Create::class                              => CanSurrenderLicence::class,
-    CommandHandler\Surrender\Update::class                              => CanAccessLicenceForSurrender::class,
     CommandHandler\Surrender\Delete::class                              => CanDeleteSurrender::class,
     QueryHandler\Surrender\GetSignature::class                          => CanConfirmSurrender::class,
+    CommandHandler\Surrender\Withdraw::class                            => IsInternalUser::class,
+    CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
+    CommandHandler\Surrender\SubmitForm::class                          => CanAccessLicenceForSurrender::class,
+    CommandHandler\Surrender\Update::class                              => CanAccessLicenceForSurrender::class,
     QueryHandler\Surrender\ByLicence::class                             => CanAccessLicenceForSurrender::class,
     QueryHandler\Surrender\OpenBusReg::class                            => IsInternalUser::class,
-    CommandHandler\Surrender\SubmitForm::class                          => CanAccessLicenceForSurrender::class,
-    CommandHandler\Surrender\Snapshot::class                            => CanAccessLicenceWithId::class,
     QueryHandler\Surrender\OpenCases::class                             => IsInternalUser::class,
-    CommandHandler\Surrender\Approve::class                             => IsInternalUser::class,
-    CommandHandler\Surrender\Withdraw::class                            => IsInternalUser::class,
     QueryHandler\Surrender\PreviousLicenceStatus::class                 => CanAccessLicenceWithId::class,
 
 ];

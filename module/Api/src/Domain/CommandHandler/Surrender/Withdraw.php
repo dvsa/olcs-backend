@@ -3,15 +3,20 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearSurrender;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Surrender\Delete as DeleteSurrender;
+use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
+use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
 use Dvsa\Olcs\Transfer\Query\Surrender\PreviousLicenceStatus;
 
 class Withdraw extends AbstractSurrenderCommandHandler
 {
+    protected $extraRepos = ['Licence', 'Task'];
 
-    protected $extraRepos = ['Licence'];
+    protected $licenceId;
 
     /**
      * @param CommandInterface $command
@@ -20,23 +25,55 @@ class Withdraw extends AbstractSurrenderCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = $this->handleSideEffect(DeleteSurrender::create(
-            [
-                'id' => $command->getId()
-            ]
-        ));
+        $this->licenceId = $command->getId();
+
+        $this->handleSurrender();
+        $this->handleTasks();
+        $this->handleLicence();
+
+        $this->result->addMessage('Withdrawn surrender for licence ' . $this->licenceId);
+
+        return $this->result;
+    }
+
+    protected function handleSurrender()
+    {
+        $result = $this->handleSideEffect(UpdateSurrender::create([
+            'id' => $this->licenceId,
+            'status' => RefData::SURRENDER_STATUS_WITHDRAWN
+        ]));
         $this->result->addMessage($result);
 
+        $result = $this->handleSideEffect(ClearSurrender::create([
+            'id' => $this->licenceId
+        ]));
+        $this->result->addMessage($result);
+    }
+
+    protected function handleTasks()
+    {
+        $surrender = $this->getSurrender($this->licenceId);
+        $tasks = $this->getRepo('Task')->fetchOpenTasksForSurrender($surrender->getId());
+
+        $taskIds = array_map(function ($task) {
+            return $task->getId();
+        }, $tasks);
+
+        $result = $this->handleSideEffect(CloseTasks::create([
+            'ids' => $taskIds
+        ]));
+        $this->result->addMessage($result);
+    }
+
+    protected function handleLicence()
+    {
         /** @var Licence $licence */
-        $licence = $this->getRepo('Licence')->fetchById($command->getId());
-        $previousStatus = $this->handleQuery(PreviousLicenceStatus::create(['id' => $command->getId()]));
+        $licence = $this->getRepo('Licence')->fetchById($this->licenceId);
+        $previousStatus = $this->handleQuery(PreviousLicenceStatus::create(['id' => $this->licenceId]));
         $status = $this->getRepo()->getRefdataReference($previousStatus['status']);
         $licence->setStatus($status);
 
         $this->getRepo('Licence')->save($licence);
-
-        $this->result->addMessage('Licence ' . $licence->getId() . ' surrender withdrawn');
-
-        return $this->result;
+        $this->result->addMessage('Reset status for licence ' . $this->licenceId);
     }
 }
