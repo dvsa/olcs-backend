@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -23,7 +22,6 @@ final class GetSignature extends AbstractQueryHandler implements ToggleRequiredI
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
     protected $repoServiceName = 'Surrender';
 
-
     /**
      * handleQuery
      *
@@ -39,7 +37,6 @@ final class GetSignature extends AbstractQueryHandler implements ToggleRequiredI
         return $this->result(
             $surrender,
             ['signatureType', 'digitalSignature']
-
         );
     }
 }
