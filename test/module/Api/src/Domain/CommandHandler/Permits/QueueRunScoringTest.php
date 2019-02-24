@@ -36,10 +36,13 @@ class QueueRunScoringTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $stockId = 47;
+        $deviation = 1.5;
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
             ->andReturn($stockId);
+        $command->shouldReceive('getDeviation')
+            ->andReturn($deviation);
 
         $this->sut->shouldReceive('handleQuery')
             ->andReturnUsing(function ($query) use ($stockId) {
@@ -52,7 +55,7 @@ class QueueRunScoringTest extends CommandHandlerTestCase
                 ];
             });
 
-        $this->expectedQueueSideEffect($stockId, Queue::TYPE_RUN_ECMT_SCORING, []);
+        $this->expectedQueueSideEffect($stockId, Queue::TYPE_RUN_ECMT_SCORING, ['deviation' => 1.5]);
 
         $stock = m::mock(IrhpPermitStockEntity::class);
         $stock->shouldReceive('proceedToScoringPending')
