@@ -80,11 +80,14 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
 
         $stockIdParams = ['stockId' => $this->stockId];
 
+        $initialiseScopeParams = $stockIdParams;
+        $initialiseScopeParams['deviation'] = $command->getDeviation();
+
         try {
             $this->result->merge(
                 $this->handleSideEffects(
                     [
-                        InitialiseScope::create($stockIdParams),
+                        InitialiseScope::create($initialiseScopeParams),
                         MarkSuccessfulSectorPermitApplications::create($stockIdParams),
                         MarkSuccessfulDaPermitApplications::create($stockIdParams),
                         MarkSuccessfulRemainingPermitApplications::create($stockIdParams),
