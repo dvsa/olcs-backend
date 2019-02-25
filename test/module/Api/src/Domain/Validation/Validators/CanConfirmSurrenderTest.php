@@ -29,18 +29,20 @@ class CanConfirmSurrenderTest extends AbstractValidatorsTestCase
         $statusEntity->shouldReceive('getId')->andReturn($status);
 
         $surrenderEntity = m::mock(Surrender::class);
-        $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
-        $surrenderEntity->shouldReceive('getStatus')->andReturn($statusEntity);
         $repo = $this->mockRepo('Surrender');
-        $repo->shouldReceive('fetchOneByLicenceId')->with(1)->andReturn($surrenderEntity);
 
         if ($this->dataDescription() === 'signed surrender') {
             $this->setIsGranted(Permission::INTERNAL_USER, false);
             $this->auth->shouldReceive('getIdentity')->andReturn(null);
             $repo->shouldReceive('fetchById')->once()->andReturn($surrenderEntity);
             $this->setIsValid('isOwner', [$surrenderEntity], true);
+            $surrenderEntity->shouldReceive('getId')->twice()->andReturn(1);
+        } else {
+            $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
         }
 
+        $surrenderEntity->shouldReceive('getStatus')->andReturn($statusEntity);
+        $repo->shouldReceive('fetchOneByLicenceId')->with(1)->andReturn($surrenderEntity);
 
         $this->assertSame($expected, $this->sut->isValid($surrenderEntity));
     }
