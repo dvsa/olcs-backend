@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Class GetStatus
+ * Class GetSignature
  *
  * @package Dvsa\Olcs\Api\Domain\QueryHandler\Surrender
  */
