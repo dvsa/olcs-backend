@@ -60,6 +60,14 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
 
         $repo = $this->mockRepo('Licence');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
+        $surrenderRepo = $this->mockRepo('Surrender');
+        $surrenderEntity = m::mock(Surrender::class);
+        $surrenderEntity->shouldReceive('getId')->andReturn(1);
+        $surrenderEntity->shouldReceive('getStatus->getId')->andReturn($surrenderStatus);
+        $surrenderRepo->shouldReceive('fetchOneByLicenceId')->andReturn(
+            $surrenderEntity
+        );
+        $this->setIsValid('isOwner', [$surrenderEntity], $isOwner);
         $this->assertEquals($expected, $this->sut->isValid($entity));
     }
 

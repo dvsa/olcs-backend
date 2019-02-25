@@ -12,8 +12,8 @@ trait SurrenderStatusAwareTrait
      *
      * @return bool
      */
-    protected function hasBeenSigned(array $surrender)
+    protected function hasBeenSigned(Surrender $surrender)
     {
-        return $surrender['status']['id'] === Surrender::SURRENDER_STATUS_SIGNED;
+        return $surrender->getStatus()->getId() === Surrender::SURRENDER_STATUS_SIGNED;
     }
 }
