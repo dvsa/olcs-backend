@@ -33,9 +33,9 @@ class GenerateCoverLetterTest extends CommandHandlerTestCase
     }
 
     /**
-     * @dataProvider dpHandleCommand
+     * @dataProvider dpHandleCommandForGoods
      */
-    public function testHandleCommand($isNi, $expectedTemplate)
+    public function testHandleCommandForGoods($isNi, $expectedTemplate)
     {
         $licenceId = 100;
         $userId = 200;
@@ -49,6 +49,10 @@ class GenerateCoverLetterTest extends CommandHandlerTestCase
         $command = GenerateCoverLetterCmd::create($data);
 
         $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('isPsv')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false)
             ->shouldReceive('isNi')
             ->withNoArgs()
             ->once()
@@ -107,7 +111,7 @@ class GenerateCoverLetterTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function dpHandleCommand()
+    public function dpHandleCommandForGoods()
     {
         return [
             'GB' => [
@@ -119,5 +123,42 @@ class GenerateCoverLetterTest extends CommandHandlerTestCase
                 'expectedTemplate' => Document::GV_UK_COMMUNITY_LICENCE_NI_COVER_LETTER
             ],
         ];
+    }
+
+    public function testHandleCommandForPsv()
+    {
+        $licenceId = 100;
+        $userId = 200;
+
+        $data = [
+            'licence' => $licenceId,
+            'user' => $userId
+        ];
+
+        $command = GenerateCoverLetterCmd::create($data);
+
+        $mockLicence = m::mock(Licence::class)
+            ->shouldReceive('isPsv')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true)
+            ->getMock();
+
+        $this->repoMap['Licence']
+            ->shouldReceive('fetchById')
+            ->with($licenceId)
+            ->once()
+            ->andReturn($mockLicence);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [],
+            'messages' => [
+                'UK licence for the Community cover letter not required for PSV',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
     }
 }
