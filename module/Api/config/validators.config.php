@@ -57,6 +57,7 @@ return [
         'canAccessIrhpApplicationWithId' => Validators\CanAccessIrhpApplicationWithId::class,
         'canEditIrhpApplicationWithId' => Validators\CanEditIrhpApplicationWithId::class,
         'canDeleteSurrender' => Validators\CanDeleteSurrender::class,
-        'canAccessLicenceForSurrender' => Validators\CanAccessLicenceForSurrender::class
+        'canAccessLicenceForSurrender' => Validators\CanAccessLicenceForSurrender::class,
+        'canConfirmSurrender' => Validators\CanConfirmSurrender::class,
     ]
 ];

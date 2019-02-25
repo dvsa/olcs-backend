@@ -31,8 +31,6 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
         $this->auth->shouldReceive('getIdentity')->andReturn(null);
         $entity = m::mock(Licence::class);
         $entity->shouldReceive('getId')->once()->andReturn(111);
-
-
         switch ($this->dataDescription()) {
             case 'selfservice-user-owner':
                 $this->setIsValid('isOwner', [$entity], $isOwner);
@@ -55,7 +53,6 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 $this->setIsValid('isOwner', [$entity], $isOwner);
                 break;
             case 'selfservice-user-surrender-submitted':
-                $this->setIsGranted(Permission::INTERNAL_USER, false);
                 $this->setIsValid('isOwner', [$entity], $isOwner);
                 $entity->shouldReceive('getStatus->getId')->once()->andReturn($licenceState);
         }
@@ -63,8 +60,6 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
 
         $repo = $this->mockRepo('Licence');
         $repo->shouldReceive('fetchById')->with(111)->andReturn($entity);
-        $repo2 = $this->mockRepo('Surrender');
-        $repo2->shouldReceive('fetchByLicenceId')->with(111)->andReturn(['status'=>['id'=>$surrenderStatus]]);
         $this->assertEquals($expected, $this->sut->isValid($entity));
     }
 
@@ -97,15 +92,15 @@ class CanAccessLicenceForSurrenderTest extends AbstractValidatorsTestCase
                 Permission::INTERNAL_USER,
                 false,
                 Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
-                Surrender::SURRENDER_STATUS_SUBMITTED,
+                Surrender::SURRENDER_STATUS_SIGNED,
                 true
             ],
             'selfservice-user-surrender-submitted' => [
                 Permission::SELFSERVE_USER,
                 true,
                 Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
-                Surrender::SURRENDER_STATUS_SIGNED,
-                true
+                Surrender::SURRENDER_STATUS_SUBMITTED,
+                false
             ]
         ];
     }
