@@ -32,6 +32,12 @@ final class GenerateCoverLetter extends AbstractCommandHandler
         /** @var Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
+        if ($licence->isPsv()) {
+            $this->result->addMessage('UK licence for the Community cover letter not required for PSV');
+
+            return $this->result;
+        }
+
         // get template
         $template = $this->getTemplate($licence);
 
