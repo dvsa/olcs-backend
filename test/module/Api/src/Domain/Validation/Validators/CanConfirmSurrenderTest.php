@@ -4,6 +4,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanConfirmSurrender;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -29,18 +30,19 @@ class CanConfirmSurrenderTest extends AbstractValidatorsTestCase
         $statusEntity->shouldReceive('getId')->andReturn($status);
 
         $surrenderEntity = m::mock(Surrender::class);
+        $LicenceEntity = m::mock(Licence::class);
         $repo = $this->mockRepo('Surrender');
+        $repo2 = $this->mockRepo('Licence');
 
         if ($this->dataDescription() === 'signed surrender') {
             $this->setIsGranted(Permission::INTERNAL_USER, false);
             $this->auth->shouldReceive('getIdentity')->andReturn(null);
-            $repo->shouldReceive('fetchById')->once()->andReturn($surrenderEntity);
+             $repo2->shouldReceive('get')->with('Licence');
+            $repo2->shouldReceive('fetchById')->once()->andReturn($LicenceEntity);
             $this->setIsValid('isOwner', [$surrenderEntity], true);
-            $surrenderEntity->shouldReceive('getId')->twice()->andReturn(1);
-        } else {
-            $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
+            $this->setIsValid('isOwner', [$LicenceEntity], true);
         }
-
+        $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
         $surrenderEntity->shouldReceive('getStatus')->andReturn($statusEntity);
         $repo->shouldReceive('fetchOneByLicenceId')->with(1)->andReturn($surrenderEntity);
 
