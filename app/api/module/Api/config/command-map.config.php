@@ -1100,6 +1100,7 @@ return [
     TransferCommand\Surrender\Withdraw::class => CommandHandler\Surrender\Withdraw::class,
     Command\Surrender\Clear::class => CommandHandler\Surrender\Clear::class,
 
+
     // Permits - IRHP application
     TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,
     TransferCommand\IrhpApplication\UpdateMultipleNoOfPermits::class => CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class,

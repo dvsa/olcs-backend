@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -11,13 +10,17 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
-final class GetStatus extends AbstractQueryHandler implements ToggleRequiredInterface
+/**
+ * Class GetSignature
+ *
+ * @package Dvsa\Olcs\Api\Domain\QueryHandler\Surrender
+ */
+final class GetSignature extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
     protected $repoServiceName = 'Surrender';
-   
 
     /**
      * handleQuery
@@ -29,11 +32,11 @@ final class GetStatus extends AbstractQueryHandler implements ToggleRequiredInte
      */
     public function handleQuery(QueryInterface $query)
     {
-        $licenceId  = $query->getId();
+        $licenceId = $query->getId();
         $surrender = $this->getRepo()->fetchOneByLicence($licenceId, Query::HYDRATE_OBJECT);
-        $status = $surrender->getStatus();
         return $this->result(
-            $status
+            $surrender,
+            ['signatureType', 'digitalSignature']
         );
     }
 }
