@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplication;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -59,6 +60,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $this->maybeCancelApplicationTasks($fee);
         $this->maybeProcessEcmtPermitApplicationFee($fee);
         $this->maybeProcessEcmtPermitIssueFee($fee);
+        $this->maybeProcessIrhpApplicationFee($fee);
         $this->maybeCloseFeeTask($fee);
 
         return $this->result;
@@ -117,7 +119,6 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         );
     }
 
-
     /**
      * Process ecmt permit application fee
      *
@@ -174,6 +175,32 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
                 ['id' => $ecmtPermitApplication->getId()]
             ))
         );
+    }
+
+    /**
+     * Process irhp application fees
+     *
+     * @param Fee $fee fee
+     *
+     * @return void
+     */
+    protected function maybeProcessIrhpApplicationFee(Fee $fee)
+    {
+        $irhpApplication = $fee->getIrhpApplication();
+
+        if ($irhpApplication === null
+            || !$fee->getFeeType()->isIrhpApplicationIssue()
+            || !$irhpApplication->canBeSubmitted()
+        ) {
+            return;
+        }
+
+        // IrhpApplications have 2 fees, and could paid by ICW in any order. Only attempt following if its the last outstanding Fee
+        if (!$irhpApplication->hasOutstandingFees()) {
+            $this->result->merge(
+                $this->handleSideEffectAsSystemUser(SubmitIrhpApplication::create(['id' => $irhpApplication->getId()]))
+            );
+        }
     }
 
     /**
