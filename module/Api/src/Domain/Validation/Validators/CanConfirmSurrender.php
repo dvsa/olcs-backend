@@ -14,11 +14,6 @@ class CanConfirmSurrender extends AbstractCanAccessEntity implements HandlerInte
 {
     protected $repo = 'Surrender';
 
-    /**
-     * @var Surrender
-     */
-    private $surrender;
-
     public function isValid($dto)
     {
         $entityId = $dto->getId();
