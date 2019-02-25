@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Class CanConfirmSurrender
@@ -14,15 +13,15 @@ class CanConfirmSurrender extends AbstractCanAccessEntity implements HandlerInte
 {
     use SurrenderStatusAwareTrait;
 
-    protected $repo = 'Surrender';
+    protected $repo = 'Licence';
 
     public function isValid($dto)
     {
         $entityId = $dto->getId();
-        $surrender = $this->getRepo($this->repo)->fetchOneByLicenceId($entityId);
+        $surrender = $this->getRepo('Surrender')->fetchOneByLicenceId($entityId);
 
         if ($this->hasBeenSigned($surrender)) {
-            return parent::isValid($surrender->getId());
+            return parent::isValid($entityId);
         }
 
         return false;
