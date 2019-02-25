@@ -12,6 +12,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class CanConfirmSurrender extends AbstractCanAccessEntity implements HandlerInterface
 {
+    use SurrenderStatusAwareTrait;
+
     protected $repo = 'Surrender';
 
     public function isValid($dto)
@@ -19,8 +21,8 @@ class CanConfirmSurrender extends AbstractCanAccessEntity implements HandlerInte
         $entityId = $dto->getId();
         $surrender = $this->getRepo($this->repo)->fetchOneByLicenceId($entityId);
 
-        if ($surrender->getStatus()->getId() === RefData::SURRENDER_STATUS_SIGNED) {
-            return parent::isValid($entityId);
+        if ($this->hasBeenSigned($surrender)) {
+            return parent::isValid($surrender->getId());
         }
 
         return false;
