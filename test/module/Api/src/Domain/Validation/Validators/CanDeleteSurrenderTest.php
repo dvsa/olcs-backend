@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery as m;
 
 class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
