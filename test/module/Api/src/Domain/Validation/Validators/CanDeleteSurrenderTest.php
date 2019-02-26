@@ -3,8 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanDeleteSurrender;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Mockery as m;
 
 class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
@@ -27,15 +30,31 @@ class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
     public function testIsValid($surrender, $expected)
     {
         $statusEntity = m::mock(RefData::class);
-        $statusEntity->shouldReceive('getId')->andReturn($surrender['status']);
+
+        $organisationId = 5;
 
         $surrenderEntity = m::mock(Surrender::class);
         $surrenderEntity->shouldReceive('getStatus')->andReturn($statusEntity);
+
+        $LicenceEntity = m::mock(Licence::class);
+
+        $SurrenderRepo = $this->mockRepo('Surrender');
+        $SurrenderRepo->shouldReceive('fetchOneByLicenceId')->with(1)->andReturn($surrenderEntity);
+
+        $statusEntity->shouldReceive('getId')->andReturn($surrender['status']);
+
         $surrenderEntity->shouldReceive('getCreatedOn')->andReturn($surrender['createdOn']);
         $surrenderEntity->shouldReceive('getLastModifiedOn')->andReturn($surrender['lastModifiedOn']);
 
-        $repo = $this->mockRepo('Surrender');
-        $repo->shouldReceive('fetchOneByLicenceId')->with(1)->andReturn($surrenderEntity);
+        $LicenceRepo = $this->mockRepo('Licence');
+
+        if ($this->dataDescription() !== 'not_withdrawn_or_expired') {
+            $this->setIsGranted(Permission::INTERNAL_USER, false);
+            $this->auth->shouldReceive('getIdentity')->andReturn(null);
+            $this->setIsValid('isOwner', [$LicenceEntity], true);
+            $LicenceRepo->shouldReceive('get')->with('Licence');
+            $LicenceRepo->shouldReceive('fetchById')->once()->andReturn($LicenceEntity);
+        }
 
         $this->assertSame($expected, $this->sut->isValid(1));
     }
