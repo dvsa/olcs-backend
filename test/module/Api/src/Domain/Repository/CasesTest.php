@@ -37,6 +37,7 @@ class CasesTest extends RepositoryTestCase
 
     /**
      * @param $qb
+     *
      * @return m\MockInterface
      */
     public function getMockRepo($qb)
@@ -108,7 +109,7 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('with')->with('licence', 'l')->once()->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->once()->andReturnSelf()
             ->shouldReceive('with')->with('l.trafficArea', 'ta')->once()->andReturnSelf()
-            ->shouldReceive('with')->once() ->andReturnSelf()
+            ->shouldReceive('with')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
         $this->sut->shouldReceive('fetchPaginatedList')->andReturn('EXPECT');
@@ -294,5 +295,34 @@ class CasesTest extends RepositoryTestCase
             ->andReturnSelf();
 
         $this->sut->buildDefaultListQuery($this->mockDqb, $this->mockQi);
+    }
+
+    public function testFetchOpenCasesForSurrender()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->times(2)->andReturnSelf()
+            ->shouldReceive('withRefdata')->with()->times(2)->andReturnSelf()
+            ->shouldReceive('with')->with('caseType', 'ct')->times(2)->andReturnSelf();
+
+
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $this->mockQi->shouldReceive('getId')->andReturn(95);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchOpenCasesForSurrender($this->mockQi));
+
+
+        $expectedQuery = 'BLAH SELECT CONCAT(ct.description, m.id) as HIDDEN caseType AND m.licence = [[95]] AND m.closedDate IS NULL';
+        $this->assertEquals($expectedQuery, $this->query);
+        $this->sut->fetchOpenCasesForSurrender($this->mockQi);
     }
 }

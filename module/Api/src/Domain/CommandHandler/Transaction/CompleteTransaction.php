@@ -16,13 +16,14 @@ use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;
 use Dvsa\Olcs\Api\Domain\CpmsAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as CompleteTransactionCmd;
 
 /**
  * Complete Payment
@@ -36,8 +37,21 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
 
     protected $repoServiceName = 'Transaction';
 
+    /**
+     * Handle command
+     *
+     * @param CommandInterface $command complete transaction command
+     *
+     * @return Result
+     * @throws ValidationException
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
     public function handleCommand(CommandInterface $command)
     {
+        /**
+         * @var CompleteTransactionCmd $command
+         * @var Transaction            $transaction
+         */
 
         // ensure payment ref exists
         $reference = $command->getReference();
@@ -63,6 +77,7 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
         }
 
         if ($transaction->isPaid()) {
+            /** @var Fee $fee */
             foreach ($fees as $fee) {
                 if (!empty($fee->getEcmtPermitApplication())) {
                     $this->updateEcmtPermitApplication($fee);
@@ -109,7 +124,10 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
     }
 
     /**
+     * Submit the Ecmt application
+     *
      * @param Fee $fee Fee object
+     *
      * @return void
      */
     protected function updateEcmtPermitApplication(Fee $fee)
@@ -128,7 +146,10 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
     }
 
     /**
+     * Submit the Irhp application
+     *
      * @param Fee $fee Fee object
+     *
      * @return void
      */
     protected function updateIrhpApplication(Fee $fee)

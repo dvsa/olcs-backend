@@ -21,7 +21,7 @@ class LicenceWithCorrespondenceCd extends AbstractQueryHandler
     {
         /** @var Entity\Licence\Licence $licence */
         $licence = $this->getRepo()->fetchUsingId($query);
-
+        $tradingNames = $this->resultList($licence->getTradingNames());
         return $this->result(
             $licence,
             [
@@ -33,9 +33,12 @@ class LicenceWithCorrespondenceCd extends AbstractQueryHandler
                         'phoneContactType',
                     ]
                 ],
+                'organisation'
+            ],
+            [
                 'organisation' => [
-                    'tradingNames',
-                ],
+                    'tradingNames' => $tradingNames
+                ]
             ]
         );
     }

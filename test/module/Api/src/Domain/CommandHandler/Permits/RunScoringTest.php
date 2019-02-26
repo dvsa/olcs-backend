@@ -46,6 +46,7 @@ class RunScoringTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $stockId = 47;
+        $deviation = 1.5;
 
         $csvContent = [
             ['column1', 'column2'],
@@ -60,6 +61,8 @@ class RunScoringTest extends CommandHandlerTestCase
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
             ->andReturn($stockId);
+        $command->shouldReceive('getDeviation')
+            ->andReturn($deviation);
 
         $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
 
@@ -113,7 +116,7 @@ class RunScoringTest extends CommandHandlerTestCase
         $initialiseScopeResult->addMessage('InitialiseScope output');
         $this->expectedSideEffect(
             InitialiseScope::class,
-            ['stockId' => $stockId],
+            ['stockId' => $stockId, 'deviation' => $deviation],
             $initialiseScopeResult
         );
 

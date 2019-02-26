@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\MaxStockPermits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\MaxStockPermits as MaxStockPermitsQry;
@@ -17,6 +18,7 @@ class MaxStockPermitsTest extends QueryHandlerTestCase
         $this->sut = new MaxStockPermits();
 
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
+        $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
         $this->mockRepo('Licence', Licence::class);
 
         parent::setUp();
@@ -47,7 +49,7 @@ class MaxStockPermitsTest extends QueryHandlerTestCase
             ],
             [
                 'irhpPermitStockId' => 7,
-                'irhpPermitCount' => 0
+                'irhpPermitCount' => 0,
             ]
         ];
 
@@ -55,11 +57,33 @@ class MaxStockPermitsTest extends QueryHandlerTestCase
             ->with($licenceId)
             ->andReturn($livePermitCounts);
 
+        $irhpPermitStock1 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock1->shouldReceive('getId')
+            ->andReturn(5);
+
+        $irhpPermitStock2 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock2->shouldReceive('getId')
+            ->andReturn(6);
+
+        $irhpPermitStock3 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock3->shouldReceive('getId')
+            ->andReturn(7);
+
+        $irhpPermitStock4 = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock4->shouldReceive('getId')
+            ->andReturn(8);
+
+        $irhpPermitStocks = [$irhpPermitStock1, $irhpPermitStock2, $irhpPermitStock3, $irhpPermitStock4];
+
+        $this->repoMap['IrhpPermitStock']->shouldReceive('fetchAll')
+            ->andReturn($irhpPermitStocks);
+
         $expectedResult = [
             'result' => [
                 5 => 0,
                 6 => 5,
-                7 => 12
+                7 => 12,
+                8 => 12,
             ]
         ];
 

@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,7 +29,7 @@ use Doctrine\Common\Collections\Criteria;
  *    }
  * )
  */
-class IrhpPermitApplication extends AbstractIrhpPermitApplication
+class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface
 {
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
@@ -81,9 +83,18 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
      */
     public function getCalculatedBundleValues()
     {
+        $relatedApplication = $this->getRelatedApplication();
+
         return [
             'permitsAwarded' => $this->countPermitsAwarded(),
-            'validPermits' => $this->countValidPermits()
+            'validPermits' => $this->countValidPermits(),
+            'relatedApplication' => isset($relatedApplication) ? $relatedApplication->serialize(
+                [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ]
+            ) : null,
         ];
     }
 
@@ -148,5 +159,33 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication
         if (!is_null($this->irhpApplication) && $this->irhpApplication->canBeUpdated()) {
             $this->permitsRequired = $permitsRequired;
         }
+    }
+
+    /**
+     * Get related organisation
+     *
+     * @return Organisation|null
+     */
+    public function getRelatedOrganisation()
+    {
+        $relatedApplication = $this->getRelatedApplication();
+
+        return isset($relatedApplication) ? $relatedApplication->getRelatedOrganisation() : null;
+    }
+
+    /**
+     * There are two possible types of parent application ECMT or IRHP
+     *
+     * @return EcmtPermitApplication|IrhpApplication|null
+     */
+    public function getRelatedApplication()
+    {
+        if ($this->ecmtPermitApplication instanceof EcmtPermitApplication) {
+            return $this->ecmtPermitApplication;
+        } elseif ($this->irhpApplication instanceof IrhpApplication) {
+            return $this->irhpApplication;
+        }
+
+        return null;
     }
 }

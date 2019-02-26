@@ -2,8 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Query\Processing\History as HistoryDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
@@ -223,5 +225,43 @@ class EventHistory extends AbstractRepository
             ->with('cd.person', 'p');
 
         return $doctrineQb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function fetchPreviousLicenceStatus($licenceId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select('eht.id')
+            ->innerJoin($this->alias . '.eventHistoryType', 'eht')
+            ->innerJoin($this->alias . '.licence', 'l')
+            ->where($qb->expr()->in('eht.id', [7, 31, 75]))
+            ->andWhere($qb->expr()->eq('l.id', ':licenceId'))
+            ->setParameter('licenceId', $licenceId)
+            ->orderBy($this->alias . '.eventDatetime', 'DESC')
+            ->setMaxResults(1);
+
+        try {
+            $eventType = $qb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $exception) {
+            $eventType = 75;
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+
+        switch ($eventType) {
+            case 7:
+                $status = Licence::LICENCE_STATUS_CURTAILED;
+                break;
+            case 31:
+                $status = Licence::LICENCE_STATUS_SUSPENDED;
+                break;
+            case 75:
+                $status = Licence::LICENCE_STATUS_VALID;
+                break;
+        }
+
+        return [
+            'status' => $status
+        ];
     }
 }

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
 
 return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
@@ -16,6 +17,7 @@ return [
     QueryHandler\IrhpApplication\GetList::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\MaxStockPermits::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class => Permits\CanAccessIrhpApplicationWithId::class,
+    QueryHandler\IrhpApplication\FeePerPermit::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
@@ -38,9 +40,12 @@ return [
     QueryHandler\Permits\StockAcceptPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\StockOperationsPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\GetScoredPermitList::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrintType::class => IsInternalAdmin::class,
+    QueryHandler\Permits\ReadyToPrintCountry::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintStock::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
+    QueryHandler\Permits\DeviationData::class => IsInternalOrSystemUser::class,
     QueryHandler\IrhpPermitWindow\OpenByCountry::class => NotIsAnonymousUser::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
@@ -50,7 +55,7 @@ return [
     CommandHandler\IrhpApplication\Create::class => CanAccessLicenceWithLicence::class,
     CommandHandler\IrhpApplication\UpdateDeclaration::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\SubmitApplication::class => Permits\CanEditIrhpApplicationWithId::class,
-    CommandHandler\IrhpApplication\GenerateApplicationFee::class => IsSideEffect::class,
+    CommandHandler\IrhpApplication\RegenerateApplicationFee::class => IsSideEffect::class,
     CommandHandler\IrhpApplication\RegenerateIssueFee::class => IsSideEffect::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\Permits\UpdateEcmtEmissions::class => Permits\CanEditPermitAppWithId::class,
