@@ -74,6 +74,7 @@ final class GrantCommunityLicence extends AbstractCommandHandler implements Tran
         $result->addMessage(count($identifiers) . ' community licence(s) activated');
 
         $data = [
+            'isReprint' => false,
             'licence' => $licence->getId(),
             'communityLicenceIds' => $identifiers
         ];

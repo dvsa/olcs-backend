@@ -56,7 +56,7 @@ class QueueRunScoring extends AbstractCommandHandler implements ToggleRequiredIn
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->createQueue($stockId, Queue::TYPE_RUN_ECMT_SCORING, [])
+                $this->createQueue($stockId, Queue::TYPE_RUN_ECMT_SCORING, ['deviation' => $command->getDeviation()])
             )
         );
 

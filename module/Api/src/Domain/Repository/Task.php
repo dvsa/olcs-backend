@@ -233,4 +233,16 @@ class Task extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    public function fetchOpenTasksForSurrender(int $surrenderId)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->where($qb->expr()->eq($this->alias . '.surrender', ':surrenderId'))
+            ->setParameter('surrenderId', $surrenderId)
+            ->andWhere($qb->expr()->eq($this->alias . '.isClosed', ':isClosed'))
+            ->setParameter('isClosed', 0);
+
+        return $qb->getQuery()->getResult();
+    }
 }

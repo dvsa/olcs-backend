@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 
 /**
  * EcmtPermitApplication Entity
@@ -306,6 +307,17 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Returns the emissions category defined against the IrhpPermitWindow
+     *
+     * @return string
+     */
+    public function getWindowEmissionsCategory()
+    {
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        return $irhpPermitApplication->getIrhpPermitWindow()->getEmissionsCategory()->getId();
+    }
+
+    /**
      * Proceeds the application from under consideration to awaiting fee during the accept scoring process
      *
      * @param RefData $awaitingFeeStatus
@@ -370,7 +382,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
-            'hasOutstandingFees' => $this->hasOutstandingFees()
+            'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'windowEmissionsCategory' => $this->getWindowEmissionsCategory()
         ];
     }
 
@@ -1017,11 +1030,41 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $data['licence'] = $this->getLicence()->getLicNo();
         $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
         $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
-        $data['limitedCountries'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+
+        $data['limitedCountries'] =  'No';
+        $data['limitedCountriesList'] = null;
+        if ((int) $this->getHasRestrictedCountries() === 1) {
+            $data['limitedCountries'] = 'Yes';
+            $countries = [];
+            foreach ($this->getCountrys() as $country) {
+                $countries[] = $country->getCountryDesc();
+            }
+            $data['limitedCountriesList'] = implode(", ", $countries);
+        }
+
         $data['permitsRequired'] = $this->getPermitsRequired();
         $data['trips'] = $this->getTrips();
         $data['internationalJourneys'] = $this->getInternationalJourneys()->getDescription();
         $data['goods'] = $this->getSectors()->getName();
+
+        // default to Euro 6
+        $data['emissionsQuestion']
+            = 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with '
+                . 'Euro 6 emissions standards.';
+        $data['emissionsDeclaration']
+            = 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?';
+
+        if ($this->getWindowEmissionsCategory() === IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF) {
+            // Euro 5
+            $data['emissionsQuestion']
+                = 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant '
+                    . 'with Euro 5 emissions standards as a minimum.';
+            $data['emissionsDeclaration']
+                = 'I confirm that I will not transport goods to, through and from Austria, Greece, Hungary, Italy '
+                    . 'or Russia using this ECMT permit.';
+            $data['limitedCountries'] = 'Yes';
+            $data['limitedCountriesList'] = null;
+        }
 
         return $data;
     }
