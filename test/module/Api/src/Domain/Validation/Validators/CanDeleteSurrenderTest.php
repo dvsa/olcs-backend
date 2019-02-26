@@ -31,8 +31,6 @@ class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
     {
         $statusEntity = m::mock(RefData::class);
 
-        $organisationId = 5;
-
         $surrenderEntity = m::mock(Surrender::class);
         $surrenderEntity->shouldReceive('getStatus')->andReturn($statusEntity);
 
