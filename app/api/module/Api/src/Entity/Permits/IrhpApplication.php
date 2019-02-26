@@ -48,6 +48,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
     const ERR_CANT_SUBMIT = 'This application cannot be submitted';
     const ERR_CANT_ISSUE = 'This application cannot be issued';
+    const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
         'licence' => [
@@ -129,6 +130,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
@@ -348,21 +350,19 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the application has any outstanding application fees
+     * Return the latest application fee, or none if no application fee is present
      *
-     * @return bool
+     * @return Fee|null
      */
-    public function hasOutstandingApplicationFee()
+    public function getLatestOutstandingApplicationFee()
     {
-        $applicationFee = $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
-
-        return $applicationFee !== null;
+        return $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_APP]);
     }
 
     /**
      * Return the latest issue fee, or none if no issue fee is present
      *
-     * @return Fee|null
+     * @return FeeEntity|null
      */
     public function getLatestOutstandingIssueFee()
     {
@@ -391,6 +391,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Return the amount of the outstanding fees (application + issue)
+     *
+     * @return float|int
+     */
+    public function getOutstandingFeeAmount()
+    {
+        $feeAmount = 0;
+        $outstandingFees = $this->getOutstandingFees();
+
+        /** @var FeeEntity $fee */
+        foreach ($outstandingFees as $fee) {
+            $feeAmount += $fee->getGrossAmount();
+        }
+
+        return $feeAmount;
+    }
+
+    /**
      * Get All Outstanding IRHP Application Fees
      *
      * @return array
@@ -400,7 +418,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
         $fees = [];
 
-        /** @var Fee $fee */
+        /** @var FeeEntity $fee */
         foreach ($this->getFees() as $fee) {
             if ($fee->isOutstanding() && in_array($fee->getFeeType()->getFeeType()->getId(), $feeTypeIds)) {
                 $fees[] = $fee;
@@ -577,11 +595,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the application fee can be created
+     * Whether the application fee can be created or replaced
      *
      * @return bool
      */
-    public function canCreateApplicationFee()
+    public function canCreateOrReplaceApplicationFee()
     {
         return $this->isNotYetSubmitted();
     }
@@ -635,5 +653,62 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $validStatus;
+    }
+
+    /**
+     * Returns the application fee type product reference for this application
+     *
+     * @return string
+     *
+     * @throws ForbiddenException
+     */
+    public function getApplicationFeeTypeProductReference()
+    {
+        $this->throwForbiddenExceptionIfNotBilateral();
+
+        return FeeTypeEntity::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF;
+    }
+
+    /**
+     * Returns the issue fee type product reference for this application
+     *
+     * @return string
+     *
+     * @throws ForbiddenException
+     */
+    public function getIssueFeeTypeProductReference()
+    {
+        $this->throwForbiddenExceptionIfNotBilateral();
+
+        return FeeTypeEntity::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF;
+    }
+
+    /**
+     * Gets the fee per permit for this application
+     *
+     * @param FeeTypeEntity $applicationFeeType
+     * @param FeeTypeEntity $issueFeeType
+     *
+     * @return int
+     *
+     * @throws ForbiddenException
+     */
+    public function getFeePerPermit(FeeTypeEntity $applicationFeeType, FeeTypeEntity $issueFeeType)
+    {
+        $this->throwForbiddenExceptionIfNotBilateral();
+
+        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
+    }
+
+    /**
+     * Throws a ForbiddenException if this application is not of type bilateral
+     *
+     * @throws ForbiddenException
+     */
+    private function throwForbiddenExceptionIfNotBilateral()
+    {
+        if ($this->getIrhpPermitType()->getId() != IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            throw new ForbiddenException(self::ERR_ONLY_SUPPORTS_BILATERAL);
+        }
     }
 }

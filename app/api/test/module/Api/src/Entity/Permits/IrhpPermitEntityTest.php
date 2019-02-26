@@ -99,6 +99,7 @@ class IrhpPermitEntityTest extends EntityTester
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $issueDate = m::mock(DateTime::class);
+        $expiryDate = m::mock(DateTime::class);
         $status = m::mock(RefData::class);
         $permitNumber = 473;
 
@@ -106,6 +107,7 @@ class IrhpPermitEntityTest extends EntityTester
             $irhpPermitApplication,
             $irhpPermitRange,
             $issueDate,
+            $expiryDate,
             $status,
             $permitNumber
         );
@@ -113,6 +115,7 @@ class IrhpPermitEntityTest extends EntityTester
         $this->assertSame($irhpPermitApplication, $entity->getIrhpPermitApplication());
         $this->assertSame($irhpPermitRange, $entity->getIrhpPermitRange());
         $this->assertSame($issueDate, $entity->getIssueDate());
+        $this->assertSame($expiryDate, $entity->getExpiryDate());
         $this->assertSame($status, $entity->getStatus());
         $this->assertEquals($permitNumber, $entity->getPermitNumber());
     }

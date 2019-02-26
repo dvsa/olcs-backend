@@ -5,13 +5,14 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQuery;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Initialise Scope
  */
-final class InitialiseScope extends ScoringCommandHandler implements ToggleRequiredInterface
+class InitialiseScope extends ScoringCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -51,7 +52,19 @@ final class InitialiseScope extends ScoringCommandHandler implements ToggleRequi
 
         if ($totalPermitCount > 0) {
             $this->profileMessage('get deviation data...');
-            $deviationData = $this->getDeviationData($candidatePermitSourceValues);
+            $deviationData = $this->handleQuery(
+                DeviationDataQuery::create(
+                    ['sourceValues' => $candidatePermitSourceValues]
+                )
+            );
+
+            $deviation = $command->getDeviation();
+            if (!is_null($deviation)) {
+                $deviationData['meanDeviation'] = $deviation;
+                $this->result->addMessage('using manually overridden mean deviation of ' . $deviation);
+            } else {
+                $this->result->addMessage('using computed mean deviation of ' . $deviationData['meanDeviation']);
+            }
 
             $this->profileMessage('update candidate permits individually...');
             foreach ($candidatePermitSourceValues as $sourceValue) {
@@ -75,29 +88,5 @@ final class InitialiseScope extends ScoringCommandHandler implements ToggleRequi
         $this->result->addMessage('    - Randomised scores set: ' . $randomizedScoreCount);
 
         return $this->result;
-    }
-
-    /**
-     * Collects data for use in deviation calculations
-     *
-     * @param array $sourceValues data to be used in the calculation
-     *
-     * @return array containing data relevant to Deviation calculations as well as the Mean Deviation
-     */
-    private function getDeviationData(array $sourceValues)
-    {
-        $licence = [];
-        foreach ($sourceValues as $sourceValue) {
-            $licNo = $sourceValue['licNo'];
-            $applicationId = $sourceValue['applicationId'];
-            $permitsRequired = $sourceValue['permitsRequired'];
-
-            $licence[$licNo][$applicationId] = $permitsRequired;
-        }
-
-        return [
-            'licenceData' => $licence,
-            'meanDeviation' => count($sourceValues) / count($licence),
-        ];
     }
 }

@@ -5,9 +5,10 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Surrender;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CommunityLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\CurrentDiscsReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DeclarationReviewService;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\DocumentationReviewService;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\OperatorLicenceReviewService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\LicenceDetailsService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewService;
 use Mockery as m;
@@ -34,7 +35,8 @@ class GeneratorTest extends MockeryTestCase
         $this->services = [
             LicenceDetailsService::class => m::mock(),
             CurrentDiscsReviewService::class => m::mock(),
-            DocumentationReviewService::class => m::mock(),
+            OperatorLicenceReviewService::class => m::mock(),
+            CommunityLicenceReviewService::class => m::mock(),
             DeclarationReviewService::class => m::mock(),
             SignatureReviewService::class => m::mock(),
             'ViewRenderer' => m::mock()
@@ -49,13 +51,18 @@ class GeneratorTest extends MockeryTestCase
         $this->sut->setServiceLocator($sm);
     }
 
-    public function testGenerate()
+    /**
+     * @dataProvider dbLicenceType
+     */
+    public function testGenerate($licenceType, $expected)
     {
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')->andReturn('AB1234567');
+        $licence->shouldReceive('getLicenceType->getId')->andReturn($licenceType);
 
         $surrender = m::mock(Surrender::class);
         $surrender->shouldReceive('getLicence')->andReturn($licence);
+
 
         $this->setServices($surrender);
 
@@ -76,35 +83,6 @@ class GeneratorTest extends MockeryTestCase
 
         $variables = $result->getVariables();
 
-        $expected = [
-            'reviewTitle' => 'surrender-review-title',
-            'subTitle' => 'AB1234567',
-            'settings' => [
-                'hide-count' => true
-            ],
-            'sections' => [
-                [
-                    'header' => 'surrender-review-licence',
-                    'config' => 'licenceDetails'
-                ],
-                [
-                    'header' => 'surrender-review-current-discs',
-                    'config' => 'currentDiscs'
-                ],
-                [
-                    'header' => 'surrender-review-documentation',
-                    'config' => 'documentation'
-                ],
-                [
-                    'header' => 'surrender-review-declaration',
-                    'config' => 'declaration'
-                ],
-                [
-                    'config' => 'signature'
-                ]
-            ]
-        ];
-
         $this->assertSame($expected, $variables);
     }
 
@@ -116,13 +94,89 @@ class GeneratorTest extends MockeryTestCase
         $this->services[CurrentDiscsReviewService::class]->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('currentDiscs');
 
-        $this->services[DocumentationReviewService::class]->shouldReceive('getConfigFromData')
-            ->once()->with($surrender)->andReturn('documentation');
+        $this->services[OperatorLicenceReviewService::class]->shouldReceive('getConfigFromData')
+            ->once()->with($surrender)->andReturn('Operator licence');
+
+        $this->services[CommunityLicenceReviewService::class]->shouldReceive('getConfigFromData')
+            ->once()->with($surrender)->andReturn('Community licence');
 
         $this->services[DeclarationReviewService::class]->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('declaration');
 
         $this->services[SignatureReviewService::class]->shouldReceive('getConfigFromData')
             ->once()->with($surrender)->andReturn('signature');
+    }
+
+    public function dbLicenceType()
+    {
+        return [
+            [
+                Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                [
+                    'reviewTitle' => 'surrender-review-title',
+                    'subTitle' => 'AB1234567',
+                    'settings' => [
+                        'hide-count' => true
+                    ],
+                    'sections' => [
+                        [
+                            'header' => 'surrender-review-licence',
+                            'config' => 'licenceDetails'
+                        ],
+                        [
+                            'header' => 'surrender-review-current-discs',
+                            'config' => 'currentDiscs'
+                        ],
+                        [
+                            'header' => 'surrender-review-operator-licence',
+                            'config' => 'Operator licence'
+                        ],
+                        [
+                            'header' => 'surrender-review-community-licence',
+                            'config' => 'Community licence'
+                        ],
+                        [
+                            'header' => 'surrender-review-declaration',
+                            'config' => 'declaration'
+                        ],
+                        [
+                            'config' => 'signature'
+                        ]
+                    ]
+                ],
+
+                [
+                    Licence::LICENCE_TYPE_STANDARD_NATIONAL,
+                    [
+                        'reviewTitle' => 'surrender-review-title',
+                        'subTitle' => 'AB1234567',
+                        'settings' => [
+                            'hide-count' => true
+                        ],
+                        'sections' => [
+                            [
+                                'header' => 'surrender-review-licence',
+                                'config' => 'licenceDetails'
+                            ],
+                            [
+                                'header' => 'surrender-review-current-discs',
+                                'config' => 'currentDiscs'
+                            ],
+                            [
+                                'header' => 'surrender-review-operator-licence',
+                                'config' => 'Operator licence'
+                            ],
+                            [
+                                'header' => 'surrender-review-declaration',
+                                'config' => 'declaration'
+                            ],
+                            [
+                                'config' => 'signature'
+                            ]
+                        ]
+                    ],
+                ]
+            ]
+        ];
     }
 }

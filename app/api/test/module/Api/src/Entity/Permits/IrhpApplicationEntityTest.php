@@ -67,6 +67,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('getOutstandingFeeAmount')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(0)
             ->shouldReceive('getSectionCompletion')
             ->once()
             ->withNoArgs()
@@ -123,6 +127,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
+                'outstandingFeeAmount' => 0,
                 'sectionCompletion' => [],
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
@@ -757,64 +762,39 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpHasOutstandingApplicationFee
+     * @dataProvider dpGetLatestOutstandingApplicationFee
      */
-    public function testHasOutstandingApplicationFee($feesData, $expectedResult)
+    public function testGetLatestOutstandingApplicationFee($feesData, $expectedIndex)
     {
-        $this->sut->setFees(
-            $this->createFeesArrayCollectionFromArrayData($feesData)
-        );
+        $fees = $this->createFeesArrayCollectionFromArrayData($feesData);
+        $this->sut->setFees($fees);
 
-        $this->assertEquals($expectedResult, $this->sut->hasOutstandingApplicationFee());
+        $latestOutstandingIssueFee = $this->sut->getLatestOutstandingApplicationFee();
+
+        if (is_null($expectedIndex)) {
+            $this->assertNull($latestOutstandingIssueFee);
+        }
+
+        $this->assertSame($fees[$expectedIndex], $latestOutstandingIssueFee);
     }
 
-    public function dpHasOutstandingApplicationFee()
+    public function dpGetLatestOutstandingApplicationFee()
     {
         return [
             [
                 'fees' => [
                     [
                         'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
-                    ],
-                    [
-                        'invoicedDate' => '2019-01-04',
                         'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
-                    ]
-                ],
-                'expectedResult' => false
-            ],
-            [
-                'fees' => [
-                    [
-                        'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
                     ],
-                    [
-                        'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
-                    ]
-                ],
-                'expectedResult' => false
-            ],
-            [
-                'fees' => [
                     [
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => true,
                         'feeTypeId' => FeeType::FEE_TYPE_BUSVAR
-                    ],
-                    [
-                        'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
                     ]
                 ],
-                'expectedResult' => false
+                'expectedIndex' => null
             ],
             [
                 'fees' => [
@@ -824,12 +804,57 @@ class IrhpApplicationEntityTest extends EntityTester
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
                     ],
                     [
-                        'invoicedDate' => '2019-01-04',
+                        'invoicedDate' => '2019-01-08',
                         'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
                     ]
                 ],
-                'expectedResult' => true
+                'expectedIndex' => 1
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 0
             ],
         ];
     }
@@ -989,6 +1014,34 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->setFees($fees);
 
         $this->assertSame($outstandingFees, $this->sut->getOutstandingFees());
+    }
+
+    public function testGetOutstandingFeeAmount()
+    {
+        $outstandingIrhpAppFee = m::mock(Fee::class);
+        $outstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpAppFee->shouldReceive('getGrossAmount')->once()->andReturn(25.56);
+        $outstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_APP);
+
+        $outstandingIrhpIssueFee = m::mock(Fee::class);
+        $outstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrhpIssueFee->shouldReceive('getGrossAmount')->once()->andReturn(50);
+        $outstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
+
+        $outstandingFees = [
+            $outstandingIrhpAppFee,
+            $outstandingIrhpIssueFee
+        ];
+
+        $fees = new ArrayCollection($outstandingFees);
+
+        $this->sut->setFees($fees);
+
+        $this->assertEquals(75.56, $this->sut->getOutstandingFeeAmount());
     }
 
     /**
@@ -1302,22 +1355,22 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertFalse($irhpApplication->canCreateOrReplaceIssueFee());
     }
 
-    public function testCanCreateApplicationFeeTrue()
+    public function testCanCreateOrReplaceApplicationFeeTrue()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('isNotYetSubmitted')
             ->andReturn(true);
 
-        $this->assertTrue($irhpApplication->canCreateApplicationFee());
+        $this->assertTrue($irhpApplication->canCreateOrReplaceApplicationFee());
     }
 
-    public function testCanCreateApplicationFeeFalse()
+    public function testCanCreateOrReplaceApplicationFeeFalse()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
         $irhpApplication->shouldReceive('isNotYetSubmitted')
             ->andReturn(false);
 
-        $this->assertFalse($irhpApplication->canCreateApplicationFee());
+        $this->assertFalse($irhpApplication->canCreateOrReplaceApplicationFee());
     }
 
     public function testHasPermitsRequiredChanged()
@@ -1537,5 +1590,85 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false);
 
         $entity->proceedToValid(m::mock(RefData::class));
+    }
+
+    public function testGetApplicationFeeTypeProductReferenceBilateral()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
+            $entity->getApplicationFeeTypeProductReference()
+        );
+    }
+
+    public function testGetApplicationFeeTypeProductReferenceUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->getApplicationFeeTypeProductReference();
+    }
+
+    public function testGetIssueFeeTypeProductReferenceBilateral()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
+            $entity->getIssueFeeTypeProductReference()
+        );
+    }
+
+    public function testGetIssueFeeTypeProductReferenceUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->getIssueFeeTypeProductReference();
+    }
+
+    public function testGetFeePerPermitBilateral()
+    {
+        $applicationFeeType = m::mock(FeeType::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
+            ->andReturn(60);
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->andReturn(20);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            80,
+            $entity->getFeePerPermit($applicationFeeType, $issueFeeType)
+        );
+    }
+
+    public function testGetFeePerPermitUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->getFeePerPermit(m::mock(FeeType::class), m::mock(FeeType::class));
     }
 }

@@ -6,6 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
 use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
@@ -353,7 +354,7 @@ class IrhpPermitTest extends RepositoryTestCase
                 'select ips.id AS irhpPermitStockId, ' .
                 'count(ip.id) AS irhpPermitCount ' .
                 'from irhp_permit ip ' .
-                'right join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
+                'inner join irhp_permit_application ipa ON ip.irhp_permit_application_id = ipa.id ' .
                 'and ip.status in (?) ' .
                 'inner join irhp_application ia ON ipa.irhp_application_id = ia.id ' .
                 'inner join irhp_permit_window ipw ON ipa.irhp_permit_window_id = ipw.id ' .
@@ -383,5 +384,27 @@ class IrhpPermitTest extends RepositoryTestCase
             $livePermitCounts,
             $this->sut->getLivePermitCountsGroupedByStock($licenceId)
         );
+    }
+
+    public function testFetchListByIrhpId()
+    {
+        $this->setUpSut(IrhpPermit::class, true);
+        $this->sut->shouldReceive('fetchPaginatedList')->andReturn(['RESULTS']);
+
+        $qb = $this->createMockQb('BLAH');
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
+            ->shouldReceive('paginate')->once()->andReturnSelf();
+
+        $query = GetListByIrhpId::create(['irhpApplication' => 2, 'page' => 1, 'limit' => 10]);
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
+
+        $expectedQuery = 'BLAH '
+            . 'AND ipa.irhpApplication = [[2]]';
+        $this->assertEquals($expectedQuery, $this->query);
     }
 }

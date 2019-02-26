@@ -20,7 +20,7 @@ final class MaxStockPermits extends AbstractQueryHandler implements ToggleRequir
 
     protected $repoServiceName = 'IrhpPermit';
 
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = ['Licence', 'IrhpPermitStock'];
 
     /**
      * Handle query
@@ -33,20 +33,31 @@ final class MaxStockPermits extends AbstractQueryHandler implements ToggleRequir
     {
         $licenceId = $query->getLicence();
 
-        $livePermitCounts = $this->getRepo()->getLivePermitCountsGroupedByStock($licenceId);
-
         $licence = $this->getRepo('Licence')->fetchById($query->getLicence());
         $totAuthVehicles = $licence->getTotAuthVehicles();
 
+        $stockIds = [];
+        $stocks = $this->getRepo('IrhpPermitStock')->fetchAll();
+        foreach ($stocks as $stock) {
+            $stockIds[] = $stock->getId();
+        }
+
+        $livePermitCounts = $this->getRepo()->getLivePermitCountsGroupedByStock($licenceId);
         foreach ($livePermitCounts as $row) {
-            $irhpPermitStockId = $row['irhpPermitStockId'];
+            $livePermitsByStockId[$row['irhpPermitStockId']] = $row['irhpPermitCount'];
+        }
 
-            $maxPermits = $totAuthVehicles - $row['irhpPermitCount'];
-            if ($maxPermits < 0) {
-                $maxPermits = 0;
+        $response = [];
+        foreach ($stockIds as $stockId) {
+            if (isset($livePermitsByStockId[$stockId])) {
+                $maxPermits = $totAuthVehicles - $livePermitsByStockId[$stockId];
+                if ($maxPermits < 0) {
+                    $maxPermits = 0;
+                }
+            } else {
+                $maxPermits = $totAuthVehicles;
             }
-
-            $response[$irhpPermitStockId] = $maxPermits;
+            $response[$stockId] = $maxPermits;
         }
 
         return ['result' => $response];

@@ -21,16 +21,24 @@ class ReadyToPrintStockTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
+        $irhpPermitType = 1;
+        $country = 'DE';
+
         $irhpPermitStocks = [
             m::mock(IrhpPermitStock::class),
             m::mock(IrhpPermitStock::class),
             m::mock(IrhpPermitStock::class)
         ];
 
-        $query = ReadyToPrintStockQuery::create([]);
+        $query = ReadyToPrintStockQuery::create(
+            [
+                'irhpPermitType' => $irhpPermitType,
+                'country' => $country,
+            ]
+        );
 
         $this->repoMap['IrhpPermitStock']->shouldReceive('fetchReadyToPrint')
-            ->withNoArgs()
+            ->with($irhpPermitType, $country)
             ->andReturn($irhpPermitStocks);
 
         $this->assertEquals(

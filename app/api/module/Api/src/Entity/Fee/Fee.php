@@ -147,7 +147,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
                 }
 
                 $irhpPermitApplication = $application->getIrhpPermitApplications()->first();
-                if (!is_null($irhpPermitApplication)) {
+                if ($irhpPermitApplication) {
                     return $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getValidFrom(true);
                 }
                 break;

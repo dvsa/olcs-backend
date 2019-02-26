@@ -19,12 +19,6 @@ class ReadyToPrint extends AbstractListQueryHandler implements ToggleRequiredInt
     protected $repoServiceName = 'IrhpPermit';
 
     protected $bundle = [
-        'irhpPermitApplication' => [
-            'ecmtPermitApplication' => [
-                'licence' => [
-                    'organisation'
-                ]
-            ]
-        ],
+        'irhpPermitApplication',
     ];
 }
