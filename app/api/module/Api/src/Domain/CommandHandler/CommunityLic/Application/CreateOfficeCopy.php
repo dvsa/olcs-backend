@@ -102,6 +102,7 @@ final class CreateOfficeCopy extends AbstractCommandHandler implements Transacti
     {
         return GenerateBatchCommand::create(
             [
+                'isReprint' => false,
                 'licence' => $licenceId,
                 'identifier' => $applicationId,
                 'communityLicenceIds' => $communityLicenceIds

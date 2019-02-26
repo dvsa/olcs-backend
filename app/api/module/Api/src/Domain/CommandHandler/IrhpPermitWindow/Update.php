@@ -6,6 +6,8 @@ use DateTime;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
@@ -41,6 +43,11 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
             throw new ValidationException(['Windows which have ended cannot be edited']);
         }
 
+        if ($window->getIrhpPermitStock()->getIrhpPermitType()->isEcmtAnnual()
+            && $command->getEmissionsCategory() === IrhpPermitWindow::EMISSIONS_CATEGORY_NA_REF) {
+            throw new ValidationException(['Emissions Category: N/A not valid for Annual ECMT Stock']);
+        }
+
         if ($window->isActive()) {
             $windowStart = strtotime($window->getStartDate());
             $editStart = strtotime($command->getStartDate());
@@ -61,9 +68,11 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
 
         if ($this->numberOfOverlappingWindows($command->getIrhpPermitStock(), $command->getStartDate(), $command->getEndDate(), $command->getId()) === 0) {
             $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
+            $emissionsCategory = $this->getRepo('IrhpPermitWindow')->getRefdataReference($command->getEmissionsCategory());
 
             $window->update(
                 $permitStock,
+                $emissionsCategory,
                 $command->getStartDate(),
                 $command->getEndDate(),
                 $command->getDaysForPayment()

@@ -629,6 +629,7 @@ return [
     TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
     TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
         QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
+    TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
     TransferQuery\IrhpPermitStock\NextIrhpPermitStock::class => QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
@@ -653,6 +654,7 @@ return [
     Query\Permits\StockScoringPermitted::class => QueryHandler\Permits\StockScoringPermitted::class,
     Query\Permits\StockAcceptPermitted::class => QueryHandler\Permits\StockAcceptPermitted::class,
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
+    Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
     // IRHP Permit - internal
 
@@ -660,8 +662,9 @@ return [
     Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
     //Digital Surrender
-    TransferQuery\Surrender\GetStatus::class => QueryHandler\Surrender\GetStatus::class,
+    TransferQuery\Surrender\GetSignature::class => QueryHandler\Surrender\GetSignature::class,
     TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class,
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
+    TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
 ];

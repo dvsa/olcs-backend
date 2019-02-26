@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -69,6 +70,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canEditIrhpApplicationWithId($entityId)
  * @method bool canEditIrhpPermitApplicationWithId($entityId)
  * @method bool canDeleteSurrender($entityId)
+ * @method bool CanAccessSurrenderedLicence($entity)
  */
 trait ValidationHelperTrait
 {
