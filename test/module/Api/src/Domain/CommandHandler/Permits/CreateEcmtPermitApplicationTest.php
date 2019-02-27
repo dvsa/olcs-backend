@@ -8,12 +8,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateEcmtPermitApplication as C
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -29,7 +28,6 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $this->sut = new CreateEcmtPermitApplicationHandler();
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
-        $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
@@ -49,7 +47,6 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $licenceId = 100;
-        $stockId = 200;
         $windowId = 300;
         $ecmtPermitApplicationId = 400;
 
@@ -80,23 +77,13 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
                 }
             );
 
-        $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getId')
-            ->andReturn($stockId);
-
-        $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('getNextIrhpPermitStockByPermitType')
-            ->with(EcmtPermitApplication::PERMIT_TYPE, m::type(DateTime::class))
-            ->once()
-            ->andReturn($stock);
-
         $window = m::mock(IrhpPermitWindow::class);
         $window->shouldReceive('getId')
             ->andReturn($windowId);
 
         $this->repoMap['IrhpPermitWindow']
-            ->shouldReceive('fetchLastOpenWindowByStockId')
-            ->with($stockId)
+            ->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
+            ->with(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, m::type(DateTime::class))
             ->once()
             ->andReturn($window);
 
