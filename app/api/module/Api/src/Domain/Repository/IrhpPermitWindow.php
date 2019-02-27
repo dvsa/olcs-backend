@@ -153,6 +153,44 @@ class IrhpPermitWindow extends AbstractRepository
     }
 
     /**
+     * Returns the latest open IrhpPermitWindow for a given IrhpPermitType
+     *
+     * @param int      $irhpPermitTypeId Irhp Permit Type Id
+     * @param DateTime $now              Current datetime
+     * @param int      $hydrationMode    Hydration mode
+     *
+     * @return array
+     * @throws NotFoundException
+     */
+    public function fetchLastOpenWindowByIrhpPermitType(
+        int $irhpPermitTypeId,
+        DateTime $now,
+        $hydrationMode = Query::HYDRATE_OBJECT
+    ) {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->select($this->alias)
+            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->where($qb->expr()->eq('ipt.id', ':irhpPermitTypeId'))
+            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->setParameter('irhpPermitTypeId', $irhpPermitTypeId)
+            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->orderBy($this->alias.'.endDate', 'DESC')
+            ->setMaxResults(1);
+
+        $results = $qb->getQuery()->getResult($hydrationMode);
+
+        if (empty($results)) {
+            throw new NotFoundException('No window available.');
+        }
+
+        return $results[0];
+    }
+
+    /**
      * Fetch all windows to be closed
      *
      * @param \DateTime $currentDateTime Current datetime
