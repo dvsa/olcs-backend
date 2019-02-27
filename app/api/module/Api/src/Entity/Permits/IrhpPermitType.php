@@ -32,4 +32,14 @@ class IrhpPermitType extends AbstractIrhpPermitType
     {
         return $this->id === self::IRHP_PERMIT_TYPE_ID_ECMT;
     }
+
+    /**
+     * Is this Bilateral
+     *
+     * @return bool
+     */
+    public function isBilateral()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_BILATERAL;
+    }
 }

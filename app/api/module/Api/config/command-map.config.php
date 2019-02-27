@@ -1165,6 +1165,9 @@ return [
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
+    Command\IrhpPermit\GenerateCoverLetterDocument::class
+        => CommandHandler\IrhpPermit\GenerateCoverLetterDocument::class,
+    Command\IrhpPermit\GeneratePermitDocument::class => CommandHandler\IrhpPermit\GeneratePermitDocument::class,
 
     // IrhpApplication update
     TransferCommand\IrhpApplication\UpdateCheckAnswers::class => CommandHandler\IrhpApplication\UpdateCheckAnswers::class,

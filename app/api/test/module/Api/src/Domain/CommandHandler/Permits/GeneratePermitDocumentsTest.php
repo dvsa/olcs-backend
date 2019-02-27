@@ -3,17 +3,15 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\GenerateCoverLetterDocument;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\GeneratePermitDocument;
+use Dvsa\Olcs\Api\Domain\Command\Permits\GeneratePermitDocuments as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\GeneratePermitDocuments as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
-use Dvsa\Olcs\Api\Domain\Command\Permits\GeneratePermitDocuments as Cmd;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -30,101 +28,104 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * testHandleCommand
-     */
     public function testHandleCommand()
     {
-        $id = 1;
-        $licenceId = 20;
-        $irhpPermitStockId = 3;
-        $orgId = 101;
-        $expected = [
-            [
-                'template' => EcmtPermitApplicationEntity::PERMIT_TEMPLATE_NAME,
-                'query' => [
-                    'licence' => $licenceId,
-                    'irhpPermit' => $id,
-                    'irhpPermitStock' => $irhpPermitStockId,
-                    'organisation' => $orgId
-                ],
-                'description' => 'IRHP PERMIT ECMT 1',
-                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT
-            ],
-            [
-                'template' => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
-                'query' => [
-                    'licence' => $licenceId,
-                    'irhpPermit' => $id,
-                ],
-                'description' => 'IRHP PERMIT ECMT COVERING LETTER 1',
-                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT_COVERING_LETTER
-            ]
-        ];
+        $irhpPermitId1 = 1;
+        $irhpPermitId2 = 2;
+        $irhpPermitId3 = 3;
 
         $command = Cmd::Create(
             [
                 'ids' => [
-                    $id
+                    $irhpPermitId1, $irhpPermitId2, $irhpPermitId3
                 ]
             ]
         );
 
-        $irhpPermit = m::mock(IrhpPermitEntity::class);
+        $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
+        $irhpPermitType->shouldReceive('isBilateral')
+            ->andReturn(false);
+
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->andReturn($irhpPermitType);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->andReturn($irhpPermitType);
+
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->andReturn($irhpPermitType);
+
+        $irhpPermit1 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+
+        $irhpPermit2 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+
+        $irhpPermit3 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
-            ->with($id, Query::HYDRATE_OBJECT)
-            ->andReturn($irhpPermit);
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
-        $irhpPermit->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication);
-
-        $irhpPermitStock = m::mock(IrhpPermitStockEntity::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
-            ->andReturn($irhpPermitStock);
-
-        $irhpPermitType = EcmtPermitApplicationEntity::PERMIT_TYPE;
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->getName')->andReturn($irhpPermitType);
-
-        $irhpPermitApplication->shouldReceive('getEcmtPermitApplication->getLicence->getId')
-            ->andReturn($licenceId);
-
-        $irhpPermit->shouldReceive('getId')->andReturn($id);
-
-        $irhpPermitStock->shouldReceive('getId')->andReturn($irhpPermitStockId);
-
-        $irhpPermitApplication
-            ->shouldReceive('getEcmtPermitApplication->getLicence->getOrganisation->getId')
-            ->andReturn($orgId);
+            ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit1)
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitId2, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit2)
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitId3, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit3);
 
         $this->expectedSideEffect(
-            GenerateAndStore::class,
+            GenerateCoverLetterDocument::class,
             [
-                'template' => $expected[0]['template'],
-                'query' => $expected[0]['query'],
-                'knownValues' => [],
-                'description' => $expected[0]['description'],
-                'category' => CategoryEntity::CATEGORY_PERMITS,
-                'subCategory' => $expected[0]['subCategory'],
-                'isExternal' => false,
-                'isScan' => false
+                'irhpPermit' => $irhpPermitId1,
             ],
-            (new Result())->addId('document', 100)
+            (new Result())->addId('letters', 101)->addMessage('Cover letter #1 generated')
         );
 
         $this->expectedSideEffect(
-            GenerateAndStore::class,
+            GenerateCoverLetterDocument::class,
             [
-                'template' => $expected[1]['template'],
-                'query' => $expected[1]['query'],
-                'knownValues' => [],
-                'description' => $expected[1]['description'],
-                'category' => CategoryEntity::CATEGORY_PERMITS,
-                'subCategory' => $expected[1]['subCategory'],
-                'isExternal' => false,
-                'isScan' => false
+                'irhpPermit' => $irhpPermitId2,
             ],
-            (new Result())->addId('document', 101)
+            (new Result())->addId('letters', 102)->addMessage('Cover letter #2 generated')
+        );
+
+        $this->expectedSideEffect(
+            GenerateCoverLetterDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId3,
+            ],
+            (new Result())->addId('letters', 103)->addMessage('Cover letter #3 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId1,
+            ],
+            (new Result())->addId('permits', 201)->addMessage('Permit #1 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId2,
+            ],
+            (new Result())->addId('permits', 202)->addMessage('Permit #2 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId3,
+            ],
+            (new Result())->addId('permits', 203)->addMessage('Permit #3 generated')
         );
 
         $result = $this->sut->handleCommand($command);
@@ -132,12 +133,137 @@ class GeneratePermitDocumentsTest extends CommandHandlerTestCase
         $this->assertInstanceOf(Result::class, $result);
         $expected = [
             'id' => [
-                'permit' => 100,
-                'coveringLetter' => 101
+                'permits' => [201, 202, 203],
+                'letters' => [101, 102, 103],
             ],
             'messages' => [
-                'IRHP PERMIT ECMT 1 RTF created and stored',
-                'IRHP PERMIT ECMT COVERING LETTER 1 RTF created and stored'
+                'Cover letter #1 generated',
+                'Permit #1 generated',
+                'Cover letter #2 generated',
+                'Permit #2 generated',
+                'Cover letter #3 generated',
+                'Permit #3 generated'
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandForBilateral()
+    {
+        $irhpPermitId1 = 1;
+        $irhpPermitId2 = 2;
+        $irhpPermitId3 = 3;
+
+        $licenceId1 = 10;
+        $licenceId2 = 11;
+
+        $command = Cmd::Create(
+            [
+                'ids' => [
+                    $irhpPermitId1, $irhpPermitId2, $irhpPermitId3
+                ]
+            ]
+        );
+
+        $irhpPermitType = m::mock(IrhpPermitTypeEntity::class);
+        $irhpPermitType->shouldReceive('isBilateral')
+            ->andReturn(true);
+
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->andReturn($irhpPermitType);
+        $irhpPermitApplication1->shouldReceive('getRelatedApplication->getLicence->getId')
+            ->andReturn($licenceId1);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->andReturn($irhpPermitType);
+        $irhpPermitApplication2->shouldReceive('getRelatedApplication->getLicence->getId')
+            ->andReturn($licenceId1);
+
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getIrhpPermitType')
+            ->andReturn($irhpPermitType);
+        $irhpPermitApplication3->shouldReceive('getRelatedApplication->getLicence->getId')
+            ->andReturn($licenceId2);
+
+        $irhpPermit1 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit1->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication1);
+        $irhpPermit1->shouldReceive('getId')->andReturn($irhpPermitId1);
+
+        $irhpPermit2 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit2->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication2);
+        $irhpPermit2->shouldReceive('getId')->andReturn($irhpPermitId2);
+
+        $irhpPermit3 = m::mock(IrhpPermitEntity::class);
+        $irhpPermit3->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication3);
+        $irhpPermit3->shouldReceive('getId')->andReturn($irhpPermitId3);
+
+        $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
+            ->with($irhpPermitId1, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit1)
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitId2, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit2)
+            ->shouldReceive('fetchById')
+            ->with($irhpPermitId3, Query::HYDRATE_OBJECT)
+            ->andReturn($irhpPermit3);
+
+        $this->expectedSideEffect(
+            GenerateCoverLetterDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId1,
+            ],
+            (new Result())->addId('letters', 101)->addMessage('Cover letter #1 generated')
+        );
+
+        $this->expectedSideEffect(
+            GenerateCoverLetterDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId3,
+            ],
+            (new Result())->addId('letters', 103)->addMessage('Cover letter #3 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId1,
+            ],
+            (new Result())->addId('permits', 201)->addMessage('Permit #1 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId2,
+            ],
+            (new Result())->addId('permits', 202)->addMessage('Permit #2 generated')
+        );
+
+        $this->expectedSideEffect(
+            GeneratePermitDocument::class,
+            [
+                'irhpPermit' => $irhpPermitId3,
+            ],
+            (new Result())->addId('permits', 203)->addMessage('Permit #3 generated')
+        );
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertInstanceOf(Result::class, $result);
+        $expected = [
+            'id' => [
+                'permits' => [201, 202, 203],
+                'letters' => [101, 103],
+            ],
+            'messages' => [
+                'Cover letter #1 generated',
+                'Permit #1 generated',
+                'Permit #2 generated',
+                'Cover letter #3 generated',
+                'Permit #3 generated'
             ]
         ];
 
