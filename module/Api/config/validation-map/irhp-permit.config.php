@@ -11,6 +11,8 @@ return [
     QueryHandler\IrhpPermit\GetList::class => IsInternalUser::class,
     QueryHandler\IrhpPermit\GetListByEcmtId::class => IsInternalUser::class,
     QueryHandler\IrhpPermit\GetListByIrhpId::class => IsInternalUser::class,
+    CommandHandler\IrhpPermit\GenerateCoverLetterDocument::class => IsSideEffect::class,
+    CommandHandler\IrhpPermit\GeneratePermitDocument::class => IsSideEffect::class,
     CommandHandler\IrhpPermit\Replace::class => IsInternalUser::class,
     CommandHandler\IrhpPermit\CreateReplacement::class => IsSideEffect::class,
     QueryHandler\IrhpPermit\ByPermitNumber::class => NotIsAnonymousUser::class,
