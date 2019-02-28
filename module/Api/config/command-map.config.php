@@ -993,6 +993,8 @@ return [
     // Transfer - IRHP Permit
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
+    TransferCommand\IrhpPermit\Terminate::class =>
+        CommandHandler\IrhpPermit\Terminate::class,
 
     // Transfer - IRHP Permit Application
     TransferCommand\IrhpApplication\Create::class =>
@@ -1147,6 +1149,7 @@ return [
     TransferCommand\Permits\EcmtSubmitApplication::class => CommandHandler\Permits\EcmtSubmitApplication::class,
     TransferCommand\Permits\UpdateEcmtPermitApplication::class => CommandHandler\Permits\UpdateEcmtPermitApplication::class,
     TransferCommand\Permits\CompleteIssuePayment::class => CommandHandler\Permits\CompleteIssuePayment::class,
+    TransferCommand\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
 
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,

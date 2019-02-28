@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalEdit;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalOrSystemUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
 return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
@@ -82,6 +83,8 @@ return [
     CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
+    CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsInternalUser::class,
+
     // TODO: these will need to be changed to IsInternalAdmin
     CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\QueueAcceptScoring::class => NotIsAnonymousUser::class,

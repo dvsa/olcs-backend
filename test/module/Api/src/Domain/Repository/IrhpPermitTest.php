@@ -169,6 +169,7 @@ class IrhpPermitTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND ipa.ecmtPermitApplication = [[ID]] '
+            . 'AND m.status IN [[["irhp_permit_pending","irhp_permit_awaiting_printing","irhp_permit_printing","irhp_permit_printed","irhp_permit_error","irhp_permit_issued"]]] '
             . 'ORDER BY m.permitNumber DESC';
         $this->assertEquals($expectedQuery, $this->query);
     }
