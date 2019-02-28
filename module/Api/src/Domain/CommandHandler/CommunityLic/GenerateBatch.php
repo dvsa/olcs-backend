@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as SystemParameterEntity;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Generate Batch
@@ -32,7 +33,7 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
     public function handleCommand(CommandInterface $command)
     {
         /** @var GenerateBatchCmd $command */
-        $isReprint = $command->getIsReprint();
+        $isBatchReprint = $command->getIsBatchReprint();
 
         /**
          * @NOTE This check allows us to pass Application whenever possible, but otherwise Licence should be sufficient
@@ -42,15 +43,18 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
             $application = $this->getRepo('Application')->fetchById($command->getIdentifier());
             $licence = $application->getLicence();
             $identifier = $application->getId();
-            $template = $this->getTemplateForEntity($application, $isReprint);
+            $template = $this->getTemplateForEntity($application, $isBatchReprint);
         } else {
             $licenceId = $command->getLicence();
             $licence = $this->getRepo('Licence')->fetchById($licenceId);
-            $template = $this->getTemplateForEntity($licence, $isReprint);
+            $template = $this->getTemplateForEntity($licence, $isBatchReprint);
             $identifier = null;
         }
 
         $communityLicenceIds = $command->getCommunityLicenceIds();
+        Logger::debug(
+            'Generating community licences: ' . implode(', ', $communityLicenceIds) . ' with template: ' . $template
+        );
 
         foreach ($communityLicenceIds as $id) {
             $query = [
@@ -99,13 +103,13 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
     /**
      * Decide what system parameter to use depending on whether this is a reprint
      *
-     * @param bool $isReprint whether this is a reprint
+     * @param bool $isBatchReprint whether this is a reprint
      *
      * @return string
      */
-    private function getSystemParameterBasedOnReprint($isReprint): string
+    private function getSystemParameterBasedOnReprint(bool $isBatchReprint): string
     {
-        if ($isReprint) {
+        if ($isBatchReprint) {
             return SystemParameterEntity::DISABLE_UK_COMMUNITY_LIC_REPRINT;
         }
 
@@ -116,12 +120,13 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
      * Replacement getTemplateForEntity method - now decides between EU and UK licence based on system param
      *
      * @param Entity\Application\Application|Entity\Licence\Licence $entity licence or application
+     * @param bool isBatchReprint whether this is a batch reprint
      *
      * @return string
      */
-    private function getTemplateForEntity($entity, $isReprint): string
+    private function getTemplateForEntity($entity, bool $isBatchReprint): string
     {
-        $checkedSystemParam = $this->getSystemParameterBasedOnReprint($isReprint);
+        $checkedSystemParam = $this->getSystemParameterBasedOnReprint($isBatchReprint);
 
         /** @var SystemParameterRepo $repo */
         $repo = $this->getRepo('SystemParameter');

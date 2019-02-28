@@ -83,6 +83,7 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             ReprintCmd::class,
             [
+                'isBatchReprint' => true,
                 'user' => $userId,
                 'licence' => $licenceId,
                 'communityLicenceIds' => [53, 87]
@@ -244,6 +245,7 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
         $this->expectedSideEffectThrowsException(
             ReprintCmd::class,
             [
+                'isBatchReprint' => true,
                 'user' => $userId,
                 'licence' => $licenceId,
                 'communityLicenceIds' => [109, 131]
@@ -322,6 +324,7 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
             ],
             new Result()
         );
+
 
         $result = $this->sut->handleCommand($command);
 
