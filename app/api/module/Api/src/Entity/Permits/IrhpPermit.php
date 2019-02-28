@@ -33,12 +33,22 @@ class IrhpPermit extends AbstractIrhpPermit
     const STATUS_ERROR              = 'irhp_permit_error';
     const STATUS_CEASED             = 'irhp_permit_ceased';
     const STATUS_ISSUED             = 'irhp_permit_issued';
+    const STATUS_TERMINATED         = 'irhp_permit_terminated';
 
     public static $readyToPrintStatuses = [
         self::STATUS_PENDING,
         self::STATUS_AWAITING_PRINTING,
         self::STATUS_PRINTING,
         self::STATUS_ERROR,
+    ];
+
+    public static $validStatuses = [
+        self::STATUS_PENDING,
+        self::STATUS_AWAITING_PRINTING,
+        self::STATUS_PRINTING,
+        self::STATUS_PRINTED,
+        self::STATUS_ERROR,
+        self::STATUS_ISSUED,
     ];
 
     /**
@@ -187,6 +197,9 @@ class IrhpPermit extends AbstractIrhpPermit
             case self::STATUS_ERROR:
                 $this->proceedToError($status);
                 break;
+            case self::STATUS_TERMINATED:
+                $this->proceedToTerminated($status);
+                break;
             default:
                 throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId()));
         }
@@ -281,6 +294,28 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
+     * Proceed to terminated
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToTerminated(RefData $status)
+    {
+        if (!$this->isNotCeased()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to be terminated (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+        $this->expiryDate = new DateTime();
+        $this->status = $status;
+    }
+
+    /**
      * Is pending
      *
      * @return bool
@@ -338,5 +373,15 @@ class IrhpPermit extends AbstractIrhpPermit
     public function hasError()
     {
         return $this->status->getId() === self::STATUS_ERROR;
+    }
+
+    /**
+     * Is not ceased
+     *
+     * @return bool
+     */
+    public function isNotCeased()
+    {
+        return $this->status->getId() !== self::STATUS_CEASED;
     }
 }
