@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -9,12 +10,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateFullPermitApplication;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateFullPermitApplication as CreateFullPermitApplicationCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -30,7 +29,6 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
         $this->sut = new CreateFullPermitApplication();
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
-        $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
@@ -50,7 +48,6 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $licenceId = 100;
-        $stockId = 200;
         $windowId = 300;
         $ecmtPermitApplicationId = 400;
         $permitsRequired = 500;
@@ -86,22 +83,13 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
             ->with($licenceId)
             ->andReturn($licence);
 
-        $stock = m::mock(IrhpPermitStock::class);
-        $stock->shouldReceive('getId')
-            ->andReturn($stockId);
-
-        $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('getNextIrhpPermitStockByPermitType')
-            ->once()
-            ->andReturn($stock);
-
         $window = m::mock(IrhpPermitWindow::class);
         $window->shouldReceive('getId')
             ->andReturn($windowId);
 
         $this->repoMap['IrhpPermitWindow']
-            ->shouldReceive('fetchLastOpenWindowByStockId')
-            ->with($stockId)
+            ->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
+            ->with(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, m::type(DateTime::class))
             ->once()
             ->andReturn($window);
 
@@ -114,7 +102,7 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
                 'permitType' =>  EcmtPermitApplication::PERMIT_TYPE,
                 'receivedDate' =>  new DateTime($dateReceived)
             ],
-            (new Result())->addMessage('IRHP Permit Application created')
+            (new Result())->addMessage('Permit Fee updated')
         );
 
         $this->expectedSideEffect(
@@ -152,7 +140,9 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
                 'ecmtPermitApplication' => $ecmtPermitApplicationId,
             ],
             'messages' => [
-                'ECMT Permit Application created successfully'
+                'Permit Fee updated',
+                'ECMT Permit Application created successfully',
+                'IRHP Permit Application created',
             ]
         ];
 

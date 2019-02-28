@@ -4,11 +4,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
@@ -20,7 +22,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-final class CreateEcmtPermitApplication extends AbstractCommandHandler implements ToggleRequiredInterface
+final class CreateEcmtPermitApplication extends AbstractCommandHandler implements
+    ToggleRequiredInterface,
+    TransactionedInterface
 {
     use ToggleAwareTrait;
 
@@ -29,7 +33,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitStock', 'Licence'];
+    protected $extraRepos = ['IrhpPermitWindow', 'Licence'];
 
     /**
      * Handle command
@@ -60,12 +64,10 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
         $this->result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $this->result->addMessage('ECMT Permit Application created successfully');
 
-        $stock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(
-            EcmtPermitApplication::PERMIT_TYPE,
+        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByIrhpPermitType(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
             new DateTime()
         );
-
-        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stock->getId());
 
         $this->result->merge(
             $this->handleSideEffect(
