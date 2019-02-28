@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrhpPermitStockBundle as Qry;
  */
 class IrhpExpiryDate extends SingleValueAbstract
 {
-    const FORMATTER = 'Date';
+    const FORMATTER = 'DateDayMonthYear';
     const FIELD  = 'validTo';
     const SRCH_FLD_KEY = 'id';
     const SRCH_VAL_KEY = 'irhpPermitStock';
