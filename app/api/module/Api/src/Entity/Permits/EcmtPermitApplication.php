@@ -2,11 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -14,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 
 /**
  * EcmtPermitApplication Entity
@@ -33,6 +35,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
  */
 class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface, CancelableInterface
 {
+    use TieredProductReference;
+
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
     const STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
@@ -99,6 +103,39 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         self::INTER_JOURNEY_MORE_90 => 1
     ];
 
+    const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+        'Jan' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Feb' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Mar' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Apr' => FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'May' => FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'Jun' => FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'Jul' => FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Aug' => FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Sep' => FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Oct' => FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+        'Nov' => FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+        'Dec' => FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+    ];
+
+    /**
+     * Prepares data and calls TieredProductReference Trait method genericGetProdRefForTier
+     *
+     * @param DateTime $now
+     * @return string
+     */
+    public function getProductReferenceForTier(DateTime $now = null)
+    {
+        $now = is_null($now) ? new DateTime() : $now;
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+        return $this->genericGetProdRefForTier(
+            $irhpPermitStock->getValidFrom(true),
+            $irhpPermitStock->getValidTo(true),
+            $now,
+            self::ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY
+        );
+    }
 
     /**
      * Create new EcmtPermitApplication
