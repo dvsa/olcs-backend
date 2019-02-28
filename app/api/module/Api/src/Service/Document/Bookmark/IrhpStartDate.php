@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class IrhpStartDate extends SingleValueAbstract
 {
-    const FORMATTER = 'Date';
+    const FORMATTER = 'DateDayMonthYear';
     const FIELD  = 'validFrom';
     const SRCH_FLD_KEY = 'id';
     const SRCH_VAL_KEY = 'irhpPermitStock';
@@ -24,7 +24,7 @@ class IrhpStartDate extends SingleValueAbstract
 
         if (isset($this->data['validFrom'])) {
             if ($now > strtotime($this->data['validFrom'])) {
-                $this->setData(['validFrom' => date("Y-m-d H:i:s", $now)]);
+                $this->setData(['validFrom' => date("d F Y", $now)]);
             }
         }
 
