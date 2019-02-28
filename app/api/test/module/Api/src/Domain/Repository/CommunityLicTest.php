@@ -124,25 +124,6 @@ class CommunityLicTest extends RepositoryTestCase
         $this->assertEquals('result', $this->sut->fetchLicencesByIds([1]));
     }
 
-    public function testFetchActiveLicences()
-    {
-        $licenceId = 1;
-
-        $mockQb = m::mock();
-        $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('licence');
-        $mockQb->shouldReceive('andWhere')->with('licence')->once()->andReturnSelf();
-        $mockQb->shouldReceive('expr->eq')->with('m.status', ':status')->once()->andReturn('status');
-        $mockQb->shouldReceive('andWhere')->with('status')->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('licence', $licenceId)->once()->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')
-            ->with('status', CommunityLicEntity::STATUS_ACTIVE)->once()->andReturnSelf();
-        $mockQb->shouldReceive('orderBy')->with('m.issueNo', 'ASC')->once()->andReturnSelf();
-
-        $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
-        $mockQb->shouldReceive('getQuery->execute')->once()->andReturn('result');
-        $this->assertEquals('result', $this->sut->fetchActiveLicences($licenceId));
-    }
-
     public function testApplyListFilters()
     {
         // it's quite hard to test this protected method because of a lot of doctrine's
