@@ -521,6 +521,8 @@ class AcceptScoringTest extends CommandHandlerTestCase
             ->andReturn($licence);
         $ecmtPermitApplication->shouldReceive('getPermitsAwarded')
             ->andReturn($permitsAwarded);
+        $ecmtPermitApplication->shouldReceive('getProductReferenceForTier')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF);
         $ecmtPermitApplication->shouldReceive('getSuccessLevel')
             ->andReturn($successLevel);
         $ecmtPermitApplication->shouldReceive('getOutcomeNotificationType')
