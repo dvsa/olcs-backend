@@ -12,6 +12,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence;
 use Dvsa\Olcs\Transfer\Command\Surrender\Approve as ApproveCommand;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
 
 class ApproveTest extends CommandHandlerTestCase
@@ -28,6 +29,7 @@ class ApproveTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
         ];
+        $this->mockRepo('Licence', Licence::class);
         parent::setUp();
     }
 
@@ -40,16 +42,18 @@ class ApproveTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand($data, $expected)
     {
-
         $now = new \DateTime();
-        $data = [
+        $cmdData = [
             'id' => 45,
             'surrenderDate' => $now->format('Y-m-d')
         ];
 
-        $command = ApproveCommand::create($data);
+        $command = ApproveCommand::create($cmdData);
 
         $this->expectedSideEffect(
             UpdateCommand::class,
@@ -64,13 +68,16 @@ class ApproveTest extends CommandHandlerTestCase
             SurrenderLicence::class,
             [
                 'id' => 45,
-                'surrenderDate' => $data['surrenderDate'],
+                'surrenderDate' => $cmdData['surrenderDate'],
                 'terminated' => false
             ],
             new Result()
         );
 
         $licenceEntity = m::mock(Licence::class);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
+
         $licenceEntity->shouldReceive('getCreatedBy->getId')->andReturn(5);
         $licenceEntity->shouldReceive('getGoodsOrPsv->getId')->andReturn($data['goodsOrPsv']);
         $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn($data['licType']);
@@ -91,12 +98,9 @@ class ApproveTest extends CommandHandlerTestCase
                 'isExternal' => true,
                 'isScan' => false,
                 'dispatch' => true
-            ]
+            ],
+            new Result()
         );
-
-        if () {
-            $this->expectException(Exception::class);
-        }
 
         $this->sut->handleCommand($command);
     }
@@ -203,15 +207,49 @@ class ApproveTest extends CommandHandlerTestCase
                     'description' => 'GV - Surrender actioned letter (NI)',
                 ]
             ],
-            'psv_restricted_isNi' => [
-                'data' => [
-                    'goodsOrPsv' => Licence::LICENCE_CATEGORY_PSV,
-                    'licType' => Licence::LICENCE_TYPE_RESTRICTED,
-                    'isNi' => true,
-                ],
-                'expected' => [
-                ]
-            ],
         ];
+    }
+
+    public function testGenerateDocumentAndSendNotificationEmailWithInvalidLicenceType()
+    {
+        $now = new \DateTime();
+        $cmdData = [
+            'id' => 45,
+            'surrenderDate' => $now->format('Y-m-d')
+        ];
+
+        $command = ApproveCommand::create($cmdData);
+
+        $this->expectedSideEffect(
+            UpdateCommand::class,
+            [
+                'id' => 45,
+                'status' => RefData::SURRENDER_STATUS_APPROVED,
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            SurrenderLicence::class,
+            [
+                'id' => 45,
+                'surrenderDate' => $cmdData['surrenderDate'],
+                'terminated' => false
+            ],
+            new Result()
+        );
+
+        $licenceEntity = m::mock(Licence::class);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
+
+        $licenceEntity->shouldReceive('getCreatedBy->getId')->andReturn(5);
+        $licenceEntity->shouldReceive('getGoodsOrPsv->getId')->andReturn(Licence::LICENCE_CATEGORY_PSV);
+        $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licenceEntity->shouldReceive('isNi')->andReturn(true);
+
+        $this->expectException(Exception::class);
+
+        $this->sut->handleCommand($command);
     }
 }
