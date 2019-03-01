@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
@@ -39,7 +40,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitStock', 'FeeType'];
+    protected $extraRepos = ['IrhpPermitStock', 'FeeType', 'SystemParameter'];
 
     /**
      * Handle command
@@ -168,13 +169,22 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
      */
     private function triggerEmailNotification(EcmtPermitApplication $ecmtPermitApplication)
     {
+        $successLevel = $ecmtPermitApplication->getSuccessLevel();
+
+        if ($successLevel === EcmtPermitApplication::SUCCESS_LEVEL_NONE
+            && $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_ECMT_ALLOC_EMAIL_NONE)
+        ) {
+            $this->result->addMessage(sprintf('- email sending disabled for %s', $successLevel));
+            return;
+        }
+
         $emailCommandLookup = [
             EcmtPermitApplication::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
             EcmtPermitApplication::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
             EcmtPermitApplication::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
         ];
 
-        $emailCommand = $emailCommandLookup[$ecmtPermitApplication->getSuccessLevel()];
+        $emailCommand = $emailCommandLookup[$successLevel];
 
         $this->result->addMessage(
             sprintf('- sending email using command %s', $emailCommand)
