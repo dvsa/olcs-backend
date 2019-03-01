@@ -95,7 +95,7 @@ class Approve extends AbstractSurrenderCommandHandler
         throw new Exception('Licence type not surrenderable');
     }
 
-    private function isValidLicenceType($licType)
+    private function isValidLicenceType(string $licType): bool
     {
         $validTypes = [
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
