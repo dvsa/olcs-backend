@@ -30,7 +30,7 @@ class GoodsDisc extends AbstractRepository
     /**
      * Fetch discs to print
      *
-     * @param int $licenceType licence type
+     * @param int      $licenceType licence type
      * @param int|null $maxResults
      *
      * @return array
@@ -77,7 +77,7 @@ class GoodsDisc extends AbstractRepository
             // for NI licences we don't check operator type
             $qb->andWhere(
                 $qb->expr()->orX(
-                    //isInterm = 1
+                //isInterm = 1
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
                         $qb->expr()->eq($this->alias . '.isInterim', 1),
@@ -102,9 +102,9 @@ class GoodsDisc extends AbstractRepository
             // for non-NI licences we should check operator type as well
             $qb->andWhere(
                 $qb->expr()->orX(
-                    //isInterm = 1
+                //isInterm = 1
                     $qb->expr()->andX(
-                        // need to pick up discs from all traffic areas apart from NI
+                    // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
                         $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvagp.id', ':operatorType'),
@@ -112,7 +112,7 @@ class GoodsDisc extends AbstractRepository
                     ),
                     //isInterm = 0
                     $qb->expr()->andX(
-                        // need to pick up discs from all traffic areas apart from NI
+                    // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
                         $qb->expr()->eq($this->alias . '.isInterim', 0),
                         $qb->expr()->eq('lvlgp.id', ':operatorType1'),
@@ -282,7 +282,7 @@ class GoodsDisc extends AbstractRepository
         } catch (\Exception $exception) {
             throw $exception;
         }
-
-        return ['discCount' => $count];
+        $discCount = (int) $count ?? 0;
+        return ['discCount' => $discCount];
     }
 }
