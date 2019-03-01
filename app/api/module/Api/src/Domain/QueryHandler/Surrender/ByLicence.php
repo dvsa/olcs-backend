@@ -33,13 +33,16 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
         /** @var Surrender $surrender */
         $surrender = $this->getRepo('Surrender')->fetchOneByLicence($licenceId, Query::HYDRATE_OBJECT);
 
+        $goodsDiscsOnLicence = $this->getRepo('GoodsDisc')->countForLicence($query->getId());
+        $psvDiscsOnLicence = $this->getRepo('PsvDisc')->countForLicence($query->getId());
+
         return $this->result(
             $surrender,
-            ['licence', 'status', 'licenceDocumentStatus', 'communityLicenceDocumentStatus', 'digitalSignature', 'signatureType'],
+            ['licence' => ['correspondenceCd' => ['address',], 'organisation'], 'status', 'licenceDocumentStatus', 'communityLicenceDocumentStatus', 'digitalSignature', 'signatureType'],
             [
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
-                'goodsDiscsOnLicence' => $this->getRepo('GoodsDisc')->countForLicence($query->getId()),
-                'psvDiscsOnLicence' => $this->getRepo('PsvDisc')->countForLicence($query->getId()),
+                'goodsDiscsOnLicence' => $goodsDiscsOnLicence,
+                'psvDiscsOnLicence' => $psvDiscsOnLicence,
                 'addressLastModified' => $surrender->getLicence()->getCorrespondenceCd()->getAddress()->getLastModifiedOn()
             ]
         );

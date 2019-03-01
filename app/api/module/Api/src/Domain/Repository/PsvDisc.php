@@ -195,7 +195,7 @@ class PsvDisc extends AbstractRepository
         } catch (\Exception $exception) {
             throw $exception;
         }
-
-        return ['discCount' => $count];
+        $discCount = (int) $count ?? 0;
+        return ['discCount' => $discCount];
     }
 }
