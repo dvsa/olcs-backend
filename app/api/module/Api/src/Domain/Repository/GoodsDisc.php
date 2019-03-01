@@ -77,13 +77,11 @@ class GoodsDisc extends AbstractRepository
             // for NI licences we don't check operator type
             $qb->andWhere(
                 $qb->expr()->orX(
-                //isInterm = 1
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
                         $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvalt.id', ':applicationLicenceType')
                     ),
-                    // isInterm = 0
                     $qb->expr()->andX(
                         $qb->expr()->eq('lvlta.isNi', 1),
                         $qb->expr()->eq($this->alias . '.isInterim', 0),
@@ -102,9 +100,8 @@ class GoodsDisc extends AbstractRepository
             // for non-NI licences we should check operator type as well
             $qb->andWhere(
                 $qb->expr()->orX(
-                //isInterm = 1
                     $qb->expr()->andX(
-                    // need to pick up discs from all traffic areas apart from NI
+                        // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
                         $qb->expr()->eq($this->alias . '.isInterim', 1),
                         $qb->expr()->eq('lvagp.id', ':operatorType'),
@@ -112,7 +109,7 @@ class GoodsDisc extends AbstractRepository
                     ),
                     //isInterm = 0
                     $qb->expr()->andX(
-                    // need to pick up discs from all traffic areas apart from NI
+                        // need to pick up discs from all traffic areas apart from NI
                         $qb->expr()->eq('lvlta.isNi', 0),
                         $qb->expr()->eq($this->alias . '.isInterim', 0),
                         $qb->expr()->eq('lvlgp.id', ':operatorType1'),
@@ -170,6 +167,7 @@ class GoodsDisc extends AbstractRepository
      * @param int $licenceId
      *
      * @return int Number of discs ceased
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function ceaseDiscsForLicence($licenceId)
     {
@@ -184,6 +182,7 @@ class GoodsDisc extends AbstractRepository
      * @param int $licenceVehicleId
      *
      * @return int Number of discs ceased
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function ceaseDiscsForLicenceVehicle($licenceVehicleId)
     {
@@ -198,6 +197,7 @@ class GoodsDisc extends AbstractRepository
      * @param int $applicationId
      *
      * @return int Number of discs ceased
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function ceaseDiscsForApplication($applicationId)
     {
@@ -212,6 +212,7 @@ class GoodsDisc extends AbstractRepository
      * @param int $licenceId
      *
      * @return int Number of discs created
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function createDiscsForLicence($licenceId)
     {
@@ -242,6 +243,8 @@ class GoodsDisc extends AbstractRepository
      * Update existing discs for an application
      *
      * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
+     *
+     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function updateExistingGoodsDiscs(\Dvsa\Olcs\Api\Entity\Application\Application $application)
     {
@@ -282,7 +285,7 @@ class GoodsDisc extends AbstractRepository
         } catch (\Exception $exception) {
             throw $exception;
         }
-        $discCount = (int) $count ?? 0;
+        $discCount = (int)$count ?? 0;
         return ['discCount' => $discCount];
     }
 }
