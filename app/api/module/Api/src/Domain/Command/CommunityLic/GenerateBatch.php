@@ -19,8 +19,7 @@ final class GenerateBatch extends AbstractCommand
 {
     use UserOptional;
 
-    public $isReprint;
-
+    public $isBatchReprint = false;
     public $licence;
 
     public $communityLicenceIds;
@@ -30,9 +29,9 @@ final class GenerateBatch extends AbstractCommand
     /**
      * @return bool
      */
-    public function getIsReprint()
+    public function getIsBatchReprint()
     {
-        return $this->isReprint;
+        return $this->isBatchReprint;
     }
 
     public function getLicence()

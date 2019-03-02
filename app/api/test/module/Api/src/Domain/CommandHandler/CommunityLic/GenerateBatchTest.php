@@ -43,7 +43,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
      */
     public function testHandleCommand(
         $ukLicenceDisabled,
-        $isReprint,
+        $isBatchReprint,
         $systemParam,
         $isPsv,
         $niFlag,
@@ -53,7 +53,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $identifier = null;
         $communityLicenceIds = [10];
         $data = [
-            'isReprint' => $isReprint,
+            'isBatchReprint' => $isBatchReprint,
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
             'identifier' => $identifier
@@ -133,7 +133,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
      */
     public function testHandleCommandApplication(
         $ukLicenceDisabled,
-        $isReprint,
+        $isBatchReprint,
         $systemParam,
         $isPsv,
         $niFlag,
@@ -143,7 +143,7 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $identifier = 2;
         $communityLicenceIds = [10];
         $data = [
-            'isReprint' => $isReprint,
+            'isBatchReprint' => $isBatchReprint,
             'licence' => $licenceId,
             'communityLicenceIds' => $communityLicenceIds,
             'identifier' => $identifier
