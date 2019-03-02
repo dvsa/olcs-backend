@@ -102,7 +102,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     {
         return GenerateBatchCommand::create(
             [
-                'isReprint' => false,
+                'isBatchReprint' => false,
                 'licence' => $licenceId,
                 'communityLicenceIds' => $communityLicenceIds
             ]

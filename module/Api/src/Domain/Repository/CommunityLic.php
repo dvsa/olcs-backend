@@ -122,24 +122,6 @@ class CommunityLic extends AbstractRepository
     }
 
     /**
-     * Fetch active licences
-     *
-     * @param int $licence licence id
-     *
-     * @return mixed
-     */
-    public function fetchActiveLicences($licence)
-    {
-        $qb = $this->createQueryBuilder();
-        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licence'))
-            ->andWhere($qb->expr()->eq($this->alias . '.status', ':status'))
-            ->setParameter('licence', $licence)
-            ->setParameter('status', CommunityLicEntity::STATUS_ACTIVE)
-            ->orderBy($this->alias . '.issueNo', 'ASC');
-        return $qb->getQuery()->execute();
-    }
-
-    /**
      * Expire all for licence
      *
      * @param int     $licenceId licence id

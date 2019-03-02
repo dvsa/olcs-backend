@@ -20,12 +20,14 @@ class GenerateBatchTest extends \PHPUnit\Framework\TestCase
     {
         $command = GenerateBatch::create(
             [
+                'isBatchReprint' => true,
                 'licence' => 1,
                 'communityLicenceIds' => [10, 20],
                 'identifier' => 2,
             ]
         );
 
+        $this->assertEquals(true, $command->getIsBatchReprint());
         $this->assertEquals(1, $command->getLicence());
         $this->assertEquals([10, 20], $command->getCommunityLicenceIds());
         $this->assertEquals(2, $command->getIdentifier());

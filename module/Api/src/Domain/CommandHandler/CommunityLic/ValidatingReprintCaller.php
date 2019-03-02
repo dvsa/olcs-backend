@@ -49,6 +49,7 @@ final class ValidatingReprintCaller extends AbstractCommandHandler
                 $this->handleSideEffect(
                     ReprintCmd::create(
                         [
+                            'isBatchReprint' => true,
                             'user' => $userId,
                             'licence' => $licenceId,
                             'communityLicenceIds' => $validCommunityLicenceIds
