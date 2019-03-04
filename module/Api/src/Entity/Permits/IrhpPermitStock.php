@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -20,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class IrhpPermitStock extends AbstractIrhpPermitStock
+class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterface
 {
     const STATUS_SCORING_NEVER_RUN = 'stock_scoring_never_run';
     const STATUS_SCORING_PENDING = 'stock_scoring_pending';
