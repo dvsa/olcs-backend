@@ -60,7 +60,6 @@ class Approve extends AbstractSurrenderCommandHandler
             'template' => $template,
             'query' => [
                 'licence' => $licId,
-                'user' => $licenceEntity->getCreatedBy()->getId()
             ],
             'description' => $description,
             'licence' => $licId,

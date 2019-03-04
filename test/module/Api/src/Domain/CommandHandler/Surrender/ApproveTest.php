@@ -89,7 +89,6 @@ class ApproveTest extends CommandHandlerTestCase
                 'template' => $expected['template'],
                 'query' => [
                     'licence' => 45,
-                    'user' => 5
                 ],
                 'description' => $expected['description'],
                 'licence' => 45,
