@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -43,7 +44,8 @@ final class ByLicence extends AbstractQueryHandler implements ToggleRequiredInte
                 'disableSignatures' => $this->getRepo('SystemParameter')->getDisableGdsVerifySignatures(),
                 'goodsDiscsOnLicence' => $goodsDiscsOnLicence,
                 'psvDiscsOnLicence' => $psvDiscsOnLicence,
-                'addressLastModified' => $surrender->getLicence()->getCorrespondenceCd()->getAddress()->getLastModifiedOn()
+                'addressLastModified' => $surrender->getLicence()->getCorrespondenceCd()->getAddress()->getLastModifiedOn(),
+                'isInternationalLicence' => $surrender->getLicence()->getLicenceType()->getId() === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
             ]
         );
     }
