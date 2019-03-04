@@ -78,7 +78,7 @@ class GenerateCoverLetterTest extends CommandHandlerTestCase
                 ],
                 'description' => 'UK licence for the Community cover letter',
                 'category' => Category::CATEGORY_LICENSING,
-                'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                'subCategory' => SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE_COVER,
                 'isExternal' => false,
                 'isScan' => false
             ],
