@@ -158,6 +158,10 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $candidatePermit2Permits = new ArrayCollection([
             m::mock(IrhpPermit::class),
         ]);
+
+        $candidatePermit2Permits[0]->shouldReceive('isValid')
+            ->andReturn(true);
+
         $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit2->shouldReceive('getIrhpPermits')
             ->andReturn($candidatePermit2Permits);
@@ -167,6 +171,9 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $candidatePermit3Permits = new ArrayCollection([
             m::mock(IrhpPermit::class),
         ]);
+        $candidatePermit3Permits[0]->shouldReceive('isValid')
+            ->andReturn(false);
+
         $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit3->shouldReceive('getIrhpPermits')
             ->andReturn($candidatePermit3Permits);
@@ -176,6 +183,8 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $candidatePermit4Permits = new ArrayCollection([
             m::mock(IrhpPermit::class),
         ]);
+        $candidatePermit4Permits[0]->shouldReceive('isValid')
+            ->andReturn(true);
         $candidatePermit4 = m::mock(IrhpCandidatePermit::class);
         $candidatePermit4->shouldReceive('getIrhpPermits')
             ->andReturn($candidatePermit4Permits);

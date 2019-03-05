@@ -119,7 +119,9 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
         $validPermitCount = 0;
         foreach ($permits as $permit) {
-            $validPermitCount += is_null($permit->getIrhpPermits()) ? 0 : $permit->getIrhpPermits()->count();
+            if (!is_null($permit->getIrhpPermits()) && $permit->getIrhpPermits()->first()->isValid()) {
+                $validPermitCount += $permit->getIrhpPermits()->count();
+            }
         }
         return $validPermitCount;
     }

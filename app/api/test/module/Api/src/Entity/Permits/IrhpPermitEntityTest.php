@@ -372,4 +372,68 @@ class IrhpPermitEntityTest extends EntityTester
 
         $this->assertEquals(Entity::STATUS_CEASED, $this->sut->getStatus()->getId());
     }
+
+    /**
+     * @dataProvider dpIsCeased
+     */
+    public function testIsCeased($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        $this->assertEquals($expected, $this->sut->isCeased());
+    }
+
+    public function dpIsCeased()
+    {
+        return [
+            [Entity::STATUS_CEASED, true],
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsTerminated
+     */
+    public function testIsTerminated($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        $this->assertEquals($expected, $this->sut->isTerminated());
+    }
+
+    public function dpIsTerminated()
+    {
+        return [
+            [Entity::STATUS_TERMINATED, true],
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsValid
+     */
+    public function testIsValid($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        $this->assertEquals($expected, $this->sut->isValid());
+    }
+
+    public function dpIsValid()
+    {
+        return [
+            [Entity::STATUS_TERMINATED, false],
+            [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_AWAITING_PRINTING, true],
+            [Entity::STATUS_PRINTING, true],
+            [Entity::STATUS_PRINTED, true],
+            [Entity::STATUS_ERROR, true],
+        ];
+    }
 }
