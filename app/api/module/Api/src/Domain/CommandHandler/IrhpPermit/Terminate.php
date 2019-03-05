@@ -40,7 +40,7 @@ class Terminate extends AbstractCommandHandler implements TransactionedInterface
         try {
             $permit->proceedToStatus($terminatedStatus);
         } catch (ForbiddenException $exception) {
-            $this->result->addMessage('The permit is not in the correct state to be terminated.');
+            $this->result->addMessage('You cannot terminate an inactive permit.');
             return $this->result;
         }
 
