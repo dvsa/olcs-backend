@@ -97,4 +97,28 @@ class ResultTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expected, $this->sut->toArray());
     }
+
+    public function testMergeRecursive()
+    {
+        $this->sut->addId('foo', 111);
+        $this->sut->addId('bar', 222);
+        $this->sut->addMessage('foo was successful');
+        $this->sut->addMessage('bar failed');
+        $this->sut->setFlag('foo', 'bar');
+
+        $result = new Result();
+        $result->addId('foo', 333);
+        $result->addMessage('foo was updated');
+        $result->setFlag('cake', 'buz');
+
+        $this->sut->merge($result, true);
+
+        $expected = [
+            'id' => ['foo' => [111, 333], 'bar' => 222],
+            'messages' => ['foo was successful', 'bar failed', 'foo was updated'],
+            'flags' => ['foo' => 'bar', 'cake' => 'buz']
+        ];
+
+        $this->assertEquals($expected, $this->sut->toArray());
+    }
 }
