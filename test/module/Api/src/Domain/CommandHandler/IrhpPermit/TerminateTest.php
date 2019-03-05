@@ -56,7 +56,7 @@ class TerminateTest extends CommandHandlerTestCase
         $permit->shouldReceive('proceedToStatus')->with($terminatedStatus);
         $result = $this->sut->handleCommand($command);
         $expected = [
-            'messages' => ['The permit is not in the correct state to be terminated.'],
+            'messages' => ['You cannot terminate an inactive permit.'],
             'id' => []
         ];
 
