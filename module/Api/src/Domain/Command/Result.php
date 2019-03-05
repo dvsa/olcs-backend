@@ -139,13 +139,16 @@ final class Result
     /**
      * Merge passed result in this Result
      *
-     * @param Result $result Object necessary to merge in
+     * @param Result $result    Object necessary to merge in
+     * @param bool   $recursive Whether to merge recursively
      *
      * @return void
      */
-    public function merge(Result $result)
+    public function merge(Result $result, bool $recursive = false)
     {
-        $this->ids = array_merge($this->ids, $result->getIds());
+        $this->ids = $recursive
+            ? array_merge_recursive($this->ids, $result->getIds())
+            : array_merge($this->ids, $result->getIds());
         $this->messages = array_merge($this->messages, $result->getMessages());
         $resultFlags = $result->getFlags();
         // not ideal but it saves a time to fix 800+ unit tests

@@ -152,12 +152,6 @@ final class GeneratePermits extends AbstractCommandHandler implements ToggleRequ
         $permits = (array)$docs['permit'];
         $letters = (array)$docs['coveringLetter'];
 
-        if (sizeof($permits) != sizeof($letters)) {
-            throw new RuntimeException(
-                sprintf('Number of permits (%d) and letters (%d) does not match.', sizeof($permits), sizeof($letters))
-            );
-        }
-
         return [
             'permits' => $permits,
             'letters' => $letters,
