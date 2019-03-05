@@ -303,7 +303,7 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     private function proceedToTerminated(RefData $status)
     {
-        if (!$this->isNotCeased()) {
+        if ($this->isCeased() || $this->isTerminated()) {
             throw new ForbiddenException(
                 sprintf(
                     'The permit is not in the correct state to be terminated (%s)',
@@ -380,8 +380,28 @@ class IrhpPermit extends AbstractIrhpPermit
      *
      * @return bool
      */
-    public function isNotCeased()
+    public function isCeased()
     {
-        return $this->status->getId() !== self::STATUS_CEASED;
+        return $this->status->getId() === self::STATUS_CEASED;
+    }
+
+    /**
+     * Is terminated
+     *
+     * @return bool
+     */
+    public function isTerminated()
+    {
+        return $this->status->getId() === self::STATUS_TERMINATED;
+    }
+
+    /**
+     * Is valid
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return in_array($this->status->getId(), self::$validStatuses);
     }
 }

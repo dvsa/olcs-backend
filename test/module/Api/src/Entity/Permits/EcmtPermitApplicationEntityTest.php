@@ -1227,4 +1227,34 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dpCanBeExpired
+     */
+    public function testCanBeExpired($statusId, $expected)
+    {
+        $application = $this->createApplication($statusId);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('countValidPermits')->andReturn(0);
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+        $this->assertEquals($expected, $application->canBeExpired());
+    }
+
+    public function dpCanBeExpired()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false],
+            [Entity::STATUS_WITHDRAWN, false],
+            [Entity::STATUS_AWAITING_FEE, false],
+            [Entity::STATUS_FEE_PAID, false],
+            [Entity::STATUS_UNSUCCESSFUL, false],
+            [Entity::STATUS_ISSUED, false],
+            [Entity::STATUS_ISSUING, false],
+            [Entity::STATUS_VALID, true],
+            [Entity::STATUS_DECLINED, false],
+            [Entity::STATUS_EXPIRED, false],
+        ];
+    }
 }

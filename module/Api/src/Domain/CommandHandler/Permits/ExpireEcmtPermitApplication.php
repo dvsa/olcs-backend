@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 
 /**
- * Update Permit status
+ * Change ECMT Permit Application status to expired
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */

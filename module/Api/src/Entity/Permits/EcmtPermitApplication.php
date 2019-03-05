@@ -344,10 +344,24 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $this->status = $issuedStatus;
     }
 
+    /**
+     * Changes the status to expired
+     *
+     * @param RefData $expireStatus
+     *
+     * @throws ForbiddenException
+     */
     public function expire(RefData $expireStatus)
     {
-        if (!$this->isValid()) {
-            throw new ForbiddenException('This application can not be expired.');
+        $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
+
+        if (!$this->canBeExpired()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'This application can not be expired. (%s)',
+                    $irhpPermitApplication->countValidPermits().' '.$this->isValid()
+                )
+            );
         }
         $this->status = $expireStatus;
     }
@@ -426,6 +440,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isIssueInProgress' => $this->isIssueInProgress(),
             'isValid' => $this->isValid(),
             'isActive' => $this->isActive(),
+            'canBeExpired' => $this->canBeExpired(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
             'hasOutstandingFees' => $this->hasOutstandingFees(),
@@ -736,6 +751,20 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function isValid()
     {
         return $this->status->getId() === self::STATUS_VALID;
+    }
+
+    /**
+     * Whether the permit application can be expired
+     *
+     * @return bool
+     */
+    public function canBeExpired()
+    {
+        $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
+        if ($irhpPermitApplication->countValidPermits() === 0 && $this->isValid()) {
+            return true;
+        }
+        return false;
     }
 
     /**
