@@ -906,9 +906,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function issueFeeOverdue()
     {
-        $timeToPay = new \DateInterval('P10D');
-        $cutoff = new \DateTime();
-        $cutoff->sub($timeToPay);
+        // TODO - OLCS-21979
+        $cutoff = new \DateTime('-10 weekdays');
 
         $criteria = Criteria::create();
         $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
