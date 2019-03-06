@@ -1235,7 +1235,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     {
         $application = $this->createApplication($statusId);
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('countValidPermits')->andReturn(0);
+        $irhpPermitApplication->shouldReceive('hasValidPermits')->andReturn(false);
         $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
         $this->assertEquals($expected, $application->canBeExpired());
     }

@@ -1162,6 +1162,8 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+    Command\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
+
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
         CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,

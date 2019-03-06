@@ -4,22 +4,20 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Permits\ExpireEcmtPermitApplication;
-use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
+use Dvsa\Olcs\Api\Domain\Command\Permits\ExpireEcmtPermitApplication;
 
 /**
  * Terminate Permit
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-class Terminate extends AbstractCommandHandler implements TransactionedInterface, ToggleRequiredInterface
+class Terminate extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -35,6 +33,11 @@ class Terminate extends AbstractCommandHandler implements TransactionedInterface
     public function handleCommand(CommandInterface $command): Result
     {
         $permit = $this->getRepo()->fetchById($command->getId());
+
+        if (!$permit->getIrhpPermitRange()->getIrhpPermitStock()->getIrhpPermitType()->isEcmtAnnual()) {
+            throw new ForbiddenException('Only ECMT Permits can be terminated.');
+        }
+
         $terminatedStatus = $this->refData(IrhpPermit::STATUS_TERMINATED);
 
         try {
@@ -51,7 +54,7 @@ class Terminate extends AbstractCommandHandler implements TransactionedInterface
 
         $applicationId = $permit->getIrhpPermitApplication()->getEcmtPermitApplication()->getId();
 
-        if ($this->checkIfLastPermit($applicationId)) {
+        if (!$permit->getIrhpPermitApplication()->hasValidPermits()) {
             $this->result->merge(
                 $this->handleSideEffect(
                     ExpireEcmtPermitApplication::create(
@@ -63,30 +66,5 @@ class Terminate extends AbstractCommandHandler implements TransactionedInterface
             );
         }
         return $this->result;
-    }
-
-    /**
-     * Check if the applications has valid permits left
-     *
-     *
-     * @param int $applicationId
-     * @return bool
-     */
-    protected function checkIfLastPermit($applicationId)
-    {
-        $permitsTotal = $this->handleQuery(
-            ValidEcmtPermits::create(
-                [
-                    'page' => 1,
-                    'limit' => 10,
-                    'id' => $applicationId
-                ]
-            )
-        );
-
-        if ($permitsTotal['count'] === 0) {
-            return true;
-        }
-        return false;
     }
 }

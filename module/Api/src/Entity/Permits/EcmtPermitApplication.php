@@ -353,13 +353,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function expire(RefData $expireStatus)
     {
-        $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
-
         if (!$this->canBeExpired()) {
+            $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
             throw new ForbiddenException(
                 sprintf(
-                    'This application can not be expired. (%s)',
-                    $irhpPermitApplication->countValidPermits().' '.$this->isValid()
+                    'This application can not be expired. (No of valid permits: %s)',
+                    $irhpPermitApplication->countValidPermits()
                 )
             );
         }
@@ -761,7 +760,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function canBeExpired()
     {
         $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
-        if ($irhpPermitApplication->countValidPermits() === 0 && $this->isValid()) {
+        if (!$irhpPermitApplication->hasValidPermits() && $this->isValid()) {
             return true;
         }
         return false;
