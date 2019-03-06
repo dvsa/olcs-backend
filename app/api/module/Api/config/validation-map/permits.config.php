@@ -83,7 +83,7 @@ return [
     CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
-    CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsInternalUser::class,
+    CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsSideEffect::class,
 
     // TODO: these will need to be changed to IsInternalAdmin
     CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
