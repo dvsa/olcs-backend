@@ -60,7 +60,7 @@ trait PermitEmailTrait
             $vars['permitsRequired'] = $recordObject->getPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
             // TODO - OLCS-21979
-            $vars['paymentDeadlineNumDays'] = '10';
+            $vars['paymentDeadlineNumDays'] = '9';
 
             $criteria = Criteria::create();
             $criteria->where(
@@ -120,7 +120,7 @@ trait PermitEmailTrait
     protected function calculateDueDate(\DateTime $date)
     {
         // TODO - OLCS-21979
-        $date->add(\DateInterval::createFromDateString('+10 weekdays'));
+        $date->add(\DateInterval::createFromDateString('+9 weekdays'));
         return $date->format('d F Y');
     }
 }
