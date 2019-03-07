@@ -52,9 +52,8 @@ class Terminate extends AbstractCommandHandler implements ToggleRequiredInterfac
         $this->result->addId('IrhpPermit', $permit->getId());
         $this->result->addMessage('The selected permit has been terminated.');
 
-        $applicationId = $permit->getIrhpPermitApplication()->getEcmtPermitApplication()->getId();
-
         if (!$permit->getIrhpPermitApplication()->hasValidPermits()) {
+            $applicationId = $permit->getIrhpPermitApplication()->getEcmtPermitApplication()->getId();
             $this->result->merge(
                 $this->handleSideEffect(
                     ExpireEcmtPermitApplication::create(
