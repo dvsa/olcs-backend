@@ -14,6 +14,7 @@ return [
     CommandHandler\IrhpPermit\GenerateCoverLetterDocument::class => IsSideEffect::class,
     CommandHandler\IrhpPermit\GeneratePermitDocument::class => IsSideEffect::class,
     CommandHandler\IrhpPermit\Replace::class => IsInternalUser::class,
+    CommandHandler\IrhpPermit\Terminate::class => IsInternalUser::class,
     CommandHandler\IrhpPermit\CreateReplacement::class => IsSideEffect::class,
     QueryHandler\IrhpPermit\ByPermitNumber::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpPermitRange\ByPermitNumber::class => NotIsAnonymousUser::class,

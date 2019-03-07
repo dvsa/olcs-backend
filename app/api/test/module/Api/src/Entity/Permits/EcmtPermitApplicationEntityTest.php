@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
@@ -1225,6 +1226,48 @@ class EcmtPermitApplicationEntityTest extends EntityTester
                 $validTo,
                 new DateTime('first day of December next year')
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeExpired
+     */
+    public function testCanBeExpired($statusId, $validPermits, $expected)
+    {
+        $application = $this->createApplication($statusId);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('hasValidPermits')->andReturn($validPermits);
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+        $this->assertEquals($expected, $application->canBeExpired());
+    }
+
+    public function dpCanBeExpired()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, true, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, true, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, true, false],
+            [Entity::STATUS_WITHDRAWN, true, false],
+            [Entity::STATUS_AWAITING_FEE, true, false],
+            [Entity::STATUS_FEE_PAID, true, false],
+            [Entity::STATUS_UNSUCCESSFUL, true, false],
+            [Entity::STATUS_ISSUED, true, false],
+            [Entity::STATUS_ISSUING, true, false],
+            [Entity::STATUS_VALID, true, false],
+            [Entity::STATUS_DECLINED, true, false],
+            [Entity::STATUS_EXPIRED, true, false],
+            [Entity::STATUS_CANCELLED, false, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false, false],
+            [Entity::STATUS_WITHDRAWN, false, false],
+            [Entity::STATUS_AWAITING_FEE, false, false],
+            [Entity::STATUS_FEE_PAID, false, false],
+            [Entity::STATUS_UNSUCCESSFUL, false, false],
+            [Entity::STATUS_ISSUED, false, false],
+            [Entity::STATUS_ISSUING, false, false],
+            [Entity::STATUS_VALID, false, true],
+            [Entity::STATUS_DECLINED, false, false],
+            [Entity::STATUS_EXPIRED, false, false]
         ];
     }
 }
