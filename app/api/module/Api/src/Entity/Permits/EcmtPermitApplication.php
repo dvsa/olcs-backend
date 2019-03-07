@@ -760,7 +760,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     public function canBeExpired()
     {
         $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
-        if (!$irhpPermitApplication->hasValidPermits() && $this->isValid()) {
+        if ($this->isValid() && !$irhpPermitApplication->hasValidPermits()) {
             return true;
         }
         return false;
