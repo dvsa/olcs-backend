@@ -4,6 +4,10 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
@@ -147,56 +151,53 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
-    public function testCountValidPermits()
+    /**
+     * @dataProvider dpCountValidPermits
+     */
+    public function testCountValidPermits($statusId, $count)
     {
-        $candidatePermit1 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit1->shouldReceive('getIrhpPermits')
-            ->andReturn(null);
-        $candidatePermit1->shouldReceive('getSuccessful')
-            ->andReturn(true);
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
-        $candidatePermit2Permits = new ArrayCollection([
-            m::mock(IrhpPermit::class),
-        ]);
+        $irhpCandidate = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidate->shouldReceive('getIrhpPermitRange')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitRange);
+        $irhpCandidate->shouldReceive('getIrhpPermitApplication')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication);
 
-        $candidatePermit2Permits[0]->shouldReceive('isValid')
-            ->andReturn(true);
+        $issueDate = new \DateTime();
+        $permitNumber = '00001';
+        $status = new RefData($statusId);
 
-        $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit2->shouldReceive('getIrhpPermits')
-            ->andReturn($candidatePermit2Permits);
-        $candidatePermit2->shouldReceive('getSuccessful')
-            ->andReturn(true);
+        $irhpPermit = IrhpPermit::createNew(
+            $irhpCandidate,
+            $issueDate,
+            $status,
+            $permitNumber
+        );
 
-        $candidatePermit3Permits = new ArrayCollection([
-            m::mock(IrhpPermit::class),
-        ]);
-        $candidatePermit3Permits[0]->shouldReceive('isValid')
-            ->andReturn(false);
+        $collection = new ArrayCollection([$irhpPermit]);
 
-        $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit3->shouldReceive('getIrhpPermits')
-            ->andReturn($candidatePermit3Permits);
-        $candidatePermit3->shouldReceive('getSuccessful')
-            ->andReturn(false);
+        $this->sut->setIrhpPermits($collection);
+        $this->assertEquals($count, $this->sut->countValidPermits());
+    }
 
-        $candidatePermit4Permits = new ArrayCollection([
-            m::mock(IrhpPermit::class),
-        ]);
-        $candidatePermit4Permits[0]->shouldReceive('isValid')
-            ->andReturn(true);
-        $candidatePermit4 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit4->shouldReceive('getIrhpPermits')
-            ->andReturn($candidatePermit4Permits);
-        $candidatePermit4->shouldReceive('getSuccessful')
-            ->andReturn(true);
-
-        $this->sut->addIrhpCandidatePermits($candidatePermit1);
-        $this->sut->addIrhpCandidatePermits($candidatePermit2);
-        $this->sut->addIrhpCandidatePermits($candidatePermit3);
-        $this->sut->addIrhpCandidatePermits($candidatePermit4);
-
-        $this->assertEquals(2, $this->sut->countValidPermits());
+    public function dpCountValidPermits()
+    {
+        return [
+            [IrhpPermit::STATUS_PENDING, 1],
+            [IrhpPermit::STATUS_AWAITING_PRINTING, 1],
+            [IrhpPermit::STATUS_PRINTING, 1],
+            [IrhpPermit::STATUS_PRINTED, 1],
+            [IrhpPermit::STATUS_ERROR, 1],
+            [IrhpPermit::STATUS_CEASED, 0],
+            [IrhpPermit::STATUS_ISSUED, 1],
+            [IrhpPermit::STATUS_TERMINATED, 0]
+        ];
     }
 
     public function testCountPermitsAwarded()

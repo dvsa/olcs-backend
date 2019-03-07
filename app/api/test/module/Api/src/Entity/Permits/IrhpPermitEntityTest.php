@@ -391,6 +391,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_TERMINATED, false]
         ];
     }
 
@@ -412,6 +413,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false]
         ];
     }
 

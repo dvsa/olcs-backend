@@ -51,6 +51,11 @@ class IrhpPermit extends AbstractIrhpPermit
         self::STATUS_ISSUED,
     ];
 
+    public static $invalidStatuses = [
+        self::STATUS_CEASED,
+        self::STATUS_TERMINATED,
+    ];
+
     /**
      * Create new IrhpPermit
      *
