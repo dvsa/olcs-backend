@@ -42,7 +42,7 @@ class IrhpPermit extends AbstractIrhpPermit
         self::STATUS_ERROR,
     ];
 
-    public static $invalidStatuses = [
+    public static $nonValidStatuses = [
         self::STATUS_CEASED,
         self::STATUS_TERMINATED,
     ];
@@ -398,6 +398,6 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     public function isValid()
     {
-        return !in_array($this->status->getId(), self::$invalidStatuses);
+        return !in_array($this->status->getId(), self::$nonValidStatuses);
     }
 }
