@@ -439,7 +439,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isIssueInProgress' => $this->isIssueInProgress(),
             'isValid' => $this->isValid(),
             'isActive' => $this->isActive(),
-            'canBeExpired' => $this->canBeExpired(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
             'hasOutstandingFees' => $this->hasOutstandingFees(),
