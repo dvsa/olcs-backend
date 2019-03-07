@@ -993,6 +993,8 @@ return [
     // Transfer - IRHP Permit
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
+    TransferCommand\IrhpPermit\Terminate::class =>
+        CommandHandler\IrhpPermit\Terminate::class,
 
     // Transfer - IRHP Permit Application
     TransferCommand\IrhpApplication\Create::class =>
@@ -1159,6 +1161,8 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+    Command\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
+
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
         CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
