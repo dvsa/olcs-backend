@@ -42,15 +42,6 @@ class IrhpPermit extends AbstractIrhpPermit
         self::STATUS_ERROR,
     ];
 
-    public static $validStatuses = [
-        self::STATUS_PENDING,
-        self::STATUS_AWAITING_PRINTING,
-        self::STATUS_PRINTING,
-        self::STATUS_PRINTED,
-        self::STATUS_ERROR,
-        self::STATUS_ISSUED,
-    ];
-
     public static $invalidStatuses = [
         self::STATUS_CEASED,
         self::STATUS_TERMINATED,
@@ -407,6 +398,6 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     public function isValid()
     {
-        return in_array($this->status->getId(), self::$validStatuses);
+        return !in_array($this->status->getId(), self::$invalidStatuses);
     }
 }
