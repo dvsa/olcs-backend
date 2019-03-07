@@ -2183,6 +2183,12 @@ return array(
         ),
     ),
     'irhp_permit' => array(
+        'irhp_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitApplication',
+                'property' => 'irhpPermit'
+            )
+        ),
         'irhp_candidate_permit_id' => array(
             'inversedBy' => array(
                 'entity' => 'IrhpCandidatePermit',
