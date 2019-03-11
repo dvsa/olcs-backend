@@ -394,7 +394,7 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
-     * Is terminated
+     * Is expired
      *
      * @return bool
      */
