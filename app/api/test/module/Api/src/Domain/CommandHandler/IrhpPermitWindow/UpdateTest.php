@@ -174,7 +174,8 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
-            'daysForPayment' => 14
+            'daysForPayment' => 14,
+            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -218,7 +219,8 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
-            'daysForPayment' => 14
+            'daysForPayment' => 14,
+            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -263,7 +265,8 @@ class UpdateTest extends CommandHandlerTestCase
             'irhpPermitStock' => 1,
             'startDate' => '2019-12-01',
             'endDate' => '2019-12-30',
-            'daysForPayment' => 14
+            'daysForPayment' => 14,
+            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);

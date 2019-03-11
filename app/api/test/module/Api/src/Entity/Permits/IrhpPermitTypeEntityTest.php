@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as Entity;
+use Mockery as m;
 
 /**
  * IrhpPermitType Entity Unit Tests
@@ -26,7 +27,27 @@ class IrhpPermitTypeEntityTest extends EntityTester
 
     public function setUp()
     {
-        $this->sut = new Entity();
+        $this->sut = m::mock(Entity::class)->makePartial();
+    }
+
+    public function testGetCalculatedBundleValues()
+    {
+        $this->sut->shouldReceive('isEcmtAnnual')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true)
+            ->shouldReceive('isBilateral')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $this->assertSame(
+            [
+                'isEcmtAnnual' => true,
+                'isBilateral' => false,
+            ],
+            $this->sut->getCalculatedBundleValues()
+        );
     }
 
     /**
