@@ -49,7 +49,17 @@ class ByLicenceTest extends QueryHandlerTestCase
         $expected = new Result(
             $surrender,
             [
-                'licence' => ['correspondenceCd' => ['address',], 'organisation'],
+                'licence' => [
+                    'correspondenceCd' => [
+                        'address' => [
+                            'countryCode',
+                        ],
+                        'phoneContacts' => [
+                            'phoneContactType',
+                        ]
+                    ],
+                    'organisation'
+                ],
                 'status',
                 'licenceDocumentStatus',
                 'communityLicenceDocumentStatus',
