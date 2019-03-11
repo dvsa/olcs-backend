@@ -466,8 +466,7 @@ class IrhpPermitEntityTest extends EntityTester
     public function testIsExpired($statusId, $expected)
     {
         $this->sut->getStatus()->setId($statusId);
-
-        $this->assertEquals($expected, $this->sut->isValid());
+        $this->assertEquals($expected, $this->sut->isExpired());
     }
 
     public function dpIsExpired()
@@ -475,11 +474,11 @@ class IrhpPermitEntityTest extends EntityTester
         return [
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_CEASED, false],
-            [Entity::STATUS_AWAITING_PRINTING, true],
-            [Entity::STATUS_PRINTING, true],
-            [Entity::STATUS_PRINTED, true],
-            [Entity::STATUS_ERROR, true],
-            [Entity::STATUS_EXPIRED, false]
+            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PRINTING, false],
+            [Entity::STATUS_PRINTED, false],
+            [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_EXPIRED, true]
         ];
     }
 }
