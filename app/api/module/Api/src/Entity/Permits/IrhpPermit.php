@@ -34,6 +34,7 @@ class IrhpPermit extends AbstractIrhpPermit
     const STATUS_CEASED             = 'irhp_permit_ceased';
     const STATUS_ISSUED             = 'irhp_permit_issued';
     const STATUS_TERMINATED         = 'irhp_permit_terminated';
+    const STATUS_EXPIRED            = 'irhp_permit_expired';
 
     public static $readyToPrintStatuses = [
         self::STATUS_PENDING,
@@ -45,6 +46,7 @@ class IrhpPermit extends AbstractIrhpPermit
     public static $nonValidStatuses = [
         self::STATUS_CEASED,
         self::STATUS_TERMINATED,
+        self::STATUS_EXPIRED,
     ];
 
     /**
@@ -389,6 +391,16 @@ class IrhpPermit extends AbstractIrhpPermit
     public function isTerminated()
     {
         return $this->status->getId() === self::STATUS_TERMINATED;
+    }
+
+    /**
+     * Is expired
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return $this->status->getId() === self::STATUS_EXPIRED;
     }
 
     /**
