@@ -195,6 +195,11 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
             return $taskData;
         }
 
+        if($application::CODE_GV_VAR_UPGRADE === $application->getCode())
+        {
+            $taskData['urgent'] = 'Y';
+        }
+
         // If Transport manager section changed
         if ($this->isOnlyCompletedSection($application, ApplicationCompletion::SECTION_TRANSPORT_MANAGER)) {
             /** @var \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication $repoTma */
