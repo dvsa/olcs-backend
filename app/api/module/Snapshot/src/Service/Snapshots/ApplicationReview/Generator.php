@@ -421,7 +421,7 @@ class Generator extends AbstractGenerator
         ];
 
         return [
-            'header' => 'continuations.declaration.signature-details',
+            'hide-count' => true,
             'config' => $service->getConfigFromData($data)
         ];
     }
