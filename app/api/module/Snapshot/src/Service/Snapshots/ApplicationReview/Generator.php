@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
-use Zend\Filter\Word\UnderscoreToCame
+use Zend\Filter\Word\UnderscoreToCamelCase;
 
 /**
  * Application Review
