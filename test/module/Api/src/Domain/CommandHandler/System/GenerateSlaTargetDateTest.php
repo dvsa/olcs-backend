@@ -4,23 +4,23 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\System;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as Command;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\System\GenerateSlaTargetDate as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as Command;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
+use Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke as ProposeToRevokeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Sla as SlaRepo;
-use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate as Repo;
-use Dvsa\Olcs\Api\Domain\Repository\Statement;
+use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate as SlaTargetDateRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Statement as StatementRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
-use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
+use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
+use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
-use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -33,10 +33,10 @@ class GenerateSlaTargetDateTest extends CommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('Pi', PiRepo::class);
         $this->mockRepo('Sla', SlaRepo::class);
-        $this->mockRepo('SlaTargetDate', Repo::class);
+        $this->mockRepo('SlaTargetDate', SlaTargetDateRepo::class);
         $this->mockRepo('Submission', SubmissionRepo::class);
-        $this->mockRepo('ProposeToRevoke', ProposeToRevoke::class);
-        $this->mockRepo('Statement', Statement::class);
+        $this->mockRepo('ProposeToRevoke', ProposeToRevokeRepo::class);
+        $this->mockRepo('Statement', StatementRepo::class);
 
         $this->mockedSmServices = [
             SlaCalculatorInterface::class => m::mock(SlaCalculatorInterface::class)

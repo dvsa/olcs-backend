@@ -2,15 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Create as Sut;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\Query\Licence as LicenceRepo;
-use Dvsa\Olcs\Transfer\Command\Surrender\Create as Cmd;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Transfer\Command\Surrender\Create as Cmd;
 use Mockery as m;
 
 class CreateTest extends CommandHandlerTestCase

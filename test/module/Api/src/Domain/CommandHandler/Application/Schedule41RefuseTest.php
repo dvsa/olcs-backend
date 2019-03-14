@@ -7,18 +7,18 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Command\LicenceOperatingCentre\DisassociateS4;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Schedule41\RefuseS4;
-
-use Dvsa\Olcs\Api\Entity\Application\S4;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Schedule41Refuse;
-use Dvsa\Olcs\Transfer\Command\Application\Schedule41Refuse as Cmd;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\DeleteConditionUndertakingS4;
+use Dvsa\Olcs\Api\Domain\Command\LicenceOperatingCentre\DisassociateS4;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Schedule41\RefuseS4;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Schedule41Refuse;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Application\S4;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Transfer\Command\Application\Schedule41Refuse as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class Schedule41RefuseTest
@@ -32,14 +32,9 @@ class Schedule41RefuseTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Schedule41Refuse();
-        $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
 
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        parent::initReferences();
     }
 
     public function testHandleCommand()

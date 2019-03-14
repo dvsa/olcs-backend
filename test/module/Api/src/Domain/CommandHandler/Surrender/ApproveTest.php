@@ -2,18 +2,20 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Approve as ApproveHandler;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Approve as ApproveHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence;
 use Dvsa\Olcs\Transfer\Command\Surrender\Approve as ApproveCommand;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
 
 class ApproveTest extends CommandHandlerTestCase
@@ -30,8 +32,8 @@ class ApproveTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
         ];
-        $this->mockRepo('Licence', Licence::class);
-        $this->mockRepo('Surrender', Surrender::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
+        $this->mockRepo('Surrender', SurrenderRepo::class);
         parent::setUp();
     }
 

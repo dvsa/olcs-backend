@@ -7,9 +7,11 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as  OrganisationPersonRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Person as  PersonRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreatePeople as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOrganisationPerson as ApplicationOrganisationPersonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrganisationPersonRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Person as PersonRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreatePeople as Command;

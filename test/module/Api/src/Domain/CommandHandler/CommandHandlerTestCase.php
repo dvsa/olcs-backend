@@ -6,6 +6,8 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
+use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
@@ -18,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Json\Json as ZendJson;
@@ -31,6 +34,8 @@ use ZfcRbac\Service\AuthorizationService;
  */
 abstract class CommandHandlerTestCase extends MockeryTestCase
 {
+    use ValidateMockRepoTypeTrait;
+
     /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler */
     protected $sut;
 
@@ -141,6 +146,8 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         if (!$class instanceof m\MockInterface) {
             $class = m::mock($class);
         }
+
+        $this->validateMockRepoType($name, $class);
 
         $class
             ->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData'])

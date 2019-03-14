@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Cli\Domain\QueryHandler\GetDbValue;
+namespace Dvsa\OlcsTest\Cli\Domain\QueryHandler\Util;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;

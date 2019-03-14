@@ -9,13 +9,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\Grant;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UnderConsideration;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\ReviveApplication as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Application\ReviveApplication as Command;
+use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Command\Application\ReviveApplication as Command;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Revive Application Test
@@ -27,18 +28,9 @@ class ReviveApplicationTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Application', Application::class);
+        $this->mockRepo('Application', ApplicationRepo::class);
 
         parent::setUp();
-    }
-
-    protected function initReferences()
-    {
-        $this->refData = [
-
-        ];
-
-        parent::initReferences();
     }
 
     public function testHandleCommandWithNtu()

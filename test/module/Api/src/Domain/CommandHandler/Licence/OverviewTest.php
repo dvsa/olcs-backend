@@ -8,13 +8,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Overview;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\Overview as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -27,7 +28,7 @@ class OverviewTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Overview();
-        $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         $this->references = [
             LicenceEntity::class => [
