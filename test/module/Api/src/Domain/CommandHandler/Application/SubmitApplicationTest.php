@@ -513,11 +513,18 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $isLtd,
         $tmaStat,
         $expectedDescription,
-        $expectedSubCategory
+        $expectedSubCategory,
+        $expectedTaskData,
+        $code
     ) {
         $this->setupIsInternalUser(false);
 
         $now = new DateTime();
+
+        $expectedTaskData['subCategory'] = $expectedSubCategory;
+        $expectedTaskData['description'] = $expectedDescription;
+        $expectedTaskData['actionDate'] = $now->format('Y-m-d');
+
 
         $command = Cmd::create(
             [
@@ -537,7 +544,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->with($this->mapRefdata(ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION))
             ->andReturnSelf()
             ->shouldReceive('getCode')
-            ->andReturn('TEST CODE');
+            ->andReturn($code);
 
         $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $this->mockLic);
         $s4->setOutcome($this->mapRefdata(\Dvsa\Olcs\Api\Entity\Application\S4::STATUS_APPROVED));
@@ -560,22 +567,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             $this->mockTmaRepo->shouldReceive('fetchStatByAppId')->once()->with(self::APP_ID)->andReturn($tmaStat);
         }
 
-        $expectedTaskData = [
-            'category' => CategoryEntity::CATEGORY_APPLICATION,
-            'subCategory' => $expectedSubCategory,
-            'description' => $expectedDescription,
-            'actionDate' => $now->format('Y-m-d'),
-            'assignedToUser' => null,
-            'assignedToTeam' => null,
-            'isClosed' => false,
-            'urgent' => false,
-            'application' =>  self::APP_ID,
-            'licence' => self::LIC_ID,
-            'busReg' => null,
-            'case' => null,
-            'transportManager' => null,
-            'irfoOrganisation' => null,
-        ];
+
 
         $taskResult = new Result();
         $taskResult->addId('task', self::TASK_ID);
@@ -596,6 +588,20 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
     public function dataProviderApplicationCompletion()
     {
+        $expectedTaskData = [
+            'category' => CategoryEntity::CATEGORY_APPLICATION,
+            'assignedToUser' => null,
+            'assignedToTeam' => null,
+            'isClosed' => false,
+            'urgent' => false,
+            'application' =>  self::APP_ID,
+            'licence' => self::LIC_ID,
+            'busReg' => null,
+            'case' => null,
+            'transportManager' => null,
+            'irfoOrganisation' => null,
+        ];
+
         return [
             'peopleOnlyLtd' => [
                 [
@@ -606,7 +612,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 true,
                 [],
                 'Director change application',
-                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_DIRECTOR_CHANGE_DIGITAL,
+                $expectedTaskData,
+                'TEST CODE'
             ],
             'peopleOnlyLtdFail' => [
                 [
@@ -617,7 +625,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 true,
                 [],
                 'TEST CODE Application',
-                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
+                $expectedTaskData,
+                'TEST CODE'
             ],
             'peopleOnlyOther' => [
                 [
@@ -631,7 +641,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 false,
                 [],
                 'Partner change application',
-                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_PARTNER_CHANGE_DIGITAL,
+                $expectedTaskData,
+                'TEST CODE'
             ],
             'peopleOnlyOtherFail' => [
                 [
@@ -645,7 +657,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 true,
                 [],
                 'TEST CODE Application',
-                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
+                $expectedTaskData,
+                'TEST CODE'
             ],
             'tmOnly' => [
                 [
@@ -660,7 +674,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                     ]
                 ],
                 'TM change variation',
-                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL,
+                $expectedTaskData,
+                'TEST CODE'
             ],
             'tmOnlyDeleteOnly' => [
                 [
@@ -676,6 +692,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 ],
                 'TM1 (Removal only)',
                 \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_TM1_REMOVAL_VARIATION,
+                $expectedTaskData,
+                'TEST CODE'
             ],
             'tmOnlyFail' => [
                 [
@@ -689,8 +707,26 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 true,
                 'tmpStat' => [],
                 'TEST CODE Application',
-                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
+                $expectedTaskData,
+                'TEST CODE'
             ],
+            'GV80A' =>[
+                [
+                    ApplicationCompletion::SECTION_PEOPLE => ApplicationCompletion::STATUS_COMPLETE,
+                    ApplicationCompletion::SECTION_TRANSPORT_MANAGER => ApplicationCompletion::STATUS_COMPLETE,
+                    ApplicationCompletion::SECTION_FINANCIAL_HISTORY => ApplicationCompletion::STATUS_COMPLETE,
+                    ApplicationCompletion::SECTION_DECLARATION_INTERNAL => ApplicationCompletion::STATUS_COMPLETE,
+                    ApplicationCompletion::SECTION_DECLARATION => ApplicationCompletion::STATUS_COMPLETE,
+                    ApplicationCompletion::SECTION_CONVICTIONS_AND_PENALTIES => ApplicationCompletion::STATUS_COMPLETE,
+                ],
+                true,
+                [],
+                'GV80A Application',
+                \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
+                array_merge($expectedTaskData,['urgent' =>'Y']),
+                'GV80A'
+            ]
         ];
     }
 
