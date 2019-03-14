@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
+use Dvsa\Olcs\Api\Entity\DigitalSignature;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
@@ -11,13 +12,15 @@ class SignatureReviewService extends AbstractReviewService
     /**
      * Format the readonly config from the given record
      *
-     * @param Surrender $surrender
-     *
+     * @param array $data
      * @return mixed
      */
-    public function getConfigFromData(array $application = array())
+    public function getConfigFromData(array $data = array())
     {
-        if ($application['signatureType']['id'] === RefData::SIG_PHYSICAL_SIGNATURE) {
+        /** @var RefData $signatureType */
+        $signatureType = $data['signatureType'];
+
+        if ($signatureType->getId() === RefData::SIG_PHYSICAL_SIGNATURE) {
             return [
                 'markup' => $this->translateReplace(
                     'markup-licence-surrender-signature-physical',
@@ -29,7 +32,8 @@ class SignatureReviewService extends AbstractReviewService
             ];
         }
 
-        $signature = $application['digitalSignature'];
+        /** @var DigitalSignature $signature */
+        $signature = $data['digitalSignature'];
         return [
             'markup' => $this->translateReplace(
                 'markup-licence-surrender-signature-digital',

@@ -59,7 +59,7 @@ return [
             'Review\VariationVehicles' => Review\VariationVehiclesReviewService::class,
             'Review\ApplicationUndertakings' => Review\ApplicationUndertakingsReviewService::class,
             'Review\VariationUndertakings' => Review\VariationUndertakingsReviewService::class,
-            'Review\ApplicationSignature' => Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService::class,
+            Review\SignatureReviewService::class => Review\SignatureReviewService::class,
             'TmReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator::class,
             'Review\TransportManagerMain' => TmReview\TransportManagerMainReviewService::class,
             'Review\TransportManagerResponsibility' => TmReview\TransportManagerResponsibilityReviewService::class,
