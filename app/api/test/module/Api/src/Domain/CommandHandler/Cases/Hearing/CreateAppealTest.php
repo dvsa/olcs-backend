@@ -7,15 +7,17 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Hearing;
 
-use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\ArrayCollection;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\CreateAppeal;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Cases\Hearing\CreateAppeal as Cmd;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\CreateAppeal;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
+use Dvsa\Olcs\Transfer\Command\Cases\Hearing\CreateAppeal as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Create Appeal Test
@@ -27,8 +29,8 @@ class CreateAppealTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CreateAppeal();
-        $this->mockRepo('Appeal', AppealEntity::class);
-        $this->mockRepo('Cases', Cases::class);
+        $this->mockRepo('Appeal', AppealRepo::class);
+        $this->mockRepo('Cases', CasesRepo::class);
 
         parent::setUp();
     }

@@ -19,7 +19,7 @@ class MaxStockPermitsTest extends QueryHandlerTestCase
 
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStockRepo::class);
-        $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }

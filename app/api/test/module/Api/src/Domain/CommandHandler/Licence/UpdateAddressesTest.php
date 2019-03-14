@@ -7,16 +7,17 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateAddresses;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateAddresses as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use ZfcRbac\Service\AuthorizationService;
 
@@ -30,7 +31,7 @@ class UpdateAddressesTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new UpdateAddresses();
-        $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 

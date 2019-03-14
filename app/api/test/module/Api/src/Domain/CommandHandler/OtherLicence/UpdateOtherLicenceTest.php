@@ -11,7 +11,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence\UpdateOtherLicence;
-use Dvsa\Olcs\Api\Domain\Repository\OtherLicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\UpdateOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;

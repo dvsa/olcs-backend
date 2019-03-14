@@ -13,12 +13,13 @@ abstract class AbstractCancelApplicationHandlerTest extends CommandHandlerTestCa
 {
     protected $repoServiceName = 'changeMe';
     protected $entityClass = 'changeMe';
+    protected $repoClass = 'changeMe';
     protected $sutClass = 'changeMe';
     protected $cancelStatus = 'changeMe';
 
     public function setUp(): void
     {
-        $this->mockRepo($this->repoServiceName, $this->entityClass);
+        $this->mockRepo($this->repoServiceName, $this->repoClass);
         $this->sut = new $this->sutClass();
 
         parent::setUp();

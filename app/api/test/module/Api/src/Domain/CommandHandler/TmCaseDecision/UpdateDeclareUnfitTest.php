@@ -5,8 +5,11 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmCaseDecision;
 
+use Doctrine\ORM\Query;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TmCaseDecision\UpdateDeclareUnfit;
-use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision;
+use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision as TmCaseDecisionRepo;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -15,8 +18,6 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\UpdateDeclareUnfit as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Doctrine\ORM\Query;
 use Mockery as m;
 
 /**
@@ -27,8 +28,8 @@ class UpdateDeclareUnfitTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new UpdateDeclareUnfit();
-        $this->mockRepo('TmCaseDecision', TmCaseDecision::class);
-        $this->mockRepo('Task', Task::class);
+        $this->mockRepo('TmCaseDecision', TmCaseDecisionRepo::class);
+        $this->mockRepo('Task', TaskRepo::class);
 
         parent::setUp();
     }

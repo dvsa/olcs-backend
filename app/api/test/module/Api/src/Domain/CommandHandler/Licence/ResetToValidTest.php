@@ -7,14 +7,14 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ResetToValid as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Licence\ResetToValid as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Transfer\Command\Licence\ResetToValid as Cmd;
+use Mockery as m;
 
 /**
  * ResetToValidTest
@@ -26,7 +26,7 @@ class ResetToValidTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('Licence', LicenceRepo::class);
 
         parent::setUp();
     }
