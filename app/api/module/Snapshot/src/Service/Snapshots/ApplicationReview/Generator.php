@@ -13,8 +13,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
-use Zend\Filter\Word\UnderscoreToCamelCase;
-use Zend\View\Model\ViewModel;
+use Zend\Filter\Word\UnderscoreToCame
 
 /**
  * Application Review
@@ -88,6 +87,11 @@ class Generator extends AbstractGenerator
                 'operatingCentre' => [
                     'address'
                 ]
+            ]
+        ],
+        'signature' => [
+            'digitalSignature' => [
+
             ]
         ]
     ];

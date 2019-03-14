@@ -277,6 +277,20 @@ class SectionConfig
                 ]
             ],
         ],
+        'signature' => [
+            'restricted' => [
+                [
+                    // Must be variation or application
+                    [
+                        'application',
+                        'variation'
+                    ],
+                    [
+                        'external'
+                    ],
+                ]
+            ],
+        ],
     ];
 
     protected $init = false;
