@@ -74,9 +74,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(3)
-            ->shouldReceive('commit')
             ->times(2)
+            ->shouldReceive('commit')
+            ->once()
             ->shouldReceive('rollback')
             ->once();
 
@@ -162,9 +162,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(3)
-            ->shouldReceive('commit')
             ->times(2)
+            ->shouldReceive('commit')
+            ->once()
             ->shouldReceive('rollback')
             ->once();
 
@@ -231,9 +231,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(3)
-            ->shouldReceive('commit')
             ->times(2)
+            ->shouldReceive('commit')
+            ->once()
             ->shouldReceive('rollback')
             ->once();
 
@@ -306,9 +306,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(2)
+            ->once()
             ->shouldReceive('commit')
-            ->times(2)
+            ->once()
             ->shouldReceive('rollback')
             ->never();
 
@@ -418,9 +418,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(2)
+            ->once()
             ->shouldReceive('commit')
-            ->times(2)
+            ->once()
             ->shouldReceive('rollback')
             ->never();
 
