@@ -251,8 +251,8 @@ class IrhpPermitEntityTest extends EntityTester
     public function dpProceedToError()
     {
         return [
-            [Entity::STATUS_PENDING, false],
-            [Entity::STATUS_AWAITING_PRINTING, false],
+            [Entity::STATUS_PENDING, true],
+            [Entity::STATUS_AWAITING_PRINTING, true],
             [Entity::STATUS_PRINTING, true],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
