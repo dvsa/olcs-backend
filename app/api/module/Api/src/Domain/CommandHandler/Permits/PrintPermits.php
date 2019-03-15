@@ -64,18 +64,6 @@ final class PrintPermits extends AbstractCommandHandler implements
             throw new ValidationException([self::ERR_ALREADY_IN_PROGRESS]);
         }
 
-        // queue the request
-        $data = [
-            'ids' => $ids,
-            'user' => $this->getCurrentUser()->getId()
-        ];
-        $params = [
-            'type' => Queue::TYPE_PERMIT_GENERATE,
-            'status' => Queue::STATUS_QUEUED,
-            'options' => json_encode($data)
-        ];
-        $this->result->merge($this->handleSideEffect(CreateQueue::create($params)));
-
         // update status of permits
         $this->result->merge(
             $this->handleSideEffect(
@@ -87,6 +75,18 @@ final class PrintPermits extends AbstractCommandHandler implements
                 )
             )
         );
+
+        // queue the request
+        $data = [
+            'ids' => $ids,
+            'user' => $this->getCurrentUser()->getId()
+        ];
+        $params = [
+            'type' => Queue::TYPE_PERMIT_GENERATE,
+            'status' => Queue::STATUS_QUEUED,
+            'options' => json_encode($data)
+        ];
+        $this->result->merge($this->handleSideEffect(CreateQueue::create($params)));
 
         $this->result->addMessage('Permits submitted for printing');
 
