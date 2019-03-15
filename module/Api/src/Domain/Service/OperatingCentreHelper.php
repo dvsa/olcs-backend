@@ -231,17 +231,20 @@ class OperatingCentreHelper implements FactoryInterface
 
         $currentTa = $entity->getTrafficArea();
 
-        if ($trafficArea !== $currentTa) {
-            $this->addMessage(
-                'postcode',
-                self::ERR_OC_PC_TA_GB,
-                json_encode(
-                    [
-                        'current' => $currentTa->getName(),
-                        'oc' => $trafficArea->getName()
-                    ]
-                )
-            );
+        //if not overridden
+        if($command->getTaIsOveridden() === "N") {
+            if ($trafficArea !== $currentTa) {
+                $this->addMessage(
+                    'postcode',
+                    self::ERR_OC_PC_TA_GB,
+                    json_encode(
+                        [
+                            'current' => $currentTa->getName(),
+                            'oc' => $trafficArea->getName()
+                        ]
+                    )
+                );
+            }
         }
     }
 
