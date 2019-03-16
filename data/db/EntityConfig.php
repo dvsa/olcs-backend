@@ -2279,9 +2279,9 @@ return array(
         ),
     ),
     'answer' => array(
-        'irhp_permit_application_id' => array(
+        'irhp_application_id' => array(
             'inversedBy' => array(
-                'entity' => 'IrhpPermitApplication',
+                'entity' => 'IrhpApplication',
                 'property' => 'answer'
             )
         ),
