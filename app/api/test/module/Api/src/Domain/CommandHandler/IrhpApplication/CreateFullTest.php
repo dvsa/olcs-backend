@@ -33,7 +33,7 @@ class CreateFullTest extends CommandHandlerTestCase
     {
         $this->references = [
             IrhpPermitType::class => [
-                1 => m::mock(IrhpPermitType::class)
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => m::mock(IrhpPermitType::class)
             ],
             Licence::class => [
                 2 => m::mock(Licence::class),
@@ -53,7 +53,7 @@ class CreateFullTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $permitTypeId = 1;
+        $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL;
         $licenceId = 2;
 
         $cmdData = [

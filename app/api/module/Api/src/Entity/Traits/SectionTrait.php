@@ -66,6 +66,29 @@ trait SectionTrait
     }
 
     /**
+     * Get the sections
+     *
+     * @return array
+     * @throws RuntimeException
+     */
+    private function getSections()
+    {
+        if (!defined('static::SECTIONS')) {
+            throw new RuntimeException('Missing required definition of sections');
+        }
+
+        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+
+        if (!isset(static::SECTIONS[$irhpPermitTypeId]) || !is_array(static::SECTIONS[$irhpPermitTypeId])) {
+            throw new RuntimeException(
+                'Missing required definition of sections for irhpPermitTypeId: '.$irhpPermitTypeId
+            );
+        }
+
+        return static::SECTIONS[$irhpPermitTypeId];
+    }
+
+    /**
      * Populate the section completion
      *
      * @return void
@@ -74,13 +97,9 @@ trait SectionTrait
      */
     private function populateSectionCompletion()
     {
-        if (!defined('static::SECTIONS')) {
-            throw new RuntimeException('Missing required definition of sections');
-        }
-
         $this->sectionCompletion = [];
 
-        $sections = static::SECTIONS;
+        $sections = $this->getSections();
 
         foreach ($sections as $field => $section) {
             // validate the field
@@ -121,7 +140,7 @@ trait SectionTrait
             return;
         }
 
-        $section = static::SECTIONS[$field];
+        $section = $this->getSections()[$field];
 
         if (isset($section['validateIf']) && is_array($section['validateIf'])) {
             foreach ($section['validateIf'] as $f => $v) {
