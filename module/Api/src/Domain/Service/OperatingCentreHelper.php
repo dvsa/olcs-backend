@@ -232,7 +232,7 @@ class OperatingCentreHelper implements FactoryInterface
         $currentTa = $entity->getTrafficArea();
 
         //if not overridden
-        if($command->getTaIsOveridden() === "N") {
+        if($command->getTaIsOverridden() === "N") {
             if ($trafficArea !== $currentTa) {
                 $this->addMessage(
                     'postcode',
