@@ -276,7 +276,7 @@ class SectionConfig
                     ],
                 ]
             ],
-        ]
+        ],
     ];
 
     protected $init = false;
@@ -289,6 +289,7 @@ class SectionConfig
     protected function initSections()
     {
         if ($this->init === false) {
+
             $this->sections['financial_history']['restricted'][] = [
                 'variation',
                 [$this, 'isNotUnchanged']

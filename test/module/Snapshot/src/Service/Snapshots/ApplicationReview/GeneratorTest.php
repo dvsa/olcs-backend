@@ -9,8 +9,6 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
@@ -192,8 +190,6 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->andReturn($expectedData);
 
-        $this->mockSignatureSection();
-
         $sections = [
             'vehicles' => 'bar',
             'community_licences' => 'test',
@@ -225,10 +221,6 @@ class GeneratorTest extends MockeryTestCase
                             [
                                 'header' => 'review-people',
                                 'config' => ['people' => 'foo']
-                            ],
-                            [
-                                'hide-count' => true,
-                                'config' => ['signature' => 'foo']
                             ]
                         ]
                     ];
@@ -286,9 +278,6 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->andReturn($expectedData);
 
-
-        $this->mockSignatureSection();
-
         $sections = [
             'vehicles' => 'bar',
             'community_licences' => 'test',
@@ -320,10 +309,6 @@ class GeneratorTest extends MockeryTestCase
                             [
                                 'header' => 'review-undertakings',
                                 'config' => ['undertakings' => 'foo']
-                            ],
-                            [
-                                'hide-count' => true,
-                                'config' => ['signature' => 'foo']
                             ]
                         ]
                     ];
@@ -337,23 +322,5 @@ class GeneratorTest extends MockeryTestCase
             );
 
         $this->assertEquals('markup', $this->sut->generate($this->application, true));
-    }
-
-    private function mockSignatureSection()
-    {
-        $signatureType = m::mock(RefData::class);
-        $signatureType->shouldReceive('getId')
-            ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE);
-        $this->application->setSignatureType($signatureType);
-        $this->application->setDigitalSignature(null);
-
-        $mockSignature = m::mock(SignatureReviewService::class);
-        $mockSignature->shouldReceive('getConfigFromData')
-            ->with([
-                'signatureType' => $signatureType,
-                'digitalSignature' => null
-            ])
-            ->andReturn(['signature' => 'foo']);
-        $this->sm->setService(SignatureReviewService::class, $mockSignature);
     }
 }
