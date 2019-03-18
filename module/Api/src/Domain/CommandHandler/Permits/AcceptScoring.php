@@ -34,8 +34,6 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 {
     use QueueAwareTrait, ToggleAwareTrait;
 
-    const ISSUE_FEE_PRODUCT_REFERENCE = 'IRHP_GV_ECMT_100_PERMIT_FEE';
-
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
 
     protected $repoServiceName = 'EcmtPermitApplication';
@@ -242,7 +240,8 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
      */
     private function getCreateIssueFeeCommand(EcmtPermitApplication $ecmtPermitApplication)
     {
-        $feeType = $this->getRepo('FeeType')->getLatestByProductReference(self::ISSUE_FEE_PRODUCT_REFERENCE);
+        $feeType = $this->getRepo('FeeType')
+            ->getLatestByProductReference($ecmtPermitApplication->getProductReferenceForTier());
         $permitsAwarded = $ecmtPermitApplication->getPermitsAwarded();
 
         $feeDescription = sprintf(

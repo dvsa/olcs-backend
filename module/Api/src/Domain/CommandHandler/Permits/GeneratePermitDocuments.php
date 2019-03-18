@@ -6,15 +6,14 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\GenerateCoverLetterDocument;
+use Dvsa\Olcs\Api\Domain\Command\IrhpPermit\GeneratePermitDocument;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 
@@ -30,111 +29,88 @@ final class GeneratePermitDocuments extends AbstractCommandHandler implements To
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'IrhpPermit';
 
-    private $templates = [
-        EcmtPermitApplicationEntity::PERMIT_TYPE => [
-            'permit' => [
-                'templateName' => EcmtPermitApplicationEntity::PERMIT_TEMPLATE_NAME,
-                'query' => [
-                    'licence' => '',
-                    'irhpPermit' => '',
-                    'irhpPermitStock' => '',
-                    'organisation' => ''
-                ],
-                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT
-            ],
-            'coveringLetter' => [
-                'templateName' => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
-                'query' => [
-                    'licence' => '',
-                    'irhpPermit' => ''
-                ],
-                'subCategory' => SubCategoryEntity::DOC_SUB_CATEGORY_PERMIT_COVERING_LETTER
-            ]
-        ]
-    ];
+    /**
+     * @var array
+     */
+    private $coverLetterLicenceIds = [];
 
     /**
-     * @param CommandInterface $command
+     * Handle command
+     *
+     * @param CommandInterface $command Command
+     *
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
-        $result = new Result();
-
         foreach ($command->getIds() as $id) {
             $irhpPermit = $this->getRepo()->fetchById($id, Query::HYDRATE_OBJECT);
 
-            $irhpPermitApplication = $irhpPermit->getIrhpPermitApplication();
-            $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
-            $irhpPermitType = $irhpPermitStock->getIrhpPermitType()->getName();
+            // generate cover letter
+            $this->generateCoverLetter($irhpPermit);
 
-            $template = $this->getTemplates()[trim($irhpPermitType)];
-
-            foreach ($template as $documentType => $document) {
-                $documentQuery = [];
-
-                foreach ($document['query'] as $key => $queryParam) {
-                    $queryParam = '';
-                    switch ($key) {
-                        case 'licence':
-                            $queryParam = $irhpPermitApplication
-                                ->getEcmtPermitApplication()
-                                ->getLicence()
-                                ->getId();
-                            break;
-                        case 'irhpPermit':
-                            $queryParam = $irhpPermit->getId();
-                            break;
-                        case 'irhpPermitStock':
-                            $queryParam = $irhpPermitStock->getId();
-                            break;
-                        case 'organisation':
-                            $queryParam = $irhpPermitApplication
-                                ->getEcmtPermitApplication()
-                                ->getLicence()
-                                ->getOrganisation()
-                                ->getId();
-                            break;
-                    }
-
-                    $documentQuery[$key] = $queryParam;
-                }
-
-                $documentDescription = sprintf(
-                    '%s %d',
-                    strtoupper(str_replace('_', ' ', $document['templateName'])),
-                    $irhpPermit->getId()
-                );
-
-                $documentGenerated = $this->handleSideEffect(
-                    GenerateAndStore::create(
-                        [
-                            'template' => $document['templateName'],
-                            'query' => $documentQuery,
-                            'knownValues' => [],
-                            'description' => $documentDescription,
-                            'category' => CategoryEntity::CATEGORY_PERMITS,
-                            'subCategory' => $document['subCategory'],
-                            'isExternal' => false,
-                            'isScan' => false
-                        ]
-                    )
-                );
-
-                $result->addId($documentType, $documentGenerated->getId('document'), true);
-                $result->addMessage($documentDescription . ' RTF created and stored');
-            }
+            // generate permit
+            $this->generatePermit($irhpPermit);
         }
 
-        return $result;
+        return $this->result;
     }
 
     /**
-     * @return array
+     * Generate cover letter document
+     *
+     * @param IrhpPermitEntity $irhpPermit IRHP Permit
+     *
+     * @return void
      */
-    public function getTemplates()
+    private function generateCoverLetter(IrhpPermitEntity $irhpPermit)
     {
-        return $this->templates;
+        $irhpPermitApplication = $irhpPermit->getIrhpPermitApplication();
+
+        $irhpPermitType = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getIrhpPermitType();
+
+        if ($irhpPermitType->isBilateral()) {
+            $licenceId = $irhpPermitApplication->getRelatedApplication()->getLicence()->getId();
+
+            if (isset($this->coverLetterLicenceIds[$licenceId])) {
+                // only one cover letter per licence required
+                return;
+            }
+
+            $this->coverLetterLicenceIds[$licenceId] = true;
+        }
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                GenerateCoverLetterDocument::create(
+                    [
+                        'irhpPermit' => $irhpPermit->getId(),
+                    ]
+                )
+            ),
+            true
+        );
+    }
+
+    /**
+     * Generate permit document
+     *
+     * @param IrhpPermitEntity $irhpPermit IRHP Permit
+     *
+     * @return void
+     */
+    private function generatePermit(IrhpPermitEntity $irhpPermit)
+    {
+        $this->result->merge(
+            $this->handleSideEffect(
+                GeneratePermitDocument::create(
+                    [
+                        'irhpPermit' => $irhpPermit->getId(),
+                    ]
+                )
+            ),
+            true
+        );
     }
 }

@@ -18,7 +18,6 @@ return [
     QueryHandler\IrhpApplication\MaxStockPermits::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\FeePerPermit::class => Permits\CanAccessIrhpApplicationWithId::class,
-    QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
@@ -27,7 +26,6 @@ return [
     QueryHandler\Permits\EcmtApplicationByLicence::class => CanAccessLicenceWithLicence::class,
     QueryHandler\Permits\ValidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
-    QueryHandler\IrhpPermitStock\NextIrhpPermitStock::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
@@ -82,6 +80,8 @@ return [
     CommandHandler\Permits\GeneratePermitDocuments::class => IsSideEffect::class,
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
+    CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsSideEffect::class,
+
     // TODO: these will need to be changed to IsInternalAdmin
     CommandHandler\Permits\QueueRunScoring::class => NotIsAnonymousUser::class,
     CommandHandler\Permits\QueueAcceptScoring::class => NotIsAnonymousUser::class,

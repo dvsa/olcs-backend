@@ -61,6 +61,11 @@ class FeeType extends AbstractFeeType
     const COUNTRY_CODE_GB = 'GB';
     const COUNTRY_CODE_NI = 'NI';
 
+    const FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF = 'IRHP_GV_ECMT_100_PERMIT_FEE';
+    const FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF = 'IRHP_GV_ECMT_75_PERMIT_FEE';
+    const FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF = 'IRHP_GV_ECMT_50_PERMIT_FEE';
+    const FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF = 'IRHP_GV_ECMT_25_PERMIT_FEE';
+
     /**
      * Alias of getIsMiscellaneous
      * @return bool

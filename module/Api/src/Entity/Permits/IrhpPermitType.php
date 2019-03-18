@@ -24,6 +24,19 @@ class IrhpPermitType extends AbstractIrhpPermitType
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
 
     /**
+     * Gets calculated values
+     *
+     * @return array
+     */
+    public function getCalculatedBundleValues()
+    {
+        return [
+            'isEcmtAnnual' => $this->isEcmtAnnual(),
+            'isBilateral' => $this->isBilateral(),
+        ];
+    }
+
+    /**
      * Is this ECMT Annual
      *
      * @return bool
@@ -31,5 +44,15 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function isEcmtAnnual()
     {
         return $this->id === self::IRHP_PERMIT_TYPE_ID_ECMT;
+    }
+
+    /**
+     * Is this Bilateral
+     *
+     * @return bool
+     */
+    public function isBilateral()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_BILATERAL;
     }
 }

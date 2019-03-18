@@ -35,7 +35,7 @@ final class GetSignature extends AbstractQueryHandler implements ToggleRequiredI
         $surrender = $this->getRepo()->fetchOneByLicence($licenceId, Query::HYDRATE_OBJECT);
         return $this->result(
             $surrender,
-            ['signatureType', 'digitalSignature']
+            ['signatureType', 'digitalSignature', 'licence']
         );
     }
 }

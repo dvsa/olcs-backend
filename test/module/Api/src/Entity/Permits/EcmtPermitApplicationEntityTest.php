@@ -2,9 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -1122,5 +1126,148 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity->addIrhpPermitApplications($irhpPermitApplication);
 
         $this->assertEquals(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, $entity->getWindowEmissionsCategory());
+    }
+
+    /**
+     *
+     * @dataProvider productRefMonthProvider
+     */
+    public function testGetProductReferenceForTier($expected, $validFrom, $validTo, $now)
+    {
+        $entity = $this->createApplication();
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $entity->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitStock->shouldReceive('getValidFrom')->andReturn($validFrom);
+        $irhpPermitStock->shouldReceive('getValidTo')->andReturn($validTo);
+        $this->assertEquals($expected, $entity->getProductReferenceForTier($now));
+    }
+
+    public function productRefMonthProvider()
+    {
+        $validFrom = new DateTime('first day of January next year');
+        $validTo = new DateTime('last day of December next year');
+
+        return [
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of January next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of February next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of March next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of April next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of May next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of June next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of July next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of August next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of September next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of October next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of November next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of December next year')
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeExpired
+     */
+    public function testCanBeExpired($statusId, $validPermits, $expected)
+    {
+        $application = $this->createApplication($statusId);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('hasValidPermits')->andReturn($validPermits);
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+        $this->assertEquals($expected, $application->canBeExpired());
+    }
+
+    public function dpCanBeExpired()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, true, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, true, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, true, false],
+            [Entity::STATUS_WITHDRAWN, true, false],
+            [Entity::STATUS_AWAITING_FEE, true, false],
+            [Entity::STATUS_FEE_PAID, true, false],
+            [Entity::STATUS_UNSUCCESSFUL, true, false],
+            [Entity::STATUS_ISSUED, true, false],
+            [Entity::STATUS_ISSUING, true, false],
+            [Entity::STATUS_VALID, true, false],
+            [Entity::STATUS_DECLINED, true, false],
+            [Entity::STATUS_EXPIRED, true, false],
+            [Entity::STATUS_CANCELLED, false, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false, false],
+            [Entity::STATUS_WITHDRAWN, false, false],
+            [Entity::STATUS_AWAITING_FEE, false, false],
+            [Entity::STATUS_FEE_PAID, false, false],
+            [Entity::STATUS_UNSUCCESSFUL, false, false],
+            [Entity::STATUS_ISSUED, false, false],
+            [Entity::STATUS_ISSUING, false, false],
+            [Entity::STATUS_VALID, false, true],
+            [Entity::STATUS_DECLINED, false, false],
+            [Entity::STATUS_EXPIRED, false, false]
+        ];
     }
 }

@@ -18,6 +18,7 @@ interface IrhpInterface
     const STATUS_ISSUING = 'permit_app_issuing';
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_DECLINED = 'permit_app_declined';
+    const STATUS_EXPIRED = 'permit_app_expired';
 
     const SOURCE_SELFSERVE = 'app_source_selfserve';
     const SOURCE_INTERNAL = 'app_source_internal';

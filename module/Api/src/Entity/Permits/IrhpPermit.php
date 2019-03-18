@@ -33,12 +33,20 @@ class IrhpPermit extends AbstractIrhpPermit
     const STATUS_ERROR              = 'irhp_permit_error';
     const STATUS_CEASED             = 'irhp_permit_ceased';
     const STATUS_ISSUED             = 'irhp_permit_issued';
+    const STATUS_TERMINATED         = 'irhp_permit_terminated';
+    const STATUS_EXPIRED            = 'irhp_permit_expired';
 
     public static $readyToPrintStatuses = [
         self::STATUS_PENDING,
         self::STATUS_AWAITING_PRINTING,
         self::STATUS_PRINTING,
         self::STATUS_ERROR,
+    ];
+
+    public static $nonValidStatuses = [
+        self::STATUS_CEASED,
+        self::STATUS_TERMINATED,
+        self::STATUS_EXPIRED,
     ];
 
     /**
@@ -187,6 +195,9 @@ class IrhpPermit extends AbstractIrhpPermit
             case self::STATUS_ERROR:
                 $this->proceedToError($status);
                 break;
+            case self::STATUS_TERMINATED:
+                $this->proceedToTerminated($status);
+                break;
             default:
                 throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId()));
         }
@@ -268,7 +279,7 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     private function proceedToError(RefData $status)
     {
-        if (!$this->isPrinting()) {
+        if (!$this->isPending() && !$this->isAwaitingPrinting() && !$this->isPrinting()) {
             throw new ForbiddenException(
                 sprintf(
                     'The permit is not in the correct state to proceed to error (%s)',
@@ -277,6 +288,28 @@ class IrhpPermit extends AbstractIrhpPermit
             );
         }
 
+        $this->status = $status;
+    }
+
+    /**
+     * Proceed to terminated
+     *
+     * @param RefData $status Status
+     *
+     * @return void
+     * @throws ForbiddenException
+     */
+    private function proceedToTerminated(RefData $status)
+    {
+        if ($this->isCeased() || $this->isTerminated()) {
+            throw new ForbiddenException(
+                sprintf(
+                    'The permit is not in the correct state to be terminated (%s)',
+                    $this->status->getId()
+                )
+            );
+        }
+        $this->expiryDate = new DateTime();
         $this->status = $status;
     }
 
@@ -338,5 +371,45 @@ class IrhpPermit extends AbstractIrhpPermit
     public function hasError()
     {
         return $this->status->getId() === self::STATUS_ERROR;
+    }
+
+    /**
+     * Is not ceased
+     *
+     * @return bool
+     */
+    public function isCeased()
+    {
+        return $this->status->getId() === self::STATUS_CEASED;
+    }
+
+    /**
+     * Is terminated
+     *
+     * @return bool
+     */
+    public function isTerminated()
+    {
+        return $this->status->getId() === self::STATUS_TERMINATED;
+    }
+
+    /**
+     * Is expired
+     *
+     * @return bool
+     */
+    public function isExpired()
+    {
+        return $this->status->getId() === self::STATUS_EXPIRED;
+    }
+
+    /**
+     * Is valid
+     *
+     * @return bool
+     */
+    public function isValid()
+    {
+        return !in_array($this->status->getId(), self::$nonValidStatuses);
     }
 }
