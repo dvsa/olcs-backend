@@ -271,7 +271,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $commandData = [
             'address' => [
                 'postcode' => 'AA11AAA'
-            ]
+            ],
+            'taIsOverridden' => 'N'
         ];
 
         $ta = m::mock(TrafficArea::class)->makePartial();
@@ -301,7 +302,6 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 ]
             ]
         ];
-        var_dump($this->sut->getMessages());
         $this->assertEquals($messages, $this->sut->getMessages());
     }
 
@@ -844,5 +844,39 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $command = CreateOperatingCentre::create($commandData);
 
         $this->assertNull($this->sut->validateTrafficArea($entity, $command));
+    }
+
+    public function testValidateOverriddenTA()
+    {
+        $commandData = [
+            'address' => [
+                'postcode' => 'AA11AAA'
+            ],
+            'taIsOverridden' => 'Y'
+        ];
+
+        $ta = m::mock(TrafficArea::class)->makePartial();
+        $ta->setName('Foo');
+
+        $wrongTa = m::mock(TrafficArea::class)->makePartial();
+        $wrongTa->setName('Bar');
+
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
+            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+            ->andReturn($wrongTa);
+
+        /** @var Application $entity */
+        $entity = m::mock(Application::class)->makePartial();
+        $entity->setIsVariation(true);
+        $entity->setNiFlag('N');
+        $entity->shouldReceive('getTrafficArea')->andReturn($ta);
+
+        $command = CreateOperatingCentre::create($commandData);
+
+        $this->sut->validateTrafficArea($entity, $command);
+
+        $messages = [];
+
+        $this->assertEquals($messages, $this->sut->getMessages());
     }
 }
