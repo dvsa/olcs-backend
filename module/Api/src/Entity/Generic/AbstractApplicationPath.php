@@ -80,7 +80,11 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType",
+     *     fetch="LAZY",
+     *     inversedBy="applicationPaths"
+     * )
      * @ORM\JoinColumn(name="irhp_permit_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitType;
@@ -133,6 +137,7 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
      *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationStep",
      *     mappedBy="applicationPath"
      * )
+     * @ORM\OrderBy({"weight" = "ASC"})
      */
     protected $applicationSteps;
 

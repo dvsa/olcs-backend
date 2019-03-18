@@ -2244,6 +2244,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(true);
 
         $stock1ValidityDate = new DateTime('2019-12-31');
         $stock2ValidityDate = new DateTime('2020-12-31');

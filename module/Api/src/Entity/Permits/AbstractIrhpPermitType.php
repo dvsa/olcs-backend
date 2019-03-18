@@ -115,6 +115,18 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $version = 1;
 
     /**
+     * Application path
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationPath",
+     *     mappedBy="irhpPermitType"
+     * )
+     */
+    protected $applicationPaths;
+
+    /**
      * Irhp permit stock
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -143,6 +155,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      */
     public function initCollections()
     {
+        $this->applicationPaths = new ArrayCollection();
         $this->irhpPermitStocks = new ArrayCollection();
     }
 
@@ -348,6 +361,69 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the application path
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being set as the value
+     *
+     * @return IrhpPermitType
+     */
+    public function setApplicationPaths($applicationPaths)
+    {
+        $this->applicationPaths = $applicationPaths;
+
+        return $this;
+    }
+
+    /**
+     * Get the application paths
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationPaths()
+    {
+        return $this->applicationPaths;
+    }
+
+    /**
+     * Add a application paths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being added
+     *
+     * @return IrhpPermitType
+     */
+    public function addApplicationPaths($applicationPaths)
+    {
+        if ($applicationPaths instanceof ArrayCollection) {
+            $this->applicationPaths = new ArrayCollection(
+                array_merge(
+                    $this->applicationPaths->toArray(),
+                    $applicationPaths->toArray()
+                )
+            );
+        } elseif (!$this->applicationPaths->contains($applicationPaths)) {
+            $this->applicationPaths->add($applicationPaths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application paths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being removed
+     *
+     * @return IrhpPermitType
+     */
+    public function removeApplicationPaths($applicationPaths)
+    {
+        if ($this->applicationPaths->contains($applicationPaths)) {
+            $this->applicationPaths->removeElement($applicationPaths);
+        }
+
+        return $this;
     }
 
     /**
