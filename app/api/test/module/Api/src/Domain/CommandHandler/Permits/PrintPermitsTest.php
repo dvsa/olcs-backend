@@ -130,8 +130,8 @@ class PrintPermitsTest extends CommandHandlerTestCase
         $expected = [
             'id' => [],
             'messages' => [
-                'Queue item created',
                 'Permits updated',
+                'Queue item created',
                 'Permits submitted for printing',
             ]
         ];

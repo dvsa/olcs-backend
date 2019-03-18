@@ -169,7 +169,11 @@ class IrhpPermitTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND ipa.ecmtPermitApplication = [[ID]] '
-            . 'ORDER BY m.permitNumber DESC';
+            . 'AND m.status NOT IN [[["'.
+            IrhpPermitEntity::STATUS_CEASED.'","'.
+            IrhpPermitEntity::STATUS_TERMINATED.'","'.
+            IrhpPermitEntity::STATUS_EXPIRED.'"]]]'
+            . ' ORDER BY m.permitNumber DESC';
         $this->assertEquals($expectedQuery, $this->query);
     }
 

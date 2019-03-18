@@ -115,13 +115,13 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function countValidPermits()
     {
-        $permits = $this->getSuccessfulIrhpCandidatePermits();
+        $criteria = Criteria::create();
+        $criteria->where(
+            $criteria->expr()->notIn('status', IrhpPermit::$nonValidStatuses)
+        );
+        $permits = $this->getIrhpPermits()->matching($criteria);
 
-        $validPermitCount = 0;
-        foreach ($permits as $permit) {
-            $validPermitCount += is_null($permit->getIrhpPermits()) ? 0 : $permit->getIrhpPermits()->count();
-        }
-        return $validPermitCount;
+        return $permits->count();
     }
 
     /**
@@ -187,5 +187,15 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         }
 
         return null;
+    }
+
+    /**
+     * Has valid permits
+     *
+     * @return bool
+     */
+    public function hasValidPermits()
+    {
+        return $this->countValidPermits() > 0;
     }
 }
