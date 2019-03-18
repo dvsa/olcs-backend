@@ -33,7 +33,7 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $translator = $this->mockTranslator();
         
         $translator->shouldReceive('translate')
-            ->with('markup-signature-physical', 'snapshot')
+            ->with('markup-licence-surrender-signature-physical', 'snapshot')
             ->andReturn('%s__%s__translated');
 
         $translator->shouldReceive('translate')
@@ -41,13 +41,13 @@ class SignatureReviewServiceTest extends MockeryTestCase
             ->andReturn('directors-signature-translated');
 
         $translator->shouldReceive('translate')
-            ->with('return-address', 'snapshot')
-            ->andReturn('return-address-translated');
+            ->with('surrender-application-return-address', 'snapshot')
+            ->andReturn('surrender-application-return-address-translated');
 
 
         $markup = $this->sut->getConfigFromData($surrender);
         $expected = [
-            'markup' => "directors-signature-translated__return-address-translated__translated"
+            'markup' => "directors-signature-translated__surrender-application-return-address-translated__translated"
         ];
 
         $this->assertEquals($expected, $markup);
@@ -66,7 +66,7 @@ class SignatureReviewServiceTest extends MockeryTestCase
 
         $translator = $this->mockTranslator();
         $translator->shouldReceive('translate')
-            ->with('markup-signature-digital', 'snapshot')
+            ->with('markup-licence-surrender-signature-digital', 'snapshot')
             ->andReturn('%s__%s__%s__translated');
 
         $markup = $this->sut->getConfigFromData($surrender);
