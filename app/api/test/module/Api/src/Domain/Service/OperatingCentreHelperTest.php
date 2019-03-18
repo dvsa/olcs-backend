@@ -217,7 +217,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $commandData = [
             'address' => [
                 'postcode' => 'AA11AAA'
-            ]
+            ],
+            'isTaOverridden' => 'N'
         ];
 
         $trafficArea = m::mock();
@@ -300,7 +301,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 ]
             ]
         ];
-
+        var_dump($this->sut->getMessages());
         $this->assertEquals($messages, $this->sut->getMessages());
     }
 
