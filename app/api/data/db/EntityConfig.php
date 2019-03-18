@@ -2256,11 +2256,22 @@ return array(
             )
         ),
     ),
+    'application_path' => array(
+        'irhp_permit_type_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpPermitType',
+                'property' => 'applicationPath'
+            )
+        ),
+    ),
     'application_step' => array(
         'application_path_id' => array(
             'inversedBy' => array(
                 'entity' => 'ApplicationPath',
-                'property' => 'applicationStep'
+                'property' => 'applicationStep',
+                'orderBy' => array(
+                    'weight' => 'ASC'
+                )
             )
         ),
     ),
@@ -2282,7 +2293,8 @@ return array(
         'irhp_application_id' => array(
             'inversedBy' => array(
                 'entity' => 'IrhpApplication',
-                'property' => 'answer'
+                'property' => 'answer',
+                'indexBy' => 'question_text_id',
             )
         ),
     ),

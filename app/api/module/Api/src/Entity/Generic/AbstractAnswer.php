@@ -24,6 +24,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_answer_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_answer_irhp_application_id_question_text_id",
+     *     columns={"irhp_application_id","question_text_id"})
  *    }
  * )
  */

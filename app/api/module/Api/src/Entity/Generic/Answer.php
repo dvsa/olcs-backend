@@ -19,4 +19,30 @@ use Doctrine\ORM\Mapping as ORM;
 class Answer extends AbstractAnswer
 {
 
+    /**
+     * Get the answer value
+     *
+     * @return mix|null
+     */
+    public function getValue()
+    {
+        $fieldValues = [
+            $this->ansArray,
+            $this->ansBoolean,
+            $this->ansDate,
+            $this->ansDatetime,
+            $this->ansDecimal,
+            $this->ansInteger,
+            $this->ansString,
+            $this->ansText
+        ];
+
+        foreach ($fieldValues as $fieldValue) {
+            if (!is_null($fieldValue)) {
+                return $fieldValue;
+            }
+        }
+
+        return null;
+    }
 }
