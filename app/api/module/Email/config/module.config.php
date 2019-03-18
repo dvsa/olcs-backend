@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Email\Domain\Command;
 use Dvsa\Olcs\Email\Domain\CommandHandler;
+use Dvsa\Olcs\Email\Service;
 
 return [
     'email' => [
@@ -12,9 +13,9 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            \Dvsa\Olcs\Email\Service\TemplateRenderer::class => \Dvsa\Olcs\Email\Service\TemplateRendererFactory::class,
-            'EmailService' => \Dvsa\Olcs\Email\Service\Email::class,
-            'ImapService' => \Dvsa\Olcs\Email\Service\Imap::class,
+            Service\TemplateRenderer::class => \Dvsa\Olcs\Email\Service\TemplateRendererFactory::class,
+            'EmailService' => Service\Email::class,
+            'ImapService' => Service\Imap::class,
         ],
         'aliases' => [
             'translator' => 'MvcTranslator',
