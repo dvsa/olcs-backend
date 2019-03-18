@@ -16,8 +16,7 @@
             <div class="review-section">
                 <h2>
                     <?php
-                        $hideCount = $section['hide-count'] ?? $settings['hide-count'] ?? false;
-                        if (!$hideCount) {
+                        if (!isset($settings['hide-count'])) {
                             echo $count . '. ';
                         }
                         if (!empty($section['header'])) {
