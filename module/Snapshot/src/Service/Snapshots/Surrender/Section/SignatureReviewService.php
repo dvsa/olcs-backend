@@ -20,10 +20,10 @@ class SignatureReviewService extends AbstractReviewService
         if ($surrender->getSignatureType()->getId() === RefData::SIG_PHYSICAL_SIGNATURE) {
             return [
                 'markup' => $this->translateReplace(
-                    'markup-signature-physical',
+                    'markup-licence-surrender-signature-physical',
                     [
                         $this->translate('directors-signature'),
-                        $this->translate('return-address')
+                        $this->translate('surrender-application-return-address')
                     ]
                 )
             ];
@@ -32,7 +32,7 @@ class SignatureReviewService extends AbstractReviewService
         $signature = $surrender->getDigitalSignature();
         return [
             'markup' => $this->translateReplace(
-                'markup-signature-digital',
+                'markup-licence-surrender-signature-digital',
                 [
                     $signature->getSignatureName(),
                     $this->formatDate($signature->getDateOfBirth()),
