@@ -13,8 +13,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
 use Zend\Filter\Word\UnderscoreToCamelCase;
-use Zend\View\Model\ViewModel;
 
 /**
  * Application Review
@@ -261,6 +261,10 @@ class Generator extends AbstractGenerator
 
         $config = $this->buildReadonlyConfigForSections($data['sections'], $data);
 
+        if ($this->lva === 'application') {
+            $config['sections'][] = $this->buildSignatureSection($application);
+        }
+
         // Generate readonly markup
         return $this->generateReadonly($config);
     }
@@ -402,5 +406,23 @@ class Generator extends AbstractGenerator
         }
 
         return $bundle;
+    }
+
+    /**
+     * @param Application $application
+     * @return array
+     */
+    private function buildSignatureSection(Application $application): array
+    {
+        $service = $this->getServiceLocator()->get(SignatureReviewService::class);
+        $data = [
+            'signatureType' => $application->getSignatureType(),
+            'digitalSignature' => $application->getDigitalSignature()
+        ];
+
+        return [
+            'hide-count' => true,
+            'config' => $service->getConfigFromData($data)
+        ];
     }
 }
