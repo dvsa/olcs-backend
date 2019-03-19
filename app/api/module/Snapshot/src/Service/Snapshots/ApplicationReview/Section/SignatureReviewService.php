@@ -18,16 +18,16 @@ class SignatureReviewService extends AbstractReviewService
     public function getConfigFromData(array $data = array())
     {
         if ($data['signatureType']->getId() === RefData::SIG_PHYSICAL_SIGNATURE) {
-            return $this->getPhysicalConfig($data['organisation'], $data['isNI']);
+            return $this->getPhysicalConfig($data['organisation'], $data['isNi']);
         }
 
         return $this->getDigitalConfig($data['digitalSignature']);
     }
 
-    private function getPhysicalConfig(Organisation $organisation, $isNI)
+    private function getPhysicalConfig(Organisation $organisation, $isNi)
     {
         $title = $this->getSignatureLabel($organisation);
-        $address = $isNI ? self::SIGNATURE_ADDRESS_NI : self::SIGNATURE_ADDRESS_GB;
+        $address = $isNi ? static::SIGNATURE_ADDRESS_NI : static::SIGNATURE_ADDRESS_GB;
 
         $return = [
             'markup' => $this->translateReplace(
@@ -58,14 +58,18 @@ class SignatureReviewService extends AbstractReviewService
 
     private function getSignatureLabel(Organisation $organisation)
     {
-        $titles = [
-            Organisation::ORG_TYPE_REGISTERED_COMPANY => 'undertakings_directors_signature',
-            Organisation::ORG_TYPE_LLP => 'undertakings_directors_signature',
-            Organisation::ORG_TYPE_PARTNERSHIP => 'undertakings_partners_signature',
-            Organisation::ORG_TYPE_SOLE_TRADER => 'undertakings_owners_signature',
-            Organisation::ORG_TYPE_OTHER => 'undertakings_responsiblepersons_signature',
-            Organisation::ORG_TYPE_IRFO => 'undertakings_responsiblepersons_signature'
-        ];
-        return $titles[$organisation->getType()->getId()];
+        switch ($organisation->getType()->getId()) {
+            case Organisation::ORG_TYPE_REGISTERED_COMPANY:
+            case Organisation::ORG_TYPE_LLP:
+                return 'undertakings_directors_signature';
+            case Organisation::ORG_TYPE_PARTNERSHIP:
+                return 'undertakings_partners_signature';
+            case Organisation::ORG_TYPE_SOLE_TRADER:
+                return 'undertakings_owners_signature';
+            case Organisation::ORG_TYPE_OTHER:
+            case Organisation::ORG_TYPE_IRFO:
+            default:
+                return 'undertakings_responsiblepersons_signature';
+        }
     }
 }

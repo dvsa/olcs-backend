@@ -419,7 +419,7 @@ class Generator extends AbstractGenerator
             'organisation' => $application->getLicence()->getOrganisation(),
             'signatureType' => $application->getSignatureType(),
             'digitalSignature' => $application->getDigitalSignature(),
-            'isNI' => $application->getLicence()->isNi()
+            'isNi' => $application->getLicence()->isNi()
         ];
 
         return [
