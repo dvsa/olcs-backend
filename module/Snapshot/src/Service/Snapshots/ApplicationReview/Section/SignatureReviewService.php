@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class SignatureReviewService extends AbstractReviewService
@@ -16,26 +17,36 @@ class SignatureReviewService extends AbstractReviewService
      */
     public function getConfigFromData(array $data = array())
     {
-        /** @var RefData $signatureType */
-        $signatureType = $data['signatureType'];
-
-        if ($signatureType->getId() === RefData::SIG_PHYSICAL_SIGNATURE) {
-            return [
-                'markup' => $this->translateReplace(
-                    'markup-signature-physical',
-                    [
-                        $this->translate('directors-signature'),
-                        $this->translate('return-address')
-                    ]
-                )
-            ];
+        if ($data['signatureType']->getId() === RefData::SIG_PHYSICAL_SIGNATURE) {
+            return $this->getPhysicalConfig($data['organisation'], $data['isNI']);
         }
 
-        /** @var DigitalSignature $signature */
-        $signature = $data['digitalSignature'];
+        return $this->getDigitalConfig($data['digitalSignature']);
+    }
+
+    private function getPhysicalConfig(Organisation $organisation, $isNI)
+    {
+        $title = $this->getSignatureLabel($organisation);
+        $address = $isNI ? self::SIGNATURE_ADDRESS_NI : self::SIGNATURE_ADDRESS_GB;
+
+        $return = [
+            'markup' => $this->translateReplace(
+                self::SIGNATURE,
+                [
+                    $this->translate($title),
+                    $this->translate($address)
+                ]
+            )
+        ];
+
+        return $return;
+    }
+
+    private function getDigitalConfig(DigitalSignature $signature)
+    {
         return [
             'markup' => $this->translateReplace(
-                'markup-signature-digital',
+                static::SIGNATURE,
                 [
                     $signature->getSignatureName(),
                     $this->formatDate($signature->getDateOfBirth()),
@@ -43,5 +54,18 @@ class SignatureReviewService extends AbstractReviewService
                 ]
             )
         ];
+    }
+
+    private function getSignatureLabel(Organisation $organisation)
+    {
+        $titles = [
+            Organisation::ORG_TYPE_REGISTERED_COMPANY => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_LLP => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_PARTNERSHIP => 'undertakings_partners_signature',
+            Organisation::ORG_TYPE_SOLE_TRADER => 'undertakings_owners_signature',
+            Organisation::ORG_TYPE_OTHER => 'undertakings_responsiblepersons_signature',
+            Organisation::ORG_TYPE_IRFO => 'undertakings_responsiblepersons_signature'
+        ];
+        return $titles[$organisation->getType()->getId()];
     }
 }
