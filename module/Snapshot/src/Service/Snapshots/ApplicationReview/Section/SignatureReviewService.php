@@ -31,7 +31,7 @@ class SignatureReviewService extends AbstractReviewService
 
         $return = [
             'markup' => $this->translateReplace(
-                self::SIGNATURE,
+                static::SIGNATURE,
                 [
                     $this->translate($title),
                     $this->translate($address)
@@ -46,7 +46,7 @@ class SignatureReviewService extends AbstractReviewService
     {
         return [
             'markup' => $this->translateReplace(
-                static::SIGNATURE,
+                'markup-signature-digital',
                 [
                     $signature->getSignatureName(),
                     $this->formatDate($signature->getDateOfBirth()),
