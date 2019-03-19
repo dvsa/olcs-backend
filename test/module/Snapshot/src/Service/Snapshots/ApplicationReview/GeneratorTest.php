@@ -9,6 +9,8 @@ namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview;
 
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
 use Mockery as m;
@@ -344,14 +346,25 @@ class GeneratorTest extends MockeryTestCase
         $signatureType = m::mock(RefData::class);
         $signatureType->shouldReceive('getId')
             ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE);
+
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getType->getId')->andReturn(Organisation::ORG_TYPE_LLP);
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getOrganisation')->andReturn($organisation);
+        $licence->shouldReceive('isNi')->andReturn(true);
+
         $this->application->setSignatureType($signatureType);
         $this->application->setDigitalSignature(null);
+        $this->application->setLicence($licence);
 
         $mockSignature = m::mock(SignatureReviewService::class);
         $mockSignature->shouldReceive('getConfigFromData')
             ->with([
                 'signatureType' => $signatureType,
-                'digitalSignature' => null
+                'digitalSignature' => null,
+                'organisation'=> $organisation,
+                'isNi' => true
             ])
             ->andReturn(['signature' => 'foo']);
         $this->sm->setService(SignatureReviewService::class, $mockSignature);

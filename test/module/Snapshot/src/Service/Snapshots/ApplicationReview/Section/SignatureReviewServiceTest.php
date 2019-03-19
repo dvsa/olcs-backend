@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\DigitalSignature;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\SignatureReviewService;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -25,32 +26,42 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $this->sut->setServiceLocator($this->sm);
     }
 
-    public function testPhysicalSignature()
+    /**
+     * @dataProvider physicalSignatureDataProvider
+     */
+    public function testPhysicalSignature($data, $expected)
     {
         $translator = $this->mockTranslator();
 
         $translator->shouldReceive('translate')
-            ->with('markup-signature-physical', 'snapshot')
-            ->andReturn('%s__%s__translated');
+            ->with($expected['markup'], 'snapshot')
+            ->andReturn($expected['markup'] . '-translated');
 
         $translator->shouldReceive('translate')
-            ->with('directors-signature', 'snapshot')
-            ->andReturn('directors-signature-translated');
+            ->with($expected['signature_address'], 'snapshot')
+            ->andReturn($expected['signature_address'] . '-translated');
 
         $translator->shouldReceive('translate')
-            ->with('return-address', 'snapshot')
-            ->andReturn('return-address-translated');
+            ->with('markup-application_undertakings_signature', 'snapshot')
+            ->andReturn('markup-application_undertakings_signature-translated');
+
 
         $signatureType = m::mock(RefData::class);
         $signatureType->shouldReceive('getId')
             ->andReturn(RefData::SIG_PHYSICAL_SIGNATURE);
 
+        $organisation = m::mock(Organisation::class);
+        $organisation->shouldReceive('getType->getId')->andReturn($data['org_type']);
+
         $markup = $this->sut->getConfigFromData([
             'signatureType' => $signatureType,
-            'digitalSignature' => null
+            'digitalSignature' => null,
+            'organisation' => $organisation,
+            'isNi' => $data['is_ni']
         ]);
+
         $expected = [
-            'markup' => "directors-signature-translated__return-address-translated__translated"
+            'markup' => "markup-application_undertakings_signature-translated"
         ];
 
         $this->assertEquals($expected, $markup);
@@ -88,5 +99,91 @@ class SignatureReviewServiceTest extends MockeryTestCase
         $mockTranslator = m::mock();
         $this->sm->setService('translator', $mockTranslator);
         return $mockTranslator;
+    }
+
+    public function physicalSignatureDataProvider()
+    {
+        return [
+            'is_not_ni' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_REGISTERED_COMPANY
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_directors_signature'
+                ]
+            ],
+            'is_ni' => [
+                'data' => [
+                    'is_ni' => true,
+                    'org_type' => Organisation::ORG_TYPE_REGISTERED_COMPANY
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_ni',
+                    'markup' => 'undertakings_directors_signature'
+                ]
+            ],
+            'registered_company' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_REGISTERED_COMPANY
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_directors_signature'
+                ]
+            ],
+            'llp' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_LLP
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_directors_signature'
+                ]
+            ],
+            'partnership' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_PARTNERSHIP
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_partners_signature'
+                ]
+            ],
+            'sole_trader' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_SOLE_TRADER
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_owners_signature'
+                ]
+            ],
+            'other' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_OTHER
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_responsiblepersons_signature'
+                ]
+            ],
+            'irfo' => [
+                'data' => [
+                    'is_ni' => false,
+                    'org_type' => Organisation::ORG_TYPE_IRFO
+                ],
+                'expected' => [
+                    'signature_address' => 'markup-application_undertakings_signature_address_gb',
+                    'markup' => 'undertakings_responsiblepersons_signature'
+                ]
+            ],
+        ];
     }
 }
