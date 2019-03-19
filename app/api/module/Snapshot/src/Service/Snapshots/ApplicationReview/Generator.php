@@ -261,7 +261,7 @@ class Generator extends AbstractGenerator
 
         $config = $this->buildReadonlyConfigForSections($data['sections'], $data);
 
-        if ($this->lva === 'application') {
+        if ($this->lva === 'application' && $isInternal) {
             $config['sections'][] = $this->buildSignatureSection($application);
         }
 
@@ -416,8 +416,10 @@ class Generator extends AbstractGenerator
     {
         $service = $this->getServiceLocator()->get(SignatureReviewService::class);
         $data = [
+            'organisation' => $application->getLicence()->getOrganisation(),
             'signatureType' => $application->getSignatureType(),
-            'digitalSignature' => $application->getDigitalSignature()
+            'digitalSignature' => $application->getDigitalSignature(),
+            'isNI' => $application->getLicence()->isNi()
         ];
 
         return [
