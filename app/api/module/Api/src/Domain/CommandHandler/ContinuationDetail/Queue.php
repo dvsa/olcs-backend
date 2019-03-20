@@ -46,7 +46,7 @@ final class Queue extends AbstractCommandHandler implements AuthAwareInterface, 
             );
             $result->merge($this->handleSideEffect($createCmd));
 
-            if ($command->getType() == QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER) {
+            if ($command->getType() === QueueEntity::TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER) {
                 $result->merge($this->generateTask($continuationDetailId));
             }
         }
