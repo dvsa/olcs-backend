@@ -76,7 +76,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
     {
         if ($this->isPsv($data)) {
             if ($data['licenceType']['id'] === Licence::LICENCE_TYPE_SPECIAL_RESTRICTED) {
-                return $this->getPsv356($data);
+                return $this->getPsv356();
             }
 
             return $this->getPsv421($data);
@@ -96,8 +96,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
 
         $additionalParts = [
             $isStandard ? $this->translate(self::GV79_STANDARD) : '',
-            $isInternal ? $this->translate(self::GV79_DECLARE) : '',
-            $isInternal ? $this->getSignature($data) : ''
+            $isInternal ? $this->translate(self::GV79_DECLARE) : ''
         ];
 
         return $this->translateReplace(self::GV79, $additionalParts);
@@ -110,8 +109,7 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
 
         $additionalParts = [
             $isStandard ? $this->translate(self::GV79NI_STANDARD) : '',
-            $isInternal ? $this->translate(self::GV79NI_DECLARE) : '',
-            $isInternal ? $this->getSignature($data) : ''
+            $isInternal ? $this->translate(self::GV79NI_DECLARE) : ''
         ];
 
         return $this->translateReplace(self::GV79NI, $additionalParts);
@@ -124,22 +122,15 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
 
         $additionalParts = [
             $isStandard ? $this->translate(self::PSV421_STANDARD) : '',
-            $isInternal ? $this->translate(self::PSV421_DECLARE) : '',
-            $isInternal ? $this->getSignature($data) : ''
+            $isInternal ? $this->translate(self::PSV421_DECLARE) : ''
         ];
 
         return $this->translateReplace(self::PSV421, $additionalParts);
     }
 
-    private function getPsv356(array $data)
+    private function getPsv356()
     {
-        $isInternal = $this->isInternal($data);
-
-        $additionalParts = [
-            $isInternal ? $this->getSignature($data) : ''
-        ];
-
-        return $this->translateReplace(self::PSV356, $additionalParts);
+        return $this->translate(self::PSV356);
     }
 
     private function isStandard(array $data)
