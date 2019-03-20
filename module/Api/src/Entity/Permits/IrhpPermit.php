@@ -279,6 +279,11 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     private function proceedToError(RefData $status)
     {
+        if ($this->hasError()) {
+            // do nothing if the status is STATUS_ERROR already
+            return;
+        }
+
         if (!$this->isPending() && !$this->isAwaitingPrinting() && !$this->isPrinting()) {
             throw new ForbiddenException(
                 sprintf(
