@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Snapshot\Service\Formatter\Address;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\FormatReviewDataTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -26,7 +27,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
     const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
 
-    use ServiceLocatorAwareTrait;
+    use ServiceLocatorAwareTrait, FormatReviewDataTrait;
 
     protected function formatText($text)
     {
@@ -61,29 +62,9 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
         return $refData['description'];
     }
 
-    protected function formatShortAddress($address)
-    {
-        return Address::format($address);
-    }
-
-    protected function formatFullAddress($address)
-    {
-        return Address::format($address, ['addressFields' => 'FULL']);
-    }
-
     protected function formatConfirmed($value)
     {
         return $value === 'Y' ? 'Confirmed' : 'Unconfirmed';
-    }
-
-    protected function formatDate($date, $format = 'd M Y')
-    {
-        return date($format, strtotime($date));
-    }
-
-    protected function formatYesNo($value)
-    {
-        return $value === 'Y' ? 'Yes' : 'No';
     }
 
     protected function formatPersonFullName($person)
@@ -103,19 +84,6 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
     protected function isPsv($data)
     {
         return !$data['isGoods'];
-    }
-
-    protected function translate($string)
-    {
-        if ($string === null) {
-            return '';
-        }
-        return $this->getServiceLocator()->get('translator')->translate($string, 'snapshot');
-    }
-
-    protected function translateReplace($translationKey, array $arguments)
-    {
-        return vsprintf($this->translate($translationKey), $arguments);
     }
 
     protected function isInternal($data)
