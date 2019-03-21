@@ -114,6 +114,7 @@ class InForceInterimTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('GenerateBatch');
         $expectedData = [
+            'isBatchReprint' => false,
             'communityLicenceIds' => [123],
             'licence' => 222,
             'identifier' => 111

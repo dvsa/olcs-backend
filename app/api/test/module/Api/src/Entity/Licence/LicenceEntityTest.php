@@ -2584,4 +2584,41 @@ class LicenceEntityTest extends EntityTester
             ],
         ];
     }
+
+    /**
+     * @dataProvider dpHasStatusRequiredForCommunityLicenceReprint
+     */
+    public function testHasStatusRequiredForCommunityLicenceReprint($status, $expected)
+    {
+        $sut = m::mock(Licence::class)->makePartial();
+        $sut->shouldReceive('getStatus->getId')
+            ->andReturn($status);
+
+        $this->assertEquals(
+            $expected,
+            $sut->hasStatusRequiredForCommunityLicenceReprint()
+        );
+    }
+
+    public function dpHasStatusRequiredForCommunityLicenceReprint()
+    {
+        return [
+            [Licence::LICENCE_STATUS_UNDER_CONSIDERATION, false],
+            [Licence::LICENCE_STATUS_NOT_SUBMITTED, false],
+            [Licence::LICENCE_STATUS_SUSPENDED, true],
+            [Licence::LICENCE_STATUS_VALID, true],
+            [Licence::LICENCE_STATUS_CURTAILED, true],
+            [Licence::LICENCE_STATUS_GRANTED, false],
+            [Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION, false],
+            [Licence::LICENCE_STATUS_SURRENDERED, false],
+            [Licence::LICENCE_STATUS_WITHDRAWN, false],
+            [Licence::LICENCE_STATUS_REFUSED, false],
+            [Licence::LICENCE_STATUS_REVOKED, false],
+            [Licence::LICENCE_STATUS_NOT_TAKEN_UP, false],
+            [Licence::LICENCE_STATUS_TERMINATED, false],
+            [Licence::LICENCE_STATUS_CONTINUATION_NOT_SOUGHT, false],
+            [Licence::LICENCE_STATUS_UNLICENSED, false],
+            [Licence::LICENCE_STATUS_CANCELLED, false],
+        ];
+    }
 }

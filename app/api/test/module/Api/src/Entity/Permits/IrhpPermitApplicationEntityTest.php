@@ -4,6 +4,10 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
@@ -78,53 +82,122 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertSame(
             [
                 'permitsAwarded' => 0,
-                'validPermits' => 0
+                'validPermits' => 0,
+                'relatedApplication' => null,
             ],
             $this->sut->getCalculatedBundleValues()
         );
     }
 
-    public function testCountValidPermits()
+    public function testGetCalculatedBundleValuesForEcmtPermitApplication()
     {
-        $candidatePermit1 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit1->shouldReceive('getIrhpPermits')
-            ->andReturn(null);
-        $candidatePermit1->shouldReceive('getSuccessful')
-            ->andReturn(true);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('serialize')
+            ->with(
+                [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ]
+            )
+            ->once()
+            ->andReturn(['EcmtPermitApplication']);
 
-        $candidatePermit2Permits = new ArrayCollection([
-            m::mock(IrhpPermit::class),
-        ]);
-        $candidatePermit2 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit2->shouldReceive('getIrhpPermits')
-            ->andReturn($candidatePermit2Permits);
-        $candidatePermit2->shouldReceive('getSuccessful')
-            ->andReturn(true);
+        $irhpPermitApplication = Entity::createNew(
+            $irhpPermitWindow,
+            $licence,
+            $ecmtPermitApplication
+        );
 
-        $candidatePermit3Permits = new ArrayCollection([
-            m::mock(IrhpPermit::class),
-        ]);
-        $candidatePermit3 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit3->shouldReceive('getIrhpPermits')
-            ->andReturn($candidatePermit3Permits);
-        $candidatePermit3->shouldReceive('getSuccessful')
-            ->andReturn(false);
+        $this->assertSame(
+            [
+                'permitsAwarded' => 0,
+                'validPermits' => 0,
+                'relatedApplication' => ['EcmtPermitApplication'],
+            ],
+            $irhpPermitApplication->getCalculatedBundleValues()
+        );
+    }
 
-        $candidatePermit4Permits = new ArrayCollection([
-            m::mock(IrhpPermit::class),
-        ]);
-        $candidatePermit4 = m::mock(IrhpCandidatePermit::class);
-        $candidatePermit4->shouldReceive('getIrhpPermits')
-            ->andReturn($candidatePermit4Permits);
-        $candidatePermit4->shouldReceive('getSuccessful')
-            ->andReturn(true);
+    public function testGetCalculatedBundleValuesForIrhpApplication()
+    {
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('serialize')
+            ->with(
+                [
+                    'licence' => [
+                        'organisation'
+                    ]
+                ]
+            )
+            ->once()
+            ->andReturn(['IrhpApplication']);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
 
-        $this->sut->addIrhpCandidatePermits($candidatePermit1);
-        $this->sut->addIrhpCandidatePermits($candidatePermit2);
-        $this->sut->addIrhpCandidatePermits($candidatePermit3);
-        $this->sut->addIrhpCandidatePermits($candidatePermit4);
+        $irhpPermitApplication = Entity::createNewForIrhpApplication(
+            $irhpApplication,
+            $irhpPermitWindow
+        );
 
-        $this->assertEquals(2, $this->sut->countValidPermits());
+        $this->assertSame(
+            [
+                'permitsAwarded' => 0,
+                'validPermits' => 0,
+                'relatedApplication' => ['IrhpApplication'],
+            ],
+            $irhpPermitApplication->getCalculatedBundleValues()
+        );
+    }
+
+    /**
+     * @dataProvider dpCountValidPermits
+     */
+    public function testCountValidPermits($statusId, $count)
+    {
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $irhpCandidate = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidate->shouldReceive('getIrhpPermitRange')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitRange);
+        $irhpCandidate->shouldReceive('getIrhpPermitApplication')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitApplication);
+
+        $issueDate = new \DateTime();
+        $permitNumber = '00001';
+        $status = new RefData($statusId);
+
+        $irhpPermit = IrhpPermit::createNew(
+            $irhpCandidate,
+            $issueDate,
+            $status,
+            $permitNumber
+        );
+
+        $collection = new ArrayCollection([$irhpPermit]);
+
+        $this->sut->setIrhpPermits($collection);
+        $this->assertEquals($count, $this->sut->countValidPermits());
+    }
+
+    public function dpCountValidPermits()
+    {
+        return [
+            [IrhpPermit::STATUS_PENDING, 1],
+            [IrhpPermit::STATUS_AWAITING_PRINTING, 1],
+            [IrhpPermit::STATUS_PRINTING, 1],
+            [IrhpPermit::STATUS_PRINTED, 1],
+            [IrhpPermit::STATUS_ERROR, 1],
+            [IrhpPermit::STATUS_CEASED, 0],
+            [IrhpPermit::STATUS_ISSUED, 1],
+            [IrhpPermit::STATUS_TERMINATED, 0]
+        ];
     }
 
     public function testCountPermitsAwarded()
@@ -259,5 +332,32 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $entity = Entity::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
 
         $this->assertSame($org, $entity->getRelatedOrganisation());
+    }
+
+    public function testGetRelatedApplicationEcmt()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $licence = m::mock(Licence::class);
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+
+        $entity = Entity::createNew($irhpPermitWindow, $licence, $ecmtPermitApplication);
+
+        $this->assertSame($ecmtPermitApplication, $entity->getRelatedApplication());
+    }
+
+    public function testGetRelatedApplicationIrhp()
+    {
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpApplication = m::mock(IrhpApplication::class);
+
+        $entity = Entity::createNewForIrhpApplication($irhpApplication, $irhpPermitWindow);
+
+        $this->assertSame($irhpApplication, $entity->getRelatedApplication());
+    }
+
+    public function testGetRelatedValuesWhenNothingIsLinked()
+    {
+        $this->assertNull($this->sut->getRelatedApplication());
+        $this->assertNull($this->sut->getRelatedOrganisation());
     }
 }

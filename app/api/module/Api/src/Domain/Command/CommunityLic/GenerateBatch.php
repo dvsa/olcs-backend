@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\CommunityLic;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Transfer\FieldType\Traits\UserOptional;
 
 /**
  * Community Licence / Generate Batch
@@ -16,11 +17,22 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 final class GenerateBatch extends AbstractCommand
 {
+    use UserOptional;
+
+    public $isBatchReprint = false;
     public $licence;
 
     public $communityLicenceIds;
 
     public $identifier;
+
+    /**
+     * @return bool
+     */
+    public function getIsBatchReprint()
+    {
+        return $this->isBatchReprint;
+    }
 
     public function getLicence()
     {

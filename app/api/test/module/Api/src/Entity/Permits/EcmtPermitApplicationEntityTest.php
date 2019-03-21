@@ -2,9 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -969,7 +974,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $emissions,
         $emissionsResult,
         $countries,
-        $countriesResult
+        $countriesResult,
+        $countriesListResult,
+        $emissionsQuestion,
+        $emissionsCategory,
+        $emissionsDeclaration
     ) {
         $licNo = 'OB1234567';
         $id = 1111;
@@ -1010,10 +1019,13 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             'emissions' => $emissionsResult,
             'cabotage' => $cabotageResult,
             'limitedCountries' => $countriesResult,
+            'limitedCountriesList' => $countriesListResult,
             'permitsRequired' => $permitsRequired,
             'trips' => $trips,
             'internationalJourneys' => $internationalJourneysDesc,
-            'goods' => $sectorName
+            'goods' => $sectorName,
+            'emissionsQuestion' => $emissionsQuestion,
+            'emissionsDeclaration' => $emissionsDeclaration
         ];
 
         $application = Entity::createNewInternal(
@@ -1033,15 +1045,229 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         );
 
         $application->setId($id);
+        $application->setHasRestrictedCountries(!empty($countries));
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
+            ->andReturn($emissionsCategory);
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
 
         $this->assertSame($expectedData, $application->returnSnapshotData());
     }
 
     public function dpReturnSnapshotData()
     {
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getCountryDesc')
+            ->andReturn('country 1');
+
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getCountryDesc')
+            ->andReturn('country 2');
+
         return [
-            [1, 'Yes', 0, 'No', ['GB'], 'Yes'],
-            [0, 'No', 1, 'Yes', [], 'No'],
+            'Euro 5' => [
+                'cabotage' => 1,
+                'cabotageResult' => 'Yes',
+                'emissions' => 0,
+                'emissionsResult' => 'No',
+                'countries' => [$country1, $country2],
+                'countriesResult' => 'Yes',
+                'countriesListResult' => null,
+                'emissionsQuestion'
+                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
+                        . 'compliant with Euro 5 emissions standards as a minimum.',
+                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF,
+                'emissionsDeclaration'
+                    => 'I confirm that I will not transport goods to, through and from Austria, Greece, Hungary, '
+                        . 'Italy or Russia using this ECMT permit.'
+            ],
+            'Euro 6' => [
+                'cabotage' => 0,
+                'cabotageResult' => 'No',
+                'emissions' => 1,
+                'emissionsResult' => 'Yes',
+                'countries' => [$country1, $country2],
+                'countriesResult' => 'Yes',
+                'countriesListResult' => 'country 1, country 2',
+                'emissionsQuestion'
+                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
+                        . 'compliant with Euro 6 emissions standards.',
+                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                'emissionsDeclaration'
+                    => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?'
+            ],
+            'Euro 6 without countries' => [
+                'cabotage' => 0,
+                'cabotageResult' => 'No',
+                'emissions' => 1,
+                'emissionsResult' => 'Yes',
+                'countries' => [],
+                'countriesResult' => 'No',
+                'countriesListResult' => null,
+                'emissionsQuestion'
+                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
+                        . 'compliant with Euro 6 emissions standards.',
+                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                'emissionsDeclaration'
+                    => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?'
+            ],
+        ];
+    }
+
+    public function testGetWindowEmissionsCategory()
+    {
+        $entity = $this->createApplication();
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
+            ->andReturn(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF);
+
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, $entity->getWindowEmissionsCategory());
+    }
+
+    /**
+     *
+     * @dataProvider productRefMonthProvider
+     */
+    public function testGetProductReferenceForTier($expected, $validFrom, $validTo, $now)
+    {
+        $entity = $this->createApplication();
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $entity->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+
+        $irhpPermitStock->shouldReceive('getValidFrom')->andReturn($validFrom);
+        $irhpPermitStock->shouldReceive('getValidTo')->andReturn($validTo);
+        $this->assertEquals($expected, $entity->getProductReferenceForTier($now));
+    }
+
+    public function productRefMonthProvider()
+    {
+        $validFrom = new DateTime('first day of January next year');
+        $validTo = new DateTime('last day of December next year');
+
+        return [
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of January next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of February next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of March next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of April next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of May next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of June next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of July next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of August next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of September next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of October next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of November next year')
+            ],
+            [
+                FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+                $validFrom,
+                $validTo,
+                new DateTime('first day of December next year')
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeExpired
+     */
+    public function testCanBeExpired($statusId, $validPermits, $expected)
+    {
+        $application = $this->createApplication($statusId);
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('hasValidPermits')->andReturn($validPermits);
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+        $this->assertEquals($expected, $application->canBeExpired());
+    }
+
+    public function dpCanBeExpired()
+    {
+        return [
+            [Entity::STATUS_CANCELLED, true, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, true, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, true, false],
+            [Entity::STATUS_WITHDRAWN, true, false],
+            [Entity::STATUS_AWAITING_FEE, true, false],
+            [Entity::STATUS_FEE_PAID, true, false],
+            [Entity::STATUS_UNSUCCESSFUL, true, false],
+            [Entity::STATUS_ISSUED, true, false],
+            [Entity::STATUS_ISSUING, true, false],
+            [Entity::STATUS_VALID, true, false],
+            [Entity::STATUS_DECLINED, true, false],
+            [Entity::STATUS_EXPIRED, true, false],
+            [Entity::STATUS_CANCELLED, false, false],
+            [Entity::STATUS_NOT_YET_SUBMITTED, false, false],
+            [Entity::STATUS_UNDER_CONSIDERATION, false, false],
+            [Entity::STATUS_WITHDRAWN, false, false],
+            [Entity::STATUS_AWAITING_FEE, false, false],
+            [Entity::STATUS_FEE_PAID, false, false],
+            [Entity::STATUS_UNSUCCESSFUL, false, false],
+            [Entity::STATUS_ISSUED, false, false],
+            [Entity::STATUS_ISSUING, false, false],
+            [Entity::STATUS_VALID, false, true],
+            [Entity::STATUS_DECLINED, false, false],
+            [Entity::STATUS_EXPIRED, false, false]
         ];
     }
 }

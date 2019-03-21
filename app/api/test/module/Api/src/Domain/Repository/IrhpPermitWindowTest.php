@@ -86,6 +86,9 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->with(Query::HYDRATE_ARRAY)
             ->andReturn($expectedResult);
 
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($queryBuilder)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
         $this->assertEquals(
             $expectedResult,
             $this->sut->fetchOpenWindows($irhpPermitStock, $dateTime)
@@ -157,6 +160,9 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             ->shouldReceive('getQuery->getResult')
             ->once()
             ->andReturn($expectedResult);
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($queryBuilder)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
 
         $this->assertEquals(
             $expectedResult,
@@ -288,5 +294,65 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'AND c.id IN [[["DE","NL"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchLastOpenWindowByIrhpPermitType()
+    {
+        $now = new \DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            'RESULTS',
+            $this->sut->fetchLastOpenWindowByIrhpPermitType(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                $now
+            )
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'AND ipw.startDate <= [[2018-10-25T13:21:10+0000]] '
+            . 'AND ipw.endDate > [[2018-10-25T13:21:10+0000]] '
+            . 'ORDER BY ipw.endDate DESC '
+            . 'LIMIT 1';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
+     * @expectedExceptionMessage No window available.
+     */
+    public function testFetchLastOpenWindowByIrhpPermitTypeWhenNoWindowOpen()
+    {
+        $now = new \DateTime('2018-10-25 13:21:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([])
+                ->getMock()
+        );
+
+        $this->sut->fetchLastOpenWindowByIrhpPermitType(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+            $now
+        );
     }
 }

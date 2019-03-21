@@ -36,7 +36,8 @@ class NullSaveHandler implements \Zend\Session\SaveHandler\SaveHandlerInterface
      */
     public function read($id)
     {
-        return true;
+        // PHP 7.1 session handlers returning a bool or null value causes errors in logs. Empty string does not.
+        return '';
     }
 
     /**

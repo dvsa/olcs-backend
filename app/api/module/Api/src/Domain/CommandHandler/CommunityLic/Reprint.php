@@ -7,9 +7,13 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
+use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCommand;
@@ -22,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateT
 final class Reprint extends AbstractCommandHandler implements TransactionedInterface
 {
     protected $repoServiceName = 'CommunityLic';
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = ['Licence', 'SystemParameter'];
 
     /**
      * Handle Command
@@ -33,100 +37,114 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
      */
     public function handleCommand(CommandInterface $command)
     {
+        //by default we make DB updates, unless it's a bulk reprint when we rely on system param
+        $shouldMakeDbUpdates = true;
+        $isBatchReprint = $command->getIsBatchReprint();
+
+        if ($isBatchReprint) {
+            /** @var SystemParameterRepo $sysParamRepo */
+            $sysParamRepo = $this->getRepo('SystemParameter');
+
+            //if param NOT disabled, make the DB updates
+            $shouldMakeDbUpdates = !$sysParamRepo->fetchValue(SystemParameter::DISABLE_COM_LIC_BULK_REPRINT_DB);
+        }
+
         $ids = $command->getCommunityLicenceIds();
         $licenceId = $command->getLicence();
 
-        $this->validateLicences($ids, $licenceId);
-        $voidLicencesCommand = TransferCmd\CommunityLic\Annul::create(
-            [
-                'licence' => $licenceId,
-                'communityLicenceIds' => $ids,
-                'checkOfficeCopy' => false
-            ]
-        );
-        $this->handleSideEffect($voidLicencesCommand);
         $issueNumbers = $this->getIssueNumbersByIds($ids);
 
-        /** @var LicenceEntity $licence */
-        $licence = $this->getRepo('Licence')->fetchById($licenceId);
+        if ($shouldMakeDbUpdates) {
+            $voidLicencesCommand = TransferCmd\CommunityLic\Annul::create(
+                [
+                    'licence' => $licenceId,
+                    'communityLicenceIds' => $ids,
+                    'checkOfficeCopy' => false
+                ]
+            );
 
-        $data = [
-            'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
-            'specifiedDate' => new DateTime('now'),
-            'serialNoPrefix' => $licence->getSerialNoPrefixFromTrafficArea(),
-            'licence' => $this->getRepo()->getReference(LicenceEntity::class, $licenceId)
-        ];
+            $this->result->merge($this->handleSideEffect($voidLicencesCommand));
 
-        $result = new Result();
-        foreach ($issueNumbers as $issueNumber) {
-            $data['issueNo'] = $issueNumber;
-            $communityLic = $this->createCommunityLicObject($data);
-            $this->getRepo()->save($communityLic);
-            $result->addId('communityLic' . $communityLic->getId(), $communityLic->getId());
-            $result->addMessage("The selected licence with issue number {$issueNumber} has been generated");
+            /**
+             * @var LicenceRepo   $licenceRepo
+             * @var LicenceEntity $licence
+             */
+            $licenceRepo = $this->getRepo('Licence');
+            $licence = $licenceRepo->fetchById($licenceId);
+
+            $data = [
+                'status' => $this->getRepo()->getRefdataReference(CommunityLicEntity::STATUS_ACTIVE),
+                'specifiedDate' => new \DateTime('now'),
+                'serialNoPrefix' => $licence->getSerialNoPrefixFromTrafficArea(),
+                'licence' => $licence
+            ];
+
+            foreach ($issueNumbers as $issueNumber) {
+                $data['issueNo'] = $issueNumber;
+                $communityLic = $this->createCommunityLicObject($data);
+                $this->getRepo()->save($communityLic);
+                $this->result->addId('communityLic' . $communityLic->getId(), $communityLic->getId());
+                $this->result->addMessage("The selected licence with issue number {$issueNumber} has been generated");
+            }
+        } else {
+            $this->result->addMessage("Community licences reprinted without updating DB");
         }
 
         $generateBatchCmd = GenerateBatchCommand::create(
             [
+                'isBatchReprint' => $command->getIsBatchReprint(),
                 'licence' => $licenceId,
                 'communityLicenceIds' => $ids,
                 'identifier' => $command->getApplication(),
+                'user' => $command->getUser(),
             ]
         );
-        $result->merge($this->handleSideEffect($generateBatchCmd));
-        $result->merge($this->handleSideEffect(UpdateTotalCommunityLicencesCommand::create(['id' => $licenceId])));
+        $this->result->merge($this->handleSideEffect($generateBatchCmd));
 
-        return $result;
-    }
-
-    /**
-     * Validate that Community Licences can be reprinted
-     *
-     * @param array $ids       List of Community Licence IDs
-     * @param int   $licenceId Licence ID
-     *
-     * @throws ValidationException
-     * @return void
-     */
-    protected function validateLicences($ids, $licenceId)
-    {
-        $activeLicences = $this->getRepo()->fetchActiveLicences($licenceId);
-        $activeIds = [];
-
-        /** @var LicenceEntity $activeLicence */
-        foreach ($activeLicences as $activeLicence) {
-            $activeIds[] = $activeLicence->getId();
-        }
-
-        $notActive = array_diff($ids, $activeIds);
-        if (!empty($notActive)) {
-            throw new ValidationException(
-                [
-                    'communityLicence' => [
-                        CommunityLicEntity::ERROR_CANT_REPRINT =>
-                            'You can only reprint \'Active\' community licences'
-                    ]
-                ]
+        if ($shouldMakeDbUpdates) {
+            $this->result->merge(
+                $this->handleSideEffect(UpdateTotalCommunityLicencesCommand::create(['id' => $licenceId]))
             );
         }
+
+        return $this->result;
     }
 
     /**
-     * Get Issue Numbers By Ids
+     * Get issue numbers, and also validate licence is active
      *
      * @param array $ids Licences Ids
      *
      * @return array
+     * @throws ValidationException
      */
     protected function getIssueNumbersByIds($ids)
     {
         $issueNumbers = [];
-        $licences = $this->getRepo()->fetchLicencesByIds($ids);
 
-        /** @var CommunityLicEntity $licence */
-        foreach ($licences as $licence) {
-            $issueNumbers[] = $licence->getIssueNo();
+        /** @var CommunityLicRepo $communityLicRepo */
+        $communityLicRepo = $this->getRepo('CommunityLic');
+        $communityLicences = $communityLicRepo->fetchLicencesByIds($ids);
+
+        /** @var CommunityLic $communityLicence */
+        foreach ($communityLicences as $communityLicence) {
+            /**
+             * @todo have preserved the existing check, but could also do with checking status of the parent licence
+             */
+            if (!$communityLicence->isActive()) {
+                throw new ValidationException(
+                    [
+                        'communityLicence' => [
+                            CommunityLicEntity::ERROR_CANT_REPRINT =>
+                                'You can only reprint \'Active\' community licences'
+                        ]
+                    ]
+                );
+            }
+
+            $issueNumbers[] = $communityLicence->getIssueNo();
         }
+
         return $issueNumbers;
     }
 
@@ -135,7 +153,7 @@ final class Reprint extends AbstractCommandHandler implements TransactionedInter
      *
      * @param array $data Community Licence data
      *
-     * @return CommunityLic
+     * @return CommunityLicEntity
      */
     private function createCommunityLicObject($data)
     {

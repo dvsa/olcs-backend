@@ -6,11 +6,13 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -25,7 +27,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Andy Newton
  */
-final class CreateFullPermitApplication extends AbstractCommandHandler implements ToggleRequiredInterface
+final class CreateFullPermitApplication extends AbstractCommandHandler implements
+    ToggleRequiredInterface,
+    TransactionedInterface
 {
     use ToggleAwareTrait;
 
@@ -38,7 +42,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
      */
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['Country', 'IrhpPermitWindow', 'IrhpPermitStock', 'Licence'];
+    protected $extraRepos = ['Country', 'IrhpPermitWindow', 'Licence'];
 
     /**
      * Handle command
@@ -66,8 +70,6 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
         $ecmtPermitApplication = $this->createPermitApplicationObject($command, $licence);
         $this->getRepo()->save($ecmtPermitApplication);
 
-        $result = new Result();
-
         if ($command->getPermitsRequired() > 0 && $ecmtPermitApplication->getId()) {
             $this->result->merge($this->handleSideEffect(
                 UpdatePermitFee::create(
@@ -82,15 +84,13 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
             ));
         }
 
-        $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
-        $result->addMessage('ECMT Permit Application created successfully');
+        $this->result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
+        $this->result->addMessage('ECMT Permit Application created successfully');
 
-        $stock = $this->getRepo('IrhpPermitStock')->getNextIrhpPermitStockByPermitType(
-            EcmtPermitApplication::PERMIT_TYPE,
+        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByIrhpPermitType(
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
             new DateTime()
         );
-
-        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stock->getId());
 
         $this->result->merge(
             $this->handleSideEffect(
@@ -103,7 +103,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
             )
         );
 
-        return $result;
+        return $this->result;
     }
 
     /**

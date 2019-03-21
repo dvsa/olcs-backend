@@ -166,8 +166,8 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $permitsAwarded = 2;
         $issueFeeAmount = 123;
         $permitsGrantedissueFeeTotal = $permitsRequired * $issueFeeAmount;
-        $paymentDeadlineNumDays = '10';
-        $issueFeeDeadlineDate = '11 December 2018';
+        $paymentDeadlineNumDays = '9';
+        $issueFeeDeadlineDate = '21 March 2019';
         $awaitingFeeUrl = 'http://selfserve/permits/' . $permitAppId . '/ecmt-awaiting-fee/';
 
         $userEmail = 'email1@test.com';
@@ -222,7 +222,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         $fee->shouldReceive('getFeeTypeAmount')->andReturn($issueFeeAmount);
         $fee->shouldReceive('getOutstandingAmount')->andReturn($permitsGrantedissueFeeTotal);
         $fee->shouldReceive('getInvoicedDateTime')->andReturn(
-            new DateTime('1 December 2018')
+            new DateTime('8 March 2019')
         );
         $fees = [$fee];
 

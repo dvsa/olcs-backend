@@ -237,4 +237,37 @@ class CommunityLicEntityTest extends EntityTester
 
         $this->assertEquals($result, $expected);
     }
+
+    public function testIsActiveTrue()
+    {
+        $sut = m::mock(CommunityLicEntity::class)->makePartial();
+        $sut->shouldReceive('getStatus->getId')
+            ->andReturn(CommunityLicEntity::STATUS_ACTIVE);
+
+        $this->assertTrue($sut->isActive());
+    }
+
+    /**
+     * @dataProvider dpTestIsActiveFalse
+     */
+    public function testIsActiveFalse($status)
+    {
+        $sut = m::mock(CommunityLicEntity::class)->makePartial();
+        $sut->shouldReceive('getStatus->getId')
+            ->andReturn($status);
+
+        $this->assertFalse($sut->isActive());
+    }
+
+    public function dpTestIsActiveFalse()
+    {
+        return [
+            [CommunityLicEntity::STATUS_PENDING],
+            [CommunityLicEntity::STATUS_EXPIRED],
+            [CommunityLicEntity::STATUS_WITHDRAWN],
+            [CommunityLicEntity::STATUS_SUSPENDED],
+            [CommunityLicEntity::STATUS_ANNUL],
+            [CommunityLicEntity::STATUS_RETURNDED],
+        ];
+    }
 }
