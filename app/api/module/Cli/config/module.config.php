@@ -393,6 +393,8 @@ return [
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class,
             Queue::TYPE_COMM_LIC_BULK_REPRINT
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\ReportingBulkReprint::class,
+            Queue::TYPE_REFUND_INTERIM_FEES
+                => Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees::class
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
