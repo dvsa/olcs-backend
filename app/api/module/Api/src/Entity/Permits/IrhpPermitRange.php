@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
 
 /**
  * IrhpPermitRange Entity
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class IrhpPermitRange extends AbstractIrhpPermitRange
+class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterface
 {
     /**
      * Create
