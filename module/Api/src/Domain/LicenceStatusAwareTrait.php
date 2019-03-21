@@ -22,6 +22,10 @@ trait LicenceStatusAwareTrait
         return in_array($licence->getStatus()->getId(), $this->getLicenceStatusesActive());
     }
 
+    public function notBeenSurrendered(Licence $licence) : bool
+    {
+        return  $licence->getStatus()->getId() !== Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION;
+    }
     private function isLicenceStatusStrictlyActive(Licence $licence): bool
     {
         return in_array($licence->getStatus()->getId(), $this->getLicenceStatusesStrictlyActive());

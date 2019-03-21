@@ -199,6 +199,7 @@ class CreateOfficeCopyTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             GenerateBatchCmd::class,
             [
+                'isBatchReprint' => false,
                 'licence' => $licenceId,
                 'identifier' => $identifier,
                 'communityLicenceIds' => [111]

@@ -74,9 +74,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(3)
-            ->shouldReceive('commit')
             ->times(2)
+            ->shouldReceive('commit')
+            ->once()
             ->shouldReceive('rollback')
             ->once();
 
@@ -139,11 +139,6 @@ class GeneratePermitsTest extends CommandHandlerTestCase
                 [],
                 'Permits generation failed with error: No covering letters generated.'
             ],
-            'different number permits and letters generated' => [
-                [101, 102, 103],
-                [201, 202],
-                'Permits generation failed with error: Number of permits (3) and letters (2) does not match.'
-            ],
         ];
     }
 
@@ -167,9 +162,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(3)
-            ->shouldReceive('commit')
             ->times(2)
+            ->shouldReceive('commit')
+            ->once()
             ->shouldReceive('rollback')
             ->once();
 
@@ -236,9 +231,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(3)
-            ->shouldReceive('commit')
             ->times(2)
+            ->shouldReceive('commit')
+            ->once()
             ->shouldReceive('rollback')
             ->once();
 
@@ -311,9 +306,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(2)
+            ->once()
             ->shouldReceive('commit')
-            ->times(2)
+            ->once()
             ->shouldReceive('rollback')
             ->never();
 
@@ -423,9 +418,9 @@ class GeneratePermitsTest extends CommandHandlerTestCase
 
         $this->mockTransationMngr
             ->shouldReceive('beginTransaction')
-            ->times(2)
+            ->once()
             ->shouldReceive('commit')
-            ->times(2)
+            ->once()
             ->shouldReceive('rollback')
             ->never();
 

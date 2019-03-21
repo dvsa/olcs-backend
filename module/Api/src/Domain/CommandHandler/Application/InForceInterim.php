@@ -99,7 +99,6 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
 
         /** @var CommunityLic $commLic */
         foreach ($application->getLicence()->getCommunityLics() as $commLic) {
-
             if ($commLic->getStatus() !== null
                 && $commLic->getStatus()->getId() == CommunityLic::STATUS_PENDING
             ) {
@@ -112,10 +111,10 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
             }
         }
         if ($ids) {
-
             $this->result->addMessage(count($ids) . ' Community licence(s) activated');
 
             $data = [
+                'isBatchReprint' => false,
                 'communityLicenceIds' => $ids,
                 'licence' => $application->getLicence()->getId(),
                 'identifier' => $application->getId()

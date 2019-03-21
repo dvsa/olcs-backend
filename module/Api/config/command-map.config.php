@@ -688,10 +688,14 @@ return [
         AppCompCommandHandler\UpdateDeclarationsInternalStatus::class,
 
     // Domain - CommunityLic
+    Command\CommunityLic\GenerateCoverLetter::class => CommandHandler\CommunityLic\GenerateCoverLetter::class,
     Command\CommunityLic\GenerateBatch::class => CommandHandler\CommunityLic\GenerateBatch::class,
     Command\CommunityLic\Application\CreateOfficeCopy::class =>
         CommandHandler\CommunityLic\Application\CreateOfficeCopy::class,
     Command\CommunityLic\Licence\CreateOfficeCopy::class => CommandHandler\CommunityLic\Licence\CreateOfficeCopy::class,
+    Command\CommunityLic\BulkReprint::class => CommandHandler\CommunityLic\BulkReprint::class,
+    Command\CommunityLic\ReportingBulkReprint::class => CommandHandler\CommunityLic\ReportingBulkReprint::class,
+    Command\CommunityLic\ValidatingReprintCaller::class => CommandHandler\CommunityLic\ValidatingReprintCaller::class,
 
     // Cli - CommunityLic
     CommandCli\CommunityLic\Activate::class => CommandHandlerCli\CommunityLic\Activate::class,
@@ -703,6 +707,9 @@ return [
     Command\Document\GenerateAndStoreWithMultipleAddresses::class => CommandHandler\Document\GenerateAndStoreWithMultipleAddresses::class,
     TransferCommand\Document\GenerateAndStore::class => CommandHandler\Document\GenerateAndStore::class,
     TransferCommand\Document\Upload::class => CommandHandler\Document\Upload::class,
+
+    // Domain - Report
+    TransferCommand\Report\Upload::class => CommandHandler\Report\Upload::class,
 
     // Domain - LicenceStatusRule
     Command\LicenceStatusRule\ProcessToRevokeCurtailSuspend::class
@@ -986,6 +993,8 @@ return [
     // Transfer - IRHP Permit
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
+    TransferCommand\IrhpPermit\Terminate::class =>
+        CommandHandler\IrhpPermit\Terminate::class,
 
     // Transfer - IRHP Permit Application
     TransferCommand\IrhpApplication\Create::class =>
@@ -1089,6 +1098,10 @@ return [
     TransferCommand\Surrender\Delete::class => CommandHandler\Surrender\Delete::class,
     TransferCommand\Surrender\SubmitForm::class => CommandHandler\Surrender\SubmitForm::class,
     Command\Surrender\Snapshot::class => CommandHandler\Surrender\Snapshot::class,
+    TransferCommand\Surrender\Approve::class => CommandHandler\Surrender\Approve::class,
+    TransferCommand\Surrender\Withdraw::class => CommandHandler\Surrender\Withdraw::class,
+    Command\Surrender\Clear::class => CommandHandler\Surrender\Clear::class,
+
 
     // Permits - IRHP application
     TransferCommand\IrhpApplication\UpdateCountries::class => CommandHandler\IrhpApplication\UpdateCountries::class,
@@ -1148,12 +1161,17 @@ return [
     Command\Permits\RunScoring::class => CommandHandler\Permits\RunScoring::class,
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
+    Command\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
+
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
         CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
+    Command\IrhpPermit\GenerateCoverLetterDocument::class
+        => CommandHandler\IrhpPermit\GenerateCoverLetterDocument::class,
+    Command\IrhpPermit\GeneratePermitDocument::class => CommandHandler\IrhpPermit\GeneratePermitDocument::class,
 
     // IrhpApplication update
     TransferCommand\IrhpApplication\UpdateCheckAnswers::class => CommandHandler\IrhpApplication\UpdateCheckAnswers::class,

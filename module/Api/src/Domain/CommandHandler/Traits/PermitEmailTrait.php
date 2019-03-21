@@ -59,7 +59,8 @@ trait PermitEmailTrait
             $vars['awaitingFeeUrl'] = 'http://selfserve/permits/' . (int)$recordObject->getId() . '/ecmt-awaiting-fee/';
             $vars['permitsRequired'] = $recordObject->getPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
-            $vars['paymentDeadlineNumDays'] = '10';
+            // TODO - OLCS-21979
+            $vars['paymentDeadlineNumDays'] = '9';
 
             $criteria = Criteria::create();
             $criteria->where(
@@ -118,7 +119,8 @@ trait PermitEmailTrait
      */
     protected function calculateDueDate(\DateTime $date)
     {
-        $date->add(new \DateInterval('P10D'));
+        // TODO - OLCS-21979
+        $date->add(\DateInterval::createFromDateString('+9 weekdays'));
         return $date->format('d F Y');
     }
 }

@@ -30,7 +30,7 @@ class ByLicenceTest extends QueryHandlerTestCase
 
         $surrender = m::mock(Surrender::class);
         $surrender->shouldReceive('getLicence->getCorrespondenceCd->getAddress->getLastModifiedOn')->andReturn(new DateTime());
-
+        $surrender->shouldReceive('getLicence->getLicenceType->getId')->andReturn('ltyp_si');
         $this->repoMap['Surrender']->shouldReceive(
             'fetchOneByLicence'
         )->andReturn($surrender);
@@ -49,7 +49,17 @@ class ByLicenceTest extends QueryHandlerTestCase
         $expected = new Result(
             $surrender,
             [
-                'licence',
+                'licence' => [
+                    'correspondenceCd' => [
+                        'address' => [
+                            'countryCode',
+                        ],
+                        'phoneContacts' => [
+                            'phoneContactType',
+                        ]
+                    ],
+                    'organisation'
+                ],
                 'status',
                 'licenceDocumentStatus',
                 'communityLicenceDocumentStatus',
@@ -60,7 +70,8 @@ class ByLicenceTest extends QueryHandlerTestCase
                 'disableSignatures' => true,
                 'goodsDiscsOnLicence' => 9,
                 'psvDiscsOnLicence' => 7,
-                'addressLastModified' => new DateTime()
+                'addressLastModified' => new DateTime(),
+                'isInternationalLicence' => true
 
             ]
         );

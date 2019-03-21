@@ -87,6 +87,7 @@ class GrantCommunityLicenceTest extends CommandHandlerTestCase
             ->with($pendingRecord);
 
         $data = [
+            'isBatchReprint' => false,
             'licence' => 222,
             'communityLicenceIds' => [123],
             'identifier' => null

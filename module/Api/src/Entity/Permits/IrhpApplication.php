@@ -48,6 +48,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
     const ERR_CANT_SUBMIT = 'This application cannot be submitted';
     const ERR_CANT_ISSUE = 'This application cannot be issued';
+    const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
         'licence' => [
@@ -652,5 +653,62 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $validStatus;
+    }
+
+    /**
+     * Returns the application fee type product reference for this application
+     *
+     * @return string
+     *
+     * @throws ForbiddenException
+     */
+    public function getApplicationFeeTypeProductReference()
+    {
+        $this->throwForbiddenExceptionIfNotBilateral();
+
+        return FeeTypeEntity::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF;
+    }
+
+    /**
+     * Returns the issue fee type product reference for this application
+     *
+     * @return string
+     *
+     * @throws ForbiddenException
+     */
+    public function getIssueFeeTypeProductReference()
+    {
+        $this->throwForbiddenExceptionIfNotBilateral();
+
+        return FeeTypeEntity::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF;
+    }
+
+    /**
+     * Gets the fee per permit for this application
+     *
+     * @param FeeTypeEntity $applicationFeeType
+     * @param FeeTypeEntity $issueFeeType
+     *
+     * @return int
+     *
+     * @throws ForbiddenException
+     */
+    public function getFeePerPermit(FeeTypeEntity $applicationFeeType, FeeTypeEntity $issueFeeType)
+    {
+        $this->throwForbiddenExceptionIfNotBilateral();
+
+        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
+    }
+
+    /**
+     * Throws a ForbiddenException if this application is not of type bilateral
+     *
+     * @throws ForbiddenException
+     */
+    private function throwForbiddenExceptionIfNotBilateral()
+    {
+        if ($this->getIrhpPermitType()->getId() != IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            throw new ForbiddenException(self::ERR_ONLY_SUPPORTS_BILATERAL);
+        }
     }
 }

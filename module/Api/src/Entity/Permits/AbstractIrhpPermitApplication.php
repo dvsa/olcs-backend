@@ -197,18 +197,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $version = 1;
 
     /**
-     * Answer
-     *
-     * @var \Doctrine\Common\Collections\ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer",
-     *     mappedBy="irhpPermitApplication"
-     * )
-     */
-    protected $answers;
-
-    /**
      * Irhp candidate permit
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -219,6 +207,18 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      * )
      */
     protected $irhpCandidatePermits;
+
+    /**
+     * Irhp permit
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermit",
+     *     mappedBy="irhpPermitApplication"
+     * )
+     */
+    protected $irhpPermits;
 
     /**
      * Initialise the collections
@@ -237,8 +237,8 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      */
     public function initCollections()
     {
-        $this->answers = new ArrayCollection();
         $this->irhpCandidatePermits = new ArrayCollection();
+        $this->irhpPermits = new ArrayCollection();
     }
 
     /**
@@ -620,69 +620,6 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the answer
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being set as the value
-     *
-     * @return IrhpPermitApplication
-     */
-    public function setAnswers($answers)
-    {
-        $this->answers = $answers;
-
-        return $this;
-    }
-
-    /**
-     * Get the answers
-     *
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getAnswers()
-    {
-        return $this->answers;
-    }
-
-    /**
-     * Add a answers
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being added
-     *
-     * @return IrhpPermitApplication
-     */
-    public function addAnswers($answers)
-    {
-        if ($answers instanceof ArrayCollection) {
-            $this->answers = new ArrayCollection(
-                array_merge(
-                    $this->answers->toArray(),
-                    $answers->toArray()
-                )
-            );
-        } elseif (!$this->answers->contains($answers)) {
-            $this->answers->add($answers);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Remove a answers
-     *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being removed
-     *
-     * @return IrhpPermitApplication
-     */
-    public function removeAnswers($answers)
-    {
-        if ($this->answers->contains($answers)) {
-            $this->answers->removeElement($answers);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the irhp candidate permit
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being set as the value
@@ -740,6 +677,69 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     {
         if ($this->irhpCandidatePermits->contains($irhpCandidatePermits)) {
             $this->irhpCandidatePermits->removeElement($irhpCandidatePermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp permit
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being set as the value
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setIrhpPermits($irhpPermits)
+    {
+        $this->irhpPermits = $irhpPermits;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp permits
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpPermits()
+    {
+        return $this->irhpPermits;
+    }
+
+    /**
+     * Add a irhp permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being added
+     *
+     * @return IrhpPermitApplication
+     */
+    public function addIrhpPermits($irhpPermits)
+    {
+        if ($irhpPermits instanceof ArrayCollection) {
+            $this->irhpPermits = new ArrayCollection(
+                array_merge(
+                    $this->irhpPermits->toArray(),
+                    $irhpPermits->toArray()
+                )
+            );
+        } elseif (!$this->irhpPermits->contains($irhpPermits)) {
+            $this->irhpPermits->add($irhpPermits);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp permits
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being removed
+     *
+     * @return IrhpPermitApplication
+     */
+    public function removeIrhpPermits($irhpPermits)
+    {
+        if ($this->irhpPermits->contains($irhpPermits)) {
+            $this->irhpPermits->removeElement($irhpPermits);
         }
 
         return $this;

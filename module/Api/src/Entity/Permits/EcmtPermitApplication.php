@@ -2,11 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -14,6 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 
 /**
  * EcmtPermitApplication Entity
@@ -32,6 +35,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface, CancelableInterface
 {
+    use TieredProductReference;
+
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
     const STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
@@ -43,6 +48,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     const STATUS_ISSUING = 'permit_app_issuing';
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_DECLINED = 'permit_app_declined';
+    const STATUS_EXPIRED = 'permit_app_expired';
 
     const SOURCE_INTERNAL = 'app_source_internal';
     const SOURCE_SELFSERVE = 'app_source_selfserve';
@@ -98,6 +104,39 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         self::INTER_JOURNEY_MORE_90 => 1
     ];
 
+    const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+        'Jan' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Feb' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Mar' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
+        'Apr' => FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'May' => FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'Jun' => FeeType::FEE_TYPE_ECMT_ISSUE_75_PRODUCT_REF,
+        'Jul' => FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Aug' => FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Sep' => FeeType::FEE_TYPE_ECMT_ISSUE_50_PRODUCT_REF,
+        'Oct' => FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+        'Nov' => FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+        'Dec' => FeeType::FEE_TYPE_ECMT_ISSUE_25_PRODUCT_REF,
+    ];
+
+    /**
+     * Prepares data and calls TieredProductReference Trait method genericGetProdRefForTier
+     *
+     * @param DateTime $now
+     * @return string
+     */
+    public function getProductReferenceForTier(DateTime $now = null)
+    {
+        $now = is_null($now) ? new DateTime() : $now;
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+        return $this->genericGetProdRefForTier(
+            $irhpPermitStock->getValidFrom(true),
+            $irhpPermitStock->getValidTo(true),
+            $now,
+            self::ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY
+        );
+    }
 
     /**
      * Create new EcmtPermitApplication
@@ -306,6 +345,38 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Changes the status to expired
+     *
+     * @param RefData $expireStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function expire(RefData $expireStatus)
+    {
+        if (!$this->canBeExpired()) {
+            $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
+            throw new ForbiddenException(
+                sprintf(
+                    'This application can not be expired. (No of valid permits: %s)',
+                    $irhpPermitApplication->countValidPermits()
+                )
+            );
+        }
+        $this->status = $expireStatus;
+    }
+
+    /**
+     * Returns the emissions category defined against the IrhpPermitWindow
+     *
+     * @return string
+     */
+    public function getWindowEmissionsCategory()
+    {
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        return $irhpPermitApplication->getIrhpPermitWindow()->getEmissionsCategory()->getId();
+    }
+
+    /**
      * Proceeds the application from under consideration to awaiting fee during the accept scoring process
      *
      * @param RefData $awaitingFeeStatus
@@ -370,7 +441,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
             'isActive' => $this->isActive(),
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
-            'hasOutstandingFees' => $this->hasOutstandingFees()
+            'hasOutstandingFees' => $this->hasOutstandingFees(),
+            'windowEmissionsCategory' => $this->getWindowEmissionsCategory()
         ];
     }
 
@@ -680,6 +752,20 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Whether the permit application can be expired
+     *
+     * @return bool
+     */
+    public function canBeExpired()
+    {
+        $irhpPermitApplication = $this->getIrhpPermitApplications()->first();
+        if ($this->isValid() && !$irhpPermitApplication->hasValidPermits()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Whether the permit application can be submitted
      * @todo this currently reruns the section completion checks, should store the value instead for speed
      *
@@ -856,9 +942,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
      */
     public function issueFeeOverdue()
     {
-        $timeToPay = new \DateInterval('P10D');
-        $cutoff = new \DateTime();
-        $cutoff->sub($timeToPay);
+        // TODO - OLCS-21979
+        $cutoff = new \DateTime('-9 weekdays');
 
         $criteria = Criteria::create();
         $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
@@ -1017,11 +1102,41 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         $data['licence'] = $this->getLicence()->getLicNo();
         $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
         $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
-        $data['limitedCountries'] = (int) $this->getHasRestrictedCountries() === 1 ? 'Yes' : 'No';
+
+        $data['limitedCountries'] =  'No';
+        $data['limitedCountriesList'] = null;
+        if ((int) $this->getHasRestrictedCountries() === 1) {
+            $data['limitedCountries'] = 'Yes';
+            $countries = [];
+            foreach ($this->getCountrys() as $country) {
+                $countries[] = $country->getCountryDesc();
+            }
+            $data['limitedCountriesList'] = implode(", ", $countries);
+        }
+
         $data['permitsRequired'] = $this->getPermitsRequired();
         $data['trips'] = $this->getTrips();
         $data['internationalJourneys'] = $this->getInternationalJourneys()->getDescription();
         $data['goods'] = $this->getSectors()->getName();
+
+        // default to Euro 6
+        $data['emissionsQuestion']
+            = 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with '
+                . 'Euro 6 emissions standards.';
+        $data['emissionsDeclaration']
+            = 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?';
+
+        if ($this->getWindowEmissionsCategory() === IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF) {
+            // Euro 5
+            $data['emissionsQuestion']
+                = 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant '
+                    . 'with Euro 5 emissions standards as a minimum.';
+            $data['emissionsDeclaration']
+                = 'I confirm that I will not transport goods to, through and from Austria, Greece, Hungary, Italy '
+                    . 'or Russia using this ECMT permit.';
+            $data['limitedCountries'] = 'Yes';
+            $data['limitedCountriesList'] = null;
+        }
 
         return $data;
     }

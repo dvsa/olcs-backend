@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class CanDeleteSurrender extends AbstractCanAccessEntity
 {
-    protected $repo = 'Surrender';
+    protected $repo = 'Licence';
 
     /**
      * @var Surrender
@@ -16,10 +16,10 @@ class CanDeleteSurrender extends AbstractCanAccessEntity
 
     public function isValid($entityId)
     {
-        $this->surrender = $this->getRepo($this->repo)->fetchOneByLicenceId($entityId);
+        $this->surrender = $this->getRepo('Surrender')->fetchOneByLicenceId($entityId);
 
         if ($this->surrender->getStatus()->getId() === RefData::SURRENDER_STATUS_WITHDRAWN || $this->hasExpired()) {
-            return true;
+            return parent::isValid($entityId);
         }
 
         return false;
