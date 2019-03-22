@@ -117,5 +117,4 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         $this->sut = new RefundInterimFees($feeRepo);
         $this->sut->setServiceLocator($this->sm);
     }
-
 }
