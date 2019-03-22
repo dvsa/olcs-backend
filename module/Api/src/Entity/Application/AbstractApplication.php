@@ -1502,7 +1502,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim status
      *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $interimStatus entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity $interimStatus entity being set as the value
      *
      * @return Application
      */
