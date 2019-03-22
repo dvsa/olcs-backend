@@ -101,8 +101,7 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
             }
         }
 
-        if (
-            $application->isGoods() &&
+        if ($application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
@@ -114,7 +113,7 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
 
         $this->result->addMessage('Application ' . $application->getId() . ' refused.');
 
-        if ($application->getInterimStatus()->getId() === Application::INTERIM_STATUS_REQUESTED) {
+        if ($application->getCurrentInterimStatus() === Application::INTERIM_STATUS_REQUESTED) {
             $this->maybeRefundInterimFee($application);
         }
 

@@ -88,7 +88,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         if ($application->isNew()) {
             if ($application->getLicence()->getCommunityLics()->count() > 0) {
-
                 $this->result->merge(
                     $this->handleSideEffect(
                         ReturnAllCommunityLicences::create(
@@ -101,8 +100,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             }
         }
 
-        if (
-            $application->isGoods() &&
+        if ($application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
@@ -114,7 +112,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         $this->result->addMessage('Application ' . $application->getId() . ' withdrawn.');
 
-        if ($application->getInterimStatus()->getId() === Application::INTERIM_STATUS_REQUESTED) {
+        if ($application->getCurrentInterimStatus() === Application::INTERIM_STATUS_REQUESTED) {
             $this->maybeRefundInterimFee($application);
         }
 
