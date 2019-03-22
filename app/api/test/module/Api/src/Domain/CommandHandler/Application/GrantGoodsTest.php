@@ -5,8 +5,11 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GrantGoods;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as Cmd;
@@ -59,6 +62,7 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application = m::mock(ApplicationEntity::class)->makePartial();
         $application->setId(111);
         $application->setLicence($licence);
+        $application->shouldReceive('getInterimStatus')->once()->andReturn(new RefData(1));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
             ->with($command)
@@ -106,6 +110,7 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->setLicence($licence);
         $application->setIsVariation(true);
+        $application->shouldReceive('getInterimStatus')->once()->andReturn(new RefData(1));
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application)
             ->shouldReceive('save')->with($application)->once();
@@ -129,6 +134,8 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $result2->addMessage('CancelAllInterimFees');
         $this->expectedSideEffectAsSystemUser(CancelAllInterimFees::class, ['id' => 111], $result2);
 
+       
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -144,5 +151,30 @@ class GrantGoodsTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+
+    public function testHandleCommandRefund()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = Cmd::create($data);
+
+        $application = m::mock(Application::class);
+        $mockRefData = ApplicationEntity::INTERIM_STATUS_REQUESTED;
+        $application->shouldReceive('getInterimStatus->getId')->once()->andReturn($mockRefData);
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application)
+            ->shouldReceive('save')->with($application)->once();
+
+        $application->shouldReceive('setStatus')->with();
+        $application->shouldReceive('setGrantedDate')->with(self::any(DateTime::class))->once();
+
+
+        $result = $this->sut->handleCommand($command);
+
+
     }
 }
