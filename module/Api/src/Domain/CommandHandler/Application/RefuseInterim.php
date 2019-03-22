@@ -43,25 +43,6 @@ final class RefuseInterim extends AbstractCommandHandler implements Transactione
 
         $this->getRepo()->save($application);
 
-        $this->maybeRefundInterimFee($application);
-
         return $this->result;
-    }
-
-    private function maybeRefundInterimFee($application)
-    {
-        /** @var Fee $fee */
-        foreach ($application->getFees() as $fee) {
-            if ($fee->canRefund() && $fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_GRANTINT) {
-                $createCommand = Create::create(
-                    [
-                        'entityId' => $fee->getId(),
-                        'type' => Queue::TYPE_REFUND_INTERIM_FEES,
-                        'status' => Queue::STATUS_QUEUED,
-                    ]
-                );
-                $this->result->merge($this->handleSideEffect($createCommand));
-            }
-        }
     }
 }
