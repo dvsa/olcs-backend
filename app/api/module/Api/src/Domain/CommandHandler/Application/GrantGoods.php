@@ -5,9 +5,13 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee as CreateGrantFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
@@ -60,6 +64,10 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
 
         $result->merge($this->createGrantFee($application));
 
+        if ($application->getInterimStatus()->getId() === ApplicationEntity::INTERIM_STATUS_REQUESTED) {
+            $this->maybeRefundInterimFee($application);
+        }
+
         return $result;
     }
 
@@ -80,5 +88,22 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
         ];
 
         return $this->handleSideEffectAsSystemUser(CreateGrantFeeCmd::create($data));
+    }
+
+    private function maybeRefundInterimFee($application)
+    {
+        /** @var Fee $fee */
+        foreach ($application->getFees() as $fee) {
+            if ($fee->canRefund() && $fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_GRANTINT) {
+                $createCommand = Create::create(
+                    [
+                        'entityId' => $fee->getId(),
+                        'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+                        'status' => Queue::STATUS_QUEUED,
+                    ]
+                );
+                $this->result->merge($this->handleSideEffect($createCommand));
+            }
+        }
     }
 }
