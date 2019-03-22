@@ -31,6 +31,10 @@ final class ProceedToStatus extends AbstractCommandHandler implements ToggleRequ
         $permits = $this->getRepo()->fetchByIds($command->getIds());
 
         foreach ($permits as $permit) {
+            // the command is used as a side effect after rollback in GeneratePermits
+            // refresh the entity from the database
+            $this->getRepo()->refresh($permit);
+
             $permit->proceedToStatus($status);
 
             $this->getRepo()->save($permit);
