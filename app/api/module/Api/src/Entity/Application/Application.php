@@ -192,8 +192,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             return true;
         }
 
+
         return null;
     }
+
 
     /**
      * Is Type of Licence valid

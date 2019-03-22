@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="ref_data",
  *    indexes={
  *        @ORM\Index(name="ix_ref_data_parent_id", columns={"parent_id"}),
- *        @ORM\Index(name="ix_ref_data_ref_data_category_id", columns={"ref_data_category_id"})
+ *        @ORM\Index(name="ix_ref_data_ref_data_category_id", columns\System\RefData={"ref_data_category_id"})
  *    }
  * )
  */
