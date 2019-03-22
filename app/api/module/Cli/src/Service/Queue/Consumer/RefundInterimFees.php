@@ -33,6 +33,4 @@ class RefundInterimFees extends AbstractCommandConsumer
 
         return parent::processMessage($item);
     }
-
-
 }
