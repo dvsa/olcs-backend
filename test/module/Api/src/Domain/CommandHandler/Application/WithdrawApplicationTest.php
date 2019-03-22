@@ -3,6 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -43,13 +50,17 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'apsts_withdrawn', 'withdrawn'
+            'apsts_withdrawn',
+            'withdrawn'
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider testHandleCommandProvider
+     */
+    public function testHandleCommand($expected)
     {
         $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
 
@@ -76,12 +87,34 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
+        $feeEntity = new Fee(new FeeType(), 23, new RefData(FeeType::FEE_TYPE_GRANT));
+
+        $application->setFees(new ArrayCollection([$feeEntity]));
+
+        if ($this->dataDescription() === 'interim_requested') {
+
+            $this->expectedSideEffect(
+                Create::class,
+                [
+                    'entityId' => 1,
+                    'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+                    'status' => Queue::STATUS_QUEUED
+                ],
+                new \Dvsa\Olcs\Api\Domain\Command\Result()
+            );
+        }
+
         $application->shouldReceive('getCurrentInterimStatus')
-            ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->andReturn($expected['interimStatus'])
+            ->twice()
             ->shouldReceive('isGoods')->andReturn(true)
             ->getMock();
-        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+        $this->expectedSideEffect(
+            EndInterimCmd::class,
+            ['id' => 1],
+            new Result(),
+            $expected['numberOfEndInterimCalls']
+        );
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
@@ -140,6 +173,26 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->assertSame(['Snapshot created', 'Application 1 withdrawn.'], $result->getMessages());
     }
 
+    public function testHandleCommandProvider()
+    {
+        return [
+            [
+                'interim_inForce' => [
+                    'interimStatus' => Application::INTERIM_STATUS_INFORCE,
+                    'numberOfEndInterimCalls' => 1
+                ],
+
+            ],
+            [
+                'interim_requested' => [
+                    'interimStatus' => Application::INTERIM_STATUS_REQUESTED,
+                    'numberOfEndInterimCalls' => 0
+                ]
+            ]
+
+        ];
+    }
+
     public function testHandleCommandCloseTasks()
     {
         $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
@@ -169,7 +222,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')
             ->andReturn(true)
             ->getMock();
@@ -379,7 +432,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application->setIsVariation(true);
 
         $application
-            ->shouldReceive('getCurrentInterimStatus')->with()->once()->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->shouldReceive('getCurrentInterimStatus')->with()->twice()->andReturn(Application::INTERIM_STATUS_INFORCE)
             ->shouldReceive('isGoods')->andReturn(true)
             ->shouldReceive('isPublishable')->with()->once()->andReturn(false);
 

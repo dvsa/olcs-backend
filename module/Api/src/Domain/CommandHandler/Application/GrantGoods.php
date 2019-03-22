@@ -64,7 +64,7 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
 
         $result->merge($this->createGrantFee($application));
 
-        if ($application->getInterimStatus()->getId() === ApplicationEntity::INTERIM_STATUS_REQUESTED) {
+        if ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_REQUESTED) {
             $this->maybeRefundInterimFee($application);
         }
 
