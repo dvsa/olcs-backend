@@ -75,6 +75,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
         $application->setLicence($licence);
+        $application->shouldReceive('getInterimStatus')->once()->andReturn(new RefData(1));
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
@@ -168,6 +169,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
         $application->shouldReceive('getIsVariation')->andReturn(false);
+        $application->shouldReceive('getInterimStatus')->once()->andReturn(new RefData(1));
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
