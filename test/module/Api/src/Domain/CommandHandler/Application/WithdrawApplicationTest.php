@@ -92,7 +92,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application->setFees(new ArrayCollection([$feeEntity]));
 
         if ($this->dataDescription() === 'interim_requested') {
-
             $this->expectedSideEffect(
                 Create::class,
                 [
