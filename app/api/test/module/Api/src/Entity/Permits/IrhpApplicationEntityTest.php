@@ -1229,6 +1229,157 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => true,
                 ],
             ],
+            'Multilateral - no data set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => null,
+                    'irhpPermitApplications' => new ArrayCollection(),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 0,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - licence set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - IRHP permit apps with all apps without permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithoutPermits,
+                            $irhpPermitAppWithoutPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - IRHP permit apps with one app without permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithoutPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - IRHP permit apps with all apps with permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 2,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - checked answers set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => true,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'totalSections' => 4,
+                    'totalCompleted' => 3,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - declaration set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => true,
+                    'declaration' => true,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'totalSections' => 4,
+                    'totalCompleted' => 4,
+                    'allCompleted' => true,
+                ],
+            ],
             'ECMT Short term - no data set' => [
                 'data' => [
                     'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
