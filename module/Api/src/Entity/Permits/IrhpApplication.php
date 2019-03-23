@@ -107,6 +107,27 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 ],
             ],
         ],
+        IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL => [
+            'licence' => [
+                'validator' => 'fieldIsNotNull',
+            ],
+            'permitsRequired' => [
+                'validator' => 'permitsRequiredPopulated',
+            ],
+            'checkedAnswers' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'declaration' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+        ],
     ];
 
     /** @var int|null */
@@ -151,6 +172,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     private function permitsRequiredPopulated($field)
     {
+        if ($this->getIrhpPermitApplications()->isEmpty()) {
+            return false;
+        }
+
         /** @var IrhpPermitApplication $irhpPermitApplication */
         foreach ($this->getIrhpPermitApplications() as $irhpPermitApplication) {
             if (!$irhpPermitApplication->hasPermitsRequired()) {
