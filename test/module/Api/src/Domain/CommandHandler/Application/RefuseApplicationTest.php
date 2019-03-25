@@ -399,7 +399,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
 
         $application->shouldReceive('isPublishable')->with()->once()->andReturnNull(false);
-        $application->shouldReceive('getInterimStatus')->andReturn(new RefData(1));
 
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
