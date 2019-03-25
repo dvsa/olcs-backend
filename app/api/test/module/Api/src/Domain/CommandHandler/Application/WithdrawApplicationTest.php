@@ -457,20 +457,11 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(Application::class));
 
-        $feeEntity = new Fee(
-            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT)),
-            23,
-            new RefData(Fee::STATUS_PAID)
-        );
-        $feeEntity->setId(1);
-        $mockTransaction = m::mock(FeeTransaction::class);
-        $mockTransaction->shouldReceive('getTransaction')->times(2)->andReturnSelf();
-        $mockTransaction->shouldReceive('isMigrated')->once()->andReturn(false);
-        $mockTransaction->shouldReceive('isRefundedOrReversed')->once()->andReturn(false);
-        $mockTransaction->shouldReceive('isCompletePaymentOrAdjustment')->once()->andReturn(true);
-        $feeEntity->setFeeTransactions(
-            new ArrayCollection([$mockTransaction])
-        );
+        $feeEntity = m::mock(Fee::class);
+        $feeEntity->shouldReceive('getFeeType')->andReturn(
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')->once()->andReturnTrue()->getMock());
+        $feeEntity->shouldReceive('canRefund')->andReturnTrue();
+        $feeEntity->shouldReceive('getId')->andReturn(1);
 
         $application->setFees(new ArrayCollection([$feeEntity]));
 
