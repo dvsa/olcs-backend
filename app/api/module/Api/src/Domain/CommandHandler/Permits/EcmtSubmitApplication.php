@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -10,14 +9,11 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
-use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
-use Zend\View\Model\ViewModel;
 
 /**
  * Submit the ECMT application
@@ -31,9 +27,6 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'EcmtPermitApplication';
-
-    protected $extraRepos = ['IrhpPermitApplication', 'IrhpCandidatePermit', 'IrhpPermitWindow', 'IrhpPermitStock'];
-
 
     /**
      * Submit the ECMT application
@@ -58,51 +51,15 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
 
         $this->getRepo()->save($application);
 
-        $this->createIrhpCandidatePermitRecords(
-            $application->getPermitsRequired(),
-            $application->getFirstIrhpPermitApplication()
-        );
-
         $result = new Result();
         $result->addId('ecmtPermitApplication', $id);
         $result->addMessage('Permit application updated');
 
-        $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);
-
-        $data = $application->returnSnapshotData();
-
-        $view = new ViewModel();
-        $view->setTemplate('ecmt-permit-application-snapshot');
-
-        $view->setVariable('data', $data);
-
-        $html = $this->getCommandHandler()->getServiceLocator()->get('ViewRenderer')->render($view);
-        $snapshotCmd = SnapshotCmd::create(['id' => $id, 'html' => $html]);
-
-        //queue the email confirming submission
+        $postSubmissionCmd = $this->createQueue($id, Queue::TYPE_ECMT_POST_SUBMISSION, []);
         $result->merge(
-            $this->handleSideEffects([$emailCmd, $snapshotCmd])
+            $this->handleSideEffect($postSubmissionCmd)
         );
 
         return $result;
-    }
-
-    /**
-     * @param int $permitsRequired
-     * @param IrhpPermitApplicationEntity $irhpPermitApplication
-     */
-    private function createIrhpCandidatePermitRecords(int $permitsRequired, IrhpPermitApplicationEntity $irhpPermitApplication)
-    {
-        $intensityOfUse = floatval($irhpPermitApplication->getPermitIntensityOfUse());
-        $applicationScore = floatval($irhpPermitApplication->getPermitApplicationScore());
-
-        for ($i = 0; $i < $permitsRequired; $i++) {
-            $candidatePermit = IrhpCandidatePermitEntity::createNew(
-                $irhpPermitApplication,
-                $intensityOfUse,
-                $applicationScore
-            );
-            $this->getRepo('IrhpCandidatePermit')->save($candidatePermit);
-        }
     }
 }
