@@ -197,8 +197,7 @@ class OperatingCentreHelper implements FactoryInterface
 
         // if new application check not other application/licences in this traffic area
         if ($entity instanceof Application && $entity->isNew()) {
-            if (
-                $trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+            if ($trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
                 && $entity->getNiFlag() === 'N'
             ) {
                 $this->addMessage('postcode', self::ERR_OC_TA_NI_APP);
@@ -222,7 +221,6 @@ class OperatingCentreHelper implements FactoryInterface
 
         // If we are NI, then we must match the NI TA
         if ($entity->getNiFlag() === 'Y') {
-
             if ($trafficArea->getId() !== TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE) {
                 $this->addMessage('postcode', self::ERR_OC_PC_TA_NI);
             }
@@ -232,7 +230,7 @@ class OperatingCentreHelper implements FactoryInterface
         $currentTa = $entity->getTrafficArea();
 
         //if not overridden
-        if($command->getTaIsOverridden() === "N") {
+        if ($command->getTaIsOverridden() === "N") {
             if ($trafficArea !== $currentTa) {
                 $this->addMessage(
                     'postcode',
