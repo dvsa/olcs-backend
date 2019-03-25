@@ -36,6 +36,10 @@ class IrhpPermitTypeEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(true)
+            ->shouldReceive('isEcmtShortTerm')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isBilateral')
             ->once()
             ->withNoArgs()
@@ -44,6 +48,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
         $this->assertSame(
             [
                 'isEcmtAnnual' => true,
+                'isEcmtShortTerm' => false,
                 'isBilateral' => false,
             ],
             $this->sut->getCalculatedBundleValues()
@@ -64,6 +69,27 @@ class IrhpPermitTypeEntityTest extends EntityTester
     {
         return [
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
+        ];
+    }
+
+    /**
+    * @dataProvider dpIsEcmtShortTerm
+    */
+    public function testIsEcmtShortTerm($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isEcmtShortTerm());
+    }
+
+    public function dpIsEcmtShortTerm()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, false],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
         ];
@@ -83,6 +109,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
     {
         return [
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, true],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, false],
         ];

@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -1049,6 +1050,10 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testGetSectionCompletion($data, $expected)
     {
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+        $irhpPermitType->setId($data['irhpPermitTypeId']);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
         $this->sut->setLicence($data['licence']);
         $this->sut->setIrhpPermitApplications($data['irhpPermitApplications']);
         $this->sut->setCheckedAnswers($data['checkedAnswers']);
@@ -1066,8 +1071,9 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitAppWithPermits->setPermitsRequired(10);
 
         return [
-            'no data set' => [
+            'Bilateral - no data set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => null,
                     'irhpPermitApplications' => new ArrayCollection(),
                     'checkedAnswers' => false,
@@ -1084,8 +1090,9 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'licence set' => [
+            'Bilateral - licence set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(),
                     'checkedAnswers' => false,
@@ -1102,8 +1109,9 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'IRHP permit apps with all apps without permits required set' => [
+            'Bilateral - IRHP permit apps with all apps without permits required set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -1125,8 +1133,9 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'IRHP permit apps with one app without permits required set' => [
+            'Bilateral - IRHP permit apps with one app without permits required set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -1148,8 +1157,9 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'IRHP permit apps with all apps with permits required set' => [
+            'Bilateral - IRHP permit apps with all apps with permits required set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -1171,8 +1181,9 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'checked answers set' => [
+            'Bilateral - checked answers set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -1194,8 +1205,9 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => false,
                 ],
             ],
-            'declaration set' => [
+            'Bilateral - declaration set' => [
                 'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                     'licence' => $licence,
                     'irhpPermitApplications' => new ArrayCollection(
                         [
@@ -1217,7 +1229,334 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => true,
                 ],
             ],
+            'Multilateral - no data set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => null,
+                    'irhpPermitApplications' => new ArrayCollection(),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 0,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - licence set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - IRHP permit apps with all apps without permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithoutPermits,
+                            $irhpPermitAppWithoutPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - IRHP permit apps with one app without permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithoutPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - IRHP permit apps with all apps with permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 4,
+                    'totalCompleted' => 2,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - checked answers set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => true,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'totalSections' => 4,
+                    'totalCompleted' => 3,
+                    'allCompleted' => false,
+                ],
+            ],
+            'Multilateral - declaration set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => true,
+                    'declaration' => true,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'totalSections' => 4,
+                    'totalCompleted' => 4,
+                    'allCompleted' => true,
+                ],
+            ],
+            'ECMT Short term - no data set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => null,
+                    'irhpPermitApplications' => new ArrayCollection(),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 5,
+                    'totalCompleted' => 0,
+                    'allCompleted' => false,
+                ],
+            ],
+            'ECMT Short term - licence set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 5,
+                    'totalCompleted' => 1,
+                    'allCompleted' => false,
+                ],
+            ],
+            'ECMT Short term - IRHP permit apps with all apps without permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithoutPermits,
+                            $irhpPermitAppWithoutPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 5,
+                    'totalCompleted' => 2,
+                    'allCompleted' => false,
+                ],
+            ],
+            'ECMT Short term - IRHP permit apps with one app without permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithoutPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 5,
+                    'totalCompleted' => 2,
+                    'allCompleted' => false,
+                ],
+            ],
+            'ECMT Short term - IRHP permit apps with all apps with permits required set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => false,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    'totalSections' => 5,
+                    'totalCompleted' => 3,
+                    'allCompleted' => false,
+                ],
+            ],
+            'ECMT Short term - checked answers set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => true,
+                    'declaration' => false,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    'totalSections' => 5,
+                    'totalCompleted' => 4,
+                    'allCompleted' => false,
+                ],
+            ],
+            'ECMT Short term - declaration set' => [
+                'data' => [
+                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                    'licence' => $licence,
+                    'irhpPermitApplications' => new ArrayCollection(
+                        [
+                            $irhpPermitAppWithPermits,
+                            $irhpPermitAppWithPermits
+                        ]
+                    ),
+                    'checkedAnswers' => true,
+                    'declaration' => true,
+                ],
+                'expected' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'totalSections' => 5,
+                    'totalCompleted' => 5,
+                    'allCompleted' => true,
+                ],
+            ],
         ];
+    }
+
+    public function testGetSectionCompletionForUndefinedIrhpPermitType()
+    {
+        // undefined IRHP Permit Type id
+        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT;
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'Missing required definition of sections for irhpPermitTypeId: '.$irhpPermitTypeId
+        );
+
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+        $irhpPermitType->setId($irhpPermitTypeId);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->sut->getSectionCompletion();
     }
 
     public function testUpdateCheckAnswers()
