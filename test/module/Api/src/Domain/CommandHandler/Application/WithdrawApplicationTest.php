@@ -57,7 +57,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         parent::initReferences();
     }
-    
+
     public function testHandleCommand()
     {
         $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
@@ -458,8 +458,10 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->with(m::type(Application::class));
 
         $feeEntity = new Fee(
-            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT))
-            , 23, new RefData(Fee::STATUS_PAID));
+            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT)),
+            23,
+            new RefData(Fee::STATUS_PAID)
+        );
         $feeEntity->setId(1);
         $mockTransaction = m::mock(FeeTransaction::class);
         $mockTransaction->shouldReceive('getTransaction')->times(2)->andReturnSelf();

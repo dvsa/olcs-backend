@@ -94,7 +94,6 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
     {
         /** @var Fee $fee */
         foreach ($application->getFees() as $fee) {
-            var_dump($fee);
             if ($fee->canRefund() && $fee->getFeeType()->isInterimGrantFee()) {
                 $createCommand = Create::create(
                     [

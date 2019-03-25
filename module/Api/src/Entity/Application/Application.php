@@ -1183,7 +1183,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                     }
                 }
             }
-
         } elseif ($aoc->getAction() === 'U') {
             // For updated operating centres, if there has been no increase to the vehicles
             $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
