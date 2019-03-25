@@ -142,6 +142,14 @@ class FeeType extends AbstractFeeType
     /**
      * @return bool
      */
+    public function isInterimGrantFee()
+    {
+        return $this->getFeeType()->getId() === self::FEE_TYPE_GRANTINT;
+    }
+
+    /**
+     * @return bool
+     */
     public function isIrhpApplicationIssue()
     {
         return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP]);

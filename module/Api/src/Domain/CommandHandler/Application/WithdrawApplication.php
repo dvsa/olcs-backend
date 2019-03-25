@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -180,7 +179,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     {
         /** @var Fee $fee */
         foreach ($application->getFees() as $fee) {
-            if ($fee->canRefund() && $fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_GRANTINT) {
+            if ($fee->canRefund() && $fee->getFeeType()->isInterimGrantFee()) {
                 $createCommand = Create::create(
                     [
                         'entityId' => $fee->getId(),
