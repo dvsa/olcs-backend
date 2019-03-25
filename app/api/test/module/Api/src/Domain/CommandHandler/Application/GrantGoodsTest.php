@@ -4,14 +4,17 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GrantGoods;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -137,7 +140,6 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $result2->addMessage('CancelAllInterimFees');
         $this->expectedSideEffectAsSystemUser(CancelAllInterimFees::class, ['id' => 111], $result2);
 
-       
 
         $result = $this->sut->handleCommand($command);
 
@@ -176,7 +178,20 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('getCurrentInterimStatus')->once()->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED);
 
-        $feeEntity = new Fee(new FeeType(), 23, new RefData(FeeType::FEE_TYPE_GRANT));
+        $feeEntity = new Fee(
+            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT)),
+            23,
+            new RefData(Fee::STATUS_PAID)
+        );
+
+        $mockTransaction = m::mock(FeeTransaction::class);
+        $mockTransaction->shouldReceive('getTransaction')->times(2)->andReturnSelf();
+        $mockTransaction->shouldReceive('isMigrated')->once()->andReturn(false);
+        $mockTransaction->shouldReceive('isRefundedOrReversed')->once()->andReturn(false);
+        $mockTransaction->shouldReceive('isCompletePaymentOrAdjustment')->once()->andReturn(true);
+        $feeEntity->setFeeTransactions(
+            new ArrayCollection([$mockTransaction])
+        );
 
         $application->setFees(new ArrayCollection([$feeEntity]));
 
@@ -189,8 +204,17 @@ class GrantGoodsTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateGrantFee');
-        $this->expectedSideEffectAsSystemUser(CreateGrantFee::class, ['id' => 111], $result1);
-
+        $this->expectedSideEffectAsSystemUser(
+            CreateGrantFee::class,
+            ['id' => 111],
+            $result1
+        );
+        $this->expectedSideEffect(Create::class,
+            [
+                'id' => $feeEntity->getId(),
+                'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+                'status' => Queue::STATUS_QUEUED,
+            ], new Result());
         $this->sut->handleCommand($command);
     }
 }
