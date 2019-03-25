@@ -179,8 +179,10 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application->shouldReceive('getCurrentInterimStatus')->once()->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED);
 
         $feeEntity = new Fee(
-            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT))
-            , 23, new RefData(Fee::STATUS_PAID));
+            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT)),
+            23,
+            new RefData(Fee::STATUS_PAID)
+        );
 
         $mockTransaction = m::mock(FeeTransaction::class);
         $mockTransaction->shouldReceive('getTransaction')->times(2)->andReturnSelf();
@@ -188,7 +190,7 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $mockTransaction->shouldReceive('isRefundedOrReversed')->once()->andReturn(false);
         $mockTransaction->shouldReceive('isCompletePaymentOrAdjustment')->once()->andReturn(true);
         $feeEntity->setFeeTransactions(
-          new ArrayCollection([$mockTransaction])
+            new ArrayCollection([$mockTransaction])
         );
 
         $application->setFees(new ArrayCollection([$feeEntity]));
@@ -202,13 +204,17 @@ class GrantGoodsTest extends CommandHandlerTestCase
 
         $result1 = new Result();
         $result1->addMessage('CreateGrantFee');
-        $this->expectedSideEffectAsSystemUser(CreateGrantFee::class, ['id' => 111], $result1);
+        $this->expectedSideEffectAsSystemUser(
+            CreateGrantFee::class,
+            ['id' => 111],
+            $result1
+        );
         $this->expectedSideEffect(Create::class,
-        [
-            'id' => $feeEntity->getId(),
-            'type' => Queue::TYPE_REFUND_INTERIM_FEES,
-            'status' => Queue::STATUS_QUEUED,
-        ], new Result());
+            [
+                'id' => $feeEntity->getId(),
+                'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+                'status' => Queue::STATUS_QUEUED,
+            ], new Result());
         $this->sut->handleCommand($command);
     }
 }
