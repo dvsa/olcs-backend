@@ -209,12 +209,15 @@ class GrantGoodsTest extends CommandHandlerTestCase
             ['id' => 111],
             $result1
         );
-        $this->expectedSideEffect(Create::class,
+        $this->expectedSideEffect(
+            Create::class,
             [
                 'id' => $feeEntity->getId(),
                 'type' => Queue::TYPE_REFUND_INTERIM_FEES,
                 'status' => Queue::STATUS_QUEUED,
-            ], new Result());
+            ],
+            new Result()
+        );
         $this->sut->handleCommand($command);
     }
 }
