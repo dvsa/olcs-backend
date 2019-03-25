@@ -139,6 +139,9 @@ class FeeType extends AbstractFeeType
         return $this->feeType->getId() === self::FEE_TYPE_ECMT_ISSUE;
     }
 
+    /**
+     * @return bool
+     */
     public function isInterimGrantFee()
     {
         return $this->getFeeType()->getId() === self::FEE_TYPE_GRANTINT;
