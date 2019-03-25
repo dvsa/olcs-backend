@@ -108,6 +108,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->twice()
             ->shouldReceive('isGoods')->andReturn(true)
             ->getMock();
+
         $this->expectedSideEffect(
             EndInterimCmd::class,
             ['id' => 1],
