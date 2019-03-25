@@ -459,7 +459,11 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         $feeEntity = m::mock(Fee::class);
         $feeEntity->shouldReceive('getFeeType')->andReturn(
-            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')->once()->andReturnTrue()->getMock());
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')
+                ->once()
+                ->andReturnTrue()
+                ->getMock()
+        );
         $feeEntity->shouldReceive('canRefund')->andReturnTrue();
         $feeEntity->shouldReceive('getId')->andReturn(1);
 

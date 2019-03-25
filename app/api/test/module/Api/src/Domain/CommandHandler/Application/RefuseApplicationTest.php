@@ -453,7 +453,12 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application->shouldReceive('isNew')->andReturnFalse();
 
         $feeEntity = m::mock(Fee::class);
-        $feeEntity->shouldReceive('getFeeType->getFeeType->getId')->andReturn(FeeType::FEE_TYPE_GRANTINT);
+        $feeEntity->shouldReceive('getFeeType')->andReturn(
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')
+                ->once()
+                ->andReturnTrue()
+                ->getMock()
+        );
         $feeEntity->shouldReceive('canRefund')->andReturnTrue();
         $feeEntity->shouldReceive('getId')->andReturn(1);
 

@@ -9,14 +9,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\RefundInterimTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Refuse;
@@ -36,6 +33,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 class RefuseApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
+    use RefundInterimTrait;
 
     public $repoServiceName = 'Application';
 
@@ -175,22 +173,5 @@ class RefuseApplication extends AbstractCommandHandler implements TransactionedI
                 )
             )
         );
-    }
-
-    private function maybeRefundInterimFee($application)
-    {
-        /** @var Fee $fee */
-        foreach ($application->getFees() as $fee) {
-            if ($fee->canRefund() && $fee->getFeeType()->getFeeType()->getId() === FeeType::FEE_TYPE_GRANTINT) {
-                $createCommand = Create::create(
-                    [
-                        'entityId' => $fee->getId(),
-                        'type' => Queue::TYPE_REFUND_INTERIM_FEES,
-                        'status' => Queue::STATUS_QUEUED,
-                    ]
-                );
-                $this->result->merge($this->handleSideEffect($createCommand));
-            }
-        }
     }
 }
