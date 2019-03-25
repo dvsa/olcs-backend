@@ -116,8 +116,6 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application->setId(111);
         $application->setLicence($licence);
         $application->setIsVariation(true);
-        $application->shouldReceive('getInterimStatus')->once()->andReturn(new RefData(1));
-
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application)
             ->shouldReceive('save')->with($application)->once();
 
