@@ -176,20 +176,12 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $application->setLicence($licence);
         $application->shouldReceive('getCurrentInterimStatus')->once()->andReturn(ApplicationEntity::INTERIM_STATUS_REQUESTED);
 
-        $feeEntity = new Fee(
-            (new FeeType())->setFeeType(new RefData(FeeType::FEE_TYPE_GRANTINT)),
-            23,
-            new RefData(Fee::STATUS_PAID)
-        );
 
-        $mockTransaction = m::mock(FeeTransaction::class);
-        $mockTransaction->shouldReceive('getTransaction')->times(2)->andReturnSelf();
-        $mockTransaction->shouldReceive('isMigrated')->once()->andReturn(false);
-        $mockTransaction->shouldReceive('isRefundedOrReversed')->once()->andReturn(false);
-        $mockTransaction->shouldReceive('isCompletePaymentOrAdjustment')->once()->andReturn(true);
-        $feeEntity->setFeeTransactions(
-            new ArrayCollection([$mockTransaction])
-        );
+        $feeEntity = m::mock(Fee::class);
+        $feeEntity->shouldReceive('getFeeType')->andReturn(
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')->once()->andReturnTrue()->getMock());
+        $feeEntity->shouldReceive('canRefund')->andReturnTrue();
+        $feeEntity->shouldReceive('getId')->andReturn(1);
 
         $application->setFees(new ArrayCollection([$feeEntity]));
 
@@ -210,7 +202,7 @@ class GrantGoodsTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             Create::class,
             [
-                'id' => $feeEntity->getId(),
+                'entityId' => $feeEntity->getId(),
                 'type' => Queue::TYPE_REFUND_INTERIM_FEES,
                 'status' => Queue::STATUS_QUEUED,
             ],
