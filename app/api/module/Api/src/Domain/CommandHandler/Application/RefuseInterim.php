@@ -2,13 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Refuse Interim
@@ -30,7 +30,7 @@ final class RefuseInterim extends AbstractCommandHandler implements Transactione
     {
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
-
+        
         $status = $this->getRepo()->getRefdataReference(ApplicationEntity::INTERIM_STATUS_REFUSED);
         $application->setInterimStatus($status);
         $application->setInterimEnd(new DateTime());

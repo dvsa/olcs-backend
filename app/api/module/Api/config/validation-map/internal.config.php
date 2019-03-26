@@ -117,7 +117,7 @@ return [
     CommandHandler\Fee\ApproveWaive::class => IsInternalUser::class,
     CommandHandler\Fee\CreateFee::class => IsInternalUser::class,
     CommandHandler\Fee\RecommendWaive::class => IsInternalUser::class,
-    CommandHandler\Fee\RefundFee::class => IsInternalUser::class,
+    CommandHandler\Fee\RefundFee::class => IsInternalOrSystemUser::class,
     CommandHandler\Fee\RejectWaive::class => IsInternalUser::class,
     CommandHandler\GoodsDisc\ConfirmPrinting::class => IsInternalUser::class,
     CommandHandler\GoodsDisc\PrintDiscs::class => IsInternalUser::class,

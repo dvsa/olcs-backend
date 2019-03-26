@@ -398,6 +398,8 @@ return [
         ],
         'factories' => [
             Queue::TYPE_CPID_EXPORT_CSV => Cli\Service\Queue\Consumer\Factory\CpidOrganisationExportFactory::class,
+            Queue::TYPE_REFUND_INTERIM_FEES
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\RefundInterimFeesFactory::class
         ]
     ],
     'queue' => [
