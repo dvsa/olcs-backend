@@ -191,12 +191,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $this->setLicenceType($licenceType);
             return true;
         }
-
-
         return null;
     }
-
-
+    
     /**
      * Is Type of Licence valid
      *
