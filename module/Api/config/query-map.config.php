@@ -506,6 +506,8 @@ return [
     TransferQuery\SubCategory\GetList::class => QueryHandler\SubCategory\GetList::class,
     TransferQuery\SubCategoryDescription\GetList::class => QueryHandler\SubCategoryDescription\GetList::class,
     TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
+    TransferQuery\DocTemplate\FullList::class => QueryHandler\DocTemplate\FullList::class,
+    TransferQuery\DocTemplate\ById::class => QueryHandler\DocTemplate\ById::class,
 
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
     TransferQuery\ContactDetail\CountrySelectList::class => QueryHandler\ContactDetail\CountrySelectList::class,
@@ -656,6 +658,7 @@ return [
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
     Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
+
     // IRHP Permit - internal
 
     Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
@@ -667,6 +670,9 @@ return [
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
     TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
+
+    //Document Internal
+    Query\Document\ByDocumentStoreId::class => QueryHandler\Document\ByDocumentStoreId::class,
 
     // Templates
     TransferQuery\Template\AvailableTemplates::class => QueryHandler\Template\AvailableTemplates::class,

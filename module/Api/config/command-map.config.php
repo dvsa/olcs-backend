@@ -450,6 +450,11 @@ return [
     TransferCommand\Document\PrintLetter::class => CommandHandler\Document\PrintLetter::class,
     Command\Document\RemoveDeletedDocuments::class => CommandHandler\Document\RemoveDeletedDocuments::class,
 
+    // Transfer - DocumentTemplate
+    TransferCommand\DocTemplate\Create::class => CommandHandler\DocTemplate\Create::class,
+    TransferCommand\DocTemplate\Update::class => CommandHandler\DocTemplate\Update::class,
+    TransferCommand\DocTemplate\Delete::class => CommandHandler\DocTemplate\Delete::class,
+
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
     TransferCommand\CommunityLic\Application\CreateOfficeCopy::class =>
