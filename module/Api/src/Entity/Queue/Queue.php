@@ -67,6 +67,7 @@ class Queue extends AbstractQueue
     const TYPE_RUN_ECMT_SCORING = 'que_typ_run_ecmt_scoring';
     const TYPE_ACCEPT_ECMT_SCORING = 'que_typ_accept_ecmt_scoring';
     const TYPE_COMM_LIC_BULK_REPRINT = 'que_typ_comm_lic_bulk_reprint';
+    const TYPE_REFUND_INTERIM_FEES = 'que_typ_refund_interim_fees';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_INITIAL,
@@ -100,7 +101,8 @@ class Queue extends AbstractQueue
         self::TYPE_RUN_ECMT_SCORING,
         self::TYPE_ACCEPT_ECMT_SCORING,
         self::TYPE_COMM_LIC_BULK_REPRINT,
-        self::TYPE_ECMT_POST_SUBMISSION
+        self::TYPE_REFUND_INTERIM_FEES,
+        self::TYPE_ECMT_POST_SUBMISSION,
     ];
 
     // Errors

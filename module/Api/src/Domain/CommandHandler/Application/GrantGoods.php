@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateGrantFee as CreateGrantFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\RefundInterimTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -24,6 +25,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 final class GrantGoods extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
+    use RefundInterimTrait;
 
     protected $repoServiceName = 'Application';
 
@@ -59,6 +61,10 @@ final class GrantGoods extends AbstractCommandHandler implements TransactionedIn
         }
 
         $result->merge($this->createGrantFee($application));
+
+        if ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_REQUESTED) {
+            $this->maybeRefundInterimFee($application);
+        }
 
         return $result;
     }

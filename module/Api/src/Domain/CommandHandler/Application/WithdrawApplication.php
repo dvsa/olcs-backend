@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\RefundInterimTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
@@ -31,6 +32,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 class WithdrawApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
+    use RefundInterimTrait;
 
     public $repoServiceName = 'Application';
 
@@ -84,7 +86,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         if ($application->isNew()) {
             if ($application->getLicence()->getCommunityLics()->count() > 0) {
-
                 $this->result->merge(
                     $this->handleSideEffect(
                         ReturnAllCommunityLicences::create(
@@ -97,8 +98,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             }
         }
 
-        if (
-            $application->isGoods() &&
+        if ($application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
@@ -109,6 +109,10 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         $this->cancelOutstandingFees($application);
 
         $this->result->addMessage('Application ' . $application->getId() . ' withdrawn.');
+
+        if ($application->getCurrentInterimStatus() === Application::INTERIM_STATUS_REQUESTED) {
+            $this->maybeRefundInterimFee($application);
+        }
 
         return $this->result;
     }
