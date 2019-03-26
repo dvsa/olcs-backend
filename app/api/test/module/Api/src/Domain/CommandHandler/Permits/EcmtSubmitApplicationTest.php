@@ -2,17 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtSubmitApplication;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Zend\View\Model\ViewModel;
-use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
-
 use Mockery as m;
 
 class EcmtSubmitApplicationTest extends CommandHandlerTestCase
@@ -20,15 +14,8 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermit::class);
 
         $this->sut = new EcmtSubmitApplication();
-
-        $viewRendererService = m::mock(\Zend\View\Renderer\RendererInterface::class);
-
-        $this->mockedSmServices = [
-            'ViewRenderer' => $viewRendererService
-        ];
 
         parent::setUp();
     }
@@ -45,11 +32,6 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $ecmtPermitApplicationId = 129;
-        $permitsRequired = 2;
-        $intensityOfUse = 3;
-        $applicationScore = 4;
-        $viewData = ['data'];
-        $renderedHtml = '<html>HTML</html>';
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('submit')
@@ -57,33 +39,6 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->globally()
             ->ordered();
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-
-        $irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($intensityOfUse);
-
-        $irhpPermitApplication->shouldReceive('getPermitApplicationScore')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($applicationScore);
-
-        $ecmtPermitApplication->shouldReceive('getPermitsRequired')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($permitsRequired);
-
-        $ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($irhpPermitApplication);
-
-        $ecmtPermitApplication->shouldReceive('returnSnapshotData')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($viewData);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->once()
@@ -96,56 +51,13 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->globally()
             ->ordered();
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
-            ->times($permitsRequired)
-            ->with(m::type(IrhpCandidatePermit::class))
-            ->andReturnUsing(
-                function (IrhpCandidatePermit $irhpCandidatePermit) use ($irhpPermitApplication, $intensityOfUse, $applicationScore) {
-                    $this->assertEquals($irhpPermitApplication, $irhpCandidatePermit->getIrhpPermitApplication());
-                    $this->assertEquals(floatval($intensityOfUse), $irhpCandidatePermit->getIntensityOfUse());
-                    $this->assertEquals(floatval($applicationScore), $irhpCandidatePermit->getApplicationScore());
-
-                    return $irhpCandidatePermit;
-                }
-            );
-
-        $this->mockedSmServices['ViewRenderer']->shouldReceive('render')
-            ->once()
-            ->with(m::type(ViewModel::class))
-            ->andReturnUsing(
-                function (ViewModel $viewModel) use ($viewData, $renderedHtml) {
-                    $expectedViewVariables = ['data' => $viewData];
-
-                    $this->assertEquals('ecmt-permit-application-snapshot', $viewModel->getTemplate());
-                    $this->assertEquals($expectedViewVariables, $viewModel->getVariables()->getArrayCopy());
-
-                    return $renderedHtml;
-                }
-            );
-
-        $result1 = new Result();
-        $result1->addMessage('Snapshot created');
-        $this->expectedSideEffect(
-            SnapshotCmd::class,
-            [
-                'id' => $ecmtPermitApplicationId,
-                'html' => $renderedHtml
-            ],
-            $result1
-        );
-
-        $this->expectedEmailQueueSideEffect(
-            SendEcmtAppSubmitted::class,
-            ['id' => $ecmtPermitApplicationId],
-            $ecmtPermitApplicationId,
-            new Result()
-        );
-
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
             ->once()
             ->withNoArgs()
             ->andReturn($ecmtPermitApplicationId);
+
+        $this->expectedQueueSideEffect($ecmtPermitApplicationId, Queue::TYPE_ECMT_POST_SUBMISSION, []);
 
         $result = $this->sut->handleCommand($command);
 
@@ -156,8 +68,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
-                'Permit application updated',
-                'Snapshot created'
+                'Permit application updated'
             ],
             $result->getMessages()
         );

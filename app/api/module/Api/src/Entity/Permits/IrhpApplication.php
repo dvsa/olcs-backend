@@ -51,30 +51,81 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
-        'licence' => [
-            'validator' => 'fieldIsNotNull',
-        ],
-        'countries' => [
-            'validator' => 'countriesPopulated',
-        ],
-        'permitsRequired' => [
-            'validator' => 'permitsRequiredPopulated',
-            'validateIf' => [
-                'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+        IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
+            'licence' => [
+                'validator' => 'fieldIsNotNull',
+            ],
+            'emissions' => [
+                'validator' => 'emissionsPopulated',
+            ],
+            'permitsRequired' => [
+                'validator' => 'permitsRequiredPopulated',
+                'validateIf' => [
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'checkedAnswers' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'declaration' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
             ],
         ],
-        'checkedAnswers' => [
-            'validator' => 'fieldIsAgreed',
-            'validateIf' => [
-                'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+        IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
+            'licence' => [
+                'validator' => 'fieldIsNotNull',
+            ],
+            'countries' => [
+                'validator' => 'countriesPopulated',
+            ],
+            'permitsRequired' => [
+                'validator' => 'permitsRequiredPopulated',
+                'validateIf' => [
+                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'checkedAnswers' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'countries' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'declaration' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
             ],
         ],
-        'declaration' => [
-            'validator' => 'fieldIsAgreed',
-            'validateIf' => [
-                'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+        IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL => [
+            'licence' => [
+                'validator' => 'fieldIsNotNull',
+            ],
+            'permitsRequired' => [
+                'validator' => 'permitsRequiredPopulated',
+            ],
+            'checkedAnswers' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'declaration' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
             ],
         ],
     ];
@@ -97,6 +148,20 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * This is a custom validator for the emissions field
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    private function emissionsPopulated($field)
+    {
+        return $this->collectionHasRecord('irhpPermitApplications');
+    }
+
+    /**
      * This is a custom validator for the permitsRequired field
      *
      * @param string $field field being checked
@@ -107,6 +172,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     private function permitsRequiredPopulated($field)
     {
+        if ($this->getIrhpPermitApplications()->isEmpty()) {
+            return false;
+        }
+
         /** @var IrhpPermitApplication $irhpPermitApplication */
         foreach ($this->getIrhpPermitApplications() as $irhpPermitApplication) {
             if (!$irhpPermitApplication->hasPermitsRequired()) {
