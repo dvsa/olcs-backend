@@ -2,17 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Refuse Interim
