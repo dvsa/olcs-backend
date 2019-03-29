@@ -636,6 +636,9 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         $irhpBilateralPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
 
+        $irhpMultilateralPermitType = new IrhpPermitType();
+        $irhpMultilateralPermitType->setId(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
         $licencesArr = [];
 
         /** @var LicenceEntity $licence */
@@ -649,6 +652,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 'restricted' => $licence->getLicenceType() === LicenceEntity::LICENCE_TYPE_RESTRICTED,
                 'canMakeEcmtApplication' => $licence->canMakeEcmtApplication(),
                 'canMakeBilateralApplication' => $licence->canMakeIrhpApplication($irhpBilateralPermitType),
+                'canMakeMultilateralApplication' => $licence->canMakeIrhpApplication($irhpMultilateralPermitType),
             ];
         }
 
