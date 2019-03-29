@@ -69,6 +69,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
             RoleEntity::ROLE_PARTNER_USER,
         ],
         self::USER_TYPE_INTERNAL => [
+            RoleEntity::ROLE_SYSTEM_ADMIN,
             RoleEntity::ROLE_INTERNAL_ADMIN,
             RoleEntity::ROLE_INTERNAL_CASE_WORKER,
             RoleEntity::ROLE_INTERNAL_READ_ONLY,
@@ -459,6 +460,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      * @param array $orgs List of Dvsa\Olcs\Api\Entity\Organisation\Organisation
      *
      * @return User
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function populateOrganisationUsers(array $orgs = null)
     {

@@ -78,14 +78,17 @@ class UserEntityTest extends EntityTester
         ];
     }
 
-    public function testCreateInternal()
+    /**
+     * @dataProvider dpCreateInternal
+     */
+    public function testCreateInternal($role)
     {
-        $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setRole(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+        $roleMock = m::mock(RoleEntity::class)->makePartial();
+        $roleMock->setRole($role);
 
         $data = [
             'loginId' => 'loginId',
-            'roles' => [$role],
+            'roles' => [$roleMock],
             'translateToWelsh' => 'N',
             'accountDisabled' => 'Y',
             'team' => m::mock(TeamEntity::class),
@@ -115,15 +118,29 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(false, $entity->isAnonymous());
     }
 
-    public function testUpdateInternal()
+    public function dpCreateInternal()
     {
-        $role = m::mock(RoleEntity::class)->makePartial();
-        $role->setRole(RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY);
+        return [
+            [RoleEntity::ROLE_SYSTEM_ADMIN],
+            [RoleEntity::ROLE_INTERNAL_ADMIN],
+            [RoleEntity::ROLE_INTERNAL_CASE_WORKER],
+            [RoleEntity::ROLE_INTERNAL_READ_ONLY],
+            [RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY],
+        ];
+    }
+
+    /**
+     * @dataProvider dpUpdateInternal
+     */
+    public function testUpdateInternal($role)
+    {
+        $roleMock = m::mock(RoleEntity::class)->makePartial();
+        $roleMock->setRole($role);
 
         $data = [
             'userType' => Entity::USER_TYPE_INTERNAL,
             'loginId' => 'loginId',
-            'roles' => [$role],
+            'roles' => [$roleMock],
             'translateToWelsh' => 'Y',
             'accountDisabled' => 'N',
             'team' => m::mock(TeamEntity::class),
@@ -170,6 +187,17 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(0, $entity->getOrganisationUsers()->count());
         $this->assertEquals('DVSA', $entity->getRelatedOrganisationName());
         $this->assertEquals(false, $entity->isAnonymous());
+    }
+
+    public function dpUpdateInternal()
+    {
+        return [
+            [RoleEntity::ROLE_SYSTEM_ADMIN],
+            [RoleEntity::ROLE_INTERNAL_ADMIN],
+            [RoleEntity::ROLE_INTERNAL_CASE_WORKER],
+            [RoleEntity::ROLE_INTERNAL_READ_ONLY],
+            [RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY],
+        ];
     }
 
     public function testCreateTransportManager()
