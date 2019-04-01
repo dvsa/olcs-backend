@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Permission extends AbstractPermission
 {
+    const SYSTEM_ADMIN = 'system-admin';
     const INTERNAL_ADMIN = 'internal-admin';
     const INTERNAL_USER = 'internal-user';
     const INTERNAL_EDIT = 'internal-edit';
