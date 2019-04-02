@@ -182,12 +182,11 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
      * updateExistingGoodsDiscs
      *
      * @param ApplicationEntity $application Application
-     * @param Licence           $licence     Licence
      * @param Result            $result      Result
      *
      * @return void
      */
-    protected function updateExistingGoodsDiscs(ApplicationEntity $application, Licence $licence, Result $result)
+    protected function updateExistingGoodsDiscs(ApplicationEntity $application, Result $result)
     {
         $count = $this->getRepo('GoodsDisc')->updateExistingGoodsDiscs($application);
 
