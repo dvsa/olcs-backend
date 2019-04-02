@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCe
 use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\RefundInterimTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -27,6 +28,8 @@ use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
  */
 final class Grant extends AbstractCommandHandler implements TransactionedInterface
 {
+    use RefundInterimTrait;
+
     protected $repoServiceName = 'Application';
 
     protected $extraRepos = ['GoodsDisc', 'PsvDisc', 'LicenceVehicle'];
@@ -65,6 +68,10 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $this->updateStatusAndDate($application, ApplicationEntity::APPLICATION_STATUS_VALID);
         $this->getRepo()->save($application);
 
+        if ($application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_REQUESTED) {
+            $this->maybeRefundInterimFee($application);
+        }
+
         if ($application->getLicenceType() !== $licence->getLicenceType()) {
             $this->updateExistingDiscs($application, $licence, $result);
         }
@@ -84,8 +91,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $result->merge($this->proxyCommandAsSystemUser($command, ProcessApplicationOperatingCentres::class));
         $result->merge($this->proxyCommandAsSystemUser($command, CommonGrant::class));
 
-        if (
-            $application->isGoods() && $application->isVariation() &&
+        if ($application->isGoods() && $application->isVariation() &&
             $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
         ) {
             $result->merge($this->handleSideEffectAsSystemUser(EndInterimCmd::create(['id' => $application->getId()])));
