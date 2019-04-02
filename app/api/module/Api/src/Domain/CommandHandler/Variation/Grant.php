@@ -43,7 +43,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     public function handleCommand(CommandInterface $command)
     {
         /* @var $command Cmd */
-        $result = new Result();
+        $result = $this->result;
 
         /** @var ApplicationEntity $application */
         $application = $this->getRepo()->fetchUsingId($command);
@@ -97,6 +97,8 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             $result->merge($this->handleSideEffectAsSystemUser(EndInterimCmd::create(['id' => $application->getId()])));
         }
 
+        $result->addId('Application', $application->getId());
+        $result->addMessage('Application ' . $application->getId() . ' granted');
         return $result;
     }
 
@@ -143,7 +145,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     {
         $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
         if ($application->isGoods()) {
-            $this->updateExistingGoodsDiscs($application, $licence, $result);
+            $this->updateExistingGoodsDiscs($application, $result);
         } else {
             $this->updateExistingPsvDiscs($licence, $result);
         }
