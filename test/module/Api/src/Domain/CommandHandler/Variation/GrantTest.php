@@ -172,12 +172,15 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -282,13 +285,16 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 '41 Goods Disc(s) replaced',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -388,13 +394,16 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 'CreatePsvDiscs',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -486,12 +495,15 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -592,12 +604,16 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
+                'Message added to queue',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
                 'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
