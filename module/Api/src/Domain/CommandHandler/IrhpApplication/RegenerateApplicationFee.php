@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
  */
 class RegenerateApplicationFee extends AbstractRegenerateFee
 {
-    protected $productReference = FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF;
-
     protected $feeName = 'Application fee';
 
     protected function canCreateOrReplaceFee(IrhpApplication $irhpApplication)
@@ -21,8 +19,13 @@ class RegenerateApplicationFee extends AbstractRegenerateFee
         return $irhpApplication->canCreateOrReplaceApplicationFee();
     }
 
-    protected function getLatestOutstandingFee(IrhpApplication $irhpApplication)
+    protected function getOutstandingFees(IrhpApplication $irhpApplication)
     {
-        return $irhpApplication->getLatestOutstandingApplicationFee();
+        return $irhpApplication->getOutstandingApplicationFees();
+    }
+
+    protected function getFeeProductRefsAndQuantities(IrhpApplication $irhpApplication)
+    {
+        return $irhpApplication->getApplicationFeeProductRefsAndQuantities();
     }
 }

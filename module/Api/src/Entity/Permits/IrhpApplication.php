@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use RuntimeException;
 
 /**
  * IrhpApplication Entity
@@ -130,8 +131,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ],
     ];
 
-    /** @var int|null */
-    private $storedPermitsRequired;
+    /** @var array */
+    private $storedFeesRequired;
 
     /**
      * This is a custom validator for the countries field
@@ -429,6 +430,45 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Get a list of outstanding application fees relating to this application
+     *
+     * @return array
+     */
+    public function getOutstandingApplicationFees()
+    {
+        return $this->getOutstandingFeesByType(FeeTypeEntity::FEE_TYPE_IRHP_APP);
+    }
+
+    /**
+     * Get a list of outstanding issue fees relating to this application
+     *
+     * @return array
+     */
+    public function getOutstandingIssueFees()
+    {
+        return $this->getOutstandingFeesByType(FeeTypeEntity::FEE_TYPE_IRHP_ISSUE);
+    }
+
+    /**
+     * Get outstanding fees by types
+     *
+     * @param int $feeTypeId
+     *
+     * @return array
+     */
+    private function getOutstandingFeesByType($feeTypeId)
+    {
+        $fees = [];
+        foreach ($this->getFees() as $fee) {
+            if ($fee->isOutstanding() && $fee->getFeeType()->getFeeType()->getId() == $feeTypeId) {
+                $fees[] = $fee;
+            }
+        }
+
+        return $fees;
+    }
+
+    /**
      * Return the latest issue fee, or none if no issue fee is present
      *
      * @return FeeEntity|null
@@ -637,9 +677,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
      * Calculates and stores the total number of permits required by this application. Intended to be used in
      * conjunction with hasPermitsRequiredChanged
      */
-    public function storePermitsRequired()
+    public function storeFeesRequired()
     {
-        $this->storedPermitsRequired = $this->getPermitsRequired();
+        $this->storedFeesRequired = $this->getSerialisedFeeProductRefsAndQuantities();
     }
 
     /**
@@ -648,19 +688,86 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return bool
      */
-    public function hasPermitsRequiredChanged()
+    public function haveFeesRequiredChanged()
     {
-        return $this->getPermitsRequired() != $this->storedPermitsRequired;
+        if (is_null($this->storedFeesRequired)) {
+            throw new RuntimeException('storeFeesRequired must be called before haveFeesRequiredChanged');
+        }
+
+        return $this->getSerialisedFeeProductRefsAndQuantities() != $this->storedFeesRequired;
     }
 
     /**
-     * Whether the issue fee can be created or replaced
+     * Return a json encoded representation of all applicable fee product references and associated quantities, sorted
+     * by product reference
      *
-     * @return bool
+     * @return string
      */
-    public function canCreateOrReplaceIssueFee()
+    private function getSerialisedFeeProductRefsAndQuantities()
     {
-        return $this->isNotYetSubmitted();
+        $productRefsAndQuantities = array_merge(
+            $this->getApplicationFeeProductRefsAndQuantities(),
+            $this->getIssueFeeProductRefsAndQuantities()
+        );
+
+        ksort($productRefsAndQuantities);
+        return json_encode($productRefsAndQuantities);
+    }
+
+    /**
+     * Gets a key/value pair array representing application fee product references and quantities for this application
+     * Applicable only to bilateral and multilateral
+     *
+     * @return array
+     *
+     * @throws ForbiddenException if the permit type is unsupported
+     */
+    public function getApplicationFeeProductRefsAndQuantities()
+    {
+        $mappings = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
+                => FeeTypeEntity::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+                => FeeTypeEntity::FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF,
+        ];
+
+        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+        if (isset($mappings[$irhpPermitTypeId])) {
+            return [
+                $mappings[$irhpPermitTypeId] => $this->getPermitsRequired()
+            ];
+        }
+
+        throw new ForbiddenException(
+            'No application fee product reference available for permit type ' . $irhpPermitTypeId
+        );
+    }
+
+    /**
+     * Gets a key/value pair array representing issue fee product references and quantities for this application
+     *
+     * @return array
+     *
+     * @throws ForbiddenException if the permit type is unsupported
+     */
+    public function getIssueFeeProductRefsAndQuantities()
+    {
+        $cumulativeProductRefsAndQuantities = [];
+
+        $irhpPermitApplications = $this->getIrhpPermitApplications();
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
+            $productRef = $irhpPermitApplication->getIssueFeeProductReference();
+            $quantity = $irhpPermitApplication->getPermitsRequired();
+
+            if ($quantity > 0) {
+                if (!isset($cumulativeProductRefsAndQuantities[$productRef])) {
+                    $cumulativeProductRefsAndQuantities[$productRef] = 0;
+                }
+                $cumulativeProductRefsAndQuantities[$productRef] += $quantity;
+            }
+        }
+
+        return $cumulativeProductRefsAndQuantities;
     }
 
     /**
@@ -669,6 +776,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
      * @return bool
      */
     public function canCreateOrReplaceApplicationFee()
+    {
+        return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether the issue fees can be created or replaced
+     *
+     * @return bool
+     */
+    public function canCreateOrReplaceIssueFee()
     {
         return $this->isNotYetSubmitted();
     }
@@ -722,62 +839,5 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $validStatus;
-    }
-
-    /**
-     * Returns the application fee type product reference for this application
-     *
-     * @return string
-     *
-     * @throws ForbiddenException
-     */
-    public function getApplicationFeeTypeProductReference()
-    {
-        $this->throwForbiddenExceptionIfNotBilateral();
-
-        return FeeTypeEntity::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF;
-    }
-
-    /**
-     * Returns the issue fee type product reference for this application
-     *
-     * @return string
-     *
-     * @throws ForbiddenException
-     */
-    public function getIssueFeeTypeProductReference()
-    {
-        $this->throwForbiddenExceptionIfNotBilateral();
-
-        return FeeTypeEntity::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF;
-    }
-
-    /**
-     * Gets the fee per permit for this application
-     *
-     * @param FeeTypeEntity $applicationFeeType
-     * @param FeeTypeEntity $issueFeeType
-     *
-     * @return int
-     *
-     * @throws ForbiddenException
-     */
-    public function getFeePerPermit(FeeTypeEntity $applicationFeeType, FeeTypeEntity $issueFeeType)
-    {
-        $this->throwForbiddenExceptionIfNotBilateral();
-
-        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
-    }
-
-    /**
-     * Throws a ForbiddenException if this application is not of type bilateral
-     *
-     * @throws ForbiddenException
-     */
-    private function throwForbiddenExceptionIfNotBilateral()
-    {
-        if ($this->getIrhpPermitType()->getId() != IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL) {
-            throw new ForbiddenException(self::ERR_ONLY_SUPPORTS_BILATERAL);
-        }
     }
 }

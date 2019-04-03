@@ -29,9 +29,6 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler implements T
 
     protected $extraRepos = ['FeeType'];
 
-    /** @var string The product reference from the FeeType table */
-    protected $productReference = 'changeMe';
-
     /** @var string The human-readable name of the fee */
     protected $feeName = 'changeMe';
 
@@ -55,54 +52,45 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler implements T
 
         $feeCommands = [];
 
-        $fee = $this->getLatestOutstandingFee($irhpApplication);
-        if (!is_null($fee)) {
+        $outstandingFees = $this->getOutstandingFees($irhpApplication);
+        foreach ($outstandingFees as $fee) {
             $feeCommands[] = CancelFee::create(['id' => $fee->getId()]);
-            $this->result->addMessage('Cancelled existing ' . $this->feeName);
         }
 
-        $feeCommands[] = $this->getCreateFeeCommand($irhpApplication);
-        $this->result->addMessage('Created new ' . $this->feeName);
+        $productRefsAndQuantities = $this->getFeeProductRefsAndQuantities($irhpApplication);
+        $licenceId = $irhpApplication->getLicence()->getId();
+        $invoicedDate = date('Y-m-d');
+
+        foreach ($productRefsAndQuantities as $productRef => $quantity) {
+            $feeType = $this->getRepo('FeeType')->getLatestByProductReference($productRef);
+
+            $description = sprintf(
+                '%s - %d at £%d',
+                $feeType->getDescription(),
+                $quantity,
+                $feeType->getFixedValue()
+            );
+
+            $feeCommands[] = CreateFee::create(
+                [
+                    'licence' => $licenceId,
+                    'irhpApplication' => $irhpApplicationId,
+                    'invoicedDate' => $invoicedDate,
+                    'description' => $description,
+                    'feeType' => $feeType->getId(),
+                    'feeStatus' => Fee::STATUS_OUTSTANDING,
+                    'quantity' => $quantity,
+                ]
+            );
+        }
 
         $this->result->merge(
             $this->handleSideEffects($feeCommands)
         );
 
+        $this->result->addMessage('Refreshed ' . $this->feeName. ' list');
         $this->result->addId('irhpApplication', $irhpApplicationId);
-
         return $this->result;
-    }
-
-    /**
-     * Get fee creation command for an application
-     *
-     * @param IrhpApplication $irhpApplication
-     *
-     * @return CreateFee
-     */
-    private function getCreateFeeCommand(IrhpApplication $irhpApplication)
-    {
-        $feeType = $this->getRepo('FeeType')->getLatestByProductReference($this->productReference);
-
-        $permitsRequired = $irhpApplication->getPermitsRequired();
-
-        $feeDescription = sprintf(
-            '%s - %d permits',
-            $feeType->getDescription(),
-            $permitsRequired
-        );
-
-        return CreateFee::create(
-            [
-                'licence' => $irhpApplication->getLicence()->getId(),
-                'irhpApplication' => $irhpApplication->getId(),
-                'invoicedDate' => date('Y-m-d'),
-                'description' => $feeDescription,
-                'feeType' => $feeType->getId(),
-                'feeStatus' => Fee::STATUS_OUTSTANDING,
-                'amount' => $feeType->getFixedValue() * $permitsRequired
-            ]
-        );
     }
 
     /**
@@ -115,11 +103,21 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler implements T
     abstract protected function canCreateOrReplaceFee(IrhpApplication $irhpApplication);
 
     /**
-     * Get the latest outstanding fee
+     * Get outstanding fees on this application
      *
      * @param IrhpApplication $irhpApplication
      *
-     * @return Fee|null
+     * @return array
      */
-    abstract protected function getLatestOutstandingFee(IrhpApplication $irhpApplication);
+    abstract protected function getOutstandingFees(IrhpApplication $irhpApplication);
+
+    /**
+     * Get an array of key/value pairs representing the product references and quantities of each fee that needs to be
+     * created
+     *
+     * @param IrhpApplication $irhpApplication
+     *
+     * @return array
+     */
+    abstract protected function getFeeProductRefsAndQuantities(IrhpApplication $irhpApplication);
 }

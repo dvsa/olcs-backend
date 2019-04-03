@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\FeePerPermit as FeePerPermitQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -32,18 +34,21 @@ class FeePerPermit extends AbstractQueryHandler implements ToggleRequiredInterfa
     public function handleQuery(QueryInterface $query)
     {
         $irhpApplication = $this->getRepo()->fetchById($query->getId());
+        if ($irhpApplication->getIrhpPermitType()->getId() != IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            return ['feePerPermit' => 'Not applicable'];
+        }
+
         $feeTypeRepo = $this->getRepo('FeeType');
 
         $applicationFeeType = $feeTypeRepo->getLatestByProductReference(
-            $irhpApplication->getApplicationFeeTypeProductReference()
+            FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF
         );
 
         $issueFeeType = $feeTypeRepo->getLatestByProductReference(
-            $irhpApplication->getIssueFeeTypeProductReference()
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF
         );
 
-        $feePerPermit = $irhpApplication->getFeePerPermit($applicationFeeType, $issueFeeType);
-
+        $feePerPermit = $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
         return ['feePerPermit' => $feePerPermit];
     }
 }

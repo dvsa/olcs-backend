@@ -1712,59 +1712,190 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertFalse($irhpApplication->canCreateOrReplaceApplicationFee());
     }
 
-    public function testHasPermitsRequiredChanged()
+    public function testHaveFeesRequiredChangedExceptionWhenNothingStored()
     {
-        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitApplication1->setPermitsRequired(12);
-
-        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitApplication2->setPermitsRequired(24);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('storeFeesRequired must be called before haveFeesRequiredChanged');
 
         $irhpApplication = new Entity();
-        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication1);
-        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication2);
-
-        $irhpApplication->storePermitsRequired();
-
-        $irhpPermitApplication2->setPermitsRequired(36);
-
-        $this->assertTrue($irhpApplication->hasPermitsRequiredChanged());
+        $irhpApplication->haveFeesRequiredChanged();
     }
 
-    public function testHasPermitsRequiredChangedNoChange()
-    {
-        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitApplication1->setPermitsRequired(12);
+    /**
+     * @dataProvider dpHaveFeesRequiredChanged
+     */
+    public function testHaveFeesRequiredChanged(
+        $irhpPermitType,
+        $stock1QuantityBefore,
+        $stock2QuantityBefore,
+        $stock1QuantityAfter,
+        $stock2QuantityAfter,
+        $expected
+    ) {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitType);
 
-        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitApplication2->setPermitsRequired(24);
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
+        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+            ->andReturn($stock1QuantityBefore);
 
-        $irhpApplication = new Entity();
-        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication1);
-        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication2);
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
+        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+            ->andReturn($stock2QuantityBefore);
 
-        $irhpApplication->storePermitsRequired();
+        $irhpApplication->setIrhpPermitApplications(
+            new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2])
+        );
 
-        $this->assertFalse($irhpApplication->hasPermitsRequiredChanged());
+        $irhpApplication->storeFeesRequired();
+
+        $updatedIrhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $updatedIrhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
+        $updatedIrhpPermitApplication1->shouldReceive('getPermitsRequired')
+            ->andReturn($stock1QuantityAfter);
+
+        $updatedIrhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $updatedIrhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('BILATERAL_ISSUE_FEE_PRODUCT_REFERENCE');
+        $updatedIrhpPermitApplication2->shouldReceive('getPermitsRequired')
+            ->andReturn($stock2QuantityAfter);
+
+        $irhpApplication->setIrhpPermitApplications(
+            new ArrayCollection([$updatedIrhpPermitApplication1, $updatedIrhpPermitApplication2])
+        );
+
+        $this->assertEquals($expected, $irhpApplication->haveFeesRequiredChanged());
     }
 
-    public function testHasPermitsRequiredChangedNullToNumeric()
+    public function dpHaveFeesRequiredChanged()
     {
-        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitApplication1->setPermitsRequired(null);
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, 7, 11, 7, 11, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, 7, 11, 9, 9, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, 7, 11, 9, 13, true],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, null, null, 9, 13, true],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, 7, 11, 7, 11, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, 7, 11, 9, 9, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, 7, 11, 9, 13, true],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, null, null, 9, 13, true],
+        ];
+    }
 
-        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class)->makePartial();
-        $irhpPermitApplication2->setPermitsRequired(24);
+    /**
+     * @dataProvider dpGetApplicationFeeProductRefsAndQuantities
+     */
+    public function testGetApplicationFeeProductRefsAndQuantities($irhpPermitTypeId, $productReference)
+    {
+        $permitsRequired = 7;
 
-        $irhpApplication = new Entity();
-        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication1);
-        $irhpApplication->addIrhpPermitApplications($irhpPermitApplication2);
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+        $irhpApplication->shouldReceive('getPermitsRequired')
+            ->andReturn($permitsRequired);
 
-        $irhpApplication->storePermitsRequired();
+        $this->assertEquals(
+            [$productReference => $permitsRequired],
+            $irhpApplication->getApplicationFeeProductRefsAndQuantities()
+        );
+    }
 
-        $irhpPermitApplication1->setPermitsRequired(36);
+    public function dpGetApplicationFeeProductRefsAndQuantities()
+    {
+        return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                FeeType::FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF
+            ],
+        ];
+    }
 
-        $this->assertTrue($irhpApplication->hasPermitsRequiredChanged());
+    public function testGetApplicationFeeProductRefsAndQuantitiesUnsupportedType()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'No application fee product reference available for permit type 7'
+        );
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(7);
+
+        $irhpApplication->getApplicationFeeProductRefsAndQuantities();
+    }
+
+    public function testGetIssueFeeProductRefsAndQuantities()
+    {
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('PRODUCT_REFERENCE_1');
+        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+            ->andReturn(7);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('PRODUCT_REFERENCE_2');
+        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+            ->andReturn(3);
+
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication3->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('PRODUCT_REFERENCE_2');
+        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
+            ->andReturn(0);
+
+        $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication4->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('PRODUCT_REFERENCE_3');
+        $irhpPermitApplication4->shouldReceive('getPermitsRequired')
+            ->andReturn(0);
+
+        $irhpPermitApplication5 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication5->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('PRODUCT_REFERENCE_4');
+        $irhpPermitApplication5->shouldReceive('getPermitsRequired')
+            ->andReturn(5);
+
+        $irhpPermitApplication6 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication6->shouldReceive('getIssueFeeProductReference')
+            ->andReturn('PRODUCT_REFERENCE_4');
+        $irhpPermitApplication6->shouldReceive('getPermitsRequired')
+            ->andReturn(6);
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setIrhpPermitApplications(
+            new ArrayCollection(
+                [
+                    $irhpPermitApplication1,
+                    $irhpPermitApplication2,
+                    $irhpPermitApplication3,
+                    $irhpPermitApplication4,
+                    $irhpPermitApplication5,
+                    $irhpPermitApplication6
+                ]
+            )
+        );
+
+        $expected = [
+            'PRODUCT_REFERENCE_1' => 7,
+            'PRODUCT_REFERENCE_2' => 3,
+            'PRODUCT_REFERENCE_4' => 11
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $irhpApplication->getIssueFeeProductRefsAndQuantities()
+        );
     }
 
     public function testUpdateDateReceived()
@@ -1931,83 +2062,50 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->proceedToValid(m::mock(RefData::class));
     }
 
-    public function testGetApplicationFeeTypeProductReferenceBilateral()
+    public function testGetOutstandingApplicationFees()
     {
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
+        $fee2 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, false);
+        $fee3 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, false);
+        $fee4 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
+        $fee5 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, true);
 
-        $this->assertEquals(
-            FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
-            $entity->getApplicationFeeTypeProductReference()
+        $this->sut->setFees(
+            new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5])
         );
+
+        $outstandingApplicationFees = $this->sut->getOutstandingApplicationFees();
+        $this->assertCount(2, $outstandingApplicationFees);
+        $this->assertSame($fee1, $outstandingApplicationFees[0]);
+        $this->assertSame($fee4, $outstandingApplicationFees[1]);
     }
 
-    public function testGetApplicationFeeTypeProductReferenceUnsupported()
+    public function testGetOutstandingIssueFees()
     {
-        $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+        $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, true);
+        $fee2 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, false);
+        $fee3 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, false);
+        $fee4 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, true);
+        $fee5 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
 
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
-
-        $entity->getApplicationFeeTypeProductReference();
-    }
-
-    public function testGetIssueFeeTypeProductReferenceBilateral()
-    {
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
-
-        $this->assertEquals(
-            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
-            $entity->getIssueFeeTypeProductReference()
+        $this->sut->setFees(
+            new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5])
         );
+
+        $outstandingIssueFees = $this->sut->getOutstandingIssueFees();
+        $this->assertCount(2, $outstandingIssueFees);
+        $this->assertSame($fee1, $outstandingIssueFees[0]);
+        $this->assertSame($fee4, $outstandingIssueFees[1]);
     }
 
-    public function testGetIssueFeeTypeProductReferenceUnsupported()
+    private function createMockFee($feeTypeId, $isOutstanding)
     {
-        $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
+        $fee = m::mock(Fee::class);
+        $fee->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn($feeTypeId);
+        $fee->shouldReceive('isOutstanding')
+            ->andReturn($isOutstanding);
 
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
-
-        $entity->getIssueFeeTypeProductReference();
-    }
-
-    public function testGetFeePerPermitBilateral()
-    {
-        $applicationFeeType = m::mock(FeeType::class);
-        $applicationFeeType->shouldReceive('getFixedValue')
-            ->andReturn(60);
-
-        $issueFeeType = m::mock(FeeType::class);
-        $issueFeeType->shouldReceive('getFixedValue')
-            ->andReturn(20);
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
-
-        $this->assertEquals(
-            80,
-            $entity->getFeePerPermit($applicationFeeType, $issueFeeType)
-        );
-    }
-
-    public function testGetFeePerPermitUnsupported()
-    {
-        $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage(Entity::ERR_ONLY_SUPPORTS_BILATERAL);
-
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
-
-        $entity->getFeePerPermit(m::mock(FeeType::class), m::mock(FeeType::class));
+        return $fee;
     }
 }
