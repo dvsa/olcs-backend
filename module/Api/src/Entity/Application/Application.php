@@ -191,10 +191,9 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             $this->setLicenceType($licenceType);
             return true;
         }
-
         return null;
     }
-
+    
     /**
      * Is Type of Licence valid
      *
@@ -409,8 +408,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If licence type has been changed from restricted to national or international.
-        if (
-            $licenceTypeId === Licence::LICENCE_TYPE_RESTRICTED &&
+        if ($licenceTypeId === Licence::LICENCE_TYPE_RESTRICTED &&
             (
                 $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL ||
                 $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
@@ -420,8 +418,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         }
 
         // If licence is is updated from a standard national to an international.
-        if (
-            $licenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL &&
+        if ($licenceTypeId === Licence::LICENCE_TYPE_STANDARD_NATIONAL &&
             (
                 $applicationLicenceTypeId === Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
             )
@@ -500,8 +497,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                 continue;
             }
 
-            if (
-                ($variation[$operatingCenterId]->getNoOfVehiclesRequired() >
+            if (($variation[$operatingCenterId]->getNoOfVehiclesRequired() >
                     $licence[$operatingCenterId]->getNoOfVehiclesRequired()) ||
                 ($variation[$operatingCenterId]->getNoOfTrailersRequired() >
                     $licence[$operatingCenterId]->getNoOfTrailersRequired())
@@ -1018,8 +1014,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         //  after submit App/Var on internal side, section "Review and declarations" at selfserve section
         //  stay unreachable and user can't change status, so it should be ignored
-        if (
-            $section === ApplicationCompletion::SECTION_DECLARATION
+        if ($section === ApplicationCompletion::SECTION_DECLARATION
             && $this->getStatus()->getId() !== Application::APPLICATION_STATUS_NOT_SUBMITTED
             && $this->getAuthSignature() === true
         ) {
@@ -1130,7 +1125,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         /* @var Entity\Application\ApplicationOperatingCentre $aoc */
         $maximumDate = null;
         foreach ($this->getOperatingCentres() as $aoc) {
-
             // deleted O/C are not considered within the OOR date
             if ($aoc->getAction() === 'D') {
                 continue;
@@ -1186,7 +1180,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                     }
                 }
             }
-
         } elseif ($aoc->getAction() === 'U') {
             // For updated operating centres, if there has been no increase to the vehicles
             $licenceOperatingCentres = $this->getLicence()->getOperatingCentres();
@@ -1197,8 +1190,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                     continue;
                 }
 
-                if (
-                    $aoc->getNoOfVehiclesRequired() <= $licOc->getNoOfVehiclesRequired()
+                if ($aoc->getNoOfVehiclesRequired() <= $licOc->getNoOfVehiclesRequired()
                     && $aoc->getNoOfTrailersRequired() <= $licOc->getNoOfTrailersRequired()
                 ) {
                     return self::NOT_APPLICABLE;
@@ -1241,8 +1233,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             // It is a goods variation and 0 operating centres have been added; AND
             // It is a goods variation and 0 operating centres have been updated with an increase
             // of vehicles or trailers
-            if (
-                $this->getOperatingCentresAdded()->count() === 0 &&
+            if ($this->getOperatingCentresAdded()->count() === 0 &&
                 !$this->hasIncreaseInOperatingCentre() &&
                 !$this->isRealUpgrade()
             ) {
@@ -1298,7 +1289,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         if (is_string($date)) {
             return $date;
         }
-        if ($date instanceOf \DateTime) {
+        if ($date instanceof \DateTime) {
             return $date->format($format);
         }
         return '';
@@ -1342,8 +1333,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             /** @var PublicationEntity $latestPublication */
             if ($latestPublication === null) {
                 $latestPublication = $publicationLink->getPublication();
-            } elseif (
-                new \DateTime($publicationLink->getPublication()->getPubDate()) >
+            } elseif (new \DateTime($publicationLink->getPublication()->getPubDate()) >
                 new \DateTime($latestPublication->getPubDate())
             ) {
                 $latestPublication = $publicationLink->getPublication();
@@ -1561,7 +1551,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $latestPublication = $this->getLatestPublication();
 
         if ($latestPublication instanceof PublicationEntity) {
-
             return $latestPublication->getPublicationNo();
         }
 
@@ -1614,7 +1603,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public function getOtherActiveLicencesForOrganisation()
     {
         if ($this->getLicence() && $this->getLicence()->getOrganisation()) {
-
             $licences = $this->getLicence()->getOrganisation()->getActiveLicences();
 
             if (empty($licences)) {
@@ -2013,8 +2001,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     {
         /** @var Entity\Fee\Fee $fee */
         foreach ($this->getFees() as $fee) {
-            if (
-                ($fee->isNewApplicationFee() || $fee->isVariationFee())
+            if (($fee->isNewApplicationFee() || $fee->isVariationFee())
                 && !$fee->isCancelled()
             ) {
                 return true;

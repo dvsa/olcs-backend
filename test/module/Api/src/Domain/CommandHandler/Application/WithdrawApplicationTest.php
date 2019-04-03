@@ -3,6 +3,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
+use Dvsa\Olcs\Api\Domain\Command\Result as QueueResult;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Fee\Transaction;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -43,7 +51,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            'apsts_withdrawn', 'withdrawn'
+            'apsts_withdrawn',
+            'withdrawn'
         ];
 
         parent::initReferences();
@@ -76,12 +85,19 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
+
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')->andReturn(true)
             ->getMock();
-        $this->expectedSideEffect(EndInterimCmd::class, ['id' => 1], new Result());
+
+        $this->expectedSideEffect(
+            EndInterimCmd::class,
+            ['id' => 1],
+            new Result(),
+            1
+        );
 
         $application->shouldReceive('getIsVariation')->andReturn(false);
 
@@ -132,7 +148,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new QueueResult()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -169,7 +185,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')
             ->andReturn(true)
             ->getMock();
@@ -235,7 +251,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new QueueResult()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -288,7 +304,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new QueueResult()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -355,7 +371,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new QueueResult()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -379,7 +395,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application->setIsVariation(true);
 
         $application
-            ->shouldReceive('getCurrentInterimStatus')->with()->once()->andReturn(Application::INTERIM_STATUS_INFORCE)
+            ->shouldReceive('getCurrentInterimStatus')->with()->twice()->andReturn(Application::INTERIM_STATUS_INFORCE)
             ->shouldReceive('isGoods')->andReturn(true)
             ->shouldReceive('isPublishable')->with()->once()->andReturn(false);
 
@@ -413,11 +429,80 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new QueueResult()
         );
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Snapshot created', 'Application 1 withdrawn.'], $result->getMessages());
+    }
+
+    public function testHandleCommandRefund()
+    {
+        $command = Command::create(['id' => 532, 'reason' => 'withdrawn']);
+
+        $this->setupIsInternalUser(false);
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->shouldReceive('getId')->times(4)->andReturn(1);
+        $application->shouldReceive('isGoods')->andReturn(true)
+            ->shouldReceive('isPublishable')->with()->once()->andReturn(false)
+            ->shouldReceive('isNew')->times(2)->andReturn(false)
+            ->shouldReceive('getCurrentInterimStatus')->andReturn(Application::INTERIM_STATUS_REQUESTED);
+
+        $this->repoMap['Application']->shouldReceive('fetchById')
+            ->with(532)
+            ->andReturn($application)
+            ->shouldReceive('save')
+            ->once()
+            ->with(m::type(Application::class));
+
+        $feeEntity = m::mock(Fee::class);
+        $feeEntity->shouldReceive('getFeeType')->andReturn(
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')
+                ->once()
+                ->andReturnTrue()
+                ->getMock()
+        );
+        $feeEntity->shouldReceive('canRefund')->andReturnTrue();
+        $feeEntity->shouldReceive('getId')->andReturn(1);
+
+        $application->setFees(new ArrayCollection([$feeEntity]));
+
+        $this->repoMap['LicenceVehicle']->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with($application)
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(CeaseGoodsDiscsForApplication::class, ['application' => 1], new Result());
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel::class,
+            ['id' => 1],
+            new Result()
+        );
+
+        $result1 = new Result();
+        $result1->addMessage('Snapshot created');
+        $data = ['id' => 532, 'event' => CreateSnapshot::ON_WITHDRAW];
+        $this->expectedSideEffect(CreateSnapshot::class, $data, $result1);
+
+        $this->expectedSideEffect(
+            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            ['id' => 1],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            Create::class,
+            [
+                'entityId' => 1,
+                'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+                'status' => Queue::STATUS_QUEUED
+            ],
+            new Result()
+        );
+
+        $this->sut->handleCommand($command);
     }
 }

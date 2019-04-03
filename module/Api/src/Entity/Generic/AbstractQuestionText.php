@@ -30,6 +30,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     use ProcessDateTrait;
 
     /**
+     * Additional guidance
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="additional_guidance", length=255, nullable=true)
+     */
+    protected $additionalGuidance;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -68,6 +77,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $effectiveFrom;
 
     /**
+     * Error label
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="error_label", length=255, nullable=true)
+     */
+    protected $errorLabel;
+
+    /**
      * Guidance
      *
      * @var string
@@ -95,6 +113,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $headingCaption;
 
     /**
+     * Hint
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="hint", length=255, nullable=true)
+     */
+    protected $hint;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -106,13 +133,13 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $id;
 
     /**
-     * Iso code
+     * Label
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="iso_code", length=10, nullable=true)
+     * @ORM\Column(type="string", name="label", length=255, nullable=true)
      */
-    protected $isoCode;
+    protected $label;
 
     /**
      * Last modified by
@@ -166,6 +193,30 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      * @ORM\Column(type="string", name="warning", length=255, nullable=true)
      */
     protected $warning;
+
+    /**
+     * Set the additional guidance
+     *
+     * @param string $additionalGuidance new value being set
+     *
+     * @return QuestionText
+     */
+    public function setAdditionalGuidance($additionalGuidance)
+    {
+        $this->additionalGuidance = $additionalGuidance;
+
+        return $this;
+    }
+
+    /**
+     * Get the additional guidance
+     *
+     * @return string
+     */
+    public function getAdditionalGuidance()
+    {
+        return $this->additionalGuidance;
+    }
 
     /**
      * Set the created by
@@ -276,6 +327,30 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
+     * Set the error label
+     *
+     * @param string $errorLabel new value being set
+     *
+     * @return QuestionText
+     */
+    public function setErrorLabel($errorLabel)
+    {
+        $this->errorLabel = $errorLabel;
+
+        return $this;
+    }
+
+    /**
+     * Get the error label
+     *
+     * @return string
+     */
+    public function getErrorLabel()
+    {
+        return $this->errorLabel;
+    }
+
+    /**
      * Set the guidance
      *
      * @param string $guidance new value being set
@@ -348,6 +423,30 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
+     * Set the hint
+     *
+     * @param string $hint new value being set
+     *
+     * @return QuestionText
+     */
+    public function setHint($hint)
+    {
+        $this->hint = $hint;
+
+        return $this;
+    }
+
+    /**
+     * Get the hint
+     *
+     * @return string
+     */
+    public function getHint()
+    {
+        return $this->hint;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -372,27 +471,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the iso code
+     * Set the label
      *
-     * @param string $isoCode new value being set
+     * @param string $label new value being set
      *
      * @return QuestionText
      */
-    public function setIsoCode($isoCode)
+    public function setLabel($label)
     {
-        $this->isoCode = $isoCode;
+        $this->label = $label;
 
         return $this;
     }
 
     /**
-     * Get the iso code
+     * Get the label
      *
      * @return string
      */
-    public function getIsoCode()
+    public function getLabel()
     {
-        return $this->isoCode;
+        return $this->label;
     }
 
     /**

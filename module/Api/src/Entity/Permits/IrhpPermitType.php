@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 class IrhpPermitType extends AbstractIrhpPermitType
 {
     const IRHP_PERMIT_TYPE_ID_ECMT = 1;
+    const IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM = 2;
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
 
@@ -32,6 +33,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
     {
         return [
             'isEcmtAnnual' => $this->isEcmtAnnual(),
+            'isEcmtShortTerm' => $this->isEcmtShortTerm(),
             'isBilateral' => $this->isBilateral(),
         ];
     }
@@ -44,6 +46,16 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function isEcmtAnnual()
     {
         return $this->id === self::IRHP_PERMIT_TYPE_ID_ECMT;
+    }
+
+    /**
+     * Is this ECMT Short Term
+     *
+     * @return bool
+     */
+    public function isEcmtShortTerm()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
     }
 
     /**

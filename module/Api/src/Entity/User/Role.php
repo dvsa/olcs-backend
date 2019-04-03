@@ -18,7 +18,7 @@ use Rbac\Role\RoleInterface;
  */
 class Role extends AbstractRole implements RoleInterface
 {
-
+    const ROLE_SYSTEM_ADMIN = 'system-admin';
     const ROLE_INTERNAL_LIMITED_READ_ONLY = 'internal-limited-read-only';
     const ROLE_INTERNAL_READ_ONLY = 'internal-read-only';
     const ROLE_INTERNAL_CASE_WORKER = 'internal-case-worker';

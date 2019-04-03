@@ -2,7 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -80,7 +86,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')
             ->andReturn(true)
             ->getMock();
@@ -131,9 +137,9 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(ReturnAllCommunityLicences::class, ['id' => 123], new Result());
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -171,7 +177,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')
             ->andReturn(true)
             ->getMock();
@@ -231,9 +237,9 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -262,7 +268,9 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application = $this->getTestingApplication($licence)
             ->setId(1)
             ->setIsVariation(true)
-            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL));
+            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL))
+            ->setInterimStatus(new RefData(1));
+
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
@@ -284,9 +292,9 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -311,7 +319,8 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $application = $this->getTestingApplication($licence)
             ->setId(1)
             ->setIsVariation(true)
-            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL));
+            ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL))
+            ->setInterimStatus(new RefData(1));
 
         $publicationLink = m::mock(PublicationLinkEntity::class)
             ->shouldReceive('getpublicationSection')
@@ -353,9 +362,9 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -383,7 +392,7 @@ class RefuseApplicationTest extends CommandHandlerTestCase
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')
             ->andReturn(true)
             ->getMock();
@@ -417,13 +426,86 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $this->expectedSideEffect(CreateSnapshot::class, ['id' => 532, 'event' => CreateSnapshot::ON_REFUSE], $result1);
 
         $this->expectedSideEffect(
-            \Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees::class,
+            CancelOutstandingFees::class,
             ['id' => 1],
-            new \Dvsa\Olcs\Api\Domain\Command\Result()
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame(['Snapshot created', 'Application 1 refused.'], $result->getMessages());
+    }
+
+
+    public function testHandleCommandRefund()
+    {
+        $command = Command::create(['id' => 111]);
+
+        $this->setupIsInternalUser(false);
+
+        $application = m::mock(Application::class)->makePartial();
+        $application->shouldReceive('getInterimStatus')
+            ->once()
+            ->andReturn(new RefData(Application::INTERIM_STATUS_REQUESTED));
+        $application->setId($command->getId());
+        $application->shouldReceive('setStatus')->with();
+        $application->shouldReceive('isPublishable')->andReturnFalse();
+        $application->shouldReceive('isNew')->andReturnFalse();
+
+        $feeEntity = m::mock(Fee::class);
+        $feeEntity->shouldReceive('getFeeType')->andReturn(
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')
+                ->once()
+                ->andReturnTrue()
+                ->getMock()
+        );
+        $feeEntity->shouldReceive('canRefund')->andReturnTrue();
+        $feeEntity->shouldReceive('getId')->andReturn(1);
+
+        $application->setFees(new ArrayCollection([$feeEntity]));
+
+
+        $this->repoMap['Application']->shouldReceive('fetchById')->with($command->getId())->once()->andReturn($application)
+            ->shouldReceive('save')->with($application)->once();
+
+        $this->repoMap['LicenceVehicle']
+            ->shouldReceive('clearSpecifiedDateAndInterimApp')
+            ->with($application)
+            ->once()
+            ->getMock();
+
+        $this->expectedSideEffect(
+            CreateSnapshot::class,
+            [
+                'id' => $command->getId(),
+                'event' => CreateSnapshot::ON_REFUSE
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            CeaseGoodsDiscsForApplication::class,
+            ['application' => $command->getId()],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            CancelOutstandingFees::class,
+            ['id' => $command->getId()],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            Create::class,
+            [
+                'entityId' => 1,
+                'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+                'status' => Queue::STATUS_QUEUED
+            ],
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand($command);
+        $this->assertSame(['Application ' . $command->getId() . ' refused.'], $result->getMessages());
     }
 }
