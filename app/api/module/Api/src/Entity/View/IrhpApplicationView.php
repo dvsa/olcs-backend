@@ -73,6 +73,15 @@ class IrhpApplicationView implements BundleSerializableInterface, JsonSerializab
     protected $permitsRequired;
 
     /**
+     * Valid Permit count
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="valid_permit_count")
+     */
+    protected $validPermitCount;
+
+    /**
      * Type id
      *
      * @var int
@@ -225,5 +234,15 @@ class IrhpApplicationView implements BundleSerializableInterface, JsonSerializab
     public function getDateReceived()
     {
         return $this->dateReceived;
+    }
+
+    /**
+     * Get valid permit count
+     *
+     * @return int
+     */
+    public function getValidPermitCount()
+    {
+        return $this->validPermitCount;
     }
 }

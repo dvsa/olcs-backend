@@ -268,7 +268,7 @@ class FeeEntityTest extends EntityTester
                     ->andReturn('2015-04-03')
                     ->getMock(),
                 null,
-                new DateTime('2015-04-04'),
+                new DateTime('2010-04-04'),
             ],
             'continuation date more than 4 year in future' => [
                 Entity::ACCRUAL_RULE_CONTINUATION,

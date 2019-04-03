@@ -111,7 +111,7 @@ class FeeType extends AbstractFeeType
      *
      * @return bool
      */
-    public function isShowQuantity()
+    public function isShowQuantity(): bool
     {
         return in_array(
             $this->getFeeType()->getId(),
@@ -126,7 +126,7 @@ class FeeType extends AbstractFeeType
     /**
      * @return bool
      */
-    public function isEcmtApplication()
+    public function isEcmtApplication(): bool
     {
         return $this->feeType->getId() === self::FEE_TYPE_ECMT_APP;
     }
@@ -134,7 +134,7 @@ class FeeType extends AbstractFeeType
     /**
      * @return bool
      */
-    public function isEcmtIssue()
+    public function isEcmtIssue(): bool
     {
         return $this->feeType->getId() === self::FEE_TYPE_ECMT_ISSUE;
     }
@@ -142,7 +142,15 @@ class FeeType extends AbstractFeeType
     /**
      * @return bool
      */
-    public function isIrhpApplicationIssue()
+    public function isInterimGrantFee(): bool
+    {
+        return $this->getFeeType()->getId() === self::FEE_TYPE_GRANTINT;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIrhpApplicationIssue(): bool
     {
         return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP]);
     }

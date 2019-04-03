@@ -19,10 +19,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="answer",
  *    indexes={
  *        @ORM\Index(name="ix_answer_question_text_id", columns={"question_text_id"}),
- *        @ORM\Index(name="fk_answer_irhp_permit_application_id_irhp_permit_application_id",
-     *     columns={"irhp_permit_application_id"}),
  *        @ORM\Index(name="fk_answer_created_by_user_id", columns={"created_by"}),
- *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_answer_irhp_application_id_irhp_application_id",
+     *     columns={"irhp_application_id"})
  *    }
  * )
  */
@@ -153,18 +153,18 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $id;
 
     /**
-     * Irhp permit application
+     * Irhp application
      *
-     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
      *
      * @ORM\ManyToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication",
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
      *     fetch="LAZY",
      *     inversedBy="answers"
      * )
-     * @ORM\JoinColumn(name="irhp_permit_application_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
      */
-    protected $irhpPermitApplication;
+    protected $irhpApplication;
 
     /**
      * Last modified by
@@ -537,27 +537,27 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the irhp permit application
+     * Set the irhp application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication $irhpPermitApplication entity being set as the value
+     * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $irhpApplication entity being set as the value
      *
      * @return Answer
      */
-    public function setIrhpPermitApplication($irhpPermitApplication)
+    public function setIrhpApplication($irhpApplication)
     {
-        $this->irhpPermitApplication = $irhpPermitApplication;
+        $this->irhpApplication = $irhpApplication;
 
         return $this;
     }
 
     /**
-     * Get the irhp permit application
+     * Get the irhp application
      *
-     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication
+     * @return \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
      */
-    public function getIrhpPermitApplication()
+    public function getIrhpApplication()
     {
-        return $this->irhpPermitApplication;
+        return $this->irhpApplication;
     }
 
     /**
