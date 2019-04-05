@@ -8,12 +8,17 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres;
 use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\Grant;
 use Dvsa\Olcs\Api\Domain\Exception\BadVariationTypeException;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
@@ -86,12 +91,11 @@ class GrantTest extends CommandHandlerTestCase
         $newLicenceVehicles = new ArrayCollection();
         $newLicenceVehicle = m::mock(LicenceVehicle::class)->makePartial();
         $newLicenceVehicle->setVehicle($vehicle);
-
         $newLicenceVehicles->add($newLicenceVehicle);
 
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(ApplicationEntity::INTERIM_STATUS_INFORCE)
-            ->once()
+            ->twice()
             ->shouldReceive('isGoods')
             ->andReturn(true)
             ->twice()
@@ -129,7 +133,9 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffectAsSystemUser(
-            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
         );
 
         $this->expectedSideEffectAsSystemUser(
@@ -166,12 +172,15 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -246,7 +255,9 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffectAsSystemUser(
-            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
         );
 
         $result2 = new Result();
@@ -258,25 +269,32 @@ class GrantTest extends CommandHandlerTestCase
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
         $this->expectedSideEffectAsSystemUser(
-            ProcessApplicationOperatingCentres::class, $data, $result3
+            ProcessApplicationOperatingCentres::class,
+            $data,
+            $result3
         );
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
         $this->expectedSideEffectAsSystemUser(
-            CommonGrant::class, $data, $result4
+            CommonGrant::class,
+            $data,
+            $result4
         );
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 '41 Goods Disc(s) replaced',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -313,7 +331,9 @@ class GrantTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(true);
         $this->expectedSideEffectAsSystemUser(
-            CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result()
+            CreateSvConditionUndertakingCmd::class,
+            ['applicationId' => 111],
+            new Result()
         );
 
         $licence->shouldReceive('copyInformationFromApplication')
@@ -332,7 +352,9 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffectAsSystemUser(
-            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
         );
 
         $result2 = new Result();
@@ -340,19 +362,25 @@ class GrantTest extends CommandHandlerTestCase
         $discData = $data;
         $discData['currentTotAuth'] = 10;
         $this->expectedSideEffectAsSystemUser(
-            CreateDiscRecords::class, $discData, $result2
+            CreateDiscRecords::class,
+            $discData,
+            $result2
         );
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
         $this->expectedSideEffectAsSystemUser(
-            ProcessApplicationOperatingCentres::class, $data, $result3
+            ProcessApplicationOperatingCentres::class,
+            $data,
+            $result3
         );
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
         $this->expectedSideEffectAsSystemUser(
-            CommonGrant::class, $data, $result4
+            CommonGrant::class,
+            $data,
+            $result4
         );
 
         $result6 = new Result();
@@ -366,13 +394,16 @@ class GrantTest extends CommandHandlerTestCase
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 'CreatePsvDiscs',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -410,7 +441,9 @@ class GrantTest extends CommandHandlerTestCase
             ->once()
             ->andReturn(true);
         $this->expectedSideEffectAsSystemUser(
-            CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result()
+            CreateSvConditionUndertakingCmd::class,
+            ['applicationId' => 111],
+            new Result()
         );
 
         $licence->shouldReceive('copyInformationFromApplication')
@@ -428,7 +461,9 @@ class GrantTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffectAsSystemUser(
-            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
         );
 
         $result2 = new Result();
@@ -436,30 +471,39 @@ class GrantTest extends CommandHandlerTestCase
         $discData = $data;
         $discData['currentTotAuth'] = 10;
         $this->expectedSideEffectAsSystemUser(
-            CreateDiscRecords::class, $discData, $result2
+            CreateDiscRecords::class,
+            $discData,
+            $result2
         );
 
         $result3 = new Result();
         $result3->addMessage('ProcessApplicationOperatingCentres');
         $this->expectedSideEffectAsSystemUser(
-            ProcessApplicationOperatingCentres::class, $data, $result3
+            ProcessApplicationOperatingCentres::class,
+            $data,
+            $result3
         );
 
         $result4 = new Result();
         $result4->addMessage('CommonGrant');
         $this->expectedSideEffectAsSystemUser(
-            CommonGrant::class, $data, $result4
+            CommonGrant::class,
+            $data,
+            $result4
         );
 
         $result = $this->sut->handleCommand($command);
 
         $expected = [
-            'id' => [],
+            'id' => [
+                'Application' => 111
+            ],
             'messages' => [
                 'CreateSnapshot',
                 'CreateDiscRecords',
                 'ProcessApplicationOperatingCentres',
-                'CommonGrant'
+                'CommonGrant',
+                'Application 111 granted'
             ]
         ];
 
@@ -484,5 +528,95 @@ class GrantTest extends CommandHandlerTestCase
         $this->expectException(BadVariationTypeException::class);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandRefundInterim()
+    {
+        $data = [
+            'id' => 111
+        ];
+
+        $command = Cmd::create($data);
+
+        $application = m::mock(ApplicationEntity::class)->makePartial();
+        $application->shouldReceive('getInterimStatus')
+            ->once()
+            ->andReturn(new RefData(ApplicationEntity::INTERIM_STATUS_REQUESTED));
+        $application->setId($command->getId());
+        $application->shouldReceive('setStatus')->with();
+        $application->shouldReceive('isPublishable')->andReturnFalse();
+        $application->shouldReceive('isNew')->andReturnFalse();
+        $mockLicenceType = m::mock();
+        $application->shouldReceive('getLicenceType')->andReturn($mockLicenceType);
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicenceType')->andReturn($this->refData[Licence::LICENCE_TYPE_STANDARD_NATIONAL]);
+        $licence->shouldReceive('getPsvDiscsNotCeased->count')->andReturn(0);
+        $licence->shouldReceive('getTotAuthVehicles')->andReturn(1);
+        $licence->shouldReceive('copyInformationFromApplication')->with($application);
+        $application->shouldReceive('getLicence')->andReturn($licence);
+
+        $feeEntity = m::mock(Fee::class);
+        $feeEntity->shouldReceive('getFeeType')->andReturn(
+            m::mock(FeeType::class)->shouldReceive('isInterimGrantFee')
+                ->once()
+                ->andReturnTrue()
+                ->getMock()
+        );
+        $feeEntity->shouldReceive('canRefund')->andReturnTrue();
+        $feeEntity->shouldReceive('getId')->andReturn(1);
+
+        $application->setFees(new ArrayCollection([$feeEntity]));
+
+        $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->andReturn($application)
+            ->shouldReceive('save')->with($application)->once();
+
+        $result1 = new Result();
+        $result1->addMessage('CreateSnapshot');
+        $this->expectedSideEffectAsSystemUser(
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
+        );
+
+        $result2 = new Result();
+        $result2->addMessage('CreateDiscRecords');
+        $discData = $data;
+        $discData['currentTotAuth'] = 1;
+        $this->expectedSideEffectAsSystemUser(CreateDiscRecords::class, $discData, $result2);
+
+        $result3 = new Result();
+        $result3->addMessage('ProcessApplicationOperatingCentres');
+        $this->expectedSideEffectAsSystemUser(ProcessApplicationOperatingCentres::class, $data, $result3);
+
+        $result4 = new Result();
+        $result4->addMessage('CommonGrant');
+        $this->expectedSideEffectAsSystemUser(CommonGrant::class, $data, $result4);
+
+        $interimFeeRefundQueueCmdData = [
+            'entityId' => 1,
+            'type' => Queue::TYPE_REFUND_INTERIM_FEES,
+            'status' => Queue::STATUS_QUEUED,
+        ];
+        $result5 = new Result();
+        $result5->addMessage('Message added to queue');
+        $this->expectedSideEffectAsSystemUser(Create::class, $interimFeeRefundQueueCmdData, $result5);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'Application' => 111
+            ],
+            'messages' => [
+                'CreateSnapshot',
+                'Message added to queue',
+                'CreateDiscRecords',
+                'ProcessApplicationOperatingCentres',
+                'CommonGrant',
+                'Application 111 granted'
+            ]
+        ];
+
+        $this->assertSame($expected, $result->toArray());
     }
 }

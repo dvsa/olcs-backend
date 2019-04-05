@@ -71,9 +71,9 @@ class LicenceTest extends MockeryTestCase
         return [
             [LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION, LicenceEntity::LICENCE_CATEGORY_PSV, false],
             [LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED, LicenceEntity::LICENCE_CATEGORY_PSV, false],
-            [LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_CATEGORY_PSV, false],
+            [LicenceEntity::LICENCE_STATUS_SUSPENDED, LicenceEntity::LICENCE_CATEGORY_PSV, true],
             [LicenceEntity::LICENCE_STATUS_VALID, LicenceEntity::LICENCE_CATEGORY_PSV, true],
-            [LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_CATEGORY_PSV, false],
+            [LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_CATEGORY_PSV, true],
             [LicenceEntity::LICENCE_STATUS_GRANTED, LicenceEntity::LICENCE_CATEGORY_PSV, false],
             [LicenceEntity::LICENCE_STATUS_SURRENDERED, LicenceEntity::LICENCE_CATEGORY_PSV, false],
             [LicenceEntity::LICENCE_STATUS_WITHDRAWN, LicenceEntity::LICENCE_CATEGORY_PSV, false],

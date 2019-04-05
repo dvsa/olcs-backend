@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8ca3f12bc5c2ffb182804f835025ab9b",
-    "content-hash": "f84987e351b89d420ebc8d9b91a014d9",
+    "hash": "b59a732c2cf916cb7964415028d5ddfa",
+    "content-hash": "716f7be18456af0db8a7ea8019a232c0",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1485,11 +1485,11 @@
         },
         {
             "name": "olcs/companies-house",
-            "version": "dev-release/4.203.0",
+            "version": "dev-release/4.203.1",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/companies-house.git",
-                "reference": "5da518b462ce84c6e4f36d47c3a42b05165d1d2e"
+                "reference": "aa7e45c5f3ebaa280ad8e871c5f8195433a31e07"
             },
             "require": {
                 "php": ">=5.3.3"
@@ -1501,15 +1501,15 @@
                 }
             },
             "description": "Companies house library",
-            "time": "2019-04-02 13:22:11"
+            "time": "2019-04-04 21:21:56"
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-release/4.203.0",
+            "version": "dev-release/4.203.1",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-logging.git",
-                "reference": "2cf0e4763e30fff75416d55bc952e5617d3f4b0f"
+                "reference": "ee356dae2f15406aa751dff6e16e9185298fbd3c"
             },
             "require": {
                 "php": ">=5.4",
@@ -1556,15 +1556,15 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2019-04-02 13:22:06"
+            "time": "2019-04-04 21:21:50"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "dev-release/4.203.0",
+            "version": "dev-release/4.203.1",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-transfer.git",
-                "reference": "0796c061d8ff75728f89bc0a66b71d46ae615117"
+                "reference": "73a54aefcaaacab8d3d4dc84441d6641e78ae45b"
             },
             "require": {
                 "php": ">=5.4",
@@ -1606,15 +1606,15 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-04-02 13:24:24"
+            "time": "2019-04-04 21:24:15"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "dev-release/4.203.0",
+            "version": "dev-release/4.203.1",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-utils.git",
-                "reference": "530815a2775f9bbb9c4270d523db9bbb6cde9da4"
+                "reference": "2817b4cb7e4440a0b7444b8854922b6627f931f2"
             },
             "require": {
                 "php": ">=5.4",
@@ -1624,7 +1624,7 @@
                 "johnkary/phpunit-speedtrap": "^3.0",
                 "mockery/mockery": "^1.2.0",
                 "olcs/olcs-devtools": "dev-master",
-                "olcs/olcs-logging": "dev-release/4.203.0",
+                "olcs/olcs-logging": "dev-release/4.203.1",
                 "phpstan/phpstan-mockery": "^0.10.2",
                 "phpstan/phpstan-shim": "^0.10.5"
             },
@@ -1655,15 +1655,15 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2019-04-02 13:25:15"
+            "time": "2019-04-04 21:25:08"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "dev-release/4.203.0",
+            "version": "dev-release/4.203.1",
             "source": {
                 "type": "git",
                 "url": "git@repo.shd.ci.nonprod.dvsa.aws:olcs/olcs-xmltools.git",
-                "reference": "c1619402fcb357707f60fdf40782012ab0da9879"
+                "reference": "c2a0e761f7b0c29bf4a472b6b7ea2cf7a1a81c1a"
             },
             "require": {
                 "php": ">=5.4.0",
@@ -1707,7 +1707,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2019-04-02 13:21:18"
+            "time": "2019-04-04 21:20:57"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -2438,17 +2438,17 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v3.4.23",
+            "version": "v3.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "8d8a9e877b3fcdc50ddecf8dcea146059753f782"
+                "reference": "adbdd5d66342fb0a0bce7422ba68181842b6610d"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-8d8a9e877b3fcdc50ddecf8dcea146059753f782-zip-4a532f.tar",
-                "reference": "8d8a9e877b3fcdc50ddecf8dcea146059753f782",
-                "shasum": "c55293a9f3d0a54021dd901e2289db737fb5a147"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/symfony-debug-adbdd5d66342fb0a0bce7422ba68181842b6610d-zip-be24d9.tar",
+                "reference": "adbdd5d66342fb0a0bce7422ba68181842b6610d",
+                "shasum": "2425125da46299776bcb911175f9a34fcb4cf2a2"
             },
             "require": {
                 "php": "^5.5.9|>=7.0.8",
@@ -2490,7 +2490,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-02-24 15:45:11"
+            "time": "2019-03-10 17:07:42"
         },
         {
             "name": "symfony/filesystem",
@@ -2544,7 +2544,7 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.23",
+            "version": "v3.4.24",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -5070,17 +5070,17 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "cb2f008f3f05af2893a87208fe6a6c4985483f8b"
+                "reference": "06b6ce404ee574e9c1787fb67bb9980ca4387c34"
             },
             "dist": {
                 "type": "tar",
-                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/theseer-tokenizer-cb2f008f3f05af2893a87208fe6a6c4985483f8b-zip-1b9019.tar",
-                "reference": "cb2f008f3f05af2893a87208fe6a6c4985483f8b",
-                "shasum": "c2b5e658546e4dd121e563d0e7738341dd58b884"
+                "url": "http://devrepo.shd.ci.nonprod.dvsa.aws/dist/theseer-tokenizer-06b6ce404ee574e9c1787fb67bb9980ca4387c34-zip-4b86ed.tar",
+                "reference": "06b6ce404ee574e9c1787fb67bb9980ca4387c34",
+                "shasum": "b7b367d811186adc105eeea846ba91439faefdc1"
             },
             "require": {
                 "ext-dom": "*",
@@ -5106,7 +5106,7 @@
                 }
             ],
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
-            "time": "2017-04-07 12:08:54"
+            "time": "2019-04-03 18:37:40"
         },
         {
             "name": "webmozart/assert",
