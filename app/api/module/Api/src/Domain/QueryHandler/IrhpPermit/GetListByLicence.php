@@ -19,14 +19,10 @@ class GetListByLicence extends AbstractListQueryHandler implements ToggleRequire
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
     protected $bundle = [
-        'irhpPermitApplication' => [
-            'irhpApplication' => [
-                'licence'
-            ],
-            'irhpPermitWindow' => [
-                'irhpPermitStock' => [
-                    'country'
-                ]
+        'irhpPermitApplication',
+        'irhpPermitRange' => [
+            'irhpPermitStock' => [
+                'country'
             ]
         ]
     ];
