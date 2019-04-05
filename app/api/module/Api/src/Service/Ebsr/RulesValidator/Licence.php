@@ -59,7 +59,7 @@ class Licence extends AbstractValidator
             return false;
         }
 
-        $validLicenceStates = [LicenceEntity::LICENCE_STATUS_VALID];
+        $validLicenceStates = [LicenceEntity::LICENCE_STATUS_VALID,LicenceEntity::LICENCE_STATUS_CURTAILED, LicenceEntity::LICENCE_STATUS_SUSPENDED];
 
         if (!in_array($licence->getStatus()->getId(), $validLicenceStates)) {
             $this->error(self::LICENCE_INACTIVE_ERROR);
