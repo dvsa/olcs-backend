@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\CreateDefaultIrhpPermitApplications;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
@@ -30,7 +32,7 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->references = [
             IrhpPermitType::class => [
-                1 => m::mock(IrhpPermitType::class)
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => m::mock(IrhpPermitType::class)
             ],
             Licence::class => [
                 2 => m::mock(Licence::class),
@@ -50,28 +52,61 @@ class CreateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $permitTypeId = 1;
+        $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL;
         $licenceId = 2;
-
-        $cmdData = [
-            'type' => $permitTypeId,
-            'licence' => $licenceId,
-        ];
-
-        $command = CreateCmd::create($cmdData);
-
-        $irhpApplication = null;
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
             ->with(m::type(IrhpApplication::class))
             ->once()
             ->andReturnUsing(
-                function (IrhpApplication $app) use (&$irhpApplication) {
-                    $irhpApplication = $app;
-                    $app->setId(4);
+                function ($irhpApplication) {
+                    $this->assertSame(
+                        $this->refData[IrhpInterface::SOURCE_SELFSERVE],
+                        $irhpApplication->getSource()
+                    );
+
+                    $this->assertSame(
+                        $this->refData[IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+                        $irhpApplication->getStatus()
+                    );
+
+                    $this->assertSame(
+                        $this->references[IrhpPermitType::class][IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+                        $irhpApplication->getIrhpPermitType()
+                    );
+
+                    $this->assertSame(
+                        $this->references[Licence::class][2],
+                        $irhpApplication->getLicence()
+                    );
+
+                    $this->assertEquals(
+                        date('Y-m-d'),
+                        $irhpApplication->getDateReceived(true)->format('Y-m-d')
+                    );
+
+                    $irhpApplication->setId(4);
+
+                    return;
                 }
             );
+
+        $sideEffectResult = new Result();
+        $sideEffectResult->addMessage('Message from CreateDefaultIrhpPermitApplications');
+
+        $this->expectedSideEffect(
+            CreateDefaultIrhpPermitApplications::class,
+            ['id' => 4],
+            $sideEffectResult
+        );
+
+        $command = CreateCmd::create(
+            [
+                'type' => $permitTypeId,
+                'licence' => $licenceId
+            ]
+        );
 
         $result = $this->sut->handleCommand($command);
 
@@ -80,7 +115,8 @@ class CreateTest extends CommandHandlerTestCase
                 'irhpApplication' => 4,
             ],
             'messages' => [
-                0 => 'IRHP Application created successfully',
+                'Message from CreateDefaultIrhpPermitApplications',
+                'IRHP Application created successfully'
             ]
         ];
 

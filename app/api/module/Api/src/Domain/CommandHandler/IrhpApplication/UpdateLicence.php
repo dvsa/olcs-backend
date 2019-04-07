@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\ResetIrhpPermitApplications;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -15,8 +17,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
-use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete;
 
 /**
  * Update IRHP Application Licence
@@ -59,12 +59,11 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
             throw new ForbiddenException($message);
         }
 
-        $irhpPermitApplications = $application->getIrhpPermitApplications();
-
-        /** @var IrhpPermitApplication $irhpPermitApplication */
-        foreach ($irhpPermitApplications as $irhpPermitApplication) {
-            $this->result->merge($this->handleSideEffect(Delete::create(['id' => $irhpPermitApplication->getId()])));
-        }
+        $this->result->merge(
+            $this->handleSideEffect(
+                ResetIrhpPermitApplications::create(['id' => $command->getId()])
+            )
+        );
 
         // Update the licence but reset the previously answers questions to NULL
         $application->updateLicence($licence);
