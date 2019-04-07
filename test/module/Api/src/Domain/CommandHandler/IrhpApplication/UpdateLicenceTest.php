@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
-use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\ResetIrhpPermitApplications;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateLicence as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateLicence as Command;
@@ -72,17 +71,6 @@ class UpdateLicenceTest extends CommandHandlerTestCase
 
         $command = Command::create($data);
 
-        $irhpPermitApplications = [
-            1 => m::mock(IrhpPermitApplication::class)
-                ->shouldReceive('getId')
-                ->andReturn(1)
-                ->getMock(),
-            2 => m::mock(IrhpPermitApplication::class)
-                ->shouldReceive('getId')
-                ->andReturn(2)
-                ->getMock()
-        ];
-
         $fees = [
             1 => m::mock(Fee::class)
                 ->shouldReceive('getId')
@@ -95,9 +83,6 @@ class UpdateLicenceTest extends CommandHandlerTestCase
         ];
 
         $this->commandHandler
-            ->shouldReceive('handleCommand')
-            ->with(m::type(Delete::class), false)
-            ->andReturn(new Result())
             ->shouldReceive('handleCommand')
             ->with(m::type(CancelFee::class), false)
             ->andReturn(new Result());
@@ -120,19 +105,13 @@ class UpdateLicenceTest extends CommandHandlerTestCase
         /** @var IrhpApplicationEntity $irhpApplication */
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
 
-        $irhpApplication
-            ->shouldReceive('getIrhpPermitType')
-            ->andReturn(
-                m::mock(IrhpPermitType::class)
-            )
-            ->getMock()
-            ->shouldReceive('getIrhpPermitApplications')
-            ->andReturn($irhpPermitApplications)
-            ->shouldReceive('updateLicence')
-            ->with($licence)
-            ->shouldReceive('getOutstandingFees')
-            ->andReturn($fees)
-            ->shouldReceive('getId')
+        $irhpApplication->shouldReceive('getIrhpPermitType')
+            ->andReturn(m::mock(IrhpPermitType::class));
+        $irhpApplication->shouldReceive('updateLicence')
+            ->with($licence);
+        $irhpApplication->shouldReceive('getOutstandingFees')
+            ->andReturn($fees);
+        $irhpApplication->shouldReceive('getId')
             ->andReturn(1);
 
         $this->repoMap['IrhpApplication']
@@ -147,6 +126,15 @@ class UpdateLicenceTest extends CommandHandlerTestCase
             ->with(2)
             ->andReturn($licence);
 
+        $sideEffectResult = new Result();
+        $sideEffectResult->addMessage('Message from ResetIrhpPermitApplications');
+
+        $this->expectedSideEffect(
+            ResetIrhpPermitApplications::class,
+            ['id' => 1],
+            $sideEffectResult
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -154,7 +142,8 @@ class UpdateLicenceTest extends CommandHandlerTestCase
                 'irhpApplication' => 1
             ],
             'messages' => [
-                0 => 'IrhpApplication Licence Updated successfully'
+                0 => 'Message from ResetIrhpPermitApplications',
+                1 => 'IrhpApplication Licence Updated successfully'
             ]
         ];
 

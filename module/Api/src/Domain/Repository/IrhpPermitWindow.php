@@ -242,4 +242,28 @@ class IrhpPermitWindow extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch all open windows for the specified type
+     *
+     * @param int      $type Type
+     * @param DateTime $now  Now
+     *
+     * @return array
+     */
+    public function fetchOpenWindowsByType($type, DateTime $now)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb->select($this->alias)
+            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->where($qb->expr()->eq('ipt.id', ':type'))
+            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->setParameter('type', $type)
+            ->setParameter('now', $now->format(DateTime::ISO8601));
+
+        return $qb->getQuery()->getResult();
+    }
 }

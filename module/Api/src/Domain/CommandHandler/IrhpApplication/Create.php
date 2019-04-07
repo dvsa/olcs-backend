@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\CreateDefaultIrhpPermitApplications;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
@@ -33,15 +34,15 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
      *
      * @return Result
      * @throws NotFoundException
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
+        $permitTypeId = $command->getType();
 
         /** @var IrhpApplicationRepo $irhpApplicationRepo */
         $irhpApplicationRepo = $this->getRepo();
         /** @var IrhpPermitTypeEntity $permitType */
-        $permitType = $irhpApplicationRepo->getReference(IrhpPermitTypeEntity::class, $command->getType());
+        $permitType = $irhpApplicationRepo->getReference(IrhpPermitTypeEntity::class, $permitTypeId);
 
         if (!($permitType instanceof IrhpPermitTypeEntity)) {
             throw new NotFoundException('Permit type not found');
@@ -50,12 +51,18 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         $irhpApplication = IrhpApplicationEntity::createNew(
             $this->refData(IrhpInterface::SOURCE_SELFSERVE),
             $this->refData(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
-            $irhpApplicationRepo->getReference(IrhpPermitTypeEntity::class, $permitType->getId()),
+            $irhpApplicationRepo->getReference(IrhpPermitTypeEntity::class, $permitTypeId),
             $irhpApplicationRepo->getReference(LicenceEntity::class, $command->getLicence()),
             date('Y-m-d')
         );
 
         $irhpApplicationRepo->save($irhpApplication);
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                CreateDefaultIrhpPermitApplications::create(['id' => $irhpApplication->getId()])
+            )
+        );
 
         $this->result->addId('irhpApplication', $irhpApplication->getId());
         $this->result->addMessage('IRHP Application created successfully');
