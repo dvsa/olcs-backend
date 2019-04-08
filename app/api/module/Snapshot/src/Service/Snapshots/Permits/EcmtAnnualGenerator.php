@@ -22,6 +22,7 @@ class EcmtAnnualGenerator extends AbstractGenerator implements SnapshotGenerator
      * Generate the snapshot html
      *
      * @return string
+     * @throws \Exception
      */
     public function generate(): string
     {
@@ -45,7 +46,7 @@ class EcmtAnnualGenerator extends AbstractGenerator implements SnapshotGenerator
                         'permits.ecmt.declaration.bullet.guidance.issued.logbook',
                         'permits.ecmt.declaration.bullet.guidance.carry.logbook',
                     ],
-                    'declaration' => 'permits.ecmt.declaration',
+                    'declaration' => 'permits.snapshot.declaration',
                 ],
             ],
             'permit-application'
