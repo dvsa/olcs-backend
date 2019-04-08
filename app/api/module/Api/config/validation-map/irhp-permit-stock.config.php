@@ -3,12 +3,13 @@
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 
 return [
     QueryHandler\IrhpPermitStock\ById::class => IsInternalAdmin::class,
     QueryHandler\IrhpPermitStock\GetList::class => IsInternalAdmin::class,
     QueryHandler\IrhpPermitStock\GetFormList::class => IsInternalAdmin::class,
-    CommandHandler\IrhpPermitStock\Create::class => IsInternalAdmin::class,
-    CommandHandler\IrhpPermitStock\Update::class => IsInternalAdmin::class,
-    CommandHandler\IrhpPermitStock\Delete::class => IsInternalAdmin::class,
+    CommandHandler\IrhpPermitStock\Create::class => IsSystemAdmin::class,
+    CommandHandler\IrhpPermitStock\Update::class => IsSystemAdmin::class,
+    CommandHandler\IrhpPermitStock\Delete::class => IsSystemAdmin::class,
 ];
