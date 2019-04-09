@@ -355,4 +355,34 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             $now
         );
     }
+
+    public function testFetchOpenWindowsByType()
+    {
+        $now = new DateTime('2019-04-08 09:51:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenWindowsByType(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, $now)
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
