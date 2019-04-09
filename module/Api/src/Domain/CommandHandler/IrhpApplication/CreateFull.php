@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -12,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -28,6 +30,7 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
 
     protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
     protected $repoServiceName = 'IrhpApplication';
+    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];
 
     /**
      * Handle command
@@ -58,14 +61,9 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
         );
         $irhpApplicationRepo->save($irhpApplication);
 
-        $this->result->merge(
-            $this->handleSideEffect(
-                UpdateCountries::create([
-                    'id' => $irhpApplication->getId(),
-                    'countries' => array_keys($command->getPermitsRequired())
-                ])
-            )
-        );
+        $this->createIrhpPermitApplications($irhpApplication, $command->getIrhpPermitType());
+        $this->updateCountries($irhpApplication, $permitType->getId(), $command);
+
         $irhpApplicationRepo->refresh($irhpApplication);
         $irhpApplication->resetSectionCompletion();
 
@@ -94,5 +92,56 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
         $this->result->addMessage('IRHP Application created successfully');
 
         return $this->result;
+    }
+
+    /**
+     * Creates and saves instances of IrhpPermitApplication as required to accompany the IrhpApplication
+     *
+     * @param IrhpApplicationEntity $irhpApplication
+     * @param int $permitTypeId
+     */
+    private function updateCountries(IrhpApplicationEntity $irhpApplication, $permitTypeId, $command)
+    {
+        if ((int)$permitTypeId !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            return;
+        }
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                UpdateCountries::create([
+                    'id' => $irhpApplication->getId(),
+                    'countries' => array_keys($command->getPermitsRequired())
+                ])
+            )
+        );
+    }
+
+    /**
+     * Creates and saves instances of IrhpPermitApplication as required to accompany the IrhpApplication
+     *
+     * @param IrhpApplicationEntity $irhpApplication
+     * @param int $permitTypeId
+     */
+    private function createIrhpPermitApplications(IrhpApplicationEntity $irhpApplication, $permitTypeId)
+    {
+        if ($permitTypeId != IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL) {
+            return;
+        }
+
+        $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
+            $permitTypeId,
+            new DateTime()
+        );
+
+        $irhpPermitApplicationRepo = $this->getRepo('IrhpPermitApplication');
+
+        foreach ($irhpPermitWindows as $irhpPermitWindow) {
+            $irhpPermitApplication = IrhpPermitApplicationEntity::createNewForIrhpApplication(
+                $irhpApplication,
+                $irhpPermitWindow
+            );
+
+            $irhpPermitApplicationRepo->save($irhpPermitApplication);
+        }
     }
 }
