@@ -429,4 +429,13 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             $irhpPermitApplication->getIssueFeeProductReference()
         );
     }
+
+    public function testClearPermitsRequired()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setPermitsRequired(5);
+        $entity->clearPermitsRequired();
+
+        $this->assertNull($entity->getPermitsRequired());
+    }
 }

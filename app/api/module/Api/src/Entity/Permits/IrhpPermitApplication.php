@@ -252,4 +252,14 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
         return $productReference;
     }
+
+    /**
+     * Clear permits required
+     *
+     * @return bool
+     */
+    public function clearPermitsRequired()
+    {
+        return $this->permitsRequired = null;
+    }
 }
