@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use DateTime;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -9,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 
 /**
  * IrhpPermitApplication Entity
@@ -31,6 +35,23 @@ use Doctrine\Common\Collections\Criteria;
  */
 class IrhpPermitApplication extends AbstractIrhpPermitApplication implements OrganisationProviderInterface
 {
+    use TieredProductReference;
+
+    const MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+        'Jan' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
+        'Feb' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
+        'Mar' => FeeType::FEE_TYPE_IRHP_ISSUE_MULTILATERAL_PRODUCT_REF,
+        'Apr' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_75_PRODUCT_REF,
+        'May' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_75_PRODUCT_REF,
+        'Jun' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_75_PRODUCT_REF,
+        'Jul' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_50_PRODUCT_REF,
+        'Aug' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_50_PRODUCT_REF,
+        'Sep' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_50_PRODUCT_REF,
+        'Oct' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF,
+        'Nov' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF,
+        'Dec' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF,
+    ];
+
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
         Licence $licence,
@@ -197,5 +218,38 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     public function hasValidPermits()
     {
         return $this->countValidPermits() > 0;
+    }
+
+    /**
+     * Returns the issue fee product reference for this application
+     * Applicable to bilateral and multilateral only
+     *
+     * @return string
+     *
+     * @throws ForbiddenException
+     */
+    public function getIssueFeeProductReference()
+    {
+        $irhpPermitTypeId = $this->getIrhpApplication()->getIrhpPermitType()->getId();
+        switch ($irhpPermitTypeId) {
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
+                $productReference = FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF;
+                break;
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
+                $irhpPermitStock = $this->getIrhpPermitWindow()->getIrhpPermitStock();
+                $productReference = $this->genericGetProdRefForTier(
+                    $irhpPermitStock->getValidFrom(true),
+                    $irhpPermitStock->getValidTo(true),
+                    new DateTime(),
+                    self::MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY
+                );
+                break;
+            default:
+                throw new ForbiddenException(
+                    'Cannot get issue fee product ref and quantity for irhp permit type ' . $irhpPermitTypeId
+                );
+        }
+
+        return $productReference;
     }
 }

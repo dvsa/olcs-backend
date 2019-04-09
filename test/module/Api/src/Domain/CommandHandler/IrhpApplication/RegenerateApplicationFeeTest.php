@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
@@ -28,138 +27,129 @@ class RegenerateApplicationFeeTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    public function testFeeAlreadyExists()
+    public function testHandleCommand()
     {
         $irhpApplicationId = 47;
-        $existingFeeId = 78;
         $licenceId = 32;
-        $permitsRequired = 14;
-        $feeDescription = 'Bilateral permits application fee - 14 permits';
-        $feeTypeId = 103;
-        $feeTypeDescription = 'Bilateral permits application fee';
-        $feeTypeFixedValue = 150;
-        $feeAmount = 2100;
 
-        $existingFee = m::mock(Fee::class);
-        $existingFee->shouldReceive('getId')
-            ->andReturn($existingFeeId);
+        $existingFee1Id = 78;
+        $existingFee1 = m::mock(Fee::class);
+        $existingFee1->shouldReceive('getId')
+            ->andReturn($existingFee1Id);
+
+        $existingFee2Id = 79;
+        $existingFee2 = m::mock(Fee::class);
+        $existingFee2->shouldReceive('getId')
+            ->andReturn($existingFee2Id);
+
+        $existingFees = [$existingFee1, $existingFee2];
+
+        $product1Reference = 'PRODUCT_REF_1';
+        $product1Quantity = 4;
+        $product1FeeTypeId = 123;
+        $product1FeeTypeDescription = 'Product Reference 1 Description';
+        $product1FeeTypeFixedValue = 23;
+
+        $product1FeeType = m::mock(FeeType::class);
+        $product1FeeType->shouldReceive('getId')
+            ->andReturn($product1FeeTypeId);
+        $product1FeeType->shouldReceive('getDescription')
+            ->andReturn($product1FeeTypeDescription);
+        $product1FeeType->shouldReceive('getFixedValue')
+            ->andReturn($product1FeeTypeFixedValue);
+
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
+            ->with($product1Reference)
+            ->andReturn($product1FeeType);
+
+        $product2Reference = 'PRODUCT_REF_2';
+        $product2Quantity = 6;
+        $product2FeeTypeId = 456;
+        $product2FeeTypeDescription = 'Product Reference 2 Description';
+        $product2FeeTypeFixedValue = 35;
+
+        $product2FeeType = m::mock(FeeType::class);
+        $product2FeeType->shouldReceive('getId')
+            ->andReturn($product2FeeTypeId);
+        $product2FeeType->shouldReceive('getDescription')
+            ->andReturn($product2FeeTypeDescription);
+        $product2FeeType->shouldReceive('getFixedValue')
+            ->andReturn($product2FeeTypeFixedValue);
+
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
+            ->with($product2Reference)
+            ->andReturn($product2FeeType);
+
+        $productRefsAndQuantities = [
+            $product1Reference => $product1Quantity,
+            $product2Reference => $product2Quantity,
+        ];
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
         $irhpApplication->shouldReceive('canCreateOrReplaceApplicationFee')
             ->andReturn(true);
-        $irhpApplication->shouldReceive('getLatestOutstandingApplicationFee')
-            ->andReturn($existingFee);
+        $irhpApplication->shouldReceive('getOutstandingApplicationFees')
+            ->andReturn($existingFees);
         $irhpApplication->shouldReceive('getLicence->getId')
             ->andReturn($licenceId);
-        $irhpApplication->shouldReceive('getPermitsRequired')
-            ->andReturn($permitsRequired);
+        $irhpApplication->shouldReceive('getApplicationFeeProductRefsAndQuantities')
+            ->andReturn($productRefsAndQuantities);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
             ->andReturn($irhpApplication);
 
-        $feeType = m::mock(FeeType::class);
-        $feeType->shouldReceive('getId')
-            ->andReturn($feeTypeId);
-        $feeType->shouldReceive('getDescription')
-            ->andReturn($feeTypeDescription);
-        $feeType->shouldReceive('getFixedValue')
-            ->andReturn($feeTypeFixedValue);
-
-        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
-            ->with('IRHP_GV_APP_BILATERAL_ANN')
-            ->andReturn($feeType);
-
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
 
-        $cancelFeeData = [
-            'id' => $existingFeeId
-        ];
-        $this->expectedSideEffect(CancelFee::class, $cancelFeeData, new Result());
-
-        $createFeeData = [
-            'licence' => $licenceId,
-            'irhpApplication' => $irhpApplicationId,
-            'invoicedDate' => date('Y-m-d'),
-            'description' => $feeDescription,
-            'feeType' => $feeTypeId,
-            'feeStatus' => Fee::STATUS_OUTSTANDING,
-            'amount' => $feeAmount
-        ];
-        $this->expectedSideEffect(CreateFee::class, $createFeeData, new Result());
-
-        $result = $this->sut->handleCommand($command);
-
-        $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
-        $this->assertEquals(
-            ['Cancelled existing Application fee', 'Created new Application fee'],
-            $result->getMessages()
+        $this->expectedSideEffect(
+            CancelFee::class,
+            ['id' => $existingFee1Id],
+            new Result()
         );
-    }
 
-    public function testFeeDoesNotAlreadyExist()
-    {
-        $irhpApplicationId = 47;
-        $licenceId = 32;
-        $permitsRequired = 14;
-        $feeDescription = 'Bilateral permits application fee - 14 permits';
-        $feeTypeId = 103;
-        $feeTypeDescription = 'Bilateral permits application fee';
-        $feeTypeFixedValue = 150;
-        $feeAmount = 2100;
+        $this->expectedSideEffect(
+            CancelFee::class,
+            ['id' => $existingFee2Id],
+            new Result()
+        );
 
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getId')
-            ->andReturn($irhpApplicationId);
-        $irhpApplication->shouldReceive('canCreateOrReplaceApplicationFee')
-            ->andReturn(true);
-        $irhpApplication->shouldReceive('getLatestOutstandingApplicationFee')
-            ->andReturn(null);
-        $irhpApplication->shouldReceive('getLicence->getId')
-            ->andReturn($licenceId);
-        $irhpApplication->shouldReceive('getPermitsRequired')
-            ->andReturn($permitsRequired);
+        $this->expectedSideEffect(
+            CreateFee::class,
+            [
+                'licence' => $licenceId,
+                'irhpApplication' => $irhpApplicationId,
+                'invoicedDate' => date('Y-m-d'),
+                'description' => 'Product Reference 1 Description - 4 at £23',
+                'feeType' => $product1FeeTypeId,
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'quantity' => $product1Quantity
+            ],
+            new Result()
+        );
 
-        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
-            ->with($irhpApplicationId)
-            ->andReturn($irhpApplication);
-
-        $feeType = m::mock(FeeType::class);
-        $feeType->shouldReceive('getId')
-            ->andReturn($feeTypeId);
-        $feeType->shouldReceive('getDescription')
-            ->andReturn($feeTypeDescription);
-        $feeType->shouldReceive('getFixedValue')
-            ->andReturn($feeTypeFixedValue);
-
-        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
-            ->with('IRHP_GV_APP_BILATERAL_ANN')
-            ->andReturn($feeType);
-
-        $command = m::mock(CommandInterface::class);
-        $command->shouldReceive('getId')
-            ->andReturn($irhpApplicationId);
-
-        $createFeeData = [
-            'licence' => $licenceId,
-            'irhpApplication' => $irhpApplicationId,
-            'invoicedDate' => date('Y-m-d'),
-            'description' => $feeDescription,
-            'feeType' => $feeTypeId,
-            'feeStatus' => Fee::STATUS_OUTSTANDING,
-            'amount' => $feeAmount
-        ];
-        $this->expectedSideEffect(CreateFee::class, $createFeeData, new Result());
+        $this->expectedSideEffect(
+            CreateFee::class,
+            [
+                'licence' => $licenceId,
+                'irhpApplication' => $irhpApplicationId,
+                'invoicedDate' => date('Y-m-d'),
+                'description' => 'Product Reference 2 Description - 6 at £35',
+                'feeType' => $product2FeeTypeId,
+                'feeStatus' => Fee::STATUS_OUTSTANDING,
+                'quantity' => $product2Quantity
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
         $this->assertEquals(
-            ['Created new Application fee'],
+            ['Refreshed Application fee list'],
             $result->getMessages()
         );
     }
