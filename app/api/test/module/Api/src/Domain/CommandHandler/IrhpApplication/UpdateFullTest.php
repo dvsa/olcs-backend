@@ -54,7 +54,6 @@ class UpdateFullTest extends CommandHandlerTestCase
 
         $command = CreateCmd::create($cmdData);
 
-        $irhpApplication = null;
         $irhpApplicationEntity = m::mock(IrhpApplication::class);
 
         $this->repoMap['IrhpApplication']
@@ -73,6 +72,9 @@ class UpdateFullTest extends CommandHandlerTestCase
 
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
+
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(4);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -111,6 +113,84 @@ class UpdateFullTest extends CommandHandlerTestCase
                 0 => 'section updated',
                 1 => 'section updated',
                 2 => 'IRHP Application updated successfully',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandMultilateral()
+    {
+        $permitTypeId = 4;
+        $licenceId = 2;
+
+        $cmdData = [
+            'id' => 44,
+            'type' => $permitTypeId,
+            'licence' => $licenceId,
+            'dateReceived' => '2020-01-03',
+            'declaration' => 0,
+            'countries' => ['DE', 'FR', 'NL'],
+            'permitsRequired' => [
+                '2020' => 10,
+                '2021' => 12
+            ]
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $irhpApplicationEntity = m::mock(IrhpApplication::class);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchById')
+            ->with(44)
+            ->once()
+            ->andReturn($irhpApplicationEntity);
+
+        $irhpApplicationEntity->shouldReceive('getId')
+            ->times(2)
+            ->andReturn(44);
+
+        $irhpApplicationEntity->shouldReceive('updateDateReceived')
+            ->once()
+            ->with($cmdData['dateReceived']);
+
+        $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
+            ->twice();
+
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(5);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('save')
+            ->with($irhpApplicationEntity)
+            ->once()
+            ->andReturn($irhpApplicationEntity);
+
+
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('refresh')
+            ->twice()
+            ->andReturnSelf();
+
+        $result2 = new Result();
+        $result2->addMessage('section updated');
+        $sideEffectData = [
+            'id' => 44,
+            'permitsRequired' => $command->getPermitsRequired()
+        ];
+        $this->expectedSideEffect(UpdateMultipleNoOfPermits::class, $sideEffectData, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'irhpApplication' => 44,
+            ],
+            'messages' => [
+                0 => 'section updated',
+                1 => 'IRHP Application updated successfully',
             ]
         ];
 

@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
@@ -39,15 +41,11 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
         /** @var IrhpApplicationRepo $irhpApplicationRepo */
         $irhpApplicationRepo = $this->getRepo();
 
+        /** @var IrhpApplicationEntity $irhpApplication */
         $irhpApplication = $irhpApplicationRepo->fetchById($command->getId());
 
-        $this->result->merge(
-            $this->handleSideEffect(
-                UpdateCountries::create([
-                    'id' => $irhpApplication->getId(),
-                    'countries' => array_keys($command->getPermitsRequired())])
-            )
-        );
+        $this->updateCountries($irhpApplication, $irhpApplication->getIrhpPermitType()->getId(), $command);
+
         $irhpApplicationRepo->refresh($irhpApplication);
         $irhpApplication->resetSectionCompletion();
 
@@ -78,5 +76,28 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
         $this->result->addMessage('IRHP Application updated successfully');
 
         return $this->result;
+    }
+
+    /**
+     * Creates and saves instances of IrhpPermitApplication as required to accompany the IrhpApplication
+     *
+     * @param IrhpApplicationEntity $irhpApplication
+     * @param int $permitTypeId
+     * @param CommandInterface $command
+     */
+    private function updateCountries(IrhpApplicationEntity $irhpApplication, $permitTypeId, CommandInterface $command)
+    {
+        if ((int)$permitTypeId !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            return;
+        }
+
+        $this->result->merge(
+            $this->handleSideEffect(
+                UpdateCountries::create([
+                    'id' => $irhpApplication->getId(),
+                    'countries' => array_keys($command->getPermitsRequired())
+                ])
+            )
+        );
     }
 }
