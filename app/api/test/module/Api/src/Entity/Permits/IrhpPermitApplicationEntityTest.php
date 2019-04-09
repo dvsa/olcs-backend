@@ -2,11 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -359,5 +363,70 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $this->assertNull($this->sut->getRelatedApplication());
         $this->assertNull($this->sut->getRelatedOrganisation());
+    }
+
+    public function testGetIssueFeeProductReferenceBilateral()
+    {
+        $irhpPermitApplication = m::mock(Entity::class)->makePartial();
+        $irhpPermitApplication->shouldReceive('getIrhpApplication->getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF,
+            $irhpPermitApplication->getIssueFeeProductReference()
+        );
+    }
+
+    public function testGetIssueFeeProductReferenceMultilateral()
+    {
+        $tieredProductReference = 'TIERED_PRODUCT_REFERENCE';
+
+        $stockValidFrom = m::mock(DateTime::class);
+        $stockValidTo = m::mock(DateTime::class);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getValidFrom')
+            ->with(true)
+            ->andReturn($stockValidFrom);
+        $irhpPermitStock->shouldReceive('getValidTo')
+            ->with(true)
+            ->andReturn($stockValidTo);
+
+        $irhpPermitApplication = m::mock(Entity::class)->makePartial();
+        $irhpPermitApplication->shouldReceive('getIrhpApplication->getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+        $irhpPermitApplication->shouldReceive('genericGetProdRefForTier')
+            ->andReturnUsing(
+                function (
+                    $validityStart,
+                    $validityEnd,
+                    $now,
+                    $tieredProductReferenceArray
+                ) use (
+                    $tieredProductReference,
+                    $stockValidFrom,
+                    $stockValidTo
+                ) {
+                    $this->assertSame($validityStart, $stockValidFrom);
+                    $this->assertSame($validityEnd, $stockValidTo);
+                    $this->assertEquals(
+                        (new DateTime())->format('Y-m-d'),
+                        $now->format('Y-m-d')
+                    );
+                    $this->assertEquals(
+                        Entity::MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY,
+                        $tieredProductReferenceArray
+                    );
+
+                    return $tieredProductReference;
+                }
+            );
+
+        $this->assertEquals(
+            $tieredProductReference,
+            $irhpPermitApplication->getIssueFeeProductReference()
+        );
     }
 }
