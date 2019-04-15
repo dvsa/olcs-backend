@@ -43,7 +43,8 @@
         "beberlei/DoctrineExtensions": "^1.0",
         "qandidate/toggle": "^1.1",
         "league/flysystem": "^1.0",
-        "league/flysystem-webdav": "^1.0"
+        "league/flysystem-webdav": "^1.0",
+        "sabre/uri": "^1.0.1"
     },
     "require-dev": {
         "olcs/olcs-devtools": "^4.205",
