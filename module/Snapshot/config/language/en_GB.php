@@ -372,5 +372,22 @@ return [
     'surrender-review-documentation-operator-licence' => 'Operator licence',
     'surrender-review-documentation-community-licence' => 'Community licence and all certified copies',
 
+    //permit snapshot translations
+    'permits.check-answers.page.question.licence' => 'Licence selected',
+    'permits.form.euro6.label' => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with Euro 6 emissions standards.',
+    'permits.form.cabotage.label' => 'I confirm that I will not undertake any cabotage journeys using an ECMT permit.',
+    'permits.page.restricted-countries.question' => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?',
+    'permits.page.permits.required.question' => 'How many permits do you require for this licence?',
+    'permits.page.number-of-trips.question' => 'How many international trips did you make in the last 12 months using this licence?',
+    'permits.page.international.journey.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
+    'permits.page.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
+    'permits.snapshot.title' => 'Application for %s',
+    'permits.ecmt.declaration' => 'I declare that the statements and information provided are true and that my application is correct. I understand that it is an offence to make a false declaration to obtain a permit.',
+    'permits.ecmt.declaration.bullet.guidance.note' => 'I have read the Guidance Notes (https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage) on how to use ECMT permits.',
+    'permits.ecmt.declaration.bullet.guidance.restricted.countries' => 'I understand if a permit is issued it may exclude travel to Austria, Greece, Hungary, Italy and Russia.',
+    'permits.ecmt.declaration.bullet.guidance.issued.logbook' => 'I understand that if a permit is issued I will be issued with a corresponding logbook which I must complete with full journey details before the start of a journey.',
+    'permits.ecmt.declaration.bullet.guidance.carry.logbook' => 'I understand that I must carry a permit and corresponding logbook for the entire outbound and return journey.',
+
+
     // Potentially unused translations
 ];
