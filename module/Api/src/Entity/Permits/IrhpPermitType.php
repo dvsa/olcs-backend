@@ -35,6 +35,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
             'isEcmtAnnual' => $this->isEcmtAnnual(),
             'isEcmtShortTerm' => $this->isEcmtShortTerm(),
             'isBilateral' => $this->isBilateral(),
+            'isMultilateral' => $this->isMultilateral(),
         ];
     }
 
@@ -66,5 +67,15 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function isBilateral()
     {
         return $this->id === self::IRHP_PERMIT_TYPE_ID_BILATERAL;
+    }
+
+    /**
+     * Is this Multilateral
+     *
+     * @return bool
+     */
+    public function isMultilateral()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_MULTILATERAL;
     }
 }

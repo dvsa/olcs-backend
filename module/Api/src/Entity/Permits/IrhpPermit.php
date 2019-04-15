@@ -168,8 +168,29 @@ class IrhpPermit extends AbstractIrhpPermit
     public function getCalculatedBundleValues()
     {
         return [
-            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix()
+            'permitNumberWithPrefix' => $this->getPermitNumberWithPrefix(),
+            'startDate' => $this->getStartDate(),
         ];
+    }
+
+    /**
+     * Get the permit start date
+     *
+     * @return DateTime
+     */
+    public function getStartDate()
+    {
+        // set to stock's valid from date by default
+        $startDate = $this->getIrhpPermitRange()->getIrhpPermitStock()->getValidFrom(true);
+
+        $issueDate = $this->getIssueDate(true);
+
+        if (isset($startDate) && isset($issueDate) && ($issueDate > $startDate)) {
+            // overwrite with the issue date
+            $startDate = $issueDate;
+        }
+
+        return $startDate;
     }
 
     /**
