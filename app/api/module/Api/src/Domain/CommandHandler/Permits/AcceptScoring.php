@@ -94,7 +94,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
                 )
             );
 
-            $applicationIds = $this->getRepo()->fetchInScopeApplicationIds($stockId);
+            $applicationIds = $this->getRepo()->fetchInScopeUnderConsiderationApplicationIds($stockId);
 
             $this->result->addMessage(
                 sprintf('%d under consideration applications found', count($applicationIds))
