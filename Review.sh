@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PHPCS_SEVERITY=1
-BASE_BRANCH="origin/develop"
+BASE_BRANCH="origin/master"
 while getopts "hib:" opt; do
   case $opt in
     h)
