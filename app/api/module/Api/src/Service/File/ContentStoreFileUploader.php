@@ -16,7 +16,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterface
 {
-    const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
+    const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file';
 
     /** @var ContentStoreClient */
     private $contentStoreClient;
@@ -51,15 +51,11 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
 
         $response = $this->write($identifier, $file);
 
-        if ($response->isSuccess()) {
+        if ($response !== false) {
             return $file;
         }
 
-        if ($response->getStatusCode() === Response::STATUS_CODE_415) {
-            throw new MimeNotAllowedException();
-        }
-
-        throw new Exception(sprintf(self::ERR_UNABLE_UPLOAD, $response->getBody()));
+        throw new Exception(self::ERR_UNABLE_UPLOAD);
     }
 
     /**
@@ -79,7 +75,7 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      *
      * @param string $identifier File name on storage
      *
-     * @return Response
+     * @return bool
      */
     public function remove($identifier)
     {
@@ -92,7 +88,7 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      * @param string           $identifier File name of storage
      * @param ContentStoreFile $file       File
      *
-     * @return Response
+     * @return bool
      */
     private function write($identifier, ContentStoreFile $file)
     {

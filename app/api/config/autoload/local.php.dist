@@ -101,11 +101,13 @@ return [
     'document_share' => [
         'client' => [
             // Document service URI *Environment specific*
-            'baseuri' => 'http://docman.shd.da.nonprod.dvsa.aws:8080/hfs/',
-            // Document service user ID *Environment specific*
-            'uuid' => 'uD12345',
+            'baseuri' => 'https://olcs-internal.olcs.gov.uk/documents',
             // Document service workspace "olcs"
-            'workspace' => 'olcs'
+            'workspace' => 'olcs',
+            // Username to log in to WebDAV for writing documents
+            'username' => '',
+            // Password
+            'password' => ''
         ],
         'invalid_defined_mime_types' => [
             'docm' => 'application/vnd.ms-word.document.macroEnabled.12',

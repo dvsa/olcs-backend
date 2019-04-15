@@ -32,6 +32,8 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
         /** @var Entity $template */
         $template = $this->getRepo()->fetchById($command->getTemplate());
 
+        print_r($template);
+        exit();
         return $this->generateDocument($template, $command);
     }
 
