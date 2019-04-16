@@ -336,7 +336,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             );
         }
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchInScopeApplicationIds')
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchInScopeUnderConsiderationApplicationIds')
             ->with($stockId)
             ->andReturn(
                 [
