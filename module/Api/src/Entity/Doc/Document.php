@@ -96,6 +96,9 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
     const IRHP_PERMIT_ANN_BILAT_SWEDEN = 'IRHP_PERMIT_ANN_BILAT_SWEDEN';
     const IRHP_PERMIT_ANN_BILAT_COVERING_LETTER = 'IRHP_PERMIT_ANN_BILAT_COVERING_LETTER';
 
+    const IRHP_PERMIT_ANN_MULTILAT = 'IRHP_PERMIT_ANN_MULTILATERAL';
+    const IRHP_PERMIT_ANN_MULTILAT_COVERING_LETTER = 'IRHP_PERMIT_ANN_MULTILAT_COVERING_LETTER';
+
     /**
      * Document constructor.
      *

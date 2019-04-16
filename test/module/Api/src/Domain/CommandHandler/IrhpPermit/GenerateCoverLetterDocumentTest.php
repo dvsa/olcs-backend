@@ -113,6 +113,14 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
                     'IRHP PERMIT ANN BILAT COVERING LETTER 1 RTF created and stored',
                 ],
             ],
+            'IRHP Multilateral' => [
+                'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'expectedTemplate' => DocumentEntity::IRHP_PERMIT_ANN_MULTILAT_COVERING_LETTER,
+                'expectedDescription' => 'IRHP PERMIT ANN MULTILAT COVERING LETTER 1',
+                'expectedMessages' => [
+                    'IRHP PERMIT ANN MULTILAT COVERING LETTER 1 RTF created and stored',
+                ],
+            ],
         ];
     }
 
