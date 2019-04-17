@@ -277,8 +277,10 @@ class IrhpCandidatePermit extends AbstractRepository
             ->innerJoin('l.trafficArea', 'ta')
             ->innerJoin('l.organisation', 'o')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->andWhere('epa.status = ?2')
             ->andWhere('epa.inScope = 1')
             ->setParameter(1, $irhpPermitStockId)
+            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
             ->getQuery()
             ->getScalarResult();
     }
