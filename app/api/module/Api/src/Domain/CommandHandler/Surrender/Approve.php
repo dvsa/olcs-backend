@@ -114,7 +114,7 @@ class Approve extends AbstractSurrenderCommandHandler
     {
         /** @var Surrender $surrender */
         $surrender = $this->getSurrender($licId);
-        if ($surrender->getEcmsChecked() && $surrender->getSignatureChecked() === false) {
+        if (($surrender->getEcmsChecked() && $surrender->getSignatureChecked()) === false) {
             throw new Exception('The surrender has not been checked');
         }
     }
