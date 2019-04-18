@@ -132,14 +132,15 @@ class IrhpPermit extends AbstractRepository
                 ->setParameter('irhpId', $query->getIrhpApplication());
         }
 
-        if (($query instanceof GetListByLicence) && ($query->getLicence() !== null)) {
+        if ($query instanceof GetListByLicence) {
             $qb->innerJoin('ipa.irhpApplication', 'ia')
-                ->innerJoin('ipa.irhpPermitWindow', 'ipw')
-                ->innerJoin('ipw.irhpPermitStock', 'ips')
-                ->innerJoin('ips.country', 'ipc')
+                ->innerJoin($this->alias . '.irhpPermitRange', 'ipr')
+                ->innerJoin('ipr.irhpPermitStock', 'ips')
+                ->leftJoin('ips.country', 'ipc')
                 ->andWhere($qb->expr()->eq('ia.licence', ':licenceId'))
                 ->setParameter('licenceId', $query->getLicence())
-                ->andWhere($qb->expr()->isNotNull('ipa.irhpApplication'));
+                ->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
+                ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType());
 
             $qb->orderBy('ipc.countryDesc', 'ASC');
             $qb->addOrderBy($this->alias . '.expiryDate', 'ASC');

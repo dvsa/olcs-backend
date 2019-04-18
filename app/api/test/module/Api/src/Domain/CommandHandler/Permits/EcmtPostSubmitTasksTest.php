@@ -49,8 +49,6 @@ class EcmtPostSubmitTasksTest extends CommandHandlerTestCase
         $permitsRequired = 2;
         $intensityOfUse = 3;
         $applicationScore = 4;
-        $viewData = ['data'];
-        $renderedHtml = '<html>HTML</html>';
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
@@ -81,11 +79,6 @@ class EcmtPostSubmitTasksTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($irhpPermitApplication);
 
-        $ecmtPermitApplication->shouldReceive('returnSnapshotData')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($viewData);
-
         $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
             ->times($permitsRequired)
             ->with(m::type(IrhpCandidatePermit::class))
@@ -99,27 +92,12 @@ class EcmtPostSubmitTasksTest extends CommandHandlerTestCase
                 }
             );
 
-        $this->mockedSmServices['ViewRenderer']->shouldReceive('render')
-            ->once()
-            ->with(m::type(ViewModel::class))
-            ->andReturnUsing(
-                function (ViewModel $viewModel) use ($viewData, $renderedHtml) {
-                    $expectedViewVariables = ['data' => $viewData];
-
-                    $this->assertEquals('ecmt-permit-application-snapshot', $viewModel->getTemplate());
-                    $this->assertEquals($expectedViewVariables, $viewModel->getVariables()->getArrayCopy());
-
-                    return $renderedHtml;
-                }
-            );
-
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
             SnapshotCmd::class,
             [
                 'id' => $ecmtPermitApplicationId,
-                'html' => $renderedHtml
             ],
             $result1
         );
