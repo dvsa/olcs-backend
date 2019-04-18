@@ -1,0 +1,8 @@
+<div class="printable__section">
+    <?php
+        if (!empty($bullets)) {
+            echo $this->partial('partials/read-only/bullet-list', ['bullets' => $bullets]);
+        }
+    ?>
+    <p><strong><?php echo $this->escapeHtml($this->translate($declaration, 'snapshot')); ?></strong></p>
+</div>

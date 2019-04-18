@@ -1775,12 +1775,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.205.0",
+            "version": "4.205.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.205.0/olcs-olcs-transfer-4.205.0.zip",
-                "reference": "c5c1193c3e39b2aac4445ed32b698c41f997e877",
-                "shasum": "c5c1193c3e39b2aac4445ed32b698c41f997e877"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.205.2/olcs-olcs-transfer-4.205.2.zip",
+                "reference": "f6ae8bf1ce0d858472a0465a4f253419dddd6cda",
+                "shasum": "f6ae8bf1ce0d858472a0465a4f253419dddd6cda"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -1836,7 +1836,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-04-12T16:05:44+00:00"
+            "time": "2019-04-16T16:14:12+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -3981,10 +3981,10 @@
         },
         {
             "name": "symfony/config",
-            "version": "v3.4.24",
+            "version": "v3.4.25",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/config/v3.4.24/symfony-config-v3.4.24.zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/config/v3.4.25/symfony-config-v3.4.25.zip",
                 "reference": "177a276c01575253c95cefe0866e3d1b57637fe0",
                 "shasum": ""
             },
@@ -4039,11 +4039,11 @@
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.24",
+            "version": "v3.4.25",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/console/v3.4.24/symfony-console-v3.4.24.zip",
-                "reference": "98ae3cdc4bec48fe7ee24afc81dbb4a242186c9e",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/console/v3.4.25/symfony-console-v3.4.25.zip",
+                "reference": "15a9104356436cb26e08adab97706654799d31d8",
                 "shasum": ""
             },
             "require": {
@@ -4101,15 +4101,15 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-31T11:33:18+00:00"
+            "time": "2019-04-08T09:29:13+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v4.2.5",
+            "version": "v4.2.6",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/debug/v4.2.5/symfony-debug-v4.2.5.zip",
-                "reference": "43ce8ab34c734dcc8a4af576cb86711daab964c5",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/debug/v4.2.6/symfony-debug-v4.2.6.zip",
+                "reference": "2d279b6bb1d582dd5740d4d3251ae8c18812ed37",
                 "shasum": ""
             },
             "require": {
@@ -4151,7 +4151,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-03-10T17:09:50+00:00"
+            "time": "2019-04-11T11:27:41+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -4263,11 +4263,11 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.24",
+            "version": "v3.4.25",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/finder/v3.4.24/symfony-finder-v3.4.24.zip",
-                "reference": "fcdde4aa38f48190ce70d782c166f23930084f9b",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/finder/v3.4.25/symfony-finder-v3.4.25.zip",
+                "reference": "61af5ce0b34b942d414fe8f1b11950d0e9a90e98",
                 "shasum": ""
             },
             "require": {
@@ -4302,7 +4302,7 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-02-22T14:44:53+00:00"
+            "time": "2019-04-02T19:54:57+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

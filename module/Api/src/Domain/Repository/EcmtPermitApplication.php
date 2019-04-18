@@ -160,13 +160,13 @@ class EcmtPermitApplication extends AbstractRepository
     }
 
     /**
-     * Fetch application ids within a stock that are in scope
+     * Fetch application ids within a stock that are both in scope and under consideration
      *
      * @param int $stockId
      *
      * @return array
      */
-    public function fetchInScopeApplicationIds($stockId)
+    public function fetchInScopeUnderConsiderationApplicationIds($stockId)
     {
         $statement = $this->getEntityManager()->getConnection()->executeQuery(
             'select e.id from ecmt_permit_application e ' .
@@ -175,8 +175,12 @@ class EcmtPermitApplication extends AbstractRepository
             '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
             '    )' .
             ') ' .
-            'and e.in_scope = 1 ',
-            ['stockId' => $stockId]
+            'and e.in_scope = 1 ' .
+            'and e.status = :status',
+            [
+                'stockId' => $stockId,
+                'status' => Entity::STATUS_UNDER_CONSIDERATION
+            ]
         );
 
         return array_column($statement->fetchAll(), 'id');

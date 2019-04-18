@@ -3,10 +3,12 @@
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section as Review;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Section as TmReview;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\ContinuationReview\Section as ContinuationReview;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\EcmtAnnualGenerator;
 
 return [
     'service_manager' => [
         'invokables' => [
+            EcmtAnnualGenerator::class => EcmtAnnualGenerator::class,
             'ReviewSnapshot' => \Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Generator::class,
             'Review\VariationTypeOfLicence' => Review\VariationTypeOfLicenceReviewService::class,
             'Review\VariationBusinessType' => Review\VariationBusinessTypeReviewService::class,

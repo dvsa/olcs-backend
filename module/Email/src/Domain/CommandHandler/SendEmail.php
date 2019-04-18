@@ -259,11 +259,11 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
 
         $subject = vsprintf($subject, $command->getSubjectVariables());
 
-        $plainBody = $this->replaceUris($this->translate($command->getPlainBody(), $command->getLocale()));
+        $plainBody = $this->replaceUris($command->getPlainBody());
         $htmlBody = $command->getHtmlBody();
 
         if ($htmlBody !== null) {
-            $htmlBody = $this->replaceUris($this->translate($htmlBody, $command->getLocale()));
+            $htmlBody = $this->replaceUris($htmlBody);
         }
 
         /**
