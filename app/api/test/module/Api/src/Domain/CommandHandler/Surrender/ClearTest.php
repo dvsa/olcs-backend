@@ -70,7 +70,9 @@ class ClearTest extends CommandHandlerTestCase
             'DiscStolenInfo' => null,
             'LicenceDocumentInfo' => null,
             'LicenceDocumentStatus' => null,
-            'SignatureType' => null
+            'SignatureType' => null,
+            'SignatureChecked' => null,
+            'EcmsChecked' => null
         ];
     }
 }
