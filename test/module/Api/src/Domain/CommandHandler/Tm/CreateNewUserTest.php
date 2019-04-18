@@ -27,6 +27,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Create New User Test
@@ -52,7 +53,10 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->mockRepo('Address', Repository\Address::class);
         $this->mockRepo('Role', Repository\Role::class);
 
-        $this->mockedSmServices[UserInterface::class] = m::mock(UserInterface::class);
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            UserInterface::class => m::mock(UserInterface::class),
+        ];
 
         parent::setUp();
     }
@@ -192,6 +196,9 @@ class CreateNewUserTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $response->toArray());
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandWithEmail()
     {
         $data = [
