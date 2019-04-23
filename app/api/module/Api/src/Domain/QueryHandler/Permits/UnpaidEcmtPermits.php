@@ -16,7 +16,7 @@ final class UnpaidEcmtPermits extends AbstractListQueryHandler implements Toggle
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpCandidatePermit';
     protected $bundle = [
         'irhpPermitApplication' => [

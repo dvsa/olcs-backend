@@ -18,7 +18,7 @@ class DeviationData extends AbstractQueryHandler implements ToggleRequiredInterf
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     /**
      * Handle query

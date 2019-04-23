@@ -24,7 +24,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     /**

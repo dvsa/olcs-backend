@@ -28,7 +28,7 @@ final class CreateFull extends AbstractCommandHandler implements ToggleRequiredI
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermitApplication'];
 

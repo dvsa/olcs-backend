@@ -17,7 +17,7 @@ final class CancelEcmtPermitApplication extends AbstractCancelApplicationHandler
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $cancelStatus = IrhpInterface::STATUS_CANCELLED;
 }
