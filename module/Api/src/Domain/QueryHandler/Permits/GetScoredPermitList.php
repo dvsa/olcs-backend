@@ -25,7 +25,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
         TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
     ];
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'EcmtPermitApplication';
 

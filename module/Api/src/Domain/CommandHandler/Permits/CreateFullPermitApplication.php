@@ -33,7 +33,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an ECMT application';
 
