@@ -1200,4 +1200,7 @@ return [
         CommandHandlerCli\Permits\UploadScoringLog::class,
     CommandCli\Permits\GeneratePermits::class =>
         CommandHandlerCli\Permits\GeneratePermits::class,
+
+    // Templates
+    TransferCommand\Template\UpdateTemplateSource::class => CommandHandler\Template\UpdateTemplateSource::class,
 ];

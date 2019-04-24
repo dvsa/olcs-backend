@@ -22,7 +22,7 @@ class TemplateRendererFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $templateRenderer = new TemplateRenderer();
-        $templateRenderer->setViewRenderer($serviceLocator->get('ViewRenderer'));
+        $templateRenderer->setViewRenderer($serviceLocator->get('TemplateStrategySelectingViewRenderer'));
 
         return $templateRenderer;
     }
