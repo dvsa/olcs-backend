@@ -196,4 +196,6 @@ return [
     'Question' => 'Generic',
     'Answer' => 'Generic',
     'QuestionText' => 'Generic',
+    'Template' => 'Template',
+    'TemplateTestData' => 'Template',
 ];
