@@ -345,7 +345,6 @@ class ApproveTest extends CommandHandlerTestCase
         }
 
         $this->sut->handleCommand($command);
-
     }
 
     public function dpTesthasEcmsAndSignatureBeenChecked()

@@ -54,7 +54,6 @@ class ClearTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(Result::class, $result);
         $this->assertSame(['Surrender data successfully cleared'], $result->getMessages());
-        
     }
 
     protected function surrenderProperties()
