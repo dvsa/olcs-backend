@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Email\Service;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
 use Dvsa\Olcs\Email\Service\TemplateRendererFactory;
 
 /**
@@ -22,9 +23,9 @@ class TemplateRendererFactoryTest extends MockeryTestCase
 
     public function testCreateService()
     {
-        $mockViewRenderer = m::mock(\Zend\View\Renderer\RendererInterface::class);
+        $mockViewRenderer = m::mock(StrategySelectingViewRenderer::class);
         $sl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class);
-        $sl->shouldReceive('get')->with('ViewRenderer')->once()->andReturn($mockViewRenderer);
+        $sl->shouldReceive('get')->with('TemplateStrategySelectingViewRenderer')->once()->andReturn($mockViewRenderer);
         $service = $this->sut->createService($sl);
 
         $this->assertSame($mockViewRenderer, $service->getViewRenderer());

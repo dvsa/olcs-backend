@@ -665,4 +665,9 @@ return [
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
     TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
+
+    // Templates
+    TransferQuery\Template\AvailableTemplates::class => QueryHandler\Template\AvailableTemplates::class,
+    TransferQuery\Template\PreviewTemplateSource::class => QueryHandler\Template\PreviewTemplateSource::class,
+    TransferQuery\Template\TemplateSource::class => QueryHandler\Template\TemplateSource::class,
 ];
