@@ -25,7 +25,7 @@ final class WithdrawEcmtPermitApplication extends AbstractCommandHandler impleme
     use ToggleAwareTrait;
     use QueueAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $extraRepos = ['Fee'];
 

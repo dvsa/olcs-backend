@@ -18,7 +18,7 @@ final class StoreEcmtPermitApplicationSnapshot extends AbstractCreateSnapshotHan
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $generatorClass = EcmtAnnualGenerator::class;
     protected $documentCategory = Category::CATEGORY_PERMITS;

@@ -22,7 +22,7 @@ final class UpdateEcmtPermitsRequired extends AbstractCommandHandler implements 
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     public function handleCommand(CommandInterface $command)
