@@ -53,6 +53,22 @@ class Fee extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
+    public function fetchInterimRefunds(int $applicationId)
+    {
+        $doctrineQb = $this->getQueryByApplicationFeeTypeFeeType(
+            $applicationId,
+            \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
+        );
+        $doctrineQb->leftJoin($this->alias.'.application', 'a')
+                   ->leftJoin($this->alias.'.licence', 'l');
+
+        $this->wherePaidFee($doctrineQb);
+        $doctrineQb->andWhere($doctrineQb->expr()->isNotNull("COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)"));
+
+
+
+    }
+
     /**
      * Fetch outstanding fees for an organisation
      * (only those associated to a valid licence or in progress application)
