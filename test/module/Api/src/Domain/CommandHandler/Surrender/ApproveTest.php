@@ -85,10 +85,10 @@ class ApproveTest extends CommandHandlerTestCase
         $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn($data['licType']);
         $licenceEntity->shouldReceive('isNi')->andReturn($data['isNi']);
 
-        $surrenderEntity = m::mock(Licence::class);
+        $surrenderEntity = m::mock(Surrender::class);
 
-        $this->repoMap['Surrender']->shouldReceive('fetchById')->andReturn($surrenderEntity);
-        $this->repoMap['Licence']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
+        $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
 
         $surrenderEntity->shouldReceive('getEcmsChecked')->andReturn(true);
         $surrenderEntity->shouldReceive('getSignatureChecked')->andReturn(true);
@@ -252,9 +252,9 @@ class ApproveTest extends CommandHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
 
-        $surrenderEntity = m::mock(Licence::class);
+        $surrenderEntity = m::mock(Surrender::class);
 
-        $this->repoMap['Licence']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
 
         $surrenderEntity->shouldReceive('getEcmsChecked')->andReturn(true);
         $surrenderEntity->shouldReceive('getSignatureChecked')->andReturn(true);
@@ -327,9 +327,9 @@ class ApproveTest extends CommandHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
 
-        $surrenderEntity = m::mock(Licence::class);
+        $surrenderEntity = m::mock(Surrender::class);
 
-        $this->repoMap['Licence']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
 
         $surrenderEntity->shouldReceive('getEcmsChecked')->andReturn($data['ecmsChecked']);
         $surrenderEntity->shouldReceive('getSignatureChecked')->andReturn($data['signatureChecked']);
