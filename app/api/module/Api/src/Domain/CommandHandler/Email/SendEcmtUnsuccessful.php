@@ -17,7 +17,7 @@ class SendEcmtUnsuccessful extends AbstractEmailHandler implements ToggleRequire
     use ToggleAwareTrait;
     use PermitEmailTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-app-unsuccessful';
     protected $subject = 'email.ecmt.response.subject';

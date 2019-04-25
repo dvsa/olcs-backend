@@ -26,7 +26,7 @@ final class AllocatePermits extends AbstractCommandHandler implements ToggleRequ
 {
     use QueueAwareTrait, ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['IrhpPermit'];

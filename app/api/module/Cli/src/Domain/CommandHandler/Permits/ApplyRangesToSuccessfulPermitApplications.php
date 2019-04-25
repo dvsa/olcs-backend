@@ -28,7 +28,7 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
     const COUNTRY_IDS_KEY = 'countryIds';
     const PERMITS_REMAINING_KEY = 'permitsRemaining';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpCandidatePermit';
 

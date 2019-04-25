@@ -17,7 +17,7 @@ class SendEcmtAutomaticallyWithdrawn extends AbstractEmailHandler implements Tog
     use ToggleAwareTrait;
     use PermitEmailTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-automatically-withdrawn';
     protected $subject = 'email.ecmt.automatically.withdrawn.subject';

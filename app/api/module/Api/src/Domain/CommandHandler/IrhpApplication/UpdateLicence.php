@@ -29,7 +29,7 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
     const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an IRHP application';
     const LICENCE_ORG_MSG = 'Licence does not belong to this organisation';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['Licence'];
