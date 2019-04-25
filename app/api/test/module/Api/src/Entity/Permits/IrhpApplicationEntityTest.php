@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -104,6 +105,14 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('isBilateral')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('isMultilateral')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canCheckAnswers')
             ->once()
             ->withNoArgs()
@@ -140,6 +149,8 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
                 'isCancelled' => false,
+                'isBilateral' => false,
+                'isMultilateral' => false,
                 'canCheckAnswers' => true,
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
@@ -176,6 +187,13 @@ class IrhpApplicationEntityTest extends EntityTester
             $organisation,
             $this->sut->getRelatedOrganisation()
         );
+    }
+
+    public function testGetRelatedLicence()
+    {
+        $licence = m::mock(Licence::class);
+        $entity = $this->createNewEntity(null, null, null, $licence);
+        $this->assertEquals($licence, $entity->getRelatedLicence());
     }
 
     /**
@@ -427,6 +445,36 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
             [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
+    public function testIsBilateral($isBilateral)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn($isBilateral);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $this->assertEquals($isBilateral, $entity->isBilateral());
+    }
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
+    public function testIsMultilateral($isMultilateral)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn($isMultilateral);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $this->assertEquals($isMultilateral, $entity->isMultilateral());
+    }
+
+    public function trueOrFalseProvider()
+    {
+        return [
+            [true],
+            [false],
         ];
     }
 
@@ -2062,6 +2110,223 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->proceedToValid(m::mock(RefData::class));
     }
 
+    public function testGetQuestionAnswerBilateral()
+    {
+        $licNo = 'OB1234567';
+
+        $country1 = 'country1';
+        $country2 = 'country2';
+        $joinedCountries = 'country1, country2';
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(true);
+
+        $stock1ValidityDate = new DateTime('2019-12-31');
+        $stock2ValidityDate = new DateTime('2019-12-31');
+        $stock3ValidityDate = new DateTime('2020-12-31');
+
+        $stock1ValidityYear = 2019;
+        $stock2ValidityYear = 2019;
+        $stock3ValidityYear = 2020;
+
+        $stock1RequiredPermits = 6;
+        $stock2RequiredPermits = 4;
+        $stock3RequiredPermits = 0;
+
+        $stock1 = m::mock(IrhpPermitStock::class);
+        $stock1->shouldReceive('getCountry->getCountryDesc')->once()->withNoArgs()->andReturn($country1);
+        $stock1->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock1ValidityDate);
+
+        $stock2 = m::mock(IrhpPermitStock::class);
+        $stock2->shouldReceive('getCountry->getCountryDesc')->once()->withNoArgs()->andReturn($country2);
+        $stock2->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock2ValidityDate);
+
+        $stock3 = m::mock(IrhpPermitStock::class);
+        $stock3->shouldReceive('getCountry->getCountryDesc')->once()->withNoArgs()->andReturn($country2);
+        $stock3->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock3ValidityDate);
+
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($stock1RequiredPermits);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock1);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($stock2RequiredPermits);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock2);
+
+        //this permit application entry has a zero for number of permits, but is included
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($stock3RequiredPermits);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock3);
+
+        //this permit application entry has a null entry for number of permits, so is ignored
+        $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication4->shouldReceive('getPermitsRequired')->twice()->withNoArgs()->andReturn(null);
+        $irhpPermitApplication4->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')->never();
+
+        $permitApplications = [
+            $irhpPermitApplication1,
+            $irhpPermitApplication2,
+            $irhpPermitApplication3,
+            $irhpPermitApplication4,
+        ];
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->setIrhpPermitApplications(new ArrayCollection($permitApplications));
+
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $licNo,
+            ],
+            [
+                'question' => 'permits.irhp.countries.transporting',
+                'answer' =>  $joinedCountries,
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  10,
+            ],
+            [
+                'question' => $country1 . ' for ' . $stock1ValidityYear,
+                'answer' =>  $stock1RequiredPermits,
+            ],
+            [
+                'question' => $country2 . ' for ' . $stock2ValidityYear,
+                'answer' =>  $stock2RequiredPermits,
+            ],
+            [
+                'question' => $country2 . ' for ' . $stock3ValidityYear,
+                'answer' =>  $stock3RequiredPermits,
+            ],
+        ];
+
+        $this->assertEquals($data, $entity->getQuestionAnswerData());
+    }
+
+    public function testGetQuestionAnswerMultilateral()
+    {
+        $licNo = 'OB1234567';
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
+
+        $stock1ValidityDate = new DateTime('2019-12-31');
+        $stock2ValidityDate = new DateTime('2020-12-31');
+        $stock3ValidityDate = new DateTime('2021-12-31');
+
+        $stock1ValidityYear = 2019;
+        $stock2ValidityYear = 2020;
+        $stock3ValidityYear = 2021;
+
+        $stock1RequiredPermits = 6;
+        $stock2RequiredPermits = 4;
+        $stock3RequiredPermits = 0;
+
+        $stock1 = m::mock(IrhpPermitStock::class);
+        $stock1->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock1ValidityDate);
+
+        $stock2 = m::mock(IrhpPermitStock::class);
+        $stock2->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock2ValidityDate);
+
+        $stock3 = m::mock(IrhpPermitStock::class);
+        $stock3->shouldReceive('getValidTo')->once()->with(true)->andReturn($stock3ValidityDate);
+
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($stock1RequiredPermits);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock1);
+
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2->shouldReceive('getPermitsRequired')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($stock2RequiredPermits);
+        $irhpPermitApplication2->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock2);
+
+        //this permit application entry has a zero for number of permits, but is included
+        $irhpPermitApplication3 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication3->shouldReceive('getPermitsRequired')
+            ->twice()
+            ->withNoArgs()
+            ->andReturn($stock3RequiredPermits);
+        $irhpPermitApplication3->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock3);
+
+        //this permit application entry has a null entry for number of permits, so is ignored
+        $irhpPermitApplication4 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication4->shouldReceive('getPermitsRequired')->twice()->withNoArgs()->andReturn(null);
+        $irhpPermitApplication4->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')->never();
+
+        $permitApplications = [
+            $irhpPermitApplication1,
+            $irhpPermitApplication2,
+            $irhpPermitApplication3,
+            $irhpPermitApplication4,
+        ];
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->setIrhpPermitApplications(new ArrayCollection($permitApplications));
+
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $licNo,
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  10,
+            ],
+            [
+                'question' => 'For ' . $stock1ValidityYear,
+                'answer' =>  $stock1RequiredPermits,
+            ],
+            [
+                'question' => 'For ' . $stock2ValidityYear,
+                'answer' =>  $stock2RequiredPermits,
+            ],
+            [
+                'question' => 'For ' . $stock3ValidityYear,
+                'answer' =>  $stock3RequiredPermits,
+            ],
+        ];
+
+        $this->assertEquals($data, $entity->getQuestionAnswerData());
+    }
+
     public function testGetOutstandingApplicationFees()
     {
         $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
@@ -2107,5 +2372,31 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn($isOutstanding);
 
         return $fee;
+    }
+
+    private function createNewEntity(
+        $source = null,
+        $status = null,
+        $irhpPermitType = null,
+        $licence = null,
+        $dateReceived = null
+    ): Entity {
+        if (!isset($source)) {
+            $source = m::mock(RefData::class);
+        }
+
+        if (!isset($status)) {
+            $status = m::mock(RefData::class);
+        }
+
+        if (!isset($irhpPermitType)) {
+            $irhpPermitType = m::mock(IrhpPermitType::class);
+        }
+
+        if (!isset($licence)) {
+            $licence = m::mock(Licence::class);
+        }
+
+        return Entity::createNew($source, $status, $irhpPermitType, $licence, $dateReceived);
     }
 }
