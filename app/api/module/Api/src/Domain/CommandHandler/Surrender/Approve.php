@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 class Approve extends AbstractSurrenderCommandHandler
 {
-    protected $repoServiceName = 'Licence';
+    protected $extraRepos = ['Licence'];
 
     /** @var $licenceEntity LicenceEntity */
     protected $licenceEntity;
@@ -30,7 +30,7 @@ class Approve extends AbstractSurrenderCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
-        $this->licenceEntity = $this->getRepo()->fetchById($command->getId());
+        $this->licenceEntity = $this->getRepo('Licence')->fetchById($command->getId());
 
         $this->hasEcmsAndSignatureBeenChecked($command->getId());
         
