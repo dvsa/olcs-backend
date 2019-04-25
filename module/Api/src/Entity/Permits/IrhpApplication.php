@@ -6,16 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
@@ -39,6 +37,7 @@ use RuntimeException;
 class IrhpApplication extends AbstractIrhpApplication implements
     IrhpInterface,
     OrganisationProviderInterface,
+    LicenceProviderInterface,
     SectionableInterface,
     CancelableInterface
 {
@@ -212,11 +211,122 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'isCancelled' => $this->isCancelled(),
+            'isBilateral' => $this->isBilateral(),
+            'isMultilateral' => $this->isMultilateral(),
             'canCheckAnswers' => $this->canCheckAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
             'permitsRequired' => $this->getPermitsRequired(),
             'canUpdateCountries' => $this->canUpdateCountries(),
         ];
+    }
+
+    /**
+     * Get question and answer data
+     *
+     * @return array
+     */
+    public function getQuestionAnswerData(): array
+    {
+        if ($this->isBilateral()) {
+            return $this->getQuestionAnswerDataBilateral();
+        }
+
+        return $this->getQuestionAnswerDataMultilateral();
+    }
+
+    /**
+     * Get question and answer data for a bilateral application
+     *
+     * @return array
+     */
+    public function getQuestionAnswerDataBilateral(): array
+    {
+        $numberOfPermits = [];
+        $countriesArray = [];
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
+
+            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
+            if ($permitsRequired === null) {
+                continue;
+            }
+
+            $stock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+            $country = $stock->getCountry()->getCountryDesc();
+            $year = $stock->getValidTo(true)->format('Y');
+
+            $numberOfPermits[$country][$year] = $permitsRequired;
+            $countriesArray[$country] = $country;
+        }
+
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->licence->getLicNo(),
+            ],
+            [
+                'question' => 'permits.irhp.countries.transporting',
+                'answer' =>  implode(', ', $countriesArray),
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  $this->getPermitsRequired(),
+            ],
+        ];
+
+        foreach ($numberOfPermits as $country => $years) {
+            foreach ($years as $year => $permitsRequired) {
+                $data[] = [
+                    'question' => sprintf('%s for %d', $country, $year),
+                    'answer' => $permitsRequired
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get question and answer data for a multilateral application
+     *
+     * @return array
+     */
+    public function getQuestionAnswerDataMultilateral(): array
+    {
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->licence->getLicNo(),
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  $this->getPermitsRequired(),
+            ],
+        ];
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
+
+            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
+            if ($permitsRequired === null) {
+                continue;
+            }
+
+            $year = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getValidTo(true)
+                ->format('Y');
+
+            $data[] = [
+                'question' => sprintf('For %d', $year),
+                'answer' => $permitsRequired
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -237,6 +347,36 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * Get the related licence
+     *
+     * @return Licence
+     */
+    public function getRelatedLicence(): Licence
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Whether the application is for a bilateral permit type
+     *
+     * @return bool
+     */
+    public function isBilateral(): bool
+    {
+        return $this->irhpPermitType->isBilateral();
+    }
+
+    /**
+     * Whether the application is for a multilateral permit type
+     *
+     * @return bool
+     */
+    public function isMultilateral(): bool
+    {
+        return $this->irhpPermitType->isMultilateral();
     }
 
     /**
@@ -666,8 +806,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $applications = $this->irhpPermitApplications;
         $total = 0;
 
+        /** @var IrhpPermitApplication $app */
         foreach ($applications as $app) {
-            $total += is_null($app->getPermitsRequired()) ? 0 : $app->getPermitsRequired();
+            $permitsRequired = $app->getPermitsRequired();
+            $total += is_null($permitsRequired) ? 0 : $permitsRequired;
         }
 
         return $total;
