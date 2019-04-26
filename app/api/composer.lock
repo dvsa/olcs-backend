@@ -1775,12 +1775,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.205.3",
+            "version": "4.205.6",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.205.3/olcs-olcs-transfer-4.205.3.zip",
-                "reference": "b847ae6f721ffa6d44ac5615c76213816c9f13fd",
-                "shasum": "b847ae6f721ffa6d44ac5615c76213816c9f13fd"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.205.6/olcs-olcs-transfer-4.205.6.zip",
+                "reference": "bc5383f1291a08aff6587a644be619852e5856f3",
+                "shasum": "bc5383f1291a08aff6587a644be619852e5856f3"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -1836,7 +1836,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-04-23T15:06:02+00:00"
+            "time": "2019-04-26T10:04:08+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -3452,11 +3452,11 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "4.1.0",
+            "version": "4.2.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/environment/4.1.0/sebastian-environment-4.1.0.zip",
-                "reference": "6fda8ce1974b62b14935adc02a9ed38252eca656",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sebastian/environment/4.2.1/sebastian-environment-4.2.1.zip",
+                "reference": "3095910f0f0fb155ac4021fc51a4a7a39ac04e8a",
                 "shasum": ""
             },
             "require": {
@@ -3471,7 +3471,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 }
             },
             "autoload": {
@@ -3495,7 +3495,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2019-02-01T05:27:49+00:00"
+            "time": "2019-04-25T07:55:20+00:00"
         },
         {
             "name": "sebastian/exporter",
