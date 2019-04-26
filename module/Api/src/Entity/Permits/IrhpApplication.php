@@ -857,14 +857,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Gets a key/value pair array representing application fee product references and quantities for this application
+     * Gets the application fee product reference for this application
      * Applicable only to bilateral and multilateral
      *
      * @return array
      *
      * @throws ForbiddenException if the permit type is unsupported
      */
-    public function getApplicationFeeProductRefsAndQuantities()
+    public function getApplicationFeeProductReference()
     {
         $mappings = [
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
@@ -874,15 +874,54 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
 
         $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
-        if (isset($mappings[$irhpPermitTypeId])) {
-            return [
-                $mappings[$irhpPermitTypeId] => $this->getPermitsRequired()
-            ];
+        if (!isset($mappings[$irhpPermitTypeId])) {
+            throw new ForbiddenException(
+                'No application fee product reference available for permit type ' . $irhpPermitTypeId
+            );
         }
 
-        throw new ForbiddenException(
-            'No application fee product reference available for permit type ' . $irhpPermitTypeId
-        );
+        return $mappings[$irhpPermitTypeId];
+    }
+
+    /**
+     * Gets a key/value pair array representing application fee product references and quantities for this application
+     *
+     * @return array
+     */
+    public function getApplicationFeeProductRefsAndQuantities()
+    {
+        return [
+            $this->getApplicationFeeProductReference() => $this->getPermitsRequired()
+        ];
+    }
+
+    /**
+     * Gets the total fee per permit including application fee and issue fee
+     * Applicable only to bilateral and multilateral
+     *
+     * @param FeeTypeEntity $applicationFeeType
+     * @param FeeTypeEntity $issueFeeType
+     *
+     * @return int
+     *
+     * @throws ForbiddenException if the permit type is unsupported
+     */
+    public function getFeePerPermit(FeeTypeEntity $applicationFeeType, FeeTypeEntity $issueFeeType)
+    {
+        $permittedPermitTypeIds = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+        ];
+
+        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+
+        if (!in_array($irhpPermitTypeId, $permittedPermitTypeIds)) {
+            throw new ForbiddenException(
+                'Cannot get fee per permit for irhp permit type ' . $irhpPermitTypeId
+            );
+        }
+
+        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
     }
 
     /**
