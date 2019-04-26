@@ -138,6 +138,15 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     protected $discStolenInfo;
 
     /**
+     * Ecms checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="ecms_checked", nullable=true)
+     */
+    protected $ecmsChecked;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -196,6 +205,15 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
      * @ORM\JoinColumn(name="licence_document_status", referencedColumnName="id", nullable=true)
      */
     protected $licenceDocumentStatus;
+
+    /**
+     * Signature checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="signature_checked", nullable=true)
+     */
+    protected $signatureChecked;
 
     /**
      * Signature type
@@ -474,6 +492,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     }
 
     /**
+     * Set the ecms checked
+     *
+     * @param boolean $ecmsChecked new value being set
+     *
+     * @return Surrender
+     */
+    public function setEcmsChecked($ecmsChecked)
+    {
+        $this->ecmsChecked = $ecmsChecked;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecms checked
+     *
+     * @return boolean
+     */
+    public function getEcmsChecked()
+    {
+        return $this->ecmsChecked;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -621,6 +663,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     public function getLicenceDocumentStatus()
     {
         return $this->licenceDocumentStatus;
+    }
+
+    /**
+     * Set the signature checked
+     *
+     * @param boolean $signatureChecked new value being set
+     *
+     * @return Surrender
+     */
+    public function setSignatureChecked($signatureChecked)
+    {
+        $this->signatureChecked = $signatureChecked;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature checked
+     *
+     * @return boolean
+     */
+    public function getSignatureChecked()
+    {
+        return $this->signatureChecked;
     }
 
     /**
