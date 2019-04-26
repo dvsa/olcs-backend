@@ -88,11 +88,17 @@ class UpdateTest extends CommandHandlerTestCase
             $surrenderEntity->shouldReceive('setSignatureType')->once();
         }
 
-
         if (array_key_exists('communityLicenceDocumentInfo', $data)) {
             $surrenderEntity->shouldReceive('setCommunityLicenceDocumentInfo')->once();
         }
 
+        if (array_key_exists('ecmsChecked', $data)) {
+            $surrenderEntity->shouldReceive('setEcmsChecked')->once();
+        }
+
+        if (array_key_exists('signatureChecked', $data)) {
+            $surrenderEntity->shouldReceive('setSignatureChecked')->once();
+        }
 
         $surrenderEntity->shouldReceive('getId')->once()->andReturn(1);
 
@@ -131,7 +137,9 @@ class UpdateTest extends CommandHandlerTestCase
                     'licenceDocumentStatus' => 'doc_sts_destroyed',
                     'status' => 'surr_sts_comm_lic_docs_complete',
                     'signatureType' => 'sig_physical_signature',
-                    'communityLicenceDocumentInfo' => 'some community licence doc info'
+                    'communityLicenceDocumentInfo' => 'some community licence doc info',
+                    'ecmsChecked' => true,
+                    'signatureChecked' => true,
                 ]
             ],
             'case_02' => [

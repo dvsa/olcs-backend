@@ -22,6 +22,6 @@ abstract class AbstractSurrenderCommandHandler extends AbstractCommandHandler im
 
     protected function getSurrender($licenceId)
     {
-        return $this->getRepo()->fetchOneByLicenceId($licenceId, Query::HYDRATE_OBJECT);
+        return $this->getRepo('Surrender')->fetchOneByLicenceId($licenceId, Query::HYDRATE_OBJECT);
     }
 }
