@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,6 +21,7 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
 
     /**
      * Category
@@ -330,23 +332,5 @@ abstract class AbstractSla implements BundleSerializableInterface, JsonSerializa
     public function getWeekend()
     {
         return $this->weekend;
-    }
-
-
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }
