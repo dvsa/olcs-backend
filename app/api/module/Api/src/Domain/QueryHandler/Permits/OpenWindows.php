@@ -22,7 +22,7 @@ class OpenWindows extends AbstractQueryHandler implements ToggleRequiredInterfac
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['IrhpPermitType', 'IrhpPermitStock'];
     protected $bundle = ['emissionsCategory'];

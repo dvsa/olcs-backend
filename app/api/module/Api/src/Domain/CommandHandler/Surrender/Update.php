@@ -69,6 +69,14 @@ final class Update extends AbstractSurrenderCommandHandler
             $surrender->setCommunityLicenceDocumentInfo($command->getCommunityLicenceDocumentInfo());
         }
 
+        if ($command->getEcmsChecked() !== null) {
+            $surrender->setEcmsChecked($command->getEcmsChecked());
+        }
+
+        if ($command->getSignatureChecked() !== null) {
+            $surrender->setSignatureChecked($command->getSignatureChecked());
+        }
+
         $this->getRepo()->save($surrender);
 
         $this->result->addId('surrender', $surrender->getId());

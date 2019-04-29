@@ -14,7 +14,7 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $bundle = [
         'licence' => ['trafficArea', 'organisation'],

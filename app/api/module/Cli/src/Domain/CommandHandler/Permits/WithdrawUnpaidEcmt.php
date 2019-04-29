@@ -26,7 +26,7 @@ final class WithdrawUnpaidEcmt extends AbstractCommandHandler implements Transac
     use ToggleAwareTrait;
 
     private $query;
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     /**

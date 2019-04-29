@@ -2,18 +2,23 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Permits;
 
-use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\EcmtAnnualGenerator;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use OlcsTest\Bootstrap;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\PhpRenderer;
 
-class EcmtAnnualGeneratorTest extends MockeryTestCase
+/**
+ * Class IrhpGeneratorTest
+ *
+ * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ */
+class IrhpGeneratorTest extends MockeryTestCase
 {
     /**
-     * @var EcmtAnnualGenerator
+     * @var IrhpGenerator
      */
     protected $sut;
 
@@ -24,7 +29,7 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->sut = new EcmtAnnualGenerator();
+        $this->sut = new IrhpGenerator();
         $this->viewRenderer = m::mock(PhpRenderer::class);
 
         $sm = Bootstrap::getServiceManager();
@@ -35,7 +40,7 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
     public function testGenerateWithNoPermitApplication()
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Snapshot generator expects ECMT permit application record');
+        $this->expectExceptionMessage('Snapshot generator expects IRHP application record');
 
         $this->sut->setData(['entity' => null]);
         $this->sut->generate();
@@ -49,27 +54,27 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
         $questionAnswerData = ['data'];
         $html = '<html>';
 
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $irhpApplication = m::mock(IrhpApplication::class);
 
-        $ecmtPermitApplication
+        $irhpApplication
             ->shouldReceive('getLicence->getOrganisation->getName')
             ->once()
             ->withNoArgs()
             ->andReturn($operatorName);
 
-        $ecmtPermitApplication
-            ->shouldReceive('getPermitType->getDescription')
+        $irhpApplication
+            ->shouldReceive('getIrhpPermitType->getName->getDescription')
             ->once()
             ->withNoArgs()
             ->andReturn($permitType);
 
-        $ecmtPermitApplication
+        $irhpApplication
             ->shouldReceive('getApplicationRef')
             ->once()
             ->withNoArgs()
             ->andReturn($applicationRef);
 
-        $ecmtPermitApplication
+        $irhpApplication
             ->shouldReceive('getQuestionAnswerData')
             ->once()
             ->withNoArgs()
@@ -82,10 +87,10 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
             'questionAnswerData' => $questionAnswerData,
             'guidanceDeclaration' => [
                 'bullets' => [
-                    'permits.ecmt.declaration.bullet.guidance.note',
-                    'permits.ecmt.declaration.bullet.guidance.restricted.countries',
-                    'permits.ecmt.declaration.bullet.guidance.issued.logbook',
-                    'permits.ecmt.declaration.bullet.guidance.carry.logbook',
+                    'permits.irhp.declaration.bullet.guidance.note',
+                    'permits.irhp.declaration.bullet.conditions',
+                    'permits.irhp.declaration.bullet.guidance.carry',
+                    'permits.irhp.declaration.bullet.guidance.transport',
                 ],
                 'declaration' => 'permits.snapshot.declaration',
             ],
@@ -106,7 +111,7 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
                 }
             );
 
-        $this->sut->setData(['entity' => $ecmtPermitApplication]);
+        $this->sut->setData(['entity' => $irhpApplication]);
         $this->sut->generate();
     }
 }

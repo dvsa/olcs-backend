@@ -1169,6 +1169,8 @@ return [
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
         CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
+    Command\IrhpApplication\StoreSnapshot::class =>
+        CommandHandler\IrhpApplication\StoreSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,

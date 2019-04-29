@@ -17,7 +17,7 @@ class SendEcmtAppSubmitted extends AbstractEmailHandler implements ToggleRequire
     use ToggleAwareTrait;
     use PermitEmailTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-app-submitted';
     protected $subject = 'email.ecmt.default.subject';

@@ -28,6 +28,8 @@ class Clear extends AbstractSurrenderCommandHandler
         $surrender->setLicenceDocumentInfo(null);
         $surrender->setLicenceDocumentStatus(null);
         $surrender->setSignatureType(null);
+        $surrender->setEcmsChecked(null);
+        $surrender->setSignatureChecked(null);
 
         $this->getRepo()->save($surrender);
         $this->result->addId('surrender', $surrender->getId());

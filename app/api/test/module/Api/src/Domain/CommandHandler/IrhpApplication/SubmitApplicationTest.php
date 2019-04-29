@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplication;
@@ -51,6 +52,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->ordered()
             ->globally();
+
+        $this->expectedSideEffect(
+            StoreSnapshot::class,
+            ['id' => $irhpApplicationId],
+            new Result()
+        );
 
         $this->expectedQueueSideEffect($irhpApplicationId, Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE, []);
 
