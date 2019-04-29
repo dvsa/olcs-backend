@@ -6,6 +6,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Template;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Template\UpdateTemplateSource as Sut;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Template as TemplateRepo;
 use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Transfer\Command\Template\UpdateTemplateSource as Cmd;
@@ -91,9 +92,9 @@ class UpdateTemplateSourceTest extends CommandHandlerTestCase
         $this->assertEquals($expectedMessages, $result->getMessages());
     }
 
-    public function testRuntimeExceptionOnTemplateRenderingFailure()
+    public function testValidationExceptionOnTemplateRenderingFailure()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Unable to render template content with dataset Dataset 2: Something went wrong');
 
         $templateId = 7;
