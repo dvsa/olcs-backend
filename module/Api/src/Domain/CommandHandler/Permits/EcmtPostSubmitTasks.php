@@ -24,7 +24,7 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
 {
     use QueueAwareTrait, ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['IrhpCandidatePermit'];

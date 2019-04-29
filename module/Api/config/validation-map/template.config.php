@@ -2,11 +2,12 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalAdmin;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 
 return [
-    QueryHandler\Template\AvailableTemplates::class => IsInternalAdmin::class,
-    QueryHandler\Template\PreviewTemplateSource::class => IsInternalAdmin::class,
-    QueryHandler\Template\TemplateSource::class => IsInternalAdmin::class,
-    CommandHandler\Template\UpdateTemplateSource::class => IsInternalAdmin::class,
+    QueryHandler\Template\AvailableTemplates::class => IsSystemAdmin::class,
+    QueryHandler\Template\PreviewTemplateSource::class => IsSystemAdmin::class,
+    QueryHandler\Template\TemplateSource::class => IsSystemAdmin::class,
+    QueryHandler\Template\TemplateCategories::class => IsSystemAdmin::class,
+    CommandHandler\Template\UpdateTemplateSource::class => IsSystemAdmin::class,
 ];

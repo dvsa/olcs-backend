@@ -30,7 +30,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
 
     const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an ECMT application';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['IrhpPermitWindow', 'Licence'];

@@ -124,22 +124,43 @@ class TemplateTest extends RepositoryTestCase
         $this->sut->fetchByLocaleFormatName($locale, $format, $name);
     }
 
-    public function testFetchAll()
+    public function testFetchDistinctCategories()
     {
-        $templates = [
-            m::mock(Template::class),
-            m::mock(Template::class),
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $categories = [
+            [
+                'id' => 4,
+                'description' => 'Permits'
+            ]
         ];
 
-        $queryBuilder = m::mock(QueryBuilder::class);
-        $queryBuilder->shouldReceive('getQuery->getResult')
-            ->andReturn($templates);
+        $queryBuilder->shouldReceive('select')
+            ->with('cat.description', 'cat.id')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with('Dvsa\Olcs\Api\Entity\Template\Template', 't')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('distinct')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->once()
+            ->with('t.category', 'cat')
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('t.category IS NOT NULL')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->andReturn($categories);
 
-        $this->mockCreateQueryBuilder($queryBuilder);
-
-        $this->assertEquals(
-            $templates,
-            $this->sut->fetchAll()
+        $this->assertSame(
+            $categories,
+            $this->sut->fetchDistinctCategories()
         );
     }
 }

@@ -17,7 +17,7 @@ final class ExpireEcmtPermitApplication extends AbstractUpdateDefinedValue imple
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $entityMethodName = 'expire';
     protected $definedValue = EcmtPermitApplication::STATUS_EXPIRED;

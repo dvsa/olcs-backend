@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Approve as ApproveHandler;
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\SurrenderLicence;
 use Dvsa\Olcs\Transfer\Command\Surrender\Approve as ApproveCommand;
@@ -30,6 +31,7 @@ class ApproveTest extends CommandHandlerTestCase
             \ZfcRbac\Service\AuthorizationService::class => m::mock(\ZfcRbac\Service\AuthorizationService::class)
         ];
         $this->mockRepo('Licence', Licence::class);
+        $this->mockRepo('Surrender', Surrender::class);
         parent::setUp();
     }
 
@@ -82,6 +84,14 @@ class ApproveTest extends CommandHandlerTestCase
         $licenceEntity->shouldReceive('getGoodsOrPsv->getId')->andReturn($data['goodsOrPsv']);
         $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn($data['licType']);
         $licenceEntity->shouldReceive('isNi')->andReturn($data['isNi']);
+
+        $surrenderEntity = m::mock(Surrender::class);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
+
+        $surrenderEntity->shouldReceive('getEcmsChecked')->andReturn(true);
+        $surrenderEntity->shouldReceive('getSignatureChecked')->andReturn(true);
 
         $this->expectedSideEffect(
             GenerateAndStore::class,
@@ -242,13 +252,144 @@ class ApproveTest extends CommandHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
 
+        $surrenderEntity = m::mock(Surrender::class);
+
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
+
+        $surrenderEntity->shouldReceive('getEcmsChecked')->andReturn(true);
+        $surrenderEntity->shouldReceive('getSignatureChecked')->andReturn(true);
+
         $licenceEntity->shouldReceive('getCreatedBy->getId')->andReturn(5);
         $licenceEntity->shouldReceive('getGoodsOrPsv->getId')->andReturn(Licence::LICENCE_CATEGORY_PSV);
         $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
         $licenceEntity->shouldReceive('isNi')->andReturn(true);
 
         $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Licence type not surrenderable');
 
         $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @dataProvider dpTesthasEcmsAndSignatureBeenChecked
+     */
+    public function testhasEcmsAndSignatureBeenChecked($data, $expected)
+    {
+        $now = new \DateTime();
+        $cmdData = [
+            'id' => 45,
+            'surrenderDate' => $now->format('Y-m-d')
+        ];
+
+        $command = ApproveCommand::create($cmdData);
+
+        $this->expectedSideEffect(
+            UpdateCommand::class,
+            [
+                'id' => 45,
+                'status' => RefData::SURRENDER_STATUS_APPROVED,
+            ],
+            new Result(),
+            $expected['numberOfSideEffectCalls']
+        );
+
+        $this->expectedSideEffect(
+            SurrenderLicence::class,
+            [
+                'id' => 45,
+                'surrenderDate' => $cmdData['surrenderDate'],
+                'terminated' => false
+            ],
+            new Result(),
+            $expected['numberOfSideEffectCalls']
+        );
+
+        $this->expectedSideEffect(
+            GenerateAndStore::class,
+            [
+                'template' => 'NI/SURRENDER_LETTER_TO_OPERATOR_GV_NI',
+                'query' => [
+                    'licence' => 45,
+                ],
+                'description' => 'GV - Surrender actioned letter (NI)',
+                'licence' => 45,
+                'category' => Category::CATEGORY_LICENSING,
+                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
+                'isExternal' => true,
+                'isScan' => false,
+                'dispatch' => true
+            ],
+            new Result(),
+            $expected['numberOfSideEffectCalls']
+        );
+
+        $licenceEntity = m::mock(Licence::class);
+
+        $this->repoMap['Licence']->shouldReceive('fetchById')->andReturn($licenceEntity);
+
+        $surrenderEntity = m::mock(Surrender::class);
+
+        $this->repoMap['Surrender']->shouldReceive('fetchOneByLicenceId')->andReturn($surrenderEntity);
+
+        $surrenderEntity->shouldReceive('getEcmsChecked')->andReturn($data['ecmsChecked']);
+        $surrenderEntity->shouldReceive('getSignatureChecked')->andReturn($data['signatureChecked']);
+
+        $licenceEntity->shouldReceive('getCreatedBy->getId')->andReturn(5);
+        $licenceEntity->shouldReceive('getGoodsOrPsv->getId')->andReturn(Licence::LICENCE_CATEGORY_GOODS_VEHICLE);
+        $licenceEntity->shouldReceive('getLicenceType->getId')->andReturn(Licence::LICENCE_TYPE_STANDARD_NATIONAL);
+        $licenceEntity->shouldReceive('isNi')->andReturn(true);
+
+        if ($expected['throwException'] === true) {
+            $this->expectException(Exception::class);
+            $this->expectExceptionMessage('The surrender has not been checked');
+        }
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function dpTesthasEcmsAndSignatureBeenChecked()
+    {
+        return [
+            'ecms_checked' => [
+                'data' => [
+                    'ecmsChecked' => true,
+                    'signatureChecked' => false,
+                ],
+                'expected' => [
+                    'throwException' => true,
+                    'numberOfSideEffectCalls' => 0
+                ]
+            ],
+            'signature_checked' => [
+                'data' => [
+                    'ecmsChecked' => false,
+                    'signatureChecked' => true
+                ],
+                'expected' => [
+                    'throwException' => true,
+                    'numberOfSideEffectCalls' => 0
+                ]
+            ],
+            'both_checked' => [
+                'data' => [
+                    'ecmsChecked' => true,
+                    'signatureChecked' => true
+                ],
+                'expected' => [
+                    'throwException' => false,
+                    'numberOfSideEffectCalls' => 1
+                ]
+            ],
+            'none_checked' => [
+                'data' => [
+                    'ecmsChecked' => false,
+                    'signatureChecked' => false
+                ],
+                'expected' => [
+                    'throwException' => true,
+                    'numberOfSideEffectCalls' => 0
+                ]
+            ]
+        ];
     }
 }
