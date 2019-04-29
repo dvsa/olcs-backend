@@ -1,55 +1,23 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Email;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Template;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Template\TemplateSource;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Template\TemplateSource as TemplateSourceHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Template as TemplateRepo;
-use Dvsa\Olcs\Transfer\Query\Template\TemplateSource as TemplateSourceQry;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Query\Template\TemplateSource as QryClass;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\AbstractQueryByIdHandlerTest;
+use Dvsa\Olcs\Api\Entity\Template\Template as TemplateEntity;
 
-class TemplateSourceTest extends QueryHandlerTestCase
+/**
+ * Template Source Test
+ *
+ * @author Andy Newton <andy@vitri.ltd>
+ */
+class TemplateSourceTest extends AbstractQueryByIdHandlerTest
 {
-    public function setUp()
-    {
-        $this->sut = new TemplateSource();
-
-        $this->mockRepo('Template', TemplateRepo::class);
-
-        parent::setUp();
-    }
-
-    public function testHandleQuery()
-    {
-        $templateId = 45;
-        $source = '{{var1}} test {{var2}}';
-        $locale = 'en_GB';
-        $format = 'plain';
-
-        $template = m::mock(Template::class);
-        $template->shouldReceive('getSource')
-            ->andReturn($source);
-        $template->shouldReceive('getLocale')
-            ->andReturn($locale);
-        $template->shouldReceive('getFormat')
-            ->andReturn($format);
-
-        $query = TemplateSourceQry::create(
-            ['id' => $templateId]
-        );
-
-        $this->repoMap['Template']->shouldReceive('fetchUsingId')
-            ->with($query)
-            ->andReturn($template);
-
-        $expectedResponse = [
-            'source' => $source,
-            'locale' => $locale,
-            'format' => $format
-        ];
-
-        $result = $this->sut->handleQuery($query);
-        $this->assertEquals($expectedResponse, $result);
-    }
+    protected $sutClass = TemplateSourceHandler::class;
+    protected $sutRepo = 'Template';
+    protected $qryClass = QryClass::class;
+    protected $repoClass = TemplateRepo::class;
+    protected $entityClass = TemplateEntity::class;
 }
