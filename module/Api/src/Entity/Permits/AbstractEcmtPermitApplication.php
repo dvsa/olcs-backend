@@ -31,7 +31,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"international_journeys"}),
  *        @ORM\Index(name="ix_withdraw_reason", columns={"withdraw_reason"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_source", columns={"source"}),
- *        @ORM\Index(name="ix_ecmt_permit_application_in_scope", columns={"in_scope"})
+ *        @ORM\Index(name="ix_ecmt_permit_application_in_scope", columns={"in_scope"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_cancellation_date",
+     *     columns={"cancellation_date"})
  *    }
  * )
  */
@@ -49,6 +51,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="boolean", name="cabotage", nullable=true)
      */
     protected $cabotage;
+
+    /**
+     * Cancellation date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="cancellation_date", nullable=true)
+     */
+    protected $cancellationDate;
 
     /**
      * Checked answers
@@ -352,6 +363,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getCabotage()
     {
         return $this->cabotage;
+    }
+
+    /**
+     * Set the cancellation date
+     *
+     * @param \DateTime $cancellationDate new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setCancellationDate($cancellationDate)
+    {
+        $this->cancellationDate = $cancellationDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancellation date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getCancellationDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->cancellationDate);
+        }
+
+        return $this->cancellationDate;
     }
 
     /**

@@ -361,6 +361,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->setStatus(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
         $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
         $this->assertEquals(IrhpInterface::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getCancellationDate()->format('Y-m-d'));
     }
 
     /**

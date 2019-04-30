@@ -232,6 +232,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity = $this->createApplication();
         $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
         $this->assertEquals(Entity::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getCancellationDate()->format('Y-m-d'));
     }
 
     /**
