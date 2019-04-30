@@ -34,7 +34,7 @@ class PermitApplicationReferenceTest extends \PHPUnit\Framework\TestCase
             [
                 [
                     'irhpPermitApplication' => [
-                        'ecmtPermitApplication' => [
+                        'relatedApplication' => [
                             'applicationRef' => 'OB1234567/1',
                         ]
                     ]
