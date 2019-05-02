@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
+use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -66,6 +67,9 @@ class CreateUserTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandInternalUser()
     {
         $userId = 111;
@@ -76,6 +80,7 @@ class CreateUserTest extends CommandHandlerTestCase
             'team' => 1,
             'licenceNumber' => $licenceNumber,
             'loginId' => 'login_id',
+            'roles' => [RoleEntity::ROLE_INTERNAL_CASE_WORKER],
             'contactDetails' => [
                 'emailAddress' => 'test1@test.me',
                 'person' => [
@@ -111,6 +116,8 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('isGranted')
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser->isAllowedToPerformActionOnRoles')
             ->andReturn(true);
 
         $this->mockedSmServices[UserInterface::class]->shouldReceive('generatePid')->with('login_id')->andReturn('pid');
@@ -129,7 +136,18 @@ class CreateUserTest extends CommandHandlerTestCase
         $this->repoMap['User']
             ->shouldReceive('populateRefDataReference')
             ->once()
-            ->andReturn($data);
+            ->andReturnUsing(
+                function ($data) {
+                    $role = m::mock(RoleEntity::class);
+                    $role->shouldReceive('getRole')
+                        ->once()
+                        ->andReturn(RoleEntity::ROLE_INTERNAL_CASE_WORKER);
+
+                    $data['roles'] = [$role];
+
+                    return $data;
+                }
+            );
 
         $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
             ->once()
@@ -204,6 +222,9 @@ class CreateUserTest extends CommandHandlerTestCase
         );
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommand()
     {
         $userId = 111;
@@ -352,6 +373,9 @@ class CreateUserTest extends CommandHandlerTestCase
         );
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandForTm()
     {
         $userId = 111;

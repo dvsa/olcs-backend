@@ -398,4 +398,23 @@ class UserTest extends RepositoryTestCase
         static::assertEquals('QUERY AND u.loginId = [[' . $userName . ']]', $this->query);
         static::assertEquals('EXPECT', $actual);
     }
+
+    public function testFetchUsersCountByRole()
+    {
+        $qb = $this->createMockQb('QUERY');
+        $qb->shouldReceive('getQuery->getSingleScalarResult')->once()->andReturn('EXPECT');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $actual = $this->sut->fetchUsersCountByRole(RoleEntity::ROLE_SYSTEM_ADMIN);
+
+        static::assertEquals(
+            'QUERY '
+            . 'SELECT COUNT(DISTINCT u.id) '
+            . 'INNER JOIN u.roles r '
+            . 'AND r.role = [[' . RoleEntity::ROLE_SYSTEM_ADMIN . ']]',
+            $this->query
+        );
+        static::assertEquals('EXPECT', $actual);
+    }
 }

@@ -332,4 +332,22 @@ class User extends AbstractRepository
     {
         return $this->fetchByX('loginId', [$login]);
     }
+
+    /**
+     * Get count of users in role
+     *
+     * @param string $role Role
+     *
+     * @return int
+     */
+    public function fetchUsersCountByRole($role)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->select('COUNT(DISTINCT ' . $this->alias . '.id)')
+            ->innerJoin($this->alias . '.roles', 'r')
+            ->andWhere($qb->expr()->eq('r.role', ':role'))
+            ->setParameter('role', $role);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
