@@ -1835,16 +1835,14 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @dataProvider dpGetApplicationFeeProductRefsAndQuantities
-     */
-    public function testGetApplicationFeeProductRefsAndQuantities($irhpPermitTypeId, $productReference)
+    public function testGetApplicationFeeProductRefsAndQuantities()
     {
+        $productReference = 'PRODUCT_REFERENCE';
         $permitsRequired = 7;
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn($irhpPermitTypeId);
+        $irhpApplication->shouldReceive('getApplicationFeeProductReference')
+            ->andReturn($productReference);
         $irhpApplication->shouldReceive('getPermitsRequired')
             ->andReturn($permitsRequired);
 
@@ -1854,7 +1852,22 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function dpGetApplicationFeeProductRefsAndQuantities()
+    /**
+     * @dataProvider dpGetApplicationFeeProductReference
+     */
+    public function testGetApplicationFeeProductReference($irhpPermitTypeId, $productReference)
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->assertEquals(
+            $productReference,
+            $irhpApplication->getApplicationFeeProductReference()
+        );
+    }
+
+    public function dpGetApplicationFeeProductReference()
     {
         return [
             [
@@ -1868,7 +1881,7 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testGetApplicationFeeProductRefsAndQuantitiesUnsupportedType()
+    public function testGetApplicationFeeProductReferenceUnsupportedType()
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(
@@ -1879,7 +1892,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
             ->andReturn(7);
 
-        $irhpApplication->getApplicationFeeProductRefsAndQuantities();
+        $irhpApplication->getApplicationFeeProductReference();
     }
 
     public function testGetIssueFeeProductRefsAndQuantities()
