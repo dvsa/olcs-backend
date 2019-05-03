@@ -30,7 +30,6 @@ return [
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\LastOpenWindow::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\CheckRunScoringPrerequisites::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueAcceptScoringPermitted::class => NotIsAnonymousUser::class,
