@@ -327,6 +327,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         }
 
         $this->status = $cancelStatus;
+        $this->cancellationDate = new \DateTime();
     }
 
     public function proceedToIssuing(RefData $issuingStatus)

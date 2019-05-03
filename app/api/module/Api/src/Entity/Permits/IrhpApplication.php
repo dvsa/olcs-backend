@@ -458,6 +458,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $cancelStatus;
+        $this->cancellationDate = new \DateTime();
     }
 
     /**
