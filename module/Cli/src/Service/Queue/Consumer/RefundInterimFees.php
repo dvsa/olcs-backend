@@ -27,6 +27,7 @@ class RefundInterimFees extends AbstractCommandConsumer
         /** @var \Dvsa\Olcs\Api\Entity\Fee\Fee $fee */
         $fee = $this->feeRepo->fetchById($item->getEntityId());
 
+        // has already been refunded
         if (!$fee->canRefund()) {
             return $this->failed($item, "Fee cannot be refunded");
         }

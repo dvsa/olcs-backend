@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
@@ -59,6 +60,8 @@ class FeeTest extends RepositoryTestCase
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(33));
     }
 
+
+
     public function testFetchInterimFeesByApplicationIdOutstanding()
     {
         $mockQb = m::mock(QueryBuilder::class);
@@ -75,6 +78,32 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('feeStatus', 'ot')->once();
 
         $this->assertSame('result', $this->sut->fetchInterimFeesByApplicationId(12, true));
+    }
+
+
+    public function testFetchInterimRefunds()
+    {
+        $mockQb = m::mock(QueryBuilder::class);
+        $this->createMockQb($mockQb);
+
+
+        $this->em->shouldReceive('getQueryBuilder->withRefdata->order')->with('invoiceDate', 'ASC')->once();
+
+
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->once()->andReturn($mockQb);
+        $this->em->shouldReceive('getQueryBuilder')->andReturn($mockQb);
+
+
+
+        $startDate = new DateTime();
+
+        $startDate = $startDate->sub(new \DateInterval('P'.abs ( (7-date("N")-7)).'D'));
+        $endDate = new DateTime();
+
+        $trafficAreas = [];
+
+        $this->sut->fetchInterimRefunds($startDate, $endDate, $trafficAreas);
+
     }
 
     public function testFetchInterimFeesByApplicationIdPaid()
