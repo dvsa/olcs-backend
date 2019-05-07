@@ -102,15 +102,14 @@ class PreviewTemplateSourceTest extends QueryHandlerTestCase
         $this->assertEquals($expectedResponse, $result);
     }
 
-    public function testExceptionOnRenderingFailure()
+    public function testRenderingFailure()
     {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Error previewing dataset Dataset 1: Something went wrong');
-
         $templateId = 6;
         $locale = 'en_GB';
         $format = 'plain';
         $source = '{{var1}} test {{var2}}';
+
+        $dataset1Name = 'Dataset 1';
 
         $dataset1Values = [
             'var1' => 'dataset1 value1',
@@ -148,6 +147,13 @@ class PreviewTemplateSourceTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($template);
 
-        $this->sut->handleQuery($query);
+        $expectedResponse = [
+            $dataset1Name => 'Something went wrong',
+            'error' => true
+        ];
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertEquals($expectedResponse, $result);
     }
 }
