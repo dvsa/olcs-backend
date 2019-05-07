@@ -39,6 +39,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     {
         // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
         $this->duplicateStockCheck($command);
+        $this->validityPeriodValidation($command);
 
         $irhpPermitType = $this->getRepo('IrhpPermitStock')->getReference(IrhpPermitTypeEntity::class, $command->getIrhpPermitType());
         $country = null;
@@ -49,10 +50,10 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
         $stock = StockEntity::create(
             $irhpPermitType,
             $country,
-            $command->getValidFrom(),
-            $command->getValidTo(),
             $command->getInitialStock(),
-            $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN)
+            $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN),
+            $command->getValidFrom(),
+            $command->getValidTo()
         );
 
         try {

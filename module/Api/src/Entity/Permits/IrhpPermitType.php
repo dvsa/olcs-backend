@@ -21,6 +21,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
 {
     const IRHP_PERMIT_TYPE_ID_ECMT = 1;
     const IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM = 2;
+    const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL = 3;
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
 
