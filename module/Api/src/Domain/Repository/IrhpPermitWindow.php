@@ -46,37 +46,6 @@ class IrhpPermitWindow extends AbstractRepository
     }
 
     /**
-     * Returns the IrhpPermitWindow that was most recently open prior to the specified date and time, or null if there
-     * were no windows open prior to the specified date
-     *
-     * @param int $irhpPermitStock
-     * @param DateTime $currentDateTime
-     *
-     * @return mixed
-     */
-    public function fetchLastOpenWindow(int $irhpPermitStock, DateTime $currentDateTime)
-    {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-
-        $qb->select('ipw')
-            ->from(Entity::class, 'ipw')
-            ->where($qb->expr()->andX(
-                $qb->expr()->eq('?1', 'ipw.irhpPermitStock'),
-                $qb->expr()->gt('?2', 'ipw.endDate')
-            ))
-            ->orderBy('ipw.endDate', 'DESC')
-            ->setParameter(1, $irhpPermitStock)
-            ->setParameter(2, $currentDateTime)
-            ->setMaxResults(1);
-
-        $this->getQueryBuilder()
-            ->modifyQuery($qb)
-            ->withRefdata();
-
-        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
-    }
-
-    /**
      * Fetch Windows by Permit Stock ID
      *
      * @param $irhpPermitStockId
