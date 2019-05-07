@@ -53,19 +53,52 @@ class Fee extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
-    public function fetchInterimRefunds(int $applicationId)
+
+    public function fetchInterimRefunds($after, $before, $trafficArea = null)
     {
-        $doctrineQb = $this->getQueryByApplicationFeeTypeFeeType(
-            $applicationId,
-            \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
-        );
+        $doctrineQb = $this->createQueryBuilder();
+
+
+        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'ASC');
+
+        $feeTypeFeeType = \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT;
+
         $doctrineQb->leftJoin($this->alias.'.application', 'a')
                    ->leftJoin($this->alias.'.licence', 'l');
 
         $this->wherePaidFee($doctrineQb);
         $doctrineQb->andWhere($doctrineQb->expr()->isNotNull("COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)"));
 
+        $doctrineQb->join($this->alias . '.feeType', 'ft')
+            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'));
+        $doctrineQb->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType));
 
+        if (!is_null($after) && !is_null($before)) {
+           $doctrineQb
+               ->andWhere($doctrineQb->expr()->gte($this->alias.'.invoicedDate', ':after'))
+               ->setParameter('after', $after);
+
+           $doctrineQb
+               ->andWhere($doctrineQb->expr()->lte($this->alias.'.invoicedDate', ':before'))
+               ->setParameter('before', $before);
+       }
+
+       if(!is_null($trafficArea) && is_array($trafficArea))
+       {
+           $trafficAreas = explode(',', $trafficArea);
+           $conditions = [];
+           for ($i = 0; $i < count($trafficAreas); $i++) {
+               $conditions[] = 'ft.trafficArea = :trafficArea' . $i;
+           }
+           $orX = $qb->expr()->orX();
+           $orX->addMultiple($conditions);
+           $qb->andWhere($orX);
+           for ($i = 0; $i < count($trafficAreas); $i++) {
+               $qb->setParameter('trafficArea' . $i, $trafficAreas[$i]);
+           }
+       }
+
+        return $doctrineQb->getQuery()->getResult();
 
     }
 
@@ -134,6 +167,8 @@ class Fee extends AbstractRepository
         if ($hideContinuationsFees) {
             $this->hideContinuationFees($doctrineQb);
         }
+
+
 
         return $doctrineQb->getQuery()->getSingleScalarResult();
     }
