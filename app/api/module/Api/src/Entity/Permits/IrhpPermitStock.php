@@ -38,14 +38,14 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * @param IrhpPermitType $type
      * @param Country $country
-     * @param string $validFrom
-     * @param string $validTo
      * @param int $quota
      * @param RefData $status
+     * @param mixed $validFrom
+     * @param mixed $validTo
      * @return IrhpPermitStock
      * @throws ValidationException
      */
-    public static function create($type, $country, $validFrom, $validTo, $quota, RefData $status)
+    public static function create($type, $country, $quota, RefData $status, $validFrom = null, $validTo = null)
     {
         static::validateCountry($type, $country);
 
@@ -64,13 +64,13 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * @param IrhpPermitType $type
      * @param Country $country
-     * @param string $validFrom
-     * @param string $validTo
      * @param int $quota
+     * @param mixed $validFrom
+     * @param mixed $validTo
      * @return $this
      * @throws ValidationException
      */
-    public function update($type, $country, $validFrom, $validTo, $quota)
+    public function update($type, $country, $quota, $validFrom = null, $validTo = null)
     {
         static::validateCountry($type, $country);
 

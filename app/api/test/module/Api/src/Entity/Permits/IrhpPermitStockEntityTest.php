@@ -47,7 +47,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
 
-        $entity = Entity::create($irhpPermitType, null, $validFrom, $validTo, $initialStock, $status);
+        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $validFrom, $validTo);
 
         $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
@@ -55,7 +55,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($initialStock, $entity->getInitialStock());
         $this->assertEquals($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, null, $updateValidFrom, $updateValidTo, $updateInitialStock);
+        $entity->update($irhpPermitType, null, $updateInitialStock, $updateValidFrom, $updateValidTo);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
@@ -74,10 +74,10 @@ class IrhpPermitStockEntityTest extends EntityTester
         $stock = Entity::create(
             $irhpPermitType,
             null,
-            '2019-01-01',
-            '2019-02-01',
             1400,
-            $status
+            $status,
+            '2019-01-01',
+            '2019-02-01'
         );
 
         $irhpPermitType->shouldReceive('getId')
@@ -100,10 +100,10 @@ class IrhpPermitStockEntityTest extends EntityTester
         $stock = Entity::create(
             $irhpPermitType,
             null,
-            '2019-01-01',
-            '2019-02-01',
             1400,
-            $status
+            $status,
+            '2019-01-01',
+            '2019-02-01'
         );
 
         $irhpPermitType->shouldReceive('getId')
@@ -1122,10 +1122,10 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpStockEntity = Entity::create(
             $irhpPermitType,
             null,
-            '2019-01-01',
-            '2019-02-01',
             1400,
-            $status
+            $status,
+            '2019-01-01',
+            '2019-02-01'
         );
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
