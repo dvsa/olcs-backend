@@ -128,6 +128,23 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 ],
             ],
         ],
+        IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => [
+            'licence' => [
+                'validator' => 'fieldIsNotNull',
+            ],
+            'checkedAnswers' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'declaration' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+        ],
     ];
 
     /** @var array */
