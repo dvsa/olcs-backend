@@ -83,15 +83,26 @@ class FeeTest extends RepositoryTestCase
 
     public function testFetchInterimRefunds()
     {
-        $mockQb = m::mock(QueryBuilder::class);
-        $this->createMockQb($mockQb);
+        $mockQb = $this->createMockQb('{{QUERY}}');
+        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
+        $mockRepo =  $this->em->shouldReceive('getRepository')->andReturnSelf();
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
+            ->shouldReceive('withRefdata')->once()->andReturnSelf()
+            ->shouldReceive('with')->zeroOrMoreTimes()->andReturnSelf()
+            ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
+
+        $mockQb->shouldReceive('leftJoin')->twice()->andReturnSelf();
+        $conditions = ['ft.trafficArea = :trafficArea0','ft.trafficArea = :trafficArea1'];
+
+        $mockQb->shouldReceive('expr->orX->addMultiple')->with($conditions)->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->once()->andReturnSelf();
+        $this->em->shouldReceive('getReference')->once()->andReturnSelf();
 
 
-        $this->em->shouldReceive('getQueryBuilder->withRefdata->order')->with('invoiceDate', 'ASC')->once();
-
-
-        $this->em->shouldReceive('getRepository->createQueryBuilder')->once()->andReturn($mockQb);
-        $this->em->shouldReceive('getQueryBuilder')->andReturn($mockQb);
+        $mockRepo->shouldReceive('createQuerybuilder')->andReturn($mockQb);
+        $mockRepo->shouldReceive('getQueryBuilder')->andReturn($mockQb);
 
 
 
@@ -100,7 +111,7 @@ class FeeTest extends RepositoryTestCase
         $startDate = $startDate->sub(new \DateInterval('P'.abs ( (7-date("N")-7)).'D'));
         $endDate = new DateTime();
 
-        $trafficAreas = [];
+        $trafficAreas = ['B', 'C'];
 
         $this->sut->fetchInterimRefunds($startDate, $endDate, $trafficAreas);
 

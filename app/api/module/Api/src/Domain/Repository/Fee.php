@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -54,12 +55,19 @@ class Fee extends AbstractRepository
     }
 
 
-    public function fetchInterimRefunds($after, $before, $trafficArea = null)
+    public function fetchInterimRefunds($after, $before, array $trafficArea = null)
     {
         $doctrineQb = $this->createQueryBuilder();
 
 
-        $this->getQueryBuilder()->withRefdata()->order('invoicedDate', 'ASC');
+        $this->getQueryBuilder()
+            ->modifyQuery($doctrineQb)
+            ->withRefdata()
+            ->with('feeTransactions', 'ft')
+            ->with('ft.transaction', 't')
+            ->with('t.status')
+            ->order('invoicedDate', 'ASC');
+
 
         $feeTypeFeeType = \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT;
 
@@ -85,16 +93,15 @@ class Fee extends AbstractRepository
 
        if(!is_null($trafficArea) && is_array($trafficArea))
        {
-           $trafficAreas = explode(',', $trafficArea);
            $conditions = [];
-           for ($i = 0; $i < count($trafficAreas); $i++) {
+           for ($i = 0; $i < count($trafficArea); $i++) {
                $conditions[] = 'ft.trafficArea = :trafficArea' . $i;
            }
-           $orX = $qb->expr()->orX();
+           $orX = $doctrineQb->expr()->orX();
            $orX->addMultiple($conditions);
-           $qb->andWhere($orX);
-           for ($i = 0; $i < count($trafficAreas); $i++) {
-               $qb->setParameter('trafficArea' . $i, $trafficAreas[$i]);
+           $doctrineQb->andWhere($orX);
+           for ($i = 0; $i < count($trafficArea); $i++) {
+               $doctrineQb->setParameter('trafficArea' . $i, $trafficArea[$i]);
            }
        }
 
@@ -518,7 +525,7 @@ class Fee extends AbstractRepository
      *
      * @return void
      */
-    private function wherePaidFee(\Doctrine\ORM\QueryBuilder $doctrineQb)
+    private function wherePaidFee(QueryBuilder $doctrineQb)
     {
         $doctrineQb
             ->andWhere($doctrineQb->expr()->eq($this->alias.'.feeStatus', ':feeStatus'))
