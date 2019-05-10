@@ -138,7 +138,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         $criteria = Criteria::create();
         $criteria->where(
-            $criteria->expr()->notIn('status', IrhpPermit::$nonValidStatuses)
+            $criteria->expr()->in('status', IrhpPermit::$validStatuses)
         );
         $permits = $this->getIrhpPermits()->matching($criteria);
 
