@@ -30,26 +30,49 @@ abstract class Factory extends ZendFactory
         }
         if ($transport instanceof S3File && isset($spec['options'])) {
 
-                $assumeRoleCredentials = new AssumeRoleCredentialProvider([
-                    'client' => new StsClient([
-                        'region' => $spec['options']['awsOptions']['region'],
-                        'version' => $spec['options']['awsOptions']['version']
-                    ]),
-                    'assume_role_params' => [
-                        'RoleArn' => $spec['options']['s3Options']['roleArn'],
-                        'RoleSessionName' => $spec['options']['s3Options']['roleSessionName'],
-                    ]
-                ]);
-                $provider = CredentialProvider::memoize($assumeRoleCredentials);
-                $s3Client = new S3Client([
-                    'region'      => $spec['options']['awsOptions']['region'],
-                    'version'     => $spec['options']['awsOptions']['version'],
-                    'credentials' => $provider
-                ]);
+            $s3Client = self::getS3Client($spec);
 
-                $transport->setOptions(new S3FileOptions($spec['options'], $s3Client));
+            $transport->setOptions(new S3FileOptions($spec['options'], $s3Client));
         }
 
         return $transport;
+    }
+
+    /**
+     * @param $spec
+     *
+     * @return S3Client
+     */
+    private static function getS3Client($spec): S3Client
+    {
+        $provider = self::getAwsCredentialProvider($spec);
+        $s3Client = new S3Client([
+            'region' => $spec['options']['awsOptions']['region'],
+            'version' => $spec['options']['awsOptions']['version'],
+            'credentials' => $provider
+        ]);
+        return $s3Client;
+    }
+
+    /**
+     * @param $spec
+     *
+     * @return callable
+     */
+    private static function getAwsCredentialProvider($spec): callable
+    {
+        $assumeRoleCredentials = new AssumeRoleCredentialProvider([
+            'client' => new StsClient([
+                'region' => $spec['options']['awsOptions']['region'],
+                'version' => $spec['options']['awsOptions']['version']
+            ]),
+            'assume_role_params' => [
+                'RoleArn' => $spec['options']['s3Options']['roleArn'],
+                'RoleSessionName' => $spec['options']['s3Options']['roleSessionName'],
+            ]
+        ]);
+
+        $provider = CredentialProvider::memoize($assumeRoleCredentials);
+        return $provider;
     }
 }

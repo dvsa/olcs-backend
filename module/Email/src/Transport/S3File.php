@@ -76,22 +76,20 @@ class S3File implements TransportInterface
         $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
 
         $s3Client = $this->getOptions()->getS3Client();
-        //['s3Path' => 'devapp-olcs-pri-olcs-autotest-s3/olcs.qa.nonprod.dvsa.aws/email']],
 
         $bucket = $this->getOptions()->getS3Bucket();
         $key = $this->getOptions()->getS3Key();
 
-        try{
+        try {
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,
                 'Key' => $key,
                 'SourceFile' => $s3FileName,
             ]);
 
-        }
-        catch (S3Exception $e) {
+        } catch (S3Exception $e) {
             $this->deleteFile($file); //clean up email file
-            throw new RuntimeException('Cannot send mail to S3 : '. $e->getAwsErrorMessage() );
+            throw new RuntimeException('Cannot send mail to S3 : ' . $e->getAwsErrorMessage());
         }
 
         $this->deleteFile($file);
@@ -101,9 +99,9 @@ class S3File implements TransportInterface
     /**
      * Execute a system command
      *
-     * @param string $command CLI command to execute
-     * @param array  &$output Output from command
-     * @param int    &$result Result/exit code
+     * @param string  $command CLI command to execute
+     * @param array  &$output  Output from command
+     * @param int    &$result  Result/exit code
      *
      * @return void
      * @codeCoverageIgnore
