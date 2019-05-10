@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Email\Transport;
 
+use Aws\S3\Exception\S3Exception;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Zend\I18n\Filter\Alnum;
 use Zend\Mail\Transport\Exception\RuntimeException;
@@ -74,17 +75,27 @@ class S3File implements TransportInterface
         $filter = new Alnum(true);
         $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
 
-        $this->executeCommand(
-            sprintf('s3cmd put %s s3://%s/%s 2>&1', $file, $this->getOptions()->getS3Path(), $s3FileName),
-            $output,
-            $result
-        );
+        $s3Client = $this->getOptions()->getS3Client();
+        //['s3Path' => 'devapp-olcs-pri-olcs-autotest-s3/olcs.qa.nonprod.dvsa.aws/email']],
+
+        $bucket = $this->getOptions()->getS3Bucket();
+        $key = $this->getOptions()->getS3Key();
+
+        try{
+            $result = $s3Client->putObject([
+                'Bucket' => $bucket,
+                'Key' => $key,
+                'SourceFile' => $s3FileName,
+            ]);
+
+        }
+        catch (S3Exception $e) {
+            $this->deleteFile($file); //clean up email file
+            throw new RuntimeException('Cannot send mail to S3 : '. $e->getAwsErrorMessage() );
+        }
 
         $this->deleteFile($file);
 
-        if ($result !== 0) {
-            throw new RuntimeException('Cannot send mail to S3 : '. implode("\n", $output));
-        }
     }
 
     /**

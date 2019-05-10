@@ -1,6 +1,11 @@
 <?php
+
 namespace Dvsa\Olcs\Email\Transport;
 
+use Aws\Credentials\AssumeRoleCredentialProvider;
+use Aws\Credentials\CredentialProvider;
+use Aws\S3\S3Client;
+use Aws\Sts\StsClient;
 use Zend\Mail\Transport\Factory as ZendFactory;
 use Zend\Mail\Transport\TransportInterface;
 
@@ -24,7 +29,25 @@ abstract class Factory extends ZendFactory
             $transport->setOptions(new MultiTransportOptions($spec['options']));
         }
         if ($transport instanceof S3File && isset($spec['options'])) {
-            $transport->setOptions(new S3FileOptions($spec['options']));
+
+                $assumeRoleCredentials = new AssumeRoleCredentialProvider([
+                    'client' => new StsClient([
+                        'region' => $spec['options']['awsOptions']['region'],
+                        'version' => $spec['options']['awsOptions']['version']
+                    ]),
+                    'assume_role_params' => [
+                        'RoleArn' => $spec['options']['s3Options']['roleArn'],
+                        'RoleSessionName' => $spec['options']['s3Options']['roleSessionName'],
+                    ]
+                ]);
+                $provider = CredentialProvider::memoize($assumeRoleCredentials);
+                $s3Client = new S3Client([
+                    'region'      => $spec['options']['awsOptions']['region'],
+                    'version'     => $spec['options']['awsOptions']['version'],
+                    'credentials' => $provider
+                ]);
+
+                $transport->setOptions(new S3FileOptions($spec['options'], $s3Client));
         }
 
         return $transport;
