@@ -37,16 +37,27 @@ class FactoryTest extends MockeryTestCase
 
     public function testS3File()
     {
+        $config = [
+            'options' => [
+                's3Bucket' => 'PATH',
+                's3Key' => 'name',
+                'awsOptions' => [
+                    'region' => 'test',
+                    'version' => 'latest',
+                ],
+                's3Options' => [
+                    'roleArn' => 'TEST',
+                    'roleSessionName' => 'TEST'
+                ]
+            ]
+        ];
         $transport = Factory::create(
             [
                 'type' => 'Dvsa\Olcs\Email\Transport\S3File',
-                'options' => [
-                    's3Path' => 'PATH',
-                ]
+                $config
             ]
         );
 
         $this->assertInstanceOf(S3File::class, $transport);
-        $this->assertSame('PATH', $transport->getOptions()->getS3Path());
     }
 }
