@@ -59,5 +59,6 @@ class FactoryTest extends MockeryTestCase
         );
 
         $this->assertInstanceOf(S3File::class, $transport);
+
     }
 }

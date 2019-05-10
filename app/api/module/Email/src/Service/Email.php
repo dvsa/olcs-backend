@@ -72,6 +72,7 @@ class Email implements FactoryInterface
         }
 
         $transport = Factory::create($config['mail']);
+
         $this->setMailTransport($transport);
 
         return $this;

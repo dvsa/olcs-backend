@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Email\Transport;
 
 use Zend\Stdlib\AbstractOptions;
@@ -19,8 +20,14 @@ class S3FileOptions extends AbstractOptions
      */
     protected $s3Key;
 
+    /**
+     * @var string
+     */
     protected $awsOptions;
 
+    /**
+     * @var string
+     */
     protected $s3Options;
 
     /**
@@ -37,9 +44,7 @@ class S3FileOptions extends AbstractOptions
      */
     public function __construct($options, $s3Client)
     {
-
         $this->s3Client = $s3Client;
-
         parent::__construct($options);
     }
 
@@ -50,8 +55,6 @@ class S3FileOptions extends AbstractOptions
     {
         return $this->s3Client;
     }
-
-
 
 
     /**
