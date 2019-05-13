@@ -2,8 +2,11 @@
 
 namespace Dvsa\OlcsTest\Email\Transport;
 
+use Aws\S3\S3Client;
 use Dvsa\Olcs\Email\Transport\MultiTransport;
 use Dvsa\Olcs\Email\Transport\S3File;
+use Dvsa\Olcs\Email\Transport\S3FileOptions;
+use GuzzleHttp\Promise\Promise;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\Mail\Transport\File;
 use Zend\Mail\Transport\Sendmail;
@@ -51,6 +54,9 @@ class FactoryTest extends MockeryTestCase
                 ]
             ]
         ];
+
+
+
         $transport = Factory::create(
             [
                 'type' => 'Dvsa\Olcs\Email\Transport\S3File',

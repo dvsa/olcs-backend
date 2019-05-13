@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Email\Service;
 
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
 use Dvsa\Olcs\Email\Transport\Factory;
+use Dvsa\Olcs\Email\Transport\S3File;
 use Zend\Mail\Header\GenericHeader;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;

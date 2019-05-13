@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Email\Transport;
 use Aws\S3\Exception\S3Exception;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Zend\I18n\Filter\Alnum;
+use Zend\Log\Logger;
 use Zend\Mail\Transport\Exception\RuntimeException;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\File;
@@ -78,37 +79,20 @@ class S3File implements TransportInterface
         $s3Client = $this->getOptions()->getS3Client();
 
         $bucket = $this->getOptions()->getS3Bucket();
-        $key = $this->getOptions()->getS3Key();
+        $key = $s3FileName;
 
         try {
             $result = $s3Client->putObject([
                 'Bucket' => $bucket,
                 'Key' => $key,
-                'SourceFile' => $s3FileName,
+                'SourceFile' => $file,
             ]);
-
         } catch (S3Exception $e) {
             $this->deleteFile($file); //clean up email file
             throw new RuntimeException('Cannot send mail to S3 : ' . $e->getAwsErrorMessage());
         }
 
         $this->deleteFile($file);
-
-    }
-
-    /**
-     * Execute a system command
-     *
-     * @param string  $command CLI command to execute
-     * @param array  &$output  Output from command
-     * @param int    &$result  Result/exit code
-     *
-     * @return void
-     * @codeCoverageIgnore
-     */
-    protected function executeCommand($command, &$output, &$result)
-    {
-        exec($command, $output, $result);
     }
 
     /**

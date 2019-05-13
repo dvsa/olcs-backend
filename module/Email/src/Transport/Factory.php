@@ -29,9 +29,7 @@ abstract class Factory extends ZendFactory
             $transport->setOptions(new MultiTransportOptions($spec['options']));
         }
         if ($transport instanceof S3File && isset($spec['options'])) {
-
             $s3Client = self::getS3Client($spec);
-
             $transport->setOptions(new S3FileOptions($spec['options'], $s3Client));
         }
 
@@ -43,7 +41,7 @@ abstract class Factory extends ZendFactory
      *
      * @return S3Client
      */
-    private static function getS3Client($spec): S3Client
+    protected static function getS3Client($spec): S3Client
     {
         $provider = self::getAwsCredentialProvider($spec);
         $s3Client = new S3Client([
@@ -59,7 +57,7 @@ abstract class Factory extends ZendFactory
      *
      * @return callable
      */
-    private static function getAwsCredentialProvider($spec): callable
+    protected static function getAwsCredentialProvider($spec): callable
     {
         $assumeRoleCredentials = new AssumeRoleCredentialProvider([
             'client' => new StsClient([
