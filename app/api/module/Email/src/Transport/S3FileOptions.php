@@ -18,11 +18,6 @@ class S3FileOptions extends AbstractOptions
     /**
      * @var string
      */
-    protected $s3Key;
-
-    /**
-     * @var string
-     */
     protected $awsOptions;
 
     /**
@@ -77,22 +72,6 @@ class S3FileOptions extends AbstractOptions
     public function getS3Bucket()
     {
         return $this->s3Bucket;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getS3Key()
-    {
-        return $this->s3Key;
-    }
-
-    /**
-     * @param mixed $s3Key
-     */
-    public function setS3Key($s3Key): void
-    {
-        $this->s3Key = $s3Key;
     }
 
     /**
