@@ -24,6 +24,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_question_question_type_ref_data_id", columns={"question_type"}),
  *        @ORM\Index(name="fk_question_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="question_slug_uindex", columns={"slug"})
  *    }
  * )
  */
@@ -157,7 +160,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\QuestionText", mappedBy="question2")
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\QuestionText", mappedBy="question")
      */
     protected $questionTexts;
 
