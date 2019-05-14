@@ -32,22 +32,22 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     use ClearPropertiesTrait;
 
     /**
-     * Additional guidance
+     * Additional guidance key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="additional_guidance", length=255, nullable=true)
+     * @ORM\Column(type="string", name="additional_guidance_key", length=255, nullable=true)
      */
-    protected $additionalGuidance;
+    protected $additionalGuidanceKey;
 
     /**
-     * Bullet list
+     * Bullet list key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="bullet_list", length=255, nullable=true)
+     * @ORM\Column(type="string", name="bullet_list_key", length=255, nullable=true)
      */
-    protected $bulletList;
+    protected $bulletListKey;
 
     /**
      * Created by
@@ -70,13 +70,13 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $createdOn;
 
     /**
-     * Details
+     * Details key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="details", length=255, nullable=true)
+     * @ORM\Column(type="string", name="details_key", length=255, nullable=true)
      */
-    protected $details;
+    protected $detailsKey;
 
     /**
      * Effective from
@@ -88,22 +88,22 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $effectiveFrom;
 
     /**
-     * Guidance
+     * Guidance key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="guidance", length=255, nullable=true)
+     * @ORM\Column(type="string", name="guidance_key", length=255, nullable=true)
      */
-    protected $guidance;
+    protected $guidanceKey;
 
     /**
-     * Hint
+     * Hint key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="hint", length=255, nullable=true)
+     * @ORM\Column(type="string", name="hint_key", length=255, nullable=true)
      */
-    protected $hint;
+    protected $hintKey;
 
     /**
      * Identifier - Id
@@ -117,13 +117,13 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $id;
 
     /**
-     * Label
+     * Label key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="label", length=255, nullable=true)
+     * @ORM\Column(type="string", name="label_key", length=255, nullable=true)
      */
-    protected $label;
+    protected $labelKey;
 
     /**
      * Last modified by
@@ -148,15 +148,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Question
      *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="question", length=255, nullable=true)
-     */
-    protected $question;
-
-    /**
-     * Question2
-     *
      * @var \Dvsa\Olcs\Api\Entity\Generic\Question
      *
      * @ORM\ManyToOne(
@@ -166,7 +157,16 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      * )
      * @ORM\JoinColumn(name="question_id", referencedColumnName="id", nullable=false)
      */
-    protected $question2;
+    protected $question;
+
+    /**
+     * Question key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="question_key", length=255, nullable=true)
+     */
+    protected $questionKey;
 
     /**
      * Version
@@ -179,60 +179,60 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $version = 1;
 
     /**
-     * Warning
+     * Warning key
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="warning", length=255, nullable=true)
+     * @ORM\Column(type="string", name="warning_key", length=255, nullable=true)
      */
-    protected $warning;
+    protected $warningKey;
 
     /**
-     * Set the additional guidance
+     * Set the additional guidance key
      *
-     * @param string $additionalGuidance new value being set
+     * @param string $additionalGuidanceKey new value being set
      *
      * @return QuestionText
      */
-    public function setAdditionalGuidance($additionalGuidance)
+    public function setAdditionalGuidanceKey($additionalGuidanceKey)
     {
-        $this->additionalGuidance = $additionalGuidance;
+        $this->additionalGuidanceKey = $additionalGuidanceKey;
 
         return $this;
     }
 
     /**
-     * Get the additional guidance
+     * Get the additional guidance key
      *
      * @return string
      */
-    public function getAdditionalGuidance()
+    public function getAdditionalGuidanceKey()
     {
-        return $this->additionalGuidance;
+        return $this->additionalGuidanceKey;
     }
 
     /**
-     * Set the bullet list
+     * Set the bullet list key
      *
-     * @param string $bulletList new value being set
+     * @param string $bulletListKey new value being set
      *
      * @return QuestionText
      */
-    public function setBulletList($bulletList)
+    public function setBulletListKey($bulletListKey)
     {
-        $this->bulletList = $bulletList;
+        $this->bulletListKey = $bulletListKey;
 
         return $this;
     }
 
     /**
-     * Get the bullet list
+     * Get the bullet list key
      *
      * @return string
      */
-    public function getBulletList()
+    public function getBulletListKey()
     {
-        return $this->bulletList;
+        return $this->bulletListKey;
     }
 
     /**
@@ -290,27 +290,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the details
+     * Set the details key
      *
-     * @param string $details new value being set
+     * @param string $detailsKey new value being set
      *
      * @return QuestionText
      */
-    public function setDetails($details)
+    public function setDetailsKey($detailsKey)
     {
-        $this->details = $details;
+        $this->detailsKey = $detailsKey;
 
         return $this;
     }
 
     /**
-     * Get the details
+     * Get the details key
      *
      * @return string
      */
-    public function getDetails()
+    public function getDetailsKey()
     {
-        return $this->details;
+        return $this->detailsKey;
     }
 
     /**
@@ -344,51 +344,51 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the guidance
+     * Set the guidance key
      *
-     * @param string $guidance new value being set
+     * @param string $guidanceKey new value being set
      *
      * @return QuestionText
      */
-    public function setGuidance($guidance)
+    public function setGuidanceKey($guidanceKey)
     {
-        $this->guidance = $guidance;
+        $this->guidanceKey = $guidanceKey;
 
         return $this;
     }
 
     /**
-     * Get the guidance
+     * Get the guidance key
      *
      * @return string
      */
-    public function getGuidance()
+    public function getGuidanceKey()
     {
-        return $this->guidance;
+        return $this->guidanceKey;
     }
 
     /**
-     * Set the hint
+     * Set the hint key
      *
-     * @param string $hint new value being set
+     * @param string $hintKey new value being set
      *
      * @return QuestionText
      */
-    public function setHint($hint)
+    public function setHintKey($hintKey)
     {
-        $this->hint = $hint;
+        $this->hintKey = $hintKey;
 
         return $this;
     }
 
     /**
-     * Get the hint
+     * Get the hint key
      *
      * @return string
      */
-    public function getHint()
+    public function getHintKey()
     {
-        return $this->hint;
+        return $this->hintKey;
     }
 
     /**
@@ -416,27 +416,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the label
+     * Set the label key
      *
-     * @param string $label new value being set
+     * @param string $labelKey new value being set
      *
      * @return QuestionText
      */
-    public function setLabel($label)
+    public function setLabelKey($labelKey)
     {
-        $this->label = $label;
+        $this->labelKey = $labelKey;
 
         return $this;
     }
 
     /**
-     * Get the label
+     * Get the label key
      *
      * @return string
      */
-    public function getLabel()
+    public function getLabelKey()
     {
-        return $this->label;
+        return $this->labelKey;
     }
 
     /**
@@ -496,7 +496,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Set the question
      *
-     * @param string $question new value being set
+     * @param \Dvsa\Olcs\Api\Entity\Generic\Question $question entity being set as the value
      *
      * @return QuestionText
      */
@@ -510,7 +510,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Get the question
      *
-     * @return string
+     * @return \Dvsa\Olcs\Api\Entity\Generic\Question
      */
     public function getQuestion()
     {
@@ -518,27 +518,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the question2
+     * Set the question key
      *
-     * @param \Dvsa\Olcs\Api\Entity\Generic\Question $question2 entity being set as the value
+     * @param string $questionKey new value being set
      *
      * @return QuestionText
      */
-    public function setQuestion2($question2)
+    public function setQuestionKey($questionKey)
     {
-        $this->question2 = $question2;
+        $this->questionKey = $questionKey;
 
         return $this;
     }
 
     /**
-     * Get the question2
+     * Get the question key
      *
-     * @return \Dvsa\Olcs\Api\Entity\Generic\Question
+     * @return string
      */
-    public function getQuestion2()
+    public function getQuestionKey()
     {
-        return $this->question2;
+        return $this->questionKey;
     }
 
     /**
@@ -566,27 +566,27 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the warning
+     * Set the warning key
      *
-     * @param string $warning new value being set
+     * @param string $warningKey new value being set
      *
      * @return QuestionText
      */
-    public function setWarning($warning)
+    public function setWarningKey($warningKey)
     {
-        $this->warning = $warning;
+        $this->warningKey = $warningKey;
 
         return $this;
     }
 
     /**
-     * Get the warning
+     * Get the warning key
      *
      * @return string
      */
-    public function getWarning()
+    public function getWarningKey()
     {
-        return $this->warning;
+        return $this->warningKey;
     }
 
     /**
