@@ -113,6 +113,15 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     protected $questionType;
 
     /**
+     * Slug
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="slug", length=255, nullable=true)
+     */
+    protected $slug;
+
+    /**
      * Title
      *
      * @var string
@@ -148,7 +157,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\QuestionText", mappedBy="question")
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\QuestionText", mappedBy="question2")
      */
     protected $questionTexts;
 
@@ -375,6 +384,30 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     public function getQuestionType()
     {
         return $this->questionType;
+    }
+
+    /**
+     * Set the slug
+     *
+     * @param string $slug new value being set
+     *
+     * @return Question
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get the slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**

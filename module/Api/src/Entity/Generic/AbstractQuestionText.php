@@ -41,6 +41,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $additionalGuidance;
 
     /**
+     * Bullet list
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="bullet_list", length=255, nullable=true)
+     */
+    protected $bulletList;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -79,15 +88,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $effectiveFrom;
 
     /**
-     * Error label
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="error_label", length=255, nullable=true)
-     */
-    protected $errorLabel;
-
-    /**
      * Guidance
      *
      * @var string
@@ -95,24 +95,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      * @ORM\Column(type="string", name="guidance", length=255, nullable=true)
      */
     protected $guidance;
-
-    /**
-     * Heading
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="heading", length=255, nullable=true)
-     */
-    protected $heading;
-
-    /**
-     * Heading caption
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="heading_caption", length=255, nullable=true)
-     */
-    protected $headingCaption;
 
     /**
      * Hint
@@ -166,6 +148,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Question
      *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="question", length=255, nullable=true)
+     */
+    protected $question;
+
+    /**
+     * Question2
+     *
      * @var \Dvsa\Olcs\Api\Entity\Generic\Question
      *
      * @ORM\ManyToOne(
@@ -175,7 +166,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      * )
      * @ORM\JoinColumn(name="question_id", referencedColumnName="id", nullable=false)
      */
-    protected $question;
+    protected $question2;
 
     /**
      * Version
@@ -218,6 +209,30 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     public function getAdditionalGuidance()
     {
         return $this->additionalGuidance;
+    }
+
+    /**
+     * Set the bullet list
+     *
+     * @param string $bulletList new value being set
+     *
+     * @return QuestionText
+     */
+    public function setBulletList($bulletList)
+    {
+        $this->bulletList = $bulletList;
+
+        return $this;
+    }
+
+    /**
+     * Get the bullet list
+     *
+     * @return string
+     */
+    public function getBulletList()
+    {
+        return $this->bulletList;
     }
 
     /**
@@ -329,30 +344,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the error label
-     *
-     * @param string $errorLabel new value being set
-     *
-     * @return QuestionText
-     */
-    public function setErrorLabel($errorLabel)
-    {
-        $this->errorLabel = $errorLabel;
-
-        return $this;
-    }
-
-    /**
-     * Get the error label
-     *
-     * @return string
-     */
-    public function getErrorLabel()
-    {
-        return $this->errorLabel;
-    }
-
-    /**
      * Set the guidance
      *
      * @param string $guidance new value being set
@@ -374,54 +365,6 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     public function getGuidance()
     {
         return $this->guidance;
-    }
-
-    /**
-     * Set the heading
-     *
-     * @param string $heading new value being set
-     *
-     * @return QuestionText
-     */
-    public function setHeading($heading)
-    {
-        $this->heading = $heading;
-
-        return $this;
-    }
-
-    /**
-     * Get the heading
-     *
-     * @return string
-     */
-    public function getHeading()
-    {
-        return $this->heading;
-    }
-
-    /**
-     * Set the heading caption
-     *
-     * @param string $headingCaption new value being set
-     *
-     * @return QuestionText
-     */
-    public function setHeadingCaption($headingCaption)
-    {
-        $this->headingCaption = $headingCaption;
-
-        return $this;
-    }
-
-    /**
-     * Get the heading caption
-     *
-     * @return string
-     */
-    public function getHeadingCaption()
-    {
-        return $this->headingCaption;
     }
 
     /**
@@ -553,7 +496,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Set the question
      *
-     * @param \Dvsa\Olcs\Api\Entity\Generic\Question $question entity being set as the value
+     * @param string $question new value being set
      *
      * @return QuestionText
      */
@@ -567,11 +510,35 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     /**
      * Get the question
      *
-     * @return \Dvsa\Olcs\Api\Entity\Generic\Question
+     * @return string
      */
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    /**
+     * Set the question2
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Generic\Question $question2 entity being set as the value
+     *
+     * @return QuestionText
+     */
+    public function setQuestion2($question2)
+    {
+        $this->question2 = $question2;
+
+        return $this;
+    }
+
+    /**
+     * Get the question2
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Generic\Question
+     */
+    public function getQuestion2()
+    {
+        return $this->question2;
     }
 
     /**
