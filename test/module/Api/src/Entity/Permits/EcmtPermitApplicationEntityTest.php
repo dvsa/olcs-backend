@@ -232,6 +232,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity = $this->createApplication();
         $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
         $this->assertEquals(Entity::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getCancellationDate()->format('Y-m-d'));
     }
 
     /**
@@ -965,38 +966,120 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function dpGetQuestionAnswerData()
+    {
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getCountryDesc')->withNoArgs()->andReturn('Country 1');
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getCountryDesc')->withNoArgs()->andReturn('Country 2');
+
+        $restrictedCountries = [$country1, $country2];
+
+        return [
+            'euro 6 with restricted countries' => [
+                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                1,
+                'permits.form.euro6.label',
+                'Yes',
+                1,
+                'Yes',
+                $restrictedCountries,
+                'permits.page.restricted-countries.question',
+                'Yes',
+                ['Country 1, Country 2'],
+            ],
+            'euro 6 with restricted countries, plus emissions not agreed' => [
+                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                0,
+                'permits.form.euro6.label',
+                'No',
+                1,
+                'Yes',
+                $restrictedCountries,
+                'permits.page.restricted-countries.question',
+                'Yes',
+                ['Country 1, Country 2'],
+            ],
+            'euro 6 with restricted countries, plus cabotage not agreed' => [
+                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                1,
+                'permits.form.euro6.label',
+                'Yes',
+                0,
+                'No',
+                $restrictedCountries,
+                'permits.page.restricted-countries.question',
+                'Yes',
+                ['Country 1, Country 2'],
+            ],
+            'euro 6 with restricted countries, plus cabotage and emissions not agreed' => [
+                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                0,
+                'permits.form.euro6.label',
+                'No',
+                0,
+                'No',
+                $restrictedCountries,
+                'permits.page.restricted-countries.question',
+                'Yes',
+                ['Country 1, Country 2'],
+            ],
+            'euro 6 with no restricted countries' => [
+                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
+                1,
+                'permits.form.euro6.label',
+                'Yes',
+                0,
+                'No',
+                [],
+                'permits.page.restricted-countries.question',
+                'No',
+                [],
+            ],
+            'euro 5' => [
+                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF,
+                0,
+                'permits.form.euro5.label',
+                'No',
+                1,
+                'Yes',
+                [],
+                'permits.form.restricted.countries.euro5.label',
+                'Yes',
+                [],
+            ],
+        ];
+    }
+
     /**
-     * @dataProvider dpReturnSnapshotData
+     * @dataProvider dpGetQuestionAnswerData
      */
-    public function testReturnSnapshotData(
-        $cabotage,
-        $cabotageResult,
-        $emissions,
-        $emissionsResult,
-        $countries,
-        $countriesResult,
-        $countriesListResult,
+    public function testGetQuestionAnswerData(
+        $emissionCategory,
+        $emissionsValue,
         $emissionsQuestion,
-        $emissionsCategory,
-        $emissionsDeclaration
+        $emissionsAnswer,
+        $cabotageValue,
+        $cabotageAnswer,
+        $countries,
+        $countriesQuestion,
+        $countriesAnswer,
+        $countriesList
     ) {
         $licNo = 'OB1234567';
-        $id = 1111;
-        $applicationRef = $licNo . ' / ' . $id;
-        $orgName = 'org name';
-        $permitTypeDesc = 'permit type desc';
         $internationalJourneysDesc = 'international journey desc';
         $sectorName = 'sector name';
+        $dateReceived = '2017-12-25';
+        $declaration = 1;
+        $permitsRequired = 999;
+        $trips = 666;
 
+        $irhpPermitApplication = $this->getWindowEmissionCategory($emissionCategory);
         $sectors = m::mock(Sectors::class);
         $sectors->shouldReceive('getName')->once()->withNoArgs()->andReturn($sectorName);
         $sourceRefData = m::mock(RefData::class);
         $statusRefData = m::mock(RefData::class);
         $permitTypeRefData = m::mock(RefData::class);
-        $permitTypeRefData->shouldReceive('getDescription')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($permitTypeDesc);
         $internationalJourneysRefData = m::mock(RefData::class);
         $internationalJourneysRefData->shouldReceive('getDescription')
             ->once()
@@ -1004,29 +1087,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             ->andReturn($internationalJourneysDesc);
 
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('getLicNo')->twice()->withNoArgs()->andReturn($licNo);
-        $licence->shouldReceive('getOrganisation->getName')->once()->withNoArgs()->andReturn($orgName);
-        $dateReceived = '2017-12-25';
-        $declaration = 1;
-        $permitsRequired = 999;
-        $trips = 666;
-
-        $expectedData = [
-            'permitType' => $permitTypeDesc,
-            'operator' => $orgName,
-            'ref' => $applicationRef,
-            'licence' => $licNo,
-            'emissions' => $emissionsResult,
-            'cabotage' => $cabotageResult,
-            'limitedCountries' => $countriesResult,
-            'limitedCountriesList' => $countriesListResult,
-            'permitsRequired' => $permitsRequired,
-            'trips' => $trips,
-            'internationalJourneys' => $internationalJourneysDesc,
-            'goods' => $sectorName,
-            'emissionsQuestion' => $emissionsQuestion,
-            'emissionsDeclaration' => $emissionsDeclaration
-        ];
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $application = Entity::createNewInternal(
             $sourceRefData,
@@ -1036,96 +1097,92 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $dateReceived,
             $sectors,
             new ArrayCollection($countries),
-            $cabotage,
+            $cabotageValue,
             $declaration,
-            $emissions,
+            $emissionsValue,
             $permitsRequired,
             $trips,
             $internationalJourneysRefData
         );
 
-        $application->setId($id);
-        $application->setHasRestrictedCountries(!empty($countries));
+        $application->addIrhpPermitApplications($irhpPermitApplication);
 
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
-            ->andReturn($emissionsCategory);
-        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
-
-        $this->assertSame($expectedData, $application->returnSnapshotData());
-    }
-
-    public function dpReturnSnapshotData()
-    {
-        $country1 = m::mock(Country::class);
-        $country1->shouldReceive('getCountryDesc')
-            ->andReturn('country 1');
-
-        $country2 = m::mock(Country::class);
-        $country2->shouldReceive('getCountryDesc')
-            ->andReturn('country 2');
-
-        return [
-            'Euro 5' => [
-                'cabotage' => 1,
-                'cabotageResult' => 'Yes',
-                'emissions' => 0,
-                'emissionsResult' => 'No',
-                'countries' => [$country1, $country2],
-                'countriesResult' => 'Yes',
-                'countriesListResult' => null,
-                'emissionsQuestion'
-                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
-                        . 'compliant with Euro 5 emissions standards as a minimum.',
-                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF,
-                'emissionsDeclaration'
-                    => 'I confirm that I will not transport goods to, through and from Austria, Greece, Hungary, '
-                        . 'Italy or Russia using this ECMT permit.'
+        $expectedData = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $licNo,
             ],
-            'Euro 6' => [
-                'cabotage' => 0,
-                'cabotageResult' => 'No',
-                'emissions' => 1,
-                'emissionsResult' => 'Yes',
-                'countries' => [$country1, $country2],
-                'countriesResult' => 'Yes',
-                'countriesListResult' => 'country 1, country 2',
-                'emissionsQuestion'
-                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
-                        . 'compliant with Euro 6 emissions standards.',
-                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                'emissionsDeclaration'
-                    => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?'
+            [
+                'question' => $emissionsQuestion,
+                'answer' =>  $emissionsAnswer,
             ],
-            'Euro 6 without countries' => [
-                'cabotage' => 0,
-                'cabotageResult' => 'No',
-                'emissions' => 1,
-                'emissionsResult' => 'Yes',
-                'countries' => [],
-                'countriesResult' => 'No',
-                'countriesListResult' => null,
-                'emissionsQuestion'
-                    => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally '
-                        . 'compliant with Euro 6 emissions standards.',
-                'emissionsCategory' => IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                'emissionsDeclaration'
-                    => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?'
+            [
+                'question' => 'permits.form.cabotage.label',
+                'answer' =>  $cabotageAnswer,
+            ],
+            [
+                'question' => $countriesQuestion,
+                'answer' => $countriesAnswer,
+                'answerList' => $countriesList,
+            ],
+            [
+                'question' => 'permits.page.permits.required.question',
+                'answer' => $permitsRequired,
+            ],
+            [
+                'question' => 'permits.page.number-of-trips.question',
+                'answer' => $trips,
+            ],
+            [
+                'question' => 'permits.page.international.journey.question',
+                'answer' => $internationalJourneysDesc,
+            ],
+            [
+                'question' => 'permits.page.sectors.question',
+                'answer' => $sectorName,
             ],
         ];
+
+        $this->assertEquals($expectedData, $application->getQuestionAnswerData());
+    }
+
+    public function dpEmissionsCategory(): array
+    {
+        return [
+            [IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, true],
+            [IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF, false],
+            [IrhpPermitWindow::EMISSIONS_CATEGORY_NA_REF, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpEmissionsCategory
+     */
+    public function testIsEuro6EmissionCategory($category, $expectedResponse)
+    {
+        $entity = $this->createApplication();
+        $irhpPermitApplication = $this->getWindowEmissionCategory($category);
+        $entity->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $this->assertEquals($expectedResponse, $entity->isEuro6EmissionCategory());
     }
 
     public function testGetWindowEmissionsCategory()
     {
         $entity = $this->createApplication();
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
-            ->andReturn(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF);
-
-        $entity->addIrhpPermitApplications($irhpPermitApplication);
+        $irhpPermitApplication = $this->getWindowEmissionCategory(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF);
+        $entity->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
 
         $this->assertEquals(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, $entity->getWindowEmissionsCategory());
+    }
+
+    private function getWindowEmissionCategory($emissionCategory)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
+            ->andReturn($emissionCategory);
+
+        return $irhpPermitApplication;
     }
 
     /**

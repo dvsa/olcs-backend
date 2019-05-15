@@ -29,6 +29,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
+use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -136,6 +137,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
         $user->setId($userId);
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
@@ -261,6 +263,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
         $user->setId($userId);
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
@@ -322,6 +325,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         );
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandWithPasswordResetByEmail()
     {
         $userId = 111;
@@ -379,6 +385,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
         $user->setId($userId);
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
@@ -447,6 +454,9 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandWithPasswordResetByPost()
     {
         $userId = 111;
@@ -518,6 +528,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
         $user->setId($userId);
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
@@ -679,6 +690,7 @@ class UpdateUserTest extends CommandHandlerTestCase
 
         /** @var UserEntity $user */
         $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
         $user->setId($userId);
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
@@ -811,6 +823,126 @@ class UpdateUserTest extends CommandHandlerTestCase
             ->andReturn([m::mock(UserEntity::class)])
             ->shouldReceive('enableSoftDeleteable')
             ->once();
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsRolesPermissionException()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'loginId' => 'loginId',
+            'roles' => [RoleEntity::ROLE_SYSTEM_ADMIN],
+        ];
+
+        $command = Cmd::create($data);
+
+        $loggedInUserId = 1000;
+
+        /** @var RoleEntity $loggedInUserRole */
+        $loggedInUserRole = m::mock(RoleEntity::class)->makePartial();
+        $loggedInUserRole->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
+
+        /** @var UserEntity $loggedInUser */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser->initCollections();
+        $loggedInUser->setId($loggedInUserId);
+        $loggedInUser->addRoles($loggedInUserRole);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
+
+        /** @var RoleEntity $userRole */
+        $userRole = m::mock(RoleEntity::class)->makePartial();
+        $userRole->setRole(RoleEntity::ROLE_INTERNAL_ADMIN);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
+        $user->setId($userId);
+        $user->setLoginId('loginId');
+        $user->addRoles($userRole);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('save')
+            ->never();
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandThrowsRolesPermissionLastUserException()
+    {
+        $userId = 111;
+
+        $data = [
+            'id' => 111,
+            'version' => 1,
+            'loginId' => 'loginId',
+            'roles' => [RoleEntity::ROLE_INTERNAL_ADMIN],
+        ];
+
+        $command = Cmd::create($data);
+
+        $loggedInUserId = 1000;
+
+        /** @var RoleEntity $loggedInUserRole */
+        $loggedInUserRole = m::mock(RoleEntity::class)->makePartial();
+        $loggedInUserRole->setRole(RoleEntity::ROLE_SYSTEM_ADMIN);
+
+        /** @var UserEntity $loggedInUser */
+        $loggedInUser = m::mock(UserEntity::class)->makePartial();
+        $loggedInUser->initCollections();
+        $loggedInUser->setId($loggedInUserId);
+        $loggedInUser->addRoles($loggedInUserRole);
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->once()
+            ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
+            ->andReturn(true)
+            ->shouldReceive('getIdentity->getUser')
+            ->once()
+            ->andReturn($loggedInUser);
+
+        /** @var RoleEntity $userRole */
+        $userRole = m::mock(RoleEntity::class)->makePartial();
+        $userRole->setRole(RoleEntity::ROLE_SYSTEM_ADMIN);
+
+        /** @var UserEntity $user */
+        $user = m::mock(UserEntity::class)->makePartial();
+        $user->initCollections();
+        $user->setId($userId);
+        $user->setLoginId('loginId');
+        $user->addRoles($userRole);
+
+        $this->repoMap['User']->shouldReceive('fetchById')
+            ->once()
+            ->with($userId, Query::HYDRATE_OBJECT, 1)
+            ->andReturn($user)
+            ->shouldReceive('fetchUsersCountByRole')
+            ->once()
+            ->with(RoleEntity::ROLE_SYSTEM_ADMIN)
+            ->andReturn(1)
+            ->shouldReceive('save')
+            ->never();
 
         $this->sut->handleCommand($command);
     }

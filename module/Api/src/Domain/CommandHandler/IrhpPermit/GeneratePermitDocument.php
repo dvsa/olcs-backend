@@ -26,7 +26,7 @@ final class GeneratePermitDocument extends AbstractCommandHandler implements Tog
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
 
     /**
@@ -66,7 +66,9 @@ final class GeneratePermitDocument extends AbstractCommandHandler implements Tog
             CountryEntity::ID_SLOVENIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SLOVENIA,
             CountryEntity::ID_SPAIN => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SPAIN,
             CountryEntity::ID_SWEDEN => DocumentEntity::IRHP_PERMIT_ANN_BILAT_SWEDEN,
-        ]
+        ],
+        IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+            => DocumentEntity::IRHP_PERMIT_ANN_MULTILAT,
     ];
 
     /**
@@ -125,14 +127,14 @@ final class GeneratePermitDocument extends AbstractCommandHandler implements Tog
         $irhpPermitTypeId = $irhpPermitStock->getIrhpPermitType()->getId();
 
         switch ($irhpPermitTypeId) {
-            case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT:
-                $template = isset($this->templates[$irhpPermitTypeId]) ? $this->templates[$irhpPermitTypeId] : null;
-                break;
             case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL:
                 // those templates are country specific
                 $countryId = $irhpPermitStock->getCountry()->getId();
                 $template = isset($this->templates[$irhpPermitTypeId][$countryId])
                     ? $this->templates[$irhpPermitTypeId][$countryId] : null;
+                break;
+            default:
+                $template = isset($this->templates[$irhpPermitTypeId]) ? $this->templates[$irhpPermitTypeId] : null;
                 break;
         }
 

@@ -24,7 +24,7 @@ final class GeneratePermits extends AbstractCommandHandler implements ToggleRequ
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     private $transMngr;
 

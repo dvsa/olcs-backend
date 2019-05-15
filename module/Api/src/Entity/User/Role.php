@@ -32,6 +32,62 @@ class Role extends AbstractRole implements RoleInterface
     const ROLE_LOCAL_AUTHORITY_USER = 'local-authority-user';
     const ROLE_ANON = 'anon';
 
+    /**
+     * List of roles and the roles they are allowed to update a user from/to
+     *
+     * @var array
+     */
+    private static $rolesHierarchy = [
+        self::ROLE_SYSTEM_ADMIN => [
+            self::ROLE_SYSTEM_ADMIN,
+            self::ROLE_INTERNAL_ADMIN,
+            self::ROLE_INTERNAL_CASE_WORKER,
+            self::ROLE_INTERNAL_READ_ONLY,
+            self::ROLE_INTERNAL_LIMITED_READ_ONLY,
+            self::ROLE_OPERATOR_ADMIN,
+            self::ROLE_OPERATOR_USER,
+            self::ROLE_OPERATOR_TM,
+            self::ROLE_PARTNER_ADMIN,
+            self::ROLE_PARTNER_USER,
+            self::ROLE_LOCAL_AUTHORITY_ADMIN,
+            self::ROLE_LOCAL_AUTHORITY_USER,
+        ],
+        self::ROLE_INTERNAL_ADMIN => [
+            self::ROLE_INTERNAL_ADMIN,
+            self::ROLE_INTERNAL_CASE_WORKER,
+            self::ROLE_INTERNAL_READ_ONLY,
+            self::ROLE_INTERNAL_LIMITED_READ_ONLY,
+            self::ROLE_OPERATOR_ADMIN,
+            self::ROLE_OPERATOR_USER,
+            self::ROLE_OPERATOR_TM,
+            self::ROLE_PARTNER_ADMIN,
+            self::ROLE_PARTNER_USER,
+            self::ROLE_LOCAL_AUTHORITY_ADMIN,
+            self::ROLE_LOCAL_AUTHORITY_USER,
+        ],
+        self::ROLE_INTERNAL_CASE_WORKER => [
+            self::ROLE_INTERNAL_CASE_WORKER,
+            self::ROLE_INTERNAL_READ_ONLY,
+            self::ROLE_INTERNAL_LIMITED_READ_ONLY,
+            self::ROLE_OPERATOR_ADMIN,
+            self::ROLE_OPERATOR_USER,
+            self::ROLE_OPERATOR_TM,
+            self::ROLE_PARTNER_ADMIN,
+            self::ROLE_PARTNER_USER,
+            self::ROLE_LOCAL_AUTHORITY_ADMIN,
+            self::ROLE_LOCAL_AUTHORITY_USER,
+        ],
+    ];
+
+    /**
+     * Get list of roles this role is allowed to switch any user to
+     *
+     * @return array
+     */
+    public function getAllowedRoles()
+    {
+        return isset(self::$rolesHierarchy[$this->getRole()]) ? self::$rolesHierarchy[$this->getRole()] : [];
+    }
 
     public static function anon()
     {

@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use DateTime;
@@ -130,16 +131,70 @@ class IrhpPermitEntityTest extends EntityTester
         $this->assertSame('UK00431', $this->sut->getPermitNumberWithPrefix());
     }
 
+    /**
+    * @dataProvider dpGetStartDate
+    */
+    public function testGetStartDate($validFrom, $issueDate, $expected)
+    {
+        $this->sut->setIssueDate($issueDate);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getValidFrom')
+            ->with(true)
+            ->andReturn($validFrom);
+
+        $this->irhpPermitRange->shouldReceive('getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+
+        $this->assertEquals($expected, $this->sut->getStartDate());
+    }
+
+    public function dpGetStartDate()
+    {
+        $inPast = new DateTime('last year');
+        $now = new DateTime();
+        $inFuture = new DateTime('next year');
+
+        return [
+            'issued before valid from date' => [
+                'validFrom' => $inFuture,
+                'issueDate' => $now,
+                'expected' => $inFuture,
+            ],
+            'issued after valid from date' => [
+                'validFrom' => $inPast,
+                'issueDate' => $now,
+                'expected' => $now,
+            ],
+            'not yet issued' => [
+                'validFrom' => $inPast,
+                'issueDate' => null,
+                'expected' => $inPast,
+            ],
+        ];
+    }
+
     public function testGetCalculatedBundleValues()
     {
         $prefix = 'UK';
-        
+
+        $now = new DateTime();
+        $this->sut->setIssueDate($now);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getValidFrom')
+            ->with(true)
+            ->andReturn(new DateTime('last year'));
+
         $this->irhpPermitRange->shouldReceive('getPrefix')
-            ->andReturn($prefix);
+            ->andReturn($prefix)
+            ->shouldReceive('getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
 
         $this->assertEquals(
             [
                 'permitNumberWithPrefix' => 'UK00431',
+                'startDate' => $now,
             ],
             $this->sut->getCalculatedBundleValues()
         );

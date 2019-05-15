@@ -1169,6 +1169,8 @@ return [
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
         CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
+    Command\IrhpApplication\StoreSnapshot::class =>
+        CommandHandler\IrhpApplication\StoreSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,
@@ -1200,4 +1202,7 @@ return [
         CommandHandlerCli\Permits\UploadScoringLog::class,
     CommandCli\Permits\GeneratePermits::class =>
         CommandHandlerCli\Permits\GeneratePermits::class,
+
+    // Templates
+    TransferCommand\Template\UpdateTemplateSource::class => CommandHandler\Template\UpdateTemplateSource::class,
 ];

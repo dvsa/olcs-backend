@@ -20,7 +20,7 @@ final class Close extends AbstractCommandHandler implements TransactionedInterfa
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermitWindow';
     protected $extraRepos = ['EcmtPermitApplication'];
 

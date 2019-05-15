@@ -25,7 +25,7 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
 
     /**
@@ -36,6 +36,8 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
             => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL
             => DocumentEntity::IRHP_PERMIT_ANN_BILAT_COVERING_LETTER,
+        IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+            => DocumentEntity::IRHP_PERMIT_ANN_MULTILAT_COVERING_LETTER,
     ];
 
     /**

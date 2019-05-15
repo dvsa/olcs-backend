@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -40,6 +41,7 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
 
     /**
      * Community licence document info
@@ -138,6 +140,15 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     protected $discStolenInfo;
 
     /**
+     * Ecms checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="ecms_checked", nullable=true)
+     */
+    protected $ecmsChecked;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -196,6 +207,15 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
      * @ORM\JoinColumn(name="licence_document_status", referencedColumnName="id", nullable=true)
      */
     protected $licenceDocumentStatus;
+
+    /**
+     * Signature checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="signature_checked", nullable=true)
+     */
+    protected $signatureChecked;
 
     /**
      * Signature type
@@ -474,6 +494,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     }
 
     /**
+     * Set the ecms checked
+     *
+     * @param boolean $ecmsChecked new value being set
+     *
+     * @return Surrender
+     */
+    public function setEcmsChecked($ecmsChecked)
+    {
+        $this->ecmsChecked = $ecmsChecked;
+
+        return $this;
+    }
+
+    /**
+     * Get the ecms checked
+     *
+     * @return boolean
+     */
+    public function getEcmsChecked()
+    {
+        return $this->ecmsChecked;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -624,6 +668,30 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     }
 
     /**
+     * Set the signature checked
+     *
+     * @param boolean $signatureChecked new value being set
+     *
+     * @return Surrender
+     */
+    public function setSignatureChecked($signatureChecked)
+    {
+        $this->signatureChecked = $signatureChecked;
+
+        return $this;
+    }
+
+    /**
+     * Get the signature checked
+     *
+     * @return boolean
+     */
+    public function getSignatureChecked()
+    {
+        return $this->signatureChecked;
+    }
+
+    /**
      * Set the signature type
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $signatureType entity being set as the value
@@ -717,21 +785,5 @@ abstract class AbstractSurrender implements BundleSerializableInterface, JsonSer
     public function setLastModifiedOnBeforeUpdate()
     {
         $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

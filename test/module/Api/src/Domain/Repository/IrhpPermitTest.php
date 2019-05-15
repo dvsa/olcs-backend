@@ -3,8 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\Query\Expr;
-use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
@@ -13,6 +11,7 @@ use Dvsa\Olcs\Transfer\Query\Permits\ValidEcmtPermits;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Mockery as m;
 use PDO;
 
@@ -315,16 +314,23 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
-        $query = GetListByLicence::create(['licence' => 7, 'page' => 1, 'limit' => 10]);
+        $query = GetListByLicence::create(
+            [
+                'licence' => 7,
+                'irhpPermitType' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'page' => 1,
+                'limit' => 10
+            ]
+        );
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
             . 'INNER JOIN ipa.irhpApplication ia '
-            . 'INNER JOIN ipa.irhpPermitWindow ipw '
-            . 'INNER JOIN ipw.irhpPermitStock ips '
-            . 'INNER JOIN ips.country ipc '
+            . 'INNER JOIN m.irhpPermitRange ipr '
+            . 'INNER JOIN ipr.irhpPermitStock ips '
+            . 'LEFT JOIN ips.country ipc '
             . 'AND ia.licence = [[7]] '
-            . 'AND ipa.irhpApplication IS NOT NULL '
+            . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
             . 'ORDER BY ipc.countryDesc ASC '
             . 'ORDER BY m.expiryDate ASC '
             . 'ORDER BY ipa.id ASC '

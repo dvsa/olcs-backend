@@ -6,6 +6,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 
@@ -19,7 +20,7 @@ trait IrhpPermitStockTrait
      * @return void
      * @throws ValidationException
      */
-    protected function duplicateStockCheck($command)
+    public function duplicateStockCheck($command)
     {
         // Stocks for bilateral type are permitted to share shame type ID and validFrom/validTo
         if ((int) $command->getIrhpPermitType() !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
@@ -32,6 +33,33 @@ trait IrhpPermitStockTrait
 
             if ($existingStock > 0) {
                 throw new ValidationException(['You cannot create a duplicate stock']);
+            }
+        }
+    }
+
+    /**
+     * Performs validation on provided validity dates.
+     *
+     * @param $command
+     * @throws ValidationException
+     */
+    public function validityPeriodValidation($command)
+    {
+        if ((int) $command->getIrhpPermitType() !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL) {
+            if (is_null($command->getValidFrom()) || is_null($command->getValidTo())) {
+                throw new ValidationException(['This permit type requires you specify a Validity start and end date']);
+            }
+
+            $validFrom = new DateTime($command->getValidFrom());
+            $validTo = new DateTime($command->getValidTo());
+            $now = new DateTime();
+
+            if ($validTo < $validFrom) {
+                throw new ValidationException(['Validity Period End Date must be equal to or later than Validity Period Start Date']);
+            }
+
+            if ($validTo < $now) {
+                throw new ValidationException(['Validity Period End date should be today or in the future']);
             }
         }
     }

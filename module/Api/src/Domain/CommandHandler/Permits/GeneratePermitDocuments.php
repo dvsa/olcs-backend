@@ -26,7 +26,7 @@ final class GeneratePermitDocuments extends AbstractCommandHandler implements To
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpPermit';
 
     /**
@@ -70,7 +70,7 @@ final class GeneratePermitDocuments extends AbstractCommandHandler implements To
 
         $irhpPermitType = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getIrhpPermitType();
 
-        if ($irhpPermitType->isBilateral()) {
+        if ($irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral()) {
             $licenceId = $irhpPermitApplication->getRelatedApplication()->getLicence()->getId();
 
             if (isset($this->coverLetterLicenceIds[$licenceId])) {

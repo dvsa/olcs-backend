@@ -16,7 +16,7 @@ class CountrySelectList extends AbstractListQueryHandler implements ToggleRequir
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'Country';
 }
