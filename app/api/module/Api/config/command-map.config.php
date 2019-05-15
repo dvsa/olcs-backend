@@ -1109,6 +1109,7 @@ return [
     TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
     TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
     TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
+    TransferCommand\IrhpApplication\SubmitApplicationStep::class => CommandHandler\IrhpApplication\SubmitApplicationStep::class,
     Command\IrhpApplication\RegenerateApplicationFee::class => CommandHandler\IrhpApplication\RegenerateApplicationFee::class,
     Command\IrhpApplication\RegenerateIssueFee::class => CommandHandler\IrhpApplication\RegenerateIssueFee::class,
     TransferCommand\IrhpApplication\CreateFull::class => CommandHandler\IrhpApplication\CreateFull::class,

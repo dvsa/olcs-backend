@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Entity\Generic;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 
 /**
  * Question Entity
@@ -19,6 +18,18 @@ use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
  */
 class Question extends AbstractQuestion
 {
+    // Standard question types
+    const FORM_CONTROL_TYPE_CHECKBOX = 'form_control_checkbox';
+    const FORM_CONTROL_TYPE_RADIO = 'form_control_radio';
+    const FORM_CONTROL_TYPE_TEXT = 'form_control_text';
+
+    // Custom question types
+    const FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS = 'form_control_ecmt_rem_no_permits';
+
+    // Question data types
+    const QUESTION_TYPE_STRING = 'question_type_string';
+    const QUESTION_TYPE_INTEGER = 'question_type_integer';
+    const QUESTION_TYPE_BOOLEAN = 'question_type_boolean';
     const QUESTION_TYPE_CUSTOM = 'question_type_custom';
 
     /**
@@ -58,5 +69,15 @@ class Question extends AbstractQuestion
         $activeQuestionTexts = $this->getQuestionTexts()->matching($criteria);
 
         return !$activeQuestionTexts->isEmpty() ? $activeQuestionTexts->first() : null;
+    }
+
+    /**
+     * Get the decoded form of the option source for this question
+     *
+     * @return array
+     */
+    public function getDecodedOptionSource()
+    {
+        return json_decode($this->optionSource, true);
     }
 }
