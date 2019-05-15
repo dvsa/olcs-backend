@@ -70,7 +70,8 @@
             "Dvsa\\Olcs\\Address\\": "module/Address/src",
             "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib",
-            "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src"
+            "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src",
+            "Dvsa\\Olcs\\AwsSdk\\": "module/AwsSdk/src"
         }
     },
     "config": {
