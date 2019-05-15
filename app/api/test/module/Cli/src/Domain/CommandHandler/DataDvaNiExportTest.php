@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use org\bovigo\vfs\vfsStream;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport
  */
@@ -115,11 +116,11 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
 
         $date = new DateTime('now');
 
-        $expectFile = $this->tmpPath . '/NiGvLicences-'.$date->format(DataDvaNiExport::FILE_DATETIME_FORMAT).'.csv';
+        $expectFile = $this->tmpPath . '/NiGvLicences-' . $date->format(DataDvaNiExport::FILE_DATETIME_FORMAT) . '.csv';
 
         $expectMsg =
             'Fetching data from DB for NI Operator Licences' .
-            'create csv file: ' . $expectFile ;
+            'create csv file: ' . $expectFile;
 
         static::assertEquals(
             $expectMsg,
@@ -129,10 +130,9 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
         static::assertSame(
             'LicenceNumber,LicenceType' . "\n" .
             '123455,test_type' . "\n" .
-            '123456,test_type' . "\n".
+            '123456,test_type' . "\n" .
             '123457,test_type' . "\n",
             file_get_contents($expectFile)
         );
     }
-
 }

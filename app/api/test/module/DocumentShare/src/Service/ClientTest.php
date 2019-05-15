@@ -54,7 +54,7 @@ class ClientTest extends MockeryTestCase
     {
         $expectContent = 'unit_ABCD1234';
         $testPath = 'test';
-        $testStream = fopen('data://text/plain;base64,' . base64_encode($expectContent),'r');
+        $testStream = fopen('data://text/plain;base64,' . base64_encode($expectContent), 'r');
 
         $this->mockFileSystem->expects('readStream')->with($testPath)->andReturn($testStream);
 

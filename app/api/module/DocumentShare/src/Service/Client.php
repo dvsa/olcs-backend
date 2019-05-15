@@ -18,17 +18,17 @@ class Client
     const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
 
     /**
-     * @var FilesystemInterface 
+     * @var FilesystemInterface
      */
     protected $filesystem;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $uuid;
 
     /**
-     * @var array 
+     * @var array
      */
     protected $cache = [];
 
