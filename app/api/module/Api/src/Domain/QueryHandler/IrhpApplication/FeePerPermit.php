@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -18,7 +19,7 @@ class FeePerPermit extends AbstractQueryHandler implements ToggleRequiredInterfa
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -33,22 +34,37 @@ class FeePerPermit extends AbstractQueryHandler implements ToggleRequiredInterfa
      */
     public function handleQuery(QueryInterface $query)
     {
-        $irhpApplication = $this->getRepo()->fetchById($query->getId());
-        if ($irhpApplication->getIrhpPermitType()->getId() != IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL) {
-            return ['feePerPermit' => 'Not applicable'];
+        $irhpApplication = $this->getRepo()->fetchUsingId($query);
+
+        $permittedPermitTypeIds = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+        ];
+
+        if (!in_array($irhpApplication->getIrhpPermitType()->getId(), $permittedPermitTypeIds)) {
+            throw new ForbiddenException('FeePerPermit query only supports bilateral and multilateral types');
         }
 
         $feeTypeRepo = $this->getRepo('FeeType');
 
         $applicationFeeType = $feeTypeRepo->getLatestByProductReference(
-            FeeType::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF
+            $irhpApplication->getApplicationFeeProductReference()
         );
 
-        $issueFeeType = $feeTypeRepo->getLatestByProductReference(
-            FeeType::FEE_TYPE_IRHP_ISSUE_BILATERAL_PRODUCT_REF
-        );
+        $irhpPermitApplications = $irhpApplication->getIrhpPermitApplications();
+        $feesPerPermit = [];
 
-        $feePerPermit = $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
-        return ['feePerPermit' => $feePerPermit];
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
+            $issueFeeType = $feeTypeRepo->getLatestByProductReference(
+                $irhpPermitApplication->getIssueFeeProductReference()
+            );
+
+            $feesPerPermit[$irhpPermitApplication->getId()] = $irhpApplication->getFeePerPermit(
+                $applicationFeeType,
+                $issueFeeType
+            );
+        }
+
+        return $feesPerPermit;
     }
 }

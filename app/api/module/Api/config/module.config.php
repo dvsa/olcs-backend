@@ -112,13 +112,19 @@ return [
 
             ApiSrv\Document\PrintLetter::class => ApiSrv\Document\PrintLetter::class,
             \Dvsa\Olcs\Api\Service\Toggle\ToggleService::class =>
-                \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::class
+                \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::class,
+
+            'TemplateFetcher' => ApiSrv\Template\TemplateFetcher::class,
+            'TemplateDatabaseTwigLoader' => ApiSrv\Template\DatabaseTwigLoaderFactory::class,
+            'TemplateDatabaseTemplateFetcher' => ApiSrv\Template\DatabaseTemplateFetcherFactory::class,
+            'TemplateTwigRenderer' => ApiSrv\Template\TwigRendererFactory::class,
+            'TemplateTwigEnvironment' => ApiSrv\Template\TwigEnvironmentFactory::class,
+            'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
         ],
     ],
     'view_manager' => [
         'template_path_stack' => [
             'submission' => __DIR__ . '/../view/submission',
-            'permits' => __DIR__ . '/../view/permits',
         ]
     ],
     'file_uploader' => [
@@ -354,6 +360,7 @@ return [
             'IrhpPermitWindow' => RepositoryFactory::class,
             'IrhpPermitRange' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
+            'Template' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

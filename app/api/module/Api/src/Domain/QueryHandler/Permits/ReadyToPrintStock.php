@@ -15,7 +15,7 @@ class ReadyToPrintStock extends AbstractQueryHandler implements ToggleRequiredIn
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpPermitStock';
 

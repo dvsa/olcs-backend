@@ -13,12 +13,10 @@ class StoreEcmtPermitApplicationSnapshotTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'id' => 2,
-            'html' => 'HTML',
         ];
 
         $command = Cmd::create($data);
 
         $this->assertEquals(2, $command->getId());
-        $this->assertEquals('HTML', $command->getHtml());
     }
 }

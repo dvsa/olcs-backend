@@ -17,7 +17,7 @@ final class Cancel extends AbstractCancelApplicationHandler implements ToggleReq
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $cancelStatus = IrhpInterface::STATUS_CANCELLED;
 }

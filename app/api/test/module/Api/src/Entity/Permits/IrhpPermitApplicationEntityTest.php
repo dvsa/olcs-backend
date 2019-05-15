@@ -377,7 +377,10 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
-    public function testGetIssueFeeProductReferenceMultilateral()
+    /**
+     * @dataProvider dpGetIssueFeeProductReferenceMultilateral
+     */
+    public function testGetIssueFeeProductReferenceMultilateral($dateTimeInput, $expectedFormattedDateTime)
     {
         $tieredProductReference = 'TIERED_PRODUCT_REFERENCE';
 
@@ -407,13 +410,14 @@ class IrhpPermitApplicationEntityTest extends EntityTester
                 ) use (
                     $tieredProductReference,
                     $stockValidFrom,
-                    $stockValidTo
+                    $stockValidTo,
+                    $expectedFormattedDateTime
                 ) {
                     $this->assertSame($validityStart, $stockValidFrom);
                     $this->assertSame($validityEnd, $stockValidTo);
                     $this->assertEquals(
-                        (new DateTime())->format('Y-m-d'),
-                        $now->format('Y-m-d')
+                        $now->format('Y-m-d'),
+                        $expectedFormattedDateTime
                     );
                     $this->assertEquals(
                         Entity::MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY,
@@ -426,8 +430,18 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertEquals(
             $tieredProductReference,
-            $irhpPermitApplication->getIssueFeeProductReference()
+            $irhpPermitApplication->getIssueFeeProductReference($dateTimeInput)
         );
+    }
+
+    public function dpGetIssueFeeProductReferenceMultilateral()
+    {
+        $dateTime = new DateTime('2029-04-21 13:40:15');
+
+        return [
+            [null, (new DateTime())->format('Y-m-d')],
+            [$dateTime, $dateTime->format('Y-m-d')]
+        ];
     }
 
     public function testClearPermitsRequired()

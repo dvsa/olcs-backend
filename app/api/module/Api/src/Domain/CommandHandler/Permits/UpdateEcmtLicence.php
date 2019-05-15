@@ -29,7 +29,7 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
     const LICENCE_INVALID_MSG = 'Licence ID %s with number %s is unable to make an ECMT application';
     const LICENCE_ORG_MSG = 'Licence does not belong to this organisation';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['Licence'];

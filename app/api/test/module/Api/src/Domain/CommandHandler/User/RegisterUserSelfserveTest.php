@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Register User Selfserve Test
@@ -40,6 +41,7 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('Organisation', Organisation::class);
 
         $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
 
@@ -56,6 +58,9 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandWithOrg()
     {
         $userId = 111;
@@ -180,6 +185,9 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->assertEquals(UserEntity::USER_TYPE_OPERATOR, $savedUser->getUserType());
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function testHandleCommandWithLicence()
     {
         $userId = 111;

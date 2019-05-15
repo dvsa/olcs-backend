@@ -23,7 +23,9 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
             'countrys' => [
                 'country'
             ],
-            'irhpPermitStock'
+            'irhpPermitStock' => [
+                'country'
+            ]
             ]
         ];
 }

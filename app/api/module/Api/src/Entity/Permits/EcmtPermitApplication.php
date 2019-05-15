@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -33,7 +34,10 @@ use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
  *    }
  * )
  */
-class EcmtPermitApplication extends AbstractEcmtPermitApplication implements OrganisationProviderInterface, CancelableInterface
+class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
+    OrganisationProviderInterface,
+    CancelableInterface,
+    LicenceProviderInterface
 {
     use TieredProductReference;
 
@@ -197,7 +201,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         return $ecmtPermitApplication;
     }
 
-
     /**
      * Create new EcmtPermitApplication
      *
@@ -324,6 +327,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
         }
 
         $this->status = $cancelStatus;
+        $this->cancellationDate = new \DateTime();
     }
 
     public function proceedToIssuing(RefData $issuingStatus)
@@ -917,6 +921,16 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Get the related licence
+     *
+     * @return Licence
+     */
+    public function getRelatedLicence(): Licence
+    {
+        return $this->licence;
+    }
+
+    /**
      * Calculates the intensity_of_use value for
      * permits requested by an ecmtPermitApplication
      */
@@ -1090,54 +1104,80 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements Org
     }
 
     /**
+     * Get question and answer data - note this is a bit of a fudge, future permit types can get most of this from DB
      *
-     * Return data required for the creation of a HTML snapshot
      * @return array
      */
-    public function returnSnapshotData()
+    public function getQuestionAnswerData()
     {
-        $data['permitType'] = $this->getPermitType()->getDescription();
-        $data['operator'] = $this->getLicence()->getOrganisation()->getName();
-        $data['ref'] = $this->getApplicationRef();
-        $data['licence'] = $this->getLicence()->getLicNo();
-        $data['emissions'] =  (int) $this->getEmissions() === 1 ? 'Yes' : 'No';
-        $data['cabotage'] = (int) $this->getCabotage() === 1 ? 'Yes' : 'No';
+        $emissionsQuestion = 'permits.form.euro5.label';
+        $countriesQuestion = 'permits.form.restricted.countries.euro5.label';
+        $limitedCountriesAnswer = 'Yes';
+        $limitedCountriesList = [];
 
-        $data['limitedCountries'] =  'No';
-        $data['limitedCountriesList'] = null;
-        if ((int) $this->getHasRestrictedCountries() === 1) {
-            $data['limitedCountries'] = 'Yes';
-            $countries = [];
-            foreach ($this->getCountrys() as $country) {
-                $countries[] = $country->getCountryDesc();
+        if ($this->isEuro6EmissionCategory()) {
+            $emissionsQuestion = 'permits.form.euro6.label';
+            $countriesQuestion = 'permits.page.restricted-countries.question';
+            $limitedCountriesAnswer = 'No';
+
+            if ((int) $this->getHasRestrictedCountries() === 1) {
+                $limitedCountriesAnswer = 'Yes';
+                $countries = [];
+
+                foreach ($this->getCountrys() as $country) {
+                    $countries[] = $country->getCountryDesc();
+                }
+
+                $limitedCountriesList = [implode(', ', $countries)];
             }
-            $data['limitedCountriesList'] = implode(", ", $countries);
         }
 
-        $data['permitsRequired'] = $this->getPermitsRequired();
-        $data['trips'] = $this->getTrips();
-        $data['internationalJourneys'] = $this->getInternationalJourneys()->getDescription();
-        $data['goods'] = $this->getSectors()->getName();
-
-        // default to Euro 6
-        $data['emissionsQuestion']
-            = 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with '
-                . 'Euro 6 emissions standards.';
-        $data['emissionsDeclaration']
-            = 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?';
-
-        if ($this->getWindowEmissionsCategory() === IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF) {
-            // Euro 5
-            $data['emissionsQuestion']
-                = 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant '
-                    . 'with Euro 5 emissions standards as a minimum.';
-            $data['emissionsDeclaration']
-                = 'I confirm that I will not transport goods to, through and from Austria, Greece, Hungary, Italy '
-                    . 'or Russia using this ECMT permit.';
-            $data['limitedCountries'] = 'Yes';
-            $data['limitedCountriesList'] = null;
-        }
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->getLicence()->getLicNo(),
+            ],
+            [
+                'question' => $emissionsQuestion,
+                'answer' =>  (int) $this->getEmissions() === 1 ? 'Yes' : 'No',
+            ],
+            [
+                'question' => 'permits.form.cabotage.label',
+                'answer' =>  (int) $this->getCabotage() === 1 ? 'Yes' : 'No',
+            ],
+            [
+                'question' => $countriesQuestion,
+                'answer' => $limitedCountriesAnswer,
+                'answerList' => $limitedCountriesList,
+            ],
+            [
+                'question' => 'permits.page.permits.required.question',
+                'answer' => $this->getPermitsRequired(),
+            ],
+            [
+                'question' => 'permits.page.number-of-trips.question',
+                'answer' => $this->getTrips(),
+            ],
+            [
+                'question' => 'permits.page.international.journey.question',
+                'answer' => $this->getInternationalJourneys()->getDescription(),
+            ],
+            [
+                'question' => 'permits.page.sectors.question',
+                'answer' => $this->getSectors()->getName(),
+            ],
+        ];
 
         return $data;
+    }
+
+    /**
+     * Whether this application is a euro 6 emission category
+     *
+     * @return bool
+     */
+    public function isEuro6EmissionCategory()
+    {
+        return $this->getWindowEmissionsCategory() === IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF;
     }
 }

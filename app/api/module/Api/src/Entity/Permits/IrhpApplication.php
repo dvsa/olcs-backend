@@ -6,16 +6,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
@@ -39,6 +37,7 @@ use RuntimeException;
 class IrhpApplication extends AbstractIrhpApplication implements
     IrhpInterface,
     OrganisationProviderInterface,
+    LicenceProviderInterface,
     SectionableInterface,
     CancelableInterface
 {
@@ -120,6 +119,23 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 'validateIf' => [
                     'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+            'declaration' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                ],
+            ],
+        ],
+        IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => [
+            'licence' => [
+                'validator' => 'fieldIsNotNull',
+            ],
+            'checkedAnswers' => [
+                'validator' => 'fieldIsAgreed',
+                'validateIf' => [
+                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                 ],
             ],
             'declaration' => [
@@ -212,11 +228,122 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'isCancelled' => $this->isCancelled(),
+            'isBilateral' => $this->isBilateral(),
+            'isMultilateral' => $this->isMultilateral(),
             'canCheckAnswers' => $this->canCheckAnswers(),
             'canMakeDeclaration' => $this->canMakeDeclaration(),
             'permitsRequired' => $this->getPermitsRequired(),
             'canUpdateCountries' => $this->canUpdateCountries(),
         ];
+    }
+
+    /**
+     * Get question and answer data
+     *
+     * @return array
+     */
+    public function getQuestionAnswerData(): array
+    {
+        if ($this->isBilateral()) {
+            return $this->getQuestionAnswerDataBilateral();
+        }
+
+        return $this->getQuestionAnswerDataMultilateral();
+    }
+
+    /**
+     * Get question and answer data for a bilateral application
+     *
+     * @return array
+     */
+    public function getQuestionAnswerDataBilateral(): array
+    {
+        $numberOfPermits = [];
+        $countriesArray = [];
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
+
+            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
+            if ($permitsRequired === null) {
+                continue;
+            }
+
+            $stock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
+            $country = $stock->getCountry()->getCountryDesc();
+            $year = $stock->getValidTo(true)->format('Y');
+
+            $numberOfPermits[$country][$year] = $permitsRequired;
+            $countriesArray[$country] = $country;
+        }
+
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->licence->getLicNo(),
+            ],
+            [
+                'question' => 'permits.irhp.countries.transporting',
+                'answer' =>  implode(', ', $countriesArray),
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  $this->getPermitsRequired(),
+            ],
+        ];
+
+        foreach ($numberOfPermits as $country => $years) {
+            foreach ($years as $year => $permitsRequired) {
+                $data[] = [
+                    'question' => sprintf('%s for %d', $country, $year),
+                    'answer' => $permitsRequired
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get question and answer data for a multilateral application
+     *
+     * @return array
+     */
+    public function getQuestionAnswerDataMultilateral(): array
+    {
+        $data = [
+            [
+                'question' => 'permits.check-answers.page.question.licence',
+                'answer' =>  $this->licence->getLicNo(),
+            ],
+            [
+                'question' => 'permits.snapshot.number.required',
+                'answer' =>  $this->getPermitsRequired(),
+            ],
+        ];
+
+        /** @var IrhpPermitApplication $irhpPermitApplication */
+        foreach ($this->irhpPermitApplications as $irhpPermitApplication) {
+            $permitsRequired = $irhpPermitApplication->getPermitsRequired();
+
+            //if the permits required hasn't been filled in at all, we skip (although we do show zeros)
+            if ($permitsRequired === null) {
+                continue;
+            }
+
+            $year = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getValidTo(true)
+                ->format('Y');
+
+            $data[] = [
+                'question' => sprintf('For %d', $year),
+                'answer' => $permitsRequired
+            ];
+        }
+
+        return $data;
     }
 
     /**
@@ -237,6 +364,36 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getRelatedOrganisation()
     {
         return $this->getLicence()->getOrganisation();
+    }
+
+    /**
+     * Get the related licence
+     *
+     * @return Licence
+     */
+    public function getRelatedLicence(): Licence
+    {
+        return $this->licence;
+    }
+
+    /**
+     * Whether the application is for a bilateral permit type
+     *
+     * @return bool
+     */
+    public function isBilateral(): bool
+    {
+        return $this->irhpPermitType->isBilateral();
+    }
+
+    /**
+     * Whether the application is for a multilateral permit type
+     *
+     * @return bool
+     */
+    public function isMultilateral(): bool
+    {
+        return $this->irhpPermitType->isMultilateral();
     }
 
     /**
@@ -318,6 +475,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $cancelStatus;
+        $this->cancellationDate = new \DateTime();
     }
 
     /**
@@ -666,8 +824,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $applications = $this->irhpPermitApplications;
         $total = 0;
 
+        /** @var IrhpPermitApplication $app */
         foreach ($applications as $app) {
-            $total += is_null($app->getPermitsRequired()) ? 0 : $app->getPermitsRequired();
+            $permitsRequired = $app->getPermitsRequired();
+            $total += is_null($permitsRequired) ? 0 : $permitsRequired;
         }
 
         return $total;
@@ -715,14 +875,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Gets a key/value pair array representing application fee product references and quantities for this application
+     * Gets the application fee product reference for this application
      * Applicable only to bilateral and multilateral
      *
      * @return array
      *
      * @throws ForbiddenException if the permit type is unsupported
      */
-    public function getApplicationFeeProductRefsAndQuantities()
+    public function getApplicationFeeProductReference()
     {
         $mappings = [
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
@@ -732,15 +892,54 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
 
         $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
-        if (isset($mappings[$irhpPermitTypeId])) {
-            return [
-                $mappings[$irhpPermitTypeId] => $this->getPermitsRequired()
-            ];
+        if (!isset($mappings[$irhpPermitTypeId])) {
+            throw new ForbiddenException(
+                'No application fee product reference available for permit type ' . $irhpPermitTypeId
+            );
         }
 
-        throw new ForbiddenException(
-            'No application fee product reference available for permit type ' . $irhpPermitTypeId
-        );
+        return $mappings[$irhpPermitTypeId];
+    }
+
+    /**
+     * Gets a key/value pair array representing application fee product references and quantities for this application
+     *
+     * @return array
+     */
+    public function getApplicationFeeProductRefsAndQuantities()
+    {
+        return [
+            $this->getApplicationFeeProductReference() => $this->getPermitsRequired()
+        ];
+    }
+
+    /**
+     * Gets the total fee per permit including application fee and issue fee
+     * Applicable only to bilateral and multilateral
+     *
+     * @param FeeTypeEntity $applicationFeeType
+     * @param FeeTypeEntity $issueFeeType
+     *
+     * @return int
+     *
+     * @throws ForbiddenException if the permit type is unsupported
+     */
+    public function getFeePerPermit(FeeTypeEntity $applicationFeeType, FeeTypeEntity $issueFeeType)
+    {
+        $permittedPermitTypeIds = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+        ];
+
+        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+
+        if (!in_array($irhpPermitTypeId, $permittedPermitTypeIds)) {
+            throw new ForbiddenException(
+                'Cannot get fee per permit for irhp permit type ' . $irhpPermitTypeId
+            );
+        }
+
+        return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();
     }
 
     /**

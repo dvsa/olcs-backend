@@ -2,10 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Abstracts;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Instantiator\Instantiator;
-use Dvsa\Olcs\Api\Entity\Licence\AbstractLicence;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

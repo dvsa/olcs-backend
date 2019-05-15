@@ -14,7 +14,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
-use Zend\View\Model\ViewModel;
 
 /**
  * Handles actions necessary once EcmtPermitApplication is marked as submitted.
@@ -25,7 +24,7 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
 {
     use QueueAwareTrait, ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['IrhpCandidatePermit'];
@@ -52,12 +51,7 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
         );
 
         // Setup necessary data to create HTML snapshot of Ecmt Permit Application
-        $data = $application->returnSnapshotData();
-        $view = new ViewModel();
-        $view->setTemplate('ecmt-permit-application-snapshot');
-        $view->setVariable('data', $data);
-        $html = $this->getCommandHandler()->getServiceLocator()->get('ViewRenderer')->render($view);
-        $snapshotCmd = SnapshotCmd::create(['id' => $id, 'html' => $html]);
+        $snapshotCmd = SnapshotCmd::create(['id' => $id]);
 
         // Prepare Submitted Email
         $emailCmd = $this->emailQueue(SendEcmtAppSubmittedCmd::class, ['id' => $id], $id);

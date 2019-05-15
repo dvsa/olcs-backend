@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update User Selfserve Test
@@ -28,6 +29,7 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
         $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
             UserInterface::class => m::mock(UserInterface::class)
         ];
 

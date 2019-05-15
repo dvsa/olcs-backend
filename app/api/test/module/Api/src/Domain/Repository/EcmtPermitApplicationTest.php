@@ -72,7 +72,7 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
         );
     }
 
-    public function testFetchInScopeApplicationIds()
+    public function testFetchInScopeUnderConsiderationApplicationIds()
     {
         $stockId = 14;
 
@@ -96,8 +96,12 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
                 '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
                 '    )' .
                 ') ' .
-                'and e.in_scope = 1 ',
-                ['stockId' => $stockId]
+                'and e.in_scope = 1 ' .
+                'and e.status = :status',
+                [
+                    'stockId' => $stockId,
+                    'status' => EcmtPermitApplicationEntity::STATUS_UNDER_CONSIDERATION
+                ]
             )
             ->once()
             ->andReturn($statement);
@@ -106,7 +110,7 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
 
         $this->assertEquals(
             [14, 15, 16],
-            $this->sut->fetchInScopeApplicationIds($stockId)
+            $this->sut->fetchInScopeUnderConsiderationApplicationIds($stockId)
         );
     }
 

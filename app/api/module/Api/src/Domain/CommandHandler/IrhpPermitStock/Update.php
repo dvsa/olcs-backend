@@ -37,6 +37,7 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
     {
         // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
         $this->duplicateStockCheck($command);
+        $this->validityPeriodValidation($command);
 
         /**
          * @var IrhpPermitStock $command
@@ -53,9 +54,9 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
         $stock->update(
             $irhpPermitType,
             $country,
+            $command->getInitialStock(),
             $command->getValidFrom(),
-            $command->getValidTo(),
-            $command->getInitialStock()
+            $command->getValidTo()
         );
 
         try {
