@@ -20,7 +20,7 @@ class ClientFactory implements FactoryInterface
     private $options;
 
     /**
-     * @var ServiceLocatorInterface 
+     * @var ServiceLocatorInterface
      */
     private $serviceLocator;
 
@@ -48,9 +48,9 @@ class ClientFactory implements FactoryInterface
 
         $webDAVClient = new WebDAVClient(
             [
-            'baseUri' => $clientOptions['baseuri'],
-            'username' => $clientOptions['username'],
-            'password' => $clientOptions['password']
+                'baseUri' => $clientOptions['baseuri'],
+                'username' => $clientOptions['username'],
+                'password' => $clientOptions['password']
             ]
         );
 

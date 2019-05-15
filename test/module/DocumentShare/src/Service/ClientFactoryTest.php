@@ -33,10 +33,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             try {
                 $sut->createService($mockSl);
             } catch (\Exception $e) {
-                if (
-                    $e->getMessage() == $expected->getMessage() &&
-                    get_class($e) == get_class($expected)
-                ) {
+                if ($e->getMessage() == $expected->getMessage() && get_class($e) == get_class($expected)) {
                     $passed = true;
                 }
             }
