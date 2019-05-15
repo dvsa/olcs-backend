@@ -2279,7 +2279,10 @@ return array(
         'question_id' => array(
             'inversedBy' => array(
                 'entity' => 'Question',
-                'property' => 'applicationValidation'
+                'property' => 'applicationValidation',
+                'orderBy' => array(
+                    'weight' => 'ASC'
+                )
             )
         ),
         'application_step_id' => array(

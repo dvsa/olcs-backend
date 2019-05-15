@@ -357,6 +357,37 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Get an answer to the given application step
+     *
+     * @return mix|null
+     */
+    public function getAnswer(ApplicationStep $applicationStep)
+    {
+        $question = $applicationStep->getQuestion();
+
+        if ($question->isCustom()) {
+            // TODO - OLCS-23788 - custom handling to be added here
+            return null;
+        }
+
+        // standard Q&A
+        $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
+
+        if (!isset($activeQuestionText)) {
+            return null;
+        }
+
+        // answers are indexed by question_text_id
+        $answer = $this->getAnswers()->get($activeQuestionText->getId());
+
+        if (!isset($answer)) {
+            return null;
+        }
+
+        return $answer->getValue();
+    }
+
+    /**
      * Get question and answer data for a bilateral application
      *
      * @return array

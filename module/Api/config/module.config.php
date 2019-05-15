@@ -24,6 +24,7 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'QaDirectOptionsGenerator' => ApiSrv\Qa\FormControlStrategy\OptionsGenerator\Direct::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -120,6 +121,17 @@ return [
             'TemplateTwigRenderer' => ApiSrv\Template\TwigRendererFactory::class,
             'TemplateTwigEnvironment' => ApiSrv\Template\TwigEnvironmentFactory::class,
             'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
+
+            'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
+            'QaRadioFormControlStrategy' => ApiSrv\Qa\FormControlStrategy\RadioFactory::class,
+            'QaCheckboxFormControlStrategy' => ApiSrv\Qa\FormControlStrategy\CheckboxFactory::class,
+            'QaTextFormControlStrategy' => ApiSrv\Qa\FormControlStrategy\TextFactory::class,
+            'QaEcmtRemovalNoOfPermitsFormControlStrategy' =>
+                ApiSrv\Qa\FormControlStrategy\EcmtRemovalNoOfPermitsFactory::class,
+
+            'QaGenericAnswerSaver' => ApiSrv\Qa\FormControlStrategy\Common\GenericAnswerSaverFactory::class,
+            'QaOptionsGeneratorProvider' => ApiSrv\Qa\FormControlStrategy\OptionsGeneratorProviderFactory::class,
+            'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
         ],
     ],
     'view_manager' => [
@@ -361,6 +373,9 @@ return [
             'IrhpPermitRange' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
             'Template' => RepositoryFactory::class,
+            'ApplicationStep' => RepositoryFactory::class,
+            'ApplicationPath' => RepositoryFactory::class,
+            'Answer' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

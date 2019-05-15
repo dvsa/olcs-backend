@@ -632,6 +632,7 @@ return [
         QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
     TransferQuery\IrhpApplication\FeeBreakdown::class => QueryHandler\IrhpApplication\FeeBreakdown::class,
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
+    TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,

@@ -163,6 +163,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationValidation",
      *     mappedBy="question"
      * )
+     * @ORM\OrderBy({"weight" = "ASC"})
      */
     protected $applicationValidations;
 
