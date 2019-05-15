@@ -12,11 +12,17 @@ class File
     const ERR_CANT_OPEN_DOWNLOAD_STREAM = 'Can not access temp file with downloaded content';
     const ERR_CANT_OPEN_RES = 'Can not access temp file for record downloaded content';
 
-    /** @var  string */
+    /**
+     * @var string 
+     */
     protected $file;
-    /** @var  string */
+    /**
+     * @var string 
+     */
     private $mimeType;
-    /** @var  string */
+    /**
+     * @var string 
+     */
     private $identifier;
 
     /**

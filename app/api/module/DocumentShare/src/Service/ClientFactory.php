@@ -19,7 +19,9 @@ class ClientFactory implements FactoryInterface
      */
     private $options;
 
-    /** @var ServiceLocatorInterface */
+    /**
+     * @var ServiceLocatorInterface 
+     */
     private $serviceLocator;
 
     /**
@@ -44,11 +46,13 @@ class ClientFactory implements FactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        $webDAVClient = new WebDAVClient([
+        $webDAVClient = new WebDAVClient(
+            [
             'baseUri' => $clientOptions['baseuri'],
             'username' => $clientOptions['username'],
             'password' => $clientOptions['password']
-        ]);
+            ]
+        );
 
         $adapter = new WebDAVAdapter($webDAVClient, $clientOptions['workspace']);
         $fileSystem = new Filesystem($adapter);
@@ -61,7 +65,7 @@ class ClientFactory implements FactoryInterface
     /**
      * Gets options from configuration based on name.
      *
-     * @param string                  $key Key
+     * @param string $key Key
      *
      * @return \Zend\Stdlib\AbstractOptions
      * @throws \RuntimeException
