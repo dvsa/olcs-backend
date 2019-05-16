@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.93.6",
+            "version": "3.93.9",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.93.6/aws-aws-sdk-php-3.93.6.zip",
-                "reference": "75d6b1ec57f3438ac960d74e08366be43d52eca7",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.93.9/aws-aws-sdk-php-3.93.9.zip",
+                "reference": "047622ae51d49a89f4045c2daa138c2b47d2e089",
                 "shasum": ""
             },
             "require": {
@@ -81,7 +81,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-05-08T18:16:33+00:00"
+            "time": "2019-05-14T18:16:56+00:00"
         },
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1928,12 +1928,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.4",
+            "version": "4.206.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.4/olcs-olcs-transfer-4.206.4.zip",
-                "reference": "06303cde99e79850fc0ee0df52ec0b0379fd6889",
-                "shasum": "06303cde99e79850fc0ee0df52ec0b0379fd6889"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.5/olcs-olcs-transfer-4.206.5.zip",
+                "reference": "f3ef802e398413c4cd197e73ea92108e9cd63e72",
+                "shasum": "f3ef802e398413c4cd197e73ea92108e9cd63e72"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -1989,7 +1989,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-05-08T14:15:44+00:00"
+            "time": "2019-05-15T13:22:09+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -2966,11 +2966,11 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.5.10",
+            "version": "7.5.11",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpunit/7.5.10/phpunit-phpunit-7.5.10.zip",
-                "reference": "d7d9cee051d03ed98df6023aad93f7902731a780",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/phpunit/7.5.11/phpunit-phpunit-7.5.11.zip",
+                "reference": "64cb33f5b520da490a7b13149d39b43cf3c890c6",
                 "shasum": ""
             },
             "require": {
@@ -3040,7 +3040,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2019-05-09T05:06:47+00:00"
+            "time": "2019-05-14T04:53:02+00:00"
         },
         {
             "name": "psr/container",
@@ -4632,11 +4632,11 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.9.0",
+            "version": "v2.10.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/twig/twig/v2.9.0/twig-twig-v2.9.0.zip",
-                "reference": "82a1c055c8ed4c4705023bfd0405f3c74db6e3ae",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/twig/twig/v2.10.0/twig-twig-v2.10.0.zip",
+                "reference": "5240e21982885b76629552d83b4ebb6d41ccde6b",
                 "shasum": ""
             },
             "require": {
@@ -4652,7 +4652,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.9-dev"
+                    "dev-master": "2.10-dev"
                 }
             },
             "autoload": {
@@ -4689,7 +4689,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-04-28T06:57:38+00:00"
+            "time": "2019-05-14T12:03:52+00:00"
         },
         {
             "name": "webmozart/assert",
