@@ -75,7 +75,7 @@ class S3File implements TransportInterface
         $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
 
         $this->executeCommand(
-            sprintf('s3cmd put %s s3://%s/%s 2>&1', $file, $this->getOptions()->getS3Path(), $s3FileName),
+	sprintf('aws s3 cp %s s3://%s/%s 2>&1', $file, $this->getOptions()->getS3Path(), $s3FileName),
             $output,
             $result
         );
