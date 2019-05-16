@@ -26,6 +26,9 @@ class S3ClientTest extends TestCase
         $this->sm = Bootstrap::getServiceManager();
     }
 
+    /**
+     *
+     */
     public function testCreateService()
     {
         // Params
