@@ -112,7 +112,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="option_source", length=255, nullable=true)
+     * @ORM\Column(type="string", name="option_source", length=4096, nullable=true)
      */
     protected $optionSource;
 
