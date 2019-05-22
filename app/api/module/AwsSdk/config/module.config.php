@@ -1,7 +1,7 @@
 <?php
 
 
-use Dvsa\Olcs\AwsSdk\Factories\AbsCredentialsProviderFactory;
+use Dvsa\Olcs\AwsSdk\Factories\AwsCredentialsProviderFactory;
 use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
 
 return [
@@ -9,7 +9,7 @@ return [
         'factories' => [
             'S3FileOptions' =>\Dvsa\Olcs\Email\Transport\S3FileOptionsFactory::class,
             'S3Client' => S3ClientFactory::class,
-            'AwsCredentialsProvider' => AbsCredentialsProviderFactory::class
+            'AwsCredentialsProvider' => AwsCredentialsProviderFactory::class
             ],
     ]
 ];

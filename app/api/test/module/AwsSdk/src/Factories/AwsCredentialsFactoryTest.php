@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\AwsSdk\Factories;
 
-use Dvsa\Olcs\AwsSdk\Factories\AbsCredentialsProviderFactory;
+use Dvsa\Olcs\AwsSdk\Factories\AwsCredentialsProviderFactory;
 use OlcsTest\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +21,7 @@ class AwsCredentialsFactoryTest extends TestCase
     public function setUp()
     {
         $this->sm = Bootstrap::getServiceManager();
-        $this->sut = new AbsCredentialsProviderFactory();
+        $this->sut = new AwsCredentialsProviderFactory();
     }
 
     public function testCreateService()
