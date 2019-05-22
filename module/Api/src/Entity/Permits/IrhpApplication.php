@@ -252,6 +252,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             [
                 'section' => 'licence',
                 'slug' => 'custom-licence',
+                'questionShort' => 'section.name.application/licence',
                 'question' => 'section.name.application/licence',
                 'answer' =>  $answer,
                 'status' => $status,
@@ -273,10 +274,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
             }
 
+            $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
+
             $data[] = [
                 'section' => $question->getSlug(),
                 'slug' => $question->getSlug(),
-                'question' => $question->getActiveQuestionText($this->getApplicationPathLockedOn())->getQuestionKey(),
+                'questionShort' => $activeQuestionText->getQuestionShortKey(),
+                'question' => $activeQuestionText->getQuestionKey(),
                 'answer' => $answer,
                 'status' => $status,
             ];
@@ -297,6 +301,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $data[] = [
             'section' => 'checkedAnswers',
             'slug' => 'custom-check-answers',
+            'questionShort' => 'section.name.application/check-answers',
             'question' => 'section.name.application/check-answers',
             'answer' => $answer,
             'status' => $status,
@@ -317,6 +322,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $data[] = [
             'section' => 'declaration',
             'slug' => 'custom-declaration',
+            'questionShort' => 'section.name.application/declaration',
             'question' => 'section.name.application/declaration',
             'answer' => $answer,
             'status' => $status,

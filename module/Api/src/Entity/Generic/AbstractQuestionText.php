@@ -169,6 +169,15 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     protected $questionKey;
 
     /**
+     * Question short key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="question_short_key", length=255, nullable=true)
+     */
+    protected $questionShortKey;
+
+    /**
      * Version
      *
      * @var int
@@ -539,6 +548,30 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
     public function getQuestionKey()
     {
         return $this->questionKey;
+    }
+
+    /**
+     * Set the question short key
+     *
+     * @param string $questionShortKey new value being set
+     *
+     * @return QuestionText
+     */
+    public function setQuestionShortKey($questionShortKey)
+    {
+        $this->questionShortKey = $questionShortKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the question short key
+     *
+     * @return string
+     */
+    public function getQuestionShortKey()
+    {
+        return $this->questionShortKey;
     }
 
     /**
