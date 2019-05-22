@@ -82,7 +82,7 @@ class S3File implements TransportInterface
         $key = $s3FileName;
 
         try {
-            $result = $s3Client->putObject([
+            $s3Client->putObject([
                 'Bucket' => $bucket,
                 'Key' => $key,
                 'SourceFile' => $file,

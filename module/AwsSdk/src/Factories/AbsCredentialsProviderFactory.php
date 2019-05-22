@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
-
 use Aws\Credentials\AssumeRoleCredentialProvider;
 use Aws\Credentials\CredentialProvider;
 use Aws\Sts\StsClient;
@@ -14,7 +13,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @package Dvsa\Olcs\AwsSdk
  */
-class AwsCredentailsProviderFactory implements FactoryInterface
+class AbsCredentialsProviderFactory implements FactoryInterface
 {
 
     /**
