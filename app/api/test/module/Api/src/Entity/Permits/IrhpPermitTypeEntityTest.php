@@ -47,14 +47,20 @@ class IrhpPermitTypeEntityTest extends EntityTester
             ->shouldReceive('isMultilateral')
             ->once()
             ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('isApplicationPathEnabled')
+            ->once()
+            ->withNoArgs()
             ->andReturn(false);
 
         $this->assertSame(
             [
                 'isEcmtAnnual' => true,
                 'isEcmtShortTerm' => false,
+                'isEcmtRemoval' => false,
                 'isBilateral' => false,
                 'isMultilateral' => false,
+                'isApplicationPathEnabled' => false,
             ],
             $this->sut->getCalculatedBundleValues()
         );
