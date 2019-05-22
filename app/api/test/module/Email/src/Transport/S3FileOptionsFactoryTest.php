@@ -1,41 +1,44 @@
 <?php
 
-namespace Dvsa\OlcsTest\AwsSdk\Factories;
+
+namespace Dvsa\OlcsTest\Email\Transport;
 
 use Aws\Credentials\CredentialsInterface;
 use Aws\S3\S3Client;
-use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
+use Dvsa\Olcs\Email\Transport\S3FileOptions;
+use Dvsa\Olcs\Email\Transport\S3FileOptionsFactory;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
-use PHPUnit\Framework\TestCase;
 
 /**
- * Class S3ClientTest
+ * Class S3FileOptionsFactoryTest
  *
- * @package Dvsa\OlcsTest\AwsSdk
+ * @package Dvsa\OlcsTest\Email\Transport
  */
-class S3ClientTest extends TestCase
+class S3FileOptionsFactoryTest extends MockeryTestCase
 {
+
     protected $sm;
 
     protected $sut;
 
     public function setUp()
     {
-        $this->sut = new S3ClientFactory();
-
         $this->sm = Bootstrap::getServiceManager();
+        $this->sut = new S3FileOptionsFactory();
     }
 
-    /**
-     *
-     */
     public function testCreateService()
     {
         // Params
         $config = [
             'awsOptions' => [
                 'region' => 'eu-west-1',
-                'version' => 'latest'
+                'version' => 'latest',
+                's3Options' => [
+                    'roleArn' => 'test',
+                    'roleSessionName' => 'test'
+                ],
             ]
         ];
         $provider = \Mockery::mock(CredentialsInterface::class);
@@ -47,10 +50,8 @@ class S3ClientTest extends TestCase
             'version' => $config['awsOptions']['version'],
             'credentials' => $provider
         ]));
-        /**
-         * @var S3Client
-         */
+
         $s3Options = $this->sut->createService($this->sm);
-        $this->assertInstanceOf(S3Client::class, $s3Options);
+        $this->assertInstanceOf(S3FileOptions::class, $s3Options);
     }
 }
