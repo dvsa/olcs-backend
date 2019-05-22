@@ -99,16 +99,29 @@ trait SectionTrait
     {
         $this->sectionCompletion = [];
 
-        $sections = $this->getSections();
+        if ($this->getIrhpPermitType()->isApplicationPathEnabled()) {
+            // q&a
+            $data = $this->getQuestionAnswerData();
 
-        foreach ($sections as $field => $section) {
-            // validate the field
-            $this->validateField($field);
+            foreach ($data as $value) {
+                // build the section completion array is the currently used format of 'field name' => 'status'
+                // canCheckAnswers() / canMakeDeclaration() / canBeSubmitted() need it
+                // to be refactored once all permit types are migrated to q&a
+                $this->sectionCompletion[$value['section']] = $value['status'];
+                $totalSections = count($this->sectionCompletion);
+            }
+        } else {
+            // backward compatibility
+            $sections = $this->getSections();
+            $totalSections = count($sections);
+
+            foreach ($sections as $field => $section) {
+                // validate the field
+                $this->validateField($field);
+            }
         }
 
         // populate the summary
-        $totalSections = count($sections);
-
         $countByStatus = array_count_values($this->sectionCompletion);
         $totalCompleted = isset($countByStatus[SectionableInterface::SECTION_COMPLETION_COMPLETED])
             ? $countByStatus[SectionableInterface::SECTION_COMPLETION_COMPLETED] : 0;
@@ -173,7 +186,15 @@ trait SectionTrait
      */
     protected function isFieldReadyToComplete($field)
     {
-        $this->validateField($field);
+        // canCheckAnswers() / canMakeDeclaration() / canBeSubmitted() uses this method atm
+        if ($this->getIrhpPermitType()->isApplicationPathEnabled()) {
+            // q&a
+            $this->getSectionCompletion();
+        } else {
+            // backward compatibility
+            $this->validateField($field);
+        }
+
         return $this->sectionCompletion[$field] !== SectionableInterface::SECTION_COMPLETION_CANNOT_START;
     }
 }

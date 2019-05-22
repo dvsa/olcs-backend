@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
@@ -128,23 +130,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 ],
             ],
         ],
-        IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => [
-            'licence' => [
-                'validator' => 'fieldIsNotNull',
-            ],
-            'checkedAnswers' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-            'declaration' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-        ],
     ];
 
     /** @var array */
@@ -244,11 +229,137 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getQuestionAnswerData(): array
     {
+        // kept for backward compatibility only
         if ($this->isBilateral()) {
             return $this->getQuestionAnswerDataBilateral();
+        } elseif ($this->isMultilateral()) {
+            return $this->getQuestionAnswerDataMultilateral();
         }
 
-        return $this->getQuestionAnswerDataMultilateral();
+        // the Q&A solution
+        $activeApplicationPath = $this->getActiveApplicationPath();
+
+        if (!isset($activeApplicationPath)) {
+            return [];
+        }
+
+        // licence
+        $answer = $this->licence->getLicNo();
+        $status = !empty($answer)
+            ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+            : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+        $data = [
+            [
+                'section' => 'licence',
+                'slug' => 'custom-licence',
+                'questionShort' => 'section.name.application/licence',
+                'question' => 'section.name.application/licence',
+                'answer' =>  $answer,
+                'status' => $status,
+            ]
+        ];
+        $previousQuestionStatus = $status;
+
+        // list of defined steps
+        foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
+            $question = $applicationStep->getQuestion();
+            $answer = null;
+            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+
+            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+                $answer = $this->getAnswer($applicationStep);
+
+                $status = isset($answer)
+                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+            }
+
+            $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
+
+            $data[] = [
+                'section' => $question->getSlug(),
+                'slug' => $question->getSlug(),
+                'questionShort' => $activeQuestionText->getQuestionShortKey(),
+                'question' => $activeQuestionText->getQuestionKey(),
+                'answer' => $answer,
+                'status' => $status,
+            ];
+            $previousQuestionStatus = $status;
+        }
+
+        // checked answers
+        $answer = null;
+        $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+
+        if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+            $answer = $this->getCheckedAnswers();
+            $status = !empty($answer)
+                ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+        }
+
+        $data[] = [
+            'section' => 'checkedAnswers',
+            'slug' => 'custom-check-answers',
+            'questionShort' => 'section.name.application/check-answers',
+            'question' => 'section.name.application/check-answers',
+            'answer' => $answer,
+            'status' => $status,
+        ];
+        $previousQuestionStatus = $status;
+
+        // declaration
+        $answer = null;
+        $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+
+        if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+            $answer = $this->getDeclaration();
+            $status = !empty($answer)
+                ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+        }
+
+        $data[] = [
+            'section' => 'declaration',
+            'slug' => 'custom-declaration',
+            'questionShort' => 'section.name.application/declaration',
+            'question' => 'section.name.application/declaration',
+            'answer' => $answer,
+            'status' => $status,
+        ];
+
+        return $data;
+    }
+
+    /**
+     * Get an answer to the given application step
+     *
+     * @return mix|null
+     */
+    public function getAnswer(ApplicationStep $applicationStep)
+    {
+        $question = $applicationStep->getQuestion();
+
+        if ($question->isCustom()) {
+            // TODO - OLCS-23788 - custom handling to be added here
+            return null;
+        }
+
+        // standard Q&A
+        $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
+
+        if (!isset($activeQuestionText)) {
+            return null;
+        }
+
+        // answers are indexed by question_text_id
+        $answer = $this->getAnswers()->get($activeQuestionText->getId());
+
+        if (!isset($answer)) {
+            return null;
+        }
+
+        return $answer->getValue();
     }
 
     /**
@@ -256,7 +367,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return array
      */
-    public function getQuestionAnswerDataBilateral(): array
+    private function getQuestionAnswerDataBilateral(): array
     {
         $numberOfPermits = [];
         $countriesArray = [];
@@ -310,7 +421,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return array
      */
-    public function getQuestionAnswerDataMultilateral(): array
+    private function getQuestionAnswerDataMultilateral(): array
     {
         $data = [
             [
@@ -1038,5 +1149,27 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $validStatus;
+    }
+
+    /**
+     * Get the application path locked on datetime
+     *
+     * @return \DateTime
+     */
+    public function getApplicationPathLockedOn()
+    {
+        // the application path locked at the time when the application was created
+        return $this->getCreatedOn(true);
+    }
+
+    /**
+     * Get the active application path
+     *
+     * @return ApplicationPath|null
+     */
+    public function getActiveApplicationPath()
+    {
+        // get application path active at the time when the application path was locked
+        return $this->getIrhpPermitType()->getActiveApplicationPath($this->getApplicationPathLockedOn());
     }
 }
