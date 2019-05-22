@@ -97,8 +97,8 @@ class IrhpPermit extends AbstractRepository
         if ($query instanceof ValidEcmtPermits) {
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getId());
-            $qb->andWhere($qb->expr()->notIn($this->alias . '.status', ':statuses'))
-                ->setParameter('statuses', Entity::$nonValidStatuses);
+            $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
+                ->setParameter('statuses', Entity::$validStatuses);
             $qb->orderBy($this->alias . '.permitNumber', 'DESC');
         } elseif ($query instanceof ReadyToPrint) {
             if ($query->getIrhpPermitStock() != null) {
@@ -140,7 +140,9 @@ class IrhpPermit extends AbstractRepository
                 ->andWhere($qb->expr()->eq('ia.licence', ':licenceId'))
                 ->setParameter('licenceId', $query->getLicence())
                 ->andWhere($qb->expr()->eq('ips.irhpPermitType', ':irhpPermitTypeId'))
-                ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType());
+                ->setParameter('irhpPermitTypeId', $query->getIrhpPermitType())
+                ->andWhere($qb->expr()->in($this->alias . '.status', ':validStatuses'))
+                ->setParameter('validStatuses', Entity::$validStatuses);
 
             $qb->orderBy('ipc.countryDesc', 'ASC');
             $qb->addOrderBy($this->alias . '.expiryDate', 'ASC');
