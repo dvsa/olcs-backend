@@ -199,7 +199,6 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             [IrhpPermit::STATUS_PRINTED, 1],
             [IrhpPermit::STATUS_ERROR, 1],
             [IrhpPermit::STATUS_CEASED, 0],
-            [IrhpPermit::STATUS_ISSUED, 1],
             [IrhpPermit::STATUS_TERMINATED, 0]
         ];
     }

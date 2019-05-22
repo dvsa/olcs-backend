@@ -23,7 +23,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_question_question_type_ref_data_id", columns={"question_type"}),
  *        @ORM\Index(name="fk_question_created_by_user_id", columns={"created_by"}),
- *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_question_last_modified_by_user_id", columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_question_form_control_type_ref_data_id", columns={"form_control_type"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="question_slug_uindex", columns={"slug"})
  *    }
  * )
  */
@@ -61,6 +65,16 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      * @ORM\Column(type="string", name="description", length=255, nullable=true)
      */
     protected $description;
+
+    /**
+     * Form control type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="form_control_type", referencedColumnName="id", nullable=true)
+     */
+    protected $formControlType;
 
     /**
      * Identifier - Id
@@ -111,6 +125,15 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="question_type", referencedColumnName="id", nullable=true)
      */
     protected $questionType;
+
+    /**
+     * Slug
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="slug", length=255, nullable=true)
+     */
+    protected $slug;
 
     /**
      * Title
@@ -252,6 +275,30 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     }
 
     /**
+     * Set the form control type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $formControlType entity being set as the value
+     *
+     * @return Question
+     */
+    public function setFormControlType($formControlType)
+    {
+        $this->formControlType = $formControlType;
+
+        return $this;
+    }
+
+    /**
+     * Get the form control type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getFormControlType()
+    {
+        return $this->formControlType;
+    }
+
+    /**
      * Set the id
      *
      * @param int $id new value being set
@@ -375,6 +422,30 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     public function getQuestionType()
     {
         return $this->questionType;
+    }
+
+    /**
+     * Set the slug
+     *
+     * @param string $slug new value being set
+     *
+     * @return Question
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get the slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 
     /**

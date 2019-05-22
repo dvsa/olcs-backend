@@ -23,7 +23,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="ix_application_step_application_path_id", columns={"application_path_id"}),
  *        @ORM\Index(name="ix_application_step_question_id", columns={"question_id"}),
- *        @ORM\Index(name="ix_application_step_parent_id", columns={"parent_id"}),
  *        @ORM\Index(name="fk_application_step_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_application_step_last_modified_by_user_id",
      *     columns={"last_modified_by"})
@@ -120,24 +119,6 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     protected $lastModifiedOn;
 
     /**
-     * Mandatory
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="mandatory", nullable=true)
-     */
-    protected $mandatory;
-
-    /**
-     * Multiple responses
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="multiple_responses", nullable=true)
-     */
-    protected $multipleResponses;
-
-    /**
      * Only on yes
      *
      * @var boolean
@@ -145,34 +126,6 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
      * @ORM\Column(type="boolean", name="only_on_yes", nullable=true)
      */
     protected $onlyOnYes;
-
-    /**
-     * Option filter field
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="option_filter_field", length=255, nullable=true)
-     */
-    protected $optionFilterField;
-
-    /**
-     * Option filter value
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="option_filter_value", length=255, nullable=true)
-     */
-    protected $optionFilterValue;
-
-    /**
-     * Parent
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Generic\ApplicationStep
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationStep", fetch="LAZY")
-     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
-     */
-    protected $parent;
 
     /**
      * Question
@@ -440,54 +393,6 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     }
 
     /**
-     * Set the mandatory
-     *
-     * @param boolean $mandatory new value being set
-     *
-     * @return ApplicationStep
-     */
-    public function setMandatory($mandatory)
-    {
-        $this->mandatory = $mandatory;
-
-        return $this;
-    }
-
-    /**
-     * Get the mandatory
-     *
-     * @return boolean
-     */
-    public function getMandatory()
-    {
-        return $this->mandatory;
-    }
-
-    /**
-     * Set the multiple responses
-     *
-     * @param boolean $multipleResponses new value being set
-     *
-     * @return ApplicationStep
-     */
-    public function setMultipleResponses($multipleResponses)
-    {
-        $this->multipleResponses = $multipleResponses;
-
-        return $this;
-    }
-
-    /**
-     * Get the multiple responses
-     *
-     * @return boolean
-     */
-    public function getMultipleResponses()
-    {
-        return $this->multipleResponses;
-    }
-
-    /**
      * Set the only on yes
      *
      * @param boolean $onlyOnYes new value being set
@@ -509,78 +414,6 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     public function getOnlyOnYes()
     {
         return $this->onlyOnYes;
-    }
-
-    /**
-     * Set the option filter field
-     *
-     * @param string $optionFilterField new value being set
-     *
-     * @return ApplicationStep
-     */
-    public function setOptionFilterField($optionFilterField)
-    {
-        $this->optionFilterField = $optionFilterField;
-
-        return $this;
-    }
-
-    /**
-     * Get the option filter field
-     *
-     * @return string
-     */
-    public function getOptionFilterField()
-    {
-        return $this->optionFilterField;
-    }
-
-    /**
-     * Set the option filter value
-     *
-     * @param string $optionFilterValue new value being set
-     *
-     * @return ApplicationStep
-     */
-    public function setOptionFilterValue($optionFilterValue)
-    {
-        $this->optionFilterValue = $optionFilterValue;
-
-        return $this;
-    }
-
-    /**
-     * Get the option filter value
-     *
-     * @return string
-     */
-    public function getOptionFilterValue()
-    {
-        return $this->optionFilterValue;
-    }
-
-    /**
-     * Set the parent
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Generic\ApplicationStep $parent entity being set as the value
-     *
-     * @return ApplicationStep
-     */
-    public function setParent($parent)
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * Get the parent
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Generic\ApplicationStep
-     */
-    public function getParent()
-    {
-        return $this->parent;
     }
 
     /**
