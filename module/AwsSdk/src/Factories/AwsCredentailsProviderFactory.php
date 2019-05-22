@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Dvsa\Olcs\AwsSdk;
+namespace Dvsa\Olcs\AwsSdk\Factories;
 
 
 use Aws\Credentials\AssumeRoleCredentialProvider;
@@ -27,7 +26,7 @@ class AwsCredentailsProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('config');
+        $config = $serviceLocator->get('Config');
         $assumeRoleCredentials = new AssumeRoleCredentialProvider([
             'client' => new StsClient([
                 'region' => $config['awsOptions']['region'],
