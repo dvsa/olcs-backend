@@ -42,8 +42,7 @@
         "beberlei/doctrineextensions": "^1.0",
         "qandidate/toggle": "^1.1",
         "elendev/nexus-composer-push": "^0.1",
-        "twig/twig": "^2.0",
-        "aws/aws-sdk-php": "^3.93"
+        "twig/twig": "^2.0"
     },
     "require-dev": {
         "olcs/olcs-devtools": "~4.206.0",
@@ -70,8 +69,7 @@
             "Dvsa\\Olcs\\Address\\": "module/Address/src",
             "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
             "CompaniesHouse\\": "vendor/olcs/companies-house/lib",
-            "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src",
-            "Dvsa\\Olcs\\AwsSdk\\": "module/AwsSdk/src"
+            "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src"
         }
     },
     "config": {
