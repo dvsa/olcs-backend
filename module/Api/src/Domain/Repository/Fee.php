@@ -604,6 +604,11 @@ class Fee extends AbstractRepository
             $qb->setParameter('irfoGvPermitId', $query->getIrfoGvPermit());
         }
 
+        if ($query->getIrhpApplication() !== null) {
+            $qb->andWhere($this->alias . '.irhpApplication = :irhpApplicationId');
+            $qb->setParameter('irhpApplicationId', $query->getIrhpApplication());
+        }
+
         if ($query->getIsMiscellaneous() !== null) {
             $qb->innerJoin($this->alias . '.feeType', 'ft')
                 ->andWhere('ft.isMiscellaneous = :isMiscellaneous')
