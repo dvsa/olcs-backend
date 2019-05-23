@@ -83,7 +83,7 @@ abstract class AbstractCreateSnapshotHandlerTest extends CommandHandlerTestCase
             'filename' => str_replace(' ', '', $this->documentDescription) . '.html',
             'description' => $this->documentDescription,
             'licence' => $entity instanceof LicenceProviderInterface ? $licence : null,
-            $this->documentLinkId => null,
+            $this->documentLinkId => $this->documentLinkValue,
         ];
 
         $this->expectedSideEffect(Upload::class, $params, new Result());
