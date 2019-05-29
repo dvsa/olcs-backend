@@ -3,7 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Fee;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeList as FeeListQry;
 use Mockery as m;
@@ -83,9 +85,20 @@ class FeeTest extends RepositoryTestCase
 
     public function testFetchInterimRefunds()
     {
-        $mockQb = $this->createMockQb('{{QUERY}}');
-        $this->queryBuilder->shouldReceive('withRefdata')->once()->andReturnSelf();
-        $mockRepo =  $this->em->shouldReceive('getRepository')->andReturnSelf();
+        $alias = 'f';
+        $startDate = new DateTime();
+        $startDate = $startDate->sub(new \DateInterval('P'.abs ( (7-date("N")-7)).'D'));
+        $endDate = new DateTime();
+        $trafficAreas = ['B', 'C'];
+
+        $mockRepo = m::mock(Fee::class);
+        $mockRepo->shouldAllowMockingProtectedMethods();
+        $mockRepo->shouldReceive('getRefdataReference')->andReturn(new RefDataEntity(1));
+
+        $this->em->shouldReceive('getReference')->twice()->andReturnSelf();
+        $this->em->shouldReceive('getRepository')->andReturn($mockRepo);
+
+        $mockQb = m::mock(QueryBuilder::class);
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
@@ -93,28 +106,33 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('with')->zeroOrMoreTimes()->andReturnSelf()
             ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('leftJoin')->twice()->andReturnSelf();
-        $conditions = ['ft.trafficArea = :trafficArea0','ft.trafficArea = :trafficArea1'];
+        $mockQb->shouldReceive('leftJoin')->with($alias . '.application', 'a')->once()->andReturnSelf();
+        $mockQb->shouldReceive('leftJoin')->with($alias . '.licence', 'l')->once()->andReturnSelf();
+        $mockQb->shouldReceive('join')->with($alias . '.feeType', 'ft')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('expr->orX->addMultiple')->with($conditions)->once()->andReturnSelf();
-        $mockQb->shouldReceive('expr->eq')->once()->andReturnSelf();
-        $this->em->shouldReceive('getReference')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('ft.feeType', ':feeTypeFeeType')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->isNotNull')->with('COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->gte')->with($alias . '.invoicedDate', ':after')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->lte')->with($alias . '.invoicedDate', ':before')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->orX')->once()->andReturn(new Orx());
+        $mockQb->shouldReceive('expr')->andReturn(new Expr());
 
+        $mockQb->shouldReceive('andWhere')->andReturnSelf();
+
+        $mockQb->shouldReceive('setParameter')->with('feeStatus', $this->em)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeTypeFeeType', $this->em)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('after', $startDate)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('before', $endDate)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('trafficArea0', $trafficAreas[0])->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('trafficArea1', $trafficAreas[1])->andReturnSelf();
+
+        $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
 
         $mockRepo->shouldReceive('createQuerybuilder')->andReturn($mockQb);
         $mockRepo->shouldReceive('getQueryBuilder')->andReturn($mockQb);
 
-
-
-        $startDate = new DateTime();
-
-        $startDate = $startDate->sub(new \DateInterval('P'.abs ( (7-date("N")-7)).'D'));
-        $endDate = new DateTime();
-
-        $trafficAreas = ['B', 'C'];
-
-        $this->sut->fetchInterimRefunds($startDate, $endDate, $trafficAreas);
-
+        $this->assertSame('result', $this->sut->fetchInterimRefunds($startDate, $endDate, $trafficAreas));
     }
 
     public function testFetchInterimFeesByApplicationIdPaid()
