@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Service\Qa;
 
 use RuntimeException;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
+use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 
 class FormControlStrategyProvider
 {
@@ -12,30 +14,41 @@ class FormControlStrategyProvider
     /**
      * Create service instance
      *
-     * @param array $mappings
-     *
      * @return FormControlStrategyProvider
      */
-    public function __construct(array $mappings)
+    public function __construct()
     {
-        $this->mappings = $mappings;
+        $this->mappings = [];
     }
 
     /**
-     * Returns an implementation of FormControlStrategyInterface corresponding to the provided form control type name
+     * Returns an implementation of FormControlStrategyInterface corresponding to the provided application step entity
      *
-     * @param string $formControlType
+     * @param ApplicationStep $applicationStep
      *
      * @return FormControlStrategyInterface
      *
      * @throws RuntimeException if no strategy exists for the specified name
      */
-    public function get($formControlType)
+    public function get(ApplicationStep $applicationStep)
     {
+        $formControlType = $applicationStep->getQuestion()->getFormControlType()->getId();
+
         if (!isset($this->mappings[$formControlType])) {
             throw new RuntimeException('No FormControlStrategy found for form control type ' . $formControlType);
         }
 
         return $this->mappings[$formControlType];
+    }
+
+    /**
+     * Registers an implementation of FormControlStrategyInterface corresponding to the provided form control type name
+     *
+     * @param string $formControlType
+     * @param FormControlStrategyInterface $strategy
+     */
+    public function registerStrategy($formControlType, FormControlStrategyInterface $strategy)
+    {
+        $this->mappings[$formControlType] = $strategy;
     }
 }

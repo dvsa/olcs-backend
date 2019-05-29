@@ -19,7 +19,6 @@ class ApplicationStepObjectsProviderFactory implements FactoryInterface
         $repoServiceManager = $serviceLocator->get('RepositoryServiceManager');
 
         return new ApplicationStepObjectsProvider(
-            $serviceLocator->get('QaFormControlStrategyProvider'),
             $repoServiceManager->get('ApplicationStep'),
             $repoServiceManager->get('ApplicationPath'),
             $repoServiceManager->get('IrhpApplication')

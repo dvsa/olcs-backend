@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
+use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as SubmitApplicationStepCmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -19,6 +20,9 @@ class SubmitApplicationStep extends AbstractCommandHandler
     /** @var ApplicationStepObjectsProvider */
     private $applicationStepObjectsProvider;
 
+    /** @var FormControlStrategyProvider */
+    private $formControlStrategyProvider;
+
     /**
      * Create service
      *
@@ -31,6 +35,7 @@ class SubmitApplicationStep extends AbstractCommandHandler
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->applicationStepObjectsProvider = $mainServiceLocator->get('QaApplicationStepObjectsProvider');
+        $this->formControlStrategyProvider = $mainServiceLocator->get('QaFormControlStrategyProvider');
 
         return parent::createService($serviceLocator);
     }
@@ -50,6 +55,8 @@ class SubmitApplicationStep extends AbstractCommandHandler
         );
 
         extract($objects);
+
+        $formControlStrategy = $this->formControlStrategyProvider->get($applicationStep);
         $formControlStrategy->saveFormData($applicationStep, $irhpApplication, $command->getPostData());
 
         return $this->result;
