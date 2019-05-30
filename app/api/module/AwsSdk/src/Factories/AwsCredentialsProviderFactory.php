@@ -10,7 +10,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class AwsCredentailsProviderFactory
- *
+ * @author shaun.hare@dvsa.gov.uk
  * @package Dvsa\Olcs\AwsSdk
  */
 class AwsCredentialsProviderFactory implements FactoryInterface
