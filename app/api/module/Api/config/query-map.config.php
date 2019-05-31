@@ -93,6 +93,7 @@ return [
     TransferQuery\Application\UploadEvidence::class => QueryHandler\Application\UploadEvidence::class,
     Query\Application\NotTakenUpList::class => QueryHandler\Application\NotTakenUpList::class,
     TransferQuery\Application\OutstandingFees::class => QueryHandler\Application\OutstandingFees::class,
+    TransferQuery\Fee\InterimRefunds::class => QueryHandler\Fee\InterimRefunds::class,
 
     // Licence
     TransferQuery\Licence\BusinessDetails::class => QueryHandler\Licence\BusinessDetails::class,
