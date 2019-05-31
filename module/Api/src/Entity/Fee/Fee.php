@@ -35,6 +35,9 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     const STATUS_OUTSTANDING       = 'lfs_ot';
     const STATUS_PAID              = 'lfs_pd';
     const STATUS_CANCELLED         = 'lfs_cn';
+    const STATUS_REFUND_PENDING    = 'lfs_refund_pending';
+    const STATUS_REFUND_FAILED     = 'lfs_refund_failed';
+    const STATUS_REFUNDED          = 'lfs_refunded';
 
     const ACCRUAL_RULE_LICENCE_START            = 'acr_licence_start';
     const ACCRUAL_RULE_CONTINUATION             = 'acr_continuation';
@@ -212,13 +215,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
 
     public function allowEdit()
     {
-        return !in_array(
-            $this->getFeeStatus()->getId(),
-            [
-                self::STATUS_PAID,
-                self::STATUS_CANCELLED,
-            ]
-        );
+        return $this->getFeeStatus()->getId() == static::STATUS_OUTSTANDING;
     }
 
     public function getPaymentMethod()

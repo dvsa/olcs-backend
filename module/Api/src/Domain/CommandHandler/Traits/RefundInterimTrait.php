@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -27,6 +28,15 @@ trait RefundInterimTrait
                     ]
                 );
                 $this->result->merge($this->handleSideEffect($createCommand));
+
+                $updateCommand = UpdateFeeStatus::create(
+                    [
+                        'id' => $fee->getId(),
+                        'status' => Fee::STATUS_REFUND_PENDING
+                    ]
+                );
+                $this->result->merge($this->handleSideEffect($updateCommand));
+
             }
         }
     }
