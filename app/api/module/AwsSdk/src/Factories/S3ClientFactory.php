@@ -25,7 +25,7 @@ class S3ClientFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
-        $provider = $serviceLocator->get('AWSCredentialsProvider');
+        $provider = $serviceLocator->get('AwsCredentialsProvider');
         $s3Client = new S3Client([
             'region' => $config['awsOptions']['region'],
             'version' => $config['awsOptions']['version'],
