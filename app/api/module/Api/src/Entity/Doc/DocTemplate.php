@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Doc;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\User\User;
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  *    }
  * )
  */
-class DocTemplate extends AbstractDocTemplate
+class DocTemplate extends AbstractDocTemplate implements DeletableInterface
 {
     const TEMPLATE_PATH_PREFIXES = [
         'root' => 'templates/',
@@ -99,5 +100,15 @@ class DocTemplate extends AbstractDocTemplate
     ) {
         $this->document = $document;
         return $this;
+    }
+
+    /**
+     * Can doc template be deleted?
+     *
+     * @return boolean
+     */
+    public function canDelete()
+    {
+        return true;
     }
 }
