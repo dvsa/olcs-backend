@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Query\Surrender\OpenCases;
 use Dvsa\Olcs\Utils\Helper\ValueHelper;
 
 /**
@@ -80,6 +81,7 @@ class Summary extends AbstractQueryHandler
                 'actions' => $actions,
                 'reference' => $this->getLatestPaymentReference($application->getId()),
                 'outstandingFee' => $application->getLatestOutstandingApplicationFee() !== null,
+                'canWithdraw' => $this->canWithdraw($application)
             ]
         );
     }
@@ -212,5 +214,21 @@ class Summary extends AbstractQueryHandler
         }
 
         return '';
+    }
+
+    private function canWithdraw(Entity\Application\Application $application)
+    {
+       $isUnderConsideration = ($application->getStatus() === $this->getRepo()->getRefdataReference($application::APPLICATION_STATUS_UNDER_CONSIDERATION));
+
+       $openCases = OpenCases::create(
+         [
+             "id" => $application->getLicence()->getId()
+         ]  
+       );
+       if($openCases['count'] > 0 )
+       {
+           return false;
+       }
+       return $isUnderConsideration;
     }
 }
