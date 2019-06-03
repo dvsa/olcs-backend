@@ -220,7 +220,9 @@ class Summary extends AbstractQueryHandler
     private function canWithdraw(Entity\Application\Application $application)
     {
 
-        $isUnderConsideration = ($application->getStatus()->getId() === $this->getRepo()->getRefdataReference($application::APPLICATION_STATUS_UNDER_CONSIDERATION));
+        $status = $application->getStatus()->getId();
+        $underConsideration = $this->getRepo()->getRefdataReference($application::APPLICATION_STATUS_UNDER_CONSIDERATION)->getId();
+        $isUnderConsideration = ($status === $underConsideration);
 
         try {
             $openCases = $this->getRepo('Cases')->fetchOpenCasesForApplication($application->getLicence()->getId());

@@ -333,7 +333,7 @@ class CasesTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $qb
+        $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
             ->shouldReceive('with')->with('licence', 'l')->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
@@ -359,7 +359,7 @@ class CasesTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $qb
+        $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
             ->shouldReceive('with')->with('licence', 'l')->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
