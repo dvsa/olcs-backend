@@ -224,7 +224,7 @@ class Cases extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->modifyQuery($qb)
+        $this->getQueryBuilder()->modifyQuery($qb)
             ->with('licence', 'l')
             ->with('application', 'a');
         $expr = $qb->expr();

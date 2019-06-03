@@ -84,7 +84,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
 
@@ -150,7 +150,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
@@ -224,7 +224,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
@@ -295,7 +295,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
 
@@ -355,7 +355,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
 
@@ -422,7 +422,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
 
@@ -489,7 +489,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
@@ -558,7 +558,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $result = $this->sut->handleQuery($query);
@@ -627,7 +627,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
@@ -702,7 +702,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
@@ -760,7 +760,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
 
@@ -820,7 +820,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
 
@@ -883,7 +883,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(1)->andReturn(["case", "case2"]);
@@ -945,7 +945,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-        $this->mockAppRepo->shouldReceive('getRefdataReference')
+        $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
         $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(1)->andReturn(
