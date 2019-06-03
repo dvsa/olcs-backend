@@ -80,21 +80,10 @@ class Answer extends AbstractAnswer
      */
     public function isEqualTo($value)
     {
-        $fieldValues = [
-            $this->ansArray,
-            $this->ansBoolean,
-            $this->ansDate,
-            $this->ansDatetime,
-            $this->ansDecimal,
-            $this->ansInteger,
-            $this->ansString,
-            $this->ansText
-        ];
+        $fieldValue = $this->getValue();
 
-        foreach ($fieldValues as $fieldValue) {
-            if (!is_null($fieldValue)) {
-                return $fieldValue == $value;
-            }
+        if (!is_null($fieldValue)) {
+            return $fieldValue == $value;
         }
 
         throw new RuntimeException('No non-null field values found in answer');
