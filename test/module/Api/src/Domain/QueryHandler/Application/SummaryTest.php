@@ -28,11 +28,13 @@ class SummaryTest extends QueryHandlerTestCase
         $this->sut = new Summary();
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('Fee', Repository\Fee::class);
+        $this->mockRepo('Cases',Repository\Cases::class);
 
         parent::setUp();
 
         $this->mockFeeRepo = $this->repoMap['Fee'];
         $this->mockAppRepo = $this->repoMap['Application'];
+        $this->mockCaseRepo = $this->repoMap['Cases'];
 
         $this->mockAppRepo
             ->shouldReceive('getCategoryReference')
@@ -54,11 +56,17 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+           $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -78,6 +86,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
@@ -97,6 +108,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => true,
+                'canWithdraw' => true
             ],
             $result->serialize()
         );
@@ -112,6 +124,14 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
+
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -132,6 +152,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
@@ -149,6 +172,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => true,
+                'canWithdraw' =>true
             ],
             $result->serialize()
         );
@@ -158,11 +182,22 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -191,7 +226,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
 
         $result = $this->sut->handleQuery($query);
@@ -208,6 +245,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => '',
                 'outstandingFee' => false,
+                'canWithdraw' => true
             ],
             $result->serialize()
         );
@@ -217,12 +255,25 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('isPsv')->andReturn(true);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
+
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -237,10 +288,19 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getTransportManagers->matching')->andReturn($tms);
         $mockApplication->shouldReceive('getLatestOutstandingApplicationFee')->andReturn(null);
 
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
+
         $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
 
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
 
@@ -255,6 +315,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => '',
                 'outstandingFee' => false,
+                'canWithdraw' => true
             ],
             $result->serialize()
         );
@@ -264,11 +325,21 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -287,6 +358,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
@@ -305,6 +379,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' => true
             ],
             $result->serialize()
         );
@@ -314,11 +389,24 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
+
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
+
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -338,6 +426,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
@@ -356,6 +447,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' => true
             ],
             $result->serialize()
         );
@@ -365,6 +457,11 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_valid');
+
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -372,6 +469,11 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UPDATED);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(true);
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -392,6 +494,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->with($query)
             ->andReturn($mockApplication);
 
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
@@ -409,6 +514,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' => false
             ],
             $result->serialize()
         );
@@ -418,6 +524,11 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_valid');
+
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -425,6 +536,12 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -447,7 +564,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
@@ -461,6 +580,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' =>false
             ],
             $result->serialize()
         );
@@ -470,6 +590,11 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_consideration');
+
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -477,6 +602,14 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(true);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
+
 
         /** @var Entity\Licence\LicenceOperatingCentre $loc */
         $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
@@ -502,7 +635,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
@@ -519,6 +654,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' => true
             ],
             $result->serialize()
         );
@@ -528,6 +664,10 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_valid');
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
@@ -535,6 +675,13 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn(Entity\Application\Application::VARIATION_STATUS_UNCHANGED);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
 
         /** @var Entity\Licence\LicenceOperatingCentre $loc */
         $loc = m::mock(Entity\Licence\LicenceOperatingCentre::class)->makePartial();
@@ -563,7 +710,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
@@ -577,6 +726,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' => false
             ],
             $result->serialize()
         );
@@ -585,6 +735,10 @@ class SummaryTest extends QueryHandlerTestCase
     public function testHandleQueryVariationWithNoApplicationData()
     {
         $query = Qry::create(['id' => 111]);
+
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_valid');
+
 
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
@@ -603,10 +757,20 @@ class SummaryTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
 
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
+
         $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
@@ -619,6 +783,7 @@ class SummaryTest extends QueryHandlerTestCase
                 'actions' => [],
                 'reference' => 'ref',
                 'outstandingFee' => false,
+                'canWithdraw' => false
             ],
             $result->serialize()
         );
@@ -628,11 +793,22 @@ class SummaryTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
+        $mockRefData = m::mock(Entity\System\RefData::class);
+        $mockRefData->shouldReceive('getId')->andReturn('apsts_valid');
+
+
         /** @var Entity\Application\Application|m\MockInterface $mockApplication */
         $mockApplication = m::mock(Entity\Application\Application::class)->makePartial();
         $mockApplication->shouldReceive('serialize')->andReturn(['foo' => 'bar']);
         $mockApplication->shouldReceive('canAddOperatingCentresEvidence')->andReturn(false);
         $mockApplication->shouldReceive('canAddFinancialEvidence')->andReturn(false);
+
+
+        $mockApplication->shouldReceive('getStatus')->andReturn(
+            $mockRefData
+        );
+        $mockApplication->shouldReceive('getLicence->getId')->andReturn(1);
+
 
         $tm1 = m::mock(Entity\Tm\TransportManagerApplication::class)->makePartial();
 
@@ -652,7 +828,9 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->with($query)
             ->andReturn($mockApplication);
-
+        $this->mockAppRepo->shouldReceive('getRefdataReference')
+            ->once()
+            ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
@@ -666,6 +844,7 @@ class SummaryTest extends QueryHandlerTestCase
                 ],
                 'reference' => 'ref',
                 'outstandingFee' => true,
+                'canWithdraw' => false
             ],
             $result->serialize()
         );
