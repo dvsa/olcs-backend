@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Surrender;
 
@@ -74,6 +75,10 @@ trait NamingServiceAwareTrait
 
         if (!empty($data['surrender'])) {
             return $this->getRepo()->getReference(Surrender::class, $data['surrender']);
+        }
+
+        if (!empty($data['irhpApplication'])) {
+            return $this->getRepo()->getReference(IrhpApplication::class, $data['irhpApplication']);
         }
 
         return null;

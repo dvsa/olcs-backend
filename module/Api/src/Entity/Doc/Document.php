@@ -180,6 +180,10 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
             return $this->getContinuationDetail()->getRelatedOrganisation();
         }
 
+        if ($this->getIrhpApplication()) {
+            return $this->getIrhpApplication()->getRelatedOrganisation();
+        }
+
         return null;
     }
 
@@ -207,6 +211,11 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
         $busReg = $this->getBusReg();
         if ($busReg !== null) {
             return $busReg->getLicence();
+        }
+
+        $irhpApplication = $this->getIrhpApplication();
+        if ($irhpApplication !== null) {
+            return $irhpApplication->getLicence();
         }
 
         return null;

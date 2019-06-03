@@ -3311,6 +3311,16 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertSame($fee4, $outstandingIssueFees[1]);
     }
 
+    public function testGetContextValue()
+    {
+        $irhpApplicationId = 87;
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setId($irhpApplicationId);
+
+        $this->assertEquals($irhpApplicationId, $irhpApplication->getContextValue());
+    }
+
     private function createMockFee($feeTypeId, $isOutstanding)
     {
         $fee = m::mock(Fee::class);

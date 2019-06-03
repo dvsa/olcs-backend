@@ -216,7 +216,16 @@ final class Upload extends AbstractCommandHandler implements
         $additionalCommand = clone $command;
 
         // clear all target entities for the new command
-        $propertiesToClear = ['application','licence','transportManager','surrender','case','busReg'];
+        $propertiesToClear = [
+            'application',
+            'licence',
+            'transportManager',
+            'surrender',
+            'case',
+            'busReg',
+            'irhpApplication'
+        ];
+
         foreach ($propertiesToClear as $property) {
             $method = 'set' . ucfirst($property);
             $additionalCommand->$method(null);
