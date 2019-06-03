@@ -21,9 +21,6 @@ class UpdateFeeStatus extends AbstractCommand
      */
     protected $status;
 
-    /*
-     * return
-     */
     public function getStatus()
     {
         return $this->status;
