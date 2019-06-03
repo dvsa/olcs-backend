@@ -886,7 +886,7 @@ class SummaryTest extends QueryHandlerTestCase
         $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
-        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(1)->andReturn(["case", "case2"]);
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn(["case", "case2"]);
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 
