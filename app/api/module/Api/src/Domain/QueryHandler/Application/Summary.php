@@ -225,7 +225,7 @@ class Summary extends AbstractQueryHandler
         $isUnderConsideration = ($status === $underConsideration);
 
         try {
-            $openCases = $this->getRepo('Cases')->fetchOpenCasesForApplication($application->getLicence()->getId());
+            $openCases = $this->getRepo('Cases')->fetchOpenCasesForApplication($application->getId());
 
             if (count($openCases) > 0) {
                 return false;
