@@ -2,9 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Template\Template as Entity;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Doctrine\ORM\NoResultException;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Template
@@ -14,6 +16,28 @@ use Doctrine\ORM\NoResultException;
 class Template extends AbstractRepository
 {
     protected $entity = Entity::class;
+
+    /**
+     * Attach filters to query
+     *
+     * @param QueryBuilder                               $qb    Query Builder
+     * @param \Dvsa\Olcs\Transfer\Query\Template\AvailableTemplates $query Http query
+     *
+     * @return void
+     */
+    protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
+    {
+        if (method_exists($query, 'getEmailTemplateCategory') && is_numeric($query->getEmailTemplateCategory())) {
+            // Category ID can be a real category int, or 0 to indicate the dummy Header/Footer category for email templates.
+            $categoryId = $query->getEmailTemplateCategory();
+            if ((int) $categoryId === 0) {
+                $qb->andWhere($qb->expr()->isNull('m.category'));
+            } else {
+                $qb->andWhere($qb->expr()->eq('m.category', ':categoryId'))
+                    ->setParameter('categoryId', $categoryId);
+            }
+        }
+    }
 
     /**
      * Fetch by locale, format and name
@@ -45,13 +69,19 @@ class Template extends AbstractRepository
     }
 
     /**
-     * Fetch all
+     * Fetch distinct categories from template rows.
      *
      * @return array
      */
-    public function fetchAll()
+    public function fetchDistinctCategories()
     {
-        $qb = $this->createQueryBuilder();
-        return $qb->getQuery()->getResult();
+        return $this->getEntityManager()
+            ->createQueryBuilder()
+            ->select('cat.description', 'cat.id')
+            ->from(Entity::class, 't')
+            ->distinct()
+            ->innerJoin('t.category', 'cat')
+            ->where('t.category IS NOT NULL')
+            ->getQuery()->getResult();
     }
 }

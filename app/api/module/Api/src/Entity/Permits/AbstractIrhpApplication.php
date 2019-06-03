@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -25,7 +26,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_irhp_application_status", columns={"status"}),
  *        @ORM\Index(name="ix_irhp_application_irhp_permit_type_id", columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="ix_irhp_application_created_by", columns={"created_by"}),
- *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"})
+ *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"}),
+ *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"})
  *    }
  * )
  */
@@ -33,6 +35,16 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
+
+    /**
+     * Cancellation date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="cancellation_date", nullable=true)
+     */
+    protected $cancellationDate;
 
     /**
      * Checked answers
@@ -171,7 +183,11 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer", mappedBy="irhpApplication")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer",
+     *     mappedBy="irhpApplication",
+     *     indexBy="question_text_id"
+     * )
      */
     protected $answers;
 
@@ -216,6 +232,36 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
         $this->answers = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
+    }
+
+    /**
+     * Set the cancellation date
+     *
+     * @param \DateTime $cancellationDate new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setCancellationDate($cancellationDate)
+    {
+        $this->cancellationDate = $cancellationDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the cancellation date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getCancellationDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->cancellationDate);
+        }
+
+        return $this->cancellationDate;
     }
 
     /**
@@ -759,25 +805,5 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function setLastModifiedOnBeforeUpdate()
     {
         $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

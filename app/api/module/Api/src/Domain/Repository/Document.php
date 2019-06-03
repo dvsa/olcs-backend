@@ -123,4 +123,17 @@ class Document extends AbstractRepository
 
         return $qb->getQuery()->getResult($hydrationMode);
     }
+
+    /**
+     * @param string $documentStoreId
+     * @return array
+     */
+    public function fetchByDocumentStoreId($documentStoreId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.identifier', ':documentStoreId'))
+            ->setParameter('documentStoreId', $documentStoreId);
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
 }

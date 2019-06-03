@@ -4,11 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Template;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Template\UpdateTemplateSource as UpdateTemplateSourceCmd;
 use Exception;
-use RuntimeException;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -48,12 +48,12 @@ class UpdateTemplateSource extends AbstractCommandHandler
             try {
                 $this->twigRenderer->renderString($source, $datasetValues);
             } catch (Exception $e) {
-                throw new RuntimeException(
-                    sprintf(
+                throw new ValidationException(
+                    [sprintf(
                         'Unable to render template content with dataset %s: %s',
                         $datasetName,
                         $e->getMessage()
-                    )
+                    )]
                 );
             }
         }

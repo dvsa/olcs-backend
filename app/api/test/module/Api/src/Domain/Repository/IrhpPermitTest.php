@@ -168,10 +168,12 @@ class IrhpPermitTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND ipa.ecmtPermitApplication = [[ID]] '
-            . 'AND m.status NOT IN [[["'.
-            IrhpPermitEntity::STATUS_CEASED.'","'.
-            IrhpPermitEntity::STATUS_TERMINATED.'","'.
-            IrhpPermitEntity::STATUS_EXPIRED.'"]]]'
+            . 'AND m.status IN [[["'.
+            IrhpPermitEntity::STATUS_PENDING.'","'.
+            IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.
+            IrhpPermitEntity::STATUS_ERROR.'","'.
+            IrhpPermitEntity::STATUS_PRINTING.'","'.
+            IrhpPermitEntity::STATUS_PRINTED.'"]]]'
             . ' ORDER BY m.permitNumber DESC';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -331,6 +333,9 @@ class IrhpPermitTest extends RepositoryTestCase
             . 'LEFT JOIN ips.country ipc '
             . 'AND ia.licence = [[7]] '
             . 'AND ips.irhpPermitType = [['.IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND m.status IN [[["'.IrhpPermitEntity::STATUS_PENDING.'","'
+            . IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.IrhpPermitEntity::STATUS_ERROR.'","'
+            . IrhpPermitEntity::STATUS_PRINTING.'","'.IrhpPermitEntity::STATUS_PRINTED.'"]]] '
             . 'ORDER BY ipc.countryDesc ASC '
             . 'ORDER BY m.expiryDate ASC '
             . 'ORDER BY ipa.id ASC '

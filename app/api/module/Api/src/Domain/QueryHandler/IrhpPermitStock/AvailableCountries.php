@@ -18,7 +18,7 @@ class AvailableCountries extends AbstractQueryHandler implements ToggleRequiredI
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'Country';
 
     /**

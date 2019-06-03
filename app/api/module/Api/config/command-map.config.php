@@ -450,6 +450,11 @@ return [
     TransferCommand\Document\PrintLetter::class => CommandHandler\Document\PrintLetter::class,
     Command\Document\RemoveDeletedDocuments::class => CommandHandler\Document\RemoveDeletedDocuments::class,
 
+    // Transfer - DocumentTemplate
+    TransferCommand\DocTemplate\Create::class => CommandHandler\DocTemplate\Create::class,
+    TransferCommand\DocTemplate\Update::class => CommandHandler\DocTemplate\Update::class,
+    TransferCommand\DocTemplate\Delete::class => CommandHandler\DocTemplate\Delete::class,
+
     // Transfer - CommunityLic
     TransferCommand\CommunityLic\Application\Create::class => CommandHandler\CommunityLic\Application\Create::class,
     TransferCommand\CommunityLic\Application\CreateOfficeCopy::class =>
@@ -1109,6 +1114,7 @@ return [
     TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
     TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
     TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
+    TransferCommand\IrhpApplication\SubmitApplicationStep::class => CommandHandler\IrhpApplication\SubmitApplicationStep::class,
     Command\IrhpApplication\RegenerateApplicationFee::class => CommandHandler\IrhpApplication\RegenerateApplicationFee::class,
     Command\IrhpApplication\RegenerateIssueFee::class => CommandHandler\IrhpApplication\RegenerateIssueFee::class,
     TransferCommand\IrhpApplication\CreateFull::class => CommandHandler\IrhpApplication\CreateFull::class,
@@ -1169,6 +1175,8 @@ return [
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
         CommandHandler\Permits\StoreEcmtPermitApplicationSnapshot::class,
+    Command\IrhpApplication\StoreSnapshot::class =>
+        CommandHandler\IrhpApplication\StoreSnapshot::class,
 
     // IrhpPermit Internal Backend Command
     Command\IrhpPermit\ReplacementIrhpPermit::class => CommandHandler\IrhpPermit\CreateReplacement::class,

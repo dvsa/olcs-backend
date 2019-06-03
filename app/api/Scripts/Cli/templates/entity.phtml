@@ -6,6 +6,11 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+<?php if ($details['hasCollections']) { ?>
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+<?php } else { ?>
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+<?php } ?>
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
@@ -61,6 +66,11 @@ abstract class Abstract<?php echo $details['name']; ?> implements BundleSerializ
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+<?php if ($details['hasCollections']) { ?>
+    use ClearPropertiesWithCollectionsTrait;
+<?php } else { ?>
+    use ClearPropertiesTrait;
+<?php } ?>
 <?php foreach ($details['fields'] as $item): $field = $item['config']; ?>
 
 <?php include('property.phtml'); ?>
@@ -96,10 +106,10 @@ abstract class Abstract<?php echo $details['name']; ?> implements BundleSerializ
 <?php include('methods.phtml'); ?>
 <?php endforeach; ?>
 <?php endif;?>
-
 <?php
 if ($details['hasCreatedOn']) {
 ?>
+
     /**
      * Set the createdOn field on persist
      *
@@ -114,10 +124,10 @@ if ($details['hasCreatedOn']) {
 <?php
 }
 ?>
-
 <?php
 if ($details['hasModifiedOn']) {
 ?>
+
     /**
      * Set the lastModifiedOn field on persist
      *
@@ -132,28 +142,4 @@ if ($details['hasModifiedOn']) {
 <?php
 }
 ?>
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-<?php if ($details['hasCollections']) { ?>
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-<?php } else { ?>
-                $this->$property = null;
-<?php } ?>
-            }
-        }
-    }
 }

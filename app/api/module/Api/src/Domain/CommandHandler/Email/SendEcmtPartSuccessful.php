@@ -17,7 +17,7 @@ class SendEcmtPartSuccessful extends AbstractEmailHandler implements ToggleRequi
     use ToggleAwareTrait;
     use PermitEmailTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $template = 'ecmt-app-part-successful';
     protected $subject = 'email.ecmt.response.subject';
