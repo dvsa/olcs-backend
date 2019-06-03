@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -31,6 +32,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
 
     /**
      * Created by
@@ -113,6 +115,18 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     protected $version = 1;
 
     /**
+     * Application path
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationPath",
+     *     mappedBy="irhpPermitType"
+     * )
+     */
+    protected $applicationPaths;
+
+    /**
      * Irhp permit stock
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -141,6 +155,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
      */
     public function initCollections()
     {
+        $this->applicationPaths = new ArrayCollection();
         $this->irhpPermitStocks = new ArrayCollection();
     }
 
@@ -349,6 +364,69 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     }
 
     /**
+     * Set the application path
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being set as the value
+     *
+     * @return IrhpPermitType
+     */
+    public function setApplicationPaths($applicationPaths)
+    {
+        $this->applicationPaths = $applicationPaths;
+
+        return $this;
+    }
+
+    /**
+     * Get the application paths
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getApplicationPaths()
+    {
+        return $this->applicationPaths;
+    }
+
+    /**
+     * Add a application paths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being added
+     *
+     * @return IrhpPermitType
+     */
+    public function addApplicationPaths($applicationPaths)
+    {
+        if ($applicationPaths instanceof ArrayCollection) {
+            $this->applicationPaths = new ArrayCollection(
+                array_merge(
+                    $this->applicationPaths->toArray(),
+                    $applicationPaths->toArray()
+                )
+            );
+        } elseif (!$this->applicationPaths->contains($applicationPaths)) {
+            $this->applicationPaths->add($applicationPaths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a application paths
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being removed
+     *
+     * @return IrhpPermitType
+     */
+    public function removeApplicationPaths($applicationPaths)
+    {
+        if ($this->applicationPaths->contains($applicationPaths)) {
+            $this->applicationPaths->removeElement($applicationPaths);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the irhp permit stock
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being set as the value
@@ -433,25 +511,5 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     public function setLastModifiedOnBeforeUpdate()
     {
         $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

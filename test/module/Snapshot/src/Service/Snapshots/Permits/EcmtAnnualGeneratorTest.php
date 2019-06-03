@@ -87,7 +87,7 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
                     'permits.ecmt.declaration.bullet.guidance.issued.logbook',
                     'permits.ecmt.declaration.bullet.guidance.carry.logbook',
                 ],
-                'declaration' => 'permits.ecmt.declaration',
+                'declaration' => 'permits.snapshot.declaration',
             ],
         ];
 

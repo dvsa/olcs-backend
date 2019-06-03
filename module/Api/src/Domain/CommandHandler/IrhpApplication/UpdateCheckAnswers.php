@@ -16,7 +16,7 @@ final class UpdateCheckAnswers extends AbstractCallEntityMethod implements Toggl
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $entityMethodName = 'updateCheckAnswers';
 }

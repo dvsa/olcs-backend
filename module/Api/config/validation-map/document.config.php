@@ -3,6 +3,7 @@
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentWithId;
@@ -28,4 +29,6 @@ return [
     QueryHandler\Document\Download::class => CanAccessDocumentWithId::class,
     QueryHandler\Document\DownloadGuide::class => NoValidationRequired::class,
     QueryHandler\Document\PrintLetter::class => CanAccessDocumentWithId::class,
+
+    QueryHandler\Document\ByDocumentStoreId::class => IsSystemAdmin::class,
 ];

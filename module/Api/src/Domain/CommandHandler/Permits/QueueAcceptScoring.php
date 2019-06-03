@@ -25,7 +25,7 @@ class QueueAcceptScoring extends AbstractCommandHandler implements ToggleRequire
 
     protected $repoServiceName = 'IrhpPermitStock';
 
-    protected $toggleConfig = [FeatureToggle::BACKEND_ECMT];
+    protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     /**
      * Handle command
