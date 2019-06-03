@@ -26,5 +26,6 @@ class UpdateFeeStatus extends AbstractCommandHandler
             ->addId('fee', $fee->getId())
             ->addMessage('Fee status updated:' . $status);
 
+        return $this->result;
     }
 }
