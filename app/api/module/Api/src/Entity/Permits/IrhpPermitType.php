@@ -108,7 +108,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
     /**
      * Get an active application path
      *
-     * @param \DateTime $dateTime DateTime to change against
+     * @param \DateTime $dateTime DateTime to check against
      *
      * @return ApplicationPath|null
      */
@@ -120,12 +120,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
         }
 
         $criteria = Criteria::create();
-        $criteria->where(
-            $criteria->expr()->lte(
-                'effectiveFrom',
-                $dateTime->format(DateTime::ISO8601)
-            )
-        );
+        $criteria->where($criteria->expr()->lte('effectiveFrom', $dateTime));
         $criteria->orderBy(['effectiveFrom' => Criteria::DESC]);
         $criteria->setMaxResults(1);
 
