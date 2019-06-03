@@ -69,6 +69,10 @@ class NamingServiceAwareTraitTest extends MockeryTestCase
                 'data' => ['irfoOrganisation' => 9994],
                 'expectArgs' => [Entity\Organisation\Organisation::class, 9994],
             ],
+            [
+                'data' => ['irhpApplication' => 9993],
+                'expectArgs' => [Entity\Permits\IrhpApplication::class, 9993],
+            ],
         ];
     }
 
