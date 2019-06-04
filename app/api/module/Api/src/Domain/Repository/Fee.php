@@ -63,8 +63,8 @@ class Fee extends AbstractRepository
         $this->getQueryBuilder()
             ->modifyQuery($doctrineQb)
             ->withRefdata()
-            ->with('feeTransactions', 'ft')
-            ->with('ft.transaction', 't')
+            ->with('feeTransactions', 'ftr')
+            ->with('ftr.transaction', 't')
             ->with('t.status')
             ->order('invoicedDate', 'ASC');
 
@@ -74,12 +74,20 @@ class Fee extends AbstractRepository
         $doctrineQb->leftJoin($this->alias . '.application', 'a')
             ->leftJoin($this->alias . '.licence', 'l');
 
-        $this->wherePaidFee($doctrineQb);
+        $doctrineQb->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
+            ->setParameter(
+                'feeStatus',
+                [
+                    $this->getRefdataReference(Entity::STATUS_REFUNDED),
+                    $this->getRefdataReference(Entity::STATUS_REFUND_FAILED),
+                    $this->getRefdataReference(Entity::STATUS_REFUND_PENDING)
+                ]
+            );
         $doctrineQb->andWhere($doctrineQb->expr()->isNotNull("COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)"));
 
-        $doctrineQb->join($this->alias . '.feeType', 'ft')
-            ->andWhere($doctrineQb->expr()->eq('ft.feeType', ':feeTypeFeeType'));
-        $doctrineQb->setParameter('feeTypeFeeType', $this->getRefdataReference($feeTypeFeeType));
+        $doctrineQb->join($this->alias . '.feeType', 'fty')
+            ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':FeeType'));
+        $doctrineQb->setParameter('FeeType', $this->getRefdataReference($feeTypeFeeType));
 
         if (!is_null($after) && !is_null($before)) {
             $doctrineQb
@@ -94,7 +102,7 @@ class Fee extends AbstractRepository
         if (!is_null($trafficArea) && is_array($trafficArea)) {
             $conditions = [];
             for ($i = 0; $i < count($trafficArea); $i++) {
-                $conditions[] = 'ft.trafficArea = :trafficArea' . $i;
+                $conditions[] = 'ftr.trafficArea = :trafficArea' . $i;
             }
             $orX = $doctrineQb->expr()->orX()->addMultiple($conditions);
             $doctrineQb->andWhere($orX);
