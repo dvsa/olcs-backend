@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class Update extends AbstractCommandHandler implements
+class Update extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface,
     NamingServiceAwareInterface,
