@@ -18,8 +18,6 @@ class UpdateFeeStatus extends AbstractCommandHandler
     {
         $status = $command->getStatus();
 
-        $fee = $this->getRepo()->fetchUsingId($command->getId());
-
         $fee = $this->getRepo()->fetchById($command->getId());
         $fee->setStatus($this->getRepo()->getRefdataReference($status));
         $this->getRepo()->save($fee);
