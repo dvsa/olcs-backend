@@ -18,16 +18,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ApplicationValidation extends AbstractApplicationValidation
 {
-    /**
-     * Get a platform/framework-neutral representation of this validation rule
-     *
-     * @return array
-     */
-    public function getRepresentation()
-    {
-        return [
-            'rule' => $this->rule,
-            'parameters' => json_decode($this->parameters, true)
-        ];
-    }
 }

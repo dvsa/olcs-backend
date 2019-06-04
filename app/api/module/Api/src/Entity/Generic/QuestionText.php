@@ -16,18 +16,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class QuestionText extends AbstractQuestionText
 {
-    /**
-     * Get an array representing the non-form elements displayed within an application step
-     *
-     * @return array
-     */
-    public function getTemplateVars()
-    {
-        return [
-            'question' => $this->questionKey,
-            'details' => $this->detailsKey,
-            'guidance' => json_decode($this->guidanceKey, true),
-            'additionalGuidance' => $this->additionalGuidanceKey,
-        ];
-    }
 }

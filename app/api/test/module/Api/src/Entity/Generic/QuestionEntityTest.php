@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Generic\Question as Entity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Mockery as m;
 
 /**
  * Question Entity Unit Tests
@@ -110,5 +111,23 @@ class QuestionEntityTest extends EntityTester
                 'expected' => null,
             ],
         ];
+    }
+
+    public function testGetDecodedOptionSource()
+    {
+        $optionSourceAsJson = '{"option1": "value1", "option2": "value2"}';
+
+        $optionSourceAsArray = [
+            'option1' => 'value1',
+            'option2' => 'value2'
+        ];
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setOptionSource($optionSourceAsJson);
+
+        $this->assertEquals(
+            $optionSourceAsArray,
+            $entity->getDecodedOptionSource()
+        );
     }
 }

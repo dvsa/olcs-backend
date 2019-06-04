@@ -18,14 +18,19 @@ class FormControlStrategyProviderFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $mappings = [
-            Question::FORM_CONTROL_TYPE_CHECKBOX => $serviceLocator->get('QaCheckboxFormControlStrategy'),
-            Question::FORM_CONTROL_TYPE_RADIO => $serviceLocator->get('QaRadioFormControlStrategy'),
-            Question::FORM_CONTROL_TYPE_TEXT => $serviceLocator->get('QaTextFormControlStrategy'),
-            Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS => $serviceLocator->get(
-                'QaEcmtRemovalNoOfPermitsFormControlStrategy'
-            )
+            Question::FORM_CONTROL_TYPE_CHECKBOX => 'QaCheckboxFormControlStrategy',
+            Question::FORM_CONTROL_TYPE_TEXT => 'QaTextFormControlStrategy',
+            Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS => 'QaEcmtRemovalNoOfPermitsFormControlStrategy',
         ];
 
-        return new FormControlStrategyProvider($mappings);
+        $provider = new FormControlStrategyProvider($mappings);
+        foreach ($mappings as $type => $serviceName) {
+            $provider->registerStrategy(
+                $type,
+                $serviceLocator->get($serviceName)
+            );
+        }
+
+        return $provider;
     }
 }
