@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 class UpdateFeeStatus extends AbstractCommandHandler
@@ -18,8 +19,9 @@ class UpdateFeeStatus extends AbstractCommandHandler
     {
         $status = $command->getStatus();
 
+        /** @var Fee $fee */
         $fee = $this->getRepo()->fetchById($command->getId());
-        $fee->setStatus($this->getRepo()->getRefdataReference($status));
+        $fee->setFeeStatus($this->getRepo()->getRefdataReference($status));
         $this->getRepo()->save($fee);
 
         $this->result

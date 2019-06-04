@@ -30,7 +30,7 @@ class UpdateFeeStatusTest extends CommandHandlerTestCase
         ]);
 
         $mockFee = m::mock(Fee::class);
-        $mockFee->shouldReceive('setStatus')->once();
+        $mockFee->shouldReceive('setFeeStatus')->once();
         $mockFee->shouldReceive('getId')->once()->andReturn(1);
 
         $this->repoMap['Fee']
