@@ -6,11 +6,8 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update Fee Status Test
