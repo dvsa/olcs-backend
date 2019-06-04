@@ -2,15 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\TradingName;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -38,7 +38,7 @@ class Fee extends AbstractRepository
     {
         $doctrineQb = $this->getQueryByApplicationFeeTypeFeeType(
             $applicationId,
-            \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT
+            FeeTypeEntity::FEE_TYPE_GRANTINT
         );
 
         if ($outstanding && !$paid) {
@@ -64,15 +64,8 @@ class Fee extends AbstractRepository
             ->modifyQuery($doctrineQb)
             ->withRefdata()
             ->with('feeTransactions', 'ftr')
-            ->with('ftr.transaction', 't')
-            ->with('t.status')
+            ->with($this->alias . '.licence', 'l')
             ->order('invoicedDate', 'ASC');
-
-
-        $feeTypeFeeType = \Dvsa\Olcs\Api\Entity\Fee\FeeType::FEE_TYPE_GRANTINT;
-
-        $doctrineQb->leftJoin($this->alias . '.application', 'a')
-            ->leftJoin($this->alias . '.licence', 'l');
 
         $doctrineQb->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
             ->setParameter(
@@ -83,11 +76,13 @@ class Fee extends AbstractRepository
                     $this->getRefdataReference(Entity::STATUS_REFUND_PENDING)
                 ]
             );
-        $doctrineQb->andWhere($doctrineQb->expr()->isNotNull("COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)"));
+
+        $doctrineQb->leftJoin($this->alias . '.application', 'a')
+            ->andWhere($doctrineQb->expr()->isNotNull("COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)"));
 
         $doctrineQb->join($this->alias . '.feeType', 'fty')
-            ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':FeeType'));
-        $doctrineQb->setParameter('FeeType', $this->getRefdataReference($feeTypeFeeType));
+            ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':feeType'));
+        $doctrineQb->setParameter('feeType', $this->getRefdataReference(FeeTypeEntity::FEE_TYPE_GRANTINT));
 
         if (!is_null($after) && !is_null($before)) {
             $doctrineQb

@@ -9,29 +9,33 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class InterimRefunds extends AbstractQueryHandler
 {
-
-
     protected $repoServiceName = 'Fee';
 
     public function handleQuery(QueryInterface $query)
     {
         /**
+         * @var $query \Dvsa\Olcs\Transfer\Query\Fee\InterimRefunds
+         */
+
+        /**
          * @var  $repo \Dvsa\Olcs\Api\Domain\Repository\Fee
          */
         $repo = $this->getRepo();
-
-        /**
-         * @var $query \Dvsa\Olcs\Transfer\Query\Fee\InterimRefunds
-         */
 
         $after = $query->getStartDate();
         $before = $query->getEndDate();
         $trafficArea = $query->getTrafficArea();
 
-        $refunds = $repo->fetchInterimRefunds($after, $before, $trafficArea);
+        $refunds = array_filter($repo->fetchInterimRefunds($after, $before, $trafficArea));
 
         return [
-            'result' => $this->resultList($refunds)
+            'count' => count($refunds),
+            'result' => $this->resultList($refunds, [
+                'licence' =>
+                    [
+                        'status'
+                    ]
+            ])
         ];
     }
 }
