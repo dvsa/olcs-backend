@@ -374,4 +374,9 @@ class CasesTest extends RepositoryTestCase
         $this->expectException(NotFoundException::class);
         $this->sut->fetchOpenCasesForApplication(1);
     }
+
+    public function testFetchOpenCasesReturnsNoneIfClosed()
+    {
+        $this->assertEquals(true, false);
+    }
 }
