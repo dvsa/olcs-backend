@@ -16,8 +16,7 @@ return [
             Service\TemplateRenderer::class => \Dvsa\Olcs\Email\Service\TemplateRendererFactory::class,
             'EmailService' => Service\Email::class,
             'ImapService' => Service\Imap::class,
-            'S3FileOptions' =>\Dvsa\Olcs\Email\Transport\S3FileOptionsFactory::class,
-            ],
+        ],
         'aliases' => [
             'translator' => 'MvcTranslator',
         ],

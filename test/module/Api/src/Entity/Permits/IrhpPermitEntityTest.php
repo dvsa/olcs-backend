@@ -423,7 +423,6 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
-            [Entity::STATUS_ISSUED, false],
             [Entity::STATUS_CEASED, true],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]

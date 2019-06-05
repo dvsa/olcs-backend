@@ -69,6 +69,15 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
     protected $createdOn;
 
     /**
+     * Error translation key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="error_translation_key", length=255, nullable=true)
+     */
+    protected $errorTranslationKey;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -226,6 +235,30 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
         }
 
         return $this->createdOn;
+    }
+
+    /**
+     * Set the error translation key
+     *
+     * @param string $errorTranslationKey new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setErrorTranslationKey($errorTranslationKey)
+    {
+        $this->errorTranslationKey = $errorTranslationKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the error translation key
+     *
+     * @return string
+     */
+    public function getErrorTranslationKey()
+    {
+        return $this->errorTranslationKey;
     }
 
     /**
