@@ -5,11 +5,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as StockEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -37,25 +35,22 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
     {
         // This shared method is defined in IrhpPermitStockTrait - and can throw a ValidationException
         $this->duplicateStockCheck($command);
+        $this->validityPeriodValidation($command);
+        $references = $this->resolveReferences($command);
 
         /**
          * @var IrhpPermitStock $command
          * @var StockEntity $stock
-         * @var PermitStockRepo $repo
          */
         $stock = $this->getRepo()->fetchUsingId($command);
-        $irhpPermitType = $this->getRepo('IrhpPermitType')->fetchById($command->getIrhpPermitType());
-        $country = null;
-        if ($command->getIrhpPermitType() === IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
-            $country = $this->getRepo('IrhpPermitStock')->getReference(Country::class, $command->getCountry());
-        }
 
         $stock->update(
-            $irhpPermitType,
-            $country,
+            $references['irhpPermitType'],
+            $references['country'],
+            $command->getInitialStock(),
+            $references['emissionsCategory'],
             $command->getValidFrom(),
-            $command->getValidTo(),
-            $command->getInitialStock()
+            $command->getValidTo()
         );
 
         try {

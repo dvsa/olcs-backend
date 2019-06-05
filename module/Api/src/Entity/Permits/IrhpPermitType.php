@@ -2,7 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 
 /**
  * IrhpPermitType Entity
@@ -21,6 +24,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
 {
     const IRHP_PERMIT_TYPE_ID_ECMT = 1;
     const IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM = 2;
+    const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL = 3;
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
 
@@ -34,8 +38,10 @@ class IrhpPermitType extends AbstractIrhpPermitType
         return [
             'isEcmtAnnual' => $this->isEcmtAnnual(),
             'isEcmtShortTerm' => $this->isEcmtShortTerm(),
+            'isEcmtRemoval' => $this->isEcmtRemoval(),
             'isBilateral' => $this->isBilateral(),
             'isMultilateral' => $this->isMultilateral(),
+            'isApplicationPathEnabled' => $this->isApplicationPathEnabled(),
         ];
     }
 
@@ -60,6 +66,16 @@ class IrhpPermitType extends AbstractIrhpPermitType
     }
 
     /**
+     * Is this ECMT Removal
+     *
+     * @return bool
+     */
+    public function isEcmtRemoval()
+    {
+        return $this->id === self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL;
+    }
+
+    /**
      * Is this Bilateral
      *
      * @return bool
@@ -77,5 +93,39 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function isMultilateral()
     {
         return $this->id === self::IRHP_PERMIT_TYPE_ID_MULTILATERAL;
+    }
+
+    /**
+     * Is application path enabled
+     *
+     * @return bool
+     */
+    public function isApplicationPathEnabled()
+    {
+        return $this->isEcmtRemoval();
+    }
+
+    /**
+     * Get an active application path
+     *
+     * @param \DateTime $dateTime DateTime to check against
+     *
+     * @return ApplicationPath|null
+     */
+    public function getActiveApplicationPath(\DateTime $dateTime = null)
+    {
+        if (!isset($dateTime)) {
+            // get the latest active if specific datetime not provided
+            $dateTime = new DateTime();
+        }
+
+        $criteria = Criteria::create();
+        $criteria->where($criteria->expr()->lte('effectiveFrom', $dateTime));
+        $criteria->orderBy(['effectiveFrom' => Criteria::DESC]);
+        $criteria->setMaxResults(1);
+
+        $activeApplicationPaths = $this->getApplicationPaths()->matching($criteria);
+
+        return !$activeApplicationPaths->isEmpty() ? $activeApplicationPaths->first() : null;
     }
 }
