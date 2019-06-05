@@ -87,7 +87,7 @@ class FeeTest extends RepositoryTestCase
     {
         $alias = 'f';
         $startDate = new DateTime();
-        $startDate = $startDate->sub(new \DateInterval('P'.abs ( (7-date("N")-7)).'D'));
+        $startDate = $startDate->sub(new \DateInterval('P' . abs((7-date("N")-7)) .'D'));
         $endDate = new DateTime();
         $trafficAreas = ['B', 'C'];
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Fee;
-
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;

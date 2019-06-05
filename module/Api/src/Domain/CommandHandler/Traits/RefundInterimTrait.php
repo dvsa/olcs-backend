@@ -36,7 +36,6 @@ trait RefundInterimTrait
                     ]
                 );
                 $this->result->merge($this->handleSideEffect($updateCommand));
-
             }
         }
     }
