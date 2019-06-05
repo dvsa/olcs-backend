@@ -2,12 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-class UpdateFeeStatus extends AbstractCommandHandler
+class UpdateFeeStatus extends AbstractCommandHandler implements AuthAwareInterface
 {
+    use AuthAwareTrait;
 
     protected $repoServiceName = 'Fee';
 

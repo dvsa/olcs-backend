@@ -63,7 +63,6 @@ class FeeTest extends RepositoryTestCase
     }
 
 
-
     public function testFetchInterimFeesByApplicationIdOutstanding()
     {
         $mockQb = m::mock(QueryBuilder::class);
@@ -87,15 +86,13 @@ class FeeTest extends RepositoryTestCase
     {
         $alias = 'f';
         $startDate = new DateTime();
-        $startDate = $startDate->sub(new \DateInterval('P' . abs((7-date("N")-7)) .'D'));
+        $startDate = $startDate->sub(new \DateInterval('P' . abs((7 - date("N") - 7)) . 'D'));
         $endDate = new DateTime();
         $trafficAreas = ['B', 'C'];
 
         $mockRepo = m::mock(Fee::class);
         $mockRepo->shouldAllowMockingProtectedMethods();
-        $mockRepo->shouldReceive('getRefdataReference')->andReturn(new RefDataEntity(1));
 
-        $this->em->shouldReceive('getReference')->twice()->andReturnSelf();
         $this->em->shouldReceive('getRepository')->andReturn($mockRepo);
 
         $mockQb = m::mock(QueryBuilder::class);
@@ -107,21 +104,25 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
 
         $mockQb->shouldReceive('leftJoin')->with($alias . '.application', 'a')->once()->andReturnSelf();
-        $mockQb->shouldReceive('leftJoin')->with($alias . '.licence', 'l')->once()->andReturnSelf();
-        $mockQb->shouldReceive('join')->with($alias . '.feeType', 'ft')->once()->andReturnSelf();
+        $mockQb->shouldReceive('join')->with($alias . '.feeType', 'fty')->once()->andReturnSelf();
 
-        $mockQb->shouldReceive('expr->eq')->with('ft.feeType', ':feeTypeFeeType')->once()->andReturnSelf();
-        $mockQb->shouldReceive('expr->eq')->with('f.feeStatus', ':feeStatus')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->eq')->with('fty.feeType', ':feeType')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->isNotNull')->with('COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->gte')->with($alias . '.invoicedDate', ':after')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->lte')->with($alias . '.invoicedDate', ':before')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->orX')->once()->andReturn(new Orx());
+        $mockQb->shouldReceive('expr->in')->once()->with('f.feeStatus', ':feeStatus')->andReturnSelf();
         $mockQb->shouldReceive('expr')->andReturn(new Expr());
 
         $mockQb->shouldReceive('andWhere')->andReturnSelf();
 
-        $mockQb->shouldReceive('setParameter')->with('feeStatus', $this->em)->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('feeTypeFeeType', $this->em)->andReturnSelf();
+        $feeStatuses = [
+            FeeEntity::STATUS_REFUNDED,
+            FeeEntity::STATUS_REFUND_FAILED,
+            FeeEntity::STATUS_REFUND_PENDING
+        ];
+        $mockQb->shouldReceive('setParameter')->with('feeStatus', $feeStatuses)->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('feeType', FeeTypeEntity::FEE_TYPE_GRANTINT)->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('after', $startDate)->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('before', $endDate)->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('trafficArea0', $trafficAreas[0])->andReturnSelf();
@@ -411,7 +412,7 @@ class FeeTest extends RepositoryTestCase
             ->once()
             ->andReturn($mockQb);
 
-         $this->queryBuilder->shouldReceive('modifyQuery')
+        $this->queryBuilder->shouldReceive('modifyQuery')
             ->with($mockQb)
             ->andReturnSelf()
             ->shouldReceive('withRefdata')
@@ -737,7 +738,7 @@ class FeeTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH INNER JOIN f.feeType ft AND f.licence = [[716]] AND '
             . 'ft.feeType = [[CONT]] AND f.feeStatus = [[ot]]'
-            . ' AND f.invoicedDate >= [['.$expectedAfterStr.']]';
+            . ' AND f.invoicedDate >= [[' . $expectedAfterStr . ']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -958,15 +959,15 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('expr')
             ->andReturn(
                 m::mock()
-                ->shouldReceive('eq')
-                ->with('f.application', ':application')
-                ->andReturn('FOO')
-                ->once()
-                ->shouldReceive('eq')
-                ->with('ft.feeType', ':feeType')
-                ->andReturn('BAR')
-                ->once()
-                ->getMock()
+                    ->shouldReceive('eq')
+                    ->with('f.application', ':application')
+                    ->andReturn('FOO')
+                    ->once()
+                    ->shouldReceive('eq')
+                    ->with('ft.feeType', ':feeType')
+                    ->andReturn('BAR')
+                    ->once()
+                    ->getMock()
             )
             ->twice()
             ->shouldReceive('andWhere')

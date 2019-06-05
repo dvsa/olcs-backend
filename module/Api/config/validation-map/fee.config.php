@@ -10,4 +10,5 @@ return [
     CommandHandler\Fee\ResetFees::class => IsInternalUser::class,
     QueryHandler\Fee\Fee::class => CanAccessFeeWithId::class,
     QueryHandler\Fee\InterimRefunds::class => IsInternalUser::class,
+    CommandHandler\Fee\UpdateFeeStatus::class => IsInternalUser::class
 ];
