@@ -37,7 +37,7 @@ class S3FileTest extends MockeryTestCase
         $sut->shouldReceive('executeCommand')->once()->andReturnUsing(
             function ($command, &$output, &$result) {
                 $s3FileName = 'TEST_SUBJECT';
-                $this->assertSame('s3cmd put EMAIL_FILE s3://S3_PATH/'.$s3FileName.' 2>&1', $command);
+                $this->assertSame('aws s3 cp EMAIL_FILE s3://S3_PATH/'.$s3FileName.' 2>&1', $command);
                 $output = [];
                 $result = 0;
             }
@@ -64,7 +64,7 @@ class S3FileTest extends MockeryTestCase
         $sut->shouldReceive('executeCommand')->once()->andReturnUsing(
             function ($command, &$output, &$result) {
                 $s3FileName = 'TEST_SUBJECT';
-                $this->assertSame('s3cmd put EMAIL_FILE s3://S3_PATH/'.$s3FileName.' 2>&1', $command);
+                $this->assertSame('aws s3 cp EMAIL_FILE s3://S3_PATH/'.$s3FileName.' 2>&1', $command);
                 $output = ['OUTPUT 1'];
                 $result = 67;
             }

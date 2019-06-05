@@ -138,7 +138,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         $criteria = Criteria::create();
         $criteria->where(
-            $criteria->expr()->notIn('status', IrhpPermit::$nonValidStatuses)
+            $criteria->expr()->in('status', IrhpPermit::$validStatuses)
         );
         $permits = $this->getIrhpPermits()->matching($criteria);
 
@@ -224,12 +224,18 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      * Returns the issue fee product reference for this application
      * Applicable to bilateral and multilateral only
      *
+     * @param DateTime $dateTime (optional)
+     *
      * @return string
      *
      * @throws ForbiddenException
      */
-    public function getIssueFeeProductReference()
+    public function getIssueFeeProductReference(?DateTime $dateTime = null)
     {
+        if (is_null($dateTime)) {
+            $dateTime = new DateTime();
+        }
+
         $irhpPermitTypeId = $this->getIrhpApplication()->getIrhpPermitType()->getId();
         switch ($irhpPermitTypeId) {
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
@@ -240,7 +246,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
                 $productReference = $this->genericGetProdRefForTier(
                     $irhpPermitStock->getValidFrom(true),
                     $irhpPermitStock->getValidTo(true),
-                    new DateTime(),
+                    $dateTime,
                     self::MULTILATERAL_ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY
                 );
                 break;

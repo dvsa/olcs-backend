@@ -507,6 +507,8 @@ return [
     TransferQuery\SubCategory\GetList::class => QueryHandler\SubCategory\GetList::class,
     TransferQuery\SubCategoryDescription\GetList::class => QueryHandler\SubCategoryDescription\GetList::class,
     TransferQuery\DocTemplate\GetList::class => QueryHandler\DocTemplate\GetList::class,
+    TransferQuery\DocTemplate\FullList::class => QueryHandler\DocTemplate\FullList::class,
+    TransferQuery\DocTemplate\ById::class => QueryHandler\DocTemplate\ById::class,
 
     TransferQuery\ContactDetail\CountryList::class => QueryHandler\ContactDetail\CountryList::class,
     TransferQuery\ContactDetail\CountrySelectList::class => QueryHandler\ContactDetail\CountrySelectList::class,
@@ -627,10 +629,13 @@ return [
     TransferQuery\IrhpApplication\GetAllByOrganisation::class
         => QueryHandler\IrhpApplication\GetAllByOrganisation::class,
     TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
+    TransferQuery\IrhpApplication\QuestionAnswer::class => QueryHandler\IrhpApplication\QuestionAnswer::class,
     TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
     TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
         QueryHandler\IrhpApplication\MaxStockPermitsByApplication::class,
+    TransferQuery\IrhpApplication\FeeBreakdown::class => QueryHandler\IrhpApplication\FeeBreakdown::class,
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
+    TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
@@ -642,7 +647,6 @@ return [
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
-    TransferQuery\Permits\LastOpenWindow::class => QueryHandler\Permits\LastOpenWindow::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
 
     // Permits - internal
@@ -655,6 +659,7 @@ return [
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
     Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
+
     // IRHP Permit - internal
 
     Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
@@ -666,6 +671,9 @@ return [
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
     TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
+
+    //Document Internal
+    Query\Document\ByDocumentStoreId::class => QueryHandler\Document\ByDocumentStoreId::class,
 
     // Templates
     TransferQuery\Template\AvailableTemplates::class => QueryHandler\Template\AvailableTemplates::class,

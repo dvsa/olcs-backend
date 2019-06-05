@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,6 +33,7 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesWithCollectionsTrait;
 
     /**
      * Created by
@@ -78,7 +80,11 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType",
+     *     fetch="LAZY",
+     *     inversedBy="applicationPaths"
+     * )
      * @ORM\JoinColumn(name="irhp_permit_type_id", referencedColumnName="id", nullable=false)
      */
     protected $irhpPermitType;
@@ -131,6 +137,7 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
      *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationStep",
      *     mappedBy="applicationPath"
      * )
+     * @ORM\OrderBy({"weight" = "ASC"})
      */
     protected $applicationSteps;
 
@@ -473,25 +480,5 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
     public function setLastModifiedOnBeforeUpdate()
     {
         $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                if ($this->$property instanceof Collection) {
-                    $this->$property = new ArrayCollection(array());
-                } else {
-                    $this->$property = null;
-                }
-            }
-        }
     }
 }

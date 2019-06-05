@@ -69,13 +69,9 @@ class PreviewTemplateSource extends AbstractQueryHandler
                     ['content' => $this->twigRenderer->renderString($source, $datasetValues)]
                 );
             } catch (Exception $e) {
-                throw new RuntimeException(
-                    sprintf(
-                        'Error previewing dataset %s: %s',
-                        $datasetName,
-                        $e->getMessage()
-                    )
-                );
+                $result['error'] = true;
+                $result[$datasetName] = $e->getMessage();
+                break;
             }
         }
 

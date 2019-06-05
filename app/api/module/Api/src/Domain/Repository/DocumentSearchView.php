@@ -55,11 +55,11 @@ class DocumentSearchView extends AbstractReadonlyRepository
     }
 
     /**
-     * Apply filters 
+     * Apply filters
      *
      * @param QueryBuilder                      $qb    Query Builder
      * @param TransferQry\Document\DocumentList $query Api Query
-     * 
+     *
      * @return void
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
@@ -124,34 +124,46 @@ class DocumentSearchView extends AbstractReadonlyRepository
                 );
                 $qb->setParameter('BUS_REG_ID', $busRegId);
             }
+
+            $irhpApplicationId = $query->getIrhpApplication();
+            if ($irhpApplicationId !== null) {
+                $qb->andWhere(
+                    $qb->expr()->eq($this->alias . '.irhpApplicationId', ':IRHP_APPLICATION_ID')
+                );
+                $qb->setParameter('IRHP_APPLICATION_ID', $irhpApplicationId);
+            }
         }
 
         $idExpressions = [];
 
         if ($query->getLicence() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.licenceId', ':licence'
+                'm.licenceId',
+                ':licence'
             );
             $qb->setParameter('licence', $query->getLicence());
         }
 
         if ($query->getTransportManager() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.tmId', ':tm'
+                'm.tmId',
+                ':tm'
             );
             $qb->setParameter('tm', $query->getTransportManager());
         }
 
         if ($query->getCase() !== null && !$isShowSelfOnly) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.caseId', ':case'
+                'm.caseId',
+                ':case'
             );
             $qb->setParameter('case', $query->getCase());
         }
 
         if ($query->getIrfoOrganisation() !== null) {
             $idExpressions[] = $qb->expr()->eq(
-                'm.irfoOrganisationId', ':irfoOrganisation'
+                'm.irfoOrganisationId',
+                ':irfoOrganisation'
             );
             $qb->setParameter('irfoOrganisation', $query->getIrfoOrganisation());
         }

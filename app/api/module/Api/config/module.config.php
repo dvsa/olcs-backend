@@ -24,6 +24,19 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'QaAnswerFactory' => ApiSrv\Qa\AnswerSaver\AnswerFactory::class,
+            'QaApplicationStepFactory' => ApiSrv\Qa\Element\ApplicationStepFactory::class,
+            'QaCheckboxElementFactory' => ApiSrv\Qa\Element\CheckboxElementFactory::class,
+            'QaFilteredTranslateableTextFactory' => ApiSrv\Qa\Element\FilteredTranslateableTextFactory::class,
+            'QaQuestionTextFactory' => ApiSrv\Qa\Element\QuestionTextFactory::class,
+            'QaSelfservePageFactory' => ApiSrv\Qa\Element\SelfservePageFactory::class,
+            'QaTextElementFactory' => ApiSrv\Qa\Element\TextElementFactory::class,
+            'QaTranslateableTextFactory' => ApiSrv\Qa\Element\TranslateableTextFactory::class,
+            'QaValidatorFactory' => ApiSrv\Qa\Element\ValidatorFactory::class,
+            'QaValidatorListFactory' => ApiSrv\Qa\Element\ValidatorListFactory::class,
+            'QaNullSelfservePagePostProcessor' => ApiSrv\Qa\PostProcessor\NullSelfservePagePostProcessor::class,
+            'QaEcmtRemovalNoOfPermitsSelfservePagePostProcessor' =>
+                ApiSrv\Qa\PostProcessor\EcmtRemovalNoOfPermitsSelfservePagePostProcessor::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -120,6 +133,29 @@ return [
             'TemplateTwigRenderer' => ApiSrv\Template\TwigRendererFactory::class,
             'TemplateTwigEnvironment' => ApiSrv\Template\TwigEnvironmentFactory::class,
             'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
+
+            'QaGenericAnswerSaver' => ApiSrv\Qa\AnswerSaver\GenericAnswerSaverFactory::class,
+            'QaCheckboxAnswerSaver' => ApiSrv\Qa\AnswerSaver\CheckboxAnswerSaverFactory::class,
+            'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
+            
+            'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
+            'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
+            'QaCheckboxFormControlStrategy' => ApiSrv\Qa\Strategy\CheckboxFormControlStrategyFactory::class,
+            'QaTextFormControlStrategy' => ApiSrv\Qa\Strategy\TextFormControlStrategyFactory::class,
+            'QaEcmtRemovalNoOfPermitsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
+
+            'QaApplicationStepGenerator' => ApiSrv\Qa\Element\ApplicationStepGeneratorFactory::class,
+            'QaCheckboxElementGenerator' => ApiSrv\Qa\Element\CheckboxElementGeneratorFactory::class,
+            'QaFilteredTranslateableTextGenerator' => ApiSrv\Qa\Element\FilteredTranslateableTextGeneratorFactory::class,
+            'QaQuestionTextGenerator' => ApiSrv\Qa\Element\QuestionTextGeneratorFactory::class,
+            'QaSelfservePageGenerator' => ApiSrv\Qa\Element\SelfservePageGeneratorFactory::class,
+            'QaTextElementGenerator' => ApiSrv\Qa\Element\TextElementGeneratorFactory::class,
+            'QaTranslateableTextGenerator' => ApiSrv\Qa\Element\TranslateableTextGeneratorFactory::class,
+            'QaJsonDecodingFilteredTranslateableTextGenerator'
+                => ApiSrv\Qa\Element\JsonDecodingFilteredTranslateableTextGeneratorFactory::class,
+            'QaValidatorGenerator' => ApiSrv\Qa\Element\ValidatorGeneratorFactory::class,
+            'QaValidatorListGenerator' => ApiSrv\Qa\Element\ValidatorListGeneratorFactory::class,
         ],
     ],
     'view_manager' => [
@@ -361,6 +397,9 @@ return [
             'IrhpPermitRange' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
             'Template' => RepositoryFactory::class,
+            'ApplicationStep' => RepositoryFactory::class,
+            'ApplicationPath' => RepositoryFactory::class,
+            'Answer' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

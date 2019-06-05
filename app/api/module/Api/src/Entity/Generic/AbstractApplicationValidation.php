@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -31,6 +32,7 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
+    use ClearPropertiesTrait;
 
     /**
      * Application step
@@ -65,6 +67,15 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
+
+    /**
+     * Error translation key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="error_translation_key", length=255, nullable=true)
+     */
+    protected $errorTranslationKey;
 
     /**
      * Identifier - Id
@@ -224,6 +235,30 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
         }
 
         return $this->createdOn;
+    }
+
+    /**
+     * Set the error translation key
+     *
+     * @param string $errorTranslationKey new value being set
+     *
+     * @return ApplicationValidation
+     */
+    public function setErrorTranslationKey($errorTranslationKey)
+    {
+        $this->errorTranslationKey = $errorTranslationKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the error translation key
+     *
+     * @return string
+     */
+    public function getErrorTranslationKey()
+    {
+        return $this->errorTranslationKey;
     }
 
     /**
@@ -446,21 +481,5 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
     public function setLastModifiedOnBeforeUpdate()
     {
         $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * Clear properties
-     *
-     * @param array $properties array of properties
-     *
-     * @return void
-     */
-    public function clearProperties($properties = array())
-    {
-        foreach ($properties as $property) {
-            if (property_exists($this, $property)) {
-                $this->$property = null;
-            }
-        }
     }
 }

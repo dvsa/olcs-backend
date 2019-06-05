@@ -10,6 +10,11 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
+use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
@@ -361,6 +366,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->setStatus(new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED));
         $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
         $this->assertEquals(IrhpInterface::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getCancellationDate()->format('Y-m-d'));
     }
 
     /**
@@ -1607,6 +1613,217 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->sut->getSectionCompletion();
     }
 
+    /**
+     * @dataProvider dpCanCheckAnswersForApplicationPathEnabled
+     */
+    public function testCanCheckAnswersForApplicationPathEnabled(
+        $irhpPermitTypeId,
+        $status,
+        $questionAnswerData,
+        $expected
+    ) {
+        $irhpPermitType = new IrhpPermitType();
+        $irhpPermitType->setId($irhpPermitTypeId);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->sut->setStatus(new RefData($status));
+
+        $this->sut->shouldReceive('getQuestionAnswerData')
+            ->andReturn($questionAnswerData);
+
+        $this->assertEquals($expected, $this->sut->canCheckAnswers());
+    }
+
+    public function dpCanCheckAnswersForApplicationPathEnabled()
+    {
+        return [
+            'ECMT Removal - not yet submitted - check answers cannot start' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Removal - not yet submitted - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Removal - not yet submitted - check answers completed' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Removal - under consideration - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Removal - withdrawn - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Removal - cancelled - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanCheckAnswersForNonApplicationPathEnabled
+     */
+    public function testCanCheckAnswersForNonApplicationPathEnabled(
+        $irhpPermitTypeId,
+        $status,
+        $permitsRequired,
+        $expected
+    ) {
+        $this->sut->setStatus(new RefData($status));
+
+        $irhpPermitType = new IrhpPermitType();
+        $irhpPermitType->setId($irhpPermitTypeId);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $licence = m::mock(Licence::class);
+        $this->sut->setLicence($licence);
+
+        $irhpPermitApp = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApp->setPermitsRequired($permitsRequired);
+
+        $this->sut->setIrhpPermitApplications(
+            new ArrayCollection([$irhpPermitApp])
+        );
+
+        $this->assertEquals($expected, $this->sut->canCheckAnswers());
+    }
+
+    public function dpCanCheckAnswersForNonApplicationPathEnabled()
+    {
+        return [
+            'Bilateral - not yet submitted - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => 10,
+                'expected' => true,
+            ],
+            'Bilateral - not yet submitted - permits required not set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => null,
+                'expected' => false,
+            ],
+            'Bilateral - under consideration - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'permitsRequired' => 10,
+                'expected' => false,
+            ],
+            'Bilateral - withdrawn - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'permitsRequired' => 10,
+                'expected' => false,
+            ],
+            'Bilateral - cancelled - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'permitsRequired' => 10,
+                'expected' => false,
+            ],
+            'Multilateral - not yet submitted - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => 10,
+                'expected' => true,
+            ],
+            'Multilateral - not yet submitted - permits required not set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => null,
+                'expected' => false,
+            ],
+            'Multilateral - under consideration - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'permitsRequired' => 10,
+                'expected' => false,
+            ],
+            'Multilateral - withdrawn - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'permitsRequired' => 10,
+                'expected' => false,
+            ],
+            'Multilateral - cancelled - permits required set' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'permitsRequired' => 10,
+                'expected' => false,
+            ],
+        ];
+    }
+
     public function testUpdateCheckAnswers()
     {
         $irhpApplication = m::mock(Entity::class)->makePartial();
@@ -1658,6 +1875,243 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpApplication->resetCheckAnswersAndDeclaration();
         $this->assertTrue($irhpApplication->getDeclaration());
         $this->assertTrue($irhpApplication->getCheckedAnswers());
+    }
+
+    /**
+     * @dataProvider dpCanMakeDeclarationForApplicationPathEnabled
+     */
+    public function testCanMakeDeclarationForApplicationPathEnabled(
+        $irhpPermitTypeId,
+        $status,
+        $questionAnswerData,
+        $expected
+    ) {
+        $irhpPermitType = new IrhpPermitType();
+        $irhpPermitType->setId($irhpPermitTypeId);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->sut->setStatus(new RefData($status));
+
+        $this->sut->shouldReceive('getQuestionAnswerData')
+            ->andReturn($questionAnswerData);
+
+        $this->assertEquals($expected, $this->sut->canMakeDeclaration());
+    }
+
+    public function dpCanMakeDeclarationForApplicationPathEnabled()
+    {
+        return [
+            'ECMT Removal - not yet submitted - declaration cannot start' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Removal - not yet submitted - declaration not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Removal - not yet submitted - declaration completed' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Removal - under consideration - declaration not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Removal - withdrawn - declaration not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Removal - cancelled - declaration not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanMakeDeclarationForNonApplicationPathEnabled
+     */
+    public function testCanMakeDeclarationForNonApplicationPathEnabled(
+        $irhpPermitTypeId,
+        $status,
+        $permitsRequired,
+        $checkedAnswers,
+        $expected
+    ) {
+        $this->sut->setStatus(new RefData($status));
+
+        $irhpPermitType = new IrhpPermitType();
+        $irhpPermitType->setId($irhpPermitTypeId);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $licence = m::mock(Licence::class);
+        $this->sut->setLicence($licence);
+
+        $irhpPermitApp = m::mock(IrhpPermitApplication::class)->makePartial();
+        $irhpPermitApp->setPermitsRequired($permitsRequired);
+
+        $this->sut->setIrhpPermitApplications(
+            new ArrayCollection([$irhpPermitApp])
+        );
+        $this->sut->setCheckedAnswers($checkedAnswers);
+
+        $this->assertEquals($expected, $this->sut->canMakeDeclaration());
+    }
+
+    public function dpCanMakeDeclarationForNonApplicationPathEnabled()
+    {
+        return [
+            'Bilateral - not yet submitted - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => true,
+            ],
+            'Bilateral - not yet submitted - permits required set - answers not checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => 10,
+                'checkedAnswers' => null,
+                'expected' => false,
+            ],
+            'Bilateral - not yet submitted - permits required not set - answers not checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => null,
+                'checkedAnswers' => null,
+                'expected' => false,
+            ],
+            'Bilateral - under consideration - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => false,
+            ],
+            'Bilateral - withdrawn - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => false,
+            ],
+            'Bilateral - cancelled - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => false,
+            ],
+            'Multilateral - not yet submitted - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => true,
+            ],
+            'Multilateral - not yet submitted - permits required set - answers not checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => 10,
+                'checkedAnswers' => null,
+                'expected' => false,
+            ],
+            'Multilateral - not yet submitted - permits required not set - answers not checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'permitsRequired' => null,
+                'checkedAnswers' => null,
+                'expected' => false,
+            ],
+            'Multilateral - under consideration - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => false,
+            ],
+            'Multilateral - withdrawn - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => false,
+            ],
+            'Multilateral - cancelled - permits required set - answers checked' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'permitsRequired' => 10,
+                'checkedAnswers' => true,
+                'expected' => false,
+            ],
+        ];
     }
 
     public function testMakeDeclaration()
@@ -1835,16 +2289,14 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    /**
-     * @dataProvider dpGetApplicationFeeProductRefsAndQuantities
-     */
-    public function testGetApplicationFeeProductRefsAndQuantities($irhpPermitTypeId, $productReference)
+    public function testGetApplicationFeeProductRefsAndQuantities()
     {
+        $productReference = 'PRODUCT_REFERENCE';
         $permitsRequired = 7;
 
         $irhpApplication = m::mock(Entity::class)->makePartial();
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn($irhpPermitTypeId);
+        $irhpApplication->shouldReceive('getApplicationFeeProductReference')
+            ->andReturn($productReference);
         $irhpApplication->shouldReceive('getPermitsRequired')
             ->andReturn($permitsRequired);
 
@@ -1854,7 +2306,22 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
-    public function dpGetApplicationFeeProductRefsAndQuantities()
+    /**
+     * @dataProvider dpGetApplicationFeeProductReference
+     */
+    public function testGetApplicationFeeProductReference($irhpPermitTypeId, $productReference)
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->assertEquals(
+            $productReference,
+            $irhpApplication->getApplicationFeeProductReference()
+        );
+    }
+
+    public function dpGetApplicationFeeProductReference()
     {
         return [
             [
@@ -1868,7 +2335,7 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testGetApplicationFeeProductRefsAndQuantitiesUnsupportedType()
+    public function testGetApplicationFeeProductReferenceUnsupportedType()
     {
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(
@@ -1879,7 +2346,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
             ->andReturn(7);
 
-        $irhpApplication->getApplicationFeeProductRefsAndQuantities();
+        $irhpApplication->getApplicationFeeProductReference();
     }
 
     public function testGetIssueFeeProductRefsAndQuantities()
@@ -2230,6 +2697,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(true);
 
         $stock1ValidityDate = new DateTime('2019-12-31');
         $stock2ValidityDate = new DateTime('2020-12-31');
@@ -2327,6 +2795,486 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertEquals($data, $entity->getQuestionAnswerData());
     }
 
+    public function testGetQuestionAnswerDataWithoutActiveApplicationPath()
+    {
+        $expected = [];
+
+        $createdOn = new DateTime();
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('getActiveApplicationPath')->once()->with($createdOn)->andReturn(null);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity->setCreatedOn($createdOn);
+
+        $this->assertEquals($expected, $entity->getQuestionAnswerData());
+    }
+
+    /**
+     * @dataProvider dpGetQuestionAnswerDataWithActiveApplicationPath
+     */
+    public function testGetQuestionAnswerDataWithActiveApplicationPath($data, $applicationSteps, $expected)
+    {
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($data['licNo']);
+
+        $applicationPath = m::mock(ApplicationPath::class);
+        $applicationPath->shouldReceive('getApplicationSteps')->once()->withNoArgs()->andReturn($applicationSteps);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
+        $irhpPermitType->shouldReceive('getActiveApplicationPath')
+            ->with($data['createdOn'])
+            ->once()
+            ->andReturn($applicationPath);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->setAnswers($data['answers']);
+        $entity->setCreatedOn($data['createdOn']);
+        $entity->setCheckedAnswers($data['checkedAnswers']);
+        $entity->setDeclaration($data['declaration']);
+
+        $this->assertEquals($expected, $entity->getQuestionAnswerData());
+    }
+
+    public function dpGetQuestionAnswerDataWithActiveApplicationPath()
+    {
+        $createdOn = new DateTime();
+
+        // q1
+        $question1TextId = 1;
+        $question1Text = m::mock(QuestionText::class);
+        $question1Text->shouldReceive('getId')->withNoArgs()->andReturn($question1TextId);
+        $question1Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q1-short-key');
+        $question1Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('q1-key');
+
+        $question1 = m::mock(Question::class);
+        $question1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
+        $question1->shouldReceive('getActiveQuestionText')->with($createdOn)->andReturn($question1Text);
+        $question1->shouldReceive('getSlug')->withNoArgs()->andReturn('q1-slug');
+        $question1->shouldReceive('isCustom')->withNoArgs()->andReturn(false);
+
+        $step1 = m::mock(ApplicationStep::class);
+        $step1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
+
+        $answer1 = m::mock(Answer::class);
+        $answer1->shouldReceive('getValue')->withNoArgs()->andReturn('q1-answer');
+
+        // q2
+        $question2TextId = 2;
+        $question2Text = m::mock(QuestionText::class);
+        $question2Text->shouldReceive('getId')->withNoArgs()->andReturn($question2TextId);
+        $question2Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q2-short-key');
+        $question2Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('q2-key');
+
+        $question2 = m::mock(Question::class);
+        $question2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
+        $question2->shouldReceive('getActiveQuestionText')->with($createdOn)->andReturn($question2Text);
+        $question2->shouldReceive('getSlug')->withNoArgs()->andReturn('q2-slug');
+        $question2->shouldReceive('isCustom')->withNoArgs()->andReturn(false);
+
+        $step2 = m::mock(ApplicationStep::class);
+        $step2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
+
+        $answer2 = m::mock(Answer::class);
+        $answer2->shouldReceive('getValue')->withNoArgs()->andReturn('q2-answer');
+
+        return [
+            'licence not set' => [
+                'data' => [
+                    'licNo' => '',
+                    'answers' => new ArrayCollection([]),
+                    'checkedAnswers' => 0,
+                    'declaration' => 0,
+                    'createdOn' => $createdOn,
+                ],
+                'applicationSteps' => new ArrayCollection([$step1, $step2]),
+                'expected' => [
+                    [
+                        'section' => 'licence',
+                        'slug' => 'custom-licence',
+                        'questionShort' => 'section.name.application/licence',
+                        'question' => 'section.name.application/licence',
+                        'answer' => '',
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                    [
+                        'section' => 'q1-slug',
+                        'slug' => 'q1-slug',
+                        'questionShort' => 'q1-short-key',
+                        'question' => 'q1-key',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                    [
+                        'section' => 'q2-slug',
+                        'slug' => 'q2-slug',
+                        'questionShort' => 'q2-short-key',
+                        'question' => 'q2-key',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+            ],
+            'licence set' => [
+                'data' => [
+                    'licNo' => 'OB1234567',
+                    'answers' => new ArrayCollection([]),
+                    'checkedAnswers' => 0,
+                    'declaration' => 0,
+                    'createdOn' => $createdOn,
+                ],
+                'applicationSteps' => new ArrayCollection([$step1, $step2]),
+                'expected' => [
+                    [
+                        'section' => 'licence',
+                        'slug' => 'custom-licence',
+                        'questionShort' => 'section.name.application/licence',
+                        'question' => 'section.name.application/licence',
+                        'answer' => 'OB1234567',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q1-slug',
+                        'slug' => 'q1-slug',
+                        'questionShort' => 'q1-short-key',
+                        'question' => 'q1-key',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                    [
+                        'section' => 'q2-slug',
+                        'slug' => 'q2-slug',
+                        'questionShort' => 'q2-short-key',
+                        'question' => 'q2-key',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 0,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+            ],
+            'q1 answered' => [
+                'data' => [
+                    'licNo' => 'OB1234567',
+                    'answers' => new ArrayCollection([$question1TextId => $answer1]),
+                    'checkedAnswers' => 0,
+                    'declaration' => 0,
+                    'createdOn' => $createdOn,
+                ],
+                'applicationSteps' => new ArrayCollection([$step1, $step2]),
+                'expected' => [
+                    [
+                        'section' => 'licence',
+                        'slug' => 'custom-licence',
+                        'questionShort' => 'section.name.application/licence',
+                        'question' => 'section.name.application/licence',
+                        'answer' => 'OB1234567',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q1-slug',
+                        'slug' => 'q1-slug',
+                        'questionShort' => 'q1-short-key',
+                        'question' => 'q1-key',
+                        'answer' => 'q1-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q2-slug',
+                        'slug' => 'q2-slug',
+                        'questionShort' => 'q2-short-key',
+                        'question' => 'q2-key',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 0,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+            ],
+            'q2 answered' => [
+                'data' => [
+                    'licNo' => 'OB1234567',
+                    'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
+                    'checkedAnswers' => 0,
+                    'declaration' => 0,
+                    'createdOn' => $createdOn,
+                ],
+                'applicationSteps' => new ArrayCollection([$step1, $step2]),
+                'expected' => [
+                    [
+                        'section' => 'licence',
+                        'slug' => 'custom-licence',
+                        'questionShort' => 'section.name.application/licence',
+                        'question' => 'section.name.application/licence',
+                        'answer' => 'OB1234567',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q1-slug',
+                        'slug' => 'q1-slug',
+                        'questionShort' => 'q1-short-key',
+                        'question' => 'q1-key',
+                        'answer' => 'q1-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q2-slug',
+                        'slug' => 'q2-slug',
+                        'questionShort' => 'q2-short-key',
+                        'question' => 'q2-key',
+                        'answer' => 'q2-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 0,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+            ],
+            'answers checked' => [
+                'data' => [
+                    'licNo' => 'OB1234567',
+                    'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
+                    'checkedAnswers' => 1,
+                    'declaration' => 0,
+                    'createdOn' => $createdOn,
+                ],
+                'applicationSteps' => new ArrayCollection([$step1, $step2]),
+                'expected' => [
+                    [
+                        'section' => 'licence',
+                        'slug' => 'custom-licence',
+                        'questionShort' => 'section.name.application/licence',
+                        'question' => 'section.name.application/licence',
+                        'answer' => 'OB1234567',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q1-slug',
+                        'slug' => 'q1-slug',
+                        'questionShort' => 'q1-short-key',
+                        'question' => 'q1-key',
+                        'answer' => 'q1-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q2-slug',
+                        'slug' => 'q2-slug',
+                        'questionShort' => 'q2-short-key',
+                        'question' => 'q2-key',
+                        'answer' => 'q2-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+            ],
+            'declaration set' => [
+                'data' => [
+                    'licNo' => 'OB1234567',
+                    'answers' => new ArrayCollection([$question1TextId => $answer1, $question2TextId => $answer2]),
+                    'checkedAnswers' => 1,
+                    'declaration' => 1,
+                    'createdOn' => $createdOn,
+                ],
+                'applicationSteps' => new ArrayCollection([$step1, $step2]),
+                'expected' => [
+                    [
+                        'section' => 'licence',
+                        'slug' => 'custom-licence',
+                        'questionShort' => 'section.name.application/licence',
+                        'question' => 'section.name.application/licence',
+                        'answer' => 'OB1234567',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q1-slug',
+                        'slug' => 'q1-slug',
+                        'questionShort' => 'q1-short-key',
+                        'question' => 'q1-key',
+                        'answer' => 'q1-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'q2-slug',
+                        'slug' => 'q2-slug',
+                        'questionShort' => 'q2-short-key',
+                        'question' => 'q2-key',
+                        'answer' => 'q2-answer',
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                    [
+                        'section' => 'declaration',
+                        'slug' => 'custom-declaration',
+                        'questionShort' => 'section.name.application/declaration',
+                        'question' => 'section.name.application/declaration',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function testGetAnswerForCustomQuestion()
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+
+        $this->assertNull($entity->getAnswer($step));
+    }
+
+    public function testGetAnswerForQuestionWithoutActiveQuestionText()
+    {
+        $createdOn = new DateTime();
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
+        $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn(null);
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->setCreatedOn($createdOn);
+
+        $this->assertNull($entity->getAnswer($step));
+    }
+
+    public function testGetAnswerForQuestionWithoutAnswer()
+    {
+        $createdOn = new DateTime();
+
+        $questionTextId = 1;
+        $questionText = m::mock(QuestionText::class);
+        $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
+        $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->setCreatedOn($createdOn);
+
+        $this->assertNull($entity->getAnswer($step));
+    }
+
+    public function testGetAnswerForQuestionWithAnswer()
+    {
+        $createdOn = new DateTime();
+        $answer = 'answer';
+
+        $questionTextId = 1;
+        $questionText = m::mock(QuestionText::class);
+        $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
+        $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $answer = m::mock(Answer::class);
+        $answer->shouldReceive('getValue')->withNoArgs()->once()->andReturn($answer);
+
+        $entity = $this->createNewEntity();
+        $entity->setCreatedOn($createdOn);
+        $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
+
+        $this->assertEquals($answer, $entity->getAnswer($step));
+    }
+
     public function testGetOutstandingApplicationFees()
     {
         $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
@@ -2361,6 +3309,16 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertCount(2, $outstandingIssueFees);
         $this->assertSame($fee1, $outstandingIssueFees[0]);
         $this->assertSame($fee4, $outstandingIssueFees[1]);
+    }
+
+    public function testGetContextValue()
+    {
+        $irhpApplicationId = 87;
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->setId($irhpApplicationId);
+
+        $this->assertEquals($irhpApplicationId, $irhpApplication->getContextValue());
     }
 
     private function createMockFee($feeTypeId, $isOutstanding)
