@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -67,11 +68,22 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         );
 
         $this->expectCommand(
+            UpdateFeeStatus::class,
+            [
+                'id' => $this->item->getId(),
+                'status' => FeeEntity::STATUS_REFUNDED
+            ],
+            new Result(),
+            false
+        );
+
+        $this->expectCommand(
             Complete::class,
             ['item' => $this->item],
             new Result(),
             false
         );
+
 
         $result = $this->sut->processMessage($this->item);
 
@@ -90,6 +102,16 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             [
                 'item' => $this->item,
                 'lastError' => 'Fee cannot be refunded',
+            ],
+            new Result(),
+            false
+        );
+
+        $this->expectCommand(
+            UpdateFeeStatus::class,
+            [
+                'id' => $this->item->getId(),
+                'status' => FeeEntity::STATUS_REFUND_FAILED
             ],
             new Result(),
             false

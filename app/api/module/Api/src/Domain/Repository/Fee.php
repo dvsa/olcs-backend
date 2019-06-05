@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as Entity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\TradingName;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -72,9 +71,9 @@ class Fee extends AbstractRepository
             ->setParameter(
                 'feeStatus',
                 [
-                    $this->getRefdataReference(Entity::STATUS_REFUNDED),
-                    $this->getRefdataReference(Entity::STATUS_REFUND_FAILED),
-                    $this->getRefdataReference(Entity::STATUS_REFUND_PENDING)
+                    Entity::STATUS_REFUNDED,
+                    Entity::STATUS_REFUND_FAILED,
+                    Entity::STATUS_REFUND_PENDING
                 ]
             );
 
@@ -83,7 +82,7 @@ class Fee extends AbstractRepository
 
         $doctrineQb->join($this->alias . '.feeType', 'fty')
             ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':feeType'));
-        $doctrineQb->setParameter('feeType', $this->getRefdataReference(FeeTypeEntity::FEE_TYPE_GRANTINT));
+        $doctrineQb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_GRANTINT);
 
         if (!is_null($after) && !is_null($before)) {
             $doctrineQb

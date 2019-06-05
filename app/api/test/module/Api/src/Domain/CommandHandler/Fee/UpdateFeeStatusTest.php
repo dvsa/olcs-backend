@@ -6,8 +6,10 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Update Fee Status Test
@@ -16,8 +18,22 @@ class UpdateFeeStatusTest extends CommandHandlerTestCase
 {
     public function setUp()
     {
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
+        ];
+
         $this->sut = new UpdateFeeStatus();
         $this->mockRepo('Fee', Repository\FeeType::class);
+
+        /** @var UserEntity $mockUser */
+        $mockUser = m::mock(UserEntity::class)
+            ->shouldReceive('getLoginId')
+            ->andReturn('bob')
+            ->getMock();
+
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('getIdentity->getUser')
+            ->andReturn($mockUser);
 
         parent::setUp();
     }
