@@ -33,7 +33,8 @@ class InterimRefunds extends AbstractQueryHandler
             'result' => $this->resultList($refunds, [
                 'licence' =>
                     [
-                        'status'
+                        'status',
+                        'organisation'
                     ]
             ])
         ];
