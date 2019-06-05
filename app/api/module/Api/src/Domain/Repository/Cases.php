@@ -225,13 +225,15 @@ class Cases extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-             ->with('application', 'a');
+            ->with('application', 'a');
         $expr = $qb->expr();
-        $expr->eq(self::$aliasApp.'.id', ':byApplication')
+
+        $qb->Where($expr->eq(self::$aliasApp.'.id', ':byApplication'))
             ->setParameter('byApplication', $id);
-         $qb->andWhere(
-             $expr->isNull($this->alias . '.closedDate')
-         );
+        $qb->andWhere(
+            $expr->isNull($this->alias . '.closedDate')
+        );
+
         $result = $qb->getQuery()->getResult();
         if (!$result) {
             throw new Exception\NotFoundException('Resource not found');
