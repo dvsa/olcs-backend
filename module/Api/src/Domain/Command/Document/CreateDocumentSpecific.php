@@ -61,6 +61,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $ecmtPermitApplication;
 
+    protected $irhpApplication;
+
     /**
      * Get filename
      *
@@ -299,5 +301,15 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getEcmtPermitApplication()
     {
         return $this->ecmtPermitApplication;
+    }
+
+    /**
+     * Get irhp application
+     *
+     * @return int
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 }

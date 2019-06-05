@@ -58,19 +58,13 @@ class ApplicationStep extends AbstractApplicationStep
         return $applicationSteps[$thisIndex - 1];
     }
 
-    /**
-     * Get a platform/framework-neutral representation of the validators applicable to this application step
-     *
-     * @return array
-     */
-    public function getValidatorsRepresentation()
+    public function getFieldsetName()
     {
-        $validators = [];
+        return 'fieldset' . $this->id;
+    }
 
-        foreach ($this->question->getApplicationValidations() as $applicationValidation) {
-            $validators[] = $applicationValidation->getRepresentation();
-        }
-
-        return $validators;
+    public function getDecodedOptionSource()
+    {
+        return $this->getQuestion()->getDecodedOptionSource();
     }
 }

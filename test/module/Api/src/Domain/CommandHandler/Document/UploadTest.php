@@ -77,7 +77,10 @@ class UploadTest extends CommandHandlerTestCase
             ],
             Entity\Surrender::class => [
                 777 => m::mock(Entity\Surrender::class),
-            ]
+            ],
+            Entity\Permits\IrhpApplication::class => [
+                888 => m::mock(Entity\Permits\IrhpApplication::class),
+            ],
         ];
 
         $this->categoryReferences = [
@@ -201,6 +204,11 @@ class UploadTest extends CommandHandlerTestCase
                 'surrender',
                 777,
                 Entity\Surrender::class
+            ],
+            [
+                'irhpApplication',
+                888,
+                Entity\Permits\IrhpApplication::class,
             ]
         ];
     }

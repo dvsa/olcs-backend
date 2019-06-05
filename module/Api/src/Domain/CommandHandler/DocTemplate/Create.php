@@ -26,7 +26,7 @@ use \Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class Create extends AbstractCommandHandler implements
+class Create extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface,
     NamingServiceAwareInterface,

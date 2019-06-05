@@ -4,14 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Qa;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepository;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationPath as ApplicationPathRepository;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
 
 class ApplicationStepObjectsProvider
 {
-    /** @var FormControlStrategyProvider */
-    private $formControlStrategyProvider;
+    const ERR_ALREADY_SUBMITTED = 'This application has been submitted and cannot be edited';
+    const ERR_NOT_ACCESSIBLE = 'This question isn\'t yet accessible';
 
     /** @var ApplicationStepRepository */
     private $applicationStepRepo;
@@ -25,7 +25,6 @@ class ApplicationStepObjectsProvider
     /**
      * Create service instance
      *
-     * @param FormControlStrategyProvider $formControlStrategyProvider
      * @param ApplicationStepRepository $applicationStepRepo
      * @param ApplicationPathRepository $applicationPathRepo
      * @param IrhpApplicationRepository $irhpApplicationRepo
@@ -33,12 +32,10 @@ class ApplicationStepObjectsProvider
      * @return ApplicationStepObjectsProvider
      */
     public function __construct(
-        FormControlStrategyProvider $formControlStrategyProvider,
         ApplicationStepRepository $applicationStepRepo,
         ApplicationPathRepository $applicationPathRepo,
         IrhpApplicationRepository $irhpApplicationRepo
     ) {
-        $this->formControlStrategyProvider = $formControlStrategyProvider;
         $this->applicationStepRepo = $applicationStepRepo;
         $this->applicationPathRepo = $applicationPathRepo;
         $this->irhpApplicationRepo = $irhpApplicationRepo;
@@ -59,7 +56,7 @@ class ApplicationStepObjectsProvider
     {
         $irhpApplication = $this->irhpApplicationRepo->fetchById($irhpApplicationId);
         if (!$irhpApplication->isNotYetSubmitted()) {
-            throw new ForbiddenException('This application has been submitted and cannot be edited');
+            throw new ForbiddenException(self::ERR_ALREADY_SUBMITTED);
         }
 
         $applicationPath = $this->applicationPathRepo->fetchByIrhpPermitTypeIdAndDate(
@@ -79,19 +76,12 @@ class ApplicationStepObjectsProvider
         }
 
         if (is_object($previousApplicationStep) && is_null($irhpApplication->getAnswer($previousApplicationStep))) {
-            throw new ForbiddenException('This question isn\'t yet accessible');
+            throw new ForbiddenException(self::ERR_NOT_ACCESSIBLE);
         }
 
-        $question = $applicationStep->getQuestion();
-        $formControlStrategy = $this->formControlStrategyProvider->get(
-            $question->getFormControlType()->getId()
-        );
-
         return [
-            'irhpApplication' => $irhpApplication,
             'applicationStep' => $applicationStep,
-            'question' => $question,
-            'formControlStrategy' => $formControlStrategy,
+            'irhpApplication' => $irhpApplication,
         ];
     }
 }
