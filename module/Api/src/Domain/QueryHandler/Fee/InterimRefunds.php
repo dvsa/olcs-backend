@@ -28,7 +28,7 @@ class InterimRefunds extends AbstractQueryHandler
 
         return [
             'count' => count($refunds),
-            'result' => $this->resultList($refunds, [
+            'results' => $this->resultList($refunds, [
                 'licence' =>
                     [
                         'status',
