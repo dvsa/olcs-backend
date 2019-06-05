@@ -2,9 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\AnswerSaver;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\CheckboxAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Checkbox\CheckboxAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -24,6 +26,8 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
 
     private $genericAnswerWriter;
 
+    private $genericAnswerFetcher;
+
     private $checkboxAnswerSaver;
 
     public function setUp()
@@ -38,7 +42,9 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
 
         $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
 
-        $this->checkboxAnswerSaver = new CheckboxAnswerSaver($this->genericAnswerWriter);
+        $this->genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
+
+        $this->checkboxAnswerSaver = new CheckboxAnswerSaver($this->genericAnswerWriter, $this->genericAnswerFetcher);
     }
 
     public function testSaveChecked()
@@ -52,6 +58,10 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
         $this->genericAnswerWriter->shouldReceive('write')
             ->with($this->applicationStep, $this->irhpApplication, true);
 
+        $this->genericAnswerFetcher->shouldReceive('fetch')
+            ->with($this->applicationStep, $postData)
+            ->andReturn('4');
+
         $this->checkboxAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
     }
 
@@ -64,6 +74,10 @@ class CheckboxAnswerSaverTest extends MockeryTestCase
 
         $this->genericAnswerWriter->shouldReceive('write')
             ->with($this->applicationStep, $this->irhpApplication, false);
+
+        $this->genericAnswerFetcher->shouldReceive('fetch')
+            ->with($this->applicationStep, $postData)
+            ->andThrow(new NotFoundException());
 
         $this->checkboxAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
     }
