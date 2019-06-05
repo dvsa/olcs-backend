@@ -310,7 +310,6 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('with')->with('caseType', 'ct')->times(2)->andReturnSelf();
 
 
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
@@ -335,7 +334,6 @@ class CasesTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
-            ->shouldReceive('with')->with('licence', 'l')->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
 
 
@@ -346,10 +344,8 @@ class CasesTest extends RepositoryTestCase
                 ->getMock()
         );
         $result = $this->sut->fetchOpenCasesForApplication(1);
-        $expectedQuery = 'BLAH AND a.id = [[1]]';
+        $expectedQuery = 'BLAH AND a.id = [[1]] AND m.closedDate IS NULL';
         $this->assertEquals($expectedQuery, $this->query);
-
-
         $this->assertEquals('RESULTS', $result);
     }
 
@@ -361,7 +357,6 @@ class CasesTest extends RepositoryTestCase
 
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
-            ->shouldReceive('with')->with('licence', 'l')->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
 
 
@@ -373,10 +368,5 @@ class CasesTest extends RepositoryTestCase
         );
         $this->expectException(NotFoundException::class);
         $this->sut->fetchOpenCasesForApplication(1);
-    }
-
-    public function testFetchOpenCasesReturnsNoneIfClosed()
-    {
-        $this->assertEquals(true, false);
     }
 }
