@@ -16,10 +16,11 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class ApplicationStep extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'Answer';
-
     /** @var ApplicationStepObjectsProvider */
     private $applicationStepObjectsProvider;
+
+    /** @var SelfservePageGenerator */
+    private $selfservePageGenerator;
 
     /**
      * Create service
@@ -33,6 +34,7 @@ class ApplicationStep extends AbstractQueryHandler
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
         $this->applicationStepObjectsProvider = $mainServiceLocator->get('QaApplicationStepObjectsProvider');
+        $this->selfservePageGenerator = $mainServiceLocator->get('QaSelfservePageGenerator');
 
         return parent::createService($serviceLocator);
     }
@@ -51,38 +53,11 @@ class ApplicationStep extends AbstractQueryHandler
             $query->getSlug()
         );
 
-        extract($objects);
-
-        try {
-            $answer = $this->getRepo('Answer')->fetchByQuestionIdAndIrhpApplicationId(
-                $question->getId(),
-                $irhpApplication->getId()
-            );
-        } catch (NotFoundException $e) {
-            $answer = null;
-        }
-
-        $templateVars = array_merge(
-            $question->getActiveQuestionText()->getTemplateVars(),
-            [
-                'application' => [
-                    'applicationRef' => $irhpApplication->getApplicationRef()
-                ]
-            ]
+        $selfservePage = $this->selfservePageGenerator->generate(
+            $objects['applicationStep'],
+            $objects['irhpApplication']
         );
 
-        return [
-            'form' => $formControlStrategy->getFormRepresentation(
-                $applicationStep,
-                $irhpApplication,
-                $answer
-            ),
-            'templateVars' => $formControlStrategy->processTemplateVars(
-                $applicationStep,
-                $irhpApplication,
-                $templateVars
-            ),
-            'nextStepSlug' => $applicationStep->getNextStepSlug()
-        ];
+        return $selfservePage->getRepresentation();
     }
 }

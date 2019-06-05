@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use RuntimeException;
 
 /**
@@ -41,7 +42,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     OrganisationProviderInterface,
     LicenceProviderInterface,
     SectionableInterface,
-    CancelableInterface
+    CancelableInterface,
+    ContextProviderInterface
 {
     use SectionTrait;
 
@@ -1171,5 +1173,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         // get application path active at the time when the application path was locked
         return $this->getIrhpPermitType()->getActiveApplicationPath($this->getApplicationPathLockedOn());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContextValue()
+    {
+        return $this->id;
     }
 }
