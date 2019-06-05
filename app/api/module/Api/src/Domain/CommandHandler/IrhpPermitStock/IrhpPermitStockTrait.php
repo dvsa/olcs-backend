@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 
 trait IrhpPermitStockTrait
@@ -62,5 +63,33 @@ trait IrhpPermitStockTrait
                 throw new ValidationException(['Validity Period End date should be today or in the future']);
             }
         }
+    }
+
+    /**
+     * Common ref-data and other reference resolution used in Create/Update handlers
+     *
+     * @param $command
+     * @return array
+     * @throws ValidationException
+     */
+    public function resolveReferences($command)
+    {
+        $references = [];
+        $references['irhpPermitType'] = $this->getRepo('IrhpPermitStock')->getReference(IrhpPermitTypeEntity::class, $command->getIrhpPermitType());
+
+        $references['country'] = null;
+        if ($command->getIrhpPermitType() === IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
+            $references['country'] = $this->getRepo('IrhpPermitStock')->getReference(Country::class, $command->getCountry());
+        }
+
+        $references['emissionsCategory'] = null;
+        if ($command->getIrhpPermitType() === IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
+            if (empty($command->getEmissionsCategory())) {
+                throw new ValidationException(['You must select the Euro Emissions for this permit type']);
+            }
+            $references['emissionsCategory'] = $this->getRepo()->getRefDataReference($command->getEmissionsCategory());
+        }
+
+        return $references;
     }
 }

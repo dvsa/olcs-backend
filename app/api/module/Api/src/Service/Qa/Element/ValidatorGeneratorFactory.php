@@ -1,24 +1,23 @@
 <?php
 
-namespace Dvsa\Olcs\Email\Transport;
+namespace Dvsa\Olcs\Api\Service\Qa\Element;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class S3FileOptionsFactory implements FactoryInterface
+class ValidatorGeneratorFactory implements FactoryInterface
 {
-
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return mixed
+     * @return ValidatorGenerator
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $s3fileOptions = new S3FileOptions($config, $serviceLocator->get('S3Client'));
-        return $s3fileOptions;
+        return new ValidatorGenerator(
+            $serviceLocator->get('QaValidatorFactory')
+        );
     }
 }

@@ -183,7 +183,11 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer", mappedBy="irhpApplication")
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\Answer",
+     *     mappedBy="irhpApplication",
+     *     indexBy="question_text_id"
+     * )
      */
     protected $answers;
 

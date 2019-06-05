@@ -1,7 +1,6 @@
 <?php
 namespace Dvsa\Olcs\Email\Transport;
 
-use Zend\Mail\Transport\Factory;
 use Zend\Stdlib\AbstractOptions;
 
 /**

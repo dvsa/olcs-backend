@@ -38,6 +38,7 @@ class DocumentSearchViewTest extends \PHPUnit\Framework\TestCase
             'tmId' => 7,
             'ciId' => 8,
             'irfoOrganisationId' => 10,
+            'irhpApplicationId' => 11,
             'applicationId' => 'unit_AppId',
             'deletedDate' => 'unit_deleteDate',
             'agreedDate' => 'unit_agreedDate',
