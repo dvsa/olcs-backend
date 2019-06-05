@@ -9,6 +9,6 @@ class EcmtRemovalNoOfPermitsSelfservePagePostProcessor implements SelfservePageP
     public function process(SelfservePage $page)
     {
         $translateableText = $page->getQuestionText()->getGuidance()->getTranslateableText();
-        $translateableText->setParameter(0, '352');
+        //$translateableText->setParameter(0, '352');
     }
 }
