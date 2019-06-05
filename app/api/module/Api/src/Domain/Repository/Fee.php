@@ -65,6 +65,7 @@ class Fee extends AbstractRepository
             ->withRefdata()
             ->with('feeTransactions', 'ftr')
             ->with($this->alias . '.licence', 'l')
+            ->with('l.organisation', 'o')
             ->order('invoicedDate', 'ASC');
 
         $doctrineQb->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
