@@ -77,7 +77,10 @@ class Email implements FactoryInterface
         $transport = Factory::create($config['mail']);
 
         if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
-            $transport->setOptions(new MultiTransportOptions($config['mail']['options']));
+            $multiTransport = new MultiTransportOptions($config['mail']['options']);
+            $multiTransport->sl = $serviceLocator;
+            $transport->setOptions();
+
         }
 
         if ($transport instanceof S3File && isset($config['mail']['options'])) {
