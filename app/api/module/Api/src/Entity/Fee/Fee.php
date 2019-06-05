@@ -215,7 +215,13 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
 
     public function allowEdit()
     {
-        return $this->getFeeStatus()->getId() == static::STATUS_OUTSTANDING;
+        return !in_array(
+            $this->getFeeStatus()->getId(),
+            [
+                self::STATUS_PAID,
+                self::STATUS_CANCELLED,
+            ]
+        );
     }
 
     public function getPaymentMethod()
