@@ -3,8 +3,11 @@
 namespace Dvsa\Olcs\Email\Service;
 
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
-use Dvsa\Olcs\Email\Transport\Factory;
+use Dvsa\Olcs\Email\Transport\MultiTransport;
+use Dvsa\Olcs\Email\Transport\MultiTransportOptions;
+use Dvsa\Olcs\Email\Transport\S3File;
 use Zend\Mail\Header\GenericHeader;
+use Zend\Mail\Transport\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Mail as ZendMail;
@@ -72,6 +75,18 @@ class Email implements FactoryInterface
         }
 
         $transport = Factory::create($config['mail']);
+
+        if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
+            $multiTransport = new MultiTransportOptions($config['mail']['options']);
+            $multiTransport->sl = $serviceLocator;
+            $transport->setOptions();
+
+        }
+
+        if ($transport instanceof S3File && isset($config['mail']['options'])) {
+            $transport->setOptions($serviceLocator->get('S3FileOptions'));
+        }
+
         $this->setMailTransport($transport);
 
         return $this;
