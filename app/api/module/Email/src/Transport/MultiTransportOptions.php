@@ -13,6 +13,10 @@ class MultiTransportOptions extends AbstractOptions
      */
     protected $transport = [];
 
+    protected $mail;
+
+    public $sl;
+
     /**
      * Set the Transports
      *
@@ -24,6 +28,9 @@ class MultiTransportOptions extends AbstractOptions
     {
         foreach ($transports as $transport) {
             $this->transport[] = Factory::create($transport);
+            if ($transport instanceof S3File) {
+                $transport->setOptions($this->sl->get('S3FileOptions'));
+            }
         }
     }
 
