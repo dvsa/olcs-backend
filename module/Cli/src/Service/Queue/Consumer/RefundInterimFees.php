@@ -31,21 +31,21 @@ class RefundInterimFees extends AbstractCommandConsumer
 
         // has already been refunded
         if (!$fee->canRefund()) {
-            $this->updateRefundStatus($item->getId(), FeeEntity::STATUS_REFUND_FAILED);
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);
             return $this->failed($item, "Fee cannot be refunded");
         }
 
         try {
             $result = parent::processMessage($item);
         } catch (\Exception $exception) {
-            $this->updateRefundStatus($item->getId());
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);
             throw $exception;
         }
 
-        if (substr($result, 0, 6) == 'failed') {
-            $this->updateRefundStatus($item->getId(), FeeEntity::STATUS_REFUND_FAILED);
+        if (substr($result, 0, 12) === 'Successfully') {
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUNDED);
         } else {
-            $this->updateRefundStatus($item->getId(), FeeEntity::STATUS_REFUNDED);
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);
         }
 
         return $result;
