@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @package Dvsa\OlcsTest\AwsSdk
  */
-class S3ClientTest extends TestCase
+class S3ClientFactoryTest extends TestCase
 {
     protected $sm;
 
