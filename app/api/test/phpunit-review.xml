@@ -44,6 +44,9 @@
         <testsuite name="GdsVerify">
             <directory>./module/GdsVerify</directory>
         </testsuite>
+        <testsuite name="AwsSDK">
+            <directory>./module/AwsSdk</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
@@ -52,6 +55,7 @@
                 <file>../module/Olcs/Db/Module.php</file>
                 <file>../module/Api/src/Module.php</file>
                 <file>../module/Cli/src/Module.php</file>
+                <file>../module/AwsSdk/src/Module.php</file>
                 <file>../module/DocumentShare/src/Module.php</file>
                 <file>../module/Email/src/Module.php</file>
                 <file>../module/CompaniesHouse/src/Module.php</file>
@@ -62,6 +66,7 @@
                 <directory>../module/GdsVerify/config</directory>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
+                <directory>../module/AwsSdk/config</directory>
                 <directory>../module/DocumentShare/config</directory>
                 <directory>../module/CompaniesHouse/config</directory>
                 <directory>../module/Snapshot/config</directory>
