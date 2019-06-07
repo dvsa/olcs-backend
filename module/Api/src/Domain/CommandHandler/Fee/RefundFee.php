@@ -106,7 +106,7 @@ final class RefundFee extends AbstractCommandHandler implements
             ->addId('transaction', $transaction->getId())
             ->addMessage('Refund transaction created');
 
-        if ($fee->getFeeType()->getFeeType()->getId() != FeeType::FEE_TYPE_GRANTINT) {
+        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT) {
             $this->result->merge(
                 $this->handleSideEffect(CancelFeeCmd::create(['id' => $fee->getId()]))
             );
