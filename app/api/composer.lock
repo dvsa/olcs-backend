@@ -2834,11 +2834,11 @@
         },
         {
             "name": "phpunit/php-timer",
-            "version": "2.1.1",
+            "version": "2.1.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/php-timer/2.1.1/phpunit-php-timer-2.1.1.zip",
-                "reference": "8b389aebe1b8b0578430bda0c7c95a829608e059",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/phpunit/php-timer/2.1.2/phpunit-php-timer-2.1.2.zip",
+                "reference": "1038454804406b0b5f5f520358e78c1c2f71501e",
                 "shasum": ""
             },
             "require": {
@@ -2873,7 +2873,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2019-02-20T10:12:59+00:00"
+            "time": "2019-06-07T04:22:29+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -4258,11 +4258,11 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v4.3.0",
+            "version": "v4.3.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/debug/v4.3.0/symfony-debug-v4.3.0.zip",
-                "reference": "97cde06d798f1326857090bc1b7c8f9d225c3dcb",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/debug/v4.3.1/symfony-debug-v4.3.1.zip",
+                "reference": "4e025104f1f9adb1f7a2d14fb102c9986d6e97c6",
                 "shasum": ""
             },
             "require": {
@@ -4304,7 +4304,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-05-20T16:16:12+00:00"
+            "time": "2019-05-30T16:10:05+00:00"
         },
         {
             "name": "symfony/dependency-injection",
