@@ -1928,12 +1928,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.8",
+            "version": "4.206.9",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.8/olcs-olcs-transfer-4.206.8.zip",
-                "reference": "df25113985c821e21e72897323cbe2567d2ef359",
-                "shasum": "df25113985c821e21e72897323cbe2567d2ef359"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.9/olcs-olcs-transfer-4.206.9.zip",
+                "reference": "e37b69e33153145aad66809f6c1aeef52245ee18",
+                "shasum": "e37b69e33153145aad66809f6c1aeef52245ee18"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -1989,7 +1989,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-05-28T12:40:12+00:00"
+            "time": "2019-06-03T09:38:54+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -4632,11 +4632,11 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.11.0",
+            "version": "v2.11.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/twig/twig/v2.11.0/twig-twig-v2.11.0.zip",
-                "reference": "c344879ae57dc1487b1df3e3d8325936125ba2cc",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/twig/twig/v2.11.2/twig-twig-v2.11.2.zip",
+                "reference": "84a463403da1c81afbcedda8f0e788c78bd25a79",
                 "shasum": ""
             },
             "require": {
@@ -4647,7 +4647,7 @@
             "require-dev": {
                 "psr/container": "^1.0",
                 "symfony/debug": "^2.7",
-                "symfony/phpunit-bridge": "^3.4.19|^4.1.8"
+                "symfony/phpunit-bridge": "^3.4.19|^4.1.8|^5.0"
             },
             "type": "library",
             "extra": {
@@ -4689,7 +4689,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-05-31T06:21:42+00:00"
+            "time": "2019-06-05T11:17:07+00:00"
         },
         {
             "name": "webmozart/assert",
