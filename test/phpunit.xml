@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit bootstrap="test_bootstrap.php" colors="true" stopOnError="false">
+<phpunit bootstrap="test_bootstrap.php" colors="true">
     <testsuites>
         <testsuite name="Address">
             <directory>./module/Address</directory>
@@ -11,7 +11,7 @@
         <testsuite name="DocumentShare">
             <directory>./module/DocumentShare</directory>
         </testsuite>
-        <testsuite name="Companies House">
+        <testsuite name="CompaniesHouse">
             <directory>./module/CompaniesHouse</directory>
         </testsuite>
         <testsuite name="Email">
@@ -20,22 +20,22 @@
         <testsuite name="Snapshot">
             <directory>./module/Snapshot</directory>
         </testsuite>
-        <testsuite name="Api Domain">
+        <testsuite name="ApiDomain">
             <directory>./module/Api/src/Domain</directory>
         </testsuite>
-        <testsuite name="Api Entity">
+        <testsuite name="ApiEntity">
             <directory>./module/Api/src/Entity</directory>
         </testsuite>
-        <testsuite name="Api Service">
+        <testsuite name="ApiService">
             <directory>./module/Api/src/Service</directory>
         </testsuite>
-        <testsuite name="Api Misc">
-            <directory>./module/Api/src</directory>
-        </testsuite>
-        <testsuite name="Api Listener">
+        <testsuite name="ApiListener">
             <directory>./module/Api/src/Listener</directory>
         </testsuite>
-        <testsuite name="OLD Olcs">
+        <testsuite name="ApiMisc">
+            <directory>./module/Api/src</directory>
+        </testsuite>
+        <testsuite name="OLDOlcs">
             <directory>./module/Olcs</directory>
         </testsuite>
         <testsuite name="OLD Scanning">
@@ -53,23 +53,22 @@
             <directory suffix=".php">../module</directory>
             <exclude>
                 <file>../module/Olcs/Db/Module.php</file>
+                <file>../module/Api/src/Module.php</file>
                 <file>../module/Cli/src/Module.php</file>
                 <file>../module/AwsSdk/src/Module.php</file>
                 <file>../module/DocumentShare/src/Module.php</file>
                 <file>../module/Email/src/Module.php</file>
                 <file>../module/CompaniesHouse/src/Module.php</file>
-                <file>../module/Scanning/src/Module.php</file>
                 <file>../module/Snapshot/src/Module.php</file>
                 <file>../module/Address/src/Module.php</file>
+                <file>../module/Scanning/src/Module.php</file>
                 <file>../module/GdsVerify/src/Module.php</file>
                 <directory>../module/GdsVerify/config</directory>
                 <directory>../module/Email/config</directory>
                 <directory>../module/Cli/config</directory>
                 <directory>../module/AwsSdk/config</directory>
-                <directory>../module/Cli/src/Session/NullSaveHandler.php</directory>
                 <directory>../module/DocumentShare/config</directory>
                 <directory>../module/CompaniesHouse/config</directory>
-                <directory>../module/Scanning/config</directory>
                 <directory>../module/Snapshot/config</directory>
                 <directory>../module/Address/config</directory>
                 <directory>../module/Olcs/Db/config</directory>
@@ -79,11 +78,12 @@
         </whitelist>
     </filter>
     <listeners>
+        <listener class="Coverage" file="./Coverage.php" />
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
             <arguments>
                 <array>
                     <element key="slowThreshold">
-                        <integer>250</integer>
+                        <integer>750</integer>
                     </element>
                     <element key="reportLength">
                         <integer>10</integer>
