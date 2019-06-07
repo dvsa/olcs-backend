@@ -33,7 +33,8 @@ class InterimRefunds extends AbstractQueryHandler
                     [
                         'status',
                         'organisation'
-                    ]
+                    ],
+                'feeTransactions'
             ])
         ];
     }
