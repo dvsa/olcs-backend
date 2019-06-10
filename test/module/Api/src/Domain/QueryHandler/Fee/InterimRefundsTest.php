@@ -36,6 +36,8 @@ class InterimRefundsTest extends QueryHandlerTestCase
             'id' => 69,
             'startDate' => '2019-06-01',
             'endDate' => '2019-06-31',
+            'sort' => 'id',
+            'order' => 'DESC',
             'trafficArea' => [
                 'a',
                 'b'

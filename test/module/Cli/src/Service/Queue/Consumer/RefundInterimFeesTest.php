@@ -70,7 +70,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         $this->expectCommand(
             UpdateFeeStatus::class,
             [
-                'id' => $this->item->getId(),
+                'id' => $this->item->getEntityId(),
                 'status' => FeeEntity::STATUS_REFUNDED
             ],
             new Result(),
@@ -110,7 +110,7 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         $this->expectCommand(
             UpdateFeeStatus::class,
             [
-                'id' => $this->item->getId(),
+                'id' => $this->item->getEntityId(),
                 'status' => FeeEntity::STATUS_REFUND_FAILED
             ],
             new Result(),

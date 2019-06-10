@@ -89,6 +89,8 @@ class FeeTest extends RepositoryTestCase
         $startDate = $startDate->sub(new \DateInterval('P' . abs((7 - date("N") - 7)) . 'D'));
         $endDate = new DateTime();
         $trafficAreas = ['B', 'C'];
+        $sort = 'invoicedDate';
+        $order = 'DESC';
 
         $mockRepo = m::mock(Fee::class);
         $mockRepo->shouldAllowMockingProtectedMethods();
@@ -101,7 +103,7 @@ class FeeTest extends RepositoryTestCase
             ->shouldReceive('modifyQuery')->once()->with($mockQb)->andReturnSelf()
             ->shouldReceive('withRefdata')->once()->andReturnSelf()
             ->shouldReceive('with')->zeroOrMoreTimes()->andReturnSelf()
-            ->shouldReceive('order')->with('invoicedDate', 'ASC')->once()->andReturnSelf();
+            ->shouldReceive('order')->with($sort, $order)->once()->andReturnSelf();
 
         $mockQb->shouldReceive('leftJoin')->with($alias . '.application', 'a')->once()->andReturnSelf();
         $mockQb->shouldReceive('join')->with($alias . '.feeType', 'fty')->once()->andReturnSelf();
@@ -110,6 +112,7 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->isNotNull')->with('COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->gte')->with($alias . '.invoicedDate', ':after')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->lte')->with($alias . '.invoicedDate', ':before')->once()->andReturnSelf();
+        $mockQb->shouldReceive('expr->lt')->with('ftr.amount', '0')->andReturnSelf();
         $mockQb->shouldReceive('expr->orX')->once()->andReturn(new Orx());
         $mockQb->shouldReceive('expr->in')->once()->with('f.feeStatus', ':feeStatus')->andReturnSelf();
         $mockQb->shouldReceive('expr')->andReturn(new Expr());
@@ -133,7 +136,7 @@ class FeeTest extends RepositoryTestCase
         $mockRepo->shouldReceive('createQuerybuilder')->andReturn($mockQb);
         $mockRepo->shouldReceive('getQueryBuilder')->andReturn($mockQb);
 
-        $this->assertSame('result', $this->sut->fetchInterimRefunds($startDate, $endDate, $trafficAreas));
+        $this->assertSame('result', $this->sut->fetchInterimRefunds($startDate, $endDate, $sort, $order, $trafficAreas));
     }
 
     public function testFetchInterimFeesByApplicationIdPaid()
