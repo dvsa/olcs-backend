@@ -54,7 +54,7 @@ class Fee extends AbstractRepository
     }
 
 
-    public function fetchInterimRefunds($after, $before, array $trafficArea = null)
+    public function fetchInterimRefunds($after, $before, $sort, $order, array $trafficArea = null)
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -65,7 +65,7 @@ class Fee extends AbstractRepository
             ->with('feeTransactions', 'ftr')
             ->with($this->alias . '.licence', 'l')
             ->with('l.organisation', 'o')
-            ->order('invoicedDate', 'ASC');
+            ->order($sort, $order);
 
         $doctrineQb->andWhere($doctrineQb->expr()->in($this->alias . '.feeStatus', ':feeStatus'))
             ->setParameter(
@@ -83,6 +83,8 @@ class Fee extends AbstractRepository
         $doctrineQb->join($this->alias . '.feeType', 'fty')
             ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':feeType'));
         $doctrineQb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_GRANTINT);
+
+        $doctrineQb->andWhere($doctrineQb->expr()->lt('ftr.amount', 0));
 
         if (!is_null($after) && !is_null($before)) {
             $doctrineQb
