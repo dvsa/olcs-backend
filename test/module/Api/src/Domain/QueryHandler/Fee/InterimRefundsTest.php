@@ -51,7 +51,8 @@ class InterimRefundsTest extends QueryHandlerTestCase
 
         $this->repoMap['Fee']
             ->shouldReceive('fetchInterimRefunds')
-            ->with($query->getStartDate(), $query->getEndDate(), $query->getTrafficArea())
+            ->with($query->getStartDate(), $query->getEndDate(), $query->getSort(), $query->getOrder(),
+                $query->getTrafficArea())
             ->once()
             ->andReturn($expected);
 
