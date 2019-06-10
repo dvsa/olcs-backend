@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\AwsSdk\Factories;
 
-
 use Dvsa\Olcs\AwsSdk\Factories\AwsCredentialsProviderFactory;
 use OlcsTest\Bootstrap;
 use PHPUnit\Framework\TestCase;
