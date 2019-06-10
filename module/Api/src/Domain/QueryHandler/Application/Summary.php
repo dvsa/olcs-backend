@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -25,7 +26,7 @@ class Summary extends AbstractQueryHandler
 
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['Fee'];
+    protected $extraRepos = ['Fee', 'Cases'];
 
     /**
      * Handle query
@@ -80,6 +81,7 @@ class Summary extends AbstractQueryHandler
                 'actions' => $actions,
                 'reference' => $this->getLatestPaymentReference($application->getId()),
                 'outstandingFee' => $application->getLatestOutstandingApplicationFee() !== null,
+                'canWithdraw' => $this->canWithdraw($application)
             ]
         );
     }
@@ -194,7 +196,7 @@ class Summary extends AbstractQueryHandler
 
     /**
      * Return reference number of latest payment
-     * 
+     *
      * @param int $appId Application Id
      *
      * @return null|string
@@ -212,5 +214,24 @@ class Summary extends AbstractQueryHandler
         }
 
         return '';
+    }
+
+    private function canWithdraw(Entity\Application\Application $application)
+    {
+
+        $status = $application->getStatus()->getId();
+        $underConsideration = $this->getRepo()->getRefdataReference($application::APPLICATION_STATUS_UNDER_CONSIDERATION)->getId();
+        $isUnderConsideration = ($status === $underConsideration);
+
+        try {
+            $openCases = $this->getRepo('Cases')->fetchOpenCasesForApplication($application->getId());
+
+            if (count($openCases) > 0) {
+                return false;
+            }
+            return $isUnderConsideration;
+        } catch (\Exception $nfe) {
+            return $isUnderConsideration;
+        }
     }
 }
