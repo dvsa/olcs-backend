@@ -16,5 +16,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class QuestionText extends AbstractQuestionText
 {
-
 }

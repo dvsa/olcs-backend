@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
@@ -242,7 +243,7 @@ class CasesTest extends RepositoryTestCase
 
         $results = null;
 
-        $this->expectException(Exception\NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('getQuery->getResult')->andReturn($results);
@@ -309,7 +310,6 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('with')->with('caseType', 'ct')->times(2)->andReturnSelf();
 
 
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
@@ -324,5 +324,49 @@ class CasesTest extends RepositoryTestCase
         $expectedQuery = 'BLAH SELECT CONCAT(ct.description, m.id) as HIDDEN caseType AND m.licence = [[95]] AND m.closedDate IS NULL';
         $this->assertEquals($expectedQuery, $this->query);
         $this->sut->fetchOpenCasesForSurrender($this->mockQi);
+    }
+
+    public function testFetchOpenCasesForApplication()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
+            ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
+
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $result = $this->sut->fetchOpenCasesForApplication(1);
+        $expectedQuery = 'BLAH AND a.id = [[1]] AND m.closedDate IS NULL';
+        $this->assertEquals($expectedQuery, $this->query);
+        $this->assertEquals('RESULTS', $result);
+    }
+
+    public function testFetchOpenCasesForApplicationThrowsException()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
+            ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
+
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn([])
+                ->getMock()
+        );
+        $this->expectException(NotFoundException::class);
+        $this->sut->fetchOpenCasesForApplication(1);
     }
 }

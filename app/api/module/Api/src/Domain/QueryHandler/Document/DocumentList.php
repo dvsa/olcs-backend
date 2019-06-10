@@ -70,6 +70,7 @@ class DocumentList extends AbstractQueryHandler
             || $query->getCase() !== null
             || $query->getBusReg() !== null
             || $query->getTransportManager() !== null
-            || $query->getIrfoOrganisation() !== null;
+            || $query->getIrfoOrganisation() !== null
+            || $query->getIrhpApplication() !== null;
     }
 }

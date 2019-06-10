@@ -24,6 +24,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_answer_last_modified_by_user_id", columns={"last_modified_by"}),
  *        @ORM\Index(name="fk_answer_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"})
+ *    },
+ *    uniqueConstraints={
+ *        @ORM\UniqueConstraint(name="uk_answer_irhp_application_id_question_text_id",
+     *     columns={"irhp_application_id","question_text_id"})
  *    }
  * )
  */
@@ -79,15 +83,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     protected $ansDecimal;
 
     /**
-     * Ans filename
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="ans_filename", length=255, nullable=true)
-     */
-    protected $ansFilename;
-
-    /**
      * Ans integer
      *
      * @var int
@@ -133,15 +128,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
-
-    /**
-     * Document id
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="document_id", nullable=true)
-     */
-    protected $documentId;
 
     /**
      * Identifier - Id
@@ -341,30 +327,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
     }
 
     /**
-     * Set the ans filename
-     *
-     * @param string $ansFilename new value being set
-     *
-     * @return Answer
-     */
-    public function setAnsFilename($ansFilename)
-    {
-        $this->ansFilename = $ansFilename;
-
-        return $this;
-    }
-
-    /**
-     * Get the ans filename
-     *
-     * @return string
-     */
-    public function getAnsFilename()
-    {
-        return $this->ansFilename;
-    }
-
-    /**
      * Set the ans integer
      *
      * @param int $ansInteger new value being set
@@ -488,30 +450,6 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
         }
 
         return $this->createdOn;
-    }
-
-    /**
-     * Set the document id
-     *
-     * @param int $documentId new value being set
-     *
-     * @return Answer
-     */
-    public function setDocumentId($documentId)
-    {
-        $this->documentId = $documentId;
-
-        return $this;
-    }
-
-    /**
-     * Get the document id
-     *
-     * @return int
-     */
-    public function getDocumentId()
-    {
-        return $this->documentId;
     }
 
     /**
