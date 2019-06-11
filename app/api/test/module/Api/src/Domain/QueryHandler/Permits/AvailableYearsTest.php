@@ -27,7 +27,7 @@ class AvailableYearsTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    public function testHandleQueryEcmtShortTerm()
     {
         $ips1Id = 20;
         $ips2Id = 40;
@@ -92,6 +92,60 @@ class AvailableYearsTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
+                'hasYears' => true,
+                'years' => [3030, 3031],
+            ],
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    public function testHandleQueryEcmtAnnual()
+    {
+        $ips1Id = 20;
+        $ips2Id = 40;
+
+        $ips1 = m::mock(IrhpPermitStock::class);
+        $ips1->shouldReceive('getId')
+            ->andReturn($ips1Id);
+        $ips1->shouldReceive('getValidityYear')
+            ->andReturn(3030);
+
+        $ips2 = m::mock(IrhpPermitStock::class);
+        $ips2->shouldReceive('getId')
+            ->andReturn($ips2Id);
+        $ips2->shouldReceive('getValidityYear')
+            ->andReturn(3031);
+
+        $ipw1 = m::mock(IrhpPermitWindow::class);
+        $ipw1->shouldReceive('getIrhpPermitStock')
+            ->andReturn($ips1);
+
+        $ipw2 = m::mock(IrhpPermitWindow::class);
+        $ipw2->shouldReceive('getIrhpPermitStock')
+            ->andReturn($ips2);
+
+        $irhpPermitWindows =
+            [
+                $ipw1,
+                $ipw2
+            ];
+
+        $query = AvailableYearsQuery::create(
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+            ]
+        );
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByType')
+            ->with(
+                $query->getType(),
+                m::type(DateTime::class)
+            )
+            ->andReturn($irhpPermitWindows);
+
+        $this->assertEquals(
+            [
+                'hasYears' => true,
                 'years' => [3030, 3031]
             ],
             $this->sut->handleQuery($query)
@@ -111,6 +165,7 @@ class AvailableYearsTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
+                'hasYears' => false,
                 'years' => []
             ],
             $this->sut->handleQuery($query)
@@ -120,18 +175,20 @@ class AvailableYearsTest extends QueryHandlerTestCase
     public function dpTestHandleQueryUnsupportedType()
     {
         return [
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
         ];
     }
 
-    public function testHandleQueryNoYears()
+    /**
+     * @dataProvider dpTestHandleQueryNoYears
+     */
+    public function testHandleQueryNoYears($irhpPermitTypeId)
     {
         $query = AvailableYearsQuery::create(
             [
-                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'type' => $irhpPermitTypeId,
             ]
         );
 
@@ -144,9 +201,18 @@ class AvailableYearsTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
+                'hasYears' => false,
                 'years' => []
             ],
             $this->sut->handleQuery($query)
         );
+    }
+
+    public function dpTestHandleQueryNoYears()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+        ];
     }
 }

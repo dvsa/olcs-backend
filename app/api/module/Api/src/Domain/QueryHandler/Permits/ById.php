@@ -21,7 +21,7 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
     protected $bundle = ['licence'=>['trafficArea', 'licenceType', 'organisation'],
                          'sectors' => ['sectors'],
                          'countrys' => ['country'],
-                         'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock', 'emissionsCategory']],
+                         'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock']],
                          'fees' => ['feeStatus', 'feeType' => ['feeType']]
                         ];
 }

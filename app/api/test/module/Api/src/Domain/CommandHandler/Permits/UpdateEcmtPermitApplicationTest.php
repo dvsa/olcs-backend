@@ -1,11 +1,5 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
- * Date: 26/07/2018
- * Time: 12:02
- */
-
-/**
  * Update ECMT
  *
  * @author Andy Newton <andy@vitri.ltd>
@@ -13,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use DoctrineORMModuleTest\Assets\Entity\Country;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtEmissions;
+
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -60,7 +54,8 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
             'licence' => 7,
             'id' => 4,
             'emissions' => 1,
-            'permitsRequired' => 5,
+            'requiredEuro5' => 2,
+            'requiredEuro6' => 3,
             'cabotage' => 1,
             'sectors' => 7,
             'countryIds' => ['AT', 'GR']
@@ -77,9 +72,7 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $application->shouldReceive('getLicence')->with();
         $application->shouldReceive('getDateReceived')->with();
         $application->shouldReceive('getLicence->getId')->with();
-
-        $application->shouldReceive('getPermitsRequired')->withNoArgs()->once()->andReturn(5);
-
+        $application->shouldReceive('calculateTotalPermitsRequired')->withNoArgs()->once()->andReturn(5);
         $application->shouldReceive('update')
             ->andReturn($application);
 

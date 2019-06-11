@@ -55,6 +55,18 @@ return [
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsLogger' =>
+                ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
+            'PermitsApplyRangesEntityIdsExtractor' =>
+                ApiSrv\Permits\ApplyRanges\EntityIdsExtractor::class,
+            'PermitsApplyRangesRangeSubsetGenerator' =>
+                ApiSrv\Permits\ApplyRanges\RangeSubsetGenerator::class,
+            'PermitsApplyRangesRestrictedCountryIdsProvider' =>
+                ApiSrv\Permits\ApplyRanges\RestrictedCountryIdsProvider::class,
+            'PermitsApplyRangesRestrictedRangesProvider' =>
+                ApiSrv\Permits\ApplyRanges\RestrictedRangesProvider::class,
+            'PermitsApplyRangesUnrestrictedWithLowestStartNumberProvider' =>
+                ApiSrv\Permits\ApplyRanges\UnrestrictedWithLowestStartNumberProvider::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -202,7 +214,6 @@ return [
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtRemovalNoOfPermitsFeeCreator' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
-
             'QaEcmtShortTermNoOfPermitsFormControlStrategy' => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
             'QaEcmtShortTermNoOfPermitsAnswerFetcher' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
@@ -231,6 +242,30 @@ return [
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsGenerator'
+                => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsGeneratorFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsWriter'
+                => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsWriterFactory::class,
+            'PermitsScoringEmissionsCategoryAvailabilityCounter'
+                => ApiSrv\Permits\Scoring\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsScoringSuccessfulCandidatePermitsFacade'
+                => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsFacadeFactory::class,
+            'PermitsApplyRangesForCpProvider'
+                => ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
+            'PermitsApplyRangesForCpWithCountriesAndMultipleMatchingRangesProvider'
+                => ApiSrv\Permits\ApplyRanges\ForCpWithCountriesAndMultipleMatchingRangesProviderFactory::class,
+            'PermitsApplyRangesForCpWithCountriesAndNoMatchingRangesProvider'
+                => ApiSrv\Permits\ApplyRanges\ForCpWithCountriesAndNoMatchingRangesProviderFactory::class,
+            'PermitsApplyRangesForCpWithCountriesProvider'
+                => ApiSrv\Permits\ApplyRanges\ForCpWithCountriesProviderFactory::class,
+            'PermitsApplyRangesForCpWithNoCountriesProvider'
+                => ApiSrv\Permits\ApplyRanges\ForCpWithNoCountriesProviderFactory::class,
+            'PermitsApplyRangesRestrictedWithFewestCountriesProvider'
+                => ApiSrv\Permits\ApplyRanges\RestrictedWithFewestCountriesProviderFactory::class,
+            'PermitsApplyRangesRestrictedWithMostMatchingCountriesProvider'
+                => ApiSrv\Permits\ApplyRanges\RestrictedWithMostMatchingCountriesProviderFactory::class,
+            'PermitsApplyRangesWithFewestNonRequestedCountriesProvider'
+                => ApiSrv\Permits\ApplyRanges\WithFewestNonRequestedCountriesProviderFactory::class,
         ],
     ],
     'view_manager' => [

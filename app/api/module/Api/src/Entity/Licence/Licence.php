@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
@@ -133,35 +134,36 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      *
      * @return bool
      */
-    public function canMakeEcmtApplication(?EcmtPermitApplication $exclude = null)
+    public function canMakeEcmtApplication(?EcmtPermitApplication $exclude = null, ?IrhpPermitStock $stock = null)
     {
-        return !$this->hasActiveEcmtApplication($exclude) && $this->isEligibleForPermits();
+        return !$this->hasActiveEcmtApplicationForStock($exclude, $stock) && $this->isEligibleForPermits();
     }
 
     /**
-     * Check whether the licence has active ECMT applications (in some cases excluding checks on the current app)
-     *
-     * @param EcmtPermitApplication|null $exclude application to exclude
-     *
+     * @param EcmtPermitApplication|null $exclude
+     * @param IrhpPermitStock|null $stock
      * @return bool
      */
-    public function hasActiveEcmtApplication(?EcmtPermitApplication $exclude = null)
+    public function hasActiveEcmtApplicationForStock(?EcmtPermitApplication $exclude = null, ?IrhpPermitStock $stock = null)
     {
-        if ($this->ecmtApplications === null) {
+        $emctApplications = $this->getEcmtApplications();
+        if ($emctApplications === null) {
             return false;
         }
 
         /** @var EcmtPermitApplication $application */
-        foreach ($this->ecmtApplications as $application) {
+        foreach ($emctApplications as $application) {
             if ($exclude instanceof EcmtPermitApplication && $application->getId() === $exclude->getId()) {
-                continue;
+                return false;
             }
 
-            if ($application->isActive()) {
+            if ($stock instanceof IrhpPermitStock
+                && $application->getFirstIrhpPermitApplication()->getIrhpPermitWindow()->getIrhpPermitStock()->getId() === $stock->getId()
+                && $application->getStatus() == EcmtPermitApplication::STATUS_UNDER_CONSIDERATION
+            ) {
                 return true;
             }
         }
-
         return false;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationHandler;
@@ -52,6 +53,7 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
 
         $cmdData = [
             'licence' => $licenceId,
+            'year' => 3030
         ];
 
         $command = CreateEcmtPermitApplicationCmd::create($cmdData);
@@ -83,7 +85,12 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
-            ->with(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, m::type(DateTime::class))
+            ->with(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                m::type(DateTime::class),
+                Query::HYDRATE_OBJECT,
+                $command->getYear()
+            )
             ->once()
             ->andReturn($window);
 

@@ -35,19 +35,20 @@ class UpdateEcmtPermitsRequiredTest extends CommandHandlerTestCase
     {
         $data = [
             'id' => 4,
-            'permitsRequired' => 3
+            'requiredEuro5' => 2,
+            'requiredEuro6' => 1
         ];
 
         $command = Cmd::create($data);
 
         $application = m::mock(EcmtPermitApplication::class);
         $licence = m::mock(Licence::class);
-        $application->shouldReceive('getPermitsRequired')->withNoArgs()->once()->andReturn(3);
+        $application->shouldReceive('calculateTotalPermitsRequired')->withNoArgs()->once()->andReturn(3);
         $application->shouldReceive('getLicence')->withNoArgs()->once()->andReturn($licence);
         $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(4);
         $application->shouldReceive('updatePermitsRequired')
             ->once()
-            ->with(3)
+            ->with(2, 1)
             ->ordered()
             ->globally();
 

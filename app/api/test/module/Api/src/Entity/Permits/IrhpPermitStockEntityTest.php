@@ -119,6 +119,88 @@ class IrhpPermitStockEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider emissionsRangeProvider
+     */
+    public function testHasEuro5Range($data, $expected)
+    {
+        $status = m::mock(RefData::class);
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+
+        $stock = Entity::create(
+            $irhpPermitType,
+            null,
+            1400,
+            $status,
+            null,
+            '2019-01-01',
+            '2019-02-01'
+        );
+
+        $stock->setIrhpPermitRanges($data);
+
+        $this->assertEquals($expected['euro5'], $stock->hasEuro5Range());
+    }
+
+    /**
+     * @dataProvider emissionsRangeProvider
+     */
+    public function testHasEuro6Range($data, $expected)
+    {
+        $status = m::mock(RefData::class);
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+
+        $stock = Entity::create(
+            $irhpPermitType,
+            null,
+            1400,
+            $status,
+            null,
+            '2019-01-01',
+            '2019-02-01'
+        );
+
+        $stock->setIrhpPermitRanges($data);
+
+        $this->assertEquals($expected['euro6'], $stock->hasEuro6Range());
+    }
+
+    /**
+     * Data provider
+     *
+     * @return array
+     */
+    public function emissionsRangeProvider()
+    {
+        $euro5Range = m::mock(IrhpPermitRange::class)->makePartial();
+        $euro5Range->setEmissionsCategory(new RefData(RefData::EMISSIONS_CATEGORY_EURO5_REF));
+
+        $euro6Range = m::mock(IrhpPermitRange::class)->makePartial();
+        $euro6Range->setEmissionsCategory(new RefData(RefData::EMISSIONS_CATEGORY_EURO6_REF));
+
+        $naRange = m::mock(IrhpPermitRange::class)->makePartial();
+        $naRange->setEmissionsCategory(new RefData(RefData::EMISSIONS_CATEGORY_NA_REF));
+
+        return [
+            'both' => [
+                [$euro5Range, $euro6Range],
+                ['euro5' => true, 'euro6' => true],
+            ],
+            'euro5' => [
+                [$euro5Range],
+                ['euro5' => true, 'euro6' => false],
+            ],
+            'euro6' => [
+                [$euro6Range],
+                ['euro5' => false, 'euro6' => true],
+            ],
+            'na' => [
+                [$naRange],
+                ['euro5' => false, 'euro6' => false],
+            ],
+        ];
+    }
+
+    /**
      * Data provider
      *
      * @return array

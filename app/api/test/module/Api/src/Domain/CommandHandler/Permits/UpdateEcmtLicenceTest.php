@@ -13,7 +13,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
-
 use Common\Rbac\User;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\UpdateEcmtLicence;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -22,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtLicence as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use ZfcRbac\Identity\IdentityInterface;
@@ -34,6 +34,7 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
     {
         $this->sut = new UpdateEcmtLicence();
         $this->mockRepo('EcmtPermitApplication', Repository\EcmtPermitApplication::class);
+        $this->mockRepo('IrhpPermitApplication', Repository\IrhpPermitApplication::class);
         $this->mockRepo('Licence', Repository\Licence::class);
 
         $this->mockedSmServices = [
@@ -81,7 +82,17 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
 
         $application->shouldReceive('updateLicence')->with($licence)->once();
         $application->shouldReceive('getFees')->once()->andReturn([]);
-        $application->shouldreceive('getId')->withNoArgs()->once()->andReturn(5);
+        $application->shouldReceive('getId')->withNoArgs()->once()->andReturn(5);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $application->shouldReceive('getFirstIrhpPermitApplication')->withNoArgs()->once()->andReturn($irhpPermitApplication);
+
+        $irhpPermitApplication->shouldReceive('updateLicence')
+            ->once()
+            ->globally()
+            ->ordered()
+            ->with($licence);
 
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->with(5)
@@ -94,6 +105,12 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
         $this->repoMap['EcmtPermitApplication']->shouldReceive('save')
             ->once()
             ->with($application);
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('save')
+            ->globally()
+            ->ordered()
+            ->once()
+            ->with($irhpPermitApplication);
 
         $result = $this->sut->handleCommand($command);
 
@@ -137,7 +154,6 @@ class UpdateEcmtLicenceTest extends CommandHandlerTestCase
             ->with(7)
             ->andReturn($licence);
             $this->sut->handleCommand($command);
-
     }
 
     public function testExpectedExceptionWhenCanMakeEcmtApplicationFalse()

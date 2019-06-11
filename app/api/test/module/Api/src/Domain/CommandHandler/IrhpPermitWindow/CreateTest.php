@@ -2,8 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitWindow;
 
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
@@ -34,17 +32,6 @@ class CreateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-            PermitWindowEntity::EMISSIONS_CATEGORY_EURO5_REF,
-            PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF,
-            PermitWindowEntity::EMISSIONS_CATEGORY_NA_REF
-        ];
-
-        parent::initReferences();
-    }
-
     public function testHandleCommand()
     {
         $cmdData = [
@@ -52,7 +39,6 @@ class CreateTest extends CommandHandlerTestCase
             'startDate' => $this->today,
             'endDate' => $this->tomorrow,
             'daysForPayment' => '14',
-            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $this->repoMap['IrhpPermitWindow']
@@ -68,8 +54,6 @@ class CreateTest extends CommandHandlerTestCase
             ->shouldReceive('fetchById')
             ->with($command->getIrhpPermitStock())
             ->andReturn($irhpPermitStock);
-
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')->once()->andReturn(true);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('save')
@@ -89,38 +73,6 @@ class CreateTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-    }
-
-    public function testHandleCommandBadEcmtEmissionsCategory()
-    {
-        $cmdData = [
-            'irhpPermitStock' => '1',
-            'startDate' => $this->today,
-            'endDate' => $this->tomorrow,
-            'daysForPayment' => '14',
-            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_NA_REF
-        ];
-
-        $this->repoMap['IrhpPermitWindow']
-            ->shouldReceive('findOverlappingWindowsByType')
-            ->once()
-            ->andReturn([]);
-
-        $command = CreateCmd::create($cmdData);
-
-        $irhpPermitStock = m::mock(IrhpPermitStock::class);
-
-        $this->repoMap['IrhpPermitStock']
-            ->shouldReceive('fetchById')
-            ->with($command->getIrhpPermitStock())
-            ->andReturn($irhpPermitStock);
-
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')->once()->andReturn(true);
-
-        $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Emissions Category: N/A not valid for Annual ECMT Stock');
-
-        $this->sut->handleCommand($command);
     }
 
     /**
