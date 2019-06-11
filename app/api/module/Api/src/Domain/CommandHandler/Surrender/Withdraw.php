@@ -2,11 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearSurrender;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateSurrender;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
@@ -14,7 +16,9 @@ use Dvsa\Olcs\Transfer\Query\Surrender\PreviousLicenceStatus;
 
 class Withdraw extends AbstractSurrenderCommandHandler
 {
-    protected $extraRepos = ['Licence', 'Task'];
+    use AuthAwareTrait;
+
+    protected $extraRepos = ['Licence', 'Task', 'EventHistory', 'EventHistoryType'];
 
     protected $licenceId;
 
@@ -30,6 +34,7 @@ class Withdraw extends AbstractSurrenderCommandHandler
         $this->handleSurrender();
         $this->handleTasks();
         $this->handleLicence();
+        $this->handleEventHistory();
 
         $this->result->addMessage('Withdrawn surrender for licence ' . $this->licenceId);
 
@@ -75,5 +80,21 @@ class Withdraw extends AbstractSurrenderCommandHandler
 
         $this->getRepo('Licence')->save($licence);
         $this->result->addMessage('Reset status for licence ' . $this->licenceId);
+    }
+
+    protected function handleEventHistory()
+    {
+        $eventType = $this->getRepo('EventHistoryType')
+            ->fetchOneByEventCode(EventHistoryType::EVENT_CODE_SURRENDER_APPLICATION_WITHDRAWN);
+
+        // create event history record
+        $eventHistory = new EventHistory(
+            $this->getUser(),
+            $eventType
+        );
+        $eventHistory->setLicence($this->licenceId);
+
+        $this->getRepo('EventHistory')->save($eventHistory);
+        $this->result->addMessage('Event history added for licence ' . $this->licenceId);
     }
 }
