@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\TransportManagerSnapshot;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
@@ -59,7 +60,7 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             $this->updateTmType($tma->getTransportManager(), $tma->getTmType());
         }
 
-        $taskResult = $this->createTask($tma->getId());
+        $taskResult = $this->createTask($tma->getApplication());
 
         $this->result->addMessage($taskResult->getMessages()[0]);
 
@@ -158,11 +159,13 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * @param $tmaId
+     *
+     *
+     * @param Application $application
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
-    private function createTask($tmaId)
+    private function createTask(Application $application)
     {
         $taskData = [
             'category' => Category::CATEGORY_APPLICATION,
@@ -170,7 +173,8 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             'description' => 'Transport Manager form submitted',
             'isClosed' => 'N',
             'urgent' => 'N',
-            'Application Id' => $tmaId,
+            'application' => $application->getId(),
+            'licence' => $application->getLicence()->getId()
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));
