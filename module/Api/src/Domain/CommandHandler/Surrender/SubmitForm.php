@@ -3,19 +3,25 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
-use Doctrine\ORM\Query;
 
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
 
-    protected $extraRepos = ['Licence'];
+    use AuthAwareTrait;
+
+    protected $extraRepos = ['Licence', 'EventHistory', 'EventHistoryType'];
+
     /**
      * @param CommandInterface $command
      *
@@ -32,10 +38,8 @@ class SubmitForm extends AbstractSurrenderCommandHandler
             ]
         ));
 
-        /**
-         * @var Entity\Licence\Licence $licence
-         */
         $licenceRepo = $this->getRepo('Licence');
+        /** @var Licence $licence */
         $licence = $licenceRepo->fetchById($command->getId());
         $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
@@ -49,6 +53,7 @@ class SubmitForm extends AbstractSurrenderCommandHandler
         $surrenderId = $surrender->getId();
 
         $this->result->merge($this->createSurrenderTask($command->getId(), $surrenderId));
+        $this->handleEventHistory($licence);
 
         return $this->result;
     }
@@ -66,5 +71,21 @@ class SubmitForm extends AbstractSurrenderCommandHandler
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));
+    }
+
+    protected function handleEventHistory(Licence $licence)
+    {
+        $eventType = $this->getRepo('EventHistoryType')
+            ->fetchOneByEventCode(EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION);
+
+        // create event history record
+        $eventHistory = new EventHistory(
+            $this->getUser(),
+            $eventType
+        );
+        $eventHistory->setLicence($licence);
+
+        $this->getRepo('EventHistory')->save($eventHistory);
+        $this->result->addMessage('Event history added for licence ' . $licence->getId());
     }
 }
