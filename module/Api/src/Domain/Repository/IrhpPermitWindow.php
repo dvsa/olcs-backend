@@ -124,17 +124,18 @@ class IrhpPermitWindow extends AbstractRepository
     /**
      * Returns the latest open IrhpPermitWindow for a given IrhpPermitType
      *
-     * @param int      $irhpPermitTypeId Irhp Permit Type Id
-     * @param DateTime $now              Current datetime
-     * @param int      $hydrationMode    Hydration mode
-     *
+     * @param int $irhpPermitTypeId Irhp Permit Type Id
+     * @param DateTime $now Current datetime
+     * @param int $hydrationMode Hydration mode
+     * @param int|null $year
      * @return array
      * @throws NotFoundException
      */
     public function fetchLastOpenWindowByIrhpPermitType(
         int $irhpPermitTypeId,
         DateTime $now,
-        $hydrationMode = Query::HYDRATE_OBJECT
+        $hydrationMode = Query::HYDRATE_OBJECT,
+        ?int $year = null
     ) {
         $qb = $this->createQueryBuilder();
 
@@ -149,6 +150,15 @@ class IrhpPermitWindow extends AbstractRepository
             ->setParameter('now', $now->format(DateTime::ISO8601))
             ->orderBy($this->alias.'.endDate', 'DESC')
             ->setMaxResults(1);
+
+        if ($year) {
+            $fromDate = new DateTime($year.'-01-01 00:00:00');
+            $toDate = new DateTime($year.'-12-31 23:59:59');
+
+            $qb->andWhere('ips.validTo BETWEEN :fromDate AND :toDate')
+                ->setParameter('fromDate', $fromDate)
+                ->setParameter('toDate', $toDate);
+        }
 
         $results = $qb->getQuery()->getResult($hydrationMode);
 
@@ -241,6 +251,7 @@ class IrhpPermitWindow extends AbstractRepository
      *
      * @param int $type Type
      * @param DateTime $now Now
+     *
      * @param int $year
      *
      * @return array

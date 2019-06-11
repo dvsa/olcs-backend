@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -66,7 +67,9 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
 
         $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByIrhpPermitType(
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
-            new DateTime()
+            new DateTime(),
+            Query::HYDRATE_OBJECT,
+            $command->getYear()
         );
 
         $this->result->merge(

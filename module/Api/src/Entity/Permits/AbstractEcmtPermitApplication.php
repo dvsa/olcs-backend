@@ -213,15 +213,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $licence;
 
     /**
-     * No of permits
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="no_of_permits", nullable=true)
-     */
-    protected $noOfPermits;
-
-    /**
      * Permit type
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -239,6 +230,33 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\Column(type="integer", name="permits_required", nullable=true)
      */
     protected $permitsRequired;
+
+    /**
+     * Required euro5
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro5", nullable=true)
+     */
+    protected $requiredEuro5;
+
+    /**
+     * Required euro6
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro6", nullable=true)
+     */
+    protected $requiredEuro6;
+
+    /**
+     * Roadworthiness
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="roadworthiness", nullable=true)
+     */
+    protected $roadworthiness;
 
     /**
      * Sectors
@@ -799,30 +817,6 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     }
 
     /**
-     * Set the no of permits
-     *
-     * @param int $noOfPermits new value being set
-     *
-     * @return EcmtPermitApplication
-     */
-    public function setNoOfPermits($noOfPermits)
-    {
-        $this->noOfPermits = $noOfPermits;
-
-        return $this;
-    }
-
-    /**
-     * Get the no of permits
-     *
-     * @return int
-     */
-    public function getNoOfPermits()
-    {
-        return $this->noOfPermits;
-    }
-
-    /**
      * Set the permit type
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $permitType entity being set as the value
@@ -868,6 +862,78 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getPermitsRequired()
     {
         return $this->permitsRequired;
+    }
+
+    /**
+     * Set the required euro5
+     *
+     * @param int $requiredEuro5 new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setRequiredEuro5($requiredEuro5)
+    {
+        $this->requiredEuro5 = $requiredEuro5;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro5
+     *
+     * @return int
+     */
+    public function getRequiredEuro5()
+    {
+        return $this->requiredEuro5;
+    }
+
+    /**
+     * Set the required euro6
+     *
+     * @param int $requiredEuro6 new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setRequiredEuro6($requiredEuro6)
+    {
+        $this->requiredEuro6 = $requiredEuro6;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro6
+     *
+     * @return int
+     */
+    public function getRequiredEuro6()
+    {
+        return $this->requiredEuro6;
+    }
+
+    /**
+     * Set the roadworthiness
+     *
+     * @param int $roadworthiness new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setRoadworthiness($roadworthiness)
+    {
+        $this->roadworthiness = $roadworthiness;
+
+        return $this;
+    }
+
+    /**
+     * Get the roadworthiness
+     *
+     * @return int
+     */
+    public function getRoadworthiness()
+    {
+        return $this->roadworthiness;
     }
 
     /**

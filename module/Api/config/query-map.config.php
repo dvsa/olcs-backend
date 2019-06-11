@@ -137,6 +137,7 @@ return [
     // Organisation
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
+    TransferQuery\Organisation\OrganisationPermits::class => QueryHandler\Organisation\OrganisationPermits::class,
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
@@ -651,8 +652,10 @@ return [
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\AvailableYears::class => QueryHandler\Permits\AvailableYears::class,
+    TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
+    TransferQuery\Permits\ActiveEcmtApplication::class => QueryHandler\Permits\ActiveEcmtApplication::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,

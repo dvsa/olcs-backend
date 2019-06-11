@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
@@ -87,9 +88,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         'licence' => 'fieldIsNotNull',
         'emissions' => 'fieldIsAgreed',
         'cabotage' => 'fieldIsAgreed',
+        'roadworthiness' => 'fieldIsAgreed',
         'internationalJourneys' => 'fieldIsNotNull',
         'trips' => 'fieldIsInt',
-        'permitsRequired' => 'fieldIsInt',
+        'permitsRequired' => 'oneEmissionCatRequested',
         'sectors' => 'fieldIsNotNull',
         'countrys' => 'countrysPopulated',
     ];
@@ -153,9 +155,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      * @param Sectors|null $sectors
      * @param ArrayCollection $countrys
      * @param int|null $cabotage
+     * @param int|null $roadworthiness
      * @param int|null $declaration
      * @param int|null $emissions
-     * @param int|null $permitsRequired
+     * @param int|null $requiredEuro5
+     * @param int|null $requiredEuro6
      * @param int|null $trips
      * @param RefData $internationalJourneys
      *
@@ -170,9 +174,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         Sectors $sectors = null,
         ArrayCollection $countrys,
         int $cabotage = null,
+        int $roadworthiness = null,
         int $declaration = null,
         int $emissions = null,
-        int $permitsRequired = null,
+        int $requiredEuro5 = null,
+        int $requiredEuro6 = null,
         int $trips = null,
         RefData $internationalJourneys = null
     ) {
@@ -184,9 +190,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         $ecmtPermitApplication->sectors = $sectors;
         $ecmtPermitApplication->updateCountrys($countrys);
         $ecmtPermitApplication->cabotage = $cabotage;
+        $ecmtPermitApplication->roadworthiness = $roadworthiness;
         $ecmtPermitApplication->declaration = $declaration;
         $ecmtPermitApplication->emissions = $emissions;
-        $ecmtPermitApplication->permitsRequired = $permitsRequired;
+        $ecmtPermitApplication->requiredEuro5 = $requiredEuro5;
+        $ecmtPermitApplication->requiredEuro6 = $requiredEuro6;
         $ecmtPermitApplication->trips = $trips;
         $ecmtPermitApplication->internationalJourneys = $internationalJourneys;
         $ecmtPermitApplication->dateReceived = static::processDate($dateReceived);
@@ -238,11 +246,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      * @param int|null $cabotage
      * @param int|null $declaration
      * @param int|null $emissions
-     * @param int|null $permitsRequired
+     * @param int|null $requiredEuro5
+     * @param int|null $requiredEuro6
      * @param int|null $trips
      * @param RefData $internationalJourneys
      * @param string|null $dateReceived
-     *
+     * @param int|null $roadworthiness
      * @return EcmtPermitApplication
      */
     public function update(
@@ -253,10 +262,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         int $cabotage = null,
         int $declaration = null,
         int $emissions = null,
-        int $permitsRequired = null,
+        int $requiredEuro5 = null,
+        int $requiredEuro6 = null,
         int $trips = null,
         RefData $internationalJourneys = null,
-        string $dateReceived = null
+        string $dateReceived = null,
+        int $roadworthiness = null
     ) {
         $this->permitType = $permitType ?? $this->permitType;
         $this->licence = $licence;
@@ -266,10 +277,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         $this->checkedAnswers = $declaration; //auto updated alongside declaration for internal apps
         $this->declaration = $declaration;
         $this->emissions = $emissions;
-        $this->permitsRequired = $permitsRequired;
+        $this->requiredEuro5 = $requiredEuro5;
+        $this->requiredEuro6 = $requiredEuro6;
         $this->trips = $trips;
         $this->internationalJourneys = $internationalJourneys;
         $this->dateReceived = $this->processDate($dateReceived);
+        $this->roadworthiness = $roadworthiness;
 
         return $this;
     }
@@ -372,17 +385,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Returns the emissions category defined against the IrhpPermitWindow
-     *
-     * @return string
-     */
-    public function getWindowEmissionsCategory()
-    {
-        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
-        return $irhpPermitApplication->getIrhpPermitWindow()->getEmissionsCategory()->getId();
-    }
-
-    /**
      * Proceeds the application from under consideration to awaiting fee during the accept scoring process
      *
      * @param RefData $awaitingFeeStatus
@@ -423,6 +425,12 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     {
         $sectionCompletion = $this->getSectionCompletion(self::SECTIONS);
 
+        try {
+            $totalPermitsRequired = $this->calculateTotalPermitsRequired();
+        } catch (RuntimeException $e) {
+            $totalPermitsRequired = null;
+        }
+
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
@@ -437,7 +445,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
             'isUnderConsideration' => $this->isUnderConsideration(),
-            'permitIntensityOfUse' => $this->getPermitIntensityOfUse(),
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
             'isAwaitingFee' => $this->isAwaitingFee(),
@@ -448,7 +455,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             'confirmationSectionCompletion' => $this->getSectionCompletion(self::CONFIRMATION_SECTIONS),
             'sectionCompletion' => $sectionCompletion,
             'hasOutstandingFees' => $this->hasOutstandingFees(),
-            'windowEmissionsCategory' => $this->getWindowEmissionsCategory()
+            'totalPermitsRequired' => $totalPermitsRequired
         ];
     }
 
@@ -461,10 +468,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     {
         $this->emissions = null;
         $this->cabotage = null;
+        $this->roadworthiness = null;
         $this->trips = null;
         $this->internationalJourneys = null;
         $this->sectors = null;
-        $this->updatePermitsRequired(null);
+        $this->updatePermitsRequired(null, null);
         $this->resetCountrys();
         $this->resetCheckAnswersAndDeclaration();
     }
@@ -489,6 +497,19 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     public function updateCabotage($cabotage)
     {
         $this->cabotage = $cabotage;
+        $this->resetCheckAnswersAndDeclaration();
+    }
+
+    /**
+     * Updates roadworthiness
+     *
+     * @param bool $roadworthiness Roadworthiness
+     *
+     * @return void
+     */
+    public function updateRoadworthiness($roadworthiness)
+    {
+        $this->roadworthiness = $roadworthiness;
         $this->resetCheckAnswersAndDeclaration();
     }
 
@@ -521,11 +542,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     /**
      * Updates the application to indicate the number of required permits
      *
-     * @param mixed $permitsRequired
+     * @param int|null $euro5
+     * @param int|null $euro6
      */
-    public function updatePermitsRequired($permitsRequired)
+    public function updatePermitsRequired(?int $euro5, ?int $euro6)
     {
-        $this->permitsRequired = $permitsRequired;
+        $this->requiredEuro5 = $euro5;
+        $this->requiredEuro6 = $euro6;
         $this->resetCheckAnswersAndDeclaration();
     }
 
@@ -649,6 +672,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      * @param string $field field being checked
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function fieldIsNotNull($field)
     {
@@ -659,6 +683,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      * @param string $field field being checked
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function fieldIsInt($field)
     {
@@ -673,6 +698,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      * @param string $field field being checked
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function countrysPopulated($field)
     {
@@ -681,6 +707,23 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         }
 
         return $this->collectionHasRecord($field);
+    }
+
+    /**
+     * This is a custom validator for the 2 permits required fields
+     *
+     * @param string $field field being checked
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
+    private function oneEmissionCatRequested($field)
+    {
+        try {
+            return $this->calculateTotalPermitsRequired();
+        } catch (RuntimeException $e) {
+            return false;
+        }
     }
 
     /**
@@ -935,22 +978,46 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Calculates the intensity_of_use value for
-     * permits requested by an ecmtPermitApplication
+     * Calculates the intensity_of_use value for permits requested by an ecmtPermitApplication
+     *
+     * @param string $emissionsCategoryId|null
+     *
+     * return float
+     *
+     * @throws RuntimeException
      */
-    public function getPermitIntensityOfUse()
+    public function getPermitIntensityOfUse($emissionsCategoryId = null)
     {
-        return $this->permitsRequired > 0 ? $this->trips / $this->permitsRequired : 0;
+        if ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO5_REF) {
+            $numberOfPermits = $this->getRequiredEuro5();
+        } elseif ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF) {
+            $numberOfPermits = $this->getRequiredEuro6();
+        } elseif (is_null($emissionsCategoryId)) {
+            $numberOfPermits = $this->calculateTotalPermitsRequired();
+        } else {
+            throw new RuntimeException(
+                'Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: ' . $emissionsCategoryId
+            );
+        }
+
+        if ($numberOfPermits == 0) {
+            throw new RuntimeException('Permit intensity of use cannot be calculated with zero number of permits');
+        }
+
+        return $this->trips / $numberOfPermits;
     }
 
     /**
-     * Calculates the application_score value for
-     * permits requested by an ecmtPermitApplication
+     * Calculates the application_score value for permits requested by an ecmtPermitApplication
+     *
+     * @param string $emissionsCategoryId|null
+     *
+     * @return float
      */
-    public function getPermitApplicationScore()
+    public function getPermitApplicationScore($emissionsCategoryId = null)
     {
         $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
-        return $this->getPermitIntensityOfUse() * $interJourneysDecValue;
+        return $this->getPermitIntensityOfUse($emissionsCategoryId) * $interJourneysDecValue;
     }
 
     /**
@@ -1096,7 +1163,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         $successLevel = self::SUCCESS_LEVEL_PARTIAL;
         if ($permitsAwarded == 0) {
             $successLevel = self::SUCCESS_LEVEL_NONE;
-        } elseif ($this->permitsRequired == $permitsAwarded) {
+        } elseif ($this->calculateTotalPermitsRequired() == $permitsAwarded) {
             $successLevel = self::SUCCESS_LEVEL_FULL;
         }
 
@@ -1126,66 +1193,78 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      */
     public function getQuestionAnswerData()
     {
-        $emissionsQuestion = 'permits.form.euro5.label';
-        $countriesQuestion = 'permits.form.restricted.countries.euro5.label';
-        $limitedCountriesAnswer = ['Yes'];
+        $limitedCountriesAnswer = ['No'];
 
-        if ($this->isEuro6EmissionCategory()) {
-            $emissionsQuestion = 'permits.form.euro6.label';
-            $countriesQuestion = 'permits.page.restricted-countries.question';
-            $limitedCountriesAnswer = ['No'];
+        if ($this->hasRestrictedCountries) {
+            $limitedCountriesAnswer = ['Yes'];
+            $countries = [];
 
-            if ((int) $this->getHasRestrictedCountries() === 1) {
-                $limitedCountriesAnswer = ['Yes'];
-                $countries = [];
-
-                foreach ($this->getCountrys() as $country) {
-                    $countries[] = $country->getCountryDesc();
-                }
-
-                $limitedCountriesAnswer[] = implode(', ', $countries);
+            /** @var Country $country */
+            foreach ($this->countrys as $country) {
+                $countries[] = $country->getCountryDesc();
             }
+
+            $limitedCountriesAnswer[] = implode(', ', $countries);
+        }
+
+        $year = $this->getFirstIrhpPermitApplication()
+            ->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getValidityYear();
+        $permitsRequiredAnswer = ['Permits for '  . $year];
+
+        if ($this->requiredEuro5) {
+            $permitsRequiredAnswer[] = $this->requiredEuro5 . ' permits for Euro 5 minimum emission standard';
+        }
+
+        if ($this->requiredEuro6) {
+            $permitsRequiredAnswer[] = $this->requiredEuro6 . ' permits for Euro 6 minimum emission standard';
         }
 
         $data = [
             [
                 'question' => 'permits.check-answers.page.question.licence',
-                'answer' =>  $this->getLicence()->getLicNo(),
+                'answer' =>  $this->licence->getLicNo(),
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
-                'question' => $emissionsQuestion,
-                'answer' =>  (int) $this->getEmissions(),
-                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
-            ],
-            [
                 'question' => 'permits.form.cabotage.label',
-                'answer' =>  (int) $this->getCabotage(),
+                'answer' =>  $this->cabotage,
                 'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
-                'question' => $countriesQuestion,
+                'question' => 'permits.page.roadworthiness.question',
+                'answer' =>  $this->roadworthiness,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
+            ],
+            [
+                'question' => 'permits.page.restricted-countries.question',
                 'answer' => $limitedCountriesAnswer,
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
+                'question' => 'permits.form.euro-emissions.label',
+                'answer' =>  $this->emissions,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
+            ],
+            [
                 'question' => 'permits.page.permits.required.question',
-                'answer' => $this->getPermitsRequired(),
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
+                'answer' => $permitsRequiredAnswer,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.number-of-trips.question',
-                'answer' => $this->getTrips(),
+                'answer' => $this->trips,
                 'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.international.journey.question',
-                'answer' => $this->getInternationalJourneys()->getDescription(),
+                'answer' => $this->internationalJourneys->getDescription(),
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.sectors.question',
-                'answer' => $this->getSectors()->getName(),
+                'answer' => $this->sectors->getName(),
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
         ];
@@ -1194,12 +1273,14 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Whether this application is a euro 6 emission category
-     *
-     * @return bool
+     * @return int
+     * @throws RuntimeException
      */
-    public function isEuro6EmissionCategory()
+    public function calculateTotalPermitsRequired()
     {
-        return $this->getWindowEmissionsCategory() === IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF;
+        if (is_null($this->requiredEuro5) || is_null($this->requiredEuro6)) {
+            throw new RuntimeException('This ECMT Application has not had number of required permits set yet.');
+        }
+        return $this->requiredEuro5 + $this->requiredEuro6;
     }
 }

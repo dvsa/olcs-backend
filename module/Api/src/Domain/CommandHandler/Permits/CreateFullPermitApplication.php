@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -70,13 +71,14 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
         $ecmtPermitApplication = $this->createPermitApplicationObject($command, $licence);
         $this->getRepo()->save($ecmtPermitApplication);
 
-        if ($command->getPermitsRequired() > 0 && $ecmtPermitApplication->getId()) {
+        $totalPermitsRequired = $command->getRequiredEuro5() + $command->getRequiredEuro6();
+        if ($totalPermitsRequired > 0 && $ecmtPermitApplication->getId()) {
             $this->result->merge($this->handleSideEffect(
                 UpdatePermitFee::create(
                     [
                         'ecmtPermitApplicationId' => $ecmtPermitApplication->getId(),
                         'licenceId' => $command->getLicence(),
-                        'permitsRequired' => $command->getPermitsRequired(),
+                        'permitsRequired' => $totalPermitsRequired,
                         'permitType' =>  $ecmtPermitApplication::PERMIT_TYPE,
                         'receivedDate' =>  $ecmtPermitApplication->getDateReceived()
                     ]
@@ -89,7 +91,9 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
 
         $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByIrhpPermitType(
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
-            new DateTime()
+            new DateTime(),
+            Query::HYDRATE_OBJECT,
+            $command->getYear()
         );
 
         $this->result->merge(
@@ -131,9 +135,11 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
             $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
             $countrys,
             $command->getCabotage(),
+            $command->getRoadworthiness(),
             $command->getDeclaration(),
             $command->getEmissions(),
-            $command->getPermitsRequired(),
+            $command->getRequiredEuro5(),
+            $command->getRequiredEuro6(),
             $command->getTrips(),
             $this->getRepo()->getRefdataReference($command->getInternationalJourneys())
         );

@@ -26,10 +26,10 @@ class IrhpPermit extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Returns the count of permits in the specified stock
+     * Returns the count of permits in the specified stock, filtered by emissions category if provided
      *
      * @param int $stockId
-     * @param int $emissionsCategoryId (optional)
+     * @param string $emissionsCategoryId (optional)
      *
      * @return int
      */
@@ -102,8 +102,9 @@ class IrhpPermit extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query instanceof ValidEcmtPermits) {
-            $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
-                ->setParameter('ecmtId', $query->getId());
+            $qb->innerJoin('ipa.ecmtPermitApplication', 'epa')
+                ->andWhere($qb->expr()->eq('epa.licence', ':licenceId'))
+                ->setParameter('licenceId', $query->getLicence());
             $qb->andWhere($qb->expr()->in($this->alias . '.status', ':statuses'))
                 ->setParameter('statuses', Entity::$validStatuses);
             $qb->orderBy($this->alias . '.permitNumber', 'DESC');

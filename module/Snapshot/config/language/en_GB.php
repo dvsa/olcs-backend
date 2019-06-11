@@ -374,8 +374,9 @@ return [
 
     //permit snapshot translations
     'permits.check-answers.page.question.licence' => 'Licence selected',
-    'permits.form.euro6.label' => 'I confirm that my ECMT permits will only be used by vehicles that are environmentally compliant with Euro 6 emissions standards.',
+    'permits.form.euro-emissions.label' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
     'permits.form.cabotage.label' => 'I confirm that I will not undertake any cabotage journeys using an ECMT permit.',
+    'permits.page.roadworthiness.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
     'permits.page.restricted-countries.question' => 'In the next 12 months are you transporting goods to Austria, Greece, Hungary, Italy or Russia?',
     'permits.page.permits.required.question' => 'How many permits do you require for this licence?',
     'permits.page.number-of-trips.question' => 'How many international trips did you make in the last 12 months using this licence?',

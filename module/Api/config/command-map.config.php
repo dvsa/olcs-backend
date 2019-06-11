@@ -1154,6 +1154,7 @@ return [
     // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateEcmtCabotage::class => CommandHandler\Permits\UpdateEcmtCabotage::class,
+    TransferCommand\Permits\UpdateEcmtRoadworthiness::class => CommandHandler\Permits\UpdateEcmtRoadworthiness::class,
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
     TransferCommand\Permits\UpdateInternationalJourney::class => CommandHandler\Permits\UpdateInternationalJourney::class,
     TransferCommand\Permits\UpdateSector::class => CommandHandler\Permits\UpdateSector::class,

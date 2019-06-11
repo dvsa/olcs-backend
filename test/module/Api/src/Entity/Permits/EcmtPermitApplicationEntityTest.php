@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -72,9 +71,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $dateReceived = '2017-12-25';
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
+        $roadworthiness = 1;
         $declaration = 1;
         $emissions = 1;
-        $permitsRequired = 999;
+        $requiredEuro5 = 199;
+        $requiredEuro6 = 800;
         $trips = 666;
         $internationalJourneysRefData = m::mock(RefData::class);
 
@@ -87,17 +88,14 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             $countrys,
             $cabotage,
+            $roadworthiness,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneysRefData
         );
-
-        $ecmtPermitAppEntity = m::mock(Entity::class)->shouldAllowMockingProtectedMethods();
-        $ecmtPermitAppEntity->shouldReceive('getSectionCompletion')
-            ->with(Entity::SECTIONS)
-            ->andReturn(['allCompleted' => true]);
 
         $this->assertSame($sourceRefData, $application->getSource());
         $this->assertSame($statusRefData, $application->getStatus());
@@ -108,10 +106,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($countrys, $application->getCountrys());
         $this->assertEquals($expectedHasRestrictedCountries, $application->getHasRestrictedCountries());
         $this->assertEquals($cabotage, $application->getCabotage());
+        $this->assertEquals($roadworthiness, $application->getRoadworthiness());
         $this->assertEquals($declaration, $application->getCheckedAnswers()); //auto updated on internal updates
         $this->assertEquals($declaration, $application->getDeclaration());
         $this->assertEquals($emissions, $application->getEmissions());
-        $this->assertEquals($permitsRequired, $application->getPermitsRequired());
+        $this->assertEquals($requiredEuro5, $application->getRequiredEuro5());
+        $this->assertEquals($requiredEuro6, $application->getRequiredEuro6());
         $this->assertEquals($trips, $application->getTrips());
         $this->assertSame($internationalJourneysRefData, $application->getInternationalJourneys());
     }
@@ -129,7 +129,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $cabotage = 1;
         $declaration = 0;
         $emissions = 1;
-        $permitsRequired = 999;
+        $required_euro5 = 199;
+        $required_euro6 = 800;
         $trips = 666;
         $internationalJourneys = Entity::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
@@ -143,7 +144,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $cabotage,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $required_euro5,
+            $required_euro6,
             $trips,
             $internationalJourneyRefData,
             $dateReceived
@@ -158,7 +160,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($declaration, $application->getCheckedAnswers()); //auto updated on internal updates
         $this->assertEquals($declaration, $application->getDeclaration());
         $this->assertEquals($emissions, $application->getEmissions());
-        $this->assertEquals($permitsRequired, $application->getPermitsRequired());
+        $this->assertEquals($required_euro5, $application->getRequiredEuro5());
+        $this->assertEquals($required_euro6, $application->getRequiredEuro6());
         $this->assertEquals($trips, $application->getTrips());
         $this->assertEquals($internationalJourneys, $application->getInternationalJourneys()->getId());
         $this->assertEquals($dateReceived, $application->getDateReceived()->format('Y-m-d'));
@@ -318,6 +321,20 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     /**
     * @dataProvider trueFalseProvider
     */
+    public function testUpdateRoadworthiness($roadworthiness)
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->updateRoadworthiness($roadworthiness);
+
+        $this->assertEquals($roadworthiness, $entity->getRoadworthiness());
+        $this->assertFalse($entity->getCheckedAnswers());
+        $this->assertFalse($entity->getDeclaration());
+    }
+
+    /**
+    * @dataProvider trueFalseProvider
+    */
     public function testUpdateEmissions($emissions)
     {
         $entity = $this->createApplicationWithCompletedDeclaration();
@@ -359,13 +376,36 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testUpdatePermitsRequired()
     {
-        $permitsRequired = 7;
+        $requiredEuro5 = 10;
+        $requiredEuro6 = 20;
 
         $entity = $this->createApplicationWithCompletedDeclaration();
 
-        $entity->updatePermitsRequired($permitsRequired);
+        $entity->updatePermitsRequired($requiredEuro5, $requiredEuro6);
 
-        $this->assertEquals($permitsRequired, $entity->getPermitsRequired());
+        $this->assertEquals($requiredEuro5+$requiredEuro6, $entity->calculateTotalPermitsRequired());
+        $this->assertEquals($requiredEuro5, $entity->getRequiredEuro5());
+        $this->assertEquals($requiredEuro6, $entity->getRequiredEuro6());
+        $this->assertFalse($entity->getCheckedAnswers());
+        $this->assertFalse($entity->getDeclaration());
+    }
+
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testUpdatePermitsRequiredNull()
+    {
+        $requiredEuro5 = null;
+        $requiredEuro6 = null;
+
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->updatePermitsRequired($requiredEuro5, $requiredEuro6);
+
+        $entity->calculateTotalPermitsRequired();
+        $this->assertEquals($requiredEuro5, $entity->getRequiredEuro5());
+        $this->assertEquals($requiredEuro6, $entity->getRequiredEuro6());
         $this->assertFalse($entity->getCheckedAnswers());
         $this->assertFalse($entity->getDeclaration());
     }
@@ -409,29 +449,92 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertFalse($entity->getDeclaration());
     }
 
-    public function testCalculatePermitIntensityOfUse()
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUse($emissionsCategoryId, $expectedIntensityOfUse)
     {
-        $entity = $this->createApplicationWithCompletedDeclaration();
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setTrips(35);
+        $entity->setRequiredEuro5(2);
+        $entity->setRequiredEuro6(5);
 
-        $entity->setTrips(10);
-        $entity->setPermitsRequired(4);
-
-        $intensity = $entity->getPermitIntensityOfUse();
-
-        $this->assertEquals($intensity, 2.5);
+        $this->assertEquals(
+            $expectedIntensityOfUse,
+            $entity->getPermitIntensityOfUse($emissionsCategoryId)
+        );
     }
 
-    public function testCalculatePermitApplicationScore()
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
     {
-        $entity = $this->createApplicationWithCompletedDeclaration();
-        $internationalJourneys = new RefData(Entity::INTER_JOURNEY_60_90);
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Permit intensity of use cannot be calculated with zero number of permits');
 
-        $entity->setTrips(10);
-        $entity->setPermitsRequired(4);
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setRequiredEuro5(0);
+        $entity->setRequiredEuro6(0);
 
+        $entity->getPermitIntensityOfUse($emissionsCategoryId);
+    }
+
+    public function testGetPermitIntensityOfUseBadEmissionsCategory()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: xyz');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->getPermitIntensityOfUse('xyz');
+    }
+
+    public function dpTestGetPermitIntensityOfUse()
+    {
+        return [
+            [null, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 17.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 7],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitApplicationScore
+     */
+    public function testGetPermitApplicationScore(
+        $emissionsCategoryId,
+        $internationalJourneys,
+        $expectedPermitApplicationScore
+    ) {
+        $intensityOfUse = 5;
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getPermitIntensityOfUse')
+            ->with($emissionsCategoryId)
+            ->andReturn($intensityOfUse);
+
+        $internationalJourneys = new RefData($internationalJourneys);
         $entity->updateInternationalJourneys($internationalJourneys);
 
-        $this->assertEquals($entity->getPermitApplicationScore(), 1.875);
+        $this->assertEquals(
+            $expectedPermitApplicationScore,
+            $entity->getPermitApplicationScore($emissionsCategoryId)
+        );
+    }
+
+    public function dpTestGetPermitApplicationScore()
+    {
+        return [
+            [null, Entity::INTER_JOURNEY_LESS_60, 1.5],
+            [null, Entity::INTER_JOURNEY_60_90, 3.75],
+            [null, Entity::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, Entity::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, Entity::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, Entity::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, Entity::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, Entity::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, Entity::INTER_JOURNEY_MORE_90, 5],
+        ];
     }
 
     private function createApplicationUnderConsideration()
@@ -497,10 +600,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $licence = m::mock(Licence::class);
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
+        $roadworthiness = 1;
         $declaration = 1;
         $checkedAnswers = 1;
         $emissions = 1;
-        $permitsRequired = 999;
+        $requiredEuro5 = 199;
+        $requiredEuro6 = 800;
         $trips = 666;
         $internationalJourneys = Entity::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
@@ -515,9 +620,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             $countrys,
             $cabotage,
+            $roadworthiness,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneyRefData
         );
@@ -530,6 +637,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
         $this->assertSame($application->getLicence(), $newLicence);
         $this->assertEquals($application->getCabotage(), null);
+        $this->assertNull($application->getRoadworthiness());
         $this->assertEquals($application->getEmissions(), null);
         $this->assertEquals($application->getTrips(), null);
         $this->assertEquals($application->getInternationalJourneys(), null);
@@ -887,14 +995,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpProvideSuccessLevel
      */
-    public function testGetSuccessLevel($permitsRequired, $permitsAwarded, $expectedSuccessLevel)
+    public function testGetSuccessLevel($requiredEuro5, $requiredEuro6, $permitsAwarded, $expectedSuccessLevel)
     {
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')
             ->andReturn($permitsAwarded);
 
         $entity = $this->createApplicationUnderConsideration();
-        $entity->setPermitsRequired($permitsRequired);
+        $entity->setRequiredEuro5($requiredEuro5);
+        $entity->setRequiredEuro6($requiredEuro6);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
 
         $this->assertEquals(
@@ -911,12 +1020,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpProvideSuccessLevel()
     {
         return [
-            [10, 1, Entity::SUCCESS_LEVEL_PARTIAL],
-            [10, 9, Entity::SUCCESS_LEVEL_PARTIAL],
-            [10, 0, Entity::SUCCESS_LEVEL_NONE],
-            [1, 0, Entity::SUCCESS_LEVEL_NONE],
-            [1, 1, Entity::SUCCESS_LEVEL_FULL],
-            [10, 10, Entity::SUCCESS_LEVEL_FULL]
+            [5,5, 1, Entity::SUCCESS_LEVEL_PARTIAL],
+            [5,5, 9, Entity::SUCCESS_LEVEL_PARTIAL],
+            [5,5, 0, Entity::SUCCESS_LEVEL_NONE],
+            [1,0, 0, Entity::SUCCESS_LEVEL_NONE],
+            [0,1, 1, Entity::SUCCESS_LEVEL_FULL],
+            [5,5, 10, Entity::SUCCESS_LEVEL_FULL]
         ];
     }
 
@@ -1012,9 +1121,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $dateReceived = '2017-12-25';
         $sectors = m::mock(Sectors::class);
         $cabotage = 1;
+        $roadworthiness = 1;
         $declaration = 1;
         $emissions = 1;
-        $permitsRequired = 999;
+        $requiredEuro5 = 199;
+        $requiredEuro6 = 800;
         $trips = 666;
         $internationalJourneysRefData = m::mock(RefData::class);
         $countrys = new ArrayCollection([m::mock(Country::class)]);
@@ -1028,9 +1139,11 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             $countrys,
             $cabotage,
+            $roadworthiness,
             $declaration,
             $emissions,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneysRefData
         );
@@ -1061,59 +1174,53 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $restrictedCountries = [$country1, $country2];
 
         return [
-            'euro 6 with restricted countries' => [
-                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                1,
-                'permits.form.euro6.label',
-                1,
+            'euro 5 only with restricted countries' => [
+                4,
+                null,
+                ['4 permits for Euro 5 minimum emission standard'],
                 $restrictedCountries,
-                'permits.page.restricted-countries.question',
                 ['Yes', 'Country 1, Country 2'],
             ],
-            'euro 6 with restricted countries, plus emissions not agreed' => [
-                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                0,
-                'permits.form.euro6.label',
-                1,
-                $restrictedCountries,
-                'permits.page.restricted-countries.question',
-                ['Yes', 'Country 1, Country 2'],
-            ],
-            'euro 6 with restricted countries, plus cabotage not agreed' => [
-                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                1,
-                'permits.form.euro6.label',
-                0,
-                $restrictedCountries,
-                'permits.page.restricted-countries.question',
-                ['Yes', 'Country 1, Country 2'],
-            ],
-            'euro 6 with restricted countries, plus cabotage and emissions not agreed' => [
-                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                0,
-                'permits.form.euro6.label',
-                0,
-                $restrictedCountries,
-                'permits.page.restricted-countries.question',
-                ['Yes', 'Country 1, Country 2'],
-            ],
-            'euro 6 with no restricted countries' => [
-                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
-                1,
-                'permits.form.euro6.label',
-                0,
+            'euro 5 only with no restricted countries' => [
+                4,
+                null,
+                ['4 permits for Euro 5 minimum emission standard'],
                 [],
-                'permits.page.restricted-countries.question',
                 ['No'],
             ],
-            'euro 5' => [
-                IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF,
-                0,
-                'permits.form.euro5.label',
-                1,
+            'euro 6 only with restricted countries' => [
+                null,
+                7,
+                ['7 permits for Euro 6 minimum emission standard'],
+                $restrictedCountries,
+                ['Yes', 'Country 1, Country 2'],
+            ],
+            'euro 6 only with no restricted countries' => [
+                null,
+                7,
+                ['7 permits for Euro 6 minimum emission standard'],
                 [],
-                'permits.form.restricted.countries.euro5.label',
-                ['Yes'],
+                ['No'],
+            ],
+            'both emission types with restricted countries' => [
+                4,
+                7,
+                [
+                    '4 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+                $restrictedCountries,
+                ['Yes', 'Country 1, Country 2'],
+            ],
+            'both emission types with no restricted countries' => [
+                4,
+                7,
+                [
+                    '4 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+                [],
+                ['No'],
             ],
         ];
     }
@@ -1122,23 +1229,24 @@ class EcmtPermitApplicationEntityTest extends EntityTester
      * @dataProvider dpGetQuestionAnswerData
      */
     public function testGetQuestionAnswerData(
-        $emissionCategory,
-        $emissionsValue,
-        $emissionsQuestion,
-        $cabotageValue,
+        $requiredEuro5,
+        $requiredEuro6,
+        $expectedPermitsRequired,
         $countries,
-        $countriesQuestion,
         $countriesAnswer
     ) {
         $licNo = 'OB1234567';
         $internationalJourneysDesc = 'international journey desc';
         $sectorName = 'sector name';
         $dateReceived = '2017-12-25';
+        $emissionsValue = 1;
+        $roadworthinessValue = 0;
+        $cabotageValue = 1;
         $declaration = 1;
-        $permitsRequired = 999;
         $trips = 666;
+        $year = 2019;
+        $permitsRequiredAnswer = array_merge(['Permits for '  . $year], $expectedPermitsRequired);
 
-        $irhpPermitApplication = $this->getWindowEmissionCategory($emissionCategory);
         $sectors = m::mock(Sectors::class);
         $sectors->shouldReceive('getName')->once()->withNoArgs()->andReturn($sectorName);
         $sourceRefData = m::mock(RefData::class);
@@ -1162,13 +1270,19 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $sectors,
             new ArrayCollection($countries),
             $cabotageValue,
+            $roadworthinessValue,
             $declaration,
             $emissionsValue,
-            $permitsRequired,
+            $requiredEuro5,
+            $requiredEuro6,
             $trips,
             $internationalJourneysRefData
         );
 
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getValidityYear')
+            ->once()
+            ->andReturn($year);
         $application->addIrhpPermitApplications($irhpPermitApplication);
 
         $expectedData = [
@@ -1178,24 +1292,29 @@ class EcmtPermitApplicationEntityTest extends EntityTester
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
-                'question' => $emissionsQuestion,
-                'answer' =>  $emissionsValue,
-                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
-            ],
-            [
                 'question' => 'permits.form.cabotage.label',
                 'answer' =>  $cabotageValue,
                 'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
-                'question' => $countriesQuestion,
+                'question' => 'permits.page.roadworthiness.question',
+                'answer' =>  $roadworthinessValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
+            ],
+            [
+                'question' => 'permits.page.restricted-countries.question',
                 'answer' => $countriesAnswer,
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
+                'question' => 'permits.form.euro-emissions.label',
+                'answer' =>  $emissionsValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
+            ],
+            [
                 'question' => 'permits.page.permits.required.question',
-                'answer' => $permitsRequired,
-                'questionType' => Question::QUESTION_TYPE_INTEGER,
+                'answer' => $permitsRequiredAnswer,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.number-of-trips.question',
@@ -1215,45 +1334,6 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         ];
 
         $this->assertEquals($expectedData, $application->getQuestionAnswerData());
-    }
-
-    public function dpEmissionsCategory(): array
-    {
-        return [
-            [IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, true],
-            [IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF, false],
-            [IrhpPermitWindow::EMISSIONS_CATEGORY_NA_REF, false],
-        ];
-    }
-
-    /**
-     * @dataProvider dpEmissionsCategory
-     */
-    public function testIsEuro6EmissionCategory($category, $expectedResponse)
-    {
-        $entity = $this->createApplication();
-        $irhpPermitApplication = $this->getWindowEmissionCategory($category);
-        $entity->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
-
-        $this->assertEquals($expectedResponse, $entity->isEuro6EmissionCategory());
-    }
-
-    public function testGetWindowEmissionsCategory()
-    {
-        $entity = $this->createApplication();
-        $irhpPermitApplication = $this->getWindowEmissionCategory(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF);
-        $entity->addIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
-
-        $this->assertEquals(IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF, $entity->getWindowEmissionsCategory());
-    }
-
-    private function getWindowEmissionCategory($emissionCategory)
-    {
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getEmissionsCategory->getId')
-            ->andReturn($emissionCategory);
-
-        return $irhpPermitApplication;
     }
 
     /**
@@ -1397,5 +1477,26 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_DECLINED, false, false],
             [Entity::STATUS_EXPIRED, false, false]
         ];
+    }
+
+    public function testCalculateTotalPermitsRequired()
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+
+        $entity->setRequiredEuro5(2);
+        $entity->setRequiredEuro6(2);
+
+        $total = $entity->calculateTotalPermitsRequired();
+
+        $this->assertEquals($total, 4);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     */
+    public function testCalculateTotalPermitsRequiredWhenNull()
+    {
+        $entity = $this->createApplicationWithCompletedDeclaration();
+        $entity->calculateTotalPermitsRequired();
     }
 }

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
-
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitApplication as UpdateEcmtPermitApplicationCmd;
 
@@ -51,14 +51,22 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
         $applicationDate = new DateTime($ecmtPermitApplication->getDateReceived());
         $commandDate = new DateTime($command->getDateReceived());
 
-        if ((int)$ecmtPermitApplication->getPermitsRequired() !== (int)$command->getPermitsRequired()
+        $newTotalRequired = $command->getRequiredEuro5() + $command->getRequiredEuro6();
+
+        try {
+            $totalPermitsRequired = $ecmtPermitApplication->calculateTotalPermitsRequired();
+        } catch (RuntimeException $e) {
+            $totalPermitsRequired = 0;
+        }
+
+        if ($totalPermitsRequired !== $newTotalRequired
             || $applicationDate->format('Y-m-d') !== $commandDate->format('Y-m-d')
         ) {
             $this->result->merge($this->handleSideEffect(UpdatePermitFee::create(
                 [
                     'ecmtPermitApplicationId' => $ecmtPermitApplication->getId(),
                     'licenceId' => $ecmtPermitApplication->getLicence()->getId(),
-                    'permitsRequired' => $command->getPermitsRequired(),
+                    'permitsRequired' => $newTotalRequired,
                     'permitType' => $ecmtPermitApplication::PERMIT_TYPE,
                     'receivedDate' => $command->getDateReceived()
                 ]
@@ -73,10 +81,12 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
             $command->getCabotage(),
             $command->getDeclaration(),
             $command->getEmissions(),
-            $command->getPermitsRequired(),
+            $command->getRequiredEuro5(),
+            $command->getRequiredEuro6(),
             $command->getTrips(),
             $this->getRepo()->getRefdataReference($command->getInternationalJourneys()),
-            $command->getDateReceived()
+            $command->getDateReceived(),
+            $command->getRoadworthiness()
         );
 
         $this->getRepo()->save($ecmtPermitApplication);

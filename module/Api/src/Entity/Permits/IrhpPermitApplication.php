@@ -10,9 +10,11 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 use RuntimeException;
 
 /**
@@ -88,14 +90,28 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         return $irhpPermitApplication;
     }
 
-    public function getPermitIntensityOfUse()
+    /**
+     * Get the intensity of use from the associated ecmt permit application
+     *
+     * @param string $emissionsCategoryId|null
+     *
+     * @return float
+     */
+    public function getPermitIntensityOfUse($emissionsCategoryId = null)
     {
-        return $this->ecmtPermitApplication->getPermitIntensityOfUse();
+        return $this->ecmtPermitApplication->getPermitIntensityOfUse($emissionsCategoryId);
     }
 
-    public function getPermitApplicationScore()
+    /**
+     * Get the application score from the associated ecmt permit application
+     *
+     * @param string $emissionsCategoryId|null
+     *
+     * @return float
+     */
+    public function getPermitApplicationScore($emissionsCategoryId = null)
     {
-        return $this->ecmtPermitApplication->getPermitApplicationScore();
+        return $this->ecmtPermitApplication->getPermitApplicationScore($emissionsCategoryId);
     }
 
     /**
@@ -109,6 +125,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
         return [
             'permitsAwarded' => $this->countPermitsAwarded(),
+            'euro5PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF),
+            'euro6PermitsAwarded' => $this->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF),
             'validPermits' => $this->countValidPermits(),
             'relatedApplication' => isset($relatedApplication) ? $relatedApplication->serialize(
                 [
@@ -123,11 +141,13 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     /**
      * Get num of successful permit applications
      *
+     * @param string $assignedEmissionsCategoryId (optional)
+     *
      * @return int
      */
-    public function countPermitsAwarded()
+    public function countPermitsAwarded($assignedEmissionsCategoryId = null)
     {
-        return count($this->getSuccessfulIrhpCandidatePermits());
+        return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId));
     }
 
     /**
@@ -149,16 +169,31 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     /**
      * Get candidate permits marked as successful
      *
+     * @param string $assignedEmissionsCategoryId (optional)
+     *
      * @return array
      */
-    public function getSuccessfulIrhpCandidatePermits()
+    public function getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId = null)
     {
         $criteria = Criteria::create();
         $criteria->where(
             $criteria->expr()->eq('successful', true)
         );
 
-        return $this->getIrhpCandidatePermits()->matching($criteria);
+        $candidatePermits = $this->getIrhpCandidatePermits()->matching($criteria);
+
+        if (is_null($assignedEmissionsCategoryId)) {
+            return $candidatePermits;
+        }
+
+        $filteredCandidatePermits = new ArrayCollection();
+        foreach ($candidatePermits as $candidatePermit) {
+            if ($candidatePermit->getAssignedEmissionsCategory()->getId() == $assignedEmissionsCategoryId) {
+                $filteredCandidatePermits->add($candidatePermit);
+            }
+        }
+
+        return $filteredCandidatePermits;
     }
 
     /**
@@ -280,6 +315,16 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         $this->requiredEuro5 = $requiredEuro5;
         $this->requiredEuro6 = $requiredEuro6;
+    }
+
+    /**
+     * Set licence associated with application
+     *
+     * @param Licence $licence
+     */
+    public function updateLicence(Licence $licence)
+    {
+        $this->licence = $licence;
     }
 
     /**
