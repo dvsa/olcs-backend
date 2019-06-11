@@ -3,14 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Submit as CommandHandler;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
@@ -29,8 +26,6 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
 class SubmitTest extends CommandHandlerTestCase
 {
     protected $loggedInUser;
-
-    protected $applicationId = 234;
 
     public function setUp()
     {
@@ -70,16 +65,10 @@ class SubmitTest extends CommandHandlerTestCase
         $organisation = new Organisation();
 
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
+
         $tma->setIsOwner('N');
-
-        $application = m::mock(Application::class);
-        $application->shouldReceive('getLicence->getId')->andReturn(111);
-        $application->shouldReceive('getId')->andReturn(234);
-        $application->shouldReceive('getLicence->getOrganisation')->with()->once()
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
             ->andReturn($organisation);
-
-        $tma->shouldReceive('getApplication')->twice()
-            ->andReturn($application);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
@@ -91,8 +80,6 @@ class SubmitTest extends CommandHandlerTestCase
                 );
             }
         );
-
-        $this->mockTask();
 
         $this->sut->handleCommand($command);
     }
@@ -134,15 +121,6 @@ class SubmitTest extends CommandHandlerTestCase
                 }
             );
 
-        $application = m::mock(Application::class);
-        $application->shouldReceive('getLicence->getId')->andReturn(111);
-        $application->shouldReceive('getId')->andReturn(234);
-
-        $this->mockTask();
-
-        $tma->shouldReceive('getApplication')->once()
-            ->andReturn($application);
-
         $this->expectedSideEffect(
             \Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot::class,
             ['id' => 863],
@@ -157,7 +135,7 @@ class SubmitTest extends CommandHandlerTestCase
     {
         $command = Command::create(['id' => 863]);
 
-        $tma = m::mock(TransportManagerApplication::class)->makePartial();
+        $tma = new TransportManagerApplication();
         $tma->setIsOwner('Y');
         $tma->setId(1);
         $tma->setTmType(TransportManagerApplication::TYPE_EXTERNAL);
@@ -172,15 +150,6 @@ class SubmitTest extends CommandHandlerTestCase
 
         $result = new Result();
         $this->expectedSideEffect(Snapshot::class, $data, $result);
-
-        $application = m::mock(Application::class);
-        $application->shouldReceive('getLicence->getId')->andReturn(111);
-        $application->shouldReceive('getId')->andReturn(234);
-
-        $this->mockTask();
-
-        $tma->shouldReceive('getApplication')->once()
-            ->andReturn($application);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
@@ -245,24 +214,14 @@ class SubmitTest extends CommandHandlerTestCase
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setId(12);
         $tma->shouldReceive('getCreatedBy')->with()->andReturn($creator);
-
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
+            ->andReturn($organisation);
 
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
-
-        $this->applicationId = 76;
-        $application = m::mock(Application::class);
-        $application->shouldReceive('getLicence->getLicNo')->andReturn('LIC01');
-        $application->shouldReceive('getId')->andReturn(76);
-        $application->shouldReceive('getLicence->getId')->andReturn(111);
-        $application->shouldReceive('getIsVariation')->with()->once()->andReturn($isVariation);
-        $application->shouldReceive('getLicence->getOrganisation')->with()->once()
-        ->andReturn($organisation);
-        $this->mockTask();
-
-        $tma->shouldReceive('getApplication')->times(6)
-            ->andReturn($application);
-
+        $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
+        $tma->shouldReceive('getApplication->getId')->with()->twice()->andReturn(76);
+        $tma->shouldReceive('getApplication->getIsVariation')->with()->once()->andReturn($isVariation);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
@@ -304,7 +263,6 @@ class SubmitTest extends CommandHandlerTestCase
                 $this->assertSame('default', $layout);
             }
         );
-
 
         $result = new Result();
         $this->expectedSideEffect(
@@ -354,25 +312,14 @@ class SubmitTest extends CommandHandlerTestCase
         $tma = m::mock(TransportManagerApplication::class)->makePartial();
         $tma->setId(12);
         $tma->shouldReceive('getCreatedBy')->with()->andReturn($creator);
-
-
-        $this->applicationId = 76;
-        $application = m::mock(Application::class);
-        $application->shouldReceive('getLicence->getLicNo')->andReturn('LIC01');
-        $application->shouldReceive('getId')->andReturn(76);
-        $application->shouldReceive('getLicence->getId')->andReturn(111);
-        $application->shouldReceive('getIsVariation')->with()->once()->andReturn($isVariation);
-        $application->shouldReceive('getLicence->getOrganisation')->with()->once()
+        $tma->shouldReceive('getApplication->getLicence->getOrganisation')->with()->once()
             ->andReturn($organisation);
-        $this->mockTask();
-
-        $tma->shouldReceive('getApplication')->times(6)
-            ->andReturn($application);
-
 
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
-
+        $tma->shouldReceive('getApplication->getLicence->getLicNo')->with()->once()->andReturn('LIC01');
+        $tma->shouldReceive('getApplication->getId')->with()->twice()->andReturn(76);
+        $tma->shouldReceive('getApplication->getIsVariation')->with()->once()->andReturn($isVariation);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
@@ -432,21 +379,5 @@ class SubmitTest extends CommandHandlerTestCase
         );
 
         $this->sut->handleCommand($command);
-    }
-
-    private function mockTask(): void
-    {
-        $taskData = [
-            'category' => Category::CATEGORY_APPLICATION,
-            'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_TM1_DIGITAL,
-            'description' => 'Transport Manager form submitted',
-            'isClosed' => 'N',
-            'urgent' => 'N',
-            'application' => $this->applicationId,
-            'licence' => 111
-        ];
-        $result = new Result();
-        $result->addMessage('TM Application Submitted');
-        $this->expectedSideEffect(CreateTask::class, $taskData, $result);
     }
 }
