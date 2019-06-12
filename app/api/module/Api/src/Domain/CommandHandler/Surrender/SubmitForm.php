@@ -7,7 +7,6 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -20,7 +19,7 @@ class SubmitForm extends AbstractSurrenderCommandHandler
 
     use AuthAwareTrait;
 
-    protected $extraRepos = ['Licence', 'EventHistory', 'EventHistoryType'];
+    protected $extraRepos = ['Licence'];
 
     /**
      * @param CommandInterface $command
@@ -53,7 +52,8 @@ class SubmitForm extends AbstractSurrenderCommandHandler
         $surrenderId = $surrender->getId();
 
         $this->result->merge($this->createSurrenderTask($command->getId(), $surrenderId));
-        $this->handleEventHistory($licence);
+
+        $this->handleEventHistory($licence, EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION);
 
         return $this->result;
     }
@@ -71,21 +71,5 @@ class SubmitForm extends AbstractSurrenderCommandHandler
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));
-    }
-
-    protected function handleEventHistory(Licence $licence)
-    {
-        $eventType = $this->getRepo('EventHistoryType')
-            ->fetchOneByEventCode(EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION);
-
-        // create event history record
-        $eventHistory = new EventHistory(
-            $this->getUser(),
-            $eventType
-        );
-        $eventHistory->setLicence($licence);
-
-        $this->getRepo('EventHistory')->save($eventHistory);
-        $this->result->addMessage('Event history added for licence ' . $licence->getId());
     }
 }
