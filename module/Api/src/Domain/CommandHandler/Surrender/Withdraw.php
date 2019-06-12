@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearSurrender;
-use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -18,7 +17,7 @@ class Withdraw extends AbstractSurrenderCommandHandler
 {
     use AuthAwareTrait;
 
-    protected $extraRepos = ['Licence', 'Task', 'EventHistory', 'EventHistoryType'];
+    protected $extraRepos = ['Licence', 'Task'];
 
     protected $licenceId;
 
@@ -34,7 +33,6 @@ class Withdraw extends AbstractSurrenderCommandHandler
         $this->handleSurrender();
         $this->handleTasks();
         $this->handleLicence();
-        $this->handleEventHistory();
 
         $this->result->addMessage('Withdrawn surrender for licence ' . $this->licenceId);
 
@@ -74,27 +72,14 @@ class Withdraw extends AbstractSurrenderCommandHandler
     {
         /** @var Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($this->licenceId);
+
+        $this->handleEventHistory($licence, EventHistoryType::EVENT_CODE_SURRENDER_APPLICATION_WITHDRAWN);
+
         $previousStatus = $this->handleQuery(PreviousLicenceStatus::create(['id' => $this->licenceId]));
         $status = $this->getRepo()->getRefdataReference($previousStatus['status']);
         $licence->setStatus($status);
 
         $this->getRepo('Licence')->save($licence);
         $this->result->addMessage('Reset status for licence ' . $this->licenceId);
-    }
-
-    protected function handleEventHistory()
-    {
-        $eventType = $this->getRepo('EventHistoryType')
-            ->fetchOneByEventCode(EventHistoryType::EVENT_CODE_SURRENDER_APPLICATION_WITHDRAWN);
-
-        // create event history record
-        $eventHistory = new EventHistory(
-            $this->getUser(),
-            $eventType
-        );
-        $eventHistory->setLicence($this->licenceId);
-
-        $this->getRepo('EventHistory')->save($eventHistory);
-        $this->result->addMessage('Event history added for licence ' . $this->licenceId);
     }
 }
