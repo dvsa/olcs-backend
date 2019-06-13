@@ -6,9 +6,12 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
+use RuntimeException;
 
 class GenericAnswerWriter
 {
+    const ERR_CUSTOM_UNSUPPORTED = 'GenericAnswerWriter should not be used by custom questions';
+
     /** @var AnswerRepository */
     private $answerRepo;
 
@@ -42,6 +45,9 @@ class GenericAnswerWriter
     public function write(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, $answerValue)
     {
         $question = $applicationStep->getQuestion();
+        if ($question->isCustom()) {
+            throw new RuntimeException(self::ERR_CUSTOM_UNSUPPORTED);
+        }
 
         try {
             $answer = $this->answerRepo->fetchByQuestionIdAndIrhpApplicationId(

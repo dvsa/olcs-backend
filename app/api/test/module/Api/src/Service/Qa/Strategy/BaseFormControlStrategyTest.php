@@ -2,14 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Strategy;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer as AnswerEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\AnswerSaverInterface;
-use Dvsa\Olcs\Api\Service\Qa\Element\ElementGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Element\ElementInterface;
-use Dvsa\Olcs\Api\Service\Qa\Element\SelfservePage;
-use Dvsa\Olcs\Api\Service\Qa\PostProcessor\SelfservePagePostProcessorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\BaseFormControlStrategy;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -27,6 +28,8 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
     private $answerSaver;
 
+    private $questionTextGenerator;
+
     private $baseFormControlStrategy;
 
     public function setUp()
@@ -37,13 +40,13 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
         $this->answerSaver = m::mock(AnswerSaverInterface::class);
 
-        $this->selfservePagePostProcessor = m::mock(SelfservePagePostProcessorInterface::class);
+        $this->questionTextGenerator = m::mock(QuestionTextGeneratorInterface::class);
 
         $this->baseFormControlStrategy = new BaseFormControlStrategy(
             $this->frontendType,
             $this->elementGenerator,
             $this->answerSaver,
-            $this->selfservePagePostProcessor
+            $this->questionTextGenerator
         );
     }
 
@@ -57,21 +60,17 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
     public function testGetElement()
     {
-        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
-
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-
-        $answerEntity = m::mock(AnswerEntity::class);
+        $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
 
         $element = m::mock(ElementInterface::class);
 
         $this->elementGenerator->shouldReceive('generate')
-            ->with($applicationStepEntity, $irhpApplicationEntity, $answerEntity)
+            ->with($elementGeneratorContext)
             ->andReturn($element);
 
         $this->assertSame(
             $element,
-            $this->baseFormControlStrategy->getElement($applicationStepEntity, $irhpApplicationEntity, $answerEntity)
+            $this->baseFormControlStrategy->getElement($elementGeneratorContext)
         );
     }
 
@@ -94,14 +93,19 @@ class BaseFormControlStrategyTest extends MockeryTestCase
         $this->baseFormControlStrategy->saveFormData($applicationStepEntity, $irhpApplicationEntity, $postData);
     }
 
-    public function testPostProcessSelfservePage()
+    public function testGetQuestionText()
     {
-        $selfservePage = m::mock(SelfservePage::class);
+        $questionText = m::mock(QuestionText::class);
 
-        $this->selfservePagePostProcessor->shouldReceive('process')
-            ->with($selfservePage)
-            ->once();
+        $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
 
-        $this->baseFormControlStrategy->postProcessSelfservePage($selfservePage);
+        $this->questionTextGenerator->shouldReceive('generate')
+            ->with($questionTextGeneratorContext)
+            ->andReturn($questionText);
+
+        $this->assertSame(
+            $questionText,
+            $this->baseFormControlStrategy->getQuestionText($questionTextGeneratorContext)
+        );
     }
 }

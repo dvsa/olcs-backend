@@ -3198,10 +3198,32 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testGetAnswerForCustomQuestion()
+    public function testGetAnswerForCustomEcmtRemovalNoOfPermits()
+    {
+        $permitsRequired = 47;
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getPermitsRequired')
+            ->andReturn($permitsRequired);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS);
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals($permitsRequired, $entity->getAnswer($step));
+    }
+
+    public function testGetAnswerNullForCustomEcmtRemovalNoOfPermits()
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS);
 
         $step = m::mock(ApplicationStep::class);
         $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
@@ -3356,5 +3378,71 @@ class IrhpApplicationEntityTest extends EntityTester
         }
 
         return Entity::createNew($source, $status, $irhpPermitType, $licence, $dateReceived);
+    }
+
+    /**
+     * @dataProvider dpTestGetFeePerPermitBilateralMultilateral
+     */
+    public function testGetFeePerPermitBilateralMultilateral($irhpPermitTypeId)
+    {
+        $applicationFeeType = m::mock(FeeType::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
+            ->andReturn(43.20);
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->andReturn(12.15);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->assertEquals(
+            55.35,
+            $entity->getFeePerPermit($applicationFeeType, $issueFeeType)
+        );
+    }
+
+    public function dpTestGetFeePerPermitBilateralMultilateral()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL]
+        ];
+    }
+
+    public function testGetFeePerPermitEcmtRemoval()
+    {
+        $issueFee = 14.20;
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->andReturn($issueFee);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL);
+
+        $this->assertEquals(
+            $issueFee,
+            $entity->getFeePerPermit(null, $issueFeeType)
+        );
+    }
+
+    public function testGetFeePerPermitUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'Cannot get fee per permit for irhp permit type ' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+        );
+
+        $applicationFeeType = m::mock(FeeType::class);
+        $issueFeeType = m::mock(FeeType::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
+
+        $entity->getFeePerPermit($applicationFeeType, $issueFeeType);
     }
 }
