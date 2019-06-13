@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteable;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
@@ -28,6 +29,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\UniqueConstraint(name="uk_workshop_olbs_key", columns={"olbs_key"})
  *    }
  * )
+ * @Gedmo\SoftDeleteable(fieldName="removedDate", timeAware=true)
  */
 abstract class AbstractWorkshop implements BundleSerializableInterface, JsonSerializable
 {
