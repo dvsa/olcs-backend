@@ -97,7 +97,7 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
      * Get existing grant fees
      *
      * @param ApplicationEntity $application
-     *n
+     *
      * @return array
      */
     private function getExistingFees(ApplicationEntity $application)
