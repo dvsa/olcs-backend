@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Email\Transport;
 
 use Zend\Mail\Transport\Factory;
@@ -16,7 +17,15 @@ class MultiTransportOptions extends AbstractOptions
 
     protected $mail;
 
-    public $s3Options;
+    private $s3Options;
+
+    /**
+     * @param S3FileOptions $s3Options
+     */
+    public function setS3Options(S3FileOptions $s3Options): void
+    {
+        $this->s3Options = $s3Options;
+    }
 
 
     /**
