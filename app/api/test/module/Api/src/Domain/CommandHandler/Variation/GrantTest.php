@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres;
 use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\Grant;
@@ -600,6 +601,15 @@ class GrantTest extends CommandHandlerTestCase
         $result5 = new Result();
         $result5->addMessage('Message added to queue');
         $this->expectedSideEffectAsSystemUser(Create::class, $interimFeeRefundQueueCmdData, $result5);
+
+        $this->expectedSideEffect(
+            UpdateFeeStatus::class,
+            [
+                'id' => $feeEntity->getId(),
+                'status' => Fee::STATUS_REFUND_PENDING
+            ],
+            new Result()
+        );
 
         $result = $this->sut->handleCommand($command);
 

@@ -657,6 +657,7 @@ return [
     TransferCommand\Fee\RejectWaive::class => CommandHandler\Fee\RejectWaive::class,
     TransferCommand\Fee\CreateFee::class => CommandHandler\Fee\CreateFee::class,
     TransferCommand\Fee\RefundFee::class => CommandHandler\Fee\RefundFee::class,
+    Command\Fee\UpdateFeeStatus::class => CommandHandler\Fee\UpdateFeeStatus::class,
 
     // Domain - Transaction (formerly 'Payment')
     TransferCommand\Transaction\PayOutstandingFees::class => CommandHandler\Transaction\PayOutstandingFees::class,
