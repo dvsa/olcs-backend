@@ -32,10 +32,16 @@ class TranslateableText
      */
     public function getRepresentation()
     {
-        return [
-            'key' => $this->key,
-            'parameters' => $this->parameters
-        ];
+        $representation = ['key' => $this->key];
+
+        $parametersRepresentation = [];
+        foreach ($this->parameters as $parameter) {
+            $parametersRepresentation[] = $parameter->getRepresentation();
+        }
+
+        $representation['parameters'] = $parametersRepresentation;
+
+        return $representation;
     }
 
     /**
@@ -43,24 +49,22 @@ class TranslateableText
      *
      * @param string $value
      */
-    public function addParameter($value)
+    public function addParameter(TranslateableTextParameter $translateableTextParameter)
     {
-        $this->parameters[] = $value;
+        $this->parameters[] = $translateableTextParameter;
     }
 
     /**
-     * Set the value of a parameter to be used when substitusing placeholders in the string derived from the
-     * translation key
+     * Gets the parameter at the specified index
      *
      * @param int $index
-     * @param string $value
      */
-    public function setParameter($index, $value)
+    public function getParameter($index)
     {
         if (!isset($this->parameters[$index])) {
             throw new RuntimeException('No parameter exists at index ' . $index);
         }
 
-        $this->parameters[$index] = $value;
+        return $this->parameters[$index];
     }
 }

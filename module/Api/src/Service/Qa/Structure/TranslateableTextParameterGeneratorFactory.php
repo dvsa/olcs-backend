@@ -5,20 +5,19 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class TranslateableTextGeneratorFactory implements FactoryInterface
+class TranslateableTextParameterGeneratorFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return TranslateableTextGenerator
+     * @return TranslateableTextParameterGenerator
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new TranslateableTextGenerator(
-            $serviceLocator->get('QaTranslateableTextFactory'),
-            $serviceLocator->get('QaTranslateableTextParameterGenerator')
+        return new TranslateableTextParameterGenerator(
+            $serviceLocator->get('QaTranslateableTextParameterFactory')
         );
     }
 }
