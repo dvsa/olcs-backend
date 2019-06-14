@@ -78,7 +78,7 @@ class Email implements FactoryInterface
 
         if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
             $multiTransportOptions = new MultiTransportOptions($config['mail']['options']);
-            $multiTransportOptions->sl = $serviceLocator;
+            $multiTransportOptions->s3Options = $serviceLocator->get('S3FileOptions');
             $transport->setOptions($multiTransportOptions);
 
         }
