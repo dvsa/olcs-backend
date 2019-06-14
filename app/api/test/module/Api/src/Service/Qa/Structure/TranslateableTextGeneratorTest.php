@@ -5,6 +5,8 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextParameter;
+use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextParameterGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -21,6 +23,8 @@ class TranslateableTextGeneratorTest extends MockeryTestCase
 
     private $translateableTextFactory;
 
+    private $translateableTextParameterGenerator;
+
     private $translateableTextGenerator;
 
     public function setUp()
@@ -34,7 +38,12 @@ class TranslateableTextGeneratorTest extends MockeryTestCase
             ->with($this->optionsKey)
             ->andReturn($this->translateableText);
 
-        $this->translateableTextGenerator = new TranslateableTextGenerator($this->translateableTextFactory);
+        $this->translateableTextParameterGenerator = m::mock(TranslateableTextParameterGenerator::class);
+
+        $this->translateableTextGenerator = new TranslateableTextGenerator(
+            $this->translateableTextFactory,
+            $this->translateableTextParameterGenerator
+        );
     }
 
     public function testGenerateWithNoParameters()
@@ -51,8 +60,29 @@ class TranslateableTextGeneratorTest extends MockeryTestCase
 
     public function testGenerateWithParameters()
     {
-        $parameter1 = 'parameter1';
-        $parameter2 = 'parameter2';
+        $translateableTextParameter1 = m::mock(TranslateableTextParameter::class);
+
+        $parameter1 = [
+            'value' => 'parameter1Value',
+            'formatter' => 'parameter1Formatter'
+        ];
+
+        $translateableTextParameter2 = m::mock(TranslateableTextParameter::class);
+
+        $parameter2 = [
+            'value' => 'parameter2Value',
+            'formatter' => 'parameter2Formatter'
+        ];
+
+        $this->translateableTextParameterGenerator->shouldReceive('generate')
+            ->with($parameter1)
+            ->once()
+            ->andReturn($translateableTextParameter1);
+
+        $this->translateableTextParameterGenerator->shouldReceive('generate')
+            ->with($parameter2)
+            ->once()
+            ->andReturn($translateableTextParameter2);
 
         $options = [
             'key' => $this->optionsKey,
@@ -63,11 +93,11 @@ class TranslateableTextGeneratorTest extends MockeryTestCase
         ];
 
         $this->translateableText->shouldReceive('addParameter')
-            ->with($parameter1)
+            ->with($translateableTextParameter1)
             ->once()
             ->ordered();
         $this->translateableText->shouldReceive('addParameter')
-            ->with($parameter2)
+            ->with($translateableTextParameter2)
             ->once()
             ->ordered();
 

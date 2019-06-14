@@ -7,16 +7,23 @@ class TranslateableTextGenerator
     /** @var TranslateableTextFactory */
     private $translateableTextFactory;
 
+    /** @var TranslateableTextParameterGenerator */
+    private $translateableTextParameterGenerator;
+
     /**
      * Create service instance
      *
      * @param TranslateableTextFactory $translateableTextFactory
+     * @param TranslateableTextParameterGenerator $translateableTextParameterGenerator
      *
      * @return TranslateableTextGenerator
      */
-    public function __construct(TranslateableTextFactory $translateableTextFactory)
-    {
+    public function __construct(
+        TranslateableTextFactory $translateableTextFactory,
+        TranslateableTextParameterGenerator $translateableTextParameterGenerator
+    ) {
         $this->translateableTextFactory = $translateableTextFactory;
+        $this->translateableTextParameterGenerator = $translateableTextParameterGenerator;
     }
 
     /**
@@ -32,7 +39,9 @@ class TranslateableTextGenerator
 
         if (isset($options['parameters'])) {
             foreach ($options['parameters'] as $parameter) {
-                $translateableText->addParameter($parameter);
+                $translateableText->addParameter(
+                    $this->translateableTextParameterGenerator->generate($parameter)
+                );
             }
         }
 

@@ -24,10 +24,15 @@ class EcmtRemovalNoOfPermitsGeneratorTest extends MockeryTestCase
 
         $feeTypeEntity = m::mock(FeeTypeEntity::class);
 
-        $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getGuidance->getTranslateableText->setParameter')
-            ->with(0, $feePerPermit)
+        $translateableTextParameter = m::mock(TranslateableTextParameter::class);
+        $translateableTextParameter->shouldReceive('setValue')
+            ->with($feePerPermit)
             ->once();
+
+        $questionText = m::mock(QuestionText::class);
+        $questionText->shouldReceive('getGuidance->getTranslateableText->getParameter')
+            ->with(0)
+            ->andReturn($translateableTextParameter);
 
         $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
         $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity->getFeePerPermit')
