@@ -79,7 +79,7 @@ class Email implements FactoryInterface
         if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
             $multiTransport = new MultiTransportOptions($config['mail']['options']);
             $multiTransport->sl = $serviceLocator;
-            $transport->setOptions();
+            $transport->setOptions(new MultiTransportOptions($config['mail']['options']));
 
         }
 
