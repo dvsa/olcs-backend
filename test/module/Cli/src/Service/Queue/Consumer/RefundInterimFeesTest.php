@@ -2,6 +2,9 @@
 
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer;
 
+use Doctrine\ORM\ORMException;
+use DomainException;
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Failed;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -67,11 +70,22 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
         );
 
         $this->expectCommand(
+            UpdateFeeStatus::class,
+            [
+                'id' => $this->item->getEntityId(),
+                'status' => FeeEntity::STATUS_REFUNDED
+            ],
+            new Result(),
+            false
+        );
+
+        $this->expectCommand(
             Complete::class,
             ['item' => $this->item],
             new Result(),
             false
         );
+
 
         $result = $this->sut->processMessage($this->item);
 
@@ -95,12 +109,90 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             false
         );
 
+        $this->expectCommand(
+            UpdateFeeStatus::class,
+            [
+                'id' => $this->item->getEntityId(),
+                'status' => FeeEntity::STATUS_REFUND_FAILED
+            ],
+            new Result(),
+            false
+        );
+
         $result = $this->sut->processMessage($this->item);
 
         $this->assertEquals(
             'Failed to process message: ' . $this->item->getId() . '  Fee cannot be refunded',
             $result
         );
+    }
+
+    public function testProcessMessageException()
+    {
+        $this->makeSut(true);
+
+        $this->expectCommandException(
+            RefundFee::class,
+            [
+                'id' => $this->item->getEntityId(),
+                'customerReference' => null,
+                'customerName' => null,
+                'address' => null
+            ],
+            ORMException::class
+        );
+
+        $this->expectCommand(
+            UpdateFeeStatus::class,
+            [
+                'id' => $this->item->getEntityId(),
+                'status' => FeeEntity::STATUS_REFUND_FAILED
+            ],
+            new Result(),
+            false
+        );
+
+        $this->expectException(ORMException::class);
+        $this->sut->processMessage($this->item);
+    }
+
+    public function testProcessMessageFailed()
+    {
+        $this->makeSut(true);
+
+        $this->expectCommandException(
+            RefundFee::class,
+            [
+                'id' => $this->item->getEntityId(),
+                'customerReference' => null,
+                'customerName' => null,
+                'address' => null
+            ],
+            DomainException::class
+        );
+
+        $this->expectCommand(
+            Failed::class,
+            [
+                'item' => $this->item,
+                'lastError' => '',
+            ],
+            new Result(),
+            false
+        );
+
+
+        $this->expectCommand(
+            UpdateFeeStatus::class,
+            [
+                'id' => $this->item->getEntityId(),
+                'status' => FeeEntity::STATUS_REFUND_FAILED
+            ],
+            new Result(),
+            false
+        );
+
+        $this->sut->processMessage($this->item);
     }
 
     protected function makeSut(bool $canRefund)
