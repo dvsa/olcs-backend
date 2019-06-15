@@ -19,6 +19,11 @@ class MultiTransportOptions extends AbstractOptions
 
     private $s3Options;
 
+    public function __construct(array $options, S3FileOptions $s3Options)
+    {
+        $this->setS3Options($s3Options);
+        parent::__construct($options);
+    }
     /**
      * @param S3FileOptions $s3Options
      */
