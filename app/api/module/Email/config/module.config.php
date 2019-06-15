@@ -13,8 +13,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'S3FileOptions' =>\Dvsa\Olcs\Email\Transport\S3FileOptionsFactory::class,
-            Service\TemplateRenderer::class => \Dvsa\Olcs\Email\Service\TemplateRendererFactory::class,
+            'S3FileOptions' =>S3FileOptionsFactory::class,
+            Service\TemplateRenderer::class => TemplateRendererFactory::class,
             'EmailService' => Service\Email::class,
             'ImapService' => Service\Imap::class,
         ],
