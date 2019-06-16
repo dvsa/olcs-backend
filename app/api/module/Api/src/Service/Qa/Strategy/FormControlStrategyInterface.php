@@ -5,7 +5,12 @@ namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Qa\Element\SelfservePage;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
+use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 
 interface FormControlStrategyInterface
 {
@@ -19,17 +24,11 @@ interface FormControlStrategyInterface
     /**
      * Get an instance of ElementInterface representing this form control
      *
-     * @param ApplicationStep $applicationStep
-     * @param IrhpApplication $irhpApplication
-     * @param Answer $answer (optional)
+     * @param ElementGeneratorContext $context
      *
      * @return ElementInterface
      */
-    public function getElement(
-        ApplicationStep $applicationStep,
-        IrhpApplication $irhpApplication,
-        ?Answer $answer = null
-    );
+    public function getElement(ElementGeneratorContext $context);
 
     /**
      * Save the data for this form control to the persistent data store
@@ -41,9 +40,11 @@ interface FormControlStrategyInterface
     public function saveFormData(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, array $postData);
 
     /**
-     * Make any required changes to the Selfserve object
+     * Get a QuestionText instance corresponding to this form control
      *
-     * @param SelfservePage $page
+     * @param QuestionTextGeneratorContext $context
+     *
+     * @return QuestionText
      */
-    public function postProcessSelfservePage(SelfservePage $page);
+    public function getQuestionText(QuestionTextGeneratorContext $context);
 }

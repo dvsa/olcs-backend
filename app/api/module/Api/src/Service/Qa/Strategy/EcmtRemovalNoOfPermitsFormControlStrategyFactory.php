@@ -18,9 +18,9 @@ class EcmtRemovalNoOfPermitsFormControlStrategyFactory implements FactoryInterfa
     {
         return new BaseFormControlStrategy(
             'text',
-            $serviceLocator->get('QaTextElementGenerator'),
-            $serviceLocator->get('QaGenericAnswerSaver'),
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsSelfservePagePostProcessor')
+            $serviceLocator->get('QaTotAuthVehiclesTextElementGenerator'),
+            $serviceLocator->get('QaEcmtRemovalNoOfPermitsAnswerSaver'),
+            $serviceLocator->get('QaEcmtRemovalNoOfPermitsQuestionTextGenerator')
         );
     }
 }
