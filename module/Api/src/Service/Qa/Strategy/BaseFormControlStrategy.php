@@ -2,13 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\AnswerSaverInterface;
-use Dvsa\Olcs\Api\Service\Qa\Element\ElementGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\PostProcessor\SelfservePagePostProcessorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Element\SelfservePage;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 
 class BaseFormControlStrategy implements FormControlStrategyInterface
 {
@@ -21,8 +22,8 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     /** @var AnswerSaverInterface */
     private $answerSaver;
 
-    /** @var SelfservePagePostProcessorInterface */
-    private $selfservePagePostProcessor;
+    /** @var QuestionTextGeneratorInterface */
+    private $questionTextGenerator;
 
     /**
      * Create service instance
@@ -30,7 +31,7 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
      * @param string $frontendType
      * @param ElementGeneratorInterface $elementGenerator
      * @param AnswerSaverInterface $answerSaver
-     * @param SelfservePagePostProcessorInterface $selfservePagePostProcessor
+     * @param QuestionTextGeneratorInterface $questionTextGenerator
      *
      * @return BaseFormControlStrategy
      */
@@ -38,12 +39,12 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
         $frontendType,
         ElementGeneratorInterface $elementGenerator,
         AnswerSaverInterface $answerSaver,
-        SelfservePagePostProcessorInterface $selfservePagePostProcessor
+        QuestionTextGeneratorInterface $questionTextGenerator
     ) {
         $this->frontendType = $frontendType;
         $this->elementGenerator = $elementGenerator;
         $this->answerSaver = $answerSaver;
-        $this->selfservePagePostProcessor = $selfservePagePostProcessor;
+        $this->questionTextGenerator = $questionTextGenerator;
     }
 
     /**
@@ -57,12 +58,9 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function getElement(
-        ApplicationStep $applicationStep,
-        IrhpApplication $irhpApplication,
-        ?Answer $answer = null
-    ) {
-        return $this->elementGenerator->generate($applicationStep, $irhpApplication, $answer);
+    public function getElement(ElementGeneratorContext $context)
+    {
+        return $this->elementGenerator->generate($context);
     }
 
     /**
@@ -76,8 +74,8 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function postProcessSelfservePage(SelfservePage $page)
+    public function getQuestionText(QuestionTextGeneratorContext $questionTextGeneratorContext)
     {
-        $this->selfservePagePostProcessor->process($page);
+        return $this->questionTextGenerator->generate($questionTextGeneratorContext);
     }
 }
