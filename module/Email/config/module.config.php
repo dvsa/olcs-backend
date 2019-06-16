@@ -3,7 +3,6 @@
 use Dvsa\Olcs\Email\Domain\Command;
 use Dvsa\Olcs\Email\Domain\CommandHandler;
 use Dvsa\Olcs\Email\Service;
-use Dvsa\Olcs\Email\Service\TemplateRendererFactory;
 use Dvsa\Olcs\Email\Transport\S3FileOptionsFactory;
 
 return [
@@ -15,8 +14,8 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'S3FileOptions' =>S3FileOptionsFactory::class,
-            Service\TemplateRenderer::class => TemplateRendererFactory::class,
+            'S3FileOptions' => S3FileOptionsFactory::class,
+            Service\TemplateRenderer::class => Service\TemplateRendererFactory::class,
             'EmailService' => Service\Email::class,
             'ImapService' => Service\Imap::class,
         ],
