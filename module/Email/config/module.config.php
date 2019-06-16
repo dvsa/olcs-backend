@@ -3,6 +3,8 @@
 use Dvsa\Olcs\Email\Domain\Command;
 use Dvsa\Olcs\Email\Domain\CommandHandler;
 use Dvsa\Olcs\Email\Service;
+use Dvsa\Olcs\Email\Service\TemplateRendererFactory;
+use Dvsa\Olcs\Email\Transport\S3FileOptionsFactory;
 
 return [
     'email' => [
