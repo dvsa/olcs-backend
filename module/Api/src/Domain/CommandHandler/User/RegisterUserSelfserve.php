@@ -122,7 +122,6 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
             }
         } catch (\Exception $e) {
             // swallow any exception
-            throw $e;
         }
 
         $result->addId('user', $user->getId());
