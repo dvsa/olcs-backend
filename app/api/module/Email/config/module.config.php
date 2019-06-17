@@ -14,7 +14,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'S3FileOptions' => S3FileOptionsFactory::class,
+             \Dvsa\Olcs\Email\Transport\S3FileOptions::class => S3FileOptionsFactory::class,
             Service\TemplateRenderer::class => Service\TemplateRendererFactory::class,
             'EmailService' => Service\Email::class,
             'ImapService' => Service\Imap::class,
