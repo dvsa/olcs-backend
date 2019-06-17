@@ -571,7 +571,6 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->getMock();
 
         $transportConsultantCd = m::mock(ContactDetailsEntity::class);
-        $transportConsultantCd->shouldReceive('setDeletedDate')->once()->andReturnSelf();
         $transportConsultantAddress = m::mock(AddressEntity::class);
         $transportConsultantCd->shouldReceive('getAddress')->andReturn($transportConsultantAddress);
         $licence = m::mock(LicenceEntity::class)
@@ -821,7 +820,6 @@ class SaveAddressesTest extends CommandHandlerTestCase
             ->getMock();
 
         $transportConsultantCd = m::mock(ContactDetailsEntity::class);
-        $transportConsultantCd->shouldReceive('setDeletedDate')->once()->andReturnSelf();
         $transportConsultantCd->shouldReceive('getAddress')->andReturn(null);
         $licence = m::mock(LicenceEntity::class)
             ->makePartial()
