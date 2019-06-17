@@ -38,8 +38,23 @@ class S3FileOptionsFactoryTest extends MockeryTestCase
                 's3Options' => [
                     'roleArn' => 'test',
                     'roleSessionName' => 'test'
+                ]
+            ],
+            'mail' => [
+                'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
+                'options' => [
+                    'transport' => [
+                        ['type' => 'SendMail'],
+                        [
+                            'type' => '\Dvsa\Olcs\Email\Transport\S3File',
+                            'options' => [
+                                'bucket' => 'devapp-olcs-pri-olcs-autotest-s3',
+                                'key' => '/olcs.da.nonprod.dvsa.aws/email'
+                            ]
+                        ],
+                    ]
                 ],
-            ]
+            ],
         ];
         $provider = \Mockery::mock(CredentialsInterface::class);
         // Mocks
