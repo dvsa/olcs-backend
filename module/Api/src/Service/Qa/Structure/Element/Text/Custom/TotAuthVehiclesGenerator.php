@@ -32,12 +32,11 @@ class TotAuthVehiclesGenerator implements ElementGeneratorInterface
 
         $totAuthVehicles = $context->getIrhpApplicationEntity()->getLicence()->getTotAuthVehicles();
 
-        $betweenRule = $context->getValidatorList()->getValidatorByRule('Between');
-        $betweenRule->setParameter('min', 1);
+        $betweenRule = $context->getValidatorList()->getValidatorByRule('LessThan');
         $betweenRule->setParameter('max', $totAuthVehicles);
 
         $label = $textElement->getHint();
-        $label->setParameter(0, $totAuthVehicles);
+        $label->getParameter(0)->setValue($totAuthVehicles);
 
         return $textElement;
     }

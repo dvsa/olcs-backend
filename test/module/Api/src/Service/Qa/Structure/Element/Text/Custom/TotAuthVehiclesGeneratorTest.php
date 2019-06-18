@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\TotAuthVehiclesGenera
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Text;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\TextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextParameter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -24,15 +25,12 @@ class TotAuthVehiclesGeneratorTest extends MockeryTestCase
 
         $validator = m::mock(Validator::class);
         $validator->shouldReceive('setParameter')
-            ->with('min', 1)
-            ->once();
-        $validator->shouldReceive('setParameter')
             ->with('max', $totAuthVehicles)
             ->once();
 
         $validatorList = m::mock(ValidatorList::class);
         $validatorList->shouldReceive('getValidatorByRule')
-            ->with('Between')
+            ->with('LessThan')
             ->andReturn($validator);
 
         $elementGeneratorContext = m::mock(ElementGeneratorContext::class);
@@ -41,10 +39,15 @@ class TotAuthVehiclesGeneratorTest extends MockeryTestCase
         $elementGeneratorContext->shouldReceive('getValidatorList')
             ->andReturn($validatorList);
 
-        $hintTranslateableText = m::mock(TranslateableText::class);
-        $hintTranslateableText->shouldReceive('setParameter')
-            ->with(0, $totAuthVehicles)
+        $hintTranslateableTextParameter = m::mock(TranslateableTextParameter::class);
+        $hintTranslateableTextParameter->shouldReceive('setValue')
+            ->with($totAuthVehicles)
             ->once();
+
+        $hintTranslateableText = m::mock(TranslateableText::class);
+        $hintTranslateableText->shouldReceive('getParameter')
+            ->with(0)
+            ->andReturn($hintTranslateableTextParameter);
 
         $text = m::mock(Text::class);
         $text->shouldReceive('getHint')
