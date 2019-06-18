@@ -83,9 +83,7 @@ class Fee extends AbstractRepository
         $doctrineQb->join($this->alias . '.feeType', 'fty')
             ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':feeType'));
         $doctrineQb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_GRANTINT);
-
-        $doctrineQb->andWhere($doctrineQb->expr()->lt('ftr.amount', 0));
-
+        
         if (!is_null($after) && !is_null($before)) {
             $doctrineQb
                 ->andWhere($doctrineQb->expr()->gte($this->alias . '.invoicedDate', ':after'))
