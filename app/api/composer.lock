@@ -7,7 +7,7 @@
     "content-hash": "940c501a3a24f280c522a00bc5a31d4b",
     "packages": [
         {
-            "name": "beberlei/DoctrineExtensions",
+            "name": "beberlei/doctrineextensions",
             "version": "v1.2.1",
             "dist": {
                 "type": "zip",
@@ -1808,12 +1808,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.10",
+            "version": "4.206.11",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.10/olcs-olcs-transfer-4.206.10.zip",
-                "reference": "f1a95e05dca9a6794b5c5f304566eaa08d1f8d86",
-                "shasum": "f1a95e05dca9a6794b5c5f304566eaa08d1f8d86"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.11/olcs-olcs-transfer-4.206.11.zip",
+                "reference": "e8f002b46cc1c811e2bafb1d0370d1c2babe3f13",
+                "shasum": "e8f002b46cc1c811e2bafb1d0370d1c2babe3f13"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -1869,7 +1869,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-06-14T09:29:43+00:00"
+            "time": "2019-06-18T13:19:26+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -4376,7 +4376,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -4512,11 +4512,11 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.11.2",
+            "version": "v2.11.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/twig/twig/v2.11.2/twig-twig-v2.11.2.zip",
-                "reference": "84a463403da1c81afbcedda8f0e788c78bd25a79",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/twig/twig/v2.11.3/twig-twig-v2.11.3.zip",
+                "reference": "699ed2342557c88789a15402de5eb834dedd6792",
                 "shasum": ""
             },
             "require": {
@@ -4569,7 +4569,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-06-05T11:17:07+00:00"
+            "time": "2019-06-18T15:37:11+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -4968,7 +4968,7 @@
             "time": "2019-02-24T02:40:12+00:00"
         },
         {
-            "name": "mikey179/vfsStream",
+            "name": "mikey179/vfsstream",
             "version": "v1.4.0",
             "dist": {
                 "type": "zip",
