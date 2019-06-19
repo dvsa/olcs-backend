@@ -113,7 +113,7 @@ abstract class AbstractApplicationValidation implements BundleSerializableInterf
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="parameters", length=255, nullable=true)
+     * @ORM\Column(type="string", name="parameters", length=1024, nullable=true)
      */
     protected $parameters;
 
