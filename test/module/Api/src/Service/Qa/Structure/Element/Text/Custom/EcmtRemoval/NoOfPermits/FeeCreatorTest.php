@@ -56,7 +56,7 @@ class FeeCreatorTest extends MockeryTestCase
             ->andReturn($irhpApplicationId);
         $irhpApplication->shouldReceive('getLicence->getId')
             ->andReturn($licenceId);
-        $irhpApplication->shouldReceive('getOutstandingIssueFees')
+        $irhpApplication->shouldReceive('getOutstandingIrfoPermitFees')
             ->andReturn($outstandingIssueFees);
 
         $currentDateTime = m::mock(DateTime::class);
