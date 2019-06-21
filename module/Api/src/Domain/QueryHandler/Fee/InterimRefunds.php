@@ -24,7 +24,7 @@ class InterimRefunds extends AbstractQueryHandler
         $before = $query->getEndDate();
         $sort = $query->getSort();
         $order = $query->getOrder();
-        $trafficArea = $query->getTrafficArea();
+        $trafficArea = $query->getTrafficAreas();
 
         $refunds = $repo->fetchInterimRefunds($after, $before, $sort, $order, $trafficArea);
 

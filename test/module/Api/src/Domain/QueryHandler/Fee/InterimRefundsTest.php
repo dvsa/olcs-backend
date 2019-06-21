@@ -56,7 +56,7 @@ class InterimRefundsTest extends QueryHandlerTestCase
                 $query->getEndDate(),
                 $query->getSort(),
                 $query->getOrder(),
-                $query->getTrafficArea()
+                $query->getTrafficAreas()
             )
             ->once()
             ->andReturn($expected);
