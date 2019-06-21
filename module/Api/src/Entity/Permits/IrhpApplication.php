@@ -742,6 +742,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Get a list of outstanding irfo permit fees relating to this application
+     *
+     * @return array
+     */
+    public function getOutstandingIrfoPermitFees()
+    {
+        return $this->getOutstandingFeesByType(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT);
+    }
+
+    /**
      * Get outstanding fees by types
      *
      * @param int $feeTypeId

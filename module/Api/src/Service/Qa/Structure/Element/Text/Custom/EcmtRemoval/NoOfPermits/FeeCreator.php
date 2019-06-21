@@ -57,7 +57,8 @@ class FeeCreator
     {
         $feeCommands = [];
 
-        $outstandingIssueFees = $irhpApplication->getOutstandingIssueFees();
+        $outstandingIssueFees = $irhpApplication->getOutstandingIrfoPermitFees();
+
         foreach ($outstandingIssueFees as $fee) {
             $feeCommands[] = $this->commandCreator->create(
                 CancelFee::class,

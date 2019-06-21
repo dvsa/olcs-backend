@@ -43,7 +43,7 @@ class EcmtRemovalNoOfPermitsGenerator implements QuestionTextGeneratorInterface
         );
 
         $questionText = $this->questionTextGenerator->generate($context);
-        $questionText->getGuidance()->getTranslateableText()->setParameter(0, $feePerPermit);
+        $questionText->getGuidance()->getTranslateableText()->getParameter(0)->setValue($feePerPermit);
 
         return $questionText;
     }

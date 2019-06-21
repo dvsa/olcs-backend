@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextParameter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
 use Mockery as m;
@@ -18,7 +19,11 @@ class TranslateableTextTest extends MockeryTestCase
 {
     private $key;
 
+    private $parameter1Representation;
+
     private $parameter1;
+
+    private $parameter2Representation;
 
     private $parameter2;
 
@@ -27,8 +32,24 @@ class TranslateableTextTest extends MockeryTestCase
     public function setUp()
     {
         $this->key = 'translateableTextKey';
-        $this->parameter1 = 'parameter1';
-        $this->parameter2 = 'parameter2';
+
+        $this->parameter1Representation = [
+            'value' => 'parameter1Value',
+            'formatter' => 'parameter1Formatter'
+        ];
+
+        $this->parameter1 = m::mock(TranslateableTextParameter::class);
+        $this->parameter1->shouldReceive('getRepresentation')
+            ->andReturn($this->parameter1Representation);
+
+        $this->parameter2Representation = [
+            'value' => 'parameter2Value',
+            'formatter' => 'parameter2Formatter'
+        ];
+
+        $this->parameter2 = m::mock(TranslateableTextParameter::class);
+        $this->parameter2->shouldReceive('getRepresentation')
+            ->andReturn($this->parameter2Representation);
 
         $this->translateableText = new TranslateableText($this->key);
         $this->translateableText->addParameter($this->parameter1);
@@ -40,8 +61,8 @@ class TranslateableTextTest extends MockeryTestCase
         $expectedRepresentation = [
             'key' => $this->key,
             'parameters' => [
-                $this->parameter1,
-                $this->parameter2
+                $this->parameter1Representation,
+                $this->parameter2Representation
             ]
         ];
 
@@ -51,31 +72,24 @@ class TranslateableTextTest extends MockeryTestCase
         );
     }
 
-    public function testSetParameter()
+    public function testGetParameter()
     {
-        $newParameter2 = 'newParameter2';
+        $this->assertSame(
+            $this->parameter1,
+            $this->translateableText->getParameter(0)
+        );
 
-        $expectedRepresentation = [
-            'key' => $this->key,
-            'parameters' => [
-                $this->parameter1,
-                $newParameter2
-            ]
-        ];
-
-        $this->translateableText->setParameter(1, $newParameter2);
-
-        $this->assertEquals(
-            $expectedRepresentation,
-            $this->translateableText->getRepresentation()
+        $this->assertSame(
+            $this->parameter2,
+            $this->translateableText->getParameter(1)
         );
     }
 
-    public function testSetParameterBadIndex()
+    public function testGetParameterBadIndex()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No parameter exists at index 4');
 
-        $this->translateableText->setParameter(4, 'foo');
+        $this->translateableText->getParameter(4, 'foo');
     }
 }

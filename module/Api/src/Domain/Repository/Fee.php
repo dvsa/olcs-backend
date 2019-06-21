@@ -53,8 +53,7 @@ class Fee extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
-
-    public function fetchInterimRefunds($after, $before, $sort, $order, array $trafficArea = null)
+    public function fetchInterimRefunds($after, $before, $sort, $order, array $trafficArea = [])
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -83,9 +82,7 @@ class Fee extends AbstractRepository
         $doctrineQb->join($this->alias . '.feeType', 'fty')
             ->andWhere($doctrineQb->expr()->eq('fty.feeType', ':feeType'));
         $doctrineQb->setParameter('feeType', FeeTypeEntity::FEE_TYPE_GRANTINT);
-
-        $doctrineQb->andWhere($doctrineQb->expr()->lt('ftr.amount', 0));
-
+        
         if (!is_null($after) && !is_null($before)) {
             $doctrineQb
                 ->andWhere($doctrineQb->expr()->gte($this->alias . '.invoicedDate', ':after'))
@@ -96,16 +93,12 @@ class Fee extends AbstractRepository
                 ->setParameter('before', $before);
         }
 
-        if (!is_null($trafficArea) && is_array($trafficArea)) {
-            $conditions = [];
-            for ($i = 0; $i < count($trafficArea); $i++) {
-                $conditions[] = 'ftr.trafficArea = :trafficArea' . $i;
-            }
-            $orX = $doctrineQb->expr()->orX()->addMultiple($conditions);
-            $doctrineQb->andWhere($orX);
-            for ($i = 0; $i < count($trafficArea); $i++) {
-                $doctrineQb->setParameter('trafficArea' . $i, $trafficArea[$i]);
-            }
+        if (!empty($trafficArea)) {
+            $doctrineQb->andWhere($doctrineQb->expr()->in('l.trafficArea', ':trafficArea'))
+                ->setParameter(
+                    'trafficArea',
+                    $trafficArea
+                );
         }
 
         return $doctrineQb->getQuery()->getResult();
