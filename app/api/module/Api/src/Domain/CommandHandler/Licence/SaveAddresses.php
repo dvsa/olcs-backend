@@ -278,7 +278,6 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
             $this->updatePhoneContacts($params['contact'], $transportConsultant);
         } elseif ($licence->getTransportConsultantCd()) {
-            $licence->getTransportConsultantCd()->setDeletedDate(new \DateTime('now'));
             $this->maybeDeleteContactDetailsAndAddress($licence->getTransportConsultantCd());
             $licence->setTransportConsultantCd(null);
             $result->setFlag('hasChanged', true);

@@ -112,9 +112,8 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('expr->isNotNull')->with('COALESCE(a.withdrawnDate, a.refusedDate, a.grantedDate)')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->gte')->with($alias . '.invoicedDate', ':after')->once()->andReturnSelf();
         $mockQb->shouldReceive('expr->lte')->with($alias . '.invoicedDate', ':before')->once()->andReturnSelf();
-        $mockQb->shouldReceive('expr->lt')->with('ftr.amount', '0')->andReturnSelf();
-        $mockQb->shouldReceive('expr->orX')->once()->andReturn(new Orx());
         $mockQb->shouldReceive('expr->in')->once()->with('f.feeStatus', ':feeStatus')->andReturnSelf();
+        $mockQb->shouldReceive('expr->in')->once()->with('l.trafficArea', ':trafficArea')->andReturnSelf();
         $mockQb->shouldReceive('expr')->andReturn(new Expr());
 
         $mockQb->shouldReceive('andWhere')->andReturnSelf();
@@ -128,8 +127,7 @@ class FeeTest extends RepositoryTestCase
         $mockQb->shouldReceive('setParameter')->with('feeType', FeeTypeEntity::FEE_TYPE_GRANTINT)->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('after', $startDate)->andReturnSelf();
         $mockQb->shouldReceive('setParameter')->with('before', $endDate)->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('trafficArea0', $trafficAreas[0])->andReturnSelf();
-        $mockQb->shouldReceive('setParameter')->with('trafficArea1', $trafficAreas[1])->andReturnSelf();
+        $mockQb->shouldReceive('setParameter')->with('trafficArea', $trafficAreas)->andReturnSelf();
 
         $mockQb->shouldReceive('getQuery->getResult')->once()->andReturn('result');
 

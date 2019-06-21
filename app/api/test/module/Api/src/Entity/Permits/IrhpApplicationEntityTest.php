@@ -3333,6 +3333,25 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertSame($fee4, $outstandingIssueFees[1]);
     }
 
+    public function testGetOutstandingIrfoPermitFees()
+    {
+        $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, true);
+        $fee2 = $this->createMockFee(FeeType::FEE_TYPE_IRFOGVPERMIT, false);
+        $fee3 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, false);
+        $fee4 = $this->createMockFee(FeeType::FEE_TYPE_IRFOGVPERMIT, true);
+        $fee5 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
+        $fee6 = $this->createMockFee(FeeType::FEE_TYPE_IRFOGVPERMIT, true);
+
+        $this->sut->setFees(
+            new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5, $fee6])
+        );
+
+        $outstandingIrfoPermitFees = $this->sut->getOutstandingIrfoPermitFees();
+        $this->assertCount(2, $outstandingIrfoPermitFees);
+        $this->assertSame($fee4, $outstandingIrfoPermitFees[0]);
+        $this->assertSame($fee6, $outstandingIrfoPermitFees[1]);
+    }
+
     public function testGetContextValue()
     {
         $irhpApplicationId = 87;

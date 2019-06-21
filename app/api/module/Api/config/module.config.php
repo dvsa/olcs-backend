@@ -32,6 +32,7 @@ return [
             'QaSelfservePageFactory' => ApiSrv\Qa\Structure\SelfservePageFactory::class,
             'QaTextElementFactory' => ApiSrv\Qa\Structure\Element\Text\TextFactory::class,
             'QaTranslateableTextFactory' => ApiSrv\Qa\Structure\TranslateableTextFactory::class,
+            'QaTranslateableTextParameterFactory' => ApiSrv\Qa\Structure\TranslateableTextParameterFactory::class,
             'QaValidatorFactory' => ApiSrv\Qa\Structure\ValidatorFactory::class,
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
@@ -160,6 +161,7 @@ return [
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
             'QaTotAuthVehiclesTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\Custom\TotAuthVehiclesGeneratorFactory::class,
             'QaTranslateableTextGenerator' => ApiSrv\Qa\Structure\TranslateableTextGeneratorFactory::class,
+            'QaTranslateableTextParameterGenerator' => ApiSrv\Qa\Structure\TranslateableTextParameterGeneratorFactory::class,
             'QaJsonDecodingFilteredTranslateableTextGenerator'
                 => ApiSrv\Qa\Structure\JsonDecodingFilteredTranslateableTextGeneratorFactory::class,
             'QaValidatorGenerator' => ApiSrv\Qa\Structure\ValidatorGeneratorFactory::class,
