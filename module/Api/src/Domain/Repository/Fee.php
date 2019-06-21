@@ -53,8 +53,7 @@ class Fee extends AbstractRepository
         return $doctrineQb->getQuery()->getResult();
     }
 
-
-    public function fetchInterimRefunds($after, $before, $sort, $order, array $trafficArea = null)
+    public function fetchInterimRefunds($after, $before, $sort, $order, array $trafficArea = [])
     {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -94,7 +93,7 @@ class Fee extends AbstractRepository
                 ->setParameter('before', $before);
         }
 
-        if (!is_null($trafficArea) && is_array($trafficArea)) {
+        if (!empty($trafficArea)) {
             $doctrineQb->andWhere($doctrineQb->expr()->in('l.trafficArea', ':trafficArea'))
                 ->setParameter(
                     'trafficArea',
