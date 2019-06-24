@@ -222,6 +222,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canMakeDeclaration' => $this->canMakeDeclaration(),
             'permitsRequired' => $this->getPermitsRequired(),
             'canUpdateCountries' => $this->canUpdateCountries(),
+            'questionAnswerData' => $this->getQuestionAnswerData(),
         ];
     }
 
@@ -263,7 +264,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
         $previousQuestionStatus = $status;
 
-        // list of defined steps
+        /**
+         * list of defined steps
+         *
+         * @var ApplicationStep $applicationStep
+         */
         foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
             $question = $applicationStep->getQuestion();
             $answer = null;
@@ -279,11 +284,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
             $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
 
+            $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
+            $questionKey = $questionJson['translateableText']['key'];
+
             $data[] = [
                 'section' => $question->getSlug(),
                 'slug' => $question->getSlug(),
                 'questionShort' => $activeQuestionText->getQuestionShortKey(),
-                'question' => $activeQuestionText->getQuestionKey(),
+                'question' => $questionKey,
+                'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
                 'answer' => $answer,
                 'status' => $status,
             ];
