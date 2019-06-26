@@ -92,7 +92,7 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="guidance_key", length=255, nullable=true)
+     * @ORM\Column(type="string", name="guidance_key", length=1024, nullable=true)
      */
     protected $guidanceKey;
 

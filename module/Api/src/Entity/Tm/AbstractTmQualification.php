@@ -141,7 +141,7 @@ abstract class AbstractTmQualification implements BundleSerializableInterface, J
      *
      * @var string
      *
-     * @ORM\Column(type="string", name="serial_no", length=20, nullable=true)
+     * @ORM\Column(type="string", name="serial_no", length=50, nullable=true)
      */
     protected $serialNo;
 
