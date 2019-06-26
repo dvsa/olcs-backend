@@ -34,12 +34,13 @@ class S3FileTest extends MockeryTestCase
         $mockS3Client = m::mock(S3Client::class);
         $mockS3Client->shouldReceive('putObject')->once()->with([
             'Bucket' => 'testBucket',
-            'Key' => 'TEST_SUBJECT',
+            'Key' => 'testKey/TEST_SUBJECT',
             'SourceFile' => 'EMAIL_FILE'
         ])->andReturnSelf();
         $mockOptions = m::mock(S3FileOptions::class);
         $mockOptions->shouldReceive('getS3Client')->andReturn($mockS3Client);
         $mockOptions->shouldReceive('getS3Bucket')->andReturn('testBucket');
+        $mockOptions->shouldReceive('getS3Key')->andReturn('testKey');
         $mockOptions->shouldReceive('getAwsOptions')->andReturn(['region' => 'test', "version" => 'latest']);
 
         $sut = m::mock(S3File::class, [$mockFileTransport])->makePartial()->shouldAllowMockingProtectedMethods();
@@ -64,7 +65,7 @@ class S3FileTest extends MockeryTestCase
         $mockS3Client->shouldReceive('putObject')->once()->with(
             [
                 'Bucket' => 'testBucket',
-                'Key' => 'TEST_SUBJECT',
+                'Key' => 'testKey/TEST_SUBJECT',
                 'SourceFile' => 'EMAIL_FILE'
             ]
         )->andThrow(
