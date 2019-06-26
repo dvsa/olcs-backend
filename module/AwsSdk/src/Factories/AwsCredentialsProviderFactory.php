@@ -26,21 +26,8 @@ class AwsCredentialsProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config = $serviceLocator->get('Config');
-        $profile = new InstanceProfileProvider();
-        $assumeRoleCredentials = new AssumeRoleCredentialProvider([
-            'client' => new StsClient([
-                'region' => $config['awsOptions']['region'],
-                'version' => $config['awsOptions']['version'],
-                'credentials' => $profile
-            ]),
-            'assume_role_params' => [
-                'RoleArn' => $config['awsOptions']['s3Options']['roleArn'],
-                'RoleSessionName' => $config['awsOptions']['s3Options']['roleSessionName'],
-            ]
-        ]);
-
-        $provider = CredentialProvider::memoize($assumeRoleCredentials);
+        $credentialsProvider = CredentialProvider::instanceProfile();
+        $provider = CredentialProvider::memoize($credentialsProvider);
         return $provider;
     }
 }
