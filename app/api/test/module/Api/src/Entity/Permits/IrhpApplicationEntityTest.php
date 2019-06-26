@@ -133,7 +133,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('canUpdateCountries')
             ->once()
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getQuestionAnswerData')
+            ->once()
+            ->withNoArgs()
+            ->andReturn([]);
 
         $this->assertSame(
             [
@@ -160,6 +164,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
                 'canUpdateCountries' => true,
+                'questionAnswerData' => [],
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -2849,7 +2854,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $question1Text = m::mock(QuestionText::class);
         $question1Text->shouldReceive('getId')->withNoArgs()->andReturn($question1TextId);
         $question1Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q1-short-key');
-        $question1Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('q1-key');
+        $question1Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('{"translateableText": {"key": "q1-key"}}');
+        $question1Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q1-type');
 
         $question1 = m::mock(Question::class);
         $question1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
@@ -2868,7 +2874,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $question2Text = m::mock(QuestionText::class);
         $question2Text->shouldReceive('getId')->withNoArgs()->andReturn($question2TextId);
         $question2Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q2-short-key');
-        $question2Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('q2-key');
+        $question2Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('{"translateableText": {"key": "q2-key"}}');
+        $question2Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q2-type');
 
         $question2 = m::mock(Question::class);
         $question2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
@@ -2906,6 +2913,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
@@ -2914,6 +2922,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
@@ -2958,6 +2967,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
@@ -2966,6 +2976,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
@@ -3010,6 +3021,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3018,6 +3030,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
@@ -3062,6 +3075,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3070,6 +3084,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3114,6 +3129,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3122,6 +3138,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3166,6 +3183,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3174,6 +3192,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
