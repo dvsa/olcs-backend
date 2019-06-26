@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\Credentials\AssumeRoleCredentialProvider;
 use Aws\Credentials\CredentialProvider;
+use Aws\Credentials\InstanceProfileProvider;
 use Aws\Sts\StsClient;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -26,10 +27,12 @@ class AwsCredentialsProviderFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('Config');
+        $profile = new InstanceProfileProvider();
         $assumeRoleCredentials = new AssumeRoleCredentialProvider([
             'client' => new StsClient([
                 'region' => $config['awsOptions']['region'],
-                'version' => $config['awsOptions']['version']
+                'version' => $config['awsOptions']['version'],
+                'credentials' => $profile
             ]),
             'assume_role_params' => [
                 'RoleArn' => $config['awsOptions']['s3Options']['roleArn'],
