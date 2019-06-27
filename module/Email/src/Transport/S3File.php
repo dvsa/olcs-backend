@@ -73,9 +73,19 @@ class S3File implements TransportInterface
         $this->fileTransport->send($message);
         $file = $this->fileTransport->getLastFile();
 
+        $filePath = $this->fileTransport->getOptions()->getPath();
+
         $filter = new Alnum(true);
 
         $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
+
+        file_put_contents($filePath.DIRECTORY_SEPARATOR.$s3FileName, file_get_contents($file));
+
+        if(file_exists($filePath.DIRECTORY_SEPARATOR.$s3FileName))
+        {
+            $tmpFile = $filePath.DIRECTORY_SEPARATOR.$s3FileName;
+
+        }
 
         $s3Client = $this->getOptions()->getS3Client();
 
@@ -85,15 +95,17 @@ class S3File implements TransportInterface
         try {
             $s3Client->putObject([
                 'Bucket' => $bucket,
-                'Key' => $key."/".$s3FileName,
-                'SourceFile' => $file
+                'Key' => $key,
+                'SourceFile' => $tmpFile
             ]);
         } catch (S3Exception $e) {
             $this->deleteFile($file); //clean up email file
+            $this->deleteFile($tmpFile); //clean up copied s3file
             throw new RuntimeException('Cannot send mail to S3 : ' . $e->getAwsErrorMessage());
         }
 
         $this->deleteFile($file);
+        $this->deleteFile($tmpFile);
     }
 
     /**
