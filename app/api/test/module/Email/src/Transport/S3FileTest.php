@@ -11,6 +11,7 @@ use Dvsa\Olcs\Email\Transport\MultiTransportOptions;
 use Dvsa\Olcs\Email\Transport\S3File;
 use Dvsa\Olcs\Email\Transport\S3FileOptions;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use org\bovigo\vfs\vfsStream;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\Exception\RuntimeException;
 use Zend\Mail\Transport\File;
@@ -22,20 +23,35 @@ use Mockery as m;
  */
 class S3FileTest extends MockeryTestCase
 {
+    /**
+     * @var \org\bovigo\vfs\vfsStreamDirectory
+     */
+    protected $path;
+
+    public function setUp()
+    {
+        $this->path = vfsStream::setup('path');
+    }
+
     public function testSendSuccess()
     {
-
+        vfsStream::newFile('example')->at($this->path)->withContent('~');
         $mockMessage = m::mock(Message::class);
         $mockMessage->shouldReceive('getSubject')->with()->once()->andReturn('__-TEST %$£%SUBJECT*&&^');
-
+        $file = $this->path->url()."/example";
         $mockFileTransport = m::mock(File::class);
         $mockFileTransport->shouldReceive('send')->with($mockMessage)->once();
-        $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn('EMAIL_FILE');
+        $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn(
+            $file
+        );
+        $mockFileTransport->shouldReceive('getOptions->getPath')->once()->andReturn($this->path->url());
+
+
         $mockS3Client = m::mock(S3Client::class);
         $mockS3Client->shouldReceive('putObject')->once()->with([
             'Bucket' => 'testBucket',
-            'Key' => 'testKey/TEST_SUBJECT',
-            'SourceFile' => 'EMAIL_FILE'
+            'Key' => 'testKey',
+            'SourceFile' => 'vfs://path/TEST_SUBJECT'
         ])->andReturnSelf();
         $mockOptions = m::mock(S3FileOptions::class);
         $mockOptions->shouldReceive('getS3Client')->andReturn($mockS3Client);
@@ -46,27 +62,32 @@ class S3FileTest extends MockeryTestCase
         $sut = m::mock(S3File::class, [$mockFileTransport])->makePartial()->shouldAllowMockingProtectedMethods();
         $sut->setOptions($mockOptions);
 
-
-        $sut->shouldReceive('deleteFile')->with('EMAIL_FILE')->once();
+        $sut->shouldReceive('deleteFile')->with($file)->once();
+        $sut->shouldReceive('deleteFile')->with('vfs://path/TEST_SUBJECT')->once();
 
         $sut->send($mockMessage);
     }
 
     public function testSendFail()
     {
+        vfsStream::newFile('example')->at($this->path)->withContent('~');
         $mockMessage = m::mock(Message::class);
         $mockMessage->shouldReceive('getSubject')->with()->once()->andReturn('__-TEST %$£%SUBJECT*&&^');
-
+        $file = $this->path->url()."/example";
         $mockFileTransport = m::mock(File::class);
         $mockFileTransport->shouldReceive('send')->with($mockMessage)->once();
-        $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn('EMAIL_FILE');
+        $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn(
+            $file
+        );
+        $mockFileTransport->shouldReceive('getOptions->getPath')->once()->andReturn($this->path->url());
+
 
         $mockS3Client = m::mock(S3Client::class);
         $mockS3Client->shouldReceive('putObject')->once()->with(
             [
                 'Bucket' => 'testBucket',
-                'Key' => 'testKey/TEST_SUBJECT',
-                'SourceFile' => 'EMAIL_FILE'
+                'Key' => 'testKey',
+                'SourceFile' => 'vfs://path/TEST_SUBJECT'
             ]
         )->andThrow(
             new S3Exception('test', new Command('test'))
@@ -81,7 +102,8 @@ class S3FileTest extends MockeryTestCase
         $sut = m::mock(S3File::class, [$mockFileTransport])->makePartial()->shouldAllowMockingProtectedMethods();
         $sut->setOptions($mockOptions);
 
-        $sut->shouldReceive('deleteFile')->with('EMAIL_FILE')->once();
+        $sut->shouldReceive('deleteFile')->with('vfs://path/TEST_SUBJECT')->once();
+        $sut->shouldReceive('deleteFile')->with($file)->once();
 
         $this->expectException(RuntimeException::class, "Cannot send mail to S3 : OUTPUT 1");
 
