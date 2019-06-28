@@ -72,9 +72,6 @@ class S3File implements TransportInterface
     {
         $this->fileTransport->send($message);
         $file = $this->fileTransport->getLastFile();
-
-        $filePath = $this->fileTransport->getOptions()->getPath();
-
         $filter = new Alnum(true);
 
         $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);

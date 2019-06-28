@@ -44,7 +44,7 @@ class S3FileTest extends MockeryTestCase
         $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn(
             $file
         );
-        $mockFileTransport->shouldReceive('getOptions->getPath')->once()->andReturn($this->path->url());
+
 
 
         $mockS3Client = m::mock(S3Client::class);
@@ -79,7 +79,6 @@ class S3FileTest extends MockeryTestCase
         $mockFileTransport->shouldReceive('getLastFile')->with()->once()->andReturn(
             $file
         );
-        $mockFileTransport->shouldReceive('getOptions->getPath')->once()->andReturn($this->path->url());
 
 
         $mockS3Client = m::mock(S3Client::class);
