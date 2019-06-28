@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelOutstandingFees;
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -501,6 +502,15 @@ class RefuseApplicationTest extends CommandHandlerTestCase
                 'entityId' => 1,
                 'type' => Queue::TYPE_REFUND_INTERIM_FEES,
                 'status' => Queue::STATUS_QUEUED
+            ],
+            new Result()
+        );
+
+        $this->expectedSideEffect(
+            UpdateFeeStatus::class,
+            [
+                'id' => $feeEntity->getId(),
+                'status' => Fee::STATUS_REFUND_PENDING
             ],
             new Result()
         );

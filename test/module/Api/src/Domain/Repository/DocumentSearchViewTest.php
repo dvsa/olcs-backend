@@ -95,6 +95,7 @@ class DocumentSearchViewTest extends RepositoryTestCase
             'application' => 'unit_AppId',
             'busReg' => 'unit_BusReg',
             'irhpApplication' => 'unit_IrhpApplication',
+            'ecmtPermitApplication' => 'unit_EcmtPermitApplication',
         ];
 
         $query = DocumentList::create($data);
@@ -114,6 +115,7 @@ class DocumentSearchViewTest extends RepositoryTestCase
             ' AND m.caseId = [[unit_CaseId]]' .
             ' AND m.busRegId = [[unit_BusReg]]' .
             ' AND m.irhpApplicationId = [[unit_IrhpApplication]]' .
+            ' AND m.ecmtPermitApplicationId = [[unit_EcmtPermitApplication]]'.
             ' AND ('.
                 'm.irfoOrganisationId = :irfoOrganisation' .
             ')';

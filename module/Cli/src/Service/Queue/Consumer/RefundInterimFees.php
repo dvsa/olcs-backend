@@ -2,7 +2,9 @@
 
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
+use Dvsa\Olcs\Api\Domain\Command\Fee\UpdateFeeStatus;
 use Dvsa\Olcs\Api\Domain\Repository\Fee;
+use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Transfer\Command\Fee\RefundFee;
 
@@ -24,13 +26,39 @@ class RefundInterimFees extends AbstractCommandConsumer
 
     public function processMessage(QueueEntity $item)
     {
-        /** @var \Dvsa\Olcs\Api\Entity\Fee\Fee $fee */
+        /** @var FeeEntity $fee */
         $fee = $this->feeRepo->fetchById($item->getEntityId());
 
+        // has already been refunded
         if (!$fee->canRefund()) {
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);
             return $this->failed($item, "Fee cannot be refunded");
         }
 
-        return parent::processMessage($item);
+        try {
+            $result = parent::processMessage($item);
+        } catch (\Exception $exception) {
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);
+            throw $exception;
+        }
+
+        if (substr($result, 0, 12) === 'Successfully') {
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUNDED);
+        } else {
+            $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);
+        }
+
+        return $result;
+    }
+
+    protected function updateRefundStatus(int $id, string $status)
+    {
+        $command = UpdateFeeStatus::create(
+            [
+                'id' => $id,
+                'status' => $status
+            ]
+        );
+        $this->handleSideEffectCommand($command);
     }
 }

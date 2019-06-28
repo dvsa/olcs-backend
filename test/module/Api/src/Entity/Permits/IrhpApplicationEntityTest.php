@@ -133,7 +133,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('canUpdateCountries')
             ->once()
             ->withNoArgs()
-            ->andReturn(true);
+            ->andReturn(true)
+            ->shouldReceive('getQuestionAnswerData')
+            ->once()
+            ->withNoArgs()
+            ->andReturn([]);
 
         $this->assertSame(
             [
@@ -160,6 +164,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canMakeDeclaration' => true,
                 'permitsRequired' => 0,
                 'canUpdateCountries' => true,
+                'questionAnswerData' => [],
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -2849,7 +2854,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $question1Text = m::mock(QuestionText::class);
         $question1Text->shouldReceive('getId')->withNoArgs()->andReturn($question1TextId);
         $question1Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q1-short-key');
-        $question1Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('q1-key');
+        $question1Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('{"translateableText": {"key": "q1-key"}}');
+        $question1Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q1-type');
 
         $question1 = m::mock(Question::class);
         $question1->shouldReceive('getQuestion')->withNoArgs()->andReturn($question1);
@@ -2868,7 +2874,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $question2Text = m::mock(QuestionText::class);
         $question2Text->shouldReceive('getId')->withNoArgs()->andReturn($question2TextId);
         $question2Text->shouldReceive('getQuestionShortKey')->withNoArgs()->andReturn('q2-short-key');
-        $question2Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('q2-key');
+        $question2Text->shouldReceive('getQuestionKey')->withNoArgs()->andReturn('{"translateableText": {"key": "q2-key"}}');
+        $question2Text->shouldReceive('getQuestion->getQuestionType->getId')->withNoArgs()->andReturn('q2-type');
 
         $question2 = m::mock(Question::class);
         $question2->shouldReceive('getQuestion')->withNoArgs()->andReturn($question2);
@@ -2906,6 +2913,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
@@ -2914,6 +2922,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
@@ -2958,6 +2967,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
@@ -2966,6 +2976,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
@@ -3010,6 +3021,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3018,6 +3030,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
@@ -3062,6 +3075,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3070,6 +3084,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3114,6 +3129,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3122,6 +3138,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3166,6 +3183,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
                         'question' => 'q1-key',
+                        'questionType' => 'q1-type',
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3174,6 +3192,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
                         'question' => 'q2-key',
+                        'questionType' => 'q2-type',
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
@@ -3198,10 +3217,32 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
-    public function testGetAnswerForCustomQuestion()
+    public function testGetAnswerForCustomEcmtRemovalNoOfPermits()
+    {
+        $permitsRequired = 47;
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getPermitsRequired')
+            ->andReturn($permitsRequired);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS);
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals($permitsRequired, $entity->getAnswer($step));
+    }
+
+    public function testGetAnswerNullForCustomEcmtRemovalNoOfPermits()
     {
         $question = m::mock(Question::class);
         $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS);
 
         $step = m::mock(ApplicationStep::class);
         $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
@@ -3311,6 +3352,25 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertSame($fee4, $outstandingIssueFees[1]);
     }
 
+    public function testGetOutstandingIrfoPermitFees()
+    {
+        $fee1 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_ISSUE, true);
+        $fee2 = $this->createMockFee(FeeType::FEE_TYPE_IRFOGVPERMIT, false);
+        $fee3 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, false);
+        $fee4 = $this->createMockFee(FeeType::FEE_TYPE_IRFOGVPERMIT, true);
+        $fee5 = $this->createMockFee(FeeType::FEE_TYPE_IRHP_APP, true);
+        $fee6 = $this->createMockFee(FeeType::FEE_TYPE_IRFOGVPERMIT, true);
+
+        $this->sut->setFees(
+            new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5, $fee6])
+        );
+
+        $outstandingIrfoPermitFees = $this->sut->getOutstandingIrfoPermitFees();
+        $this->assertCount(2, $outstandingIrfoPermitFees);
+        $this->assertSame($fee4, $outstandingIrfoPermitFees[0]);
+        $this->assertSame($fee6, $outstandingIrfoPermitFees[1]);
+    }
+
     public function testGetContextValue()
     {
         $irhpApplicationId = 87;
@@ -3356,5 +3416,71 @@ class IrhpApplicationEntityTest extends EntityTester
         }
 
         return Entity::createNew($source, $status, $irhpPermitType, $licence, $dateReceived);
+    }
+
+    /**
+     * @dataProvider dpTestGetFeePerPermitBilateralMultilateral
+     */
+    public function testGetFeePerPermitBilateralMultilateral($irhpPermitTypeId)
+    {
+        $applicationFeeType = m::mock(FeeType::class);
+        $applicationFeeType->shouldReceive('getFixedValue')
+            ->andReturn(43.20);
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->andReturn(12.15);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->assertEquals(
+            55.35,
+            $entity->getFeePerPermit($applicationFeeType, $issueFeeType)
+        );
+    }
+
+    public function dpTestGetFeePerPermitBilateralMultilateral()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL]
+        ];
+    }
+
+    public function testGetFeePerPermitEcmtRemoval()
+    {
+        $issueFee = 14.20;
+
+        $issueFeeType = m::mock(FeeType::class);
+        $issueFeeType->shouldReceive('getFixedValue')
+            ->andReturn($issueFee);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL);
+
+        $this->assertEquals(
+            $issueFee,
+            $entity->getFeePerPermit(null, $issueFeeType)
+        );
+    }
+
+    public function testGetFeePerPermitUnsupported()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'Cannot get fee per permit for irhp permit type ' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT
+        );
+
+        $applicationFeeType = m::mock(FeeType::class);
+        $issueFeeType = m::mock(FeeType::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
+
+        $entity->getFeePerPermit($applicationFeeType, $issueFeeType);
     }
 }

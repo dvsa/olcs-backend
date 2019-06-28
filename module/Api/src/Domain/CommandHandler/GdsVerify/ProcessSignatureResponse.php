@@ -2,9 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GdsVerify;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository\EventHistoryType;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Surrender\Update;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity;
@@ -16,11 +22,14 @@ use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 /**
  * ProcessResponse
  */
-class ProcessSignatureResponse extends AbstractCommandHandler implements TransactionedInterface
+class ProcessSignatureResponse extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
+    use AuthAwareTrait;
+
     protected $repoServiceName = 'DigitalSignature';
 
-    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication', 'Licence'];
+    protected $extraRepos = ['Application', 'ContinuationDetail', 'TransportManagerApplication', 'Licence',
+        'EventHistory', 'EventHistoryType'];
 
     /** @var  \Dvsa\Olcs\GdsVerify\Service\GdsVerify */
     private $gdsVerifyService;
@@ -260,7 +269,7 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
 
     private function updateSurrender(Entity\DigitalSignature $digitalSignature, int $licenceId)
     {
-        $result = $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Surrender\Update::create(
+        $result = $this->handleSideEffect(Update::create(
             [
                 'digitalSignature' => $digitalSignature->getId(),
                 'id' => $licenceId,
@@ -276,6 +285,18 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
         $licence = $licenceRepo->fetchById($licenceId);
         $licence->setStatus($this->getRepo()->getRefdataReference(Entity\Licence\Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION));
         $licenceRepo->save($licence);
+
+        $eventType = $this->getRepo('EventHistoryType')
+            ->fetchOneByEventCode(Entity\EventHistory\EventHistoryType::EVENT_CODE_SURRENDER_UNDER_CONSIDERATION);
+
+        $eventHistory = new EventHistory(
+            $this->getUser(),
+            $eventType
+        );
+        $eventHistory->setLicence($licence);
+        $eventHistory->setEventData("");
+        $this->getRepo('EventHistory')->save($eventHistory);
+
         return $result;
     }
 
