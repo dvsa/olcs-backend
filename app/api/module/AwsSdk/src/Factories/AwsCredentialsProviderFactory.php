@@ -26,8 +26,8 @@ class AwsCredentialsProviderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $credentialsProvidor = CredentialProvider::instanceProfile();
-        $provider = CredentialProvider::memoize($credentialsProvidor);
+        $credentialsProvider = CredentialProvider::instanceProfile();
+        $provider = CredentialProvider::memoize($credentialsProvider);
         return $provider;
     }
 }
