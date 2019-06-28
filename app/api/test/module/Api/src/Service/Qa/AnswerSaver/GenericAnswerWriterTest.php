@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\AnswerFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use RuntimeException;
 
 /**
  * GenericAnswerWriterTest
@@ -20,40 +21,43 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class GenericAnswerWriterTest extends MockeryTestCase
 {
-    private $questionId;
+    private $answerRepo;
 
-    private $questionType;
-
-    private $irhpApplicationId;
-
-    private $answerValue;
+    private $answerFactory;
 
     private $question;
 
     private $applicationStep;
 
-    private $irhpApplication;
-
-    private $answer;
-
-    private $answerRepo;
-
-    private $answerFactory;
-
-    private $genericAnswerWriter;
-
     public function setUp()
     {
-        $this->questionId = 43;
-        $this->questionType = Question::QUESTION_TYPE_STRING;
+        $this->answerRepo = m::mock(AnswerRepository::class);
+
+        $this->answerFactory = m::mock(AnswerFactory::class);
+
+        $this->question = m::mock(Question::class);
+
+        $this->applicationStep = m::mock(ApplicationStep::class);
+        $this->applicationStep->shouldReceive('getQuestion')
+            ->andReturn($this->question);
+
+        $this->irhpApplication = m::mock(IrhpApplication::class);
+    }
+
+    public function testSaveAnswerAlreadyExists()
+    {
+        $questionId = 43;
+        $questionType = Question::QUESTION_TYPE_STRING;
         $this->irhpApplicationId = 124;
-        $this->answerValue = '866';
+        $answerValue = '866';
 
         $this->question = m::mock(Question::class);
         $this->question->shouldReceive('getId')
-            ->andReturn($this->questionId);
+            ->andReturn($questionId);
         $this->question->shouldReceive('getQuestionType')
-            ->andReturn($this->questionType);
+            ->andReturn($questionType);
+        $this->question->shouldReceive('isCustom')
+            ->andReturn(false);
 
         $this->applicationStep = m::mock(ApplicationStep::class);
         $this->applicationStep->shouldReceive('getQuestion')
@@ -63,53 +67,79 @@ class GenericAnswerWriterTest extends MockeryTestCase
         $this->irhpApplication->shouldReceive('getId')
             ->andReturn($this->irhpApplicationId);
 
-        $this->answer = m::mock(Answer::class);
-        $this->answer->shouldReceive('setValue')
-            ->with($this->questionType, $this->answerValue)
+        $answer = m::mock(Answer::class);
+        $answer->shouldReceive('setValue')
+            ->with($questionType, $answerValue)
             ->once()
             ->ordered()
             ->globally();
 
-        $this->answerRepo = m::mock(AnswerRepository::class);
-
-        $this->answerFactory = m::mock(AnswerFactory::class);
-
-        $this->genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
-    }
-
-    public function testSaveAnswerAlreadyExists()
-    {
-        $this->answerRepo->shouldReceive('fetchByQuestionIdAndIrhpApplicationId')
-            ->with($this->questionId, $this->irhpApplicationId)
-            ->andReturn($this->answer);
         $this->answerRepo->shouldReceive('save')
-            ->with($this->answer)
+            ->with($answer)
             ->once()
             ->ordered()
             ->globally();
+        $this->answerRepo->shouldReceive('fetchByQuestionIdAndIrhpApplicationId')
+            ->with($questionId, $this->irhpApplicationId)
+            ->andReturn($answer);
 
-        $this->genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $this->answerValue);
+        $genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
+        $genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $answerValue);
     }
 
     public function testSaveAnswerRequiresCreation()
     {
+        $questionId = 43;
+        $questionType = Question::QUESTION_TYPE_STRING;
+        $this->irhpApplicationId = 124;
+        $answerValue = '866';
+
         $questionText = m::mock(QuestionText::class);
 
+        $this->question->shouldReceive('getId')
+            ->andReturn($questionId);
+        $this->question->shouldReceive('getQuestionType')
+            ->andReturn($questionType);
+        $this->question->shouldReceive('isCustom')
+            ->andReturn(false);
         $this->question->shouldReceive('getActiveQuestionText')
             ->andReturn($questionText);
+
+        $this->irhpApplication->shouldReceive('getId')
+            ->andReturn($this->irhpApplicationId);
+
+        $answer = m::mock(Answer::class);
+        $answer->shouldReceive('setValue')
+            ->with($questionType, $answerValue)
+            ->once()
+            ->ordered()
+            ->globally();
 
         $this->answerRepo->shouldReceive('fetchByQuestionIdAndIrhpApplicationId')
             ->andThrow(new NotFoundException());
         $this->answerRepo->shouldReceive('save')
-            ->with($this->answer)
+            ->with($answer)
             ->once()
             ->ordered()
             ->globally();
 
         $this->answerFactory->shouldReceive('create')
             ->with($questionText, $this->irhpApplication)
-            ->andReturn($this->answer);
+            ->andReturn($answer);
 
-        $this->genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $this->answerValue);
+        $genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
+        $genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $answerValue);
+    }
+
+    public function testExceptionOnCustomQuestion()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(GenericAnswerWriter::ERR_CUSTOM_UNSUPPORTED);
+
+        $this->question->shouldReceive('isCustom')
+            ->andReturn(true);
+
+        $genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
+        $genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, 47);
     }
 }

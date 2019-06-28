@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
@@ -221,6 +222,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canMakeDeclaration' => $this->canMakeDeclaration(),
             'permitsRequired' => $this->getPermitsRequired(),
             'canUpdateCountries' => $this->canUpdateCountries(),
+            'questionAnswerData' => $this->getQuestionAnswerData(),
         ];
     }
 
@@ -262,7 +264,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
         $previousQuestionStatus = $status;
 
-        // list of defined steps
+        /**
+         * list of defined steps
+         *
+         * @var ApplicationStep $applicationStep
+         */
         foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
             $question = $applicationStep->getQuestion();
             $answer = null;
@@ -278,11 +284,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
             $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
 
+            $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
+            $questionKey = $questionJson['translateableText']['key'];
+
             $data[] = [
                 'section' => $question->getSlug(),
                 'slug' => $question->getSlug(),
                 'questionShort' => $activeQuestionText->getQuestionShortKey(),
-                'question' => $activeQuestionText->getQuestionKey(),
+                'question' => $questionKey,
+                'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
                 'answer' => $answer,
                 'status' => $status,
             ];
@@ -343,8 +353,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $question = $applicationStep->getQuestion();
 
         if ($question->isCustom()) {
-            // TODO - OLCS-23788 - custom handling to be added here
-            return null;
+            $formControlType = $question->getFormControlType();
+            switch ($formControlType) {
+                case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
+                    return $this->getEcmtRemovalNoOfPermitsAnswer();
+            }
+
+            throw new RuntimeException(
+                sprintf(
+                    'Unable to retrieve answer status for form control type %s',
+                    $formControlType
+                )
+            );
         }
 
         // standard Q&A
@@ -362,6 +382,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $answer->getValue();
+    }
+
+    private function getEcmtRemovalNoOfPermitsAnswer()
+    {
+        if ($this->irhpPermitApplications->count() == 0) {
+            return null;
+        }
+
+        $irhpPermitApplication = $this->irhpPermitApplications->first();
+        return $irhpPermitApplication->getPermitsRequired();
     }
 
     /**
@@ -721,6 +751,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Get a list of outstanding irfo permit fees relating to this application
+     *
+     * @return array
+     */
+    public function getOutstandingIrfoPermitFees()
+    {
+        return $this->getOutstandingFeesByType(FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT);
+    }
+
+    /**
      * Get outstanding fees by types
      *
      * @param int $feeTypeId
@@ -1030,18 +1070,19 @@ class IrhpApplication extends AbstractIrhpApplication implements
      * Gets the total fee per permit including application fee and issue fee
      * Applicable only to bilateral and multilateral
      *
-     * @param FeeTypeEntity $applicationFeeType
-     * @param FeeTypeEntity $issueFeeType
+     * @param FeeTypeEntity $applicationFeeType (optional)
+     * @param FeeTypeEntity $issueFeeType (optional)
      *
      * @return int
      *
      * @throws ForbiddenException if the permit type is unsupported
      */
-    public function getFeePerPermit(FeeTypeEntity $applicationFeeType, FeeTypeEntity $issueFeeType)
+    public function getFeePerPermit(?FeeTypeEntity $applicationFeeType = null, ?FeeTypeEntity $issueFeeType = null)
     {
         $permittedPermitTypeIds = [
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
         ];
 
         $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
@@ -1050,6 +1091,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
             throw new ForbiddenException(
                 'Cannot get fee per permit for irhp permit type ' . $irhpPermitTypeId
             );
+        }
+
+        if ($irhpPermitTypeId == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL) {
+            return $issueFeeType->getFixedValue();
         }
 
         return $applicationFeeType->getFixedValue() + $issueFeeType->getFixedValue();

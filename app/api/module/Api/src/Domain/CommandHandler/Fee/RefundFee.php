@@ -7,7 +7,6 @@
  */
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
@@ -20,6 +19,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeeTransactionEntity;
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperServiceException;
@@ -106,9 +106,11 @@ final class RefundFee extends AbstractCommandHandler implements
             ->addId('transaction', $transaction->getId())
             ->addMessage('Refund transaction created');
 
-        $this->result->merge(
-            $this->handleSideEffect(CancelFeeCmd::create(['id' => $fee->getId()]))
-        );
+        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT) {
+            $this->result->merge(
+                $this->handleSideEffect(CancelFeeCmd::create(['id' => $fee->getId()]))
+            );
+        }
 
         return $this->result;
     }

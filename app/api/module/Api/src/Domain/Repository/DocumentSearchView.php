@@ -132,6 +132,14 @@ class DocumentSearchView extends AbstractReadonlyRepository
                 );
                 $qb->setParameter('IRHP_APPLICATION_ID', $irhpApplicationId);
             }
+
+            $ecmtApplicationId = $query->getEcmtPermitApplication();
+            if ($ecmtApplicationId !== null) {
+                $qb->andWhere(
+                    $qb->expr()->eq($this->alias . '.ecmtPermitApplicationId', ':ECMT_PERMIT_APPLICATION_ID')
+                );
+                $qb->setParameter('ECMT_PERMIT_APPLICATION_ID', $ecmtApplicationId);
+            }
         }
 
         $idExpressions = [];
