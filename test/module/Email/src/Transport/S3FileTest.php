@@ -50,8 +50,8 @@ class S3FileTest extends MockeryTestCase
         $mockS3Client = m::mock(S3Client::class);
         $mockS3Client->shouldReceive('putObject')->once()->with([
             'Bucket' => 'testBucket',
-            'Key' => 'testKey',
-            'SourceFile' => 'vfs://path/TEST_SUBJECT'
+            'Key' => 'testKey/TEST_SUBJECT',
+            'Body' => '~'
         ])->andReturnSelf();
         $mockOptions = m::mock(S3FileOptions::class);
         $mockOptions->shouldReceive('getS3Client')->andReturn($mockS3Client);
@@ -63,7 +63,7 @@ class S3FileTest extends MockeryTestCase
         $sut->setOptions($mockOptions);
 
         $sut->shouldReceive('deleteFile')->with($file)->once();
-        $sut->shouldReceive('deleteFile')->with('vfs://path/TEST_SUBJECT')->once();
+
 
         $sut->send($mockMessage);
     }
@@ -86,8 +86,8 @@ class S3FileTest extends MockeryTestCase
         $mockS3Client->shouldReceive('putObject')->once()->with(
             [
                 'Bucket' => 'testBucket',
-                'Key' => 'testKey',
-                'SourceFile' => 'vfs://path/TEST_SUBJECT'
+                'Key' => 'testKey/TEST_SUBJECT',
+                'Body' => '~'
             ]
         )->andThrow(
             new S3Exception('test', new Command('test'))
@@ -102,7 +102,7 @@ class S3FileTest extends MockeryTestCase
         $sut = m::mock(S3File::class, [$mockFileTransport])->makePartial()->shouldAllowMockingProtectedMethods();
         $sut->setOptions($mockOptions);
 
-        $sut->shouldReceive('deleteFile')->with('vfs://path/TEST_SUBJECT')->once();
+
         $sut->shouldReceive('deleteFile')->with($file)->once();
 
         $this->expectException(RuntimeException::class, "Cannot send mail to S3 : OUTPUT 1");
