@@ -73,28 +73,22 @@ class S3File implements TransportInterface
         $this->fileTransport->send($message);
         $file = $this->fileTransport->getLastFile();
         $filter = new Alnum(true);
-
         $s3FileName = substr(str_replace(' ', '_', $filter->filter($message->getSubject())), 0, 100);
-
-
         $s3Client = $this->getOptions()->getS3Client();
-
         $bucket = $this->getOptions()->getS3Bucket();
         $key = $this->getOptions()->getS3Key();
 
         try {
             $s3Client->putObject([
                 'Bucket' => $bucket,
-                'Key' => $key."/".$s3FileName,
+                'Key' => $key . "/" . $s3FileName,
                 'Body' => file_get_contents($file)
             ]);
         } catch (S3Exception $e) {
             $this->deleteFile($file); //clean up email file
             throw new RuntimeException('Cannot send mail to S3 : ' . $e->getAwsErrorMessage());
         }
-
         $this->deleteFile($file);
-
     }
 
     /**

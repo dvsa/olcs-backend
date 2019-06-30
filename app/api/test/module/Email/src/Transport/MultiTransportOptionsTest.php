@@ -23,10 +23,11 @@ class MultiTransportOptionsTest extends MockeryTestCase
     public function setUp()
     {
         $this->sut = new MultiTransportOptions([], new S3FileOptions([], new S3Client([
-            'region'=>'eu-west-1',
-            'version' =>'latest'
+            'region' => 'eu-west-1',
+            'version' => 'latest'
         ])));
     }
+
     public function testSetGet()
     {
         $this->assertSame([], $this->sut->getTransport());
@@ -42,20 +43,21 @@ class MultiTransportOptionsTest extends MockeryTestCase
     {
         $transports = [
             ['type' => 'SendMail'],
-            ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key'=>'/olcs.da.nonprod.dvsa.aws/email']],
+            ['type' => '\Dvsa\Olcs\Email\Transport\S3File',
+                'options' => [
+                    'bucket' => 'devapp-olcs-pri-olcs-autotest-s3',
+                    'key' => '/olcs.da.nonprod.dvsa.aws/email'
+                ]
+            ],
         ];
 
         $this->sut->setTransport($transports);
         $mailTransports = $this->sut->getTransport();
 
-        foreach($mailTransports as $mailTransport)
-        {
+        foreach ($mailTransports as $mailTransport) {
             if ($mailTransport instanceof S3File) {
                 $this->assertNotNull($mailTransport->getOptions());
             }
         }
-
-
-
     }
 }

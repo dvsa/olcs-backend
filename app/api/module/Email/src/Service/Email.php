@@ -27,7 +27,7 @@ use Olcs\Logging\Log\Logger;
  * Class Email
  *
  * @package Olcs\Email\Service
- * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
+ * @author  Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
 class Email implements FactoryInterface
 {
@@ -80,9 +80,8 @@ class Email implements FactoryInterface
 
         if ($transport instanceof MultiTransport && isset($config['mail']['options'])) {
             $s3Options = $serviceLocator->get(S3FileOptions::class);
-            $multiTransportOptions = new MultiTransportOptions($config['mail']['options'],$s3Options);
+            $multiTransportOptions = new MultiTransportOptions($config['mail']['options'], $s3Options);
             $transport->setOptions($multiTransportOptions);
-
         }
 
         if ($transport instanceof S3File && isset($config['mail']['options'])) {
