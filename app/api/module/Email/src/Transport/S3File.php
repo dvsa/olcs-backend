@@ -85,10 +85,11 @@ class S3File implements TransportInterface
                 'Body' => file_get_contents($file)
             ]);
         } catch (S3Exception $e) {
-            $this->deleteFile($file); //clean up email file
+            
             throw new RuntimeException('Cannot send mail to S3 : ' . $e->getAwsErrorMessage());
+        } finally{
+            $this->deleteFile($file); //clean up email file
         }
-        $this->deleteFile($file);
     }
 
     /**
