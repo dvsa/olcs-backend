@@ -689,6 +689,9 @@ class Fee extends AbstractRepository
                 $feeStatus = [
                     Entity::STATUS_PAID,
                     Entity::STATUS_CANCELLED,
+                    Entity::STATUS_REFUNDED,
+                    Entity::STATUS_REFUND_FAILED,
+                    Entity::STATUS_REFUND_PENDING,
                 ];
                 break;
             case 'all':
