@@ -754,6 +754,11 @@ class IrhpApplicationEntityTest extends EntityTester
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => false,
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
                 'expectedResult' => false
@@ -783,7 +788,12 @@ class IrhpApplicationEntityTest extends EntityTester
                     [
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
                 'expectedResult' => true
@@ -798,26 +808,36 @@ class IrhpApplicationEntityTest extends EntityTester
                     [
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
-                'expectedResult' => false
+                'expectedResult' => true
             ],
             [
                 'fees' => [
                     [
                         'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => true,
+                        'isOutstanding' => false,
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
                     ],
                     [
                         'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => true,
+                        'isOutstanding' => false,
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
                 'expectedResult' => true
-            ]
+            ],
         ];
     }
 
@@ -1049,6 +1069,12 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
 
+        $outstandingIrfoGvPermitFee = m::mock(Fee::class);
+        $outstandingIrfoGvPermitFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrfoGvPermitFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRFOGVPERMIT);
+
         $notOutstandingIrhpAppFee = m::mock(Fee::class);
         $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(false);
         $notOutstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')->never();
@@ -1057,16 +1083,23 @@ class IrhpApplicationEntityTest extends EntityTester
         $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(false);
         $notOutstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')->never();
 
+        $notOutstandingIrfoGvPermitFee = m::mock(Fee::class);
+        $notOutstandingIrfoGvPermitFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrfoGvPermitFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
         $allFees = [
             $outstandingIrhpAppFee,
             $outstandingIrhpIssueFee,
+            $outstandingIrfoGvPermitFee,
             $notOutstandingIrhpAppFee,
-            $notOutstandingIrhpIssueFee
+            $notOutstandingIrhpIssueFee,
+            $notOutstandingIrfoGvPermitFee,
         ];
 
         $outstandingFees = [
             $outstandingIrhpAppFee,
-            $outstandingIrhpIssueFee
+            $outstandingIrhpIssueFee,
+            $outstandingIrfoGvPermitFee,
         ];
 
         $fees = new ArrayCollection($allFees);
