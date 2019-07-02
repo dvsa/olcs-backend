@@ -714,7 +714,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function hasOutstandingFees()
     {
         $fee = $this->getLatestOutstandingFeeByTypes(
-            [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE]
+            [
+                FeeTypeEntity::FEE_TYPE_IRHP_APP,
+                FeeTypeEntity::FEE_TYPE_IRHP_ISSUE,
+                FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT,
+            ]
         );
 
         return $fee !== null;
@@ -835,7 +839,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getOutstandingFees()
     {
-        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
+        $feeTypeIds = [
+            FeeTypeEntity::FEE_TYPE_IRHP_APP,
+            FeeTypeEntity::FEE_TYPE_IRHP_ISSUE,
+            FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT,
+        ];
         $fees = [];
 
         /** @var FeeEntity $fee */
