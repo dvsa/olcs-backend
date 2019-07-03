@@ -394,5 +394,13 @@ return [
     'permits.irhp.declaration.bullet.guidance.carry' => 'Your driver will carry the permit for the entire outbound and return journey and present it to any competent authority or inspectors.',
     'permits.irhp.declaration.bullet.guidance.transport' => 'You understand that one permit is required to transport goods to and from each EU and EEA country.',
 
+    'qanda.ecmt-removal.removal-eligibility.question' => 'Confirm you will only use removal permits for removal operations using specialised equipment and staff',
+    'qanda.ecmt-removal.cabotage.question' => 'Confirm you will not use removal permits to carry out cabotage',
+    'qanda.ecmt-removal.no-of-permits.question' => 'How many permits do you require for this licence?',
+
+    'section.name.application/licence' => 'Licence number',
+    'section.name.application/check-answers' => 'Check your answers',
+    'section.name.application/declaration' => 'Declaration',
+
     // Potentially unused translations
 ];
