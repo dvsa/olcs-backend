@@ -38,7 +38,7 @@ class OpenWindows extends AbstractQueryHandler implements ToggleRequiredInterfac
      */
     public function handleQuery(QueryInterface $query)
     {
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $query->getCurrentDateTime());
+        $date = new DateTime();
 
         /** @var IrhpPermitWindowRepo $irhpPermitWindowRepo */
         $irhpPermitWindowRepo = $this->getRepo();
