@@ -27,7 +27,7 @@ class OpenByType extends AbstractQueryHandler implements ToggleRequiredInterface
         // fetch the list of all open windows for selected countries
         $openWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
             $query->getIrhpPermitType(),
-            new DateTime($query->getCurrentDateTime())
+            new DateTime()
         );
 
         return [
