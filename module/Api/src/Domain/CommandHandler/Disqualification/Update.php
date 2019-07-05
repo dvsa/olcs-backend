@@ -35,6 +35,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
             $command->getStartDate() ? new \DateTime($command->getStartDate()) : null,
             $command->getNotes(),
             $command->getPeriod() ?: null
+
         );
 
         $this->getRepo()->save($disqualification);
