@@ -3,27 +3,27 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 class GenericAnswerFetcher
 {
-    const ERR_NO_ANSWER = 'No answer data found';
+    /** @var NamedAnswerFetcher */
+    private $namedAnswerFetcher;
+
+    public function __construct(NamedAnswerFetcher $namedAnswerFetcher)
+    {
+        $this->namedAnswerFetcher = $namedAnswerFetcher;
+    }
 
     /**
      * Retrieve an answer from the appropriate location within the post data
      *
-     * @return mixed
+     * @param ApplicationStepEntity $applicationStep
+     * @param array $postData
      *
-     * @throws NotFoundException
+     * @return mixed
      */
-    public function fetch(ApplicationStepEntity $applicationStep, $postData)
+    public function fetch(ApplicationStepEntity $applicationStep, array $postData)
     {
-        $fieldsetName = $applicationStep->getFieldsetName();
-
-        if (!isset($postData[$fieldsetName]['qaElement'])) {
-            throw new NotFoundException(self::ERR_NO_ANSWER);
-        }
-
-        return $postData[$fieldsetName]['qaElement'];
+        return $this->namedAnswerFetcher->fetch($applicationStep, $postData, 'qaElement');
     }
 }
