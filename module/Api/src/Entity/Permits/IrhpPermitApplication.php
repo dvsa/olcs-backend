@@ -268,4 +268,16 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         return $this->permitsRequired = null;
     }
+
+    /**
+     * Set permits required when in an emissions category context
+     *
+     * @param int|null $requiredEuro5
+     * @param int|null $requiredEuro6
+     */
+    public function updateEmissionsCategoryPermitsRequired($requiredEuro5, $requiredEuro6)
+    {
+        $this->requiredEuro5 = $requiredEuro5;
+        $this->requiredEuro6 = $requiredEuro6;
+    }
 }

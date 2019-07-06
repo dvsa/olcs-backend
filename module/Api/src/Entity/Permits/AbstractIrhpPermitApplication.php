@@ -160,6 +160,24 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     protected $properties;
 
     /**
+     * Required euro5
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro5", nullable=true)
+     */
+    protected $requiredEuro5;
+
+    /**
+     * Required euro6
+     *
+     * @var int
+     *
+     * @ORM\Column(type="integer", name="required_euro6", nullable=true)
+     */
+    protected $requiredEuro6;
+
+    /**
      * Sectors
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
@@ -517,6 +535,54 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    /**
+     * Set the required euro5
+     *
+     * @param int $requiredEuro5 new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredEuro5($requiredEuro5)
+    {
+        $this->requiredEuro5 = $requiredEuro5;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro5
+     *
+     * @return int
+     */
+    public function getRequiredEuro5()
+    {
+        return $this->requiredEuro5;
+    }
+
+    /**
+     * Set the required euro6
+     *
+     * @param int $requiredEuro6 new value being set
+     *
+     * @return IrhpPermitApplication
+     */
+    public function setRequiredEuro6($requiredEuro6)
+    {
+        $this->requiredEuro6 = $requiredEuro6;
+
+        return $this;
+    }
+
+    /**
+     * Get the required euro6
+     *
+     * @return int
+     */
+    public function getRequiredEuro6()
+    {
+        return $this->requiredEuro6;
     }
 
     /**
