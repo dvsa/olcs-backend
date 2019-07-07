@@ -56,34 +56,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
-        IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
-            'licence' => [
-                'validator' => 'fieldIsNotNull',
-            ],
-            'emissions' => [
-                'validator' => 'emissionsPopulated',
-            ],
-            'permitsRequired' => [
-                'validator' => 'permitsRequiredPopulated',
-                'validateIf' => [
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-            'checkedAnswers' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-            'declaration' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-        ],
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
             'licence' => [
                 'validator' => 'fieldIsNotNull',
@@ -148,20 +120,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     private function countriesPopulated($field)
-    {
-        return $this->collectionHasRecord('irhpPermitApplications');
-    }
-
-    /**
-     * This is a custom validator for the emissions field
-     *
-     * @param string $field field being checked
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    private function emissionsPopulated($field)
     {
         return $this->collectionHasRecord('irhpPermitApplications');
     }
@@ -240,13 +198,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return $this->getQuestionAnswerDataMultilateral();
         }
 
-        // the Q&A solution
-        $activeApplicationPath = $this->getActiveApplicationPath();
-
-        if (!isset($activeApplicationPath)) {
-            return [];
-        }
-
         // licence
         $answer = $this->licence->getLicNo();
         $status = !empty($answer)
@@ -264,39 +215,44 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
         $previousQuestionStatus = $status;
 
-        /**
-         * list of defined steps
-         *
-         * @var ApplicationStep $applicationStep
-         */
-        foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
-            $question = $applicationStep->getQuestion();
-            $answer = null;
-            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+        // the Q&A solution
+        $activeApplicationPath = $this->getActiveApplicationPath();
 
-            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-                $answer = $this->getAnswer($applicationStep);
+        if (isset($activeApplicationPath)) {
+            /**
+             * list of defined steps
+             *
+             * @var ApplicationStep $applicationStep
+             */
+            foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
+                $question = $applicationStep->getQuestion();
+                $answer = null;
+                $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
 
-                $status = isset($answer)
-                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+                if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+                    $answer = $this->getAnswer($applicationStep);
+
+                    $status = isset($answer)
+                        ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                        : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+                }
+
+                $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
+
+                $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
+                $questionKey = $questionJson['translateableText']['key'];
+
+                $data[] = [
+                    'section' => $question->getSlug(),
+                    'slug' => $question->getSlug(),
+                    'questionShort' => $activeQuestionText->getQuestionShortKey(),
+                    'question' => $questionKey,
+                    'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
+                    'answer' => $answer,
+                    'status' => $status,
+                ];
+                $previousQuestionStatus = $status;
             }
-
-            $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
-
-            $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
-            $questionKey = $questionJson['translateableText']['key'];
-
-            $data[] = [
-                'section' => $question->getSlug(),
-                'slug' => $question->getSlug(),
-                'questionShort' => $activeQuestionText->getQuestionShortKey(),
-                'question' => $questionKey,
-                'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
-                'answer' => $answer,
-                'status' => $status,
-            ];
-            $previousQuestionStatus = $status;
         }
 
         // checked answers
