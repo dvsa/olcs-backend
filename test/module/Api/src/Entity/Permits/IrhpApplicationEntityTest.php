@@ -1472,164 +1472,6 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => true,
                 ],
             ],
-            'ECMT Short term - no data set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => null,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 0,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - licence set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 1,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - IRHP permit apps with all apps without permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithoutPermits,
-                            $irhpPermitAppWithoutPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - IRHP permit apps with one app without permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithoutPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - IRHP permit apps with all apps with permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 3,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - checked answers set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => true,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'totalSections' => 5,
-                    'totalCompleted' => 4,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - declaration set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => true,
-                    'declaration' => true,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'totalSections' => 5,
-                    'totalCompleted' => 5,
-                    'allCompleted' => true,
-                ],
-            ],
         ];
     }
 
@@ -1752,6 +1594,96 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             'ECMT Removal - cancelled - check answers not started' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - not yet submitted - check answers cannot start' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - not yet submitted - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Short Term - not yet submitted - check answers completed' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Short Term - under consideration - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - withdrawn - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - cancelled - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'status' => IrhpInterface::STATUS_CANCELLED,
                 'questionAnswerData' => [
                     [
@@ -2835,16 +2767,46 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetQuestionAnswerDataWithoutActiveApplicationPath()
     {
-        $expected = [];
+        $licNo = 'ABC123';
+
+        $expected = [
+            [
+                'section' => 'licence',
+                'slug' => 'custom-licence',
+                'questionShort' => 'section.name.application/licence',
+                'question' => 'section.name.application/licence',
+                'answer' => $licNo,
+                'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            ],
+            [
+                'section' => 'checkedAnswers',
+                'slug' => 'custom-check-answers',
+                'questionShort' => 'section.name.application/check-answers',
+                'question' => 'section.name.application/check-answers',
+                'answer' => null,
+                'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+            ],
+            [
+                'section' => 'declaration',
+                'slug' => 'custom-declaration',
+                'questionShort' => 'section.name.application/declaration',
+                'question' => 'section.name.application/declaration',
+                'answer' => null,
+                'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+            ],
+        ];
 
         $createdOn = new DateTime();
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('getActiveApplicationPath')->once()->with($createdOn)->andReturn(null);
 
-        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
         $entity->setCreatedOn($createdOn);
 
         $this->assertEquals($expected, $entity->getQuestionAnswerData());
