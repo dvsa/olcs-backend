@@ -7,6 +7,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -60,6 +61,9 @@ class SubmitForm extends AbstractSurrenderCommandHandler
 
     private function createSurrenderTask($licId, $surrenderId)
     {
+        $actionDate = new DateTime();
+        $actionDate->add(new \DateInterval('P14D'));
+
         $taskData = [
             'category' => Category::CATEGORY_APPLICATION,
             'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,
@@ -67,7 +71,8 @@ class SubmitForm extends AbstractSurrenderCommandHandler
             'isClosed' => 'N',
             'urgent' => 'N',
             'licence' => $licId,
-            'surrender' => $surrenderId
+            'surrender' => $surrenderId,
+            'actionDate' => $actionDate->format('Y-m-d')
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));
