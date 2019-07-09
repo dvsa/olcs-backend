@@ -9,8 +9,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\DeclineEcmtPermits;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\DeclineEcmtPermits as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -32,8 +34,8 @@ class DeclineEcmtPermitsTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::STATUS_WITHDRAWN,
-            EcmtPermitApplication::WITHDRAWN_REASON_DECLINED
+            IrhpInterface::STATUS_WITHDRAWN,
+            WithdrawableInterface::WITHDRAWN_REASON_DECLINED
         ];
 
         parent::initReferences();
@@ -46,8 +48,8 @@ class DeclineEcmtPermitsTest extends CommandHandlerTestCase
 
         $application = m::mock(EcmtPermitApplication::class);
         $application->shouldReceive('decline')->with(
-            $this->refData[EcmtPermitApplication::STATUS_WITHDRAWN],
-            $this->refData[EcmtPermitApplication::WITHDRAWN_REASON_DECLINED]
+            $this->refData[IrhpInterface::STATUS_WITHDRAWN],
+            $this->refData[WithdrawableInterface::WITHDRAWN_REASON_DECLINED]
         )->once();
 
         $fee_1 = m::mock(Fee::class);

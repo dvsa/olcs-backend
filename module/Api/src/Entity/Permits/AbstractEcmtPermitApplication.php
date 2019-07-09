@@ -33,7 +33,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_ecmt_permit_application_source", columns={"source"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_in_scope", columns={"in_scope"}),
  *        @ORM\Index(name="ix_ecmt_permit_application_cancellation_date",
-     *     columns={"cancellation_date"})
+     *     columns={"cancellation_date"}),
+ *        @ORM\Index(name="ix_ecmt_permit_application_withdrawn_date", columns={"withdrawn_date"})
  *    }
  * )
  */
@@ -297,6 +298,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
      * @ORM\JoinColumn(name="withdraw_reason", referencedColumnName="id", nullable=true)
      */
     protected $withdrawReason;
+
+    /**
+     * Withdrawn date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="withdrawn_date", nullable=true)
+     */
+    protected $withdrawnDate;
 
     /**
      * Fee
@@ -1002,6 +1012,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getWithdrawReason()
     {
         return $this->withdrawReason;
+    }
+
+    /**
+     * Set the withdrawn date
+     *
+     * @param \DateTime $withdrawnDate new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setWithdrawnDate($withdrawnDate)
+    {
+        $this->withdrawnDate = $withdrawnDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getWithdrawnDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
+        return $this->withdrawnDate;
     }
 
     /**

@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use RuntimeException;
 
@@ -44,6 +45,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     LicenceProviderInterface,
     SectionableInterface,
     CancelableInterface,
+    WithdrawableInterface,
     ContextProviderInterface
 {
     use SectionTrait;
@@ -159,6 +161,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
+            'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
@@ -174,6 +177,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'isCancelled' => $this->isCancelled(),
+            'isWithdrawn' => $this->isWithdrawn(),
             'isBilateral' => $this->isBilateral(),
             'isMultilateral' => $this->isMultilateral(),
             'canCheckAnswers' => $this->canCheckAnswers(),
@@ -566,6 +570,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Is there an overdue issue fee for this application?
+     * @todo logic will be added as part of https://jira.i-env.net/browse/OLCS-24991
+     *
+     * @return bool
+     */
+    public function issueFeeOverdue()
+    {
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function isIssueInProgress()
@@ -588,6 +603,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isCancelled()
     {
         return $this->status->getId() === IrhpInterface::STATUS_CANCELLED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithdrawn(): bool
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_WITHDRAWN;
     }
 
     /**
@@ -615,6 +638,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function canBeCancelled()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether the permit application can be withdrawn
+     *
+     * @return bool
+     */
+    public function canBeWithdrawn(): bool
+    {
+        return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
     }
 
     /**
@@ -823,7 +856,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return array
      */
-    public function getOutstandingFees()
+    public function getOutstandingFees(): array
     {
         $feeTypeIds = [
             FeeTypeEntity::FEE_TYPE_IRHP_APP,
@@ -959,6 +992,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->proceedToIssuing($submitStatus);
+    }
+
+    /**
+     * Withdraw an application
+     *
+     * @param RefData $withdrawStatus
+     * @param RefData $withdrawReason
+     *
+     * @throws ForbiddenException
+     * @return void
+     */
+    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
+    {
+        if (!$this->canBeWithdrawn()) {
+            throw new ForbiddenException(WithdrawableInterface::ERR_CANT_WITHDRAW);
+        }
+
+        $this->status = $withdrawStatus;
+        $this->withdrawReason = $withdrawReason;
+        $this->withdrawnDate = new \DateTime();
     }
 
     /**
