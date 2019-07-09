@@ -27,7 +27,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_irhp_application_irhp_permit_type_id", columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="ix_irhp_application_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"}),
- *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"})
+ *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"}),
+ *        @ORM\Index(name="ix_irhp_application_withdrawn_date", columns={"withdrawn_date"}),
+ *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"})
  *    }
  * )
  */
@@ -177,6 +179,25 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * Withdraw reason
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="withdraw_reason", referencedColumnName="id", nullable=true)
+     */
+    protected $withdrawReason;
+
+    /**
+     * Withdrawn date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="withdrawn_date", nullable=true)
+     */
+    protected $withdrawnDate;
 
     /**
      * Answer
@@ -592,6 +613,60 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the withdraw reason
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $withdrawReason entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setWithdrawReason($withdrawReason)
+    {
+        $this->withdrawReason = $withdrawReason;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdraw reason
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getWithdrawReason()
+    {
+        return $this->withdrawReason;
+    }
+
+    /**
+     * Set the withdrawn date
+     *
+     * @param \DateTime $withdrawnDate new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setWithdrawnDate($withdrawnDate)
+    {
+        $this->withdrawnDate = $withdrawnDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the withdrawn date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getWithdrawnDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->withdrawnDate);
+        }
+
+        return $this->withdrawnDate;
     }
 
     /**

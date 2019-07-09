@@ -17,7 +17,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 
 /**
  * EcmtPermitApplication Entity
@@ -37,6 +39,7 @@ use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     OrganisationProviderInterface,
     CancelableInterface,
+    WithdrawableInterface,
     LicenceProviderInterface
 {
     use TieredProductReference;
@@ -44,7 +47,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
     const STATUS_UNDER_CONSIDERATION = 'permit_app_uc';
-    const STATUS_WITHDRAWN = 'permit_app_withdrawn';
     const STATUS_AWAITING_FEE = 'permit_app_awaiting';
     const STATUS_FEE_PAID = 'permit_app_fee_paid';
     const STATUS_UNSUCCESSFUL = 'permit_app_unsuccessful';
@@ -71,10 +73,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
     const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
     const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
-
-    const WITHDRAWN_REASON_UNPAID = 'permits_app_withdraw_not_paid';
-    const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
-    const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
 
     const SUCCESS_LEVEL_FULL = 'success_level_full';
     const SUCCESS_LEVEL_PARTIAL = 'success_level_partial';
@@ -291,14 +289,15 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         $this->status = $submitStatus;
     }
 
-    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason)
+    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
     {
         if (!$this->canBeWithdrawn()) {
-            throw new ForbiddenException('This application is not allowed to be withdrawn');
+            throw new ForbiddenException(WithdrawableInterface::ERR_CANT_WITHDRAW);
         }
 
         $this->status = $withdrawStatus;
         $this->withdrawReason = $withdrawReason;
+        $this->withdrawnDate = new \DateTime();
     }
 
     public function decline(RefData $declineStatus, RefData $withdrawReason)
@@ -726,9 +725,9 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     /**
      * @return bool
      */
-    public function isWithdrawn()
+    public function isWithdrawn(): bool
     {
-        return $this->status->getId() === self::STATUS_WITHDRAWN;
+        return $this->status->getId() === IrhpInterface::STATUS_WITHDRAWN;
     }
 
     /**
@@ -855,7 +854,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      *
      * @return bool
      */
-    public function canBeWithdrawn()
+    public function canBeWithdrawn(): bool
     {
         return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
     }
@@ -1003,7 +1002,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      *
      * @return array
      */
-    public function getOutstandingFees()
+    public function getOutstandingFees(): array
     {
         $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
         $fees = [];

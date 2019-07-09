@@ -5,15 +5,16 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -167,9 +168,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testWithdraw()
     {
         $entity = $this->createApplicationUnderConsideration();
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
-        $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
-        $this->assertEquals(Entity::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $entity->withdraw(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER));
+        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
     }
 
     /**
@@ -179,7 +181,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testWithdrawException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->withdraw(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
+        $entity->withdraw(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -188,9 +190,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDecline()
     {
         $entity = $this->createApplicationAwaitingFee();
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_DECLINED));
-        $this->assertEquals(Entity::STATUS_WITHDRAWN, $entity->getStatus()->getId());
-        $this->assertEquals(Entity::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
+        $entity->decline(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_DECLINED));
+        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
     }
 
     /**
@@ -200,7 +202,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testDeclineException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->decline(new RefData(Entity::STATUS_WITHDRAWN), new RefData(Entity::WITHDRAWN_REASON_BY_USER));
+        $entity->decline(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER));
     }
 
     /**
@@ -256,7 +258,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
             [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
         ];
@@ -273,7 +275,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
             [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
         ];
@@ -289,7 +291,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return [
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
             [Entity::STATUS_UNDER_CONSIDERATION]
@@ -597,7 +599,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
             [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_AWAITING_FEE],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
@@ -633,7 +635,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
             [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_AWAITING_FEE],
             [Entity::STATUS_FEE_PAID],
             [Entity::STATUS_UNSUCCESSFUL],
@@ -661,7 +663,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED, false],
             [Entity::STATUS_NOT_YET_SUBMITTED, false],
             [Entity::STATUS_UNDER_CONSIDERATION, false],
-            [Entity::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
             [Entity::STATUS_AWAITING_FEE, false],
             [Entity::STATUS_FEE_PAID, true],
             [Entity::STATUS_UNSUCCESSFUL, false],
@@ -718,7 +720,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return [
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_AWAITING_FEE],
             [Entity::STATUS_FEE_PAID],
             [Entity::STATUS_UNSUCCESSFUL],
@@ -901,7 +903,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return [
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_UNDER_CONSIDERATION],
-            [Entity::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_WITHDRAWN],
             [Entity::STATUS_AWAITING_FEE ],
             [Entity::STATUS_FEE_PAID],
             [Entity::STATUS_UNSUCCESSFUL],
@@ -1304,7 +1306,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED, true, false],
             [Entity::STATUS_NOT_YET_SUBMITTED, true, false],
             [Entity::STATUS_UNDER_CONSIDERATION, true, false],
-            [Entity::STATUS_WITHDRAWN, true, false],
+            [IrhpInterface::STATUS_WITHDRAWN, true, false],
             [Entity::STATUS_AWAITING_FEE, true, false],
             [Entity::STATUS_FEE_PAID, true, false],
             [Entity::STATUS_UNSUCCESSFUL, true, false],
@@ -1316,7 +1318,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED, false, false],
             [Entity::STATUS_NOT_YET_SUBMITTED, false, false],
             [Entity::STATUS_UNDER_CONSIDERATION, false, false],
-            [Entity::STATUS_WITHDRAWN, false, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false, false],
             [Entity::STATUS_AWAITING_FEE, false, false],
             [Entity::STATUS_FEE_PAID, false, false],
             [Entity::STATUS_UNSUCCESSFUL, false, false],
