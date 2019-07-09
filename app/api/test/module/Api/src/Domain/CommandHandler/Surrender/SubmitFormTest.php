@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\SubmitForm as sut;
+use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -82,6 +83,9 @@ class SubmitFormTest extends CommandHandlerTestCase
             new Result()
         );
 
+        $actionDate = new DateTime();
+        $actionDate->add(new \DateInterval('P14D'));
+
         $this->expectedSideEffect(
             CreateTask::class,
             [
@@ -91,7 +95,8 @@ class SubmitFormTest extends CommandHandlerTestCase
                 'isClosed' => 'N',
                 'urgent' => 'N',
                 'licence' => $command->getId(),
-                'surrender' => 5
+                'surrender' => 5,
+                'actionDate' => $actionDate->format('Y-m-d')
             ],
             new Result()
         );
