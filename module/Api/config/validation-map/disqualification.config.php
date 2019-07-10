@@ -8,5 +8,4 @@ return [
 
     Delete::class => IsInternalUser::class,
     Update::class => IsInternalUser::class,
-
 ];
