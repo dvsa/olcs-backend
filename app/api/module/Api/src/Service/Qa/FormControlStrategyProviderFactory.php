@@ -20,6 +20,7 @@ class FormControlStrategyProviderFactory implements FactoryInterface
         $mappings = [
             Question::FORM_CONTROL_TYPE_CHECKBOX => 'QaCheckboxFormControlStrategy',
             Question::FORM_CONTROL_TYPE_TEXT => 'QaTextFormControlStrategy',
+            Question::FORM_CONTROL_TYPE_RADIO => 'QaRadioFormControlStrategy',
             Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS => 'QaEcmtRemovalNoOfPermitsFormControlStrategy',
             Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS => 'QaEcmtShortTermNoOfPermitsFormControlStrategy',
         ];
