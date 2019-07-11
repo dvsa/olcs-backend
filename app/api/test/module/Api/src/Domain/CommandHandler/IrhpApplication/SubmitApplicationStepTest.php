@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Update Template Source Test
+ * Submit Application Step test
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
