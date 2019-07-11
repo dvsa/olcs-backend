@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\RefData as Repo;
+use Dvsa\Olcs\Api\Entity\System\RefData as Entity;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -13,6 +14,11 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class RefDataTest extends RepositoryTestCase
 {
+    public function setUp()
+    {
+        $this->setUpSut(Repo::class);
+    }
+
     public function testApplyListFilters()
     {
         $sut = m::mock(Repo::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -64,5 +70,47 @@ class RefDataTest extends RepositoryTestCase
         $sut->shouldReceive('getQueryBuilder')->with()->andReturn($mockQb);
 
         $sut->applyListJoins($mockQb);
+    }
+
+    public function testFetchByCategoryId()
+    {
+        $categoryId = 'permit_status';
+
+        $refDataEntities = [
+            m::mock(Entity::class),
+            m::mock(Entity::class)
+        ];
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('r')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(Entity::class, 'r')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('r.refDataCategoryId = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('orderBy')
+            ->with('r.displayOrder', 'DESC')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $categoryId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($refDataEntities);
+
+        $this->assertEquals(
+            $refDataEntities,
+            $this->sut->fetchByCategoryId($categoryId)
+        );
     }
 }

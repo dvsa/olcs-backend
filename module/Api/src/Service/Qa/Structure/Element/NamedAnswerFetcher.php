@@ -7,6 +7,8 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 class NamedAnswerFetcher
 {
+    const QA_FIELDSET_NAME = 'qa';
+
     const ERR_NO_ANSWER = 'No answer data found';
 
     /**
@@ -24,10 +26,10 @@ class NamedAnswerFetcher
     {
         $fieldsetName = $applicationStep->getFieldsetName();
 
-        if (!isset($postData[$fieldsetName][$elementName])) {
+        if (!isset($postData[self::QA_FIELDSET_NAME][$fieldsetName][$elementName])) {
             throw new NotFoundException(self::ERR_NO_ANSWER);
         }
 
-        return $postData[$fieldsetName][$elementName];
+        return $postData[self::QA_FIELDSET_NAME][$fieldsetName][$elementName];
     }
 }
