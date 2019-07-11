@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -191,6 +192,71 @@ class UpdateFullTest extends CommandHandlerTestCase
             'messages' => [
                 0 => 'section updated',
                 1 => 'IRHP Application updated successfully',
+            ]
+        ];
+
+        $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function testHandleCommandShortTerm()
+    {
+        $permitTypeId = 2;
+        $licenceId = 2;
+
+        $cmdData = [
+            'id' => 34,
+            'type' => $permitTypeId,
+            'licence' => $licenceId,
+            'dateReceived' => '2090-01-03',
+            'declaration' => 0,
+            'postData' => ['key' => 'val']
+        ];
+
+        $command = CreateCmd::create($cmdData);
+
+        $irhpApplicationEntity = m::mock(IrhpApplication::class);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchById')
+            ->with(34)
+            ->once()
+            ->andReturn($irhpApplicationEntity);
+
+        $irhpApplicationEntity->shouldReceive('getId')
+            ->times(2)
+            ->andReturn(34);
+
+        $irhpApplicationEntity->shouldReceive('updateDateReceived')
+            ->once()
+            ->with($cmdData['dateReceived']);
+
+
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(2);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('save')
+            ->with($irhpApplicationEntity)
+            ->once()
+            ->andReturn($irhpApplicationEntity);
+
+
+        $result2 = new Result();
+
+        $sideEffectData = [
+            'id' => 34,
+            'postData' => ['key' => 'val']
+        ];
+        $this->expectedSideEffect(SubmitApplicationPath::class, $sideEffectData, $result2);
+
+        $result = $this->sut->handleCommand($command);
+
+        $expected = [
+            'id' => [
+                'irhpApplication' => 34,
+            ],
+            'messages' => [
+                0 => 'IRHP Application updated successfully',
             ]
         ];
 
