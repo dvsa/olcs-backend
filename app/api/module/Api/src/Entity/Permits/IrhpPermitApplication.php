@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
+use RuntimeException;
 
 /**
  * IrhpPermitApplication Entity
@@ -279,5 +280,21 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     {
         $this->requiredEuro5 = $requiredEuro5;
         $this->requiredEuro6 = $requiredEuro6;
+    }
+
+    /**
+     * Get total permits required when in an emissions category context
+     *
+     * @return int
+     *
+     * @throws RuntimeException
+     */
+    public function getTotalEmissionsCategoryPermitsRequired()
+    {
+        if (is_null($this->requiredEuro5) || is_null($this->requiredEuro6)) {
+            return 0;
+        }
+
+        return $this->requiredEuro5 + $this->requiredEuro6;
     }
 }

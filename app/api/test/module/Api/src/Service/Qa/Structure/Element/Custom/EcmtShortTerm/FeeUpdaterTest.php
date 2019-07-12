@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits;
+namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee as CreateFeeCmd;
@@ -11,18 +11,18 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Cqrs\CommandCreator;
 use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdater;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * FeeCreatorTest
+ * FeeUpdaterTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class FeeCreatorTest extends MockeryTestCase
+class FeeUpdaterTest extends MockeryTestCase
 {
-    public function testCreate()
+    public function testUpdateFees()
     {
         $licenceId = 7;
         $irhpApplicationId = 53;
@@ -31,8 +31,8 @@ class FeeCreatorTest extends MockeryTestCase
 
         $currentDateFormatted = '2019-06-03';
 
-        $feeTypeDescription = 'ECMT Permit';
-        $feeDescription = 'ECMT Permit - 47 permits';
+        $feeTypeDescription = 'ECMT Short Term Permit';
+        $feeDescription = 'ECMT Short Term Permit - 47 permits';
         $feeTypeId = 1003;
 
         $outstandingIssueFee1Id = 76;
@@ -56,7 +56,7 @@ class FeeCreatorTest extends MockeryTestCase
             ->andReturn($irhpApplicationId);
         $irhpApplication->shouldReceive('getLicence->getId')
             ->andReturn($licenceId);
-        $irhpApplication->shouldReceive('getOutstandingIrfoPermitFees')
+        $irhpApplication->shouldReceive('getOutstandingApplicationFees')
             ->andReturn($outstandingIssueFees);
 
         $currentDateTime = m::mock(DateTime::class);
@@ -72,7 +72,7 @@ class FeeCreatorTest extends MockeryTestCase
 
         $feeTypeRepo = m::mock(FeeTypeRepository::class);
         $feeTypeRepo->shouldReceive('getLatestByProductReference')
-            ->with(FeeTypeEntity::FEE_TYPE_ECMT_REMOVAL_ISSUE_PRODUCT_REF)
+            ->with(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)
             ->andReturn($feeType);
 
         $cancelFeeCommand1 = CancelFeeCmd::create([]);
@@ -118,13 +118,13 @@ class FeeCreatorTest extends MockeryTestCase
         $currentDateTimeFactory->shouldReceive('create')
             ->andReturn($currentDateTime);
 
-        $feeCreator = new FeeCreator(
+        $feeUpdater = new FeeUpdater(
             $feeTypeRepo,
             $commandCreator,
             $commandHandlerManager,
             $currentDateTimeFactory
         );
 
-        $feeCreator->create($irhpApplication, $permitsRequired);
+        $feeUpdater->updateFees($irhpApplication, $permitsRequired);
     }
 }

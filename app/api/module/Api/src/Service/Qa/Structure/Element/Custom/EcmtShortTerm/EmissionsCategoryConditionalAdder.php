@@ -60,6 +60,9 @@ class EmissionsCategoryConditionalAdder
             return;
         }
 
+        // TODO: this logic will also need to take candidate permits into account
+        // something like candidate permits assigned to a stock of the specified emissions type and belong
+        // to an application in status GRANTED
         $permitCount = $this->irhpPermitRepo->getPermitCount($stockId, $emissionsCategoryId);
         $permitsRemaining = $combinedRangeSize - $permitCount;
         

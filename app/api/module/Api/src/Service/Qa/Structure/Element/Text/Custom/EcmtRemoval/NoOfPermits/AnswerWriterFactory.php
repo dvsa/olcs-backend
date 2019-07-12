@@ -22,7 +22,7 @@ class AnswerWriterFactory implements FactoryInterface
             $serviceLocator->get('QaEcmtRemovalNoOfPermitsIrhpPermitApplicationFactory'),
             $repositoryServiceManager->get('IrhpPermitApplication'),
             $repositoryServiceManager->get('IrhpPermitWindow'),
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsCurrentDateTimeFactory')
+            $serviceLocator->get('QaCommonCurrentDateTimeFactory')
         );
     }
 }
