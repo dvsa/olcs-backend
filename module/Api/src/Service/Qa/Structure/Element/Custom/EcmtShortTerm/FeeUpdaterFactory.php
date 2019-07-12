@@ -1,22 +1,22 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class FeeCreatorFactory implements FactoryInterface
+class FeeUpdaterFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return FeeCreatorFactory
+     * @return FeeUpdater
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new FeeCreator(
+        return new FeeUpdater(
             $serviceLocator->get('RepositoryServiceManager')->get('FeeType'),
             $serviceLocator->get('QaCommandCreator'),
             $serviceLocator->get('CommandHandlerManager'),

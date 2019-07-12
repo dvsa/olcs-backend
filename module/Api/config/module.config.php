@@ -24,6 +24,8 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'QaCommonCurrentDateTimeFactory' =>
+                ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
             'QaAnswerFactory' => ApiSrv\Qa\AnswerSaver\AnswerFactory::class,
             'QaApplicationStepFactory' => ApiSrv\Qa\Structure\ApplicationStepFactory::class,
             'QaCheckboxElementFactory' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxFactory::class,
@@ -41,8 +43,6 @@ return [
                 ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
             'QaEcmtRemovalNoOfPermitsIrhpPermitApplicationFactory' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\IrhpPermitApplicationFactory::class,
-            'QaEcmtRemovalNoOfPermitsCurrentDateTimeFactory' =>
-                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\CurrentDateTimeFactory::class,
             'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
             'QaEcmtShortTermNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
@@ -191,6 +191,10 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermEmissionsCategoryConditionalAdder' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryConditionalAdderFactory::class,
+            'QaEcmtShortTermConditionalFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
+            'QaEcmtShortTermFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
         ],
     ],
     'view_manager' => [

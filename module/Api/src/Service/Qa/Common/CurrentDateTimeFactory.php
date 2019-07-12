@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits;
+namespace Dvsa\Olcs\Api\Service\Qa\Common;
 
 use DateTime;
 

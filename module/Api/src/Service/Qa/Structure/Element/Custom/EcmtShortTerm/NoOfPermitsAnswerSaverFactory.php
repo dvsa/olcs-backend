@@ -18,7 +18,8 @@ class NoOfPermitsAnswerSaverFactory implements FactoryInterface
     {
         return new NoOfPermitsAnswerSaver(
             $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitApplication'),
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerFetcher')
+            $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerFetcher'),
+            $serviceLocator->get('QaEcmtShortTermConditionalFeeUpdater')
         );
     }
 }
