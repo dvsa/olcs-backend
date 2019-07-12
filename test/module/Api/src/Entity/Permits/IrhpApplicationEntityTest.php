@@ -3478,4 +3478,42 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $entity->getFeePerPermit($applicationFeeType, $issueFeeType);
     }
+
+    public function testGetFirstIrhpPermitApplication()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertSame(
+            $irhpPermitApplication,
+            $entity->getFirstIrhpPermitApplication()
+        );
+    }
+
+    public function testGetFirstIrhpPermitApplicationExceptionOnNone()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+        );
+
+        $entity = $this->createNewEntity();
+        $entity->getFirstIrhpPermitApplication();
+    }
+
+    public function testGetFirstIrhpPermitApplicationExceptionOnMoreThanOne()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+        );
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+
+        $entity->getFirstIrhpPermitApplication();
+    }
 }
