@@ -313,6 +313,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             switch ($formControlType) {
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
+                    return $this->getEcmtShortTermNoOfPermitsAnswer();
             }
 
             throw new RuntimeException(
@@ -340,6 +342,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return $answer->getValue();
     }
 
+    /**
+     * Get the number of permits answer value for a custom element of type ecmt removal
+     *
+     * @return int|null
+     */
     private function getEcmtRemovalNoOfPermitsAnswer()
     {
         if ($this->irhpPermitApplications->count() == 0) {
@@ -348,6 +355,29 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         $irhpPermitApplication = $this->irhpPermitApplications->first();
         return $irhpPermitApplication->getPermitsRequired();
+    }
+
+    /**
+     * Get the number of permits answer values for a custom element of type ecmt short term
+     *
+     * @return int|null
+     */
+    private function getEcmtShortTermNoOfPermitsAnswer()
+    {
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+
+        $requiredEuro5 = $irhpPermitApplication->getRequiredEuro5();
+        $requiredEuro6 = $irhpPermitApplication->getRequiredEuro6();
+
+        if (is_null($requiredEuro5) || is_null($requiredEuro6)) {
+            return null;
+        }
+
+        // TODO: how should these values be returned to accommodate translation etc?
+        return [
+            'euro5: ' . $requiredEuro5,
+            'euro6: ' . $requiredEuro6
+        ];
     }
 
     /**
@@ -1044,6 +1074,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getFeePerPermit(?FeeTypeEntity $applicationFeeType = null, ?FeeTypeEntity $issueFeeType = null)
     {
         $permittedPermitTypeIds = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
@@ -1190,5 +1221,23 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getContextValue()
     {
         return $this->id;
+    }
+
+    /**
+     * Retrieves the first linked irhp permit application instance
+     *
+     * @return IrhpPermitApplication
+     *
+     * @throws RuntimeException
+     */
+    public function getFirstIrhpPermitApplication()
+    {
+        if ($this->irhpPermitApplications->count() != 1) {
+            throw new RuntimeException(
+                'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+            );
+        }
+
+        return $this->irhpPermitApplications->first();
     }
 }
