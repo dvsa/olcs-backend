@@ -10,6 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Update as UpdateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as PermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Update IrhpPermitRange Test
@@ -29,11 +30,23 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
+    protected function initReferences()
+    {
+        $this->refData = [
+            RefData::EMISSIONS_CATEGORY_EURO5_REF,
+            RefData::EMISSIONS_CATEGORY_EURO6_REF,
+            RefData::EMISSIONS_CATEGORY_NA_REF
+        ];
+
+        parent::initReferences();
+    }
+
     public function testHandleCommand()
     {
         $id = 1;
         $cmdData = [
             'irhpPermitStock' => '1',
+            'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF,
             'prefix' => 'UK',
             'fromNo' => 1,
             'toNo' => 100,
@@ -43,6 +56,7 @@ class UpdateTest extends CommandHandlerTestCase
         ];
 
         $stock = m::mock(IrhpPermitStock::class)->makePartial();
+        $stock->shouldReceive('getIrhpPermitType->isEcmtShortTerm')->once()->andReturn(true);
 
         $command = UpdateCmd::create($cmdData);
 
@@ -54,7 +68,7 @@ class UpdateTest extends CommandHandlerTestCase
             ->andReturn($stock);
 
         $entity->shouldReceive('update')
-            ->with($stock, 'UK', '1', '100', '0', '0', [])
+            ->with($stock, $this->refData[RefData::EMISSIONS_CATEGORY_EURO6_REF], 'UK', '1', '100', '0', '0', [])
             ->andReturn(m::mock(IrhpPermitRange::class));
 
         $entity->shouldReceive('getId')
@@ -95,6 +109,7 @@ class UpdateTest extends CommandHandlerTestCase
     {
         $cmdData = [
             'irhpPermitStock' => '1',
+            'emissionsCategory' => RefData::EMISSIONS_CATEGORY_EURO6_REF,
             'prefix' => 'UK',
             'fromNo' => '1',
             'toNo' => '100',
@@ -122,6 +137,52 @@ class UpdateTest extends CommandHandlerTestCase
                 $entity
             )
             ->andReturn([m::mock(PermitRangeEntity::class)]);
+
+        $this->sut->handleCommand($command);
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     */
+    public function testHandleCommandBadEcmtEmissionsCategory()
+    {
+        $cmdData = [
+            'irhpPermitStock' => '1',
+            'emissionsCategory' => RefData::EMISSIONS_CATEGORY_NA_REF,
+            'prefix' => 'UK',
+            'fromNo' => '1',
+            'toNo' => '100',
+            'isReserve' => '0',
+            'isReplacement' => '0',
+            'countrys' => []
+        ];
+
+        $command = UpdateCmd::create($cmdData);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtShortTerm')->once()->andReturn(true);
+
+        $this->repoMap['IrhpPermitStock']
+            ->shouldReceive('fetchById')
+            ->andReturn($irhpPermitStock);
+
+        $entity = m::mock(PermitRangeEntity::class);
+
+        $this->repoMap['IrhpPermitRange']
+            ->shouldReceive('fetchUsingId')
+            ->once()
+            ->with($command)
+            ->andReturn($entity);
+
+        $this->repoMap['IrhpPermitRange']
+            ->shouldReceive('findOverlappingRangesByType')
+            ->with(
+                $cmdData['irhpPermitStock'],
+                $cmdData['fromNo'],
+                $cmdData['toNo'],
+                $entity
+            )
+            ->andReturn([]);
 
         $this->sut->handleCommand($command);
     }
