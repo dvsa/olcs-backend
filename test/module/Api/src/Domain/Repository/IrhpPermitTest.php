@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrintConfirm;
@@ -27,7 +28,7 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->setUpSut(IrhpPermit::class);
     }
 
-    public function testGetPermitCount()
+    public function testGetPermitCountWithoutEmissionsCategoryId()
     {
         $permitCount = 744;
         $stockId = 5;
@@ -70,6 +71,61 @@ class IrhpPermitTest extends RepositoryTestCase
         $this->assertEquals(
             $permitCount,
             $this->sut->getPermitCount($stockId)
+        );
+    }
+
+    public function testGetPermitCountWithEmissionsCategoryId()
+    {
+        $permitCount = 744;
+        $stockId = 5;
+        $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO6_REF;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with('count(ip.id)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpPermitEntity::class, 'ip')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ip.irhpPermitRange', 'ipr')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipr.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.ssReserve = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ipr.lostReplacement = false')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $stockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('IDENTITY(ipr.emissionsCategory) = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $emissionsCategoryId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($permitCount);
+
+        $this->assertEquals(
+            $permitCount,
+            $this->sut->getPermitCount($stockId, $emissionsCategoryId)
         );
     }
 

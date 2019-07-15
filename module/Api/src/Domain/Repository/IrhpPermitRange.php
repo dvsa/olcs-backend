@@ -12,23 +12,30 @@ class IrhpPermitRange extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Returns the number of possible permit numbers across all ranges in the specified stockId. Will return NULL if
-     * no ranges were found against the specified stockId
+     * Returns the number of possible permit numbers across all ranges in the specified stockId and (optionally)
+     * emissionsCategoryId. Will return NULL if no ranges were found against the specified constraints
      *
      * @param int $stockId
+     * @param int $emissionsCategoryId (optional)
      *
      * @return int|null
      */
-    public function getCombinedRangeSize($stockId)
+    public function getCombinedRangeSize($stockId, $emissionsCategoryId = null)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('SUM((ipr.toNo - ipr.fromNo) + 1)')
             ->from(Entity::class, 'ipr')
             ->where('ipr.ssReserve = false')
             ->andWhere('ipr.lostReplacement = false')
             ->andWhere('IDENTITY(ipr.irhpPermitStock) = ?1')
-            ->setParameter(1, $stockId)
-            ->getQuery()
+            ->setParameter(1, $stockId);
+
+        if (!is_null($emissionsCategoryId)) {
+            $qb->andWhere('IDENTITY(ipr.emissionsCategory) = ?2')
+                ->setParameter(2, $emissionsCategoryId);
+        }
+
+        return $qb->getQuery()
             ->getSingleScalarResult();
     }
 

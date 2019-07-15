@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -10,8 +11,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
+use Mockery as m;
 
 /**
  * IrhpPermitStock Entity Unit Tests
@@ -1214,5 +1215,17 @@ class IrhpPermitStockEntityTest extends EntityTester
             ->andReturn($fromNo);
 
         return $irhpPermitRange;
+    }
+
+    public function testGetValidityYear()
+    {
+        $dateTime = new DateTime('2015-12-31');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getValidTo')
+            ->with(true)
+            ->andReturn($dateTime);
+
+        $this->assertEquals(2015, $entity->getValidityYear());
     }
 }
