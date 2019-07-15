@@ -2,9 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryConditionalAdder;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory;
@@ -21,9 +20,7 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 {
     private $emissionsCategoryFactory;
 
-    private $irhpPermitRangeRepo;
-
-    private $irhpPermitRepo;
+    private $emissionsCategoryAvailabilityCounter;
 
     private $emissionsCategoryConditionalAdder;
 
@@ -42,13 +39,11 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
     public function setUp()
     {
         $this->emissionsCategoryFactory = m::mock(EmissionsCategoryFactory::class);
-        $this->irhpPermitRangeRepo = m::mock(IrhpPermitRangeRepository::class);
-        $this->irhpPermitRepo = m::mock(IrhpPermitRepository::class);
+        $this->emissionsCategoryAvailabilityCounter = m::mock(EmissionsCategoryAvailabilityCounter::class);
 
         $this->emissionsCategoryConditionalAdder = new EmissionsCategoryConditionalAdder(
             $this->emissionsCategoryFactory,
-            $this->irhpPermitRangeRepo,
-            $this->irhpPermitRepo
+            $this->emissionsCategoryAvailabilityCounter
         );
 
         $this->noOfPermits = m::mock(NoOfPermits::class);
@@ -61,17 +56,11 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 
     public function testAddWhenRangesExistAndFreePermits()
     {
-        $combinedRangeSize = 100;
-        $permitCount = 97;
         $permitsRemaining = 3;
 
-        $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
+        $this->emissionsCategoryAvailabilityCounter->shouldReceive('getCount')
             ->with($this->stockId, $this->emissionsCategoryId)
-            ->andReturn($combinedRangeSize);
-
-        $this->irhpPermitRepo->shouldReceive('getPermitCount')
-            ->with($this->stockId, $this->emissionsCategoryId)
-            ->andReturn($permitCount);
+            ->andReturn($permitsRemaining);
 
         $emissionsCategory = m::mock(EmissionsCategory::class);
 
@@ -94,39 +83,11 @@ class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
         );
     }
 
-    public function testNoAddWhenNoRanges()
-    {
-        $combinedRangeSize = null;
-
-        $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
-            ->with($this->stockId, $this->emissionsCategoryId)
-            ->andReturn($combinedRangeSize);
-
-        $this->noOfPermits->shouldReceive('addEmissionsCategory')
-            ->never();
-
-        $this->emissionsCategoryConditionalAdder->addIfRequired(
-            $this->noOfPermits,
-            $this->fieldName,
-            $this->labelTranslationKey,
-            $this->value,
-            $this->emissionsCategoryId,
-            $this->stockId
-        );
-    }
-
     public function testNoAddWhenNoFreePermitsInRanges()
     {
-        $combinedRangeSize = 100;
-        $permitCount = 100;
-
-        $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
+        $this->emissionsCategoryAvailabilityCounter->shouldReceive('getCount')
             ->with($this->stockId, $this->emissionsCategoryId)
-            ->andReturn($combinedRangeSize);
-
-        $this->irhpPermitRepo->shouldReceive('getPermitCount')
-            ->with($this->stockId, $this->emissionsCategoryId)
-            ->andReturn($permitCount);
+            ->andReturn(0);
 
         $this->noOfPermits->shouldReceive('addEmissionsCategory')
             ->never();
