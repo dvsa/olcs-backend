@@ -464,6 +464,16 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertEquals($euro6Required, $entity->getRequiredEuro6());
     }
 
+    public function testClearEmissionsCategoryPermitsRequired()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->updateEmissionsCategoryPermitsRequired(7, 5);
+        $entity->clearEmissionsCategoryPermitsRequired();
+
+        $this->assertNull($entity->getRequiredEuro5());
+        $this->assertNull($entity->getRequiredEuro6());
+    }
+
     /**
      * @dataProvider dpTestGetTotalEmissionsCategoryPermitsRequired
      */
