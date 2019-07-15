@@ -32,6 +32,7 @@ return [
     QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\AvailableYears::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\CheckRunScoringPrerequisites::class => NotIsAnonymousUser::class,
