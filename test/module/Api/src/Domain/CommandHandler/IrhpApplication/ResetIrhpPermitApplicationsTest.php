@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\Delete as DeleteIrhpPermitApplicationCmd;
