@@ -49,6 +49,9 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
             'QaEcmtShortTermEmissionsCategoryFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
+            'QaSupplementedApplicationStepFactory' =>
+                ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
+            
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -147,9 +150,12 @@ return [
             'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
 
             'QaGenericAnswerSaver' => ApiSrv\Qa\Structure\Element\GenericAnswerSaverFactory::class,
+            'QaGenericAnswerClearer' => ApiSrv\Qa\Structure\Element\GenericAnswerClearerFactory::class,
             'QaCheckboxAnswerSaver' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSaverFactory::class,
+            'QaGenericAnswerProvider' => ApiSrv\Qa\AnswerSaver\GenericAnswerProviderFactory::class,
             'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
             'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
+            'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
             
             'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
             'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
@@ -184,6 +190,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriterFactory::class,
             'QaEcmtRemovalNoOfPermitsAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtRemovalNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtRemovalNoOfPermitsFeeCreator' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
 
@@ -192,6 +200,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
             'QaEcmtShortTermNoOfPermitsAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtShortTermNoOfPermitsElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermEmissionsCategoryConditionalAdder' =>
@@ -200,6 +210,9 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
             'QaEcmtShortTermFeeUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
+
+            'QaSupplementedApplicationStepsProvider' =>
+                ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
         ],
     ],
     'view_manager' => [

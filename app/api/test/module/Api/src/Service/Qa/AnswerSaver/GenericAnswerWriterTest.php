@@ -8,11 +8,11 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\AnswerFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use RuntimeException;
 
 /**
  * GenericAnswerWriterTest
@@ -21,6 +21,16 @@ use RuntimeException;
  */
 class GenericAnswerWriterTest extends MockeryTestCase
 {
+    private $questionId;
+
+    private $questionType;
+
+    private $irhpApplicationId;
+
+    private $answerValue;
+
+    private $answer;
+
     private $answerRepo;
 
     private $answerFactory;
@@ -29,117 +39,98 @@ class GenericAnswerWriterTest extends MockeryTestCase
 
     private $applicationStep;
 
+    private $irhpApplication;
+
+    private $genericAnswerProvider;
+
+    private $genericAnswerWriter;
+
     public function setUp()
     {
+        $this->questionId = 43;
+
+        $this->questionType = Question::QUESTION_TYPE_STRING;
+
+        $this->irhpApplicationId = 47;
+
+        $this->answerValue = 866;
+
+        $this->answer = m::mock(Answer::class);
+
         $this->answerRepo = m::mock(AnswerRepository::class);
 
         $this->answerFactory = m::mock(AnswerFactory::class);
 
         $this->question = m::mock(Question::class);
+        $this->question->shouldReceive('getId')
+            ->andReturn($this->questionId);
+        $this->question->shouldReceive('getQuestionType')
+            ->andReturn($this->questionType);
 
         $this->applicationStep = m::mock(ApplicationStep::class);
         $this->applicationStep->shouldReceive('getQuestion')
             ->andReturn($this->question);
 
         $this->irhpApplication = m::mock(IrhpApplication::class);
+        $this->irhpApplication->shouldReceive('getId')
+            ->andReturn($this->irhpApplicationId);
+
+        $this->genericAnswerProvider = m::mock(GenericAnswerProvider::class);
+
+        $this->genericAnswerWriter = new GenericAnswerWriter(
+            $this->genericAnswerProvider,
+            $this->answerFactory,
+            $this->answerRepo
+        );
     }
 
     public function testSaveAnswerAlreadyExists()
     {
-        $questionId = 43;
-        $questionType = Question::QUESTION_TYPE_STRING;
-        $this->irhpApplicationId = 124;
-        $answerValue = '866';
-
-        $this->question = m::mock(Question::class);
-        $this->question->shouldReceive('getId')
-            ->andReturn($questionId);
-        $this->question->shouldReceive('getQuestionType')
-            ->andReturn($questionType);
-        $this->question->shouldReceive('isCustom')
-            ->andReturn(false);
-
-        $this->applicationStep = m::mock(ApplicationStep::class);
-        $this->applicationStep->shouldReceive('getQuestion')
-            ->andReturn($this->question);
-
-        $this->irhpApplication = m::mock(IrhpApplication::class);
-        $this->irhpApplication->shouldReceive('getId')
-            ->andReturn($this->irhpApplicationId);
-
-        $answer = m::mock(Answer::class);
-        $answer->shouldReceive('setValue')
-            ->with($questionType, $answerValue)
+        $this->answer->shouldReceive('setValue')
+            ->with($this->questionType, $this->answerValue)
             ->once()
             ->ordered()
             ->globally();
-
         $this->answerRepo->shouldReceive('save')
-            ->with($answer)
+            ->with($this->answer)
             ->once()
             ->ordered()
             ->globally();
-        $this->answerRepo->shouldReceive('fetchByQuestionIdAndIrhpApplicationId')
-            ->with($questionId, $this->irhpApplicationId)
-            ->andReturn($answer);
 
-        $genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
-        $genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $answerValue);
+        $this->genericAnswerProvider->shouldReceive('get')
+            ->with($this->applicationStep, $this->irhpApplication)
+            ->andReturn($this->answer);
+
+        $this->genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $this->answerValue);
     }
 
     public function testSaveAnswerRequiresCreation()
     {
-        $questionId = 43;
-        $questionType = Question::QUESTION_TYPE_STRING;
-        $this->irhpApplicationId = 124;
-        $answerValue = '866';
-
         $questionText = m::mock(QuestionText::class);
 
-        $this->question->shouldReceive('getId')
-            ->andReturn($questionId);
-        $this->question->shouldReceive('getQuestionType')
-            ->andReturn($questionType);
-        $this->question->shouldReceive('isCustom')
-            ->andReturn(false);
         $this->question->shouldReceive('getActiveQuestionText')
             ->andReturn($questionText);
 
-        $this->irhpApplication->shouldReceive('getId')
-            ->andReturn($this->irhpApplicationId);
+        $this->genericAnswerProvider->shouldReceive('get')
+            ->with($this->applicationStep, $this->irhpApplication)
+            ->andThrow(new NotFoundException());
 
-        $answer = m::mock(Answer::class);
-        $answer->shouldReceive('setValue')
-            ->with($questionType, $answerValue)
+        $this->answer->shouldReceive('setValue')
+            ->with($this->questionType, $this->answerValue)
             ->once()
             ->ordered()
             ->globally();
 
-        $this->answerRepo->shouldReceive('fetchByQuestionIdAndIrhpApplicationId')
-            ->andThrow(new NotFoundException());
         $this->answerRepo->shouldReceive('save')
-            ->with($answer)
+            ->with($this->answer)
             ->once()
             ->ordered()
             ->globally();
 
         $this->answerFactory->shouldReceive('create')
             ->with($questionText, $this->irhpApplication)
-            ->andReturn($answer);
+            ->andReturn($this->answer);
 
-        $genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
-        $genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $answerValue);
-    }
-
-    public function testExceptionOnCustomQuestion()
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(GenericAnswerWriter::ERR_CUSTOM_UNSUPPORTED);
-
-        $this->question->shouldReceive('isCustom')
-            ->andReturn(true);
-
-        $genericAnswerWriter = new GenericAnswerWriter($this->answerRepo, $this->answerFactory);
-        $genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, 47);
+        $this->genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $this->answerValue);
     }
 }

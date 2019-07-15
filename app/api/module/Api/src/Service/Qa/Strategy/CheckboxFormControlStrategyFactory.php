@@ -20,6 +20,7 @@ class CheckboxFormControlStrategyFactory implements FactoryInterface
             'checkbox',
             $serviceLocator->get('QaCheckboxElementGenerator'),
             $serviceLocator->get('QaGenericAnswerSaver'),
+            $serviceLocator->get('QaGenericAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator')
         );
     }

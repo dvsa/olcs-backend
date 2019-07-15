@@ -283,6 +283,15 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
+     * Clear permits required when in an emissions category context
+     */
+    public function clearEmissionsCategoryPermitsRequired()
+    {
+        $this->requiredEuro5 = null;
+        $this->requiredEuro6 = null;
+    }
+
+    /**
      * Get total permits required when in an emissions category context
      *
      * @return int
