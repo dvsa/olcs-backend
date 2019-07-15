@@ -38,8 +38,10 @@ class NamedAnswerFetcherTest extends MockeryTestCase
         $answerValue = '123';
 
         $postData = [
-            $this->fieldsetName => [
-                $elementName => $answerValue
+            'qa' => [
+                $this->fieldsetName => [
+                    $elementName => $answerValue
+                ]
             ]
         ];
 
@@ -55,8 +57,10 @@ class NamedAnswerFetcherTest extends MockeryTestCase
         $this->expectExceptionMessage(NamedAnswerFetcher::ERR_NO_ANSWER);
 
         $postData = [
-            'fields456' => [
-                'qaElement' => '123'
+            'qa' => [
+                'fields456' => [
+                    'qaElement' => '123'
+                ]
             ]
         ];
 
