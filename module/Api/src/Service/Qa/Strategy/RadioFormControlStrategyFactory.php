@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class TextFormControlStrategyFactory implements FactoryInterface
+class RadioFormControlStrategyFactory implements FactoryInterface
 {
     /**
      * Create service
@@ -17,8 +17,8 @@ class TextFormControlStrategyFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new BaseFormControlStrategy(
-            'text',
-            $serviceLocator->get('QaTextElementGenerator'),
+            'radio',
+            $serviceLocator->get('QaRadioElementGenerator'),
             $serviceLocator->get('QaGenericAnswerSaver'),
             $serviceLocator->get('QaQuestionTextGenerator')
         );
