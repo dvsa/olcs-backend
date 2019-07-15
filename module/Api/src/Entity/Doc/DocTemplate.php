@@ -38,7 +38,7 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
      * @param string $description
      * @param Document $document
      * @param bool $isNi
-     * @param bool $suppressFromOp
+     * @param string $suppressFromOp
      * @param string $deletedDate
      * @param User $createdBy
      * @return DocTemplate
@@ -49,7 +49,7 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
         string $description,
         Document $document,
         bool $isNi,
-        bool $suppressFromOp,
+        string $suppressFromOp,
         $deletedDate,
         User $createdBy
     ) {
@@ -72,7 +72,7 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
      * @param SubCategory $subCategory
      * @param string $description
      * @param bool $isNi
-     * @param bool $suppressFromOp
+     * @param string $suppressFromOp
      * @return DocTemplate
      */
     public function updateMeta(
@@ -80,7 +80,7 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
         SubCategory $subCategory,
         string $description,
         bool $isNi,
-        bool $suppressFromOp
+        string $suppressFromOp
     ) {
         $this->category = $category;
         $this->subCategory = $subCategory;
