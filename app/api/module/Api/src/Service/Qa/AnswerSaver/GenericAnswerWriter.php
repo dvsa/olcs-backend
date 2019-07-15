@@ -24,7 +24,7 @@ class GenericAnswerWriter
      * @param AnswerRepository $answerRepo
      * @param AnswerFactory $answerFactory
      *
-     * @return GenericAnswerSaver
+     * @return GenericAnswerWriter
      */
     public function __construct(
         AnswerRepository $answerRepo,
