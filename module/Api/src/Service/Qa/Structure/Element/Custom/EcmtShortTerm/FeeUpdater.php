@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Cqrs\CommandCreator;
 
-class FeeCreator
+class FeeUpdater
 {
     /** @var FeeTypeRepository */
     private $feeTypeRepo;
@@ -54,11 +54,11 @@ class FeeCreator
      * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitsRequired
      */
-    public function create(IrhpApplicationEntity $irhpApplication, $permitsRequired)
+    public function updateFees(IrhpApplicationEntity $irhpApplication, $permitsRequired)
     {
         $feeCommands = [];
 
-        $outstandingIssueFees = $irhpApplication->getOutstandingIrfoPermitFees();
+        $outstandingIssueFees = $irhpApplication->getOutstandingApplicationFees();
 
         foreach ($outstandingIssueFees as $fee) {
             $feeCommands[] = $this->commandCreator->create(
@@ -67,9 +67,7 @@ class FeeCreator
             );
         }
 
-        $feeType = $this->feeTypeRepo->getLatestByProductReference(
-            FeeType::FEE_TYPE_ECMT_REMOVAL_ISSUE_PRODUCT_REF
-        );
+        $feeType = $this->feeTypeRepo->getLatestByProductReference(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF);
 
         $feeDescription = sprintf(
             '%s - %d permits',

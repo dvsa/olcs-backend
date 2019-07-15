@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdater;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\FieldNames;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcher;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSaver;
@@ -23,6 +24,7 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
     {
         $euro5Answer = '5';
         $euro6Answer = '27';
+        $oldTotal = 13;
 
         $postData = [
             'fieldset68' => [
@@ -34,6 +36,11 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
         $applicationStep = m::mock(ApplicationStepEntity::class);
 
         $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+        $irhpPermitApplication->shouldReceive('getTotalEmissionsCategoryPermitsRequired')
+            ->once()
+            ->andReturn($oldTotal)
+            ->ordered()
+            ->globally();
         $irhpPermitApplication->shouldReceive('updateEmissionsCategoryPermitsRequired')
             ->with($euro5Answer, $euro6Answer)
             ->once()
@@ -43,6 +50,11 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
         $irhpApplication = m::mock(IrhpApplicationEntity::class);
         $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
+
+        $conditionalFeeUpdater = m::mock(ConditionalFeeUpdater::class);
+        $conditionalFeeUpdater->shouldReceive('updateFees')
+            ->with($irhpApplication, $oldTotal)
+            ->once();
 
         $irhpPermitApplicationRepo = m::mock(IrhpPermitApplicationRepository::class);
         $irhpPermitApplicationRepo->shouldReceive('save')
@@ -61,7 +73,8 @@ class NoOfPermitsAnswerSaverTest extends MockeryTestCase
 
         $noOfPermitsAnswerSaver = new NoOfPermitsAnswerSaver(
             $irhpPermitApplicationRepo,
-            $noOfPermitsAnswerFetcher
+            $noOfPermitsAnswerFetcher,
+            $conditionalFeeUpdater
         );
 
         $noOfPermitsAnswerSaver->save($applicationStep, $irhpApplication, $postData);

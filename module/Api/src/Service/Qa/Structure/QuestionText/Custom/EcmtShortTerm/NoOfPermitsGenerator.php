@@ -37,13 +37,24 @@ class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
      */
     public function generate(QuestionTextGeneratorContext $context)
     {
-        $feePerPermit = $context->getIrhpApplicationEntity()->getFeePerPermit(
-            $this->feeTypeRepo->getLatestByProductReference(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF),
-            $this->feeTypeRepo->getLatestByProductReference(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF)
+        $applicationFee = $this->feeTypeRepo->getLatestByProductReference(
+            FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF
         );
 
+        $issueFee = $this->feeTypeRepo->getLatestByProductReference(
+            FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF
+        );
+
+        $feePerPermit = $context->getIrhpApplicationEntity()->getFeePerPermit($applicationFee, $issueFee);
+        $applicationFeeFixedValue = $applicationFee->getFixedValue();
+
         $questionText = $this->questionTextGenerator->generate($context);
-        $questionText->getGuidance()->getTranslateableText()->getParameter(0)->setValue($feePerPermit);
+        $guidanceTranslateableText = $questionText->getGuidance()->getTranslateableText();
+
+        $guidanceTranslateableText->getParameter(0)->setValue($feePerPermit);
+        $guidanceTranslateableText->getParameter(1)->setValue($applicationFeeFixedValue);
+        $guidanceTranslateableText->getParameter(2)->setValue($issueFee->getFixedValue());
+        $guidanceTranslateableText->getParameter(3)->setValue($applicationFeeFixedValue);
 
         return $questionText;
     }

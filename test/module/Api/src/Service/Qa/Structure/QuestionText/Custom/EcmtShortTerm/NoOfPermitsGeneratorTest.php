@@ -20,25 +20,60 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 {
     public function testGenerate()
     {
-        $feePerPermit = '20.00';
+        $totalFeePerPermit = '20.00';
+        $applicationFeePerPermit = '15.00';
+        $issueFeePerPermit = '5.00';
 
         $applicationFeeTypeEntity = m::mock(FeeTypeEntity::class);
-        $issueFeeTypeEntity = m::mock(FeeTypeEntity::class);
+        $applicationFeeTypeEntity->shouldReceive('getFixedValue')
+            ->andReturn($applicationFeePerPermit);
 
-        $translateableTextParameter = m::mock(TranslateableTextParameter::class);
-        $translateableTextParameter->shouldReceive('setValue')
-            ->with($feePerPermit)
+        $issueFeeTypeEntity = m::mock(FeeTypeEntity::class);
+        $issueFeeTypeEntity->shouldReceive('getFixedValue')
+            ->andReturn($issueFeePerPermit);
+
+        $guidanceTranslateableTextParameterIndex0 = m::mock(TranslateableTextParameter::class);
+        $guidanceTranslateableTextParameterIndex0->shouldReceive('setValue')
+            ->with($totalFeePerPermit)
             ->once();
 
-        $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getGuidance->getTranslateableText->getParameter')
+        $guidanceTranslateableTextParameterIndex1 = m::mock(TranslateableTextParameter::class);
+        $guidanceTranslateableTextParameterIndex1->shouldReceive('setValue')
+            ->with($applicationFeePerPermit)
+            ->once();
+
+        $guidanceTranslateableTextParameterIndex2 = m::mock(TranslateableTextParameter::class);
+        $guidanceTranslateableTextParameterIndex2->shouldReceive('setValue')
+            ->with($issueFeePerPermit)
+            ->once();
+
+        $guidanceTranslateableTextParameterIndex3 = m::mock(TranslateableTextParameter::class);
+        $guidanceTranslateableTextParameterIndex3->shouldReceive('setValue')
+            ->with($applicationFeePerPermit)
+            ->once();
+
+        $guidanceTranslateableText = m::mock(TranslateableText::class);
+        $guidanceTranslateableText->shouldReceive('getParameter')
             ->with(0)
-            ->andReturn($translateableTextParameter);
+            ->andReturn($guidanceTranslateableTextParameterIndex0);
+        $guidanceTranslateableText->shouldReceive('getParameter')
+            ->with(1)
+            ->andReturn($guidanceTranslateableTextParameterIndex1);
+        $guidanceTranslateableText->shouldReceive('getParameter')
+            ->with(2)
+            ->andReturn($guidanceTranslateableTextParameterIndex2);
+        $guidanceTranslateableText->shouldReceive('getParameter')
+            ->with(3)
+            ->andReturn($guidanceTranslateableTextParameterIndex3);
+
+        $questionText = m::mock(QuestionText::class);
+        $questionText->shouldReceive('getGuidance->getTranslateableText')
+            ->andReturn($guidanceTranslateableText);
 
         $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
         $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity->getFeePerPermit')
             ->with($applicationFeeTypeEntity, $issueFeeTypeEntity)
-            ->andReturn($feePerPermit);
+            ->andReturn($totalFeePerPermit);
 
         $questionTextGenerator = m::mock(QuestionTextGenerator::class);
         $questionTextGenerator->shouldReceive('generate')

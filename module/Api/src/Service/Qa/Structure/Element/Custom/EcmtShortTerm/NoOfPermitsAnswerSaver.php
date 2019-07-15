@@ -15,20 +15,26 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
     /** @var NoOfPermitsAnswerFetcher */
     private $noOfPermitsAnswerFetcher;
 
+    /** @var ConditionalFeeUpdater */
+    private $conditionalFeeUpdater;
+
     /**
      * Create service instance
      *
      * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
      * @param NoOfPermitsAnswerFetcher $noOfPermitsAnswerFetcher
+     * @param ConditionalFeeUpdater $conditionalFeeUpdater
      *
      * @return NoOfPermitsAnswerSaver
      */
     public function __construct(
         IrhpPermitApplicationRepository $irhpPermitApplicationRepo,
-        NoOfPermitsAnswerFetcher $noOfPermitsAnswerFetcher
+        NoOfPermitsAnswerFetcher $noOfPermitsAnswerFetcher,
+        ConditionalFeeUpdater $conditionalFeeUpdater
     ) {
         $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
         $this->noOfPermitsAnswerFetcher = $noOfPermitsAnswerFetcher;
+        $this->conditionalFeeUpdater = $conditionalFeeUpdater;
     }
 
     /**
@@ -52,7 +58,11 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
         );
 
         $irhpPermitApplication = $irhpApplicationEntity->getFirstIrhpPermitApplication();
+
+        $oldTotal = $irhpPermitApplication->getTotalEmissionsCategoryPermitsRequired();
         $irhpPermitApplication->updateEmissionsCategoryPermitsRequired($requiredEuro5, $requiredEuro6);
         $this->irhpPermitApplicationRepo->save($irhpPermitApplication);
+
+        $this->conditionalFeeUpdater->updateFees($irhpApplicationEntity, $oldTotal);
     }
 }
