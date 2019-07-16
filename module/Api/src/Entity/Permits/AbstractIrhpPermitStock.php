@@ -27,9 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"}),
- *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"}),
- *        @ORM\Index(name="fk_irhp_permit_stock_emissions_category_ref_data_id",
-     *     columns={"emissions_category"})
+ *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uniqueStock",
@@ -76,16 +74,6 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      */
     protected $createdOn;
-
-    /**
-     * Emissions category
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="emissions_category", referencedColumnName="id", nullable=true)
-     */
-    protected $emissionsCategory;
 
     /**
      * Identifier - Id
@@ -326,30 +314,6 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
         }
 
         return $this->createdOn;
-    }
-
-    /**
-     * Set the emissions category
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $emissionsCategory entity being set as the value
-     *
-     * @return IrhpPermitStock
-     */
-    public function setEmissionsCategory($emissionsCategory)
-    {
-        $this->emissionsCategory = $emissionsCategory;
-
-        return $this;
-    }
-
-    /**
-     * Get the emissions category
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getEmissionsCategory()
-    {
-        return $this->emissionsCategory;
     }
 
     /**

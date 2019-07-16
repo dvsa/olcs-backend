@@ -48,7 +48,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
 
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, null, $validFrom, $validTo);
+        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $validFrom, $validTo);
 
         $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
@@ -56,43 +56,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($initialStock, $entity->getInitialStock());
         $this->assertEquals($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, null, $updateInitialStock, null, $updateValidFrom, $updateValidTo);
-
-        $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
-        $this->assertEquals($updateExpectedTo, $entity->getValidTo());
-        $this->assertEquals($updateInitialStock, $entity->getInitialStock());
-    }
-
-
-    public function testCreateUpdateWithEmissions()
-    {
-        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
-        $validFrom = '2200-01-01';
-        $expectedFrom = $this->processDate($validFrom, 'Y-m-d');
-        $validTo = '2250-02-01';
-        $expectedTo = $this->processDate($validTo, 'Y-m-d');
-        $initialStock = 2000;
-        $emissionsCategory = m::mock(RefData::class);
-
-        $updateValidFrom = '2350-02-01';
-        $updateExpectedFrom = $this->processDate($updateValidFrom, 'Y-m-d');
-        $updateValidTo = '2350-02-02';
-        $updateExpectedTo = $this->processDate($updateValidTo, 'Y-m-d');
-        $updateInitialStock = 1401;
-        $status = m::mock(RefData::class);
-
-        $irhpPermitType->shouldReceive('getId')
-            ->andReturn(2);
-
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $emissionsCategory, $validFrom, $validTo);
-
-        $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
-        $this->assertEquals($expectedFrom, $entity->getValidFrom());
-        $this->assertEquals($expectedTo, $entity->getValidTo());
-        $this->assertEquals($initialStock, $entity->getInitialStock());
-        $this->assertEquals($status, $entity->getStatus());
-
-        $entity->update($irhpPermitType, null, $updateInitialStock, $emissionsCategory, $updateValidFrom, $updateValidTo);
+        $entity->update($irhpPermitType, null, $updateInitialStock, $updateValidFrom, $updateValidTo);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
