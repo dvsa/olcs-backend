@@ -7,8 +7,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\WithdrawUnpaidEcmt as WithdrawUnpaidEcmtCmd;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
@@ -44,7 +46,7 @@ final class WithdrawUnpaidEcmt extends AbstractCommandHandler implements Transac
          */
         $repo = $this->getRepo();
 
-        $queryData = ['statusIds' => [EcmtPermitApplication::STATUS_AWAITING_FEE]];
+        $queryData = ['statusIds' => [IrhpInterface::STATUS_AWAITING_FEE]];
         $this->query = EcmtAppQuery::create($queryData);
         $ecmtApps = $repo->fetchList($this->query, Query::HYDRATE_OBJECT);
 
@@ -53,7 +55,7 @@ final class WithdrawUnpaidEcmt extends AbstractCommandHandler implements Transac
             if ($application->issueFeeOverdue()) {
                 $cmdData = [
                     'id' => $application->getId(),
-                    'reason' => EcmtPermitApplication::WITHDRAWN_REASON_UNPAID
+                    'reason' => WithdrawableInterface::WITHDRAWN_REASON_UNPAID
                 ];
 
                 $withdrawCmd = WithdrawEcmtPermitApplication::create($cmdData);
