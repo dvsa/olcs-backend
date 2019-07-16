@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -62,6 +63,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeWithdrawn')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
             ->once()
             ->withNoArgs()
@@ -106,6 +111,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('isCancelled')
             ->andReturn(false)
+            ->shouldReceive('isWithdrawn')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -143,6 +152,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
+                'canBeWithdrawn' => false,
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
@@ -158,6 +168,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
                 'isCancelled' => false,
+                'isWithdrawn' => false,
                 'isBilateral' => false,
                 'isMultilateral' => false,
                 'canCheckAnswers' => true,
@@ -456,6 +467,108 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
             [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestCanBeWithdrawn
+     */
+    public function testCanBeWithdrawn($status, $expected)
+    {
+        $entity = $this->createNewEntity(null, new RefData($status));
+        $this->assertSame($expected, $entity->canBeWithdrawn());
+    }
+
+    public function dpTestCanBeWithdrawn()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsWithdrawn
+     */
+    public function testIsWithdrawn($status, $expected)
+    {
+        $entity = $this->createNewEntity(null, new RefData($status));
+        $this->assertSame($expected, $entity->isWithdrawn());
+    }
+
+    public function dpTestIsWithdrawn()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, true],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * Tests withdrawal of an application
+     */
+    public function testWithdraw()
+    {
+        $entity = $this->createNewEntity(null, new RefData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
+        $entity->withdraw(
+            new RefData(IrhpInterface::STATUS_WITHDRAWN),
+            new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER)
+        );
+        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
+    }
+
+    /**
+     * @dataProvider dpWithdrawException
+     */
+    public function testWithdrawException($status)
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_WITHDRAW);
+        $entity = $this->createNewEntity(null, new RefData($status));
+        $entity->withdraw(
+            new RefData(IrhpInterface::STATUS_WITHDRAWN),
+            new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER)
+        );
+    }
+
+    /**
+     * Pass array of app status to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpWithdrawException()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
+            [IrhpInterface::STATUS_DECLINED],
         ];
     }
 
