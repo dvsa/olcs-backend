@@ -483,4 +483,14 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         return $this->getIrhpPermitRanges()->matching($criteria);
     }
+
+    /**
+     * Get the validity year of this stock
+     *
+     * @return int
+     */
+    public function getValidityYear()
+    {
+        return $this->getValidTo(true)->format('Y');
+    }
 }

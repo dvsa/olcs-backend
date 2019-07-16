@@ -451,4 +451,41 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertNull($entity->getPermitsRequired());
     }
+
+    public function testUpdateEmissionsCategoryPermitsRequired()
+    {
+        $euro5Required = 7;
+        $euro6Required = 3;
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->updateEmissionsCategoryPermitsRequired($euro5Required, $euro6Required);
+
+        $this->assertEquals($euro5Required, $entity->getRequiredEuro5());
+        $this->assertEquals($euro6Required, $entity->getRequiredEuro6());
+    }
+
+    /**
+     * @dataProvider dpTestGetTotalEmissionsCategoryPermitsRequired
+     */
+    public function testGetTotalEmissionsCategoryPermitsRequired($requiredEuro5, $requiredEuro6, $expected)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setRequiredEuro5($requiredEuro5);
+        $entity->setRequiredEuro6($requiredEuro6);
+
+        $this->assertEquals(
+            $expected,
+            $entity->getTotalEmissionsCategoryPermitsRequired()
+        );
+    }
+
+    public function dpTestGetTotalEmissionsCategoryPermitsRequired()
+    {
+        return [
+            [null, null, 0],
+            [null, 4, 0],
+            [4, null, 0],
+            [4, 5, 9]
+        ];
+    }
 }

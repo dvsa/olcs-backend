@@ -24,6 +24,8 @@ return [
             'VariationPublishValidationService' =>
                 \Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService::class,
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
+            'QaCommonCurrentDateTimeFactory' =>
+                ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
             'QaAnswerFactory' => ApiSrv\Qa\AnswerSaver\AnswerFactory::class,
             'QaApplicationStepFactory' => ApiSrv\Qa\Structure\ApplicationStepFactory::class,
             'QaCheckboxElementFactory' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxFactory::class,
@@ -31,19 +33,22 @@ return [
             'QaQuestionTextFactory' => ApiSrv\Qa\Structure\QuestionText\QuestionTextFactory::class,
             'QaSelfservePageFactory' => ApiSrv\Qa\Structure\SelfservePageFactory::class,
             'QaTextElementFactory' => ApiSrv\Qa\Structure\Element\Text\TextFactory::class,
+            'QaRadioElementFactory' => ApiSrv\Qa\Structure\Element\Radio\RadioFactory::class,
             'QaTranslateableTextFactory' => ApiSrv\Qa\Structure\TranslateableTextFactory::class,
             'QaTranslateableTextParameterFactory' => ApiSrv\Qa\Structure\TranslateableTextParameterFactory::class,
             'QaValidatorFactory' => ApiSrv\Qa\Structure\ValidatorFactory::class,
             'QaValidatorListFactory' => ApiSrv\Qa\Structure\ValidatorListFactory::class,
             'QaElementGeneratorContextFactory' => ApiSrv\Qa\Structure\Element\ElementGeneratorContextFactory::class,
-            'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcher::class,
+            'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
             'QaQuestionTextGeneratorContextFactory' =>
                 ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
             'QaEcmtRemovalNoOfPermitsIrhpPermitApplicationFactory' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\IrhpPermitApplicationFactory::class,
-            'QaEcmtRemovalNoOfPermitsCurrentDateTimeFactory' =>
-                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\CurrentDateTimeFactory::class,
             'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
+            'QaEcmtShortTermNoOfPermitsElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
+            'QaEcmtShortTermEmissionsCategoryFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -144,21 +149,27 @@ return [
             'QaGenericAnswerSaver' => ApiSrv\Qa\Structure\Element\GenericAnswerSaverFactory::class,
             'QaCheckboxAnswerSaver' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSaverFactory::class,
             'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
+            'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
             
             'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
             'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
             'QaCheckboxFormControlStrategy' => ApiSrv\Qa\Strategy\CheckboxFormControlStrategyFactory::class,
             'QaTextFormControlStrategy' => ApiSrv\Qa\Strategy\TextFormControlStrategyFactory::class,
+            'QaRadioFormControlStrategy' => ApiSrv\Qa\Strategy\RadioFormControlStrategyFactory::class,
             'QaEcmtRemovalNoOfPermitsFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtShortTermNoOfPermitsFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
             'QaFilteredTranslateableTextGenerator' => ApiSrv\Qa\Structure\FilteredTranslateableTextGeneratorFactory::class,
             'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
             'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
+            'QaRadioElementGenerator' => ApiSrv\Qa\Structure\Element\Radio\RadioGeneratorFactory::class,
             'QaTotAuthVehiclesTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\Custom\TotAuthVehiclesGeneratorFactory::class,
             'QaTranslateableTextGenerator' => ApiSrv\Qa\Structure\TranslateableTextGeneratorFactory::class,
             'QaTranslateableTextParameterGenerator' => ApiSrv\Qa\Structure\TranslateableTextParameterGeneratorFactory::class,
@@ -166,6 +177,8 @@ return [
                 => ApiSrv\Qa\Structure\JsonDecodingFilteredTranslateableTextGeneratorFactory::class,
             'QaValidatorGenerator' => ApiSrv\Qa\Structure\ValidatorGeneratorFactory::class,
             'QaValidatorListGenerator' => ApiSrv\Qa\Structure\ValidatorListGeneratorFactory::class,
+            'QaOptionsGenerator' => ApiSrv\Qa\Structure\Element\Options\OptionsGeneratorFactory::class,
+            'QaRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RefDataSourceFactory::class,
 
             'QaEcmtRemovalNoOfPermitsAnswerWriter' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriterFactory::class,
@@ -173,6 +186,20 @@ return [
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerSaverFactory::class,
             'QaEcmtRemovalNoOfPermitsFeeCreator' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
+
+            'QaEcmtShortTermNoOfPermitsFormControlStrategy' => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerFetcher' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtShortTermNoOfPermitsElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermEmissionsCategoryConditionalAdder' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryConditionalAdderFactory::class,
+            'QaEcmtShortTermConditionalFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
+            'QaEcmtShortTermFeeUpdater' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
         ],
     ],
     'view_manager' => [

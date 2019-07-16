@@ -1,6 +1,8 @@
 <?php
+
 namespace Dvsa\Olcs\Email\Transport;
 
+use Zend\Mail\Transport\Factory;
 use Zend\Stdlib\AbstractOptions;
 
 /**
@@ -13,6 +15,24 @@ class MultiTransportOptions extends AbstractOptions
      */
     protected $transport = [];
 
+    protected $mail;
+
+    private $s3Options;
+
+    public function __construct(array $options, S3FileOptions $s3Options)
+    {
+        $this->setS3Options($s3Options);
+        parent::__construct($options);
+    }
+    /**
+     * @param S3FileOptions $s3Options
+     */
+    public function setS3Options(S3FileOptions $s3Options): void
+    {
+        $this->s3Options = $s3Options;
+    }
+
+
     /**
      * Set the Transports
      *
@@ -23,7 +43,11 @@ class MultiTransportOptions extends AbstractOptions
     public function setTransport(array $transports)
     {
         foreach ($transports as $transport) {
-            $this->transport[] = Factory::create($transport);
+            $mailTransport = Factory::create($transport);
+            if ($mailTransport instanceof S3File) {
+                $mailTransport->setOptions($this->s3Options);
+            }
+            $this->transport[] = $mailTransport;
         }
     }
 

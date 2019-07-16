@@ -20,7 +20,7 @@ class FeeCreatorFactory implements FactoryInterface
             $serviceLocator->get('RepositoryServiceManager')->get('FeeType'),
             $serviceLocator->get('QaCommandCreator'),
             $serviceLocator->get('CommandHandlerManager'),
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsCurrentDateTimeFactory')
+            $serviceLocator->get('QaCommonCurrentDateTimeFactory')
         );
     }
 }

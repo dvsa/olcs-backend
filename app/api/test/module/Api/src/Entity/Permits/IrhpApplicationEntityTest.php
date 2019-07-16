@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
@@ -62,6 +63,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeWithdrawn')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
             ->once()
             ->withNoArgs()
@@ -106,6 +111,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(false)
             ->shouldReceive('isCancelled')
             ->andReturn(false)
+            ->shouldReceive('isWithdrawn')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -143,6 +152,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
+                'canBeWithdrawn' => false,
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
@@ -158,6 +168,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isUnderConsideration' => false,
                 'isReadyForNoOfPermits' => false,
                 'isCancelled' => false,
+                'isWithdrawn' => false,
                 'isBilateral' => false,
                 'isMultilateral' => false,
                 'canCheckAnswers' => true,
@@ -460,6 +471,108 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpTestCanBeWithdrawn
+     */
+    public function testCanBeWithdrawn($status, $expected)
+    {
+        $entity = $this->createNewEntity(null, new RefData($status));
+        $this->assertSame($expected, $entity->canBeWithdrawn());
+    }
+
+    public function dpTestCanBeWithdrawn()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsWithdrawn
+     */
+    public function testIsWithdrawn($status, $expected)
+    {
+        $entity = $this->createNewEntity(null, new RefData($status));
+        $this->assertSame($expected, $entity->isWithdrawn());
+    }
+
+    public function dpTestIsWithdrawn()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_WITHDRAWN, true],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * Tests withdrawal of an application
+     */
+    public function testWithdraw()
+    {
+        $entity = $this->createNewEntity(null, new RefData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
+        $entity->withdraw(
+            new RefData(IrhpInterface::STATUS_WITHDRAWN),
+            new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER)
+        );
+        $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
+        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
+    }
+
+    /**
+     * @dataProvider dpWithdrawException
+     */
+    public function testWithdrawException($status)
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(Entity::ERR_CANT_WITHDRAW);
+        $entity = $this->createNewEntity(null, new RefData($status));
+        $entity->withdraw(
+            new RefData(IrhpInterface::STATUS_WITHDRAWN),
+            new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER)
+        );
+    }
+
+    /**
+     * Pass array of app status to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpWithdrawException()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
+            [IrhpInterface::STATUS_DECLINED],
+        ];
+    }
+
+    /**
      * @dataProvider trueOrFalseProvider
      */
     public function testIsBilateral($isBilateral)
@@ -754,6 +867,11 @@ class IrhpApplicationEntityTest extends EntityTester
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => false,
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
                 'expectedResult' => false
@@ -783,7 +901,12 @@ class IrhpApplicationEntityTest extends EntityTester
                     [
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => false,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
                 'expectedResult' => true
@@ -798,26 +921,36 @@ class IrhpApplicationEntityTest extends EntityTester
                     [
                         'invoicedDate' => '2019-01-04',
                         'isOutstanding' => true,
-                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
-                'expectedResult' => false
+                'expectedResult' => true
             ],
             [
                 'fees' => [
                     [
                         'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => true,
+                        'isOutstanding' => false,
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
                     ],
                     [
                         'invoicedDate' => '2019-01-04',
-                        'isOutstanding' => true,
+                        'isOutstanding' => false,
                         'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => true,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRFOGVPERMIT
                     ]
                 ],
                 'expectedResult' => true
-            ]
+            ],
         ];
     }
 
@@ -1049,6 +1182,12 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->andReturn(FeeType::FEE_TYPE_IRHP_ISSUE);
 
+        $outstandingIrfoGvPermitFee = m::mock(Fee::class);
+        $outstandingIrfoGvPermitFee->shouldReceive('isOutstanding')->once()->andReturn(true);
+        $outstandingIrfoGvPermitFee->shouldReceive('getFeeType->getFeeType->getId')
+            ->once()
+            ->andReturn(FeeType::FEE_TYPE_IRFOGVPERMIT);
+
         $notOutstandingIrhpAppFee = m::mock(Fee::class);
         $notOutstandingIrhpAppFee->shouldReceive('isOutstanding')->once()->andReturn(false);
         $notOutstandingIrhpAppFee->shouldReceive('getFeeType->getFeeType->getId')->never();
@@ -1057,16 +1196,23 @@ class IrhpApplicationEntityTest extends EntityTester
         $notOutstandingIrhpIssueFee->shouldReceive('isOutstanding')->once()->andReturn(false);
         $notOutstandingIrhpIssueFee->shouldReceive('getFeeType->getFeeType->getId')->never();
 
+        $notOutstandingIrfoGvPermitFee = m::mock(Fee::class);
+        $notOutstandingIrfoGvPermitFee->shouldReceive('isOutstanding')->once()->andReturn(false);
+        $notOutstandingIrfoGvPermitFee->shouldReceive('getFeeType->getFeeType->getId')->never();
+
         $allFees = [
             $outstandingIrhpAppFee,
             $outstandingIrhpIssueFee,
+            $outstandingIrfoGvPermitFee,
             $notOutstandingIrhpAppFee,
-            $notOutstandingIrhpIssueFee
+            $notOutstandingIrhpIssueFee,
+            $notOutstandingIrfoGvPermitFee,
         ];
 
         $outstandingFees = [
             $outstandingIrhpAppFee,
-            $outstandingIrhpIssueFee
+            $outstandingIrhpIssueFee,
+            $outstandingIrfoGvPermitFee,
         ];
 
         $fees = new ArrayCollection($allFees);
@@ -1439,164 +1585,6 @@ class IrhpApplicationEntityTest extends EntityTester
                     'allCompleted' => true,
                 ],
             ],
-            'ECMT Short term - no data set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => null,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 0,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - licence set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 1,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - IRHP permit apps with all apps without permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithoutPermits,
-                            $irhpPermitAppWithoutPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - IRHP permit apps with one app without permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithoutPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 2,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - IRHP permit apps with all apps with permits required set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => false,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
-                    'totalSections' => 5,
-                    'totalCompleted' => 3,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - checked answers set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => true,
-                    'declaration' => false,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
-                    'totalSections' => 5,
-                    'totalCompleted' => 4,
-                    'allCompleted' => false,
-                ],
-            ],
-            'ECMT Short term - declaration set' => [
-                'data' => [
-                    'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
-                    'licence' => $licence,
-                    'irhpPermitApplications' => new ArrayCollection(
-                        [
-                            $irhpPermitAppWithPermits,
-                            $irhpPermitAppWithPermits
-                        ]
-                    ),
-                    'checkedAnswers' => true,
-                    'declaration' => true,
-                ],
-                'expected' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'declaration' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'totalSections' => 5,
-                    'totalCompleted' => 5,
-                    'allCompleted' => true,
-                ],
-            ],
         ];
     }
 
@@ -1719,6 +1707,96 @@ class IrhpApplicationEntityTest extends EntityTester
             ],
             'ECMT Removal - cancelled - check answers not started' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'status' => IrhpInterface::STATUS_CANCELLED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - not yet submitted - check answers cannot start' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - not yet submitted - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Short Term - not yet submitted - check answers completed' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => 1,
+                        'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+                    ],
+                ],
+                'expected' => true,
+            ],
+            'ECMT Short Term - under consideration - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - withdrawn - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'status' => IrhpInterface::STATUS_WITHDRAWN,
+                'questionAnswerData' => [
+                    [
+                        'section' => 'checkedAnswers',
+                        'slug' => 'custom-check-answers',
+                        'questionShort' => 'section.name.application/check-answers',
+                        'question' => 'section.name.application/check-answers',
+                        'answer' => null,
+                        'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+                    ],
+                ],
+                'expected' => false,
+            ],
+            'ECMT Short Term - cancelled - check answers not started' => [
+                'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'status' => IrhpInterface::STATUS_CANCELLED,
                 'questionAnswerData' => [
                     [
@@ -2802,16 +2880,46 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetQuestionAnswerDataWithoutActiveApplicationPath()
     {
-        $expected = [];
+        $licNo = 'ABC123';
+
+        $expected = [
+            [
+                'section' => 'licence',
+                'slug' => 'custom-licence',
+                'questionShort' => 'section.name.application/licence',
+                'question' => 'section.name.application/licence',
+                'answer' => $licNo,
+                'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
+            ],
+            [
+                'section' => 'checkedAnswers',
+                'slug' => 'custom-check-answers',
+                'questionShort' => 'section.name.application/check-answers',
+                'question' => 'section.name.application/check-answers',
+                'answer' => null,
+                'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
+            ],
+            [
+                'section' => 'declaration',
+                'slug' => 'custom-declaration',
+                'questionShort' => 'section.name.application/declaration',
+                'question' => 'section.name.application/declaration',
+                'answer' => null,
+                'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
+            ],
+        ];
 
         $createdOn = new DateTime();
+
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('getActiveApplicationPath')->once()->with($createdOn)->andReturn(null);
 
-        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
         $entity->setCreatedOn($createdOn);
 
         $this->assertEquals($expected, $entity->getQuestionAnswerData());
@@ -3482,5 +3590,43 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT);
 
         $entity->getFeePerPermit($applicationFeeType, $issueFeeType);
+    }
+
+    public function testGetFirstIrhpPermitApplication()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertSame(
+            $irhpPermitApplication,
+            $entity->getFirstIrhpPermitApplication()
+        );
+    }
+
+    public function testGetFirstIrhpPermitApplicationExceptionOnNone()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+        );
+
+        $entity = $this->createNewEntity();
+        $entity->getFirstIrhpPermitApplication();
+    }
+
+    public function testGetFirstIrhpPermitApplicationExceptionOnMoreThanOne()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage(
+            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+        );
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+
+        $entity->getFirstIrhpPermitApplication();
     }
 }
