@@ -7,8 +7,10 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\DeclineEcmtPermits as DeclineEcmtPermitsCmd;
 
@@ -41,8 +43,8 @@ final class DeclineEcmtPermits extends AbstractCommandHandler implements ToggleR
         $id = $command->getId();
         $application = $this->getRepo()->fetchById($id);
 
-        $newStatus = $this->refData(EcmtPermitApplication::STATUS_WITHDRAWN);
-        $withdrawReason = $this->refData(EcmtPermitApplication::WITHDRAWN_REASON_DECLINED);
+        $newStatus = $this->refData(IrhpInterface::STATUS_WITHDRAWN);
+        $withdrawReason = $this->refData(WithdrawableInterface::WITHDRAWN_REASON_DECLINED);
         $application->decline($newStatus, $withdrawReason);
 
         $this->getRepo()->save($application);

@@ -102,7 +102,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
      */
     public function isApplicationPathEnabled()
     {
-        return $this->isEcmtRemoval();
+        return $this->isEcmtShortTerm() || $this->isEcmtRemoval();
     }
 
     /**

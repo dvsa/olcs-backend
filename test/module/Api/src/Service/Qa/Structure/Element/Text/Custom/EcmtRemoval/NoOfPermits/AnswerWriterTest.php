@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationE
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriter;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\CurrentDateTimeFactory;
+use Dvsa\Olcs\Api\Service\Qa\Common\CurrentDateTimeFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\IrhpPermitApplicationFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use RuntimeException;
 
@@ -44,6 +45,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     LicenceProviderInterface,
     SectionableInterface,
     CancelableInterface,
+    WithdrawableInterface,
     ContextProviderInterface
 {
     use SectionTrait;
@@ -56,34 +58,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
-        IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
-            'licence' => [
-                'validator' => 'fieldIsNotNull',
-            ],
-            'emissions' => [
-                'validator' => 'emissionsPopulated',
-            ],
-            'permitsRequired' => [
-                'validator' => 'permitsRequiredPopulated',
-                'validateIf' => [
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-            'checkedAnswers' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'licence' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'emissions' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                    'permitsRequired' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-            'declaration' => [
-                'validator' => 'fieldIsAgreed',
-                'validateIf' => [
-                    'checkedAnswers' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
-                ],
-            ],
-        ],
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
             'licence' => [
                 'validator' => 'fieldIsNotNull',
@@ -153,20 +127,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * This is a custom validator for the emissions field
-     *
-     * @param string $field field being checked
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    private function emissionsPopulated($field)
-    {
-        return $this->collectionHasRecord('irhpPermitApplications');
-    }
-
-    /**
      * This is a custom validator for the permitsRequired field
      *
      * @param string $field field being checked
@@ -201,6 +161,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return [
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
+            'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
@@ -216,6 +177,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isUnderConsideration' => $this->isUnderConsideration(),
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'isCancelled' => $this->isCancelled(),
+            'isWithdrawn' => $this->isWithdrawn(),
             'isBilateral' => $this->isBilateral(),
             'isMultilateral' => $this->isMultilateral(),
             'canCheckAnswers' => $this->canCheckAnswers(),
@@ -240,13 +202,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return $this->getQuestionAnswerDataMultilateral();
         }
 
-        // the Q&A solution
-        $activeApplicationPath = $this->getActiveApplicationPath();
-
-        if (!isset($activeApplicationPath)) {
-            return [];
-        }
-
         // licence
         $answer = $this->licence->getLicNo();
         $status = !empty($answer)
@@ -264,39 +219,44 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ];
         $previousQuestionStatus = $status;
 
-        /**
-         * list of defined steps
-         *
-         * @var ApplicationStep $applicationStep
-         */
-        foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
-            $question = $applicationStep->getQuestion();
-            $answer = null;
-            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+        // the Q&A solution
+        $activeApplicationPath = $this->getActiveApplicationPath();
 
-            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-                $answer = $this->getAnswer($applicationStep);
+        if (isset($activeApplicationPath)) {
+            /**
+             * list of defined steps
+             *
+             * @var ApplicationStep $applicationStep
+             */
+            foreach ($activeApplicationPath->getApplicationSteps() as $applicationStep) {
+                $question = $applicationStep->getQuestion();
+                $answer = null;
+                $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
 
-                $status = isset($answer)
-                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+                if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+                    $answer = $this->getAnswer($applicationStep);
+
+                    $status = isset($answer)
+                        ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                        : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+                }
+
+                $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
+
+                $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
+                $questionKey = $questionJson['translateableText']['key'];
+
+                $data[] = [
+                    'section' => $question->getSlug(),
+                    'slug' => $question->getSlug(),
+                    'questionShort' => $activeQuestionText->getQuestionShortKey(),
+                    'question' => $questionKey,
+                    'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
+                    'answer' => $answer,
+                    'status' => $status,
+                ];
+                $previousQuestionStatus = $status;
             }
-
-            $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
-
-            $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
-            $questionKey = $questionJson['translateableText']['key'];
-
-            $data[] = [
-                'section' => $question->getSlug(),
-                'slug' => $question->getSlug(),
-                'questionShort' => $activeQuestionText->getQuestionShortKey(),
-                'question' => $questionKey,
-                'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
-                'answer' => $answer,
-                'status' => $status,
-            ];
-            $previousQuestionStatus = $status;
         }
 
         // checked answers
@@ -357,6 +317,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             switch ($formControlType) {
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
+                    return $this->getEcmtShortTermNoOfPermitsAnswer();
             }
 
             throw new RuntimeException(
@@ -384,6 +346,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return $answer->getValue();
     }
 
+    /**
+     * Get the number of permits answer value for a custom element of type ecmt removal
+     *
+     * @return int|null
+     */
     private function getEcmtRemovalNoOfPermitsAnswer()
     {
         if ($this->irhpPermitApplications->count() == 0) {
@@ -392,6 +359,29 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         $irhpPermitApplication = $this->irhpPermitApplications->first();
         return $irhpPermitApplication->getPermitsRequired();
+    }
+
+    /**
+     * Get the number of permits answer values for a custom element of type ecmt short term
+     *
+     * @return int|null
+     */
+    private function getEcmtShortTermNoOfPermitsAnswer()
+    {
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+
+        $requiredEuro5 = $irhpPermitApplication->getRequiredEuro5();
+        $requiredEuro6 = $irhpPermitApplication->getRequiredEuro6();
+
+        if (is_null($requiredEuro5) || is_null($requiredEuro6)) {
+            return null;
+        }
+
+        // TODO: how should these values be returned to accommodate translation etc?
+        return [
+            'euro5: ' . $requiredEuro5,
+            'euro6: ' . $requiredEuro6
+        ];
     }
 
     /**
@@ -580,6 +570,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Is there an overdue issue fee for this application?
+     * @todo logic will be added as part of https://jira.i-env.net/browse/OLCS-24991
+     *
+     * @return bool
+     */
+    public function issueFeeOverdue()
+    {
+        return false;
+    }
+
+    /**
      * @return bool
      */
     public function isIssueInProgress()
@@ -602,6 +603,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isCancelled()
     {
         return $this->status->getId() === IrhpInterface::STATUS_CANCELLED;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithdrawn(): bool
+    {
+        return $this->status->getId() === IrhpInterface::STATUS_WITHDRAWN;
     }
 
     /**
@@ -629,6 +638,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function canBeCancelled()
     {
         return $this->isNotYetSubmitted();
+    }
+
+    /**
+     * Whether the permit application can be withdrawn
+     *
+     * @return bool
+     */
+    public function canBeWithdrawn(): bool
+    {
+        return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
     }
 
     /**
@@ -714,7 +733,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function hasOutstandingFees()
     {
         $fee = $this->getLatestOutstandingFeeByTypes(
-            [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE]
+            [
+                FeeTypeEntity::FEE_TYPE_IRHP_APP,
+                FeeTypeEntity::FEE_TYPE_IRHP_ISSUE,
+                FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT,
+            ]
         );
 
         return $fee !== null;
@@ -833,9 +856,13 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return array
      */
-    public function getOutstandingFees()
+    public function getOutstandingFees(): array
     {
-        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_IRHP_APP, FeeTypeEntity::FEE_TYPE_IRHP_ISSUE];
+        $feeTypeIds = [
+            FeeTypeEntity::FEE_TYPE_IRHP_APP,
+            FeeTypeEntity::FEE_TYPE_IRHP_ISSUE,
+            FeeTypeEntity::FEE_TYPE_IRFOGVPERMIT,
+        ];
         $fees = [];
 
         /** @var FeeEntity $fee */
@@ -968,6 +995,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Withdraw an application
+     *
+     * @param RefData $withdrawStatus
+     * @param RefData $withdrawReason
+     *
+     * @throws ForbiddenException
+     * @return void
+     */
+    public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
+    {
+        if (!$this->canBeWithdrawn()) {
+            throw new ForbiddenException(WithdrawableInterface::ERR_CANT_WITHDRAW);
+        }
+
+        $this->status = $withdrawStatus;
+        $this->withdrawReason = $withdrawReason;
+        $this->withdrawnDate = new \DateTime();
+    }
+
+    /**
      * Gets the total number of Permits Required for the IRHP Permit Applications
      *
      * @return integer
@@ -1080,6 +1127,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getFeePerPermit(?FeeTypeEntity $applicationFeeType = null, ?FeeTypeEntity $issueFeeType = null)
     {
         $permittedPermitTypeIds = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
@@ -1226,5 +1274,23 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getContextValue()
     {
         return $this->id;
+    }
+
+    /**
+     * Retrieves the first linked irhp permit application instance
+     *
+     * @return IrhpPermitApplication
+     *
+     * @throws RuntimeException
+     */
+    public function getFirstIrhpPermitApplication()
+    {
+        if ($this->irhpPermitApplications->count() != 1) {
+            throw new RuntimeException(
+                'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+            );
+        }
+
+        return $this->irhpPermitApplications->first();
     }
 }

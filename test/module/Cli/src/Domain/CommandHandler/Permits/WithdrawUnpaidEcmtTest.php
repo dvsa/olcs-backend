@@ -4,7 +4,9 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\WithdrawEcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
@@ -65,7 +67,7 @@ class WithdrawUnpaidEcmtTest extends CommandHandlerTestCase
         $this->sut->handleCommand($cmd);
 
         $ecmtAppQuery = $this->sut->getQuery()->getArrayCopy();
-        self::assertEquals([EcmtPermitApplication::STATUS_AWAITING_FEE], $ecmtAppQuery['statusIds']);
+        self::assertEquals([IrhpInterface::STATUS_AWAITING_FEE], $ecmtAppQuery['statusIds']);
         self::assertNull($ecmtAppQuery['status']);
         self::assertNull($ecmtAppQuery['organisation']);
     }
@@ -76,7 +78,7 @@ class WithdrawUnpaidEcmtTest extends CommandHandlerTestCase
             WithdrawEcmtPermitApplication::class,
             [
                 'id' => $appId,
-                'reason' => EcmtPermitApplicationEntity::WITHDRAWN_REASON_UNPAID
+                'reason' => WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
             ],
             new Result()
         );

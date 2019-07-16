@@ -29,20 +29,27 @@ class IrhpPermit extends AbstractRepository
      * Returns the count of permits in the specified stock
      *
      * @param int $stockId
+     * @param int $emissionsCategoryId (optional)
      *
      * @return int
      */
-    public function getPermitCount($stockId)
+    public function getPermitCount($stockId, $emissionsCategoryId = null)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('count(ip.id)')
             ->from(Entity::class, 'ip')
             ->innerJoin('ip.irhpPermitRange', 'ipr')
             ->where('IDENTITY(ipr.irhpPermitStock) = ?1')
             ->andWhere('ipr.ssReserve = false')
             ->andWhere('ipr.lostReplacement = false')
-            ->setParameter(1, $stockId)
-            ->getQuery()
+            ->setParameter(1, $stockId);
+
+        if (!is_null($emissionsCategoryId)) {
+            $qb->andWhere('IDENTITY(ipr.emissionsCategory) = ?2')
+                ->setParameter(2, $emissionsCategoryId);
+        }
+
+        return $qb->getQuery()
             ->getSingleScalarResult();
     }
 
