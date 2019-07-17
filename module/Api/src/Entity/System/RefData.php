@@ -78,6 +78,7 @@ class RefData extends AbstractRefData
 
     const EMISSIONS_CATEGORY_EURO6_REF = 'emissions_cat_euro6';
     const EMISSIONS_CATEGORY_EURO5_REF = 'emissions_cat_euro5';
+    const EMISSIONS_CATEGORY_NA_REF = 'emissions_cat_na';
 
     /**
      * RefData constructor.

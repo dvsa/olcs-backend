@@ -40,13 +40,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @param Country $country
      * @param int $quota
      * @param RefData $status
-     * @param RefData|null $emissionsCategory
      * @param mixed $validFrom
      * @param mixed $validTo
      * @return IrhpPermitStock
      * @throws ValidationException
      */
-    public static function create($type, $country, $quota, RefData $status, ?RefData $emissionsCategory, $validFrom = null, $validTo = null)
+    public static function create($type, $country, $quota, RefData $status, $validFrom = null, $validTo = null)
     {
         static::validateCountry($type, $country);
 
@@ -54,7 +53,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
 
         $instance->irhpPermitType = $type;
         $instance->country = $country;
-        $instance->emissionsCategory = $emissionsCategory;
         $instance->validFrom = static::processDate($validFrom, 'Y-m-d');
         $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
@@ -67,19 +65,17 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @param IrhpPermitType $type
      * @param Country $country
      * @param int $quota
-     * @param RefData|null $emissionsCategory
      * @param mixed $validFrom
      * @param mixed $validTo
      * @return $this
      * @throws ValidationException
      */
-    public function update($type, $country, $quota, ?RefData $emissionsCategory, $validFrom = null, $validTo = null)
+    public function update($type, $country, $quota, $validFrom = null, $validTo = null)
     {
         static::validateCountry($type, $country);
 
         $this->irhpPermitType = $type;
         $this->country = $country;
-        $this->emissionsCategory = $emissionsCategory;
         $this->validFrom = static::processDate($validFrom, 'Y-m-d');
         $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
