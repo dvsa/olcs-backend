@@ -82,14 +82,6 @@ trait IrhpPermitStockTrait
             $references['country'] = $this->getRepo('IrhpPermitStock')->getReference(Country::class, $command->getCountry());
         }
 
-        $references['emissionsCategory'] = null;
-        if ($command->getIrhpPermitType() === IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
-            if (empty($command->getEmissionsCategory())) {
-                throw new ValidationException(['You must select the Euro Emissions for this permit type']);
-            }
-            $references['emissionsCategory'] = $this->getRepo()->getRefDataReference($command->getEmissionsCategory());
-        }
-
         return $references;
     }
 }

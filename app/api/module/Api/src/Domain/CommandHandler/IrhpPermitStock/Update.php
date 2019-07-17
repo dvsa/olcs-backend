@@ -48,7 +48,6 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
             $references['irhpPermitType'],
             $references['country'],
             $command->getInitialStock(),
-            $references['emissionsCategory'],
             $command->getValidFrom(),
             $command->getValidTo()
         );
