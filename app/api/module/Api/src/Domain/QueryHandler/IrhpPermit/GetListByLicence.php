@@ -23,7 +23,8 @@ class GetListByLicence extends AbstractListQueryHandler implements ToggleRequire
         'irhpPermitRange' => [
             'irhpPermitStock' => [
                 'country'
-            ]
+            ],
+            'emissionsCategory',
         ]
     ];
 }
