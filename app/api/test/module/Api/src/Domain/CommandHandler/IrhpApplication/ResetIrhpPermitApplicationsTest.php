@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\Qa\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use RuntimeException;
@@ -21,6 +22,10 @@ class ResetIrhpPermitApplicationsTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplicationRepo::class);
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->sut = new ResetIrhpPermitApplications();
+
+        $this->mockedSmServices = [
+            'QaApplicationAnswersClearer' => m::mock(ApplicationAnswersClearer::class),
+        ];
      
         parent::setUp();
     }
@@ -135,6 +140,29 @@ class ResetIrhpPermitApplicationsTest extends CommandHandlerTestCase
             ],
             $result->getMessages()
         );
+    }
+
+    public function testHandleCommandEcmtShortTerm()
+    {
+        $irhpApplicationId = 9;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $command = m::mock(CommandInterface::class);
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+
+        $this->mockedSmServices['QaApplicationAnswersClearer']->shouldReceive('clear')
+            ->with($irhpApplication)
+            ->once();
+
+        $this->sut->handleCommand($command);
     }
 
     public function testHandleCommandPermitTypeUnsupported()

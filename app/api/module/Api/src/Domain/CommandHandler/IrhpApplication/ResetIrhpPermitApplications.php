@@ -11,8 +11,10 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Reset irhp permit applications
@@ -28,6 +30,25 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitApplication'];
+
+    /** @var ApplicationAnswersClearer */
+    private $applicationAnswersClearer;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->applicationAnswersClearer = $mainServiceLocator->get('QaApplicationAnswersClearer');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -48,6 +69,9 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
                 break;
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
                 $this->deleteIrhpPermitApplications($irhpApplication->getIrhpPermitApplications());
+                break;
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
+                $this->resetEcmtShortTermAnswers($irhpApplication);
                 break;
             default:
                 throw new RuntimeException(
@@ -103,5 +127,15 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
                 count($irhpPermitApplications)
             )
         );
+    }
+
+    /**
+     * Reset answers for an ecmt short term application
+     *
+     * @param IrhpApplication $irhpApplication
+     */
+    private function resetEcmtShortTermAnswers(IrhpApplication $irhpApplication)
+    {
+        $this->applicationAnswersClearer->clear($irhpApplication);
     }
 }
