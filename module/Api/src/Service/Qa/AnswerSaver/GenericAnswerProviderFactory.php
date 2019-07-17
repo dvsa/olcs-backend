@@ -5,20 +5,18 @@ namespace Dvsa\Olcs\Api\Service\Qa\AnswerSaver;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class GenericAnswerWriterFactory implements FactoryInterface
+class GenericAnswerProviderFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return GenericAnswerWriter
+     * @return GenericAnswerProvider
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new GenericAnswerWriter(
-            $serviceLocator->get('QaGenericAnswerProvider'),
-            $serviceLocator->get('QaAnswerFactory'),
+        return new GenericAnswerProvider(
             $serviceLocator->get('RepositoryServiceManager')->get('Answer')
         );
     }

@@ -20,6 +20,7 @@ class RadioFormControlStrategyFactory implements FactoryInterface
             'radio',
             $serviceLocator->get('QaRadioElementGenerator'),
             $serviceLocator->get('QaGenericAnswerSaver'),
+            $serviceLocator->get('QaGenericAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator')
         );
     }

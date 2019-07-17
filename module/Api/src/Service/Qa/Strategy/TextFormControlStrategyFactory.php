@@ -20,6 +20,7 @@ class TextFormControlStrategyFactory implements FactoryInterface
             'text',
             $serviceLocator->get('QaTextElementGenerator'),
             $serviceLocator->get('QaGenericAnswerSaver'),
+            $serviceLocator->get('QaGenericAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator')
         );
     }
