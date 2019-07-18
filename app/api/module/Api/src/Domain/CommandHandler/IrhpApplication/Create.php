@@ -60,7 +60,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
         $this->result->merge(
             $this->handleSideEffect(
-                CreateDefaultIrhpPermitApplications::create(['id' => $irhpApplication->getId()])
+                CreateDefaultIrhpPermitApplications::create(['id' => $irhpApplication->getId(), 'year' => $command->getYear()])
             )
         );
 

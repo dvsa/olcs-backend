@@ -310,4 +310,41 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchOpenWindowsByTypeYear()
+    {
+        $now = new DateTime('2019-04-08 09:51:10');
+
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('expr->between')->once();
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+
+        $this->queryBuilder->shouldReceive('modifyQuery')->with($qb)->once()->andReturnSelf();
+        $this->queryBuilder->shouldReceive('withRefdata')->with()->once()->andReturnSelf();
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->fetchOpenWindowsByTypeYear(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, $now, 3000)
+        );
+
+        $expectedQuery = 'BLAH '
+            . 'SELECT ipw, ipr, ips '
+            . 'INNER JOIN ipw.irhpPermitStock ips '
+            . 'INNER JOIN ips.irhpPermitType ipt '
+            . 'INNER JOIN ips.irhpPermitRanges ipr '
+            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT.']] '
+            . 'AND ipw.startDate <= [[2019-04-08T09:51:10+0000]] '
+            . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND ';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
