@@ -1,23 +1,22 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
+namespace Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class EmissionsCategoryConditionalAdderFactory implements FactoryInterface
+class EmissionsCategoryAvailabilityCheckerFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return EmissionsCategoryConditionalAdder
+     * @return EmissionsCategoryAvailabilityChecker
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new EmissionsCategoryConditionalAdder(
-            $serviceLocator->get('QaEcmtShortTermEmissionsCategoryFactory'),
+        return new EmissionsCategoryAvailabilityChecker(
             $serviceLocator->get('PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter')
         );
     }

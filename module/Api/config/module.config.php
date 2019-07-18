@@ -210,9 +210,17 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
             'QaEcmtShortTermFeeUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
-
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
+    
+                'PermitsShortTermEcmtWindowAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtStockAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\StockAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoryAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
         ],
     ],
     'view_manager' => [

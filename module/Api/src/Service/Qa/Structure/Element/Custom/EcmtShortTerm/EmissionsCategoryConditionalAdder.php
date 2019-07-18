@@ -2,37 +2,30 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
 
 class EmissionsCategoryConditionalAdder
 {
     /** @var EmissionsCategoryFactory */
     private $emissionsCategoryFactory;
 
-    /** @var IrhpPermitRangeRepository */
-    private $irhpPermitRangeRepo;
-
-    /** @var IrhpPermitRepository */
-    private $irhpPermitRepo;
+    /** @var EmissionsCategoryAvailabilityCounter */
+    private $emissionsCategoryAvailabilityCounter;
 
     /**
      * Create service instance
      *
      * @param EmissionsCategoryFactory $emissionsCategoryFactory
-     * @param IrhpPermitRangeRepository $irhpPermitRangeRepo
-     * @param IrhpPermitRepository $irhpPermitRepo
+     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
      *
      * @return EmissionsCategoryConditionalAdder
      */
     public function __construct(
         EmissionsCategoryFactory $emissionsCategoryFactory,
-        IrhpPermitRangeRepository $irhpPermitRangeRepo,
-        IrhpPermitRepository $irhpPermitRepo
+        EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
     ) {
         $this->emissionsCategoryFactory = $emissionsCategoryFactory;
-        $this->irhpPermitRangeRepo = $irhpPermitRangeRepo;
-        $this->irhpPermitRepo = $irhpPermitRepo;
+        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
     }
 
     /**
@@ -54,18 +47,8 @@ class EmissionsCategoryConditionalAdder
         $emissionsCategoryId,
         $stockId
     ) {
-        $combinedRangeSize = $this->irhpPermitRangeRepo->getCombinedRangeSize($stockId, $emissionsCategoryId);
+        $permitsRemaining = $this->emissionsCategoryAvailabilityCounter->getCount($stockId, $emissionsCategoryId);
 
-        if (is_null($combinedRangeSize)) {
-            return;
-        }
-
-        // TODO: this logic will also need to take candidate permits into account
-        // something like candidate permits assigned to a stock of the specified emissions type and belong
-        // to an application in status GRANTED
-        $permitCount = $this->irhpPermitRepo->getPermitCount($stockId, $emissionsCategoryId);
-        $permitsRemaining = $combinedRangeSize - $permitCount;
-        
         if ($permitsRemaining < 1) {
             return;
         }
