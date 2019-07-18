@@ -1144,6 +1144,7 @@ return [
     // Permits Decline
     TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,
     TransferCommand\Permits\AcceptEcmtPermits::class => CommandHandler\Permits\AcceptEcmtPermits::class,
+    TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 
     // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,
