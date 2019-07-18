@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use DateTime;
 use Olcs\Logging\Log\Logger;
@@ -49,7 +50,9 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
         $irhpPermitRanges = $irhpPermitApplication
             ->getIrhpPermitWindow()
             ->getIrhpPermitStock()
-            ->getNonReservedNonReplacementRangesOrderedByFromNo();
+            ->getNonReservedNonReplacementRangesOrderedByFromNo(
+                $command->getEmissionsCategory()
+            );
 
         foreach ($irhpPermitRanges as $irhpPermitRange) {
             $assignedPermitNumbers = $this->getRepo('IrhpPermit')->getAssignedPermitNumbersByRange(
