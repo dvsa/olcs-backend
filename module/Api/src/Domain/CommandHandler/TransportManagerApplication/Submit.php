@@ -182,7 +182,7 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         return $this->handleSideEffect(CreateTask::create($taskData));
     }
 
-    private function shouldCreateTask(RefData $status)
+    private function shouldCreateTask(RefData $status) : bool
     {
         return $status->getId() === Application::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
