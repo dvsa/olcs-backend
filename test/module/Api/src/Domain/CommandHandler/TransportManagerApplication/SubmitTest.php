@@ -77,8 +77,9 @@ class SubmitTest extends CommandHandlerTestCase
         $application->shouldReceive('getId')->andReturn(234);
         $application->shouldReceive('getLicence->getOrganisation')->with()->once()
             ->andReturn($organisation);
+        $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
 
-        $tma->shouldReceive('getApplication')->twice()
+        $tma->shouldReceive('getApplication')->times(3)
             ->andReturn($application);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
@@ -137,10 +138,11 @@ class SubmitTest extends CommandHandlerTestCase
         $application = m::mock(Application::class);
         $application->shouldReceive('getLicence->getId')->andReturn(111);
         $application->shouldReceive('getId')->andReturn(234);
+        $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
 
         $this->mockTask();
 
-        $tma->shouldReceive('getApplication')->once()
+        $tma->shouldReceive('getApplication')->twice()
             ->andReturn($application);
 
         $this->expectedSideEffect(
@@ -176,10 +178,11 @@ class SubmitTest extends CommandHandlerTestCase
         $application = m::mock(Application::class);
         $application->shouldReceive('getLicence->getId')->andReturn(111);
         $application->shouldReceive('getId')->andReturn(234);
+        $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
 
         $this->mockTask();
 
-        $tma->shouldReceive('getApplication')->once()
+        $tma->shouldReceive('getApplication')->twice()
             ->andReturn($application);
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
@@ -258,9 +261,10 @@ class SubmitTest extends CommandHandlerTestCase
         $application->shouldReceive('getIsVariation')->with()->once()->andReturn($isVariation);
         $application->shouldReceive('getLicence->getOrganisation')->with()->once()
         ->andReturn($organisation);
+        $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
         $this->mockTask();
 
-        $tma->shouldReceive('getApplication')->times(6)
+        $tma->shouldReceive('getApplication')->times(7)
             ->andReturn($application);
 
 
@@ -364,9 +368,11 @@ class SubmitTest extends CommandHandlerTestCase
         $application->shouldReceive('getIsVariation')->with()->once()->andReturn($isVariation);
         $application->shouldReceive('getLicence->getOrganisation')->with()->once()
             ->andReturn($organisation);
+        $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
         $this->mockTask();
 
-        $tma->shouldReceive('getApplication')->times(6)
+
+        $tma->shouldReceive('getApplication')->times(7)
             ->andReturn($application);
 
 
@@ -430,6 +436,40 @@ class SubmitTest extends CommandHandlerTestCase
             ],
             $result
         );
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandSkipTask()
+    {
+        $command = Command::create(['id' => 863, 'version' => 234]);
+
+        $organisation = new Organisation();
+
+        $tma = m::mock(TransportManagerApplication::class)->makePartial();
+        $tma->setIsOwner('N');
+
+        $application = m::mock(Application::class);
+        $application->shouldReceive('getLicence->getId')->andReturn(111);
+        $application->shouldReceive('getId')->andReturn(234);
+        $application->shouldReceive('getLicence->getOrganisation')->with()->once()
+            ->andReturn($organisation);
+        $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_NOT_SUBMITTED));
+
+        $tma->shouldReceive('getApplication')->twice()
+            ->andReturn($application);
+
+        $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
+            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 234)->andReturn($tma);
+        $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once()->andReturnUsing(
+            function (TransportManagerApplication $tma) {
+                $this->assertSame(
+                    $this->refData[TransportManagerApplication::STATUS_TM_SIGNED],
+                    $tma->getTmApplicationStatus()
+                );
+            }
+        );
+
 
         $this->sut->handleCommand($command);
     }

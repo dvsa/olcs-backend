@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\TransportManagerSnapshot;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -60,9 +61,10 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
             $this->updateTmType($tma->getTransportManager(), $tma->getTmType());
         }
 
-        $taskResult = $this->createTask($tma->getApplication());
-
-        $this->result->addMessage($taskResult->getMessages()[0]);
+        if ($this->shouldCreateTask($tma->getApplication()->getStatus())) {
+            $taskResult = $this->createTask($tma->getApplication());
+            $this->result->addMessage($taskResult->getMessages()[0]);
+        }
 
         $this->result->addMessage("Transport Manager Application ID {$tma->getId()} submitted");
 
@@ -178,5 +180,10 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
         ];
 
         return $this->handleSideEffect(CreateTask::create($taskData));
+    }
+
+    private function shouldCreateTask(RefData $status)
+    {
+        return $status->getId() === Application::APPLICATION_STATUS_UNDER_CONSIDERATION;
     }
 }
