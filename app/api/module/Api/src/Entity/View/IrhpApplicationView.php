@@ -118,6 +118,15 @@ class IrhpApplicationView implements BundleSerializableInterface, JsonSerializab
     protected $statusDescription;
 
     /**
+     * Stock valid to
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="stock_valid_to")
+     */
+    protected $stockValidTo;
+
+    /**
      * Date received
      *
      * @var \DateTime
@@ -224,6 +233,16 @@ class IrhpApplicationView implements BundleSerializableInterface, JsonSerializab
     public function getStatusDescription()
     {
         return $this->statusDescription;
+    }
+
+    /**
+     * Get the stock valid to
+     *
+     * @return \DateTime
+     */
+    public function getStockValidTo()
+    {
+        return $this->stockValidTo;
     }
 
     /**
