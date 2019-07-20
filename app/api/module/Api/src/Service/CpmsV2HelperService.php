@@ -10,17 +10,16 @@
  */
 namespace Dvsa\Olcs\Api\Service;
 
-use CpmsClient\Service\ApiService;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
-use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\Olcs\Transfer\Query\Fee\FeeType;
+use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
+use Dvsa\Olcs\Cpms\Service\ApiService;
 use Olcs\Logging\Log\Logger;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * Cpms Version 2 Helper Service
@@ -103,8 +102,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             ? $config['cpms_credentials']['client_secret']
             : null;
 
-        $this->identity = $serviceLocator->get($config['cpms_api']['identity_provider']);
-        $this->cpmsClient = $serviceLocator->get('cpms\service\api');
+        $this->cpmsClient = $serviceLocator->get(ApiServiceFactory::class);
         $this->feesHelper = $serviceLocator->get('FeesHelperService');
         return $this;
     }
@@ -600,8 +598,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['code']) && in_array($response['code'], $refundSuccessStatuses)) {
             return [$ft->getTransaction()->getReference() => $response['receipt_reference']];
         } else {
-            $statusCode = $this->getCpmsHttpStatusCode();
-            $e = new CpmsResponseException('Invalid refund response', $statusCode);
+            $e = new CpmsResponseException('Invalid refund response');
             $e->setResponse($response);
             throw $e;
         }
@@ -652,8 +649,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($response['code']) && $response['code'] === self::RESPONSE_SUCCESS) {
             return $response['receipt_references'];
         } else {
-            $statusCode = $this->getCpmsHttpStatusCode();
-            $e = new CpmsResponseException('Invalid refund response', $statusCode);
+            $e = new CpmsResponseException('Invalid refund response');
             $e->setResponse($response);
             throw $e;
         }
@@ -848,8 +844,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             }
         }
 
-        $statusCode = $this->getCpmsHttpStatusCode();
-        $e = new CpmsResponseException('Invalid payment response', $statusCode);
+        $e = new CpmsResponseException('Invalid payment response');
         $e->setResponse($response);
         throw $e;
     }
@@ -1141,18 +1136,6 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     }
 
     /**
-     * @return int HTTP status code of the last CPMS Client response
-     */
-    private function getCpmsHttpStatusCode()
-    {
-        return $this->getClient() // CpmsClient\Service\ApiService
-            ->getClient()         // CpmsClient\Client\HttpRestJsonClient
-            ->getHttpClient()     // Zend\Http\Client
-            ->getResponse()       // Zend\HttpResponse
-            ->getStatusCode();
-    }
-
-    /**
      * Set a prefix for the invoice number
      *
      * @param string $prefix
@@ -1250,10 +1233,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     private function changeSchema($schemaId, $clientSecret)
     {
-        $options = $this->getClient()->getOptions();
-        $options->setClientId($schemaId);
-        $options->setClientSecret($clientSecret);
-        $this->identity->setClientId($schemaId);
-        $this->identity->setClientSecret($clientSecret);
+        $identity = $this->getClient()->getIdentity();
+        $identity->setClientId($schemaId);
+        $identity->setClientSecret($clientSecret);
     }
 }

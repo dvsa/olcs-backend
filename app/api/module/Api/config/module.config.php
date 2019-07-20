@@ -5,6 +5,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
 use Dvsa\Olcs\Api\Service as ApiSrv;
+use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 
 return [
     'router' => [
@@ -78,8 +79,8 @@ return [
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
-            'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsV2HelperService::class,
+            ApiServiceFactory::class => ApiServiceFactory::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
             'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,

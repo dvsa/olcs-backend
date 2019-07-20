@@ -13,7 +13,6 @@ return array(
         'Olcs\Logging',
         'DoctrineModule',
         'DoctrineORMModule',
-        'CpmsClient',
         'Olcs\Db',
         'Dvsa\Olcs\Api',
         'Dvsa\Olcs\Cli',
