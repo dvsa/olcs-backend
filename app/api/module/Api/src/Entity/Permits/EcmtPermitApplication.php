@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
@@ -949,20 +950,32 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Is there an overdue issue fee for this application?
+     * Gets fees over a certain number of days old
      *
-     * @return bool
+     * @param int $days fees invoiced over a certain number of days ago
+     *
+     * @return ArrayCollection
      */
-    public function issueFeeOverdue()
+    public function getFeesByAge(int $days = 10): ArrayCollection
     {
-        // TODO - OLCS-21979
-        $cutoff = new \DateTime('-9 weekdays');
+        $cutoff = new \DateTime('-' . $days . ' weekdays');
 
         $criteria = Criteria::create();
         $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
         $criteria->orderBy(['invoicedDate' => Criteria::DESC]);
 
-        $matchedFees = $this->getFees()->matching($criteria);
+        return $this->getFees()->matching($criteria);
+    }
+
+    /**
+     * Is there an overdue issue fee for this application?
+     * @todo paramatarise cutoff number of days https://jira.i-env.net/browse/OLCS-21979
+     *
+     * @return bool
+     */
+    public function issueFeeOverdue()
+    {
+        $matchedFees = $this->getFeesByAge();
 
         /**
          * @var Fee $fee
