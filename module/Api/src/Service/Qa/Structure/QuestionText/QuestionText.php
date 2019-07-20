@@ -75,4 +75,14 @@ class QuestionText
     {
         return $this->guidance;
     }
+
+    /**
+     * Get the embedded FilteredTranslateableText instance representing the additional guidance
+     *
+     * @return FilteredTranslateableText|null
+     */
+    public function getAdditionalGuidance()
+    {
+        return $this->additionalGuidance;
+    }
 }
