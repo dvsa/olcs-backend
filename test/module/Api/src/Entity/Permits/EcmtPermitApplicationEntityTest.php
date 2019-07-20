@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
@@ -671,6 +672,86 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_ISSUING, false],
             [Entity::STATUS_VALID, false],
             [Entity::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * Tests logic for finding overdue issue fees, and checks that the 4 fees over 10 days old are returned initially
+     *
+     * $fee1 isn't overdue, so is ignored
+     * $fee2 is overdue, but doesn't need to be checked because $fee5 is more recent and will match
+     * $fee3 is overdue, is outstanding, but isn't an issue fee
+     * $fee4 would be overdue, but is not outstanding, so the fee type is not checked
+     * $fee5 is overdue, outstanding and the correct fee type, causes the method to return true
+     */
+    public function testIssueFeeOverdue()
+    {
+        $entity = $this->createApplication();
+
+        $dateTimeMinus9 = (new \DateTime('-9 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus10 = (new \DateTime('-10 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus11 = (new \DateTime('-11 weekdays'))->format(\DateTime::ISO8601);
+
+        $fee1 = m::mock(Fee::class)->makePartial();
+        $fee1->shouldReceive('isOutstanding')->never();
+        $fee1->shouldReceive('getFeeType->isEcmtIssue')->never();
+        $fee1->setInvoicedDate($dateTimeMinus9);
+
+        $fee2 = m::mock(Fee::class)->makePartial();
+        $fee2->shouldReceive('isOutstanding')->never();
+        $fee2->shouldReceive('getFeeType->isEcmtIssue')->never();
+        $fee2->setInvoicedDate($dateTimeMinus11);
+
+        $fee3 = m::mock(Fee::class)->makePartial();
+        $fee3->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
+        $fee3->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(false);
+        $fee3->setInvoicedDate($dateTimeMinus10);
+
+        $fee4 = m::mock(Fee::class)->makePartial();
+        $fee4->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(false);
+        $fee4->shouldReceive('getFeeType->isEcmtIssue')->never();
+        $fee4->setInvoicedDate($dateTimeMinus10);
+
+        $fee5 = m::mock(Fee::class)->makePartial();
+        $fee5->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
+        $fee5->shouldReceive('getFeeType->isEcmtIssue')->once()->withNoArgs()->andReturn(true);
+        $fee5->setInvoicedDate($dateTimeMinus10);
+
+        $feesCollection = new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5]);
+
+        $entity->setFees($feesCollection);
+
+        $this->assertEquals(4, $entity->getFeesByAge()->count());
+        $this->assertTrue($entity->issueFeeOverdue());
+    }
+
+    /**
+     * @dataProvider dpIssueFeeOverdueProvider
+     */
+    public function testIssueFeeOverdueBoundary($days, $expected)
+    {
+        $entity = $this->createApplication();
+        $invoiceDate = (new \DateTime('-' . $days . ' weekdays'))->format(\DateTime::ISO8601);
+
+        $fee = m::mock(Fee::class)->makePartial();
+        $fee->shouldReceive('isOutstanding')->times($expected)->andReturn(true);
+        $fee->shouldReceive('getFeeType->isEcmtIssue')->times($expected)->andReturn(true);
+        $fee->setInvoicedDate($invoiceDate);
+
+        $feesCollection = new ArrayCollection([$fee]);
+
+        $entity->setFees($feesCollection);
+
+        $this->assertEquals($expected, $entity->getFeesByAge()->count());
+        $this->assertEquals($expected, $entity->issueFeeOverdue());
+    }
+
+    public function dpIssueFeeOverdueProvider()
+    {
+        return [
+            [9, 0],
+            [10, 1],
+            [11, 1],
         ];
     }
 
