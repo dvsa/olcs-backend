@@ -2,13 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Traits;
 
-use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Doctrine\Common\Collections\Criteria;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-
 /**
  * Permit email trait
  */
@@ -31,75 +24,9 @@ trait PermitEmailTrait
     }
 
     /**
-     * Get template variables
-     *
-     * @param EcmtPermitApplication $recordObject
-     *
-     * @return array
-     */
-    protected function getTemplateVariables($recordObject): array
-    {
-        $vars = [
-            // http://selfserve is replaced based on the environment
-            'appUrl' => 'http://selfserve/',
-            'permitsUrl' => 'http://selfserve/permits',
-            'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
-            'applicationRef' => $recordObject->getApplicationRef(),
-            'applicationFee' => str_replace(
-                '.00',
-                '',
-                $this->getRepo('FeeType')->getLatestByProductReference(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)->getAmount()
-            ),
-        ];
-
-        if ($recordObject->isAwaitingFee()) {
-            /** @var IrhpPermitApplication $irhpPermitApplication */
-            $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
-
-            $vars['awaitingFeeUrl'] = 'http://selfserve/permits/' . (int)$recordObject->getId() . '/ecmt-awaiting-fee/';
-            $vars['permitsRequired'] = $recordObject->getPermitsRequired();
-            $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
-            // TODO - OLCS-21979
-            $vars['paymentDeadlineNumDays'] = '9';
-
-            $criteria = Criteria::create();
-            $criteria->where(
-                $criteria->expr()->eq(
-                    'feeStatus',
-                    $this->getRepo()->getRefdataReference(FeeEntity::STATUS_OUTSTANDING)
-                )
-            );
-
-            $fees = $recordObject->getFees()->matching($criteria);
-            $feeTypesAmounts = [];
-
-            /** @var Fee $fee */
-            foreach ($fees as $fee) {
-                if ($fee->isEcmtIssuingFee()) {
-                    $feeTypesAmounts[] = [
-                        'issueFeeAmount' => $fee->getFeeTypeAmount(),
-                        'issueFeeTotal' => $fee->getOutstandingAmount(),
-                        'invoicedDate' => $fee->getInvoicedDateTime()
-                    ];
-                }
-            }
-
-            if (count($feeTypesAmounts) !== 1) {
-                throw new \Exception('There should be exactly one issuing fee.');
-            }
-
-            $vars['issueFeeDeadlineDate'] = $this->calculateDueDate($feeTypesAmounts[0]['invoicedDate']);
-            $vars['issueFeeAmount'] = str_replace('.00', '', $feeTypesAmounts[0]['issueFeeAmount']);
-            $vars['issueFeeTotal'] = str_replace('.00', '', $feeTypesAmounts[0]['issueFeeTotal']);
-        }
-
-        return $vars;
-    }
-
-    /**
      * Get subject variables
      *
-     * @param EcmtPermitApplication $recordObject
+     * @param mixed $recordObject
      *
      * @return array
      */

@@ -778,6 +778,8 @@ return [
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
     Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
     Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
+    Command\Email\SendEcmtShortTermSuccessful::class => CommandHandler\Email\SendEcmtShortTermSuccessful::class,
+    Command\Email\SendEcmtShortTermUnsuccessful::class => CommandHandler\Email\SendEcmtShortTermUnsuccessful::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,

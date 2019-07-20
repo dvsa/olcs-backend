@@ -8,11 +8,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtAutomaticallyWithdrawn as 
 /**
  * Test the permit app successful email
  */
-class SendEcmtAutomaticallyWithdrawnTest extends AbstractPermitTest
+class SendEcmtAutomaticallyWithdrawnTest extends AbstractEcmtAnnualPermitTest
 {
-    protected $command = SendEcmtAutomaticallyWithdrawnCmd::class;
-    protected $commandHandler = SendEcmtAutomaticallyWithdrawnHandler::class;
+    protected $commandClass = SendEcmtAutomaticallyWithdrawnCmd::class;
+    protected $commandHandlerClass = SendEcmtAutomaticallyWithdrawnHandler::class;
     protected $template = 'ecmt-automatically-withdrawn';
     protected $subject = 'email.ecmt.automatically.withdrawn.subject';
-    protected $extraRepos = ['FeeType'];
+    protected $permitApplicationRepo = 'EcmtPermitApplication';
+    protected $applicationEntityClass = EcmtPermitApplication::class;
 }
