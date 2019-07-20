@@ -170,6 +170,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'hasCheckedAnswers' => $this->hasCheckedAnswers(),
             'hasMadeDeclaration' => $this->hasMadeDeclaration(),
             'isNotYetSubmitted' => $this->isNotYetSubmitted(),
+            'isSubmittedForConsideration' => $this->isSubmittedForConsideration(),
             'isValid' => $this->isValid(),
             'isFeePaid' => $this->isFeePaid(),
             'isIssueInProgress' => $this->isIssueInProgress(),
@@ -586,6 +587,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function isIssueInProgress()
     {
         return $this->status->getId() === IrhpInterface::STATUS_ISSUING;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubmittedForConsideration()
+    {
+        return $this->getIrhpPermitType()->isEcmtShortTerm()
+            && ($this->isIssueInProgress() || $this->isUnderConsideration());
     }
 
     /**
