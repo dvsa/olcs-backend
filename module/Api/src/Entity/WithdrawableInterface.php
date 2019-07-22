@@ -13,7 +13,7 @@ interface WithdrawableInterface
 {
     public function getId();
     public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void;
-    public function canBeWithdrawn(): bool;
+    public function canBeWithdrawn(?RefData $reason): bool;
     public function isWithdrawn(): bool;
     public function getOutstandingFees(): array;
     public function getWithdrawReason();
