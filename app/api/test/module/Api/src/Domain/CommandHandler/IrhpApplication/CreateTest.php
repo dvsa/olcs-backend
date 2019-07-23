@@ -103,7 +103,7 @@ class CreateTest extends CommandHandlerTestCase
 
         $command = CreateCmd::create(
             [
-                'type' => $permitTypeId,
+                'irhpPermitType' => $permitTypeId,
                 'licence' => $licenceId
             ]
         );
@@ -129,7 +129,7 @@ class CreateTest extends CommandHandlerTestCase
         $licenceId = 2;
 
         $cmdData = [
-            'type' => $permitTypeId,
+            'irhpPermitType' => $permitTypeId,
             'licence' => $licenceId,
         ];
 
