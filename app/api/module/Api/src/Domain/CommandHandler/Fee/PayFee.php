@@ -189,7 +189,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $irhpApplication = $fee->getIrhpApplication();
 
         if ($irhpApplication === null
-            || !$fee->getFeeType()->isIrhpApplicationIssue()
+            || !$fee->getFeeType()->isIrhpApplication()
             || !$irhpApplication->canBeSubmitted()
         ) {
             return;

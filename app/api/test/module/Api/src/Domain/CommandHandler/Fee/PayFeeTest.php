@@ -162,7 +162,7 @@ class PayFeeTest extends CommandHandlerTestCase
         $fee = m::mock(FeeEntity::class);
         $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
         $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturnNull();
-        $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->once()->withNoArgs()->andReturn(true);
+        $fee->shouldReceive('getFeeType->isIrhpApplication')->once()->withNoArgs()->andReturn(true);
         $fee->shouldReceive('getIrhpApplication')->once()->withNoArgs()->andReturn($irhpApplication);
         $fee->shouldReceive('getApplication')->andReturnNull();
         $fee->shouldReceive('getTask')->andReturnNull();
@@ -199,7 +199,7 @@ class PayFeeTest extends CommandHandlerTestCase
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class);
         $fee->shouldReceive('getFeeType->getFeeType->getId')->times(3);
-        $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->once()->withNoArgs()->andReturn(true);
+        $fee->shouldReceive('getFeeType->isIrhpApplication')->once()->withNoArgs()->andReturn(true);
         $fee->shouldReceive('getEcmtPermitApplication')->twice()->withNoArgs()->andReturnNull();
         $fee->shouldReceive('getIrhpApplication')->once()->withNoArgs()->andReturn($irhpApplication);
         $fee->shouldReceive('getApplication')->andReturnNull();

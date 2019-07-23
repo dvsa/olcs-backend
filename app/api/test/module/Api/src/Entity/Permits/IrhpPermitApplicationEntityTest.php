@@ -42,7 +42,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function setUp()
     {
-        $this->sut = new Entity(m::mock(\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication::class));
+        $this->sut = new Entity();
 
         parent::setUp();
     }

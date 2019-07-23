@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
@@ -572,13 +573,43 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Gets fees over a certain number of days old
+     *
+     * @param int $days fees invoiced over a certain number of days ago
+     *
+     * @return ArrayCollection
+     */
+    public function getFeesByAge(int $days = 10): ArrayCollection
+    {
+        $cutoff = new \DateTime('-' . $days . ' weekdays');
+
+        $criteria = Criteria::create();
+        $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
+        $criteria->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        return $this->getFees()->matching($criteria);
+    }
+
+    /**
      * Is there an overdue issue fee for this application?
-     * @todo logic will be added as part of https://jira.i-env.net/browse/OLCS-24991
+     * @todo paramatarise cutoff number of days https://jira.i-env.net/browse/OLCS-21979
+     * @todo save overhead here by skipping these checks once we can easily identify which permit types have issue fees
      *
      * @return bool
      */
     public function issueFeeOverdue()
     {
+        $matchedFees = $this->getFeesByAge();
+
+        /**
+         * @var Fee $fee
+         */
+        foreach ($matchedFees as $fee) {
+            if ($fee->isOutstanding() && $fee->getFeeType()->isIrhpApplicationIssue()) {
+                return true;
+            }
+        }
+
         return false;
     }
 

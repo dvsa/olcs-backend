@@ -160,6 +160,14 @@ class FeeType extends AbstractFeeType
      */
     public function isIrhpApplicationIssue(): bool
     {
+        return $this->feeType->getId() === self::FEE_TYPE_IRHP_ISSUE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isIrhpApplication(): bool
+    {
         return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP]);
     }
 }
