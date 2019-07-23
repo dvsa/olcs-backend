@@ -38,7 +38,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
      */
     public function handleCommand(CommandInterface $command)
     {
-        $permitTypeId = $command->getIrhpPermitType();
+        $permitTypeId = $command->getType();
 
         /** @var IrhpApplicationRepo $irhpApplicationRepo */
         $irhpApplicationRepo = $this->getRepo();
