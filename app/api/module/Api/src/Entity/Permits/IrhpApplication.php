@@ -162,6 +162,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
+            'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
@@ -178,6 +179,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'isReadyForNoOfPermits' => $this->isReadyForNoOfPermits(),
             'isCancelled' => $this->isCancelled(),
             'isWithdrawn' => $this->isWithdrawn(),
+            'isDeclined' => $this->isDeclined(),
             'isBilateral' => $this->isBilateral(),
             'isMultilateral' => $this->isMultilateral(),
             'canCheckAnswers' => $this->canCheckAnswers(),
@@ -614,6 +616,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * @return bool
+     */
+    public function isDeclined(): bool
+    {
+        return $this->isWithdrawn()
+            && $this->withdrawReason->getId() === WithdrawableInterface::WITHDRAWN_REASON_DECLINED;
+    }
+
+    /**
      * Cancel an application
      *
      * @param RefData $refData cancellation status
@@ -641,13 +652,29 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * Whether the permit application can be withdrawn
+     * Whether the permit application can be withdrawn optional withdraw reason
+     *
+     * @param RefData $reason reason application is being withdrawn
      *
      * @return bool
      */
-    public function canBeWithdrawn(): bool
+    public function canBeWithdrawn(?RefData $reason = null): bool
     {
+        if ($reason instanceof RefData && $reason->getId() === WithdrawableInterface::WITHDRAWN_REASON_DECLINED) {
+            return $this->canBeDeclined();
+        }
+
         return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
+    }
+
+    /**
+     * Whether the permit application can be declined
+     *
+     * @return bool
+     */
+    public function canBeDeclined(): bool
+    {
+        return $this->isAwaitingFee();
     }
 
     /**
@@ -1005,7 +1032,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
     {
-        if (!$this->canBeWithdrawn()) {
+        if (!$this->canBeWithdrawn($withdrawReason)) {
             throw new ForbiddenException(WithdrawableInterface::ERR_CANT_WITHDRAW);
         }
 
