@@ -193,6 +193,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity->decline(new RefData(IrhpInterface::STATUS_WITHDRAWN), new RefData(WithdrawableInterface::WITHDRAWN_REASON_DECLINED));
         $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
         $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_DECLINED, $entity->getWithdrawReason()->getId());
+        $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
     }
 
     /**

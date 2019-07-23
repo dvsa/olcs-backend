@@ -308,6 +308,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
 
         $this->status = $declineStatus;
         $this->withdrawReason = $withdrawReason;
+        $this->withdrawnDate = new \DateTime();
     }
 
     public function accept(RefData $acceptStatus)
@@ -850,11 +851,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Whether the permit application can be withdrawn
+     * Whether the permit application can be withdrawn optional withdraw reason
+     *
+     * @param RefData $reason reason application is being withdrawn
      *
      * @return bool
      */
-    public function canBeWithdrawn(): bool
+    public function canBeWithdrawn(?RefData $reason = null): bool
     {
         return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
     }

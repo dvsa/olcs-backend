@@ -67,6 +67,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeDeclined')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
             ->once()
             ->withNoArgs()
@@ -115,6 +119,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('isDeclined')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isReadyForNoOfPermits')
             ->once()
             ->withNoArgs()
@@ -153,6 +161,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
                 'canBeWithdrawn' => false,
+                'canBeDeclined' => false,
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
@@ -169,6 +178,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isReadyForNoOfPermits' => false,
                 'isCancelled' => false,
                 'isWithdrawn' => false,
+                'isDeclined' => false,
                 'isBilateral' => false,
                 'isMultilateral' => false,
                 'canCheckAnswers' => true,
@@ -239,7 +249,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, true],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -265,7 +274,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -291,7 +299,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -317,7 +324,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -343,7 +349,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -369,7 +374,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -414,7 +418,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED],
             [IrhpInterface::STATUS_ISSUING],
             [IrhpInterface::STATUS_VALID],
-            [IrhpInterface::STATUS_DECLINED],
         ];
     }
 
@@ -440,7 +443,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -466,7 +468,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -492,7 +493,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -518,7 +518,25 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsDeclined
+     */
+    public function testIsDeclined($reason, $expected)
+    {
+        $entity = $this->createNewEntity(null, new RefData(IrhpInterface::STATUS_WITHDRAWN));
+        $entity->setWithdrawReason(new RefData($reason));
+        $this->assertSame($expected, $entity->isDeclined());
+    }
+
+    public function dpTestIsDeclined()
+    {
+        return [
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_BY_USER, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID, false],
         ];
     }
 
@@ -568,7 +586,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED],
             [IrhpInterface::STATUS_ISSUING],
             [IrhpInterface::STATUS_VALID],
-            [IrhpInterface::STATUS_DECLINED],
         ];
     }
 
@@ -633,7 +650,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false]
         ];
     }
 
@@ -668,7 +684,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
