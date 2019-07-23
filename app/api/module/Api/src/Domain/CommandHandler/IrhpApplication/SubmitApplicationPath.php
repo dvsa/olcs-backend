@@ -4,7 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
+use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
+use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as SubmitApplicationPathCmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -16,12 +17,10 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SubmitApplicationPath extends AbstractCommandHandler
 {
-    /** @var FormControlStrategyProvider */
-    private $formControlStrategyProvider;
+    /** @var SupplementedApplicationStepsProvider */
+    private $supplementedApplicationStepsProvider;
 
     protected $repoServiceName = 'IrhpApplication';
-
-    protected $extraRepos = ['ApplicationPath'];
 
     /**
      * Create service
@@ -34,7 +33,9 @@ class SubmitApplicationPath extends AbstractCommandHandler
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->formControlStrategyProvider = $mainServiceLocator->get('QaFormControlStrategyProvider');
+        $this->supplementedApplicationStepsProvider = $mainServiceLocator->get(
+            'QaSupplementedApplicationStepsProvider'
+        );
 
         return parent::createService($serviceLocator);
     }
@@ -50,14 +51,16 @@ class SubmitApplicationPath extends AbstractCommandHandler
     {
         $irhpApplication = $this->getRepo()->fetchUsingId($command);
 
-        $applicationPath = $this->getRepo('ApplicationPath')->fetchByIrhpPermitTypeIdAndDate(
-            $irhpApplication->getIrhpPermitType()->getId(),
-            $irhpApplication->getApplicationPathLockedOn()
+        $supplementedApplicationSteps = $this->supplementedApplicationStepsProvider->get(
+            $this->getRepo()->fetchUsingId($command)
         );
 
-        foreach ($applicationPath->getApplicationSteps() as $applicationStep) {
-            $formControlStrategy = $this->formControlStrategyProvider->get($applicationStep);
-            $formControlStrategy->saveFormData($applicationStep, $irhpApplication, $command->getPostData());
+        foreach ($supplementedApplicationSteps as $supplementedApplicationStep) {
+            $supplementedApplicationStep->getFormControlStrategy()->saveFormData(
+                $supplementedApplicationStep->getApplicationStep(),
+                $irhpApplication,
+                $command->getPostData()
+            );
         }
 
         return $this->result;

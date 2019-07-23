@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Service\Qa;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationPath as ApplicationPathRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
@@ -25,8 +24,6 @@ class ApplicationStepObjectsProviderTest extends MockeryTestCase
 
     private $irhpApplicationId;
 
-    private $applicationPathRepo;
-
     private $applicationStepRepo;
 
     private $irhpApplicationRepo;
@@ -38,13 +35,11 @@ class ApplicationStepObjectsProviderTest extends MockeryTestCase
         $this->slug = 'removals-eligibility';
         $this->irhpApplicationId = 77;
 
-        $this->applicationPathRepo = m::mock(ApplicationPathRepo::class);
         $this->applicationStepRepo = m::mock(ApplicationStepRepo::class);
         $this->irhpApplicationRepo = m::mock(IrhpApplicationRepo::class);
 
         $this->applicationStepObjectsProvider = new ApplicationStepObjectsProvider(
             $this->applicationStepRepo,
-            $this->applicationPathRepo,
             $this->irhpApplicationRepo
         );
     }
@@ -54,31 +49,23 @@ class ApplicationStepObjectsProviderTest extends MockeryTestCase
      */
     public function testGetObjects($previousApplicationStep, $irhpApplicationAnswer)
     {
-        $irhpApplicationCreatedOn = m::mock(DateTime::class);
-        $irhpApplicationPermitTypeId = 4;
         $applicationPathId = 44;
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('isNotYetSubmitted')
-            ->andReturn(true);
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn($irhpApplicationPermitTypeId);
-        $irhpApplication->shouldReceive('getCreatedOn')
-            ->andReturn($irhpApplicationCreatedOn);
-        $irhpApplication->shouldReceive('getAnswer')
-            ->andReturn($irhpApplicationAnswer);
-
-        $this->irhpApplicationRepo->shouldReceive('fetchById')
-            ->with($this->irhpApplicationId)
-            ->andReturn($irhpApplication);
 
         $applicationPath = m::mock(ApplicationPath::class);
         $applicationPath->shouldReceive('getId')
             ->andReturn($applicationPathId);
 
-        $this->applicationPathRepo->shouldReceive('fetchByIrhpPermitTypeIdAndDate')
-            ->with($irhpApplicationPermitTypeId, $irhpApplicationCreatedOn)
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->andReturn(true);
+        $irhpApplication->shouldReceive('getAnswer')
+            ->andReturn($irhpApplicationAnswer);
+        $irhpApplication->shouldReceive('getActiveApplicationPath')
             ->andReturn($applicationPath);
+
+        $this->irhpApplicationRepo->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->andReturn($irhpApplication);
 
         $applicationStep = m::mock(ApplicationStep::class);
         $applicationStep->shouldReceive('getPreviousApplicationStep')
@@ -127,31 +114,23 @@ class ApplicationStepObjectsProviderTest extends MockeryTestCase
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage(ApplicationStepObjectsProvider::ERR_NOT_ACCESSIBLE);
 
-        $irhpApplicationCreatedOn = m::mock(DateTime::class);
-        $irhpApplicationPermitTypeId = 4;
         $applicationPathId = 44;
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('isNotYetSubmitted')
-            ->andReturn(true);
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn($irhpApplicationPermitTypeId);
-        $irhpApplication->shouldReceive('getCreatedOn')
-            ->andReturn($irhpApplicationCreatedOn);
-        $irhpApplication->shouldReceive('getAnswer')
-            ->andReturn(null);
-
-        $this->irhpApplicationRepo->shouldReceive('fetchById')
-            ->with($this->irhpApplicationId)
-            ->andReturn($irhpApplication);
 
         $applicationPath = m::mock(ApplicationPath::class);
         $applicationPath->shouldReceive('getId')
             ->andReturn($applicationPathId);
 
-        $this->applicationPathRepo->shouldReceive('fetchByIrhpPermitTypeIdAndDate')
-            ->with($irhpApplicationPermitTypeId, $irhpApplicationCreatedOn)
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('isNotYetSubmitted')
+            ->andReturn(true);
+        $irhpApplication->shouldReceive('getAnswer')
+            ->andReturn(null);
+        $irhpApplication->shouldReceive('getActiveApplicationPath')
             ->andReturn($applicationPath);
+
+        $this->irhpApplicationRepo->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->andReturn($irhpApplication);
 
         $previousApplicationStep = m::mock(ApplicationStep::class);
 

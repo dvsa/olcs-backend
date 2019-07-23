@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Facade\SubmittedApplicationSteps;
 
 use DateTime;
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationPath as ApplicationPathRepository;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
@@ -24,16 +23,6 @@ class SupplementedApplicationStepsProviderTest extends MockeryTestCase
 {
     public function testGet()
     {
-        $irhpApplicationPermitTypeId = 57;
-        $irhpApplicationCreatedOn = m::mock(DateTime::class);
-
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn($irhpApplicationPermitTypeId);
-        $irhpApplication->shouldReceive('getCreatedOn')
-            ->with(true)
-            ->andReturn($irhpApplicationCreatedOn);
-
         $applicationStep1 = m::mock(ApplicationStep::class);
         $applicationStep2 = m::mock(ApplicationStep::class);
 
@@ -46,9 +35,8 @@ class SupplementedApplicationStepsProviderTest extends MockeryTestCase
         $applicationPath->shouldReceive('getApplicationSteps')
             ->andReturn($applicationSteps);
 
-        $applicationPathRepo = m::mock(ApplicationPathRepository::class);
-        $applicationPathRepo->shouldReceive('fetchByIrhpPermitTypeIdAndDate')
-            ->with($irhpApplicationPermitTypeId, $irhpApplicationCreatedOn)
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getActiveApplicationPath')
             ->andReturn($applicationPath);
 
         $formControlStrategy1 = m::mock(FormControlStrategyInterface::class);
@@ -74,7 +62,6 @@ class SupplementedApplicationStepsProviderTest extends MockeryTestCase
             ->andReturn($supplementedApplicationStep2);
 
         $supplementedApplicationStepsProvider = new SupplementedApplicationStepsProvider(
-            $applicationPathRepo,
             $formControlStrategyProvider,
             $supplementedApplicationStepFactory
         );

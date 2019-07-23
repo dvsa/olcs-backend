@@ -469,7 +469,6 @@ return [
             'IrhpApplication' => RepositoryFactory::class,
             'Template' => RepositoryFactory::class,
             'ApplicationStep' => RepositoryFactory::class,
-            'ApplicationPath' => RepositoryFactory::class,
             'Answer' => RepositoryFactory::class,
         ]
     ],
