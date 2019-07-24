@@ -27,7 +27,6 @@ class FederationTest extends \PHPUnit\Framework\TestCase
         //don't test last line
         unset($actualCertLines[count($actualCertLines) - 1]);
         for ($x = 0; $x < count($actualCertLines); $x++) {
-            echo $actualCertLines[$x];
             $this->assertEquals(64, strlen($actualCertLines[$x]), "is not 64 chars long");
         }
     }
