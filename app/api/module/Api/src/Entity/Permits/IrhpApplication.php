@@ -56,6 +56,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
     const ERR_CANT_SUBMIT = 'This application cannot be submitted';
     const ERR_CANT_ISSUE = 'This application cannot be issued';
+    const ERR_CANT_GRANT = 'Unable to grant this application';
     const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
@@ -163,6 +164,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
+            'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
             'canBeUpdated' => $this->canBeUpdated(),
@@ -709,6 +711,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Whether the permit application can be granted
+     *
+     * @return bool
+     */
+    public function canBeGranted(): bool
+    {
+        return $this->isUnderConsideration()
+            && $this->getIrhpPermitType()->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
+    }
+
+    /**
      * Whether the permit application can be declined
      *
      * @return bool
@@ -1069,6 +1082,21 @@ class IrhpApplication extends AbstractIrhpApplication implements
             default:
                 throw new ForbiddenException(self::ERR_CANT_SUBMIT);
         }
+    }
+
+    /**
+     * Grant Application -
+     *
+     * @param RefData $grantStatus
+     * @throws ForbiddenException
+     */
+    public function grant(RefData $grantStatus)
+    {
+        if (!$this->canBeGranted()) {
+            throw new ForbiddenException(self::ERR_CANT_GRANT);
+        }
+
+        $this->status = $grantStatus;
     }
 
     /**

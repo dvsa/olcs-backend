@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplication;
@@ -133,11 +133,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(CreateTask::class, $taskParams, $taskResult);
 
-        /*$this->expectedSideEffect(
+        $this->expectedSideEffect(
             StoreSnapshot::class,
             ['id' => $irhpApplicationId],
             new Result()
-        );*/
+        );
 
 
         $command = m::mock(CommandInterface::class);
