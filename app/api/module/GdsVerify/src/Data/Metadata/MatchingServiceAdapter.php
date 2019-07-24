@@ -66,14 +66,14 @@ class MatchingServiceAdapter
      * -----END CERTIFICATE-----
      * Also, each line must be maximum 79 characters long.
      *
-     * @param string $certifcateString
+     * @param string $certificateString
      *
      * @return string
      */
-    private function formatCertificate(string $certifcateString)
+    private function formatCertificate(string $certificateString) : string
     {
         return "-----BEGIN CERTIFICATE-----\n"
-        . wordwrap(trim($certifcateString), 79, "\n" , true)
+        . trim(wordwrap(trim($certificateString), 64, "\n" , true))
         . "\n-----END CERTIFICATE-----";
 
     }
