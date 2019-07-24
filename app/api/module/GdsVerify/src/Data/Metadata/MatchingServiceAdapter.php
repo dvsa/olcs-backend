@@ -73,7 +73,7 @@ class MatchingServiceAdapter
     private function formatCertificate(string $certificateString) : string
     {
         return "-----BEGIN CERTIFICATE-----\n"
-        . trim(wordwrap(trim($certificateString), 64, "\n" , true))
+        . trim(wordwrap(preg_replace( "/\r|\n|\t|\s/", "", $certificateString), 64, PHP_EOL , true))
         . "\n-----END CERTIFICATE-----";
 
     }
