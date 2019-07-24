@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Surrender;
@@ -128,6 +129,9 @@ class CreateTaskTest extends CommandHandlerTestCase
             EcmtPermitApplication::class => [
                 97 => m::mock(EcmtPermitApplication::class)
             ],
+            IrhpApplication::class => [
+                979 => m::mock(IrhpApplication::class)
+            ],
             Surrender::class => [
                 765 => m::mock(Surrender::class)
             ],
@@ -158,6 +162,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             'transportManager' => 264,
             'irfoOrganisation' => 364,
             'ecmtPermitApplication' => 97,
+            'irhpApplication' => 979,
             'submission' => 765,
             'assignedByUser' => 999,
         ];
@@ -184,6 +189,7 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertSame($this->references[TransportManager::class][264], $task->getTransportManager());
                     $this->assertSame($this->references[Organisation::class][364], $task->getIrfoOrganisation());
                     $this->assertSame($this->references[EcmtPermitApplication::class][97], $task->getEcmtPermitApplication());
+                    $this->assertSame($this->references[IrhpApplication::class][979], $task->getIrhpApplication());
                     $this->assertSame($this->references[Surrender::class][765], $task->getSurrender());
 
 
