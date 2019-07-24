@@ -1059,7 +1059,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
             throw new ForbiddenException(self::ERR_CANT_SUBMIT);
         }
 
-        $this->proceedToIssuing($submitStatus);
+        switch ($this->getIrhpPermitType()->getId()) {
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
+                return $this->proceedToUnderConsideration($submitStatus);
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+                return $this->proceedToIssuing($submitStatus);
+            default:
+                throw new ForbiddenException(self::ERR_CANT_SUBMIT);
+        }
     }
 
     /**
@@ -1296,6 +1305,22 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $issuingStatus;
+    }
+
+    /**
+     * Proceeds the application from not yet submitted status to under consideration status
+     *
+     * @param RefData $uc_status
+     *
+     * @throws ForbiddenException
+     */
+    public function proceedToUnderConsideration(RefData $uc_status)
+    {
+        if ($this->hasOutstandingFees()) {
+            throw new ForbiddenException(self::ERR_CANT_SUBMIT);
+        }
+
+        $this->status = $uc_status;
     }
 
     /**

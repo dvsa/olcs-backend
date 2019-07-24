@@ -2753,6 +2753,30 @@ class IrhpApplicationEntityTest extends EntityTester
             ->with($status)
             ->once();
 
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(5);
+
+        $entity->submit($status);
+    }
+
+    public function testSubmitShortTerm()
+    {
+        $status = m::mock(RefData::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(true);
+        $entity->shouldReceive('proceedToUnderConsideration')
+            ->with($status)
+            ->once();
+
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+
         $entity->submit($status);
     }
 
