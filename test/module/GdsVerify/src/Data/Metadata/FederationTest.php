@@ -47,6 +47,7 @@ class FederationTest extends \PHPUnit\Framework\TestCase
                         +ObVs/MJBa0wWyiU/BfXbAXBlyURDzAd4eu/VSC1p4YQe+GY5Pui+GM8
                     ',
             $federationMetadata->getSigningCertificate()
+
         );
     }
 
