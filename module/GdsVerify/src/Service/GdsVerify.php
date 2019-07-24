@@ -216,9 +216,8 @@ class GdsVerify implements \Zend\ServiceManager\FactoryInterface
     {
         $certificate = new XMLSecLibs\XMLSecurityKey(XMLSecLibs\XMLSecurityKey::RSA_SHA256, ['type' => 'public']);
         $certificate->loadKey(
-            "-----BEGIN CERTIFICATE-----\n"
-            . $this->getMatchingServiceAdapterMetadata()->getSigningCertificate()
-            . "\n-----END CERTIFICATE-----"
+            $this->getMatchingServiceAdapterMetadata()->getSigningCertificate()
+
         );
 
         return $certificate;

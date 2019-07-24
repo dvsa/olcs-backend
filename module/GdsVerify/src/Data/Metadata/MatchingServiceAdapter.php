@@ -46,7 +46,7 @@ class MatchingServiceAdapter
             /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
             foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
                 if ($keyDescriptor->use === 'signing') {
-                    return trim($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
+                    return $this->formatCertificate($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
                 }
             }
         } catch (\Exception $e) {
@@ -54,6 +54,28 @@ class MatchingServiceAdapter
         }
 
         throw new Exception('Matching Service Adapter signing certificate not found');
+    }
+
+    /**
+     * Method to ensure always a valid certifcate -
+     * For OpenSSL to recognize it as a PEM format, it must be encoded in Base64, with the following header :
+     *
+     * -----BEGIN CERTIFICATE-----
+     * and footer:
+     *
+     * -----END CERTIFICATE-----
+     * Also, each line must be maximum 79 characters long.
+     *
+     * @param string $certifcateString
+     *
+     * @return string
+     */
+    private function formatCertificate(string $certifcateString)
+    {
+        return "-----BEGIN CERTIFICATE-----\n"
+        . wordwrap(trim($certifcateString), 79, "\n" , true)
+        . "\n-----END CERTIFICATE-----";
+
     }
 
     /**
