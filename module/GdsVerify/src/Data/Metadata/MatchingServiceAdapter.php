@@ -50,7 +50,7 @@ class MatchingServiceAdapter
                 }
             }
         } catch (\Exception $e) {
-            throw new Exception('Matching Service Adapter signing certificate not found : ' .$e->getMessage());
+            throw new Exception('Matching Service Adapter signing certificate not found : ' . $e->getMessage());
         }
 
         throw new Exception('Matching Service Adapter signing certificate not found');
@@ -70,12 +70,11 @@ class MatchingServiceAdapter
      *
      * @return string
      */
-    private function formatCertificate(string $certificateString) : string
+    private function formatCertificate(string $certificateString): string
     {
         return "-----BEGIN CERTIFICATE-----\n"
-        . trim(wordwrap(preg_replace( "/\r|\n|\t|\s/", "", $certificateString), 64, PHP_EOL , true))
-        . "\n-----END CERTIFICATE-----";
-
+            . trim(wordwrap(preg_replace("/\r|\n|\t|\s/", "", $certificateString), 64, PHP_EOL, true))
+            . "\n-----END CERTIFICATE-----";
     }
 
     /**
@@ -94,7 +93,7 @@ class MatchingServiceAdapter
                 }
             }
         } catch (\Exception $e) {
-            throw new Exception('SSO URL not found in metadata : '. $e->getMessage());
+            throw new Exception('SSO URL not found in metadata : ' . $e->getMessage());
         }
 
         throw new Exception('SSO URL not found in metadata');
