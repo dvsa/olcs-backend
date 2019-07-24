@@ -58,7 +58,7 @@ class Federation
         /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
         foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
             if ($keyDescriptor->use === 'signing') {
-                return $keyDescriptor->KeyInfo->info[1]->data[0]->certificate;
+                return wordwrap(preg_replace( "/\r|\n|\t|\s/", "",($keyDescriptor->KeyInfo->info[1]->data[0]->certificate)),64,PHP_EOL, true);
             }
         }
 
