@@ -7,11 +7,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplicationPath as Sut;
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationPath as ApplicationPathRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProvider;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -27,10 +26,9 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
         $this->sut = new Sut();
 
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
-        $this->mockRepo('ApplicationPath', ApplicationPathRepo::class);
 
         $this->mockedSmServices = [
-            'QaFormControlStrategyProvider' => m::mock(FormControlStrategyProvider::class)
+            'QaSupplementedApplicationStepsProvider' => m::mock(SupplementedApplicationStepsProvider::class)
         ];
 
         parent::setUp();
@@ -39,8 +37,6 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $irhpApplicationId = 459;
-        $irhpApplicationCreatedOn = m::mock(DateTime::class);
-        $irhpApplicationPermitTypeId = 52;
 
         $postData = [
             'fieldset123' => [
@@ -55,49 +51,50 @@ class SubmitApplicationPathTest extends CommandHandlerTestCase
             ]
         );
 
-        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn($irhpApplicationPermitTypeId);
-        $irhpApplicationEntity->shouldReceive('getApplicationPathLockedOn')
-            ->withNoArgs()
-            ->andReturn($irhpApplicationCreatedOn);
+        $irhpApplication = m::mock(IrhpApplication::class);
+
+        $applicationStep1 = m::mock(ApplicationStep::class);
+
+        $formControlStrategy1 = m::mock(FormControlStrategyInterface::class);
+        $formControlStrategy1->shouldReceive('saveFormData')
+            ->with($applicationStep1, $irhpApplication, $postData)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $supplementedApplicationStep1 = m::mock(SupplementedApplicationStep::class);
+        $supplementedApplicationStep1->shouldReceive('getFormControlStrategy')
+            ->andReturn($formControlStrategy1);
+        $supplementedApplicationStep1->shouldReceive('getApplicationStep')
+            ->andReturn($applicationStep1);
+
+        $applicationStep2 = m::mock(ApplicationStep::class);
+
+        $formControlStrategy2 = m::mock(FormControlStrategyInterface::class);
+        $formControlStrategy2->shouldReceive('saveFormData')
+            ->with($applicationStep2, $irhpApplication, $postData)
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $supplementedApplicationStep2 = m::mock(SupplementedApplicationStep::class);
+        $supplementedApplicationStep2->shouldReceive('getFormControlStrategy')
+            ->andReturn($formControlStrategy2);
+        $supplementedApplicationStep2->shouldReceive('getApplicationStep')
+            ->andReturn($applicationStep2);
+
+        $supplementedApplicationSteps = [
+            $supplementedApplicationStep1,
+            $supplementedApplicationStep2
+        ];
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchUsingId')
             ->with($command)
-            ->andReturn($irhpApplicationEntity);
+            ->andReturn($irhpApplication);
 
-        $applicationStepEntity1 = m::mock(ApplicationStepEntity::class);
-        $applicationStepEntity2 = m::mock(ApplicationStepEntity::class);
-
-        $applicationStepEntity1Strategy = m::mock(FormControlStrategyInterface::class);
-        $applicationStepEntity1Strategy->shouldReceive('saveFormData')
-            ->with($applicationStepEntity1, $irhpApplicationEntity, $postData)
-            ->once();
-
-        $applicationStepEntity2Strategy = m::mock(FormControlStrategyInterface::class);
-        $applicationStepEntity2Strategy->shouldReceive('saveFormData')
-            ->with($applicationStepEntity2, $irhpApplicationEntity, $postData)
-            ->once();
-
-        $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
-            ->with($applicationStepEntity1)
-            ->andReturn($applicationStepEntity1Strategy);
-        $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
-            ->with($applicationStepEntity2)
-            ->andReturn($applicationStepEntity2Strategy);
-
-        $applicationStepEntities = [
-            $applicationStepEntity1,
-            $applicationStepEntity2,
-        ];
- 
-        $applicationPathEntity = m::mock(ApplicationPathEntity::class);
-        $applicationPathEntity->shouldReceive('getApplicationSteps')
-            ->andReturn($applicationStepEntities);
-
-        $this->repoMap['ApplicationPath']->shouldReceive('fetchByIrhpPermitTypeIdAndDate')
-            ->with($irhpApplicationPermitTypeId, $irhpApplicationCreatedOn)
-            ->andReturn($applicationPathEntity);
+        $this->mockedSmServices['QaSupplementedApplicationStepsProvider']->shouldReceive('get')
+            ->with($irhpApplication)
+            ->andReturn($supplementedApplicationSteps);
 
         $this->sut->handleCommand($command);
     }
