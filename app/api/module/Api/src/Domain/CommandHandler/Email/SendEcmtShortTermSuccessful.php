@@ -44,7 +44,7 @@ class SendEcmtShortTermSuccessful extends AbstractEmailHandler implements Toggle
             'issueFeeTotal' => $this->formatCurrency($issueFee->getOutstandingAmount()),
             'paymentDeadlineNumDays' => '10', // TODO - OLCS-21979
             'issueFeeDeadlineDate' => $this->calculateDueDate($invoicedDateTime),
-            'paymentUrl' => 'http://selfserve/permits/application/' . $irhpApplicationId . '/irhp-awaiting-fee',
+            'paymentUrl' => 'http://selfserve/permits/application/' . $irhpApplicationId . '/awaiting-fee',
         ];
     }
 
