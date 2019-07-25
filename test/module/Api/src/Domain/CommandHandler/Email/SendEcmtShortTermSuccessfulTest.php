@@ -55,7 +55,7 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
             'issueFeeTotal' => $issueFeeTotalFormatted,
             'paymentDeadlineNumDays' => '10',
             'issueFeeDeadlineDate' => '21 March 2019',
-            'paymentUrl' => 'http://selfserve/permits/application/' . $this->permitAppId . '/irhp-awaiting-fee',
+            'paymentUrl' => 'http://selfserve/permits/application/' . $this->permitAppId . '/awaiting-fee',
         ];
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
