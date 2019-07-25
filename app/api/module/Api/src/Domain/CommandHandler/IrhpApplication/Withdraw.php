@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAutomaticallyWithdrawn;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractWithdrawApplicationHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -20,10 +21,11 @@ final class Withdraw extends AbstractWithdrawApplicationHandler implements Toggl
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
+
     protected $emails = [
         WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS => SendEcmtShortTermUnsuccessful::class,
         WithdrawableInterface::WITHDRAWN_REASON_BY_USER => SendEcmtShortTermUnsuccessful::class,
         WithdrawableInterface::WITHDRAWN_REASON_DECLINED => SendEcmtShortTermUnsuccessful::class,
-        WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtShortTermUnsuccessful::class
+        WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtShortTermAutomaticallyWithdrawn::class,
     ];
 }

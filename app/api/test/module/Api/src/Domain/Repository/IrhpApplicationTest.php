@@ -4,7 +4,9 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Mockery as m;
 
 /**
@@ -81,5 +83,41 @@ class IrhpApplicationTest extends RepositoryTestCase
             . 'AND ia.status IN [[["S1","S2"]]]';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchAllAwaitingFee()
+    {
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $irhpApplications = [
+            m::mock(Entity::class),
+            m::mock(Entity::class),
+        ];
+
+        $queryBuilder->shouldReceive('select')
+            ->with('ia')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(Entity::class, 'ia')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('ia.status = :status')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with('status', IrhpInterface::STATUS_AWAITING_FEE)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->once()
+            ->andReturn($irhpApplications);
+
+        $this->assertEquals(
+            $irhpApplications,
+            $this->sut->fetchAllAwaitingFee()
+        );
     }
 }
