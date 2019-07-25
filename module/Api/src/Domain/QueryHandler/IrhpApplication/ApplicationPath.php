@@ -21,8 +21,6 @@ class ApplicationPath extends AbstractQueryHandler
 
     protected $repoServiceName = 'IrhpApplication';
 
-    protected $extraRepos = ['ApplicationPath'];
-
     /**
      * Create service
      *
@@ -49,11 +47,7 @@ class ApplicationPath extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $irhpApplication = $this->getRepo()->fetchUsingId($query);
-
-        $applicationPath = $this->getRepo('ApplicationPath')->fetchByIrhpPermitTypeIdAndDate(
-            $irhpApplication->getIrhpPermitType()->getId(),
-            $irhpApplication->getApplicationPathLockedOn()
-        );
+        $applicationPath = $irhpApplication->getActiveApplicationPath();
 
         $formFragment = $this->formFragmentGenerator->generate(
             $applicationPath->getApplicationSteps()->getValues(),

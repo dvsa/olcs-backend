@@ -2,15 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps;
 
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationPath as ApplicationPathRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Qa\FormControlStrategyProvider;
 
 class SupplementedApplicationStepsProvider
 {
-    /** @var ApplicationPathRepository */
-    private $applicationPathRepo;
-
     /** @var FormControlStrategyProvider */
     private $formControlStrategyProvider;
 
@@ -20,18 +16,15 @@ class SupplementedApplicationStepsProvider
     /**
      * Create service instance
      *
-     * @param ApplicationPathRepository $applicationPathRepo
      * @param FormControlStrategyProvider $formControlStrategyProvider
      * @param SupplementedApplicationStepFactory $supplementedApplicationStepFactory
      *
      * @return SupplementedApplicationStepsProvider
      */
     public function __construct(
-        ApplicationPathRepository $applicationPathRepo,
         FormControlStrategyProvider $formControlStrategyProvider,
         SupplementedApplicationStepFactory $supplementedApplicationStepFactory
     ) {
-        $this->applicationPathRepo = $applicationPathRepo;
         $this->formControlStrategyProvider = $formControlStrategyProvider;
         $this->supplementedApplicationStepFactory = $supplementedApplicationStepFactory;
     }
@@ -45,10 +38,7 @@ class SupplementedApplicationStepsProvider
      */
     public function get(IrhpApplication $irhpApplication)
     {
-        $applicationPath = $this->applicationPathRepo->fetchByIrhpPermitTypeIdAndDate(
-            $irhpApplication->getIrhpPermitType()->getId(),
-            $irhpApplication->getCreatedOn(true)
-        );
+        $applicationPath = $irhpApplication->getActiveApplicationPath();
 
         $supplementedApplicationSteps = [];
 
