@@ -771,6 +771,7 @@ return [
     Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
     Command\Email\SendEcmtIssued::class => CommandHandler\Email\SendEcmtIssued::class,
     Command\Email\SendEcmtUnsuccessful::class => CommandHandler\Email\SendEcmtUnsuccessful::class,
+    Command\Email\SendEcmtShortTermAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtShortTermAutomaticallyWithdrawn::class,
     Command\Email\SendEcmtPartSuccessful::class => CommandHandler\Email\SendEcmtPartSuccessful::class,
     Command\Email\SendEcmtSuccessful::class => CommandHandler\Email\SendEcmtSuccessful::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 /**
- * Send confirmation of ECMT app being successful
+ * Send confirmation of ECMT app being automatically withdrawn
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
