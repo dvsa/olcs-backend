@@ -1153,7 +1153,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Gets the application fee product reference for this application
-     * Applicable only to bilateral and multilateral
+     * Applicable only to bilateral, multilateral and ecmt short term
      *
      * @return array
      *
@@ -1166,6 +1166,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 => FeeTypeEntity::FEE_TYPE_IRHP_APP_BILATERAL_PRODUCT_REF,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
                 => FeeTypeEntity::FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+                => FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF,
         ];
 
         $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
@@ -1191,8 +1193,29 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Gets the issue fee product reference for this application
+     * Applicable only to ecmt short term
+     *
+     * @return array
+     *
+     * @throws ForbiddenException if the permit type is unsupported
+     */
+    public function getIssueFeeProductReference()
+    {
+        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+
+        if ($irhpPermitTypeId != IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
+            throw new ForbiddenException(
+                'No issue fee product reference available for permit type ' . $irhpPermitTypeId
+            );
+        }
+
+        return FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF;
+    }
+
+    /**
      * Gets the total fee per permit including application fee and issue fee
-     * Applicable only to bilateral and multilateral
+     * Applicable only to bilateral, multilateral, removals and ecmt short term
      *
      * @param FeeTypeEntity $applicationFeeType (optional)
      * @param FeeTypeEntity $issueFeeType (optional)

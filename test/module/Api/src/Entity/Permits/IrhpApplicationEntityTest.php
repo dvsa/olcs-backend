@@ -2580,6 +2580,10 @@ class IrhpApplicationEntityTest extends EntityTester
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 FeeType::FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF
             ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF
+            ],
         ];
     }
 
@@ -2595,6 +2599,44 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(7);
 
         $irhpApplication->getApplicationFeeProductReference();
+    }
+
+    public function testGetIssueFeeProductReference()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF,
+            $irhpApplication->getIssueFeeProductReference()
+        );
+    }
+
+    /**
+     * @dataProvider dpGetIssueFeeProductReferenceUnsupportedType
+     */
+    public function testGetIssueFeeProductReferenceUnsupportedType($irhpPermitTypeId)
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'No issue fee product reference available for permit type ' . $irhpPermitTypeId
+        );
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $irhpApplication->getIssueFeeProductReference();
+    }
+
+    public function dpGetIssueFeeProductReferenceUnsupportedType()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+        ];
     }
 
     public function testGetIssueFeeProductRefsAndQuantities()

@@ -8,11 +8,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtPartSuccessful as SendEcmt
 /**
  * Test the permit app part successful email
  */
-class SendEcmtPartSuccessfulTest extends AbstractPermitTest
+class SendEcmtPartSuccessfulTest extends AbstractEcmtAnnualPermitTest
 {
-    protected $command = SendEcmtPartSuccessfulCmd::class;
-    protected $commandHandler = SendEcmtPartSuccessfulHandler::class;
+    protected $commandClass = SendEcmtPartSuccessfulCmd::class;
+    protected $commandHandlerClass = SendEcmtPartSuccessfulHandler::class;
     protected $template = 'ecmt-app-part-successful';
     protected $subject = 'email.ecmt.response.subject';
-    protected $extraRepos = ['FeeType'];
+    protected $permitApplicationRepo = 'EcmtPermitApplication';
+    protected $applicationEntityClass = EcmtPermitApplication::class;
 }
