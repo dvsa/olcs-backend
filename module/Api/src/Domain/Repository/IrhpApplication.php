@@ -6,8 +6,9 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
-use \Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 class IrhpApplication extends AbstractRepository
@@ -56,6 +57,7 @@ class IrhpApplication extends AbstractRepository
 
     /**
      * @param int $licence
+     *
      * @return array
      */
     public function fetchByLicence(int $licence)
@@ -84,5 +86,20 @@ class IrhpApplication extends AbstractRepository
             ->setParameter('appStatuses', $appStatuses);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all applications in awaiting fee status
+     *
+     * @return array
+     */
+    public function fetchAllAwaitingFee()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('ia')
+            ->from(Entity::class, 'ia')
+            ->where('ia.status = :status')
+            ->setParameter('status', IrhpInterface::STATUS_AWAITING_FEE)
+            ->getQuery()->getResult();
     }
 }
