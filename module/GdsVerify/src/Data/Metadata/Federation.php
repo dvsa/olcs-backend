@@ -73,6 +73,8 @@ class Federation
      */
     private function formatCertificate(string $certificateString): string
     {
-        return wordwrap(preg_replace("/\r|\n|\t|\s/", "", ($certificateString)), 64, PHP_EOL, true);
+        return "-----BEGIN CERTIFICATE-----\n"
+            . trim(wordwrap(preg_replace("/\r|\n|\t|\s/", "", $certificateString), 64, PHP_EOL, true))
+            . "\n-----END CERTIFICATE-----";
     }
 }

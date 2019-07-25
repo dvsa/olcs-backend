@@ -24,9 +24,16 @@ class FederationTest extends \PHPUnit\Framework\TestCase
 
         $actualCertLines = explode(PHP_EOL, $federationMetadata->getSigningCertificate());
 
-        //don't test last line
+        //don't test last line or first line cos they are comments
+        unset($actualCertLines[0]);
         unset($actualCertLines[count($actualCertLines) - 1]);
-        for ($x = 0; $x < count($actualCertLines); $x++) {
+
+        // then the last line maybe not 64 chars so don't check it equals 64 just less than
+        for ($x = 1; $x < count($actualCertLines); $x++) {
+            if ($x == count($actualCertLines)-1) {
+                $this->assertLessThanOrEqual(64, strlen($actualCertLines[$x]));
+                break;
+            }
             $this->assertEquals(64, strlen($actualCertLines[$x]), "is not 64 chars long");
         }
     }
