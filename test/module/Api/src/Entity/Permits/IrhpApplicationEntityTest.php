@@ -2897,7 +2897,10 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $country1 = 'country1';
         $country2 = 'country2';
-        $joinedCountries = 'country1, country2';
+        $countriesAnswer = [
+            $country1 => $country1,
+            $country2 => $country2,
+        ];
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(true);
@@ -2979,26 +2982,32 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $licNo,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.irhp.countries.transporting',
-                'answer' =>  $joinedCountries,
+                'answer' =>  $countriesAnswer,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.snapshot.number.required',
                 'answer' =>  10,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => $country1 . ' for ' . $stock1ValidityYear,
                 'answer' =>  $stock1RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => $country2 . ' for ' . $stock2ValidityYear,
                 'answer' =>  $stock2RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => $country2 . ' for ' . $stock3ValidityYear,
                 'answer' =>  $stock3RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
         ];
 
@@ -3087,22 +3096,27 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $licNo,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.snapshot.number.required',
                 'answer' =>  10,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'For ' . $stock1ValidityYear,
                 'answer' =>  $stock1RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'For ' . $stock2ValidityYear,
                 'answer' =>  $stock2RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'For ' . $stock3ValidityYear,
                 'answer' =>  $stock3RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
         ];
 
@@ -3114,15 +3128,16 @@ class IrhpApplicationEntityTest extends EntityTester
         $licNo = 'ABC123';
 
         $expected = [
-            [
+            'custom-licence' => [
                 'section' => 'licence',
                 'slug' => 'custom-licence',
                 'questionShort' => 'section.name.application/licence',
                 'question' => 'section.name.application/licence',
+                'questionType' => Question::QUESTION_TYPE_STRING,
                 'answer' => $licNo,
                 'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
             ],
-            [
+            'custom-check-answers' => [
                 'section' => 'checkedAnswers',
                 'slug' => 'custom-check-answers',
                 'questionShort' => 'section.name.application/check-answers',
@@ -3130,7 +3145,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'answer' => null,
                 'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
             ],
-            [
+            'custom-declaration' => [
                 'section' => 'declaration',
                 'slug' => 'custom-declaration',
                 'questionShort' => 'section.name.application/declaration',
@@ -3239,15 +3254,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => '',
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3256,7 +3272,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3265,7 +3281,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3273,7 +3289,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3293,15 +3309,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3310,7 +3327,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3319,7 +3336,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3327,7 +3344,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 0,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3347,15 +3364,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3364,7 +3382,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3373,7 +3391,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3381,7 +3399,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 0,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3401,15 +3419,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3418,7 +3437,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3427,7 +3446,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3435,7 +3454,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 0,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3455,15 +3474,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3472,7 +3492,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3481,7 +3501,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3489,7 +3509,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 1,
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3509,15 +3529,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3526,7 +3547,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3535,7 +3556,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3543,7 +3564,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 1,
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',

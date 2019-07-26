@@ -212,11 +212,12 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ? SectionableInterface::SECTION_COMPLETION_COMPLETED
             : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
         $data = [
-            [
+            'custom-licence' => [
                 'section' => 'licence',
                 'slug' => 'custom-licence',
                 'questionShort' => 'section.name.application/licence',
                 'question' => 'section.name.application/licence',
+                'questionType' => Question::QUESTION_TYPE_STRING,
                 'answer' =>  $answer,
                 'status' => $status,
             ]
@@ -249,10 +250,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
                 $questionJson = json_decode($activeQuestionText->getQuestionKey(), true);
                 $questionKey = $questionJson['translateableText']['key'];
+                $slug = $question->getSlug();
 
-                $data[] = [
-                    'section' => $question->getSlug(),
-                    'slug' => $question->getSlug(),
+                $data[$slug] = [
+                    'section' => $slug,
+                    'slug' => $slug,
                     'questionShort' => $activeQuestionText->getQuestionShortKey(),
                     'question' => $questionKey,
                     'questionType' => $activeQuestionText->getQuestion()->getQuestionType()->getId(),
@@ -274,7 +276,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
         }
 
-        $data[] = [
+        $data['custom-check-answers'] = [
             'section' => 'checkedAnswers',
             'slug' => 'custom-check-answers',
             'questionShort' => 'section.name.application/check-answers',
@@ -295,7 +297,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
         }
 
-        $data[] = [
+        $data['custom-declaration'] = [
             'section' => 'declaration',
             'slug' => 'custom-declaration',
             'questionShort' => 'section.name.application/declaration',
@@ -368,7 +370,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get the number of permits answer values for a custom element of type ecmt short term
      *
-     * @return int|null
+     * @return array|null
      */
     private function getEcmtShortTermNoOfPermitsAnswer()
     {
@@ -381,11 +383,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return null;
         }
 
+        $answer = [];
+
+        if ($requiredEuro5) {
+            $answer[] = $requiredEuro5 . ' permits for Euro 5 minimum emission standard';
+        }
+
+        if ($requiredEuro6) {
+            $answer[] = $requiredEuro6 . ' permits for Euro 6 minimum emission standard';
+        }
+
         // TODO: how should these values be returned to accommodate translation etc?
-        return [
-            'euro5: ' . $requiredEuro5,
-            'euro6: ' . $requiredEuro6
-        ];
+        return $answer;
     }
 
     /**
@@ -419,14 +428,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $this->licence->getLicNo(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.irhp.countries.transporting',
-                'answer' =>  implode(', ', $countriesArray),
+                'answer' =>  $countriesArray,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.snapshot.number.required',
                 'answer' =>  $this->getPermitsRequired(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
         ];
 
@@ -434,7 +446,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             foreach ($years as $year => $permitsRequired) {
                 $data[] = [
                     'question' => sprintf('%s for %d', $country, $year),
-                    'answer' => $permitsRequired
+                    'answer' => $permitsRequired,
+                    'questionType' => Question::QUESTION_TYPE_INTEGER,
                 ];
             }
         }
@@ -453,10 +466,12 @@ class IrhpApplication extends AbstractIrhpApplication implements
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $this->licence->getLicNo(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.snapshot.number.required',
                 'answer' =>  $this->getPermitsRequired(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
         ];
 
@@ -476,7 +491,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
             $data[] = [
                 'question' => sprintf('For %d', $year),
-                'answer' => $permitsRequired
+                'answer' => $permitsRequired,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ];
         }
 

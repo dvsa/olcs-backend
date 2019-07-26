@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -1127,23 +1128,22 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     {
         $emissionsQuestion = 'permits.form.euro5.label';
         $countriesQuestion = 'permits.form.restricted.countries.euro5.label';
-        $limitedCountriesAnswer = 'Yes';
-        $limitedCountriesList = [];
+        $limitedCountriesAnswer = ['Yes'];
 
         if ($this->isEuro6EmissionCategory()) {
             $emissionsQuestion = 'permits.form.euro6.label';
             $countriesQuestion = 'permits.page.restricted-countries.question';
-            $limitedCountriesAnswer = 'No';
+            $limitedCountriesAnswer = ['No'];
 
             if ((int) $this->getHasRestrictedCountries() === 1) {
-                $limitedCountriesAnswer = 'Yes';
+                $limitedCountriesAnswer = ['Yes'];
                 $countries = [];
 
                 foreach ($this->getCountrys() as $country) {
                     $countries[] = $country->getCountryDesc();
                 }
 
-                $limitedCountriesList = [implode(', ', $countries)];
+                $limitedCountriesAnswer[] = implode(', ', $countries);
             }
         }
 
@@ -1151,35 +1151,42 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $this->getLicence()->getLicNo(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => $emissionsQuestion,
-                'answer' =>  (int) $this->getEmissions() === 1 ? 'Yes' : 'No',
+                'answer' =>  (int) $this->getEmissions(),
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
                 'question' => 'permits.form.cabotage.label',
-                'answer' =>  (int) $this->getCabotage() === 1 ? 'Yes' : 'No',
+                'answer' =>  (int) $this->getCabotage(),
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
                 'question' => $countriesQuestion,
                 'answer' => $limitedCountriesAnswer,
-                'answerList' => $limitedCountriesList,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.permits.required.question',
                 'answer' => $this->getPermitsRequired(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.number-of-trips.question',
                 'answer' => $this->getTrips(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.international.journey.question',
                 'answer' => $this->getInternationalJourneys()->getDescription(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.sectors.question',
                 'answer' => $this->getSectors()->getName(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
         ];
 

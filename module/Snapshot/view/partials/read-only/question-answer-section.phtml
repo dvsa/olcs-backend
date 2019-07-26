@@ -1,13 +1,7 @@
 <div class="printable__section">
     <?php
         foreach($data as $question) {
-            echo $this->partial('partials/read-only/question-answer-item',
-                [
-                    'question' => $question['question'],
-                    'answer' => $question['answer'],
-                    'list' => isset($question['answerList']) ? $question['answerList'] : []
-                ]
-            );
+            echo $this->partial('partials/read-only/question-answer-item', ['question' => $question]);
         }
     ?>
 </div>
