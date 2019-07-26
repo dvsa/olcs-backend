@@ -103,4 +103,9 @@ return [
             'translations' => __DIR__ . '/language/partials'
         ]
     ],
+    'view_helpers' => [
+        'invokables' => [
+            'answerFormatter' => Dvsa\Olcs\Snapshot\View\Helper\AnswerFormatter::class,
+        ],
+    ],
 ];

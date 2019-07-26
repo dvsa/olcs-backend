@@ -133,11 +133,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(CreateTask::class, $taskParams, $taskResult);
 
-        /*$this->expectedSideEffect(
+        $this->expectedSideEffect(
             StoreSnapshot::class,
             ['id' => $irhpApplicationId],
             new Result()
-        );*/
+        );
 
 
         $command = m::mock(CommandInterface::class);

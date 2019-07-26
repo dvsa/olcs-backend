@@ -402,5 +402,15 @@ return [
     'section.name.application/check-answers' => 'Check your answers',
     'section.name.application/declaration' => 'Declaration',
 
+    'st_permit_usage_transit_only' => 'Transit only',
+    'st_permit_usage_cross_trade_only' => 'Cross-trade only',
+    'st_permit_usage_both' => 'Both transit and cross-trade',
+
+    'qanda.ecmt-short-term.permit-usage.question' => 'You can only apply for these permits for cross-trade between two EU countries or transit to non-EU countries',
+    'qanda.ecmt-short-term.cabotage.question' => 'Short-term ECMT permits do not allow you to carry out cabotage',
+    'qanda.ecmt-short-term.certificates.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
+    'qanda.ecmt-short-term.emissions.question' => 'You must only use the appropriate Euro emission standards vehicles that the permit allows',
+    'qanda.ecmt-short-term.number-of-permits.question' => 'How many permits do you require for this licence?',
+
     // Potentially unused translations
 ];

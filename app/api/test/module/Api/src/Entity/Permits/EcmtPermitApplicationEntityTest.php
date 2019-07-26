@@ -6,6 +6,7 @@ use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -1064,73 +1065,55 @@ class EcmtPermitApplicationEntityTest extends EntityTester
                 IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
                 1,
                 'permits.form.euro6.label',
-                'Yes',
                 1,
-                'Yes',
                 $restrictedCountries,
                 'permits.page.restricted-countries.question',
-                'Yes',
-                ['Country 1, Country 2'],
+                ['Yes', 'Country 1, Country 2'],
             ],
             'euro 6 with restricted countries, plus emissions not agreed' => [
                 IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
                 0,
                 'permits.form.euro6.label',
-                'No',
                 1,
-                'Yes',
                 $restrictedCountries,
                 'permits.page.restricted-countries.question',
-                'Yes',
-                ['Country 1, Country 2'],
+                ['Yes', 'Country 1, Country 2'],
             ],
             'euro 6 with restricted countries, plus cabotage not agreed' => [
                 IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
                 1,
                 'permits.form.euro6.label',
-                'Yes',
                 0,
-                'No',
                 $restrictedCountries,
                 'permits.page.restricted-countries.question',
-                'Yes',
-                ['Country 1, Country 2'],
+                ['Yes', 'Country 1, Country 2'],
             ],
             'euro 6 with restricted countries, plus cabotage and emissions not agreed' => [
                 IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
                 0,
                 'permits.form.euro6.label',
-                'No',
                 0,
-                'No',
                 $restrictedCountries,
                 'permits.page.restricted-countries.question',
-                'Yes',
-                ['Country 1, Country 2'],
+                ['Yes', 'Country 1, Country 2'],
             ],
             'euro 6 with no restricted countries' => [
                 IrhpPermitWindow::EMISSIONS_CATEGORY_EURO6_REF,
                 1,
                 'permits.form.euro6.label',
-                'Yes',
                 0,
-                'No',
                 [],
                 'permits.page.restricted-countries.question',
-                'No',
-                [],
+                ['No'],
             ],
             'euro 5' => [
                 IrhpPermitWindow::EMISSIONS_CATEGORY_EURO5_REF,
                 0,
                 'permits.form.euro5.label',
-                'No',
                 1,
-                'Yes',
                 [],
                 'permits.form.restricted.countries.euro5.label',
-                'Yes',
-                [],
+                ['Yes'],
             ],
         ];
     }
@@ -1142,13 +1125,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $emissionCategory,
         $emissionsValue,
         $emissionsQuestion,
-        $emissionsAnswer,
         $cabotageValue,
-        $cabotageAnswer,
         $countries,
         $countriesQuestion,
-        $countriesAnswer,
-        $countriesList
+        $countriesAnswer
     ) {
         $licNo = 'OB1234567';
         $internationalJourneysDesc = 'international journey desc';
@@ -1195,35 +1175,42 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $licNo,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => $emissionsQuestion,
-                'answer' =>  $emissionsAnswer,
+                'answer' =>  $emissionsValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
                 'question' => 'permits.form.cabotage.label',
-                'answer' =>  $cabotageAnswer,
+                'answer' =>  $cabotageValue,
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
                 'question' => $countriesQuestion,
                 'answer' => $countriesAnswer,
-                'answerList' => $countriesList,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.permits.required.question',
                 'answer' => $permitsRequired,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.number-of-trips.question',
                 'answer' => $trips,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.international.journey.question',
                 'answer' => $internationalJourneysDesc,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.sectors.question',
                 'answer' => $sectorName,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
         ];
 
