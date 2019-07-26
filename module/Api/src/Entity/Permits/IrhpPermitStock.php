@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -467,9 +468,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Get non-reserved, non-replacement ranges relating to this stock ordered by from no
      *
+     * @param string $emissionsCategoryId (optional)
+     *
      * @return array
      */
-    public function getNonReservedNonReplacementRangesOrderedByFromNo()
+    public function getNonReservedNonReplacementRangesOrderedByFromNo($emissionsCategoryId = null)
     {
         $criteria = Criteria::create();
 
@@ -477,7 +480,20 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
             ->andWhere($criteria->expr()->eq('lostReplacement', false))
             ->orderBy(['fromNo' => Criteria::ASC]);
 
-        return $this->getIrhpPermitRanges()->matching($criteria);
+        $ranges = $this->getIrhpPermitRanges()->matching($criteria);
+
+        if (is_null($emissionsCategoryId)) {
+            return $ranges;
+        }
+
+        $filteredRanges = new ArrayCollection();
+        foreach ($ranges as $range) {
+            if ($range->getEmissionsCategory()->getId() == $emissionsCategoryId) {
+                $filteredRanges->add($range);
+            }
+        }
+
+        return $filteredRanges;
     }
 
     /**
