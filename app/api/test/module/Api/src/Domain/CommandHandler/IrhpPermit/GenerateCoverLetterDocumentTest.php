@@ -97,12 +97,20 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
     public function dpHandleCommand()
     {
         return [
-            'ECMT' => [
+            'ECMT Annual' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
                 'expectedTemplate' => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
                 'expectedDescription' => 'IRHP PERMIT ECMT COVERING LETTER 1',
                 'expectedMessages' => [
                     'IRHP PERMIT ECMT COVERING LETTER 1 RTF created and stored',
+                ],
+            ],
+            'ECMT Short-term' => [
+                'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'expectedTemplate' => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER,
+                'expectedDescription' => 'IRHP PERMIT SHORT TERM ECMT COVER LETTER 1',
+                'expectedMessages' => [
+                    'IRHP PERMIT SHORT TERM ECMT COVER LETTER 1 RTF created and stored',
                 ],
             ],
             'IRHP Bilateral' => [
