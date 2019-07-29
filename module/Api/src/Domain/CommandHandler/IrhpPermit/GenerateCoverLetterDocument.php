@@ -34,6 +34,8 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
     private $templates = [
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT
             => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
+        IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+            => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL
             => DocumentEntity::IRHP_PERMIT_ANN_BILAT_COVERING_LETTER,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL
