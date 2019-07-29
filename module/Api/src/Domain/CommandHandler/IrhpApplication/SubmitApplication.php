@@ -51,7 +51,7 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
                 $irhpApplication->submit($this->refData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
                 $sideEffects = [
                     $this->getCreateTaskCommand($irhpApplication),
-                    //SnapshotCmd::create(['id' => $irhpApplicationId])
+                    SnapshotCmd::create(['id' => $irhpApplicationId])
                 ];
                 break;
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
