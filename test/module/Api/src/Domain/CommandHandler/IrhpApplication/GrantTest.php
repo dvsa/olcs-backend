@@ -12,7 +12,9 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
@@ -21,8 +23,12 @@ class GrantTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
-        $this->mockRepo('FeeType', IrhpApplicationRepo::class);
+        $this->mockRepo('FeeType', FeeTypeRepo::class);
         $this->sut = new Grant();
+
+        $this->mockedSmServices = [
+            'PermitsGrantabilityChecker' => m::mock(GrantabilityChecker::class),
+        ];
 
         parent::setUp();
     }
@@ -43,6 +49,10 @@ class GrantTest extends CommandHandlerTestCase
         $irhpApplication = m::mock(IrhpApplication::class);
         $feeType = m::mock(FeeType::class);
 
+        $this->mockedSmServices['PermitsGrantabilityChecker']->shouldReceive('isGrantable')
+            ->with($irhpApplication)
+            ->andReturn(true);
+
         $irhpApplication->shouldReceive('canBeGranted')
             ->once()
             ->withNoArgs()
@@ -53,7 +63,6 @@ class GrantTest extends CommandHandlerTestCase
             ->with($this->refData[IrhpInterface::STATUS_AWAITING_FEE])
             ->ordered()
             ->globally();
-
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
@@ -135,7 +144,7 @@ class GrantTest extends CommandHandlerTestCase
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
     }
 
-    public function testHandleCommandCantGrant()
+    public function testHandleCommandCantGrantFromEntity()
     {
         $irhpApplicationId = 66;
         $irhpApplication = m::mock(IrhpApplication::class);
@@ -143,6 +152,10 @@ class GrantTest extends CommandHandlerTestCase
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
             ->andReturn($irhpApplication);
+
+        $this->mockedSmServices['PermitsGrantabilityChecker']->shouldReceive('isGrantable')
+            ->with($irhpApplication)
+            ->andReturn(true);
 
         $irhpApplication->shouldReceive('canBeGranted')
             ->once()
@@ -156,6 +169,30 @@ class GrantTest extends CommandHandlerTestCase
 
         $this->expectException(ForbiddenException::class);
         $this->expectExceptionMessage('This application cannot be granted');
+
+        $this->sut->handleCommand($command);
+    }
+
+    public function testHandleCommandCantGrantFromService()
+    {
+        $irhpApplicationId = 66;
+        $irhpApplication = m::mock(IrhpApplication::class);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->mockedSmServices['PermitsGrantabilityChecker']->shouldReceive('isGrantable')
+            ->with($irhpApplication)
+            ->andReturn(false);
+
+        $command = m::mock(CommandInterface::class);
+
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Insufficient permit availability to grant this application');
 
         $this->sut->handleCommand($command);
     }

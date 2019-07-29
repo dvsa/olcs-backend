@@ -227,6 +227,8 @@ return [
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsGrantabilityChecker' =>
+                ApiSrv\Permits\GrantabilityCheckerFactory::class,
         ],
     ],
     'view_manager' => [
