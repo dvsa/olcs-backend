@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Withdraw an IRHP Permit application
