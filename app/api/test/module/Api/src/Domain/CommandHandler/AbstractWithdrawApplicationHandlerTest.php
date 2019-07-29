@@ -29,6 +29,7 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     protected function initReferences()
     {
         $this->refData = [
+            WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS,
             WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
             WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
             WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
@@ -102,6 +103,7 @@ abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTest
     public function dpReasonProvider()
     {
         return [
+            [WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS],
             [WithdrawableInterface::WITHDRAWN_REASON_BY_USER],
             [WithdrawableInterface::WITHDRAWN_REASON_DECLINED],
             [WithdrawableInterface::WITHDRAWN_REASON_UNPAID],

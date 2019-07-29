@@ -165,6 +165,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
                 'canBeWithdrawn' => false,
+                'canBeGranted' => false,
                 'canBeDeclined' => false,
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
@@ -2798,7 +2799,7 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('getIrhpPermitType->getId')
             ->withNoArgs()
             ->once()
-            ->andReturn(5);
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
 
         $entity->submit($status);
     }
