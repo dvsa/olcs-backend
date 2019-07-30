@@ -59,4 +59,27 @@ class IrhpApplicationTest extends RepositoryTestCase
             $this->sut->fetchLicenceByOrganisation($organisation)
         );
     }
+
+    public function testFetchByWindowId()
+    {
+        $qb = $this->createMockQb('BLAH');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $qb->shouldReceive('getQuery')->andReturn(
+            m::mock()->shouldReceive('execute')
+                ->shouldReceive('getResult')
+                ->andReturn(['RESULTS'])
+                ->getMock()
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchByWindowId('ID', ['S1', 'S2']));
+
+        $expectedQuery = 'BLAH '
+            . 'INNER JOIN ia.irhpPermitApplications ipa '
+            . 'INNER JOIN ipa.irhpPermitWindow ipw '
+            . 'AND ipw.id = [[ID]] '
+            . 'AND ia.status IN [[["S1","S2"]]]';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
 }
