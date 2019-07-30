@@ -645,8 +645,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function isSubmittedForConsideration()
     {
-        return $this->getIrhpPermitType()->isEcmtShortTerm()
-            && ($this->isIssueInProgress() || $this->isUnderConsideration());
+        return $this->getIrhpPermitType()->isEcmtShortTerm() && $this->isUnderConsideration();
     }
 
     /**
