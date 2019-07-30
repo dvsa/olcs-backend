@@ -20,5 +20,6 @@ class ReadyToPrint extends AbstractListQueryHandler implements ToggleRequiredInt
 
     protected $bundle = [
         'irhpPermitApplication',
+        'irhpPermitRange' => ['emissionsCategory'],
     ];
 }
