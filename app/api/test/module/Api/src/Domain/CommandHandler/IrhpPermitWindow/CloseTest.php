@@ -6,9 +6,13 @@ use Dvsa\Olcs\Api\Domain\Command\IrhpPermitWindow\Close as CloseCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow\Close as CloseHandler;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as PermitWindowRepo;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\CancelApplication as CancelIrhpApplication;
 use Dvsa\Olcs\Transfer\Command\Permits\CancelEcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -23,6 +27,7 @@ class CloseTest extends CommandHandlerTestCase
         $this->sut = new CloseHandler();
         $this->mockRepo('IrhpPermitWindow', PermitWindowRepo::class);
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
         parent::setUp();
     }
@@ -30,8 +35,10 @@ class CloseTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $windowId = 1;
-        $app1Id = 10;
-        $app2Id = 11;
+        $ecmtApp1Id = 10;
+        $ecmtApp2Id = 11;
+        $irhpApp1Id = 14;
+        $irhpApp2Id = 15;
 
         $cmdData = [
             'id' => $windowId,
@@ -50,32 +57,62 @@ class CloseTest extends CommandHandlerTestCase
             ->with($cmdData['id'])
             ->andReturn($window);
 
-        $app1 = m::mock(EcmtPermitApplicationEntity::class);
-        $app1->shouldReceive('getId')
-            ->andReturn($app1Id);
+        $ecmtApp1 = m::mock(EcmtPermitApplicationEntity::class);
+        $ecmtApp1->shouldReceive('getId')
+            ->andReturn($ecmtApp1Id);
 
-        $app2 = m::mock(EcmtPermitApplicationEntity::class);
-        $app2->shouldReceive('getId')
-            ->andReturn($app2Id);
+        $ecmtApp2 = m::mock(EcmtPermitApplicationEntity::class);
+        $ecmtApp2->shouldReceive('getId')
+            ->andReturn($ecmtApp2Id);
+
+        $irhpApp1 = m::mock(IrhpApplication::class);
+        $irhpApp1->shouldReceive('getId')
+            ->andReturn($irhpApp1Id);
+
+        $irhpApp2 = m::mock(IrhpApplication::class);
+        $irhpApp2->shouldReceive('getId')
+            ->andReturn($irhpApp2Id);
 
         $this->repoMap['EcmtPermitApplication']
             ->shouldReceive('fetchByWindowId')
             ->with($windowId, [EcmtPermitApplicationEntity::STATUS_NOT_YET_SUBMITTED])
-            ->andReturn([$app1, $app2]);
+            ->andReturn([$ecmtApp1, $ecmtApp2]);
+
+        $this->repoMap['IrhpApplication']
+            ->shouldReceive('fetchByWindowId')
+            ->with($windowId, [IrhpInterface::STATUS_NOT_YET_SUBMITTED])
+            ->andReturn([$irhpApp1, $irhpApp2]);
 
         $this->expectedSideEffect(
             CancelEcmtPermitApplication::class,
             [
-                'id' => $app1Id,
+                'id' => $ecmtApp1Id,
             ],
-            (new Result())->addMessage('App1 has been cancelled')
+            (new Result())->addMessage('ECMT App1 has been cancelled')
         );
+
         $this->expectedSideEffect(
             CancelEcmtPermitApplication::class,
             [
-                'id' => $app2Id,
+                'id' => $ecmtApp2Id,
             ],
-            (new Result())->addMessage('App2 has been cancelled')
+            (new Result())->addMessage('ECMT App2 has been cancelled')
+        );
+
+        $this->expectedSideEffect(
+            CancelIrhpApplication::class,
+            [
+                'id' => $irhpApp1Id,
+            ],
+            (new Result())->addMessage('IRHP App1 has been cancelled')
+        );
+
+        $this->expectedSideEffect(
+            CancelIrhpApplication::class,
+            [
+                'id' => $irhpApp2Id,
+            ],
+            (new Result())->addMessage('IRHP App2 has been cancelled')
         );
 
         $result = $this->sut->handleCommand($command);
@@ -85,8 +122,10 @@ class CloseTest extends CommandHandlerTestCase
                 'id' => $windowId
             ],
             'messages' => [
-                'App1 has been cancelled',
-                'App2 has been cancelled',
+                'ECMT App1 has been cancelled',
+                'ECMT App2 has been cancelled',
+                'IRHP App1 has been cancelled',
+                'IRHP App2 has been cancelled',
                 sprintf('IRHP permit window \'%d\' has been closed', $windowId)
             ]
         ];
