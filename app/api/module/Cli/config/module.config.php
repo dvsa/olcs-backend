@@ -420,6 +420,7 @@ return [
             Command\CompaniesHouseVsOlcsDiffsExport::class => CommandHandler\CompaniesHouseVsOlcsDiffsExport::class,
             Command\Bus\Expire::class => CommandHandler\Bus\Expire::class,
             Command\Permits\WithdrawUnpaidEcmt::class => CommandHandler\Permits\WithdrawUnpaidEcmt::class,
+            Command\Permits\WithdrawUnpaidIrhp::class => CommandHandler\Permits\WithdrawUnpaidIrhp::class,
             Command\ImportUsersFromCsv::class => CommandHandler\ImportUsersFromCsv::class,
             Command\LastTmLetter::class => CommandHandler\LastTmLetter::class,
             Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
