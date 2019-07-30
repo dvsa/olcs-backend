@@ -15,8 +15,10 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Command Handler to action the granting of an IrhpApplication
@@ -33,6 +35,26 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
 
     protected $extraRepos = ['FeeType'];
 
+    /** @var GrantabilityChecker */
+    private $grantabilityChecker;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->grantabilityChecker = $mainServiceLocator->get('PermitsGrantabilityChecker');
+
+        return parent::createService($serviceLocator);
+    }
+
+
     /**
      * Handle command
      *
@@ -46,6 +68,10 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
         /** @var IrhpApplication $irhpApplication */
         $irhpApplicationId = $command->getId();
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
+
+        if (!$this->grantabilityChecker->isGrantable($irhpApplication)) {
+            throw new ForbiddenException('Insufficient permit availability to grant this application');
+        }
 
         if (!$irhpApplication->canBeGranted()) {
             throw new ForbiddenException('This application cannot be granted');
