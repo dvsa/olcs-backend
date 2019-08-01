@@ -19,6 +19,7 @@ class EmissionsCategoryAvailabilityCounterFactory implements FactoryInterface
         $repoServiceManager = $serviceLocator->get('RepositoryServiceManager');
 
         return new EmissionsCategoryAvailabilityCounter(
+            $serviceLocator->get('doctrine.connection.ormdefault'),
             $repoServiceManager->get('IrhpPermitRange'),
             $repoServiceManager->get('IrhpPermitApplication'),
             $repoServiceManager->get('IrhpPermit')
