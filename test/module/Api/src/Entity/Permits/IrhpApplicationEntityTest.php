@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -75,10 +76,6 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
-            ->shouldReceive('canBeUpdated')
-            ->once()
-            ->withNoArgs()
-            ->andReturn(true)
             ->shouldReceive('hasOutstandingFees')
             ->once()
             ->withNoArgs()
@@ -168,7 +165,6 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeGranted' => false,
                 'canBeDeclined' => false,
                 'canBeSubmitted' => false,
-                'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
                 'outstandingFeeAmount' => 0,
                 'sectionCompletion' => [],
@@ -547,31 +543,45 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * Tests withdrawal of an application
+     * @dataProvider dpWithdraw
      */
-    public function testWithdraw()
+    public function testWithdraw($status, $reason)
     {
-        $entity = $this->createNewEntity(null, new RefData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
+        $entity = $this->createNewEntity(null, new RefData($status));
         $entity->withdraw(
             new RefData(IrhpInterface::STATUS_WITHDRAWN),
-            new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER)
+            new RefData($reason)
         );
         $this->assertEquals(IrhpInterface::STATUS_WITHDRAWN, $entity->getStatus()->getId());
-        $this->assertEquals(WithdrawableInterface::WITHDRAWN_REASON_BY_USER, $entity->getWithdrawReason()->getId());
+        $this->assertEquals($reason, $entity->getWithdrawReason()->getId());
         $this->assertEquals(date('Y-m-d'), $entity->getWithdrawnDate()->format('Y-m-d'));
+    }
+
+    public function dpWithdraw()
+    {
+        return [
+            [
+                IrhpInterface::STATUS_UNDER_CONSIDERATION,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER
+            ],
+            [
+                IrhpInterface::STATUS_AWAITING_FEE,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED
+            ],
+        ];
     }
 
     /**
      * @dataProvider dpWithdrawException
      */
-    public function testWithdrawException($status)
+    public function testWithdrawException($status, $reason, $expectedError)
     {
-        $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage(Entity::ERR_CANT_WITHDRAW);
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage($expectedError);
         $entity = $this->createNewEntity(null, new RefData($status));
         $entity->withdraw(
             new RefData(IrhpInterface::STATUS_WITHDRAWN),
-            new RefData(WithdrawableInterface::WITHDRAWN_REASON_BY_USER)
+            new RefData($reason)
         );
     }
 
@@ -583,15 +593,91 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpWithdrawException()
     {
         return [
-            [IrhpInterface::STATUS_CANCELLED],
-            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
-            [IrhpInterface::STATUS_WITHDRAWN],
-            [IrhpInterface::STATUS_AWAITING_FEE],
-            [IrhpInterface::STATUS_FEE_PAID],
-            [IrhpInterface::STATUS_UNSUCCESSFUL],
-            [IrhpInterface::STATUS_ISSUED],
-            [IrhpInterface::STATUS_ISSUING],
-            [IrhpInterface::STATUS_VALID],
+            [
+                IrhpInterface::STATUS_CANCELLED,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_WITHDRAWN,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_AWAITING_FEE,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_FEE_PAID,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_UNSUCCESSFUL,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_ISSUED,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_ISSUING,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_VALID,
+                WithdrawableInterface::WITHDRAWN_REASON_BY_USER,
+                Entity::ERR_CANT_WITHDRAW
+            ],
+            [
+                IrhpInterface::STATUS_CANCELLED,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_NOT_YET_SUBMITTED,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_WITHDRAWN,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_FEE_PAID,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_UNSUCCESSFUL,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_ISSUED,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_ISSUING,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
+            [
+                IrhpInterface::STATUS_VALID,
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                Entity::ERR_CANT_DECLINE
+            ],
         ];
     }
 
@@ -750,7 +836,7 @@ class IrhpApplicationEntityTest extends EntityTester
         return [
             [IrhpInterface::STATUS_CANCELLED, false],
             [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
             [IrhpInterface::STATUS_WITHDRAWN, false],
             [IrhpInterface::STATUS_AWAITING_FEE, false],
             [IrhpInterface::STATUS_FEE_PAID, false],
@@ -1854,7 +1940,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
                 ],
-                'expected' => false,
+                'expected' => true,
             ],
             'ECMT Removal - withdrawn - check answers not started' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
@@ -1944,7 +2030,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
                 ],
-                'expected' => false,
+                'expected' => true,
             ],
             'ECMT Short Term - withdrawn - check answers not started' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
@@ -2026,7 +2112,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
                 'permitsRequired' => 10,
-                'expected' => false,
+                'expected' => true,
             ],
             'Bilateral - withdrawn - permits required set' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
@@ -2056,7 +2142,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
                 'permitsRequired' => 10,
-                'expected' => false,
+                'expected' => true,
             ],
             'Multilateral - withdrawn - permits required set' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
@@ -2208,7 +2294,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
                 ],
-                'expected' => false,
+                'expected' => true,
             ],
             'ECMT Removal - withdrawn - declaration not started' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
@@ -2302,7 +2388,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
                 'permitsRequired' => 10,
                 'checkedAnswers' => true,
-                'expected' => false,
+                'expected' => true,
             ],
             'Bilateral - withdrawn - permits required set - answers checked' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
@@ -2344,7 +2430,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'status' => IrhpInterface::STATUS_UNDER_CONSIDERATION,
                 'permitsRequired' => 10,
                 'checkedAnswers' => true,
-                'expected' => false,
+                'expected' => true,
             ],
             'Multilateral - withdrawn - permits required set - answers checked' => [
                 'irhpPermitTypeId' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
