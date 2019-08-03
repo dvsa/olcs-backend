@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -167,7 +168,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
-            'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
             'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
@@ -992,7 +992,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeUpdated()
     {
-        return $this->isNotYetSubmitted();
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
     }
 
     /**
@@ -1126,7 +1126,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
     {
         if (!$this->canBeWithdrawn($withdrawReason)) {
-            throw new ForbiddenException(WithdrawableInterface::ERR_CANT_WITHDRAW);
+            $error = ($withdrawReason->getId() === WithdrawableInterface::WITHDRAWN_REASON_DECLINED)
+                ? WithdrawableInterface::ERR_CANT_DECLINE : WithdrawableInterface::ERR_CANT_WITHDRAW;
+
+            throw new ValidationException([$error]);
         }
 
         $this->status = $withdrawStatus;
