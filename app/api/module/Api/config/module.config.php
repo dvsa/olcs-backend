@@ -396,6 +396,7 @@ return [
             'ChangeOfEntity' => RepositoryFactory::class,
             'ApplicationOrganisationPerson' => RepositoryFactory::class,
             'DocumentSearchView' => RepositoryFactory::class,
+            'DocTemplateSearchView' => RepositoryFactory::class,
             'S4' => RepositoryFactory::class,
             'TaskSearchView' => RepositoryFactory::class,
             'PrivateHireLicence' => RepositoryFactory::class,
