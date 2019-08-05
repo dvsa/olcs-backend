@@ -21,7 +21,6 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 {
     public function testGenerate()
     {
-        $totalFeePerPermit = '20.00';
         $applicationFeePerPermit = '15.00';
         $issueFeePerPermit = '5.00';
 
@@ -34,9 +33,6 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             ->andReturn($issueFeePerPermit);
 
         $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
-        $irhpApplicationEntity->shouldReceive('getFeePerPermit')
-            ->with($applicationFeeTypeEntity, $issueFeeTypeEntity)
-            ->andReturn($totalFeePerPermit);
         $irhpApplicationEntity->shouldReceive('getApplicationFeeProductReference')
             ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF);
         $irhpApplicationEntity->shouldReceive('getIssueFeeProductReference')
@@ -44,22 +40,12 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
         $guidanceTranslateableTextParameterIndex0 = m::mock(TranslateableTextParameter::class);
         $guidanceTranslateableTextParameterIndex0->shouldReceive('setValue')
-            ->with($totalFeePerPermit)
+            ->with($applicationFeePerPermit)
             ->once();
 
         $guidanceTranslateableTextParameterIndex1 = m::mock(TranslateableTextParameter::class);
         $guidanceTranslateableTextParameterIndex1->shouldReceive('setValue')
-            ->with($applicationFeePerPermit)
-            ->once();
-
-        $guidanceTranslateableTextParameterIndex2 = m::mock(TranslateableTextParameter::class);
-        $guidanceTranslateableTextParameterIndex2->shouldReceive('setValue')
             ->with($issueFeePerPermit)
-            ->once();
-
-        $guidanceTranslateableTextParameterIndex3 = m::mock(TranslateableTextParameter::class);
-        $guidanceTranslateableTextParameterIndex3->shouldReceive('setValue')
-            ->with($applicationFeePerPermit)
             ->once();
 
         $guidanceTranslateableText = m::mock(TranslateableText::class);
@@ -69,12 +55,6 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $guidanceTranslateableText->shouldReceive('getParameter')
             ->with(1)
             ->andReturn($guidanceTranslateableTextParameterIndex1);
-        $guidanceTranslateableText->shouldReceive('getParameter')
-            ->with(2)
-            ->andReturn($guidanceTranslateableTextParameterIndex2);
-        $guidanceTranslateableText->shouldReceive('getParameter')
-            ->with(3)
-            ->andReturn($guidanceTranslateableTextParameterIndex3);
 
         $questionText = m::mock(QuestionText::class);
         $questionText->shouldReceive('getGuidance->getTranslateableText')
