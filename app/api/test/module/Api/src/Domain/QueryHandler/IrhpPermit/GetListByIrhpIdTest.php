@@ -20,7 +20,8 @@ class GetListByIrhpIdTest extends AbstractListQueryHandlerTest
     protected $bundle = [
         'replaces',
         'irhpPermitRange' => [
-            'irhpPermitStock' => ['country']
+            'irhpPermitStock' => ['country'],
+            'emissionsCategory',
         ],
     ];
     protected $entityClass = Entity::class;

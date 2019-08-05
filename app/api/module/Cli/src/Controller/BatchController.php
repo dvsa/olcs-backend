@@ -97,7 +97,14 @@ class BatchController extends AbstractConsoleController
      */
     public function withdrawUnpaidEcmtApplicationsAction()
     {
-        return $this->handleExitStatus($this->handleCommand([CliCommand\Permits\WithdrawUnpaidEcmt::create([])]));
+        return $this->handleExitStatus(
+            $this->handleCommand(
+                [
+                    CliCommand\Permits\WithdrawUnpaidEcmt::create([]),
+                    CliCommand\Permits\WithdrawUnpaidIrhp::create([]),
+                ]
+            )
+        );
     }
 
     /**

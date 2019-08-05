@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Permits;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrganisation;
@@ -22,6 +23,7 @@ return [
     QueryHandler\IrhpApplication\FeeBreakdown::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\FeePerPermit::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ApplicationStep::class => Permits\CanAccessIrhpApplicationWithId::class,
+    QueryHandler\IrhpApplication\ApplicationPath::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,
@@ -51,9 +53,12 @@ return [
     QueryHandler\IrhpPermitWindow\OpenByCountry::class => NotIsAnonymousUser::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\Withdraw::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\Grant::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\UpdateCountries::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\SubmitApplicationStep::class => Permits\CanEditIrhpApplicationWithId::class,
+    CommandHandler\IrhpApplication\SubmitApplicationPath::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\Permits\CreateEcmtPermitApplication::class => CanAccessLicenceWithLicence::class,
     CommandHandler\IrhpApplication\Create::class => CanAccessLicenceWithLicence::class,
     CommandHandler\IrhpApplication\UpdateDeclaration::class => Permits\CanEditIrhpApplicationWithId::class,
@@ -78,6 +83,7 @@ return [
     CommandHandler\Permits\WithdrawEcmtPermitApplication::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\DeclineEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
     CommandHandler\Permits\AcceptEcmtPermits::class => Permits\CanEditPermitAppWithId::class,
+    CommandHandler\Permits\AcceptIrhpPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\Permits\CreateFullPermitApplication::class => IsInternalEdit::class,
     CommandHandler\Permits\CreateIrhpPermitApplication::class => IsSideEffect::class,
     CommandHandler\Permits\UpdatePermitFee::class => IsSideEffect::class,

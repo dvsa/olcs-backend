@@ -67,6 +67,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeDeclined')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('canBeSubmitted')
             ->once()
             ->withNoArgs()
@@ -99,6 +103,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(true)
+            ->shouldReceive('isSubmittedForConsideration')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('isValid')
             ->andReturn(false)
             ->shouldReceive('isFeePaid')
@@ -112,6 +120,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('isCancelled')
             ->andReturn(false)
             ->shouldReceive('isWithdrawn')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
+            ->shouldReceive('isDeclined')
             ->once()
             ->withNoArgs()
             ->andReturn(false)
@@ -153,6 +165,8 @@ class IrhpApplicationEntityTest extends EntityTester
                 'applicationRef' => 'appRef',
                 'canBeCancelled' => false,
                 'canBeWithdrawn' => false,
+                'canBeGranted' => false,
+                'canBeDeclined' => false,
                 'canBeSubmitted' => false,
                 'canBeUpdated' => true,
                 'hasOutstandingFees' => false,
@@ -161,6 +175,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'hasCheckedAnswers' => false,
                 'hasMadeDeclaration' => false,
                 'isNotYetSubmitted' => true,
+                'isSubmittedForConsideration' => false,
                 'isValid' => false,
                 'isFeePaid' => false,
                 'isIssueInProgress' => false,
@@ -169,6 +184,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'isReadyForNoOfPermits' => false,
                 'isCancelled' => false,
                 'isWithdrawn' => false,
+                'isDeclined' => false,
                 'isBilateral' => false,
                 'isMultilateral' => false,
                 'canCheckAnswers' => true,
@@ -239,7 +255,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, true],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -265,7 +280,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -291,7 +305,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -317,7 +330,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -343,7 +355,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -369,7 +380,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -414,7 +424,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED],
             [IrhpInterface::STATUS_ISSUING],
             [IrhpInterface::STATUS_VALID],
-            [IrhpInterface::STATUS_DECLINED],
         ];
     }
 
@@ -440,7 +449,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -466,7 +474,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -492,7 +499,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -518,7 +524,25 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestIsDeclined
+     */
+    public function testIsDeclined($reason, $expected)
+    {
+        $entity = $this->createNewEntity(null, new RefData(IrhpInterface::STATUS_WITHDRAWN));
+        $entity->setWithdrawReason(new RefData($reason));
+        $this->assertSame($expected, $entity->isDeclined());
+    }
+
+    public function dpTestIsDeclined()
+    {
+        return [
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_BY_USER, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID, false],
         ];
     }
 
@@ -568,7 +592,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED],
             [IrhpInterface::STATUS_ISSUING],
             [IrhpInterface::STATUS_VALID],
-            [IrhpInterface::STATUS_DECLINED],
         ];
     }
 
@@ -633,7 +656,74 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false]
+        ];
+    }
+
+    /**
+     * @dataProvider dpIsSubmittedForConsideration
+     */
+    public function testIsSubmittedForConsideration($irhpPermitTypeId, $status, $expected)
+    {
+        $irhpPermitType = new IrhpPermitType();
+        $irhpPermitType->setId($irhpPermitTypeId);
+
+        $statusRefData = m::mock(RefData::class);
+        $statusRefData->shouldReceive('getId')
+            ->andReturn($status);
+
+        $irhpApplication = new Entity();
+        $irhpApplication->setStatus($statusRefData);
+        $irhpApplication->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expected,
+            $irhpApplication->isSubmittedForConsideration()
+        );
+    }
+
+    public function dpIsSubmittedForConsideration()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_ISSUED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_ISSUING, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, IrhpInterface::STATUS_VALID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_ISSUED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_ISSUING, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, IrhpInterface::STATUS_VALID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_ISSUED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_ISSUING, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpInterface::STATUS_VALID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_FEE_PAID, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_ISSUED, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_ISSUING, false],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpInterface::STATUS_VALID, false],
         ];
     }
 
@@ -668,7 +758,6 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUED, false],
             [IrhpInterface::STATUS_ISSUING, false],
             [IrhpInterface::STATUS_VALID, false],
-            [IrhpInterface::STATUS_DECLINED, false],
         ];
     }
 
@@ -951,6 +1040,83 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'expectedResult' => true
             ],
+        ];
+    }
+
+    /**
+     * Tests logic for finding overdue issue fees, and checks that the 4 fees over 10 days old are returned initially
+     *
+     * $fee1 isn't overdue, so is ignored
+     * $fee2 is overdue, but doesn't need to be checked because $fee5 is more recent and will match
+     * $fee3 is overdue, is outstanding, but isn't an issue fee
+     * $fee4 would be overdue, but is not outstanding, so the fee type is not checked
+     * $fee5 is overdue, outstanding and the correct fee type, causes the method to return true
+     */
+    public function testIssueFeeOverdue()
+    {
+        $dateTimeMinus9 = (new \DateTime('-9 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus10 = (new \DateTime('-10 weekdays'))->format(\DateTime::ISO8601);
+        $dateTimeMinus11 = (new \DateTime('-11 weekdays'))->format(\DateTime::ISO8601);
+
+        $fee1 = m::mock(Fee::class)->makePartial();
+        $fee1->shouldReceive('isOutstanding')->never();
+        $fee1->shouldReceive('getFeeType->isIrhpApplicationIssue')->never();
+        $fee1->setInvoicedDate($dateTimeMinus9);
+
+        $fee2 = m::mock(Fee::class)->makePartial();
+        $fee2->shouldReceive('isOutstanding')->never();
+        $fee2->shouldReceive('getFeeType->isIrhpApplicationIssue')->never();
+        $fee2->setInvoicedDate($dateTimeMinus11);
+
+        $fee3 = m::mock(Fee::class)->makePartial();
+        $fee3->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
+        $fee3->shouldReceive('getFeeType->isIrhpApplicationIssue')->once()->withNoArgs()->andReturn(false);
+        $fee3->setInvoicedDate($dateTimeMinus10);
+
+        $fee4 = m::mock(Fee::class)->makePartial();
+        $fee4->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(false);
+        $fee4->shouldReceive('getFeeType->isIrhpApplicationIssue')->never();
+        $fee4->setInvoicedDate($dateTimeMinus10);
+
+        $fee5 = m::mock(Fee::class)->makePartial();
+        $fee5->shouldReceive('isOutstanding')->once()->withNoArgs()->andReturn(true);
+        $fee5->shouldReceive('getFeeType->isIrhpApplicationIssue')->once()->withNoArgs()->andReturn(true);
+        $fee5->setInvoicedDate($dateTimeMinus10);
+
+        $feesCollection = new ArrayCollection([$fee1, $fee2, $fee3, $fee4, $fee5]);
+
+        $this->sut->setFees($feesCollection);
+
+        $this->assertEquals(4, $this->sut->getFeesByAge()->count());
+        $this->assertTrue($this->sut->issueFeeOverdue());
+    }
+
+    /**
+     * @dataProvider dpIssueFeeOverdueProvider
+     */
+    public function testIssueFeeOverdueBoundary($days, $expected)
+    {
+        $invoiceDate = (new \DateTime('-' . $days . ' weekdays'))->format(\DateTime::ISO8601);
+
+        $fee = m::mock(Fee::class)->makePartial();
+        $fee->shouldReceive('isOutstanding')->times($expected)->andReturn(true);
+        $fee->shouldReceive('getFeeType->isIrhpApplicationIssue')->times($expected)->andReturn(true);
+        $fee->setInvoicedDate($invoiceDate);
+
+        $feesCollection = new ArrayCollection([$fee]);
+
+        $this->sut->setFees($feesCollection);
+
+        $this->assertEquals($expected, $this->sut->getFeesByAge()->count());
+        $this->assertEquals($expected, $this->sut->issueFeeOverdue());
+    }
+
+    public function dpIssueFeeOverdueProvider()
+    {
+        return [
+            [9, 0],
+            [10, 1],
+            [11, 1],
         ];
     }
 
@@ -2415,6 +2581,10 @@ class IrhpApplicationEntityTest extends EntityTester
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 FeeType::FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF
             ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF
+            ],
         ];
     }
 
@@ -2430,6 +2600,44 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn(7);
 
         $irhpApplication->getApplicationFeeProductReference();
+    }
+
+    public function testGetIssueFeeProductReference()
+    {
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+
+        $this->assertEquals(
+            FeeType::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF,
+            $irhpApplication->getIssueFeeProductReference()
+        );
+    }
+
+    /**
+     * @dataProvider dpGetIssueFeeProductReferenceUnsupportedType
+     */
+    public function testGetIssueFeeProductReferenceUnsupportedType($irhpPermitTypeId)
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'No issue fee product reference available for permit type ' . $irhpPermitTypeId
+        );
+
+        $irhpApplication = m::mock(Entity::class)->makePartial();
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $irhpApplication->getIssueFeeProductReference();
+    }
+
+    public function dpGetIssueFeeProductReferenceUnsupportedType()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+        ];
     }
 
     public function testGetIssueFeeProductRefsAndQuantities()
@@ -2588,6 +2796,30 @@ class IrhpApplicationEntityTest extends EntityTester
             ->with($status)
             ->once();
 
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+
+        $entity->submit($status);
+    }
+
+    public function testSubmitShortTerm()
+    {
+        $status = m::mock(RefData::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeSubmitted')
+            ->andReturn(true);
+        $entity->shouldReceive('proceedToUnderConsideration')
+            ->with($status)
+            ->once();
+
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+
         $entity->submit($status);
     }
 
@@ -2666,7 +2898,10 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $country1 = 'country1';
         $country2 = 'country2';
-        $joinedCountries = 'country1, country2';
+        $countriesAnswer = [
+            $country1 => $country1,
+            $country2 => $country2,
+        ];
 
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(true);
@@ -2748,26 +2983,32 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $licNo,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.irhp.countries.transporting',
-                'answer' =>  $joinedCountries,
+                'answer' =>  $countriesAnswer,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.snapshot.number.required',
                 'answer' =>  10,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => $country1 . ' for ' . $stock1ValidityYear,
                 'answer' =>  $stock1RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => $country2 . ' for ' . $stock2ValidityYear,
                 'answer' =>  $stock2RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => $country2 . ' for ' . $stock3ValidityYear,
                 'answer' =>  $stock3RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
         ];
 
@@ -2856,22 +3097,27 @@ class IrhpApplicationEntityTest extends EntityTester
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $licNo,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.snapshot.number.required',
                 'answer' =>  10,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'For ' . $stock1ValidityYear,
                 'answer' =>  $stock1RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'For ' . $stock2ValidityYear,
                 'answer' =>  $stock2RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'For ' . $stock3ValidityYear,
                 'answer' =>  $stock3RequiredPermits,
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
         ];
 
@@ -2883,15 +3129,16 @@ class IrhpApplicationEntityTest extends EntityTester
         $licNo = 'ABC123';
 
         $expected = [
-            [
+            'custom-licence' => [
                 'section' => 'licence',
                 'slug' => 'custom-licence',
                 'questionShort' => 'section.name.application/licence',
                 'question' => 'section.name.application/licence',
+                'questionType' => Question::QUESTION_TYPE_STRING,
                 'answer' => $licNo,
                 'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
             ],
-            [
+            'custom-check-answers' => [
                 'section' => 'checkedAnswers',
                 'slug' => 'custom-check-answers',
                 'questionShort' => 'section.name.application/check-answers',
@@ -2899,7 +3146,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'answer' => null,
                 'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
             ],
-            [
+            'custom-declaration' => [
                 'section' => 'declaration',
                 'slug' => 'custom-declaration',
                 'questionShort' => 'section.name.application/declaration',
@@ -3008,15 +3255,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => '',
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3025,7 +3273,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3034,7 +3282,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3042,7 +3290,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3062,15 +3310,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3079,7 +3328,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3088,7 +3337,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3096,7 +3345,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 0,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3116,15 +3365,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3133,7 +3383,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3142,7 +3392,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => null,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3150,7 +3400,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 0,
                         'status' => SectionableInterface::SECTION_COMPLETION_CANNOT_START,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3170,15 +3420,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3187,7 +3438,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3196,7 +3447,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3204,7 +3455,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 0,
                         'status' => SectionableInterface::SECTION_COMPLETION_NOT_STARTED,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3224,15 +3475,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3241,7 +3493,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3250,7 +3502,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3258,7 +3510,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 1,
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',
@@ -3278,15 +3530,16 @@ class IrhpApplicationEntityTest extends EntityTester
                 ],
                 'applicationSteps' => new ArrayCollection([$step1, $step2]),
                 'expected' => [
-                    [
+                    'custom-licence' => [
                         'section' => 'licence',
                         'slug' => 'custom-licence',
                         'questionShort' => 'section.name.application/licence',
                         'question' => 'section.name.application/licence',
+                        'questionType' => Question::QUESTION_TYPE_STRING,
                         'answer' => 'OB1234567',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q1-slug' => [
                         'section' => 'q1-slug',
                         'slug' => 'q1-slug',
                         'questionShort' => 'q1-short-key',
@@ -3295,7 +3548,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q1-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'q2-slug' => [
                         'section' => 'q2-slug',
                         'slug' => 'q2-slug',
                         'questionShort' => 'q2-short-key',
@@ -3304,7 +3557,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 'q2-answer',
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-check-answers' => [
                         'section' => 'checkedAnswers',
                         'slug' => 'custom-check-answers',
                         'questionShort' => 'section.name.application/check-answers',
@@ -3312,7 +3565,7 @@ class IrhpApplicationEntityTest extends EntityTester
                         'answer' => 1,
                         'status' => SectionableInterface::SECTION_COMPLETION_COMPLETED,
                     ],
-                    [
+                    'custom-declaration' => [
                         'section' => 'declaration',
                         'slug' => 'custom-declaration',
                         'questionShort' => 'section.name.application/declaration',

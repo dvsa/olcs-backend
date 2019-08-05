@@ -20,6 +20,7 @@ class EcmtRemovalNoOfPermitsFormControlStrategyFactory implements FactoryInterfa
             'text',
             $serviceLocator->get('QaTotAuthVehiclesTextElementGenerator'),
             $serviceLocator->get('QaEcmtRemovalNoOfPermitsAnswerSaver'),
+            $serviceLocator->get('QaEcmtRemovalNoOfPermitsAnswerClearer'),
             $serviceLocator->get('QaEcmtRemovalNoOfPermitsQuestionTextGenerator')
         );
     }

@@ -1,12 +1,8 @@
 <dl>
-    <dt><?php echo $this->escapeHtml($this->translate($question, 'snapshot')); ?></dt>
+    <dt><?php echo $this->escapeHtml($this->translate($question['question'], 'snapshot')); ?></dt>
     <dd>
         <?php
-            echo $this->escapeHtml($this->translate($answer, 'snapshot'));
-
-            foreach ($list as $listItem) {
-                echo '<br />' . $this->escapeHtml($this->translate($listItem, 'snapshot'));
-            }
+            echo $this->answerFormatter($question);
         ?>
     </dd>
 </dl>

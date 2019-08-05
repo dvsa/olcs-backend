@@ -123,13 +123,22 @@ class GeneratePermitDocumentTest extends CommandHandlerTestCase
     public function dpHandleCommand()
     {
         return [
-            'ECMT' => [
+            'ECMT Annual' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
                 'countryId' => null,
                 'expectedTemplate' => EcmtPermitApplicationEntity::PERMIT_TEMPLATE_NAME,
                 'expectedDescription' => 'IRHP PERMIT ECMT 1',
                 'expectedMessages' => [
                     'IRHP PERMIT ECMT 1 RTF created and stored',
+                ],
+            ],
+            'ECMT Short-term' => [
+                'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'countryId' => null,
+                'expectedTemplate' => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT,
+                'expectedDescription' => 'IRHP PERMIT SHORT TERM ECMT 1',
+                'expectedMessages' => [
+                    'IRHP PERMIT SHORT TERM ECMT 1 RTF created and stored',
                 ],
             ],
             'IRHP Bilateral - Austria' => [

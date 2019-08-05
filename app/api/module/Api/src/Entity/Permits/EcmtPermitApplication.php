@@ -8,7 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -308,6 +310,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
 
         $this->status = $declineStatus;
         $this->withdrawReason = $withdrawReason;
+        $this->withdrawnDate = new \DateTime();
     }
 
     public function accept(RefData $acceptStatus)
@@ -850,11 +853,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Whether the permit application can be withdrawn
+     * Whether the permit application can be withdrawn optional withdraw reason
+     *
+     * @param RefData $reason reason application is being withdrawn
      *
      * @return bool
      */
-    public function canBeWithdrawn(): bool
+    public function canBeWithdrawn(?RefData $reason = null): bool
     {
         return $this->isUnderConsideration() || ($this->isAwaitingFee() && $this->issueFeeOverdue());
     }
@@ -949,20 +954,32 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Is there an overdue issue fee for this application?
+     * Gets fees over a certain number of days old
      *
-     * @return bool
+     * @param int $days fees invoiced over a certain number of days ago
+     *
+     * @return ArrayCollection
      */
-    public function issueFeeOverdue()
+    public function getFeesByAge(int $days = 10): ArrayCollection
     {
-        // TODO - OLCS-21979
-        $cutoff = new \DateTime('-9 weekdays');
+        $cutoff = new \DateTime('-' . $days . ' weekdays');
 
         $criteria = Criteria::create();
         $criteria->andWhere(Criteria::expr()->lte('invoicedDate', $cutoff->format(\DateTime::ISO8601)));
         $criteria->orderBy(['invoicedDate' => Criteria::DESC]);
 
-        $matchedFees = $this->getFees()->matching($criteria);
+        return $this->getFees()->matching($criteria);
+    }
+
+    /**
+     * Is there an overdue issue fee for this application?
+     * @todo paramatarise cutoff number of days https://jira.i-env.net/browse/OLCS-21979
+     *
+     * @return bool
+     */
+    public function issueFeeOverdue()
+    {
+        $matchedFees = $this->getFeesByAge();
 
         /**
          * @var Fee $fee
@@ -1111,23 +1128,22 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     {
         $emissionsQuestion = 'permits.form.euro5.label';
         $countriesQuestion = 'permits.form.restricted.countries.euro5.label';
-        $limitedCountriesAnswer = 'Yes';
-        $limitedCountriesList = [];
+        $limitedCountriesAnswer = ['Yes'];
 
         if ($this->isEuro6EmissionCategory()) {
             $emissionsQuestion = 'permits.form.euro6.label';
             $countriesQuestion = 'permits.page.restricted-countries.question';
-            $limitedCountriesAnswer = 'No';
+            $limitedCountriesAnswer = ['No'];
 
             if ((int) $this->getHasRestrictedCountries() === 1) {
-                $limitedCountriesAnswer = 'Yes';
+                $limitedCountriesAnswer = ['Yes'];
                 $countries = [];
 
                 foreach ($this->getCountrys() as $country) {
                     $countries[] = $country->getCountryDesc();
                 }
 
-                $limitedCountriesList = [implode(', ', $countries)];
+                $limitedCountriesAnswer[] = implode(', ', $countries);
             }
         }
 
@@ -1135,35 +1151,42 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             [
                 'question' => 'permits.check-answers.page.question.licence',
                 'answer' =>  $this->getLicence()->getLicNo(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => $emissionsQuestion,
-                'answer' =>  (int) $this->getEmissions() === 1 ? 'Yes' : 'No',
+                'answer' =>  (int) $this->getEmissions(),
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
                 'question' => 'permits.form.cabotage.label',
-                'answer' =>  (int) $this->getCabotage() === 1 ? 'Yes' : 'No',
+                'answer' =>  (int) $this->getCabotage(),
+                'questionType' => Question::QUESTION_TYPE_BOOLEAN,
             ],
             [
                 'question' => $countriesQuestion,
                 'answer' => $limitedCountriesAnswer,
-                'answerList' => $limitedCountriesList,
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.permits.required.question',
                 'answer' => $this->getPermitsRequired(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.number-of-trips.question',
                 'answer' => $this->getTrips(),
+                'questionType' => Question::QUESTION_TYPE_INTEGER,
             ],
             [
                 'question' => 'permits.page.international.journey.question',
                 'answer' => $this->getInternationalJourneys()->getDescription(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
                 'question' => 'permits.page.sectors.question',
                 'answer' => $this->getSectors()->getName(),
+                'questionType' => Question::QUESTION_TYPE_STRING,
             ],
         ];
 

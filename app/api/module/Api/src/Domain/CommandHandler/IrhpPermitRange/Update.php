@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as RangeEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Update as UpdateRangeCmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -46,14 +47,21 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
             throw new ValidationException(['This Permit Number Range overlaps with another for this stock']);
         }
 
+        $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
+
+        if ($permitStock->getIrhpPermitType()->isEcmtShortTerm()
+            && $command->getEmissionsCategory() == RefData::EMISSIONS_CATEGORY_NA_REF) {
+            throw new ValidationException(['Emissions Category: N/A not valid for Short-term ECMT Stock']);
+        }
+
         $countrys = [];
         foreach ($command->getRestrictedCountries() as $country) {
             $countrys[] = $this->getRepo('Country')->getReference(Country::class, $country);
         }
 
-        $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
         $range->update(
             $permitStock,
+            $this->refData($command->getEmissionsCategory()),
             $command->getPrefix(),
             $command->getFromNo(),
             $command->getToNo(),

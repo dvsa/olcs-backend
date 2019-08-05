@@ -20,7 +20,6 @@ class ApplicationStepObjectsProviderFactory implements FactoryInterface
 
         return new ApplicationStepObjectsProvider(
             $repoServiceManager->get('ApplicationStep'),
-            $repoServiceManager->get('ApplicationPath'),
             $repoServiceManager->get('IrhpApplication')
         );
     }

@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**
@@ -33,6 +34,7 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $isReserve = 0;
         $isReplacement = 0;
         $countrys = [];
+        $emissionsCategory = m::mock(RefData::class);
 
         $updatedPrefix = "AU";
         $updatedFromNo = "10";
@@ -40,7 +42,16 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $updatedIsReserve = 1;
         $updatedCountrys = ['AU'];
 
-        $entity = Entity::create($irhpPermitStock, $prefix, $fromNo, $toNo, $isReserve, $isReplacement, $countrys);
+        $entity = Entity::create(
+            $irhpPermitStock,
+            $emissionsCategory,
+            $prefix,
+            $fromNo,
+            $toNo,
+            $isReserve,
+            $isReplacement,
+            $countrys
+        );
 
         $this->assertEquals($irhpPermitStock, $entity->getIrhpPermitStock());
         $this->assertEquals($prefix, $entity->getPrefix());
@@ -49,8 +60,18 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $this->assertEquals($isReserve, $entity->getSsReserve());
         $this->assertEquals($isReplacement, $entity->getLostReplacement());
         $this->assertEquals($countrys, $entity->getCountrys());
+        $this->assertSame($emissionsCategory, $entity->getEmissionsCategory());
 
-        $entity->update($irhpPermitStock, $updatedPrefix, $updatedFromNo, $updatedToNo, $updatedIsReserve, $isReplacement, $updatedCountrys);
+        $entity->update(
+            $irhpPermitStock,
+            $emissionsCategory,
+            $updatedPrefix,
+            $updatedFromNo,
+            $updatedToNo,
+            $updatedIsReserve,
+            $isReplacement,
+            $updatedCountrys
+        );
 
         $this->assertEquals($irhpPermitStock, $entity->getIrhpPermitStock());
         $this->assertEquals($updatedPrefix, $entity->getPrefix());
@@ -59,6 +80,7 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $this->assertEquals($updatedIsReserve, $entity->getSsReserve());
         $this->assertEquals($isReplacement, $entity->getLostReplacement());
         $this->assertEquals($updatedCountrys, $entity->getCountrys());
+        $this->assertSame($emissionsCategory, $entity->getEmissionsCategory());
     }
 
     /**
@@ -74,8 +96,18 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $toNo = "150";
         $isReserve = 0;
         $isReplacement = 0;
+        $emissionsCategory = m::mock(RefData::class);
 
-        $entity = Entity::create($irhpPermitStock, $prefix, $fromNo, $toNo, $isReserve, $isReplacement, $data['countrys']);
+        $entity = Entity::create(
+            $irhpPermitStock,
+            $emissionsCategory,
+            $prefix,
+            $fromNo,
+            $toNo,
+            $isReserve,
+            $isReplacement,
+            $data['countrys']
+        );
         $entity->setIrhpPermits($data['irhpPermits']);
         $entity->setIrhpCandidatePermits($data['irhpCandidatePermits']);
         $this->assertEquals($expected, $entity->canDelete($data));
@@ -165,8 +197,18 @@ class IrhpPermitRangeEntityTest extends EntityTester
         $isReserve = 0;
         $isReplacement = 0;
         $countrys = [];
+        $emissionsCategory = m::mock(RefData::class);
 
-        $entity = Entity::create($irhpPermitStock, $prefix, $fromNo, $toNo, $isReserve, $isReplacement, $countrys);
+        $entity = Entity::create(
+            $irhpPermitStock,
+            $emissionsCategory,
+            $prefix,
+            $fromNo,
+            $toNo,
+            $isReserve,
+            $isReplacement,
+            $countrys
+        );
 
         $this->assertEquals(76, $entity->getSize());
     }

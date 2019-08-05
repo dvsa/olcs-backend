@@ -6,13 +6,15 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
-use \Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 class IrhpApplication extends AbstractRepository
 {
     protected $entity = Entity::class;
+    protected $alias = 'ia';
 
     /**
      * @param QueryBuilder $qb
@@ -55,10 +57,49 @@ class IrhpApplication extends AbstractRepository
 
     /**
      * @param int $licence
+     *
      * @return array
      */
     public function fetchByLicence(int $licence)
     {
         return $this->fetchByX('licence', [$licence]);
+    }
+
+    /**
+     * Fetch all applications by IRHP permit window id and status
+     *
+     * @param int|\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $windowId    IRHP Permit Window
+     * @param array                                              $appStatuses List of app statuses
+     *
+     * @return array
+     */
+    public function fetchByWindowId($windowId, $appStatuses)
+    {
+        $qb = $this->createQueryBuilder();
+
+        $qb
+            ->innerJoin($this->alias.'.irhpPermitApplications', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->where('ipw.id = :windowId')
+            ->andWhere($qb->expr()->in($this->alias.'.status', ':appStatuses'))
+            ->setParameter('windowId', $windowId)
+            ->setParameter('appStatuses', $appStatuses);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Fetch all applications in awaiting fee status
+     *
+     * @return array
+     */
+    public function fetchAllAwaitingFee()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('ia')
+            ->from(Entity::class, 'ia')
+            ->where('ia.status = :status')
+            ->setParameter('status', IrhpInterface::STATUS_AWAITING_FEE)
+            ->getQuery()->getResult();
     }
 }

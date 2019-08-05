@@ -20,5 +20,6 @@ class ReadyToPrintConfirm extends AbstractListQueryHandler implements ToggleRequ
 
     protected $bundle = [
         'irhpPermitApplication',
+        'irhpPermitRange' => ['emissionsCategory'],
     ];
 }

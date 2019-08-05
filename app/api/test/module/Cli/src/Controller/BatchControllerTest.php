@@ -976,6 +976,12 @@ class BatchControllerTest extends MockeryTestCase
             ->once()
             ->andReturn(new Command\Result());
 
+        $this->mockCommandHandler
+            ->shouldReceive('handleCommand')
+            ->with(m::type(CliCommand\Permits\WithdrawUnpaidIrhp::class))
+            ->once()
+            ->andReturn(new Command\Result());
+
         $this->sut->withdrawUnpaidEcmtApplicationsAction();
     }
 

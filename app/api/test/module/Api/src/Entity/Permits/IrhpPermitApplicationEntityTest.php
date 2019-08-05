@@ -42,7 +42,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function setUp()
     {
-        $this->sut = new Entity(m::mock(\Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication::class));
+        $this->sut = new Entity();
 
         parent::setUp();
     }
@@ -462,6 +462,16 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertEquals($euro5Required, $entity->getRequiredEuro5());
         $this->assertEquals($euro6Required, $entity->getRequiredEuro6());
+    }
+
+    public function testClearEmissionsCategoryPermitsRequired()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->updateEmissionsCategoryPermitsRequired(7, 5);
+        $entity->clearEmissionsCategoryPermitsRequired();
+
+        $this->assertNull($entity->getRequiredEuro5());
+        $this->assertNull($entity->getRequiredEuro6());
     }
 
     /**

@@ -13,6 +13,11 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
  */
 class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterface
 {
+    const SKIPPED_QUESTIONS = [
+        'custom-check-answers',
+        'custom-declaration',
+    ];
+
     /**
      * @var array
      */
@@ -33,12 +38,19 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
             throw new \Exception('Snapshot generator expects IRHP application record');
         }
 
+        $questionAnswerData = $irhpApplication->getQuestionAnswerData();
+
+        //we don't need check answers and declaration on a snapshot
+        foreach (self::SKIPPED_QUESTIONS as $question) {
+            unset($questionAnswerData[$question]);
+        }
+
         return $this->generateReadonly(
             [
                 'permitType' => $irhpApplication->getIrhpPermitType()->getName()->getDescription(),
                 'operator' => $irhpApplication->getLicence()->getOrganisation()->getName(),
                 'ref' => $irhpApplication->getApplicationRef(),
-                'questionAnswerData' => $irhpApplication->getQuestionAnswerData(),
+                'questionAnswerData' => $questionAnswerData,
                 'guidanceDeclaration' => [
                     'bullets' => [
                         'permits.irhp.declaration.bullet.guidance.note',

@@ -48,7 +48,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
 
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, null, $validFrom, $validTo);
+        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $validFrom, $validTo);
 
         $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
@@ -56,43 +56,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($initialStock, $entity->getInitialStock());
         $this->assertEquals($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, null, $updateInitialStock, null, $updateValidFrom, $updateValidTo);
-
-        $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
-        $this->assertEquals($updateExpectedTo, $entity->getValidTo());
-        $this->assertEquals($updateInitialStock, $entity->getInitialStock());
-    }
-
-
-    public function testCreateUpdateWithEmissions()
-    {
-        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
-        $validFrom = '2200-01-01';
-        $expectedFrom = $this->processDate($validFrom, 'Y-m-d');
-        $validTo = '2250-02-01';
-        $expectedTo = $this->processDate($validTo, 'Y-m-d');
-        $initialStock = 2000;
-        $emissionsCategory = m::mock(RefData::class);
-
-        $updateValidFrom = '2350-02-01';
-        $updateExpectedFrom = $this->processDate($updateValidFrom, 'Y-m-d');
-        $updateValidTo = '2350-02-02';
-        $updateExpectedTo = $this->processDate($updateValidTo, 'Y-m-d');
-        $updateInitialStock = 1401;
-        $status = m::mock(RefData::class);
-
-        $irhpPermitType->shouldReceive('getId')
-            ->andReturn(2);
-
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $emissionsCategory, $validFrom, $validTo);
-
-        $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
-        $this->assertEquals($expectedFrom, $entity->getValidFrom());
-        $this->assertEquals($expectedTo, $entity->getValidTo());
-        $this->assertEquals($initialStock, $entity->getInitialStock());
-        $this->assertEquals($status, $entity->getStatus());
-
-        $entity->update($irhpPermitType, null, $updateInitialStock, $emissionsCategory, $updateValidFrom, $updateValidTo);
+        $entity->update($irhpPermitType, null, $updateInitialStock, $updateValidFrom, $updateValidTo);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
@@ -1176,16 +1140,16 @@ class IrhpPermitStockEntityTest extends EntityTester
     {
         $entity = m::mock(Entity::class)->makePartial();
 
-        $firstExpectedRange = $this->createMockRange(false, false, 300);
-        $secondExpectedRange = $this->createMockRange(false, false, 420);
-        $thirdExpectedRange = $this->createMockRange(false, false, 500);
+        $firstExpectedRange = $this->createMockRange(false, false, 300, RefData::EMISSIONS_CATEGORY_EURO5_REF);
+        $secondExpectedRange = $this->createMockRange(false, false, 420, RefData::EMISSIONS_CATEGORY_EURO6_REF);
+        $thirdExpectedRange = $this->createMockRange(false, false, 500, RefData::EMISSIONS_CATEGORY_EURO5_REF);
 
         $irhpPermitRanges = new ArrayCollection(
             [
                 $secondExpectedRange,
-                $this->createMockRange(false, true, 230),
-                $this->createMockRange(true, false, 100),
-                $this->createMockRange(true, true, 500),
+                $this->createMockRange(false, true, 230, RefData::EMISSIONS_CATEGORY_EURO5_REF),
+                $this->createMockRange(true, false, 100, RefData::EMISSIONS_CATEGORY_EURO6_REF),
+                $this->createMockRange(true, true, 500, RefData::EMISSIONS_CATEGORY_EURO5_REF),
                 $firstExpectedRange,
                 $thirdExpectedRange
             ]
@@ -1204,7 +1168,41 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertSame($thirdExpectedRange, $resultAsArray[2]);
     }
 
-    private function createMockRange($ssReserve, $lostReplacement, $fromNo)
+    public function testGetNonReservedNonReplacementRangesOrderedByFromNoWithEmissionsCategoryId()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $firstExpectedRange = $this->createMockRange(false, false, 300, RefData::EMISSIONS_CATEGORY_EURO5_REF);
+        $secondExpectedRange = $this->createMockRange(false, false, 500, RefData::EMISSIONS_CATEGORY_EURO5_REF);
+
+        $irhpPermitRanges = new ArrayCollection(
+            [
+                $this->createMockRange(false, false, 600, RefData::EMISSIONS_CATEGORY_EURO6_REF),
+                $this->createMockRange(false, true, 700, RefData::EMISSIONS_CATEGORY_EURO5_REF),
+                $secondExpectedRange,
+                $this->createMockRange(true, false, 800, RefData::EMISSIONS_CATEGORY_EURO6_REF),
+                $this->createMockRange(true, true, 900, RefData::EMISSIONS_CATEGORY_EURO5_REF),
+                $firstExpectedRange,
+                $this->createMockRange(false, false, 1000, RefData::EMISSIONS_CATEGORY_EURO6_REF),
+                $this->createMockRange(false, true, 110, RefData::EMISSIONS_CATEGORY_EURO5_REF),
+                $this->createMockRange(true, false, 1200, RefData::EMISSIONS_CATEGORY_EURO6_REF),
+                $this->createMockRange(true, true, 1300, RefData::EMISSIONS_CATEGORY_EURO6_REF)
+            ]
+        );
+
+        $entity->shouldReceive('getIrhpPermitRanges')
+            ->andReturn($irhpPermitRanges);
+
+        $result = $entity->getNonReservedNonReplacementRangesOrderedByFromNo(RefData::EMISSIONS_CATEGORY_EURO5_REF);
+
+        $this->assertInstanceOf(ArrayCollection::class, $result);
+
+        $resultAsArray = array_values($result->toArray());
+        $this->assertSame($firstExpectedRange, $resultAsArray[0]);
+        $this->assertSame($secondExpectedRange, $resultAsArray[1]);
+    }
+
+    private function createMockRange($ssReserve, $lostReplacement, $fromNo, $emissionsCategoryId)
     {
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $irhpPermitRange->shouldReceive('getSsReserve')
@@ -1213,6 +1211,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             ->andReturn($lostReplacement);
         $irhpPermitRange->shouldReceive('getFromNo')
             ->andReturn($fromNo);
+        $irhpPermitRange->shouldReceive('getEmissionsCategory->getId')
+            ->andReturn($emissionsCategoryId);
 
         return $irhpPermitRange;
     }

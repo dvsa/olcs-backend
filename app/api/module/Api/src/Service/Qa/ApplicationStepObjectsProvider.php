@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\ApplicationPath as ApplicationPathRepository;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
 
@@ -16,9 +15,6 @@ class ApplicationStepObjectsProvider
     /** @var ApplicationStepRepository */
     private $applicationStepRepo;
 
-    /** @var ApplicationPathRepository */
-    private $applicationPathRepo;
-
     /** @var IrhpApplicationRepository */
     private $irhpApplicationRepo;
 
@@ -26,18 +22,15 @@ class ApplicationStepObjectsProvider
      * Create service instance
      *
      * @param ApplicationStepRepository $applicationStepRepo
-     * @param ApplicationPathRepository $applicationPathRepo
      * @param IrhpApplicationRepository $irhpApplicationRepo
      *
      * @return ApplicationStepObjectsProvider
      */
     public function __construct(
         ApplicationStepRepository $applicationStepRepo,
-        ApplicationPathRepository $applicationPathRepo,
         IrhpApplicationRepository $irhpApplicationRepo
     ) {
         $this->applicationStepRepo = $applicationStepRepo;
-        $this->applicationPathRepo = $applicationPathRepo;
         $this->irhpApplicationRepo = $irhpApplicationRepo;
     }
 
@@ -59,10 +52,7 @@ class ApplicationStepObjectsProvider
             throw new ForbiddenException(self::ERR_ALREADY_SUBMITTED);
         }
 
-        $applicationPath = $this->applicationPathRepo->fetchByIrhpPermitTypeIdAndDate(
-            $irhpApplication->getIrhpPermitType()->getId(),
-            $irhpApplication->getCreatedOn(true)
-        );
+        $applicationPath = $irhpApplication->getActiveApplicationPath();
 
         $applicationStep = $this->applicationStepRepo->fetchByApplicationPathIdAndSlug(
             $applicationPath->getId(),

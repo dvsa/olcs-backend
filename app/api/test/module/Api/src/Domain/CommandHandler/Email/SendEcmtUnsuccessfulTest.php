@@ -8,11 +8,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtUnsuccessful as SendEcmtUn
 /**
  * Test the permit app unsuccessful email
  */
-class SendEcmtUnsuccessfulTest extends AbstractPermitTest
+class SendEcmtUnsuccessfulTest extends AbstractEcmtAnnualPermitTest
 {
-    protected $command = SendEcmtUnsuccessfulCmd::class;
-    protected $commandHandler = SendEcmtUnsuccessfulHandler::class;
+    protected $commandClass = SendEcmtUnsuccessfulCmd::class;
+    protected $commandHandlerClass = SendEcmtUnsuccessfulHandler::class;
     protected $template = 'ecmt-app-unsuccessful';
     protected $subject = 'email.ecmt.response.subject';
-    protected $extraRepos = ['FeeType'];
+    protected $permitApplicationRepo = 'EcmtPermitApplication';
+    protected $applicationEntityClass = EcmtPermitApplication::class;
 }

@@ -2,8 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;

@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as Cmd;
@@ -60,7 +61,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
         $this->result->merge(
             $this->handleSideEffect(
-                CreateDefaultIrhpPermitApplications::create(['id' => $irhpApplication->getId()])
+                CreateDefaultIrhpPermitApplications::create(['id' => $irhpApplication->getId(), 'year' => $command->getYear()])
             )
         );
 

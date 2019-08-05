@@ -17,8 +17,9 @@ class GenericAnswerWriterFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new GenericAnswerWriter(
-            $serviceLocator->get('RepositoryServiceManager')->get('Answer'),
-            $serviceLocator->get('QaAnswerFactory')
+            $serviceLocator->get('QaGenericAnswerProvider'),
+            $serviceLocator->get('QaAnswerFactory'),
+            $serviceLocator->get('RepositoryServiceManager')->get('Answer')
         );
     }
 }

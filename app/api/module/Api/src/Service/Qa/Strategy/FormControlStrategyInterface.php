@@ -40,6 +40,14 @@ interface FormControlStrategyInterface
     public function saveFormData(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, array $postData);
 
     /**
+     * Remove or reset to the default state any answer present for this form control
+     *
+     * @param ApplicationStep $applicationStep
+     * @param IrhpApplication $irhpApplication
+     */
+    public function clearAnswer(ApplicationStep $applicationStep, IrhpApplication $irhpApplication);
+
+    /**
      * Get a QuestionText instance corresponding to this form control
      *
      * @param QuestionTextGeneratorContext $context

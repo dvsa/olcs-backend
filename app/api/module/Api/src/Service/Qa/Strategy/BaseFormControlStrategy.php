@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Strategy;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerClearerInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
@@ -22,6 +23,9 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     /** @var AnswerSaverInterface */
     private $answerSaver;
 
+    /** @var AnswerClearerInterface */
+    private $answerClearer;
+
     /** @var QuestionTextGeneratorInterface */
     private $questionTextGenerator;
 
@@ -31,6 +35,7 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
      * @param string $frontendType
      * @param ElementGeneratorInterface $elementGenerator
      * @param AnswerSaverInterface $answerSaver
+     * @param AnswerClearerInterface $answerClearer
      * @param QuestionTextGeneratorInterface $questionTextGenerator
      *
      * @return BaseFormControlStrategy
@@ -39,11 +44,13 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
         $frontendType,
         ElementGeneratorInterface $elementGenerator,
         AnswerSaverInterface $answerSaver,
+        AnswerClearerInterface $answerClearer,
         QuestionTextGeneratorInterface $questionTextGenerator
     ) {
         $this->frontendType = $frontendType;
         $this->elementGenerator = $elementGenerator;
         $this->answerSaver = $answerSaver;
+        $this->answerClearer = $answerClearer;
         $this->questionTextGenerator = $questionTextGenerator;
     }
 
@@ -69,6 +76,14 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
     public function saveFormData(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, array $postData)
     {
         $this->answerSaver->save($applicationStep, $irhpApplication, $postData);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function clearAnswer(ApplicationStep $applicationStep, IrhpApplication $irhpApplication)
+    {
+        $this->answerClearer->clear($applicationStep, $irhpApplication);
     }
 
     /**

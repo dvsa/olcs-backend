@@ -7,8 +7,10 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\WindowAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use DateTime;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Available types
@@ -18,7 +20,27 @@ class AvailableTypes extends AbstractQueryHandler implements ToggleRequiredInter
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
+
     protected $repoServiceName = 'IrhpPermitType';
+
+    /** @var WindowAvailabilityChecker */
+    private $windowAvailabilityChecker;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->windowAvailabilityChecker = $mainServiceLocator->get('PermitsShortTermEcmtWindowAvailabilityChecker');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle query
@@ -29,6 +51,21 @@ class AvailableTypes extends AbstractQueryHandler implements ToggleRequiredInter
      */
     public function handleQuery(QueryInterface $query)
     {
-        return ['types' => $this->getRepo()->fetchAvailableTypes(new DateTime())];
+        $now = new DateTime();
+        $availableTypes = $this->getRepo()->fetchAvailableTypes($now);
+
+        $filteredAvailableTypes = [];
+        foreach ($availableTypes as $type) {
+            $includeType = true;
+            if ($type->isEcmtShortTerm()) {
+                $includeType = $this->windowAvailabilityChecker->hasAvailability($now);
+            }
+
+            if ($includeType) {
+                $filteredAvailableTypes[] = $type;
+            }
+        }
+
+        return ['types' => $filteredAvailableTypes];
     }
 }

@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplication;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
+use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
@@ -61,6 +62,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $this->maybeProcessEcmtPermitApplicationFee($fee);
         $this->maybeProcessEcmtPermitIssueFee($fee);
         $this->maybeProcessIrhpApplicationFee($fee);
+        $this->maybeProcessIrhpIssueFee($fee);
         $this->maybeCloseFeeTask($fee);
 
         return $this->result;
@@ -189,7 +191,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $irhpApplication = $fee->getIrhpApplication();
 
         if ($irhpApplication === null
-            || !$fee->getFeeType()->isIrhpApplicationIssue()
+            || !$fee->getFeeType()->isIrhpApplication()
             || !$irhpApplication->canBeSubmitted()
         ) {
             return;
@@ -201,6 +203,30 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
                 $this->handleSideEffectAsSystemUser(SubmitIrhpApplication::create(['id' => $irhpApplication->getId()]))
             );
         }
+    }
+
+    /**
+     * Process irhp issue fees
+     *
+     * @param Fee $fee fee
+     *
+     * @return void
+     */
+    protected function maybeProcessIrhpIssueFee(Fee $fee)
+    {
+        $irhpApplication = $fee->getIrhpApplication();
+
+        if ($irhpApplication === null || !$fee->getFeeType()->isIrhpApplicationIssue() || !$irhpApplication->isAwaitingFee()) {
+            return;
+        }
+
+        $this->result->merge(
+            $this->handleSideEffectAsSystemUser(
+                AcceptIrhpPermits::create(
+                    ['id' => $irhpApplication->getId()]
+                )
+            )
+        );
     }
 
     /**

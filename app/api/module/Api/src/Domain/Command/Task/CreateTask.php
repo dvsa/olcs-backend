@@ -54,6 +54,8 @@ final class CreateTask extends AbstractCommand
 
     protected $ecmtPermitApplication;
 
+    protected $irhpApplication;
+
     protected $assignedByUser;
 
     /**
@@ -182,6 +184,14 @@ final class CreateTask extends AbstractCommand
     public function getEcmtPermitApplication()
     {
         return $this->ecmtPermitApplication;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIrhpApplication()
+    {
+        return $this->irhpApplication;
     }
 
     /**

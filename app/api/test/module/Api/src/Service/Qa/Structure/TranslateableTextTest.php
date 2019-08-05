@@ -72,6 +72,26 @@ class TranslateableTextTest extends MockeryTestCase
         );
     }
 
+    public function testSetKey()
+    {
+        $newKey = 'new-key';
+
+        $this->translateableText->setKey($newKey);
+    
+        $expectedRepresentation = [
+            'key' => $newKey,
+            'parameters' => [
+                $this->parameter1Representation,
+                $this->parameter2Representation
+            ]
+        ];
+
+        $this->assertEquals(
+            $expectedRepresentation,
+            $this->translateableText->getRepresentation()
+        );
+    }
+
     public function testGetParameter()
     {
         $this->assertSame(

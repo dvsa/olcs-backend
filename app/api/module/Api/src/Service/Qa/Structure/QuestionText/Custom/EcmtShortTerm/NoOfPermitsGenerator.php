@@ -37,15 +37,17 @@ class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
      */
     public function generate(QuestionTextGeneratorContext $context)
     {
+        $irhpApplicationEntity = $context->getIrhpApplicationEntity();
+
         $applicationFee = $this->feeTypeRepo->getLatestByProductReference(
-            FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF
+            $irhpApplicationEntity->getApplicationFeeProductReference()
         );
 
         $issueFee = $this->feeTypeRepo->getLatestByProductReference(
-            FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF
+            $irhpApplicationEntity->getIssueFeeProductReference()
         );
 
-        $feePerPermit = $context->getIrhpApplicationEntity()->getFeePerPermit($applicationFee, $issueFee);
+        $feePerPermit = $irhpApplicationEntity->getFeePerPermit($applicationFee, $issueFee);
         $applicationFeeFixedValue = $applicationFee->getFixedValue();
 
         $questionText = $this->questionTextGenerator->generate($context);

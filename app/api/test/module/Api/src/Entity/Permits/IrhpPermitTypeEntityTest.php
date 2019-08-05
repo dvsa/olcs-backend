@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as Entity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath as ApplicationPathEntity;
 use Mockery as m;
+use RuntimeException;
 
 /**
  * IrhpPermitType Entity Unit Tests
@@ -258,6 +259,48 @@ class IrhpPermitTypeEntityTest extends EntityTester
                 'dateToCheck' => null,
                 'expected' => null,
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetAllocationMode
+     */
+    public function testGetAllocationMode($irhpPermitTypeId, $allocationMode)
+    {
+        $this->sut->setId($irhpPermitTypeId);
+
+        $this->assertEquals(
+            $allocationMode,
+            $this->sut->getAllocationMode()
+        );
+    }
+
+    public function dpGetAllocationMode()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, Entity::ALLOCATION_MODE_STANDARD],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, Entity::ALLOCATION_MODE_STANDARD],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, Entity::ALLOCATION_MODE_EMISSIONS_CATEGORIES],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetAllocationModeException
+     */
+    public function testGetAllocationModeException($irhpPermitTypeId)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No allocation mode set for permit type ' . $irhpPermitTypeId);
+
+        $this->sut->setId($irhpPermitTypeId);
+        $this->sut->getAllocationMode();
+    }
+
+    public function dpGetAllocationModeException()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
         ];
     }
 }
