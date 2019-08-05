@@ -29,7 +29,6 @@
         "olcs/olcs-utils": "~4.206.0",
         "olcs/olcs-logging": "~4.206.0",
         "zf-commons/zfc-rbac": "~2.5.0",
-        "cpms/client": "~4.206.0",
         "soflomo/purifier": "~0.1.0",
         "symfony/filesystem": "~3.0.0",
         "symfony/finder": "~3.2",
@@ -45,6 +44,7 @@
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "^1.0",
         "twig/twig": "^2.0",
+        "olcs/olcs-cpms": "^1.0",
         "aws/aws-sdk-php": "^3.99"
     },
     "require-dev": {

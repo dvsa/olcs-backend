@@ -771,6 +771,7 @@ return [
     Command\Email\SendEcmtAppSubmitted::class => CommandHandler\Email\SendEcmtAppSubmitted::class,
     Command\Email\SendEcmtIssued::class => CommandHandler\Email\SendEcmtIssued::class,
     Command\Email\SendEcmtUnsuccessful::class => CommandHandler\Email\SendEcmtUnsuccessful::class,
+    Command\Email\SendEcmtShortTermAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtShortTermAutomaticallyWithdrawn::class,
     Command\Email\SendEcmtPartSuccessful::class => CommandHandler\Email\SendEcmtPartSuccessful::class,
     Command\Email\SendEcmtSuccessful::class => CommandHandler\Email\SendEcmtSuccessful::class,
     Command\Email\SendErruErrors::class => CommandHandler\Email\SendErruErrors::class,
@@ -778,6 +779,8 @@ return [
     Command\Email\SendPsvOperatorListReport::class => CommandHandler\Email\SendPsvOperatorListReport::class,
     Command\Email\SendInternationalGoods::class => CommandHandler\Email\SendInternationalGoods::class,
     Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
+    Command\Email\SendEcmtShortTermSuccessful::class => CommandHandler\Email\SendEcmtShortTermSuccessful::class,
+    Command\Email\SendEcmtShortTermUnsuccessful::class => CommandHandler\Email\SendEcmtShortTermUnsuccessful::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
@@ -1115,7 +1118,10 @@ return [
     TransferCommand\IrhpApplication\UpdateDeclaration::class => CommandHandler\IrhpApplication\UpdateDeclaration::class,
     TransferCommand\IrhpApplication\SubmitApplication::class => CommandHandler\IrhpApplication\SubmitApplication::class,
     TransferCommand\IrhpApplication\CancelApplication::class => CommandHandler\IrhpApplication\Cancel::class,
+    TransferCommand\IrhpApplication\Withdraw::class => CommandHandler\IrhpApplication\Withdraw::class,
+    TransferCommand\IrhpApplication\Grant::class => CommandHandler\IrhpApplication\Grant::class,
     TransferCommand\IrhpApplication\SubmitApplicationStep::class => CommandHandler\IrhpApplication\SubmitApplicationStep::class,
+    TransferCommand\IrhpApplication\SubmitApplicationPath::class => CommandHandler\IrhpApplication\SubmitApplicationPath::class,
     Command\IrhpApplication\RegenerateApplicationFee::class => CommandHandler\IrhpApplication\RegenerateApplicationFee::class,
     Command\IrhpApplication\RegenerateIssueFee::class => CommandHandler\IrhpApplication\RegenerateIssueFee::class,
     TransferCommand\IrhpApplication\CreateFull::class => CommandHandler\IrhpApplication\CreateFull::class,
@@ -1142,6 +1148,7 @@ return [
     // Permits Decline
     TransferCommand\Permits\DeclineEcmtPermits::class => CommandHandler\Permits\DeclineEcmtPermits::class,
     TransferCommand\Permits\AcceptEcmtPermits::class => CommandHandler\Permits\AcceptEcmtPermits::class,
+    TransferCommand\Permits\AcceptIrhpPermits::class => CommandHandler\Permits\AcceptIrhpPermits::class,
 
     // Permits Update
     TransferCommand\Permits\UpdateEcmtEmissions::class => CommandHandler\Permits\UpdateEcmtEmissions::class,

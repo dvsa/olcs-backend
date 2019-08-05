@@ -58,16 +58,18 @@ class FeeUpdater
     {
         $feeCommands = [];
 
-        $outstandingIssueFees = $irhpApplication->getOutstandingApplicationFees();
+        $outstandingApplicationFees = $irhpApplication->getOutstandingApplicationFees();
 
-        foreach ($outstandingIssueFees as $fee) {
+        foreach ($outstandingApplicationFees as $fee) {
             $feeCommands[] = $this->commandCreator->create(
                 CancelFee::class,
                 ['id' => $fee->getId()]
             );
         }
 
-        $feeType = $this->feeTypeRepo->getLatestByProductReference(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF);
+        $feeType = $this->feeTypeRepo->getLatestByProductReference(
+            $irhpApplication->getApplicationFeeProductReference()
+        );
 
         $feeDescription = sprintf(
             '%s - %d permits',

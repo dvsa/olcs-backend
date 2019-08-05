@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 class SelfservePageFactory
 {
     /**
-     * Create and return an ApplicationStep instance
+     * Create and return an SelfservePage instance
      *
      * @param string $applicationReference
      * @param ApplicationStep $applicationStep

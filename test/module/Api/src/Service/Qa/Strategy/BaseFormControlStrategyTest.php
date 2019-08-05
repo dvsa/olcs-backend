@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Strategy;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerClearerInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
@@ -28,6 +29,8 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
     private $answerSaver;
 
+    private $answerClearer;
+
     private $questionTextGenerator;
 
     private $baseFormControlStrategy;
@@ -40,12 +43,15 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
         $this->answerSaver = m::mock(AnswerSaverInterface::class);
 
+        $this->answerClearer = m::mock(AnswerClearerInterface::class);
+
         $this->questionTextGenerator = m::mock(QuestionTextGeneratorInterface::class);
 
         $this->baseFormControlStrategy = new BaseFormControlStrategy(
             $this->frontendType,
             $this->elementGenerator,
             $this->answerSaver,
+            $this->answerClearer,
             $this->questionTextGenerator
         );
     }
@@ -91,6 +97,19 @@ class BaseFormControlStrategyTest extends MockeryTestCase
             ->once();
 
         $this->baseFormControlStrategy->saveFormData($applicationStepEntity, $irhpApplicationEntity, $postData);
+    }
+
+    public function testClearAnswer()
+    {
+        $applicationStepEntity = m::mock(ApplicationStepEntity::class);
+
+        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+
+        $this->answerClearer->shouldReceive('clear')
+            ->with($applicationStepEntity, $irhpApplicationEntity)
+            ->once();
+
+        $this->baseFormControlStrategy->clearAnswer($applicationStepEntity, $irhpApplicationEntity);
     }
 
     public function testGetQuestionText()

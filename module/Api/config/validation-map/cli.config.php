@@ -30,6 +30,7 @@ return [
     CliCommandHandler\Permits\CloseExpiredWindows::class => IsSystemUser::class,
     CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\WithdrawUnpaidEcmt::class => IsSystemUser::class,
+    CliCommandHandler\Permits\WithdrawUnpaidIrhp::class => IsSystemUser::class,
     CliQueryHandler\Util\GetDbValue::class => IsSystemUser::class,
 
     //  api commands
@@ -81,6 +82,9 @@ return [
     CommandHandler\Email\SendEcmtPartSuccessful::class => IsSystemUser::class,
     CommandHandler\Email\SendPublication::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtShortTermSuccessful::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtShortTermAutomaticallyWithdrawn::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtShortTermUnsuccessful::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,

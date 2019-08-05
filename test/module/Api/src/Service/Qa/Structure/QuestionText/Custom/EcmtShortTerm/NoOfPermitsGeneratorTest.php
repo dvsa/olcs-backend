@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorContext;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -31,6 +32,15 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $issueFeeTypeEntity = m::mock(FeeTypeEntity::class);
         $issueFeeTypeEntity->shouldReceive('getFixedValue')
             ->andReturn($issueFeePerPermit);
+
+        $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+        $irhpApplicationEntity->shouldReceive('getFeePerPermit')
+            ->with($applicationFeeTypeEntity, $issueFeeTypeEntity)
+            ->andReturn($totalFeePerPermit);
+        $irhpApplicationEntity->shouldReceive('getApplicationFeeProductReference')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF);
+        $irhpApplicationEntity->shouldReceive('getIssueFeeProductReference')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF);
 
         $guidanceTranslateableTextParameterIndex0 = m::mock(TranslateableTextParameter::class);
         $guidanceTranslateableTextParameterIndex0->shouldReceive('setValue')
@@ -71,9 +81,8 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
             ->andReturn($guidanceTranslateableText);
 
         $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
-        $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity->getFeePerPermit')
-            ->with($applicationFeeTypeEntity, $issueFeeTypeEntity)
-            ->andReturn($totalFeePerPermit);
+        $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
+            ->andReturn($irhpApplicationEntity);
 
         $questionTextGenerator = m::mock(QuestionTextGenerator::class);
         $questionTextGenerator->shouldReceive('generate')

@@ -16,12 +16,9 @@ class EmissionsCategoryConditionalAdderFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $repoServiceManager = $serviceLocator->get('RepositoryServiceManager');
-
         return new EmissionsCategoryConditionalAdder(
             $serviceLocator->get('QaEcmtShortTermEmissionsCategoryFactory'),
-            $repoServiceManager->get('IrhpPermitRange'),
-            $repoServiceManager->get('IrhpPermit')
+            $serviceLocator->get('PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter')
         );
     }
 }

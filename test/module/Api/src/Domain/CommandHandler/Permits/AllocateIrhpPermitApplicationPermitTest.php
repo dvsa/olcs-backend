@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Mockery as m;
@@ -37,7 +38,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testAllocatePermitInFirstRange()
+    /**
+     * @dataProvider dpEmissionsCategoryId
+     */
+    public function testAllocatePermitInFirstRange($emissionsCategoryId)
     {
         $irhpPermitApplicationId = 305;
 
@@ -58,6 +62,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
+        ->with($emissionsCategoryId)
         ->andReturn($irhpPermitRanges);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
@@ -78,6 +83,8 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $command = m::mock(Cmd::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $command->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategoryId);
 
         $result = $this->sut->handleCommand($command);
 
@@ -87,7 +94,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         );
     }
 
-    public function testFirstRangeFullAllocatePermitInSecondRange()
+    /**
+     * @dataProvider dpEmissionsCategoryId
+     */
+    public function testFirstRangeFullAllocatePermitInSecondRange($emissionsCategoryId)
     {
         $irhpPermitApplicationId = 400;
 
@@ -116,6 +126,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
+        ->with($emissionsCategoryId)
         ->andReturn($irhpPermitRanges);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
@@ -136,6 +147,8 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $command = m::mock(Cmd::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $command->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategoryId);
 
         $result = $this->sut->handleCommand($command);
 
@@ -145,8 +158,13 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         );
     }
 
-    public function testExceptionOnAllRangesFull()
+    /**
+     * @dataProvider dpEmissionsCategoryId
+     */
+    public function testExceptionOnAllRangesFull($emissionsCategoryId)
     {
+        $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO6_REF;
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to find range with free permits for irhp permit application 400');
 
@@ -176,6 +194,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
+        ->with($emissionsCategoryId)
         ->andReturn($irhpPermitRanges);
 
         $this->repoMap['IrhpPermitApplication']->shouldReceive('fetchById')
@@ -185,8 +204,19 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $command = m::mock(Cmd::class);
         $command->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $command->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategoryId);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function dpEmissionsCategoryId()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [null],
+        ];
     }
 
     private function createMockRange($id, $fromNo, $toNo, $size, DateTime $stockValidTo)

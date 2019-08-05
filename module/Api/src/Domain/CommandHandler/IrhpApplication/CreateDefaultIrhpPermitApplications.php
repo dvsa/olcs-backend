@@ -43,15 +43,26 @@ class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler impleme
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
         $permitTypeId = $irhpApplication->getIrhpPermitType()->getId();
 
-        if ($permitTypeId != IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL) {
+        if (!in_array(
+            $permitTypeId,
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM]
+        )) {
             $this->result->addMessage('No default irhp permit applications need to be created');
             return $this->result;
         }
 
-        $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
-            $permitTypeId,
-            new DateTime()
-        );
+        if (empty($command->getYear())) {
+            $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
+                $permitTypeId,
+                new DateTime()
+            );
+        } else {
+            $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByTypeYear(
+                $permitTypeId,
+                new DateTime(),
+                $command->getYear()
+            );
+        }
 
         $irhpPermitApplicationRepo = $this->getRepo('IrhpPermitApplication');
 

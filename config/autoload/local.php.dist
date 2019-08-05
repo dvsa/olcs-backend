@@ -150,25 +150,24 @@ return [
 
     // CPMS service
     'cpms_api' => [
-        'logger_alias' => 'Logger', // Zend logger service manager alias - use 'Logger' for the main OLCS log
-        'identity_provider' => 'CpmsIdentityProvider', // Should implement CpmsClient\Authenticate\IdentityProviderInterface
-        'enable_cache' => true,
-        'cache_storage' => 'array',
         'rest_client' => [
             'options' => [
                 //CPMS API version to use
                 'version' => 2,
                 // CPMS hostname e.g. 'payment-service.psqa-ap01.ps.npm' *Environment specific*
                 'domain' => 'payment-service.psqa-ap01.ps.npm', // QA
+                'customer_reference' => '',
+                'grant_type' => 'client_credentials',
+                'timeout' => 15.0,
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
             ],
         ],
     ],
 
     // CPMS service authentication - used by CpmsIdentityProvider service
     'cpms_credentials' => [
-        // CPMS user ID *Environment specific*
-        // (this can be left as is, will be deprecated in the future once authentication is implemented)
-        'user_id' => '1234',
         // CPMS client ID *Environment specific*
         'client_id' => 'OLCS',
         // CPMS Client secret *Environment specific*

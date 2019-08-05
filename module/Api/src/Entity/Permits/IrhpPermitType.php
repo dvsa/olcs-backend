@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use RuntimeException;
 
 /**
  * IrhpPermitType Entity
@@ -27,6 +28,9 @@ class IrhpPermitType extends AbstractIrhpPermitType
     const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL = 3;
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
+
+    const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
+    const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
 
     /**
      * Gets calculated values
@@ -127,5 +131,25 @@ class IrhpPermitType extends AbstractIrhpPermitType
         $activeApplicationPaths = $this->getApplicationPaths()->matching($criteria);
 
         return !$activeApplicationPaths->isEmpty() ? $activeApplicationPaths->first() : null;
+    }
+
+    /**
+     * Get the permit allocation mode used by this permit type
+     *
+     * @return string
+     */
+    public function getAllocationMode()
+    {
+        $mappings = [
+            self::IRHP_PERMIT_TYPE_ID_BILATERAL => self::ALLOCATION_MODE_STANDARD,
+            self::IRHP_PERMIT_TYPE_ID_MULTILATERAL => self::ALLOCATION_MODE_STANDARD,
+            self::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => self::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
+        ];
+
+        if (isset($mappings[$this->id])) {
+            return $mappings[$this->id];
+        }
+
+        throw new RuntimeException('No allocation mode set for permit type ' . $this->id);
     }
 }

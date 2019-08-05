@@ -5,6 +5,7 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
 use Dvsa\Olcs\Api\Service as ApiSrv;
+use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 
 return [
     'router' => [
@@ -32,6 +33,7 @@ return [
             'QaFilteredTranslateableTextFactory' => ApiSrv\Qa\Structure\FilteredTranslateableTextFactory::class,
             'QaQuestionTextFactory' => ApiSrv\Qa\Structure\QuestionText\QuestionTextFactory::class,
             'QaSelfservePageFactory' => ApiSrv\Qa\Structure\SelfservePageFactory::class,
+            'QaFormFragmentFactory' => ApiSrv\Qa\Structure\FormFragmentFactory::class,
             'QaTextElementFactory' => ApiSrv\Qa\Structure\Element\Text\TextFactory::class,
             'QaRadioElementFactory' => ApiSrv\Qa\Structure\Element\Radio\RadioFactory::class,
             'QaTranslateableTextFactory' => ApiSrv\Qa\Structure\TranslateableTextFactory::class,
@@ -49,6 +51,9 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
             'QaEcmtShortTermEmissionsCategoryFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
+            'QaSupplementedApplicationStepFactory' =>
+                ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
+            
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -75,8 +80,8 @@ return [
             Util\SlaCalculatorInterface::class => Util\SlaCalculatorFactory::class,
             Util\TimeProcessorBuilderInterface::class => Util\TimeProcessorBuilderFactory::class,
             'TransactionManager' => \Dvsa\Olcs\Api\Domain\Repository\TransactionManagerFactory::class,
-            'CpmsIdentityProvider' => \Dvsa\Olcs\Api\Service\CpmsIdentityProviderFactory::class,
             'CpmsHelperService' => \Dvsa\Olcs\Api\Service\CpmsV2HelperService::class,
+            ApiServiceFactory::class => ApiServiceFactory::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
             'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
@@ -147,9 +152,12 @@ return [
             'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
 
             'QaGenericAnswerSaver' => ApiSrv\Qa\Structure\Element\GenericAnswerSaverFactory::class,
+            'QaGenericAnswerClearer' => ApiSrv\Qa\Structure\Element\GenericAnswerClearerFactory::class,
             'QaCheckboxAnswerSaver' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSaverFactory::class,
+            'QaGenericAnswerProvider' => ApiSrv\Qa\AnswerSaver\GenericAnswerProviderFactory::class,
             'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
             'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
+            'QaApplicationAnswersClearer' => ApiSrv\Qa\AnswerSaver\ApplicationAnswersClearerFactory::class,
             
             'QaApplicationStepObjectsProvider' => ApiSrv\Qa\ApplicationStepObjectsProviderFactory::class,
             'QaFormControlStrategyProvider' => ApiSrv\Qa\FormControlStrategyProviderFactory::class,
@@ -160,6 +168,8 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
             'QaEcmtShortTermNoOfPermitsFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtShortTermPermitUsageFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -167,7 +177,9 @@ return [
             'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
             'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermPermitUsageQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\PermitUsageGeneratorFactory::class,
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
+            'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
             'QaRadioElementGenerator' => ApiSrv\Qa\Structure\Element\Radio\RadioGeneratorFactory::class,
             'QaTotAuthVehiclesTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\Custom\TotAuthVehiclesGeneratorFactory::class,
@@ -184,6 +196,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriterFactory::class,
             'QaEcmtRemovalNoOfPermitsAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtRemovalNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtRemovalNoOfPermitsFeeCreator' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\FeeCreatorFactory::class,
 
@@ -192,6 +206,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerFetcherFactory::class,
             'QaEcmtShortTermNoOfPermitsAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerSaverFactory::class,
+            'QaEcmtShortTermNoOfPermitsAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsAnswerClearerFactory::class,
             'QaEcmtShortTermNoOfPermitsElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermEmissionsCategoryConditionalAdder' =>
@@ -200,6 +216,19 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
             'QaEcmtShortTermFeeUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
+            'QaSupplementedApplicationStepsProvider' =>
+                ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
+    
+                'PermitsShortTermEcmtWindowAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtStockAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\StockAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoryAvailabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsGrantabilityChecker' =>
+                ApiSrv\Permits\GrantabilityCheckerFactory::class,
         ],
     ],
     'view_manager' => [
@@ -442,7 +471,6 @@ return [
             'IrhpApplication' => RepositoryFactory::class,
             'Template' => RepositoryFactory::class,
             'ApplicationStep' => RepositoryFactory::class,
-            'ApplicationPath' => RepositoryFactory::class,
             'Answer' => RepositoryFactory::class,
         ]
     ],

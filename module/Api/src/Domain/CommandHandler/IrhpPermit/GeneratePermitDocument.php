@@ -35,6 +35,8 @@ final class GeneratePermitDocument extends AbstractCommandHandler implements Tog
     private $templates = [
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT
             => EcmtPermitApplicationEntity::PERMIT_TEMPLATE_NAME,
+        IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+            => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL => [
             CountryEntity::ID_AUSTRIA => DocumentEntity::IRHP_PERMIT_ANN_BILAT_AUSTRIA,
             CountryEntity::ID_BELGIUM => DocumentEntity::IRHP_PERMIT_ANN_BILAT_BELGIUM,

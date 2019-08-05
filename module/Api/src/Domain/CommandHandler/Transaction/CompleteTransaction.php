@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptEcmtPermits;
+use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as SubmitEcmtPermitApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplicationCmd;
@@ -154,10 +155,24 @@ final class CompleteTransaction extends AbstractCommandHandler implements Transa
      */
     protected function updateIrhpApplication(Fee $fee)
     {
-        if ($fee->getIrhpApplication()->canBeSubmitted()) {
-            $this->result->merge($this->handleSideEffect(
-                SubmitIrhpApplicationCmd::create(['id' => $fee->getIrhpApplication()->getId()])
-            ));
+        $irhpApplication = $fee->getIrhpApplication();
+
+        if ($irhpApplication->canBeSubmitted()) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    SubmitIrhpApplicationCmd::create(
+                        ['id' => $irhpApplication->getId()]
+                    )
+                )
+            );
+        } elseif ($irhpApplication->isAwaitingFee()) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    AcceptIrhpPermits::create(
+                        ['id' => $irhpApplication->getId()]
+                    )
+                )
+            );
         }
     }
 }

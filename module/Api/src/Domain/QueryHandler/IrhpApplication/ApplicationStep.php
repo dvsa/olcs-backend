@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
 use Dvsa\Olcs\Transfer\Query\Qa\ApplicationStep as ApplicationStepQry;

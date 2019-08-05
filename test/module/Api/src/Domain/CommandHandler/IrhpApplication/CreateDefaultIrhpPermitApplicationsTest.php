@@ -81,6 +81,9 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
         $command->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
 
+        $command->shouldReceive('getYear')
+            ->andReturn(null);
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame($openWindow1, $windowsWithCreatedIrhpPermitApplications[0]);
@@ -113,6 +116,74 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             ['No default irhp permit applications need to be created'],
+            $result->getMessages()
+        );
+    }
+
+    public function testHandleCommandShortTerm()
+    {
+        $irhpApplicationId = 5;
+        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
+        $year = 3000;
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $openWindow1 = m::mock(IrhpPermitWindow::class);
+
+        $openWindows = [
+            $openWindow1
+        ];
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByTypeYear')
+            ->once()
+            ->andReturnUsing(
+                function ($irhpPermitTypeIdParam, $now) use ($irhpPermitTypeId, $openWindows) {
+                    $this->assertEquals($irhpPermitTypeId, $irhpPermitTypeIdParam);
+                    $this->assertEquals(
+                        date('Y-m-d'),
+                        $now->format('Y-m-d')
+                    );
+
+                    return $openWindows;
+                }
+            );
+
+        $windowsWithCreatedIrhpPermitApplications = [];
+
+        $this->repoMap['IrhpPermitApplication']->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(
+                function (
+                    $irhpPermitApplication
+                ) use (
+                    $irhpApplication,
+                    &$windowsWithCreatedIrhpPermitApplications
+                ) {
+                    $this->assertSame($irhpApplication, $irhpPermitApplication->getIrhpApplication());
+                    $windowsWithCreatedIrhpPermitApplications[] = $irhpPermitApplication->getIrhpPermitWindow();
+                }
+            );
+
+        $command = m::mock(CommandInterface::class);
+
+        $command->shouldReceive('getId')
+            ->andReturn($irhpApplicationId);
+
+        $command->shouldReceive('getYear')
+            ->andReturn($year);
+
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertSame($openWindow1, $windowsWithCreatedIrhpPermitApplications[0]);
+
+        $this->assertEquals(
+            ['Created 1 irhp permit applications'],
             $result->getMessages()
         );
     }

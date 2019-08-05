@@ -58,6 +58,8 @@ class FeeUpdaterTest extends MockeryTestCase
             ->andReturn($licenceId);
         $irhpApplication->shouldReceive('getOutstandingApplicationFees')
             ->andReturn($outstandingIssueFees);
+        $irhpApplication->shouldReceive('getApplicationFeeProductReference')
+            ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF);
 
         $currentDateTime = m::mock(DateTime::class);
         $currentDateTime->shouldReceive('format')

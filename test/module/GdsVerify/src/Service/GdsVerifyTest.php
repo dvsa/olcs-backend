@@ -70,6 +70,7 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
 
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSigningCertificate')->with()->once()->andReturn(
+            "-----BEGIN CERTIFICATE-----\n".
             'MIIDXTCCAkWgAwIBAgIJAOlKkJ8iwQH3MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
             BAYTAkdCMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
             aWRnaXRzIFB0eSBMdGQwHhcNMTYwMzE3MTMxNTU1WhcNNDMwODAyMTMxNTU1WjBF
@@ -88,7 +89,8 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
             0kUkK2LSKiNGk3hm3mz+PM9nAETdFXHy9bWNHnTQ4xHfBFQSBCN1oFQFY0pErakj
             TwEb7qrOF9mj4toTXouxSZpsWrOAw4q5EC+wiKwNx149SG7VLvc498VLdOOkfSHG
             Ib8/+KdN84WLI/x0/72eRR+DhBMrtCT6DR00sBK3B/hLUSxIDGUXdRedUNr/51uC
-            6w=='
+            6w=='.
+            "\n-----END CERTIFICATE-----"
         );
         $metadataLoader = m::mock(\Dvsa\Olcs\GdsVerify\Data\Loader::class);
         $metadataLoader->shouldReceive('loadMatchingServiceAdapterMetadata')->with('http://meta.com')
@@ -129,6 +131,7 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
 
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSigningCertificate')->with()->once()->andReturn(
+            "-----BEGIN CERTIFICATE-----\n".
             'MIIDXTCCAkWgAwIBAgIJAOlKkJ8iwQH3MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
             BAYTAkdCMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
             aWRnaXRzIFB0eSBMdGQwHhcNMTYwMzE3MTMxNTU1WhcNNDMwODAyMTMxNTU1WjBF
@@ -148,6 +151,7 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
             TwEb7qrOF9mj4toTXouxSZpsWrOAw4q5EC+wiKwNx149SG7VLvc498VLdOOkfSHG
             Ib8/+KdN84WLI/x0/72eRR+DhBMrtCT6DR00sBK3B/hLUSxIDGUXdRedUNr/51uC
             6w=='
+            . "\n-----END CERTIFICATE-----"
         );
         $metadataLoader = m::mock(\Dvsa\Olcs\GdsVerify\Data\Loader::class);
         $metadataLoader->shouldReceive('loadMatchingServiceAdapterMetadata')->with('http://meta.com')
@@ -175,6 +179,7 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
 
         $metadata = m::mock(\Dvsa\Olcs\GdsVerify\Data\Metadata\MatchingServiceAdapter::class);
         $metadata->shouldReceive('getSigningCertificate')->with()->once()->andReturn(
+            "-----BEGIN CERTIFICATE-----\n".
             'MIIDXTCCAkWgAwIBAgIJAOdbvV4W2wl2MA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
             BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
             aWRnaXRzIFB0eSBMdGQwHhcNMTYwMzE3MTMxNzM0WhcNNDMwODAyMTMxNzM0WjBF
@@ -194,6 +199,7 @@ class GdsVerifyTest extends \PHPUnit\Framework\TestCase
             7KWNQui0Uc7Yuu+mP6s1yCNpJS8fJj36eVABDHXsATLeSjsllPCvLiRjAuKJKa5u
             xb1knbCw6oSTSglUlRChYh8rPmdnPuM82l9mYW2GROZX37u8OpfmRGZdEiFssZPD
             SA=='
+            . "\n-----END CERTIFICATE-----"
         );
 
         $metadataLoader = m::mock(\Dvsa\Olcs\GdsVerify\Data\Loader::class);

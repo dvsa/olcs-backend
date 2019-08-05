@@ -11,11 +11,13 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath;
 
 /**
  * Create Irhp Permit Application
@@ -44,27 +46,38 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
         /** @var IrhpApplicationEntity $irhpApplication */
         $irhpApplication = $irhpApplicationRepo->fetchById($command->getId());
 
-        $this->updateCountries($irhpApplication, $irhpApplication->getIrhpPermitType()->getId(), $command);
+        switch ($irhpApplication->getIrhpPermitType()->getId()) {
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
+                $this->handleSideEffect(
+                    SubmitApplicationPath::create(
+                        [
+                            'id' => $irhpApplication->getId(), 'postData' => $command->getPostData()
+                        ]
+                    )
+                );
+                break;
+            default:
+                $this->updateCountries($irhpApplication, $irhpApplication->getIrhpPermitType()->getId(), $command);
+                $irhpApplicationRepo->refresh($irhpApplication);
+                $irhpApplication->resetSectionCompletion();
 
-        $irhpApplicationRepo->refresh($irhpApplication);
-        $irhpApplication->resetSectionCompletion();
-
-        $this->result->merge(
-            $this->handleSideEffect(
-                UpdateMultipleNoOfPermits::create([
-                    'id' => $irhpApplication->getId(),
-                    'permitsRequired' => $command->getPermitsRequired()])
-            )
-        );
-        $irhpApplicationRepo->refresh($irhpApplication);
-        $irhpApplication->resetSectionCompletion();
+                $this->result->merge(
+                    $this->handleSideEffect(
+                        UpdateMultipleNoOfPermits::create([
+                            'id' => $irhpApplication->getId(),
+                            'permitsRequired' => $command->getPermitsRequired()])
+                    )
+                );
+                $irhpApplicationRepo->refresh($irhpApplication);
+                $irhpApplication->resetSectionCompletion();
+                break;
+        }
 
         if ($command->getDeclaration()) {
             $irhpApplication->updateCheckAnswers();
             $irhpApplicationRepo->save($irhpApplication);
             $irhpApplicationRepo->refresh($irhpApplication);
             $irhpApplication->resetSectionCompletion();
-
             $irhpApplication->makeDeclaration();
             $irhpApplicationRepo->save($irhpApplication);
         }

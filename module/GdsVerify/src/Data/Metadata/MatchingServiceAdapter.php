@@ -46,14 +46,35 @@ class MatchingServiceAdapter
             /** @var \SAML2\XML\md\KeyDescriptor $keyDescriptor */
             foreach ($roleDescriptor->KeyDescriptor as $keyDescriptor) {
                 if ($keyDescriptor->use === 'signing') {
-                    return trim($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
+                    return $this->formatCertificate($keyDescriptor->KeyInfo->info[1]->data[0]->certificate);
                 }
             }
         } catch (\Exception $e) {
-            throw new Exception('Matching Service Adapter signing certificate not found : ' .$e->getMessage());
+            throw new Exception('Matching Service Adapter signing certificate not found : ' . $e->getMessage());
         }
 
         throw new Exception('Matching Service Adapter signing certificate not found');
+    }
+
+    /**
+     * Method to ensure always a valid certifcate -
+     * For OpenSSL to recognize it as a PEM format, it must be encoded in Base64, with the following header :
+     *
+     * -----BEGIN CERTIFICATE-----
+     * and footer:
+     *
+     * -----END CERTIFICATE-----
+     * Also, each line must be maximum 79 characters long.
+     *
+     * @param string $certificateString
+     *
+     * @return string
+     */
+    private function formatCertificate(string $certificateString): string
+    {
+        return "-----BEGIN CERTIFICATE-----\n"
+            . trim(wordwrap(preg_replace("/\r|\n|\t|\s/", "", $certificateString), 64, PHP_EOL, true))
+            . "\n-----END CERTIFICATE-----";
     }
 
     /**
@@ -72,7 +93,7 @@ class MatchingServiceAdapter
                 }
             }
         } catch (\Exception $e) {
-            throw new Exception('SSO URL not found in metadata : '. $e->getMessage());
+            throw new Exception('SSO URL not found in metadata : ' . $e->getMessage());
         }
 
         throw new Exception('SSO URL not found in metadata');

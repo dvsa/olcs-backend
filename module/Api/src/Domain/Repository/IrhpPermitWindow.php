@@ -235,4 +235,40 @@ class IrhpPermitWindow extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Fetch all open windows for the specified type and year
+     *
+     * @param int $type Type
+     * @param DateTime $now Now
+     * @param int $year
+     *
+     * @return array
+     */
+    public function fetchOpenWindowsByTypeYear($type, DateTime $now, $year)
+    {
+        $fromDate = new DateTime($year.'-01-01 00:00:00');
+        $toDate = new DateTime($year.'-12-31 23:59:59');
+
+        $qb = $this->createQueryBuilder();
+
+        $qb->select($this->alias, 'ipr', 'ips')
+            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin('ips.irhpPermitType', 'ipt')
+            ->innerJoin('ips.irhpPermitRanges', 'ipr')
+            ->where($qb->expr()->eq('ipt.id', ':type'))
+            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->between('ips.validTo', ':fromDate', ':toDate'))
+            ->setParameter('type', $type)
+            ->setParameter('now', $now->format(DateTime::ISO8601))
+            ->setParameter('fromDate', $fromDate)
+            ->setParameter('toDate', $toDate);
+
+        $this->getQueryBuilder()
+            ->modifyQuery($qb)
+            ->withRefdata();
+
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
 }

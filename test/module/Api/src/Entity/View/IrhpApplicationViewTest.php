@@ -30,6 +30,7 @@ class IrhpApplicationViewTest extends \PHPUnit\Framework\TestCase
             'statusId' => 'STATUS_ID',
             'statusDescription' => 'Status description',
             'dateReceived' => '2015-01-01',
+            'stockValidTo' => '2019-12-31',
         ];
         $this->entity = new IrhpApplicationView();
 
