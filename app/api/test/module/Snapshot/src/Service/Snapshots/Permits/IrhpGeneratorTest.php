@@ -53,14 +53,9 @@ class IrhpGeneratorTest extends MockeryTestCase
         $applicationRef = 'ref';
         $questionAnswerData = [
             'slug' => 'data1',
-            'custom-check-answers' => 'data2',
-            'custom-declaration' => 'data3',
-            'slug2' => 'data4',
+            'slug2' => 'data2',
         ];
-        $modifiedQuestionAnswerData = [
-            'slug' => 'data1',
-            'slug2' => 'data4',
-        ];
+
         $html = '<html>';
 
         $irhpApplication = m::mock(IrhpApplication::class);
@@ -86,14 +81,14 @@ class IrhpGeneratorTest extends MockeryTestCase
         $irhpApplication
             ->shouldReceive('getQuestionAnswerData')
             ->once()
-            ->withNoArgs()
+            ->with(true)
             ->andReturn($questionAnswerData);
 
         $config = [
             'permitType' => $permitType,
             'operator' => $operatorName,
             'ref' => $applicationRef,
-            'questionAnswerData' => $modifiedQuestionAnswerData,
+            'questionAnswerData' => $questionAnswerData,
             'guidanceDeclaration' => [
                 'bullets' => [
                     'permits.irhp.declaration.bullet.guidance.note',
