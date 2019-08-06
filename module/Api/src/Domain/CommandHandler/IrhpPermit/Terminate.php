@@ -3,21 +3,24 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\Expire as ExpireIrhpApplication;
+use Dvsa\Olcs\Api\Domain\Command\Permits\ExpireEcmtPermitApplication;
+use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Permits\ExpireEcmtPermitApplication;
 
 /**
  * Terminate Permit
  *
  * @author Tonci Vidovic <tonci.vidovic@capgemini.com>
  */
-class Terminate extends AbstractCommandHandler implements ToggleRequiredInterface
+class Terminate extends AbstractCommandHandler implements ToggleRequiredInterface, TransactionedInterface
 {
     use ToggleAwareTrait;
 
@@ -34,14 +37,9 @@ class Terminate extends AbstractCommandHandler implements ToggleRequiredInterfac
     {
         $permit = $this->getRepo()->fetchById($command->getId());
 
-        if (!$permit->getIrhpPermitRange()->getIrhpPermitStock()->getIrhpPermitType()->isEcmtAnnual()) {
-            throw new ForbiddenException('Only ECMT Permits can be terminated.');
-        }
-
-        $terminatedStatus = $this->refData(IrhpPermit::STATUS_TERMINATED);
-
         try {
-            $permit->proceedToStatus($terminatedStatus);
+            // update the status
+            $permit->proceedToStatus($this->refData(IrhpPermit::STATUS_TERMINATED));
         } catch (ForbiddenException $exception) {
             $this->result->addMessage('You cannot terminate an inactive permit.');
             return $this->result;
@@ -52,18 +50,21 @@ class Terminate extends AbstractCommandHandler implements ToggleRequiredInterfac
         $this->result->addId('IrhpPermit', $permit->getId());
         $this->result->addMessage('The selected permit has been terminated.');
 
-        if (!$permit->getIrhpPermitApplication()->hasValidPermits()) {
-            $applicationId = $permit->getIrhpPermitApplication()->getEcmtPermitApplication()->getId();
-            $this->result->merge(
-                $this->handleSideEffect(
-                    ExpireEcmtPermitApplication::create(
-                        [
-                            'id' => $applicationId
-                        ]
-                    )
-                )
-            );
+        $application = $permit->getIrhpPermitApplication()->getRelatedApplication();
+
+        if ($application->canBeExpired()) {
+            // set the application as expired
+            $data = [
+                'id' => $application->getId()
+            ];
+
+            $command = ($application instanceof EcmtPermitApplication)
+                ? ExpireEcmtPermitApplication::create($data)
+                : ExpireIrhpApplication::create($data);
+
+            $this->result->merge($this->handleSideEffect($command));
         }
+
         return $this->result;
     }
 }
