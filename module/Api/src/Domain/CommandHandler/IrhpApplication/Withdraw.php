@@ -24,8 +24,6 @@ final class Withdraw extends AbstractWithdrawApplicationHandler implements Toggl
 
     protected $emails = [
         WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS => SendEcmtShortTermUnsuccessful::class,
-        WithdrawableInterface::WITHDRAWN_REASON_BY_USER => SendEcmtShortTermUnsuccessful::class,
-        WithdrawableInterface::WITHDRAWN_REASON_DECLINED => SendEcmtShortTermUnsuccessful::class,
         WithdrawableInterface::WITHDRAWN_REASON_UNPAID => SendEcmtShortTermAutomaticallyWithdrawn::class,
     ];
 }
