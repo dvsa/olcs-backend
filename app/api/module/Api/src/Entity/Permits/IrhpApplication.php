@@ -1473,4 +1473,42 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         return $this->irhpPermitApplications->first();
     }
+
+    /**
+     * Changes the status to expired
+     *
+     * @param RefData $expireStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function expire(RefData $expireStatus)
+    {
+        if (!$this->canBeExpired()) {
+            throw new ForbiddenException('This application cannot be expired.');
+        }
+
+        $this->status = $expireStatus;
+    }
+
+    /**
+     * Whether the application can be expired
+     *
+     * @return bool
+     */
+    public function canBeExpired()
+    {
+        if (!$this->isValid()) {
+            // only valid application can be expired
+            return false;
+        }
+
+        foreach ($this->getIrhpPermitApplications() as $irhpPermitApplication) {
+            if ($irhpPermitApplication->hasValidPermits()) {
+                // only application without any valid permits can be expired
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

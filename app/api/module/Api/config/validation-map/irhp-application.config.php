@@ -14,6 +14,7 @@ return [
     CommandHandler\IrhpApplication\CreateFull::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\UpdateFull::class => CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\StoreSnapshot::class => IsSideEffect::class,
+    CommandHandler\IrhpApplication\Expire::class => IsSideEffect::class,
     QueryHandler\IrhpApplication\GetAllByLicence::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\GetAllByOrganisation::class => CanAccessOrganisationWithOrganisation::class,
 ];
