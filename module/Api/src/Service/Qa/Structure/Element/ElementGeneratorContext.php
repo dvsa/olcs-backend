@@ -59,7 +59,7 @@ class ElementGeneratorContext
     /**
      * Get the embedded IrhpApplicationEntity instance
      *
-     * @return ApplicationStepEntity
+     * @return IrhpApplicationEntity
      */
     public function getIrhpApplicationEntity()
     {
