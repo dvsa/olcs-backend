@@ -71,7 +71,8 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
                 $this->deleteIrhpPermitApplications($irhpApplication->getIrhpPermitApplications());
                 break;
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
-                $this->resetEcmtShortTermAnswers($irhpApplication);
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+                $this->applicationAnswersClearer->clear($irhpApplication);
                 break;
             default:
                 throw new RuntimeException(
@@ -127,15 +128,5 @@ class ResetIrhpPermitApplications extends AbstractCommandHandler implements Togg
                 count($irhpPermitApplications)
             )
         );
-    }
-
-    /**
-     * Reset answers for an ecmt short term application
-     *
-     * @param IrhpApplication $irhpApplication
-     */
-    private function resetEcmtShortTermAnswers(IrhpApplication $irhpApplication)
-    {
-        $this->applicationAnswersClearer->clear($irhpApplication);
     }
 }
