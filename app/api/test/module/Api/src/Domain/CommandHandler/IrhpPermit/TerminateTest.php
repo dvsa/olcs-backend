@@ -2,13 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermit;
 
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\Expire as ExpireIrhpApplication;
 use Dvsa\Olcs\Api\Domain\Command\Permits\ExpireEcmtPermitApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit\Terminate as CmdHandler;
 use Dvsa\Olcs\Transfer\Command\IrhpPermit\Terminate;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
@@ -19,12 +23,9 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class TerminateTest extends CommandHandlerTestCase
 {
-
     public function setUp()
     {
-        $this->sut = m::mock(CmdHandler::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->sut = new CmdHandler();
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
 
         parent::setUp();
@@ -39,44 +40,29 @@ class TerminateTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    /**
-     * Tests exception thrown for not being an ECMT permit
-     *
-     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
-     */
-    public function testPermitTypeException()
-    {
-        $cmdData = ['id' => '9'];
-        $command = Terminate::create($cmdData);
-
-        $permit = m::mock(IrhpPermit::class)->makePartial();
-        $this->repoMap['IrhpPermit']
-            ->shouldReceive('fetchById')
-            ->with($cmdData['id'])
-            ->andReturn($permit);
-
-        $permit->shouldReceive('getIrhpPermitRange->getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')
-            ->andReturn(false);
-
-        $this->sut->handleCommand($command);
-    }
-
     public function testCatchForbiddenException()
     {
-        $cmdData = ['id' => '9'];
-
-        $command = Terminate::create($cmdData);
+        $permitId = 9;
 
         $permit = m::mock(IrhpPermit::class)->makePartial();
+
         $this->repoMap['IrhpPermit']
             ->shouldReceive('fetchById')
-            ->with($cmdData['id'])
+            ->with($permitId)
+            ->once()
             ->andReturn($permit);
-        $permit->shouldReceive('getIrhpPermitRange->getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')
-            ->andReturn(true);
-        $terminatedStatus = new RefData(IrhpPermit::STATUS_CEASED);
-        $permit->setStatus($terminatedStatus);
-        $permit->shouldReceive('proceedToStatus')->with($terminatedStatus);
+
+        $permit->shouldReceive('proceedToStatus')
+            ->with($this->refData[IrhpPermit::STATUS_TERMINATED])
+            ->once()
+            ->andThrow(new ForbiddenException());
+
+        $this->repoMap['IrhpPermit']
+            ->shouldReceive('save')
+            ->with($permit)
+            ->never();
+
+        $command = Terminate::create(['id' => $permitId]);
         $result = $this->sut->handleCommand($command);
         $expected = [
             'messages' => ['You cannot terminate an inactive permit.'],
@@ -88,89 +74,139 @@ class TerminateTest extends CommandHandlerTestCase
 
     public function testTerminatePermit()
     {
-        $cmdData = ['id' => '9'];
-        $command = Terminate::create($cmdData);
+        $permitId = 9;
 
         $permit = m::mock(IrhpPermit::class)->makePartial();
+        $permit->setId($permitId);
+        $permit->setStatus(new RefData(IrhpPermit::STATUS_PENDING));
+
         $this->repoMap['IrhpPermit']
             ->shouldReceive('fetchById')
-            ->with($cmdData['id'])
+            ->with($permitId)
+            ->once()
             ->andReturn($permit);
 
-        $permit->shouldReceive('getIrhpPermitRange->getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')
-            ->andReturn(true);
-
-        $terminatedStatus = new RefData(IrhpPermit::STATUS_PENDING);
-        $permit->setStatus($terminatedStatus);
-        $permit->shouldReceive('proceedToStatus')->with($terminatedStatus);
+        $permit->shouldReceive('proceedToStatus')
+            ->with($this->refData[IrhpPermit::STATUS_TERMINATED])
+            ->once();
 
         $this->repoMap['IrhpPermit']
             ->shouldReceive('save')
+            ->with($permit)
+            ->once();
+
+        $permit->shouldReceive('getIrhpPermitApplication->getRelatedApplication->canBeExpired')
+            ->andReturn(false);
+
+        $command = Terminate::create(['id' => $permitId]);
+        $result = $this->sut->handleCommand($command);
+
+        $this->assertEquals(
+            [
+                'messages' => ['The selected permit has been terminated.'],
+                'id' => ['IrhpPermit' => $permitId]
+            ],
+            $result->toArray()
+        );
+    }
+
+    public function testTerminateLastPermitOnEcmtApp()
+    {
+        $permitId = 9;
+
+        $permit = m::mock(IrhpPermit::class)->makePartial();
+        $permit->setId($permitId);
+        $permit->setStatus(new RefData(IrhpPermit::STATUS_PENDING));
+
+        $this->repoMap['IrhpPermit']
+            ->shouldReceive('fetchById')
+            ->with($permitId)
             ->once()
-            ->with(m::type(IrhpPermit::class))
-            ->andReturnUsing(
-                function (IrhpPermit $irhpPermit) use (&$savedIrhpPermit) {
-                    $irhpPermit->setId(9);
-                    $savedIrhpPermit = $irhpPermit;
-                }
-            );
-        $permit->shouldReceive('getIrhpPermitApplication->getEcmtPermitApplication->getId')
-            ->andReturn(1);
-        $permit->shouldReceive('getIrhpPermitApplication->hasValidPermits')
+            ->andReturn($permit);
+
+        $permit->shouldReceive('proceedToStatus')
+            ->with($this->refData[IrhpPermit::STATUS_TERMINATED])
+            ->once();
+
+        $this->repoMap['IrhpPermit']
+            ->shouldReceive('save')
+            ->with($permit)
+            ->once();
+
+        $appId = 1;
+        $application = m::mock(EcmtPermitApplication::class);
+        $application->shouldReceive('getId')
+            ->andReturn($appId);
+        $application->shouldReceive('canBeExpired')
             ->andReturn(true);
 
+        $permit->shouldReceive('getIrhpPermitApplication->getRelatedApplication')
+            ->andReturn($application);
+
+        $this->expectedSideEffect(
+            ExpireEcmtPermitApplication::class,
+            [
+                'id' => $appId,
+            ],
+            new Result()
+        );
+
+        $command = Terminate::create(['id' => $permitId]);
         $result = $this->sut->handleCommand($command);
         $expected = [
             'messages' => ['The selected permit has been terminated.'],
-            'id' => ['IrhpPermit' => 9]
+            'id' => ['IrhpPermit' => $permitId]
         ];
 
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testTerminateLastPermit()
+    public function testTerminateLastPermitOnIrhpApp()
     {
-        $cmdData = ['id' => '9'];
-
-        $command = Terminate::create($cmdData);
+        $permitId = 9;
 
         $permit = m::mock(IrhpPermit::class)->makePartial();
+        $permit->setId($permitId);
+        $permit->setStatus(new RefData(IrhpPermit::STATUS_PENDING));
+
         $this->repoMap['IrhpPermit']
             ->shouldReceive('fetchById')
-            ->with($cmdData['id'])
+            ->with($permitId)
+            ->once()
             ->andReturn($permit);
 
-        $permit->shouldReceive('getIrhpPermitRange->getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')
-            ->andReturn(true);
-        $terminatedStatus = new RefData(IrhpPermit::STATUS_PENDING);
-        $permit->setStatus($terminatedStatus);
-        $permit->shouldReceive('proceedToStatus')->with($terminatedStatus);
+        $permit->shouldReceive('proceedToStatus')
+            ->with($this->refData[IrhpPermit::STATUS_TERMINATED])
+            ->once();
 
         $this->repoMap['IrhpPermit']
             ->shouldReceive('save')
-            ->once()
-            ->with(m::type(IrhpPermit::class))
-            ->andReturnUsing(
-                function (IrhpPermit $irhpPermit) use (&$savedIrhpPermit) {
-                    $irhpPermit->setId(9);
-                    $savedIrhpPermit = $irhpPermit;
-                }
-            );
-        $permit->shouldReceive('getIrhpPermitApplication->getEcmtPermitApplication->getId')
-            ->andReturn(1);
-        $permit->shouldReceive('getIrhpPermitApplication->hasValidPermits')
-            ->andReturn(false);
+            ->with($permit)
+            ->once();
 
-        $sideEffectResult = new Result();
-        $createCmdData = [
-            'id' => 1
-        ];
-        $this->expectedSideEffect(ExpireEcmtPermitApplication::class, $createCmdData, $sideEffectResult);
+        $appId = 1;
+        $application = m::mock(IrhpApplication::class);
+        $application->shouldReceive('getId')
+            ->andReturn($appId);
+        $application->shouldReceive('canBeExpired')
+            ->andReturn(true);
 
+        $permit->shouldReceive('getIrhpPermitApplication->getRelatedApplication')
+            ->andReturn($application);
+
+        $this->expectedSideEffect(
+            ExpireIrhpApplication::class,
+            [
+                'id' => $appId,
+            ],
+            new Result()
+        );
+
+        $command = Terminate::create(['id' => $permitId]);
         $result = $this->sut->handleCommand($command);
         $expected = [
             'messages' => ['The selected permit has been terminated.'],
-            'id' => ['IrhpPermit' => 9]
+            'id' => ['IrhpPermit' => $permitId]
         ];
 
         $this->assertEquals($expected, $result->toArray());

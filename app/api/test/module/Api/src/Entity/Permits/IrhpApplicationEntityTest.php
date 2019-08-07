@@ -4014,4 +4014,75 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $entity->getFirstIrhpPermitApplication();
     }
+
+    public function testExpire()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeExpired')
+            ->andReturn(true);
+
+        $status = m::mock(RefData::class);
+
+        $entity->expire($status);
+        $this->assertSame($status, $entity->getStatus());
+    }
+
+    public function testExpireException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('This application cannot be expired.');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeExpired')
+            ->andReturn(false);
+
+        $entity->expire(m::mock(RefData::class));
+    }
+
+    /**
+     * @dataProvider dpCanBeExpired
+     */
+    public function testCanBeExpired($status, $hasValidPermits, $expected)
+    {
+        $entity = $this->createNewEntity();
+        $entity->setStatus(new RefData($status));
+
+        $irhpPermitApp1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApp1->shouldReceive('hasValidPermits')->andReturn(false);
+        $entity->addIrhpPermitApplications($irhpPermitApp1);
+
+        $irhpPermitApp2 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApp2->shouldReceive('hasValidPermits')->andReturn($hasValidPermits);
+        $entity->addIrhpPermitApplications($irhpPermitApp2);
+
+        $this->assertEquals($expected, $entity->canBeExpired());
+    }
+
+    public function dpCanBeExpired()
+    {
+        return [
+            [IrhpInterface::STATUS_VALID, true, false],
+            [IrhpInterface::STATUS_VALID, false, true],
+            [IrhpInterface::STATUS_CANCELLED, true, false],
+            [IrhpInterface::STATUS_CANCELLED, false, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false, false],
+            [IrhpInterface::STATUS_WITHDRAWN, true, false],
+            [IrhpInterface::STATUS_WITHDRAWN, false, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, true, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false, false],
+            [IrhpInterface::STATUS_FEE_PAID, true, false],
+            [IrhpInterface::STATUS_FEE_PAID, false, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, true, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false, false],
+            [IrhpInterface::STATUS_ISSUED, true, false],
+            [IrhpInterface::STATUS_ISSUED, false, false],
+            [IrhpInterface::STATUS_ISSUING, true, false],
+            [IrhpInterface::STATUS_ISSUING, false, false],
+            [IrhpInterface::STATUS_EXPIRED, true, false],
+            [IrhpInterface::STATUS_EXPIRED, false, false],
+        ];
+    }
 }
