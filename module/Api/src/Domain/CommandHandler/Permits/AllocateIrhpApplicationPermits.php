@@ -40,7 +40,10 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     {
         $irhpApplicationId = $command->getId();
 
-        $irhpApplication = $this->getRepo()->fetchById($command->getId());
+        $repo = $this->getRepo();
+        $irhpApplication = $repo->fetchById($command->getId());
+        $repo->refresh($irhpApplication);
+
         $allocationMode = $irhpApplication->getIrhpPermitType()->getAllocationMode();
 
         foreach ($irhpApplication->getIrhpPermitApplications() as $irhpPermitApplication) {
@@ -48,7 +51,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
         }
 
         $irhpApplication->proceedToValid($this->refData(IrhpInterface::STATUS_VALID));
-        $this->getRepo()->save($irhpApplication);
+        $repo->save($irhpApplication);
 
         $this->result->addMessage('Allocated requested permits for IRHP application');
         $this->result->addId('irhpApplication', $irhpApplicationId);

@@ -77,16 +77,21 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplications);
         $irhpApplication->shouldReceive('getIrhpPermitType->getAllocationMode')
             ->andReturn(IrhpPermitType::ALLOCATION_MODE_STANDARD);
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
         $irhpApplication->shouldReceive('proceedToValid')
             ->with($this->refData[IrhpInterface::STATUS_VALID])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($irhpApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($this->irhpApplicationId)
@@ -156,16 +161,21 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplications);
         $irhpApplication->shouldReceive('getIrhpPermitType->getAllocationMode')
             ->andReturn(IrhpPermitType::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
         $irhpApplication->shouldReceive('proceedToValid')
             ->with($this->refData[IrhpInterface::STATUS_VALID])
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
         $this->repoMap['IrhpApplication']->shouldReceive('save')
             ->with($irhpApplication)
             ->once()
-            ->ordered()
-            ->globally();
+            ->globally()
+            ->ordered();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($this->irhpApplicationId)
