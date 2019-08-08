@@ -80,7 +80,7 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
         $this->applicationEntity->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
-        $this->applicationEntity->shouldReceive('getLatestOutstandingIssueFee')
+        $this->applicationEntity->shouldReceive('getLatestIssueFee')
             ->withNoArgs()
             ->once()
             ->globally()

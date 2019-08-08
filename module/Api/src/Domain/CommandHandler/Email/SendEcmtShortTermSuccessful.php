@@ -34,7 +34,7 @@ class SendEcmtShortTermSuccessful extends AbstractEmailHandler implements Toggle
         $this->getRepo()->refresh($recordObject);
 
         $irhpPermitApplication = $recordObject->getFirstIrhpPermitApplication();
-        $issueFee = $recordObject->getLatestOutstandingIssueFee();
+        $issueFee = $recordObject->getLatestIssueFee();
         $invoicedDateTime = $issueFee->getInvoicedDateTime();
         $irhpApplicationId = $recordObject->getId();
 

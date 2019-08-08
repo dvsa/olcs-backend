@@ -1402,6 +1402,89 @@ class IrhpApplicationEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider dpGetLatestIssueFee
+     */
+    public function testGetLatestIssueFee($feesData, $expectedIndex)
+    {
+        $fees = $this->createFeesArrayCollectionFromArrayData($feesData);
+        $this->sut->setFees($fees);
+
+        $latestOutstandingIssueFee = $this->sut->getLatestIssueFee();
+
+        if (is_null($expectedIndex)) {
+            $this->assertNull($latestOutstandingIssueFee);
+        }
+
+        $this->assertSame($fees[$expectedIndex], $latestOutstandingIssueFee);
+    }
+
+    public function dpGetLatestIssueFee()
+    {
+        return [
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSAPP
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_BUSVAR
+                    ]
+                ],
+                'expectedIndex' => null
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 1
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+            [
+                'fees' => [
+                    [
+                        'invoicedDate' => '2019-01-04',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_ISSUE
+                    ],
+                    [
+                        'invoicedDate' => '2019-01-08',
+                        'isOutstanding' => false,
+                        'feeTypeId' => FeeType::FEE_TYPE_IRHP_APP
+                    ]
+                ],
+                'expectedIndex' => 0
+            ],
+        ];
+    }
+
     private function createFeesArrayCollectionFromArrayData($feesData)
     {
         $fees = [];
