@@ -921,6 +921,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return FeeEntity|null
      */
+    public function getLatestIssueFee()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        /** @var FeeEntity $fee */
+        foreach ($this->getFees()->matching($criteria) as $fee) {
+            if ($fee->getFeeType()->getFeeType()->getId() == FeeTypeEntity::FEE_TYPE_IRHP_ISSUE) {
+                return $fee;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the latest outstanding issue fee, or none if no issue fee is present
+     *
+     * @return FeeEntity|null
+     */
     public function getLatestOutstandingIssueFee()
     {
         return $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_ISSUE]);
