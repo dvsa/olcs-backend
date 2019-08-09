@@ -92,7 +92,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
                 /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $documentTemplate */
                 $documentTemplate = $this->documentRepo->fetchById($template);
             } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
-                throw new \Exception('Template not found');
+                throw new \Exception('Template not found whilst trying to fetch document id'. $template);
             }
             $possibleTemplatePaths = [$documentTemplate->getIdentifier()];
         } else {
@@ -145,7 +145,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $file = $this->getTemplate($possibleTemplatePaths);
 
         if ($file === null) {
-            throw new \Exception('Template not found');
+            throw new \Exception('Unable to get template file');
         }
 
         try {
