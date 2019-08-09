@@ -22,6 +22,7 @@ class TwigEnvironmentFactory implements FactoryInterface
             [
                 'strict_variables' => true,
                 'cache' => sys_get_temp_dir(),
+                'auto_reload' => true,
             ]
         );
     }
