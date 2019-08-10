@@ -6,6 +6,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplicationStep as Sut;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\ApplicationStepObjectsProvider;
@@ -24,6 +25,8 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
     {
         $this->sut = new Sut();
 
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
+
         $this->mockedSmServices = [
             'QaApplicationStepObjectsProvider' => m::mock(ApplicationStepObjectsProvider::class),
             'QaFormControlStrategyProvider' => m::mock(FormControlStrategyProvider::class)
@@ -39,6 +42,9 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $irhpApplicationEntity = m::mock(IrhpApplicationEntity::class);
+        $irhpApplicationEntity->shouldReceive('resetCheckAnswersAndDeclaration')
+            ->withNoArgs()
+            ->once();
 
         $applicationStepObjects = [
             'applicationStep' => $applicationStepEntity,
@@ -58,6 +64,10 @@ class SubmitApplicationStepTest extends CommandHandlerTestCase
         $formControlStrategy = m::mock(FormControlStrategyInterface::class);
         $formControlStrategy->shouldReceive('saveFormData')
             ->with($applicationStepEntity, $irhpApplicationEntity, $postData)
+            ->once();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('save')
+            ->with($irhpApplicationEntity)
             ->once();
 
         $this->mockedSmServices['QaFormControlStrategyProvider']->shouldReceive('get')
