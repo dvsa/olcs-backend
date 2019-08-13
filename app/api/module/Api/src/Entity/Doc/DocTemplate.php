@@ -29,7 +29,8 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
         'root' => 'templates/',
         'ni' => 'templates/NI/',
         'gb' => 'templates/GB/',
-        'image' => 'templates/Image/'
+        'image' => 'templates/Image/',
+        'guides' => 'guides/'
     ];
 
     /**
@@ -37,20 +38,20 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
      * @param SubCategory $subCategory
      * @param string $description
      * @param Document $document
-     * @param bool $isNi
+     * @param string $isNi
      * @param string $suppressFromOp
-     * @param string $deletedDate
+     * @param string $templateSlug
      * @param User $createdBy
      * @return DocTemplate
      */
     public static function createNew(
         Category $category,
-        SubCategory $subCategory,
+        ?SubCategory $subCategory,
         string $description,
         Document $document,
-        bool $isNi,
+        string $isNi,
         string $suppressFromOp,
-        $deletedDate,
+        ?string $templateSlug,
         User $createdBy
     ) {
         $docTemplate = new self();
@@ -60,7 +61,7 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
         $docTemplate->document = $document;
         $docTemplate->isNi = $isNi;
         $docTemplate->suppressFromOp = $suppressFromOp;
-        $docTemplate->deletedDate = static::processDate($deletedDate);
+        $docTemplate->templateSlug = $templateSlug;
         $docTemplate->category = $category;
         $docTemplate->createdBy = $createdBy;
 
@@ -71,15 +72,15 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
      * @param Category $category
      * @param SubCategory $subCategory
      * @param string $description
-     * @param bool $isNi
+     * @param string $isNi
      * @param string $suppressFromOp
      * @return DocTemplate
      */
     public function updateMeta(
         Category $category,
-        SubCategory $subCategory,
+        ?SubCategory $subCategory,
         string $description,
-        bool $isNi,
+        string $isNi,
         string $suppressFromOp
     ) {
         $this->category = $category;

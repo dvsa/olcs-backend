@@ -86,7 +86,7 @@ class Update extends AbstractCommandHandler implements
             $this->getRepo('Category')->getReference(Category::class, $command->getCategory()),
             $this->getRepo('SubCategory')->getReference(SubCategory::class, $command->getSubCategory()),
             $command->getDescription(),
-            $command->getTemplateFolder() === 'ni' ? 'Y' : 'N',
+            $command->getIsNi(),
             $command->getSuppressFromOp()
         );
     }
