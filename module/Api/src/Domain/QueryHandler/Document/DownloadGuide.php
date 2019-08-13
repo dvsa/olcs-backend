@@ -10,6 +10,8 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class DownloadGuide extends AbstractDownload
 {
+    protected $extraRepos = ['DocTemplate'];
+
     /**
      * Handle query
      *
@@ -24,11 +26,28 @@ class DownloadGuide extends AbstractDownload
 
         $identifier = $query->getIdentifier();
 
+        if ($query->getIsSlug()) {
+            $identifier = $this->getIdentifierFromSlug($identifier);
+        }
+
         // make sure that the file identifier cannot go up directory structure to secure documents
         if (strpos($identifier, '..') !== false) {
             throw new NotFoundException();
         }
 
         return $this->download($identifier, '/guides/' . $identifier);
+    }
+
+    /**
+     * Lookup document store identifier for doc template slug
+     *
+     * @param string $slug
+     * @return string
+     * @throws NotFoundException
+     */
+    protected function getIdentifierFromSlug(string $slug)
+    {
+        $docTemplate = $this->getRepo('DocTemplate')->fetchByTemplateSlug($slug);
+        return basename($docTemplate->getDocument()->getIdentifier());
     }
 }
