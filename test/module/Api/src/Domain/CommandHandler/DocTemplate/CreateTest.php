@@ -89,7 +89,8 @@ class CreateTest extends CommandHandlerTestCase
             'subCategory' => 22,
             'templateFolder' => 'root',
             'description' => 'description',
-            'suppressFromOp' => 0,
+            'suppressFromOp' => 'N',
+            'isNi' => 'N'
         ];
 
         $command = TransferCmd\DocTemplate\Create::create($data);
@@ -178,7 +179,7 @@ class CreateTest extends CommandHandlerTestCase
             'subCategory' => 22,
             'templateFolder' => 'root',
             'description' => 'description',
-            'suppressFromOp' => 0,
+            'suppressFromOp' => 'N',
         ];
 
         $command = TransferCmd\DocTemplate\Create::create($data);

@@ -98,9 +98,9 @@ class Create extends AbstractCommandHandler implements
             $this->getRepo('SubCategory')->getReference(SubCategory::class, $command->getSubCategory()),
             $command->getDescription(),
             $this->getRepo('Document')->getReference(Document::class, $this->result->getIds()['document']),
-            $command->getTemplateFolder() === 'ni' ? 'Y' : 'N',
+            $command->getIsNi(),
             $command->getSuppressFromOp(),
-            null,
+            $command->getTemplateSlug(),
             $this->getRepo('User')->getReference(User::class, $this->getCurrentUser())
         );
     }
