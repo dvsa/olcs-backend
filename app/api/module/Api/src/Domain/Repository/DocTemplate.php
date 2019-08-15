@@ -8,6 +8,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as Entity;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
  * DocTemplate
@@ -28,5 +29,18 @@ class DocTemplate extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('m.subCategory', ':subCategory'))
                 ->setParameter('subCategory', $query->getSubCategory());
         }
+    }
+
+    /**
+     * Fetch by template slug
+     *
+     * @param string $slug Template Slug String
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Doc\DocTemplate
+     * @throws NotFoundException
+     */
+    public function fetchByTemplateSlug(string $slug)
+    {
+        return $this->fetchOneByX('templateSlug', [$slug]);
     }
 }

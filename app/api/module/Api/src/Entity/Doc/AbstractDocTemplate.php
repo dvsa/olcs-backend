@@ -144,7 +144,7 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
      * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
-     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
      */
     protected $subCategory;
 
@@ -156,6 +156,15 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
      * @ORM\Column(type="yesno", name="suppress_from_op", nullable=false)
      */
     protected $suppressFromOp;
+
+    /**
+     * Template slug
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="template_slug", length=100, nullable=true)
+     */
+    protected $templateSlug;
 
     /**
      * Version
@@ -503,6 +512,30 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     public function getSuppressFromOp()
     {
         return $this->suppressFromOp;
+    }
+
+    /**
+     * Set the template slug
+     *
+     * @param string $templateSlug new value being set
+     *
+     * @return DocTemplate
+     */
+    public function setTemplateSlug($templateSlug)
+    {
+        $this->templateSlug = $templateSlug;
+
+        return $this;
+    }
+
+    /**
+     * Get the template slug
+     *
+     * @return string
+     */
+    public function getTemplateSlug()
+    {
+        return $this->templateSlug;
     }
 
     /**
