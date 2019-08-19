@@ -274,7 +274,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param \Dvsa\Olcs\Api\Entity\System\SubCategory              $subCategory     sub category
      * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre operating centre
      *
-     * @return Collection
+     * @return ArrayCollection
      */
     public function getApplicationDocuments($category, $subCategory, $operatingCentre = null)
     {
@@ -2197,5 +2197,16 @@ class Application extends AbstractApplication implements ContextProviderInterfac
             }
         }
         return $applicationOrgPeopleAdded;
+    }
+
+    public function getPostSubmittedApplicationDocuments($category, $subCategory, $operatingCentre = null)
+    {
+        $applicationDocuments = $this->getApplicationDocuments($category, $subCategory, $operatingCentre);
+
+        $expr = Criteria::expr();
+        $criteria = Criteria::create();
+        $criteria->where($expr->eq('postSubmissionUpload', true));
+
+        return $applicationDocuments->matching($criteria);
     }
 }
