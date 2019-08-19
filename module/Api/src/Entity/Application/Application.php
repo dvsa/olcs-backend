@@ -2205,7 +2205,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
         $expr = Criteria::expr();
         $criteria = Criteria::create();
-        $criteria->where($expr->eq('postSubmissionUpload', true));
+        $criteria->where($expr->eq('isPostSubmissionUpload', true));
 
         return $applicationDocuments->matching($criteria);
     }

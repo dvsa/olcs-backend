@@ -485,9 +485,9 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @var boolean
      *
-     * @ORM\Column(type="boolean", name="post_submission_upload", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="is_post_submission_upload", nullable=false, options={"default": 0})
      */
-    protected $postSubmissionUpload = 0;
+    protected $isPostSubmissionUpload = 0;
 
     /**
      * Initialise the collections
@@ -1575,16 +1575,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * @return boolean
      */
-    public function isPostSubmissionUpload()
+    public function getIsPostSubmissionUpload()
     {
-        return $this->postSubmissionUpload;
+        return $this->isPostSubmissionUpload;
     }
 
     /**
-     * @param boolean $postSubmissionUpload
+     * @param boolean $isPostSubmissionUpload
      */
-    public function setPostSubmissionUpload($postSubmissionUpload)
+    public function setIsPostSubmissionUpload($isPostSubmissionUpload)
     {
-        $this->postSubmissionUpload = $postSubmissionUpload;
+        $this->isPostSubmissionUpload = $isPostSubmissionUpload;
     }
 }

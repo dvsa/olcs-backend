@@ -83,7 +83,7 @@ final class CreateDocumentSpecific extends AbstractCommandHandler
     {
         $document->setIsExternal($command->getIsExternal());
         $document->setIsScan($command->getIsScan());
-        $document->setPostSubmissionUpload($command->getPostSubmissionUpload());
+        $document->setIsPostSubmissionUpload($command->getIsPostSubmissionUpload());
     }
 
     /**
