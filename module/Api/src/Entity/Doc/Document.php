@@ -31,32 +31,32 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class Document extends AbstractDocument implements OrganisationProviderInterface
 {
-    const GV_CONTINUATION_CHECKLIST = 1252;
-    const GV_CONTINUATION_CHECKLIST_NI = 1501;
-    const PSV_CONTINUATION_CHECKLIST = 1302;
-    const PSV_CONTINUATION_CHECKLIST_SR = 1303;
+    const GV_CONTINUATION_CHECKLIST = 'GVChecklist';
+    const GV_CONTINUATION_CHECKLIST_NI = 'GVChecklist';
+    const PSV_CONTINUATION_CHECKLIST = 'PSVChecklist';
+    const PSV_CONTINUATION_CHECKLIST_SR = 'PSVSRChecklist';
 
-    const GV_LICENCE_GB     = 1254; //templates/GB/GV_LICENCE_V1.rtf
-    const PSV_LICENCE_GB    = 1255; //templates/GB/PSV_LICENCE_V1.rtf
-    const PSR_SR_LICENCE_GB = 1310; //templates/GB/PSVSRLicence.rtf
-    const GV_LICENCE_NI     = 1512; //templates/NI/GV_LICENCE_V1.rtf
-    const PSV_LICENCE_NI    = 1516; //templates/NI/PSV_LICENCE_V1.rtf
-    const PSR_SR_LICENCE_NI = 1518; //templates/NI/PSVSRLicence.rtf
+    const GV_LICENCE_GB     = 'GV_LICENCE_V1';
+    const PSV_LICENCE_GB    = 'PSV_LICENCE_V1';
+    const PSR_SR_LICENCE_GB = 'PSVSRLicence';
+    const GV_LICENCE_NI     = 'GV_LICENCE_V1';
+    const PSV_LICENCE_NI    = 'PSV_LICENCE_V1';
+    const PSR_SR_LICENCE_NI = 'PSVSRLicence';
 
-    const BUS_REG_NEW = 1236;           //  /templates/GB/BUS_REG_NEW_REGISTRATION_TAN21.rtf
-    const BUS_REG_VARIATION = 1237;     //  /templates/GB/BUS_REG_VARIATION_TAN21.rtf
-    const BUS_REG_CANCELLATION = 1238;   //  /templates/GB/BUS_REG_CANCELLATION.rtf
-    const BUS_REG_NEW_REFUSE_SHORT_NOTICE = 1239;  //  /templates/GB/BUS_REG_NEW_REGISTRATION_REFUSE_SHORT_NOTICE.rtf
-    const BUS_REG_VARIATION_REFUSE_SHORT_NOTICE = 1240;  //  /templates/GB/BUS_REG_VARIATION_REFUSE_SHORT_NOTICE.rtf
-    const BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE = 1241;   //  /te.../GB/BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE.rtf
+    const BUS_REG_NEW = 'BUS_REG_NEW_REGISTRATION_TAN21';
+    const BUS_REG_VARIATION = 'BUS_REG_VARIATION_TAN21';
+    const BUS_REG_CANCELLATION = 'BUS_REG_CANCELLATION';
+    const BUS_REG_NEW_REFUSE_SHORT_NOTICE = 'BUS_REG_NEW_REGISTRATION_REFUSE_SHORT_NOTICE';
+    const BUS_REG_VARIATION_REFUSE_SHORT_NOTICE = 'BUS_REG_VARIATION_REFUSE_SHORT_NOTICE';
+    const BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE = 'BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE';
 
-    const GV_DISC_LETTER_GB  = 1730; // /templates/GB/GVDiscLetter.rtf
-    const GV_DISC_LETTER_NI  = 1731; // /templates/NI/GVDiscLetter.rtf
-    const GV_VEHICLE_LIST_GB = 1258; // /templates/GB/GVVehiclesList.rtf
-    const GV_VEHICLE_LIST_NI = 1513; // /templates/NI/GVVehiclesList.rtf
+    const GV_DISC_LETTER_GB  = 'GVDiscLetter';
+    const GV_DISC_LETTER_NI  = 'GVDiscLetter';
+    const GV_VEHICLE_LIST_GB = 'GVVehiclesList';
+    const GV_VEHICLE_LIST_NI = 'GVVehiclesList';
 
-    const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_GB = 1041; // /tempates/GB/CNS_Letter_to_operator.rtf
-    const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_NI = 'LICENCE_TERMINATED_CONT_FEE_NOT_PAID'; // /tempates/NI/CNS_Letter_to_operator.rtf
+    const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_GB = 'LICENCE_TERMINATED_CONT_FEE_NOT_PAID';
+    const LICENCE_TERMINATED_CONT_FEE_NOT_PAID_NI = 'LICENCE_TERMINATED_CONT_FEE_NOT_PAID';
 
     const GV_UK_COMMUNITY_LICENCE_GB = 'UK_licence_for_the_Community_GV_GB';
     const GV_UK_COMMUNITY_LICENCE_GB_COVER_LETTER = 'UK_licence_for_the_Community_Cover_Letter_GV_GB';
