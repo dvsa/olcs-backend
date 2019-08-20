@@ -298,7 +298,6 @@ class ApplicationEntityTest extends EntityTester
         $this->entity->setOperatingCentres($aocCollection);
 
         $this->assertEquals($mockAoc1, $this->entity->getApplicationOperatingCentreById(1));
-
     }
 
     /**
@@ -373,7 +372,6 @@ class ApplicationEntityTest extends EntityTester
 
         try {
             static::assertTrue($sut->validateFinancialHistory($flags, $text));
-
         } catch (ValidationException $e) {
             static::assertEquals(
                 [
@@ -928,7 +926,6 @@ class ApplicationEntityTest extends EntityTester
             [null, '2015-06-22', '2015-06-22'],
             [null, null, null],
         ];
-
     }
 
     public function testGetRemainingSpaces()
@@ -3633,8 +3630,7 @@ class ApplicationEntityTest extends EntityTester
     public function testGetApplicationOrganisationPersonsAdded(
         $applicationOrganisationPersonsActions,
         $expectedApplicationOrganisationPersonsActions
-    )
-    {
+    ) {
 
         $applicationOrganisationPersons = $this->createMockApplicationOrganisationPersons(
             $applicationOrganisationPersonsActions
@@ -3683,8 +3679,66 @@ class ApplicationEntityTest extends EntityTester
         ];
 
         return $dataProvider;
+    }
 
+    /**
+     * @group applicationEntity
+     */
+    public function testGetPostSubmissionApplicationDocuments()
+    {
+        $mockDocument1 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory')
+            ->once()
+            ->shouldReceive('getoperatingCentre')
+            ->andReturn('operatingCentre')
+            ->once()
+            ->shouldReceive('getisPostSubmissionUpload')
+            ->andReturn(1)
+            ->once()
+            ->getMock();
 
+        $mockDocument2 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category1')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory1')
+            ->never()
+            ->shouldReceive('getoperatingCentre')
+            ->andReturn('operatingCentre1')
+            ->never()
+            ->shouldReceive('getisPostSubmissionUpload')
+            ->andReturn(0)
+            ->never()
+            ->getMock();
+
+        $mockDocument3 = m::mock()
+            ->shouldReceive('getcategory')
+            ->andReturn('category')
+            ->once()
+            ->shouldReceive('getsubCategory')
+            ->andReturn('subCategory')
+            ->once()
+            ->shouldReceive('getoperatingCentre')
+            ->andReturn('operatingCentre')
+            ->once()
+            ->shouldReceive('getisPostSubmissionUpload')
+            ->andReturn(0)
+            ->once()
+            ->getMock();
+
+        $documentsCollection = new ArrayCollection([$mockDocument1, $mockDocument2, $mockDocument3]);
+        $expected = new ArrayCollection([$mockDocument1]);
+
+        $this->entity->setDocuments($documentsCollection);
+        $this->assertEquals(
+            $expected,
+            $this->entity->getPostSubmissionApplicationDocuments('category', 'subCategory', 'operatingCentre')
+        );
     }
 
     private function createMockApplicationOrganisationPersons($actions = array())
@@ -3699,6 +3753,5 @@ class ApplicationEntityTest extends EntityTester
         }
 
         return new ArrayCollection($applicationOrganisationPersons);
-
     }
 }

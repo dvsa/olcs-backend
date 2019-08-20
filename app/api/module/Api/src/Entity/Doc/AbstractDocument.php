@@ -481,6 +481,15 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $slaTargetDate;
 
     /**
+     * Was uploaded post submission
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="is_post_submission_upload", nullable=false, options={"default": 0})
+     */
+    protected $isPostSubmissionUpload = 0;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -1561,5 +1570,21 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function setLastModifiedOnBeforeUpdate()
     {
         $this->lastModifiedOn = new \DateTime();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsPostSubmissionUpload()
+    {
+        return $this->isPostSubmissionUpload;
+    }
+
+    /**
+     * @param boolean $isPostSubmissionUpload
+     */
+    public function setIsPostSubmissionUpload($isPostSubmissionUpload)
+    {
+        $this->isPostSubmissionUpload = $isPostSubmissionUpload;
     }
 }
