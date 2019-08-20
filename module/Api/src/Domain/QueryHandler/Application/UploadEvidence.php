@@ -30,7 +30,7 @@ class UploadEvidence extends AbstractQueryHandler
         /** @var \Dvsa\Olcs\Api\Domain\Repository\Application $applicationRepo */
         $applicationRepo = $this->getRepo();
 
-        $financialEvidenceDocuments = $application->getPostSubmittedApplicationDocuments(
+        $financialEvidenceDocuments = $application->getPostSubmissionApplicationDocuments(
             $applicationRepo->getCategoryReference(Entity\System\Category::CATEGORY_APPLICATION),
             $applicationRepo->getSubCategoryReference(
                 Entity\System\SubCategory::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL

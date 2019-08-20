@@ -62,7 +62,8 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'application' => 123,
             'issuedDate' => '2015-01-01',
             'metadata' => 'foo',
-            'isEbsrPack' => 0
+            'isEbsrPack' => 0,
+            'isPostSubmissionUpload' => 1
         ];
 
         $command = Cmd::create($data);
@@ -72,7 +73,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             ->andReturnUsing(
                 function (Entity $document) {
                     $document->setId(111);
-
                     $this->assertEquals('ABCDEF', $document->getIdentifier());
                     $this->assertNull($document->getIsExternal());
                     $this->assertEquals('foo.pdf', $document->getFilename());
@@ -83,6 +83,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
                     $this->assertEquals('foo', $document->getMetadata());
+                    $this->assertEquals(1, $document->getIsPostSubmissionUpload());
                 }
             );
 
@@ -117,7 +118,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'application' => 123,
             'issuedDate' => '2015-01-01',
             'metadata' => 'foo',
-            'isEbsrPack' => true
+            'isEbsrPack' => true,
         ];
 
         $command = Cmd::create($data);
@@ -138,6 +139,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertInstanceOf('\DateTime', $document->getIssuedDate());
                     $this->assertEquals('2015-01-01', $document->getIssuedDate()->format('Y-m-d'));
                     $this->assertEquals('foo', $document->getMetadata());
+                    $this->assertEquals(0, $document->getIsPostSubmissionUpload());
                 }
             );
 
@@ -168,7 +170,8 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
             'category' => 1,
             'subCategory' => 2,
             'application' => 123,
-            'isEbsrPack' => 0
+            'isEbsrPack' => 0,
+            'isPostSubmissionUpload' => 0
         ];
 
         $command = Cmd::create($data);
@@ -186,6 +189,7 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertSame($this->categoryReferences[1], $document->getCategory());
                     $this->assertSame($this->subCategoryReferences[2], $document->getSubCategory());
                     $this->assertNull($document->getLicence());
+                    $this->assertEquals(0, $document->getIsPostSubmissionUpload());
                 }
             );
 
