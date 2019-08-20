@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpApplication;
 
 use DateTime;
 use DateTimeZone;
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\FeeBreakdown;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;

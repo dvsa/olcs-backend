@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
 
@@ -13,15 +14,29 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
  */
 class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterface
 {
-    /**
-     * @var array
-     */
+    /** @var AnswersSummaryGenerator */
+    private $answersSummaryGenerator;
+
+    /** @var array */
     private $data;
+
+    /**
+     * Create service instance
+     *
+     * @param AnswersSummaryGenerator $answersSummaryGenerator
+     *
+     * @return IrhpGenerator
+     */
+    public function __construct(AnswersSummaryGenerator $answersSummaryGenerator)
+    {
+        $this->answersSummaryGenerator = $answersSummaryGenerator;
+    }
 
     /**
      * Generate the snapshot html
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function generate(): string
@@ -35,12 +50,16 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
 
         $permitType = $irhpApplication->getIrhpPermitType();
 
+        $answersSummaryRepresentation = $this->answersSummaryGenerator->generate($irhpApplication, true)
+            ->getRepresentation();
+
         return $this->generateReadonly(
             [
                 'permitType' => $permitType->getName()->getDescription(),
                 'operator' => $irhpApplication->getLicence()->getOrganisation()->getName(),
                 'ref' => $irhpApplication->getApplicationRef(),
-                'questionAnswerData' => $irhpApplication->getQuestionAnswerData(true),
+                'questionAnswerPartialName' => 'question-answer-section-qa',
+                'questionAnswerData' => $answersSummaryRepresentation['rows'],
                 'guidanceDeclaration' => [
                     'bullets' => 'markup-irhp-declaration-' . $permitType->getId(),
                     'declaration' => 'permits.snapshot.declaration',

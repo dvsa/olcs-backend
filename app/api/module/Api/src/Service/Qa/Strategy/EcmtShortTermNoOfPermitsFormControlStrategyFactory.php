@@ -21,7 +21,8 @@ class EcmtShortTermNoOfPermitsFormControlStrategyFactory implements FactoryInter
             $serviceLocator->get('QaEcmtShortTermNoOfPermitsElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerSaver'),
             $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerClearer'),
-            $serviceLocator->get('QaEcmtShortTermNoOfPermitsQuestionTextGenerator')
+            $serviceLocator->get('QaEcmtShortTermNoOfPermitsQuestionTextGenerator'),
+            $serviceLocator->get('QaEcmtShortTermNoOfPermitsAnswerSummaryProvider')
         );
     }
 }

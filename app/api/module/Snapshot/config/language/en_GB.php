@@ -374,6 +374,8 @@ return [
 
     //permit snapshot translations
     'permits.check-answers.page.question.licence' => 'Licence selected',
+    'permits.check-your-answers.countries' => '%s permits for %s in %s',
+    'permits.check-your-answers.no-of-permits' => '%s permits in %s',
     'permits.form.euro-emissions.label' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
     'permits.form.cabotage.label' => 'I confirm that I will not undertake any cabotage journeys using an ECMT permit.',
     'permits.page.roadworthiness.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
@@ -386,6 +388,8 @@ return [
     'permits.snapshot.title' => 'Application for %s permits',
     'permits.snapshot.declaration' => 'I declare that the statements and information provided are true and that my application is correct. I understand that it is an offence to make a false declaration to obtain a permit.',
     'permits.irhp.countries.transporting' => 'Countries transporting goods to',
+    'permits.irhp.application.question.countries' => 'Select the country you are transporting goods to',
+    'permits.irhp.application.question.no-of-permits' => 'How many permits do you require?',
 
     'qanda.ecmt-removal.removal-eligibility.question' => 'Removal permits can only be used for removal operations using specialised equipment and staff',
     'qanda.ecmt-removal.cabotage.question' => 'Removal permits do not allow you to carry out cabotage',
@@ -396,10 +400,7 @@ return [
     'section.name.application/check-answers' => 'Check your answers',
     'section.name.application/declaration' => 'Declaration',
 
-    'st_permit_usage_transit_only' => 'Transit only',
-    'st_permit_usage_cross_trade_only' => 'Cross-trade only',
-    'st_permit_usage_both' => 'Both transit and cross-trade',
-
+    // TODO: these three keys should be removable following the ECMT->IRHP migration
     'inter_journey_less_60' => 'Less than 60%',
     'inter_journey_60_90' => '60% to 90%',
     'inter_journey_more_90' => 'More than 90%',
@@ -433,6 +434,14 @@ return [
     'permits.page.stock.select.option.2' => 'Permits for journeys starting between 1 April and 31 May 2020',
     'permits.page.stock.select.option.3' => 'Permits for journeys starting between 1 June and 31 July 2020',
     'permits.page.stock.select.option.4' => 'Permits for journeys starting between 1 August and 31 December 2020',
+
+    'qanda.ecmt-short-term.cabotage.checkbox.summary-answer' => 'I confirm that I will not undertake cabotage journeys with an short term ECMT permit',
+    'qanda.ecmt-short-term.certificates.checkbox.summary-answer' => 'I understand that I must obtain and carry the appropriate ECMT Certificate of Compliance and Certificate of Roadworthiness for each vehicle and trailer I intend to use with this permit.',
+    'qanda.ecmt-short-term.emissions.checkbox.summary-answer' => 'I confirm that I will only use my ECMT permits with vehicles that are environmentally compliant with the minimum Euro emissions standards that the permit allows.',
+
+    'qanda.common.no-of-permits.emissions-category.line' => '%s permits for %s minimum emission standard',
+    'qanda.common.no-of-permits.emissions-category.euro5' => 'Euro 5',
+    'qanda.common.no-of-permits.emissions-category.euro6' => 'Euro 6',
 
     // Potentially unused translations
 ];

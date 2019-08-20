@@ -80,6 +80,7 @@ class EcmtAnnualGeneratorTest extends MockeryTestCase
             'operator' => $operatorName,
             'ref' => $applicationRef,
             'questionAnswerData' => $questionAnswerData,
+            'questionAnswerPartialName' => 'question-answer-section',
             'guidanceDeclaration' => [
                 'bullets' => 'markup-irhp-declaration-1',
                 'declaration' => 'permits.snapshot.declaration',

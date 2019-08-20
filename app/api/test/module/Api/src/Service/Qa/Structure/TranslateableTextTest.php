@@ -92,6 +92,14 @@ class TranslateableTextTest extends MockeryTestCase
         );
     }
 
+    public function testGetKey()
+    {
+        $this->assertEquals(
+            $this->key,
+            $this->translateableText->getKey()
+        );
+    }
+
     public function testGetParameter()
     {
         $this->assertSame(
