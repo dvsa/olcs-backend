@@ -41,7 +41,7 @@ class UploadEvidenceTest extends QueryHandlerTestCase
 
         /** @var ApplicationEntity|m\Mock $application */
         $application = m::mock(ApplicationEntity::class)->makePartial();
-        $application->shouldReceive('getApplicationDocuments')
+        $application->shouldReceive('getPostSubmissionApplicationDocuments')
             ->with('CAT_REF', 'SUB_CAT_REF')->once()->andReturn($documentCollection);
         $application->shouldReceive('canAddFinancialEvidence')->with()->once()->andReturn('CAN_ADD_FE');
 
