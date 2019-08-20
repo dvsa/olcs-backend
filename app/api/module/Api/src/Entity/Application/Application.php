@@ -2199,13 +2199,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         return $applicationOrgPeopleAdded;
     }
 
-    public function getPostSubmittedApplicationDocuments($category, $subCategory, $operatingCentre = null)
+    public function getPostSubmissionApplicationDocuments($category, $subCategory, $operatingCentre = null)
     {
         $applicationDocuments = $this->getApplicationDocuments($category, $subCategory, $operatingCentre);
 
         $expr = Criteria::expr();
         $criteria = Criteria::create();
-        $criteria->where($expr->eq('isPostSubmissionUpload', true));
+        $criteria->where($expr->eq('isPostSubmissionUpload', 1));
 
         return $applicationDocuments->matching($criteria);
     }
