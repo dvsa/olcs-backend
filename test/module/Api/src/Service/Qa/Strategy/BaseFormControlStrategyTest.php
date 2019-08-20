@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Strategy;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerClearerInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
@@ -33,6 +34,8 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
     private $questionTextGenerator;
 
+    private $answerSummaryProvider;
+
     private $baseFormControlStrategy;
 
     public function setUp()
@@ -47,12 +50,15 @@ class BaseFormControlStrategyTest extends MockeryTestCase
 
         $this->questionTextGenerator = m::mock(QuestionTextGeneratorInterface::class);
 
+        $this->answerSummaryProvider = m::mock(AnswerSummaryProviderInterface::class);
+
         $this->baseFormControlStrategy = new BaseFormControlStrategy(
             $this->frontendType,
             $this->elementGenerator,
             $this->answerSaver,
             $this->answerClearer,
-            $this->questionTextGenerator
+            $this->questionTextGenerator,
+            $this->answerSummaryProvider
         );
     }
 
@@ -125,6 +131,14 @@ class BaseFormControlStrategyTest extends MockeryTestCase
         $this->assertSame(
             $questionText,
             $this->baseFormControlStrategy->getQuestionText($questionTextGeneratorContext)
+        );
+    }
+
+    public function getAnswerSummaryProvider()
+    {
+        $this->assertSame(
+            $this->answerSummaryProvider,
+            $this->baseFormControlStrategy->getAnswerSummaryProvider()
         );
     }
 }

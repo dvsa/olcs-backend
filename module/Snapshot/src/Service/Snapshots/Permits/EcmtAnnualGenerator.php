@@ -38,6 +38,7 @@ class EcmtAnnualGenerator extends AbstractGenerator implements SnapshotGenerator
                 'permitType' => $ecmtPermitApplication->getPermitType()->getDescription(),
                 'operator' => $ecmtPermitApplication->getLicence()->getOrganisation()->getName(),
                 'ref' => $ecmtPermitApplication->getApplicationRef(),
+                'questionAnswerPartialName' => 'question-answer-section',
                 'questionAnswerData' => $ecmtPermitApplication->getQuestionAnswerData(),
                 'guidanceDeclaration' => [
                     'bullets' => 'markup-irhp-declaration-1',

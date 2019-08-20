@@ -16,4 +16,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class QuestionText extends AbstractQuestionText
 {
+    /**
+     * Return the translation key from the json array in the question key field
+     *
+     * @return string
+     */
+    public function getTranslationKeyFromQuestionKey()
+    {
+        $questionJson = json_decode($this->questionKey, true);
+        return $questionJson['translateableText']['key'];
+    }
 }

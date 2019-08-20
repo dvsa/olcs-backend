@@ -1,0 +1,16 @@
+<strong><?php echo($this->escapeHtml($this->translate($periodNameKey, 'snapshot'))); ?></strong>
+<?php
+foreach ($emissionsCategories as $emissionsCategory) {
+
+    if ($emissionsCategory['count'] > 0) {
+        $translatedKey = $this->translate($emissionsCategory['key'], 'snapshot');
+
+        $line = sprintf(
+            $this->translate('qanda.common.no-of-permits.emissions-category.line', 'snapshot'),
+            $emissionsCategory['count'],
+            $translatedKey
+        );
+
+        echo('<br>' . $this->escapeHtml($line));
+    }
+}

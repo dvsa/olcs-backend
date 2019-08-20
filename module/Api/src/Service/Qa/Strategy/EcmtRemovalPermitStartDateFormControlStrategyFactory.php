@@ -21,7 +21,8 @@ class EcmtRemovalPermitStartDateFormControlStrategyFactory implements FactoryInt
             $serviceLocator->get('QaEcmtRemovalPermitStartDateElementGenerator'),
             $serviceLocator->get('QaDateAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator'),
+            $serviceLocator->get('QaDateAnswerSummaryProvider')
         );
     }
 }
