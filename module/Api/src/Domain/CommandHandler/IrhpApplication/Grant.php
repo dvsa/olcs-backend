@@ -35,6 +35,9 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
 
     protected $extraRepos = ['FeeType'];
 
+    const ERR_IRHP_GRANT_CANNOT_GRANT = 'ERR_IRHP_GRANT_CANNOT_GRANT';
+    const ERR_IRHP_GRANT_TOO_MANY_PERMITS = 'ERR_IRHP_GRANT_TOO_MANY_PERMITS';
+
     /** @var GrantabilityChecker */
     private $grantabilityChecker;
 
@@ -70,11 +73,11 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
 
         if (!$this->grantabilityChecker->isGrantable($irhpApplication)) {
-            throw new ForbiddenException('Insufficient permit availability to grant this application');
+            throw new ForbiddenException(self::ERR_IRHP_GRANT_TOO_MANY_PERMITS);
         }
 
         if (!$irhpApplication->canBeGranted()) {
-            throw new ForbiddenException('This application cannot be granted');
+            throw new ForbiddenException(self::ERR_IRHP_GRANT_CANNOT_GRANT);
         }
 
         $irhpApplication->grant($this->refData(IrhpInterface::STATUS_AWAITING_FEE));

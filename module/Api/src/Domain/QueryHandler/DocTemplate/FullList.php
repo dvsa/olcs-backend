@@ -11,6 +11,5 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractListQueryHandler;
  */
 class FullList extends AbstractListQueryHandler
 {
-    protected $repoServiceName = 'DocTemplate';
-    protected $bundle = ['category', 'subCategory', 'document'];
+    protected $repoServiceName = 'DocTemplateSearchView';
 }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -167,7 +168,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
-            'canBeUpdated' => $this->canBeUpdated(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
             'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
@@ -197,9 +197,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get question and answer data
      *
+     * @param bool $isSnapshot whether this data is for a snapshot
+     *
      * @return array
      */
-    public function getQuestionAnswerData(): array
+    public function getQuestionAnswerData(bool $isSnapshot = false): array
     {
         // kept for backward compatibility only
         if ($this->isBilateral()) {
@@ -213,12 +215,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $status = !empty($answer)
             ? SectionableInterface::SECTION_COMPLETION_COMPLETED
             : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+        $question = $isSnapshot ? 'permits.check-answers.page.question.licence' : 'section.name.application/licence';
+
         $data = [
             'custom-licence' => [
                 'section' => 'licence',
                 'slug' => 'custom-licence',
                 'questionShort' => 'section.name.application/licence',
-                'question' => 'section.name.application/licence',
+                'question' => $question,
                 'questionType' => Question::QUESTION_TYPE_STRING,
                 'answer' =>  $answer,
                 'status' => $status,
@@ -241,7 +245,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
 
                 if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-                    $answer = $this->getAnswer($applicationStep);
+                    $answer = $this->getAnswer($applicationStep, $isSnapshot);
 
                     $status = isset($answer)
                         ? SectionableInterface::SECTION_COMPLETION_COMPLETED
@@ -267,46 +271,49 @@ class IrhpApplication extends AbstractIrhpApplication implements
             }
         }
 
-        // checked answers
-        $answer = null;
-        $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+        //we don't include check answers and declaration on html snapshots
+        if (!$isSnapshot) {
+            // checked answers
+            $answer = null;
+            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
 
-        if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-            $answer = $this->getCheckedAnswers();
-            $status = !empty($answer)
-                ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-                : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+                $answer = $this->getCheckedAnswers();
+                $status = !empty($answer)
+                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+            }
+
+            $data['custom-check-answers'] = [
+                'section' => 'checkedAnswers',
+                'slug' => 'custom-check-answers',
+                'questionShort' => 'section.name.application/check-answers',
+                'question' => 'section.name.application/check-answers',
+                'answer' => $answer,
+                'status' => $status,
+            ];
+            $previousQuestionStatus = $status;
+
+            // declaration
+            $answer = null;
+            $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
+
+            if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
+                $answer = $this->getDeclaration();
+                $status = !empty($answer)
+                    ? SectionableInterface::SECTION_COMPLETION_COMPLETED
+                    : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
+            }
+
+            $data['custom-declaration'] = [
+                'section' => 'declaration',
+                'slug' => 'custom-declaration',
+                'questionShort' => 'section.name.application/declaration',
+                'question' => 'section.name.application/declaration',
+                'answer' => $answer,
+                'status' => $status,
+            ];
         }
-
-        $data['custom-check-answers'] = [
-            'section' => 'checkedAnswers',
-            'slug' => 'custom-check-answers',
-            'questionShort' => 'section.name.application/check-answers',
-            'question' => 'section.name.application/check-answers',
-            'answer' => $answer,
-            'status' => $status,
-        ];
-        $previousQuestionStatus = $status;
-
-        // declaration
-        $answer = null;
-        $status = SectionableInterface::SECTION_COMPLETION_CANNOT_START;
-
-        if ($previousQuestionStatus === SectionableInterface::SECTION_COMPLETION_COMPLETED) {
-            $answer = $this->getDeclaration();
-            $status = !empty($answer)
-                ? SectionableInterface::SECTION_COMPLETION_COMPLETED
-                : SectionableInterface::SECTION_COMPLETION_NOT_STARTED;
-        }
-
-        $data['custom-declaration'] = [
-            'section' => 'declaration',
-            'slug' => 'custom-declaration',
-            'questionShort' => 'section.name.application/declaration',
-            'question' => 'section.name.application/declaration',
-            'answer' => $answer,
-            'status' => $status,
-        ];
 
         return $data;
     }
@@ -314,9 +321,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get an answer to the given application step
      *
-     * @return mix|null
+     * @param bool $isSnapshot whether the answer should be returned in the context of a snapshot
+     *
+     * @return mixed|null
      */
-    public function getAnswer(ApplicationStep $applicationStep)
+    public function getAnswer(ApplicationStep $applicationStep, bool $isSnapshot = false)
     {
         $question = $applicationStep->getQuestion();
 
@@ -326,7 +335,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
-                    return $this->getEcmtShortTermNoOfPermitsAnswer();
+                    return $this->getEcmtShortTermNoOfPermitsAnswer($isSnapshot);
             }
 
             throw new RuntimeException(
@@ -372,9 +381,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Get the number of permits answer values for a custom element of type ecmt short term
      *
+     * @param bool $isSnapshot whether this answer is being produced in context of a snapshot
+     *
      * @return array|null
      */
-    private function getEcmtShortTermNoOfPermitsAnswer()
+    private function getEcmtShortTermNoOfPermitsAnswer($isSnapshot = false)
     {
         $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
 
@@ -385,7 +396,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return null;
         }
 
-        $answer = [];
+        //for snapshots we include a heading containing the validity year
+        if ($isSnapshot) {
+            $year = $this->getFirstIrhpPermitApplication()
+                ->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getValidityYear();
+            $answer = ['Permits for '  . $year];
+        }
 
         if ($requiredEuro5) {
             $answer[] = $requiredEuro5 . ' permits for Euro 5 minimum emission standard';
@@ -903,6 +921,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
      *
      * @return FeeEntity|null
      */
+    public function getLatestIssueFee()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(['invoicedDate' => Criteria::DESC]);
+
+        /** @var FeeEntity $fee */
+        foreach ($this->getFees()->matching($criteria) as $fee) {
+            if ($fee->getFeeType()->getFeeType()->getId() == FeeTypeEntity::FEE_TYPE_IRHP_ISSUE) {
+                return $fee;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the latest outstanding issue fee, or none if no issue fee is present
+     *
+     * @return FeeEntity|null
+     */
     public function getLatestOutstandingIssueFee()
     {
         return $this->getLatestOutstandingFeeByTypes([FeeTypeEntity::FEE_TYPE_IRHP_ISSUE]);
@@ -992,7 +1030,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeUpdated()
     {
-        return $this->isNotYetSubmitted();
+        return $this->isNotYetSubmitted() || $this->isUnderConsideration();
     }
 
     /**
@@ -1126,7 +1164,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function withdraw(RefData $withdrawStatus, RefData $withdrawReason): void
     {
         if (!$this->canBeWithdrawn($withdrawReason)) {
-            throw new ForbiddenException(WithdrawableInterface::ERR_CANT_WITHDRAW);
+            $error = ($withdrawReason->getId() === WithdrawableInterface::WITHDRAWN_REASON_DECLINED)
+                ? WithdrawableInterface::ERR_CANT_DECLINE : WithdrawableInterface::ERR_CANT_WITHDRAW;
+
+            throw new ValidationException([$error]);
         }
 
         $this->status = $withdrawStatus;
@@ -1451,5 +1492,43 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $this->irhpPermitApplications->first();
+    }
+
+    /**
+     * Changes the status to expired
+     *
+     * @param RefData $expireStatus
+     *
+     * @throws ForbiddenException
+     */
+    public function expire(RefData $expireStatus)
+    {
+        if (!$this->canBeExpired()) {
+            throw new ForbiddenException('This application cannot be expired.');
+        }
+
+        $this->status = $expireStatus;
+    }
+
+    /**
+     * Whether the application can be expired
+     *
+     * @return bool
+     */
+    public function canBeExpired()
+    {
+        if (!$this->isValid()) {
+            // only valid application can be expired
+            return false;
+        }
+
+        foreach ($this->getIrhpPermitApplications() as $irhpPermitApplication) {
+            if ($irhpPermitApplication->hasValidPermits()) {
+                // only application without any valid permits can be expired
+                return false;
+            }
+        }
+
+        return true;
     }
 }

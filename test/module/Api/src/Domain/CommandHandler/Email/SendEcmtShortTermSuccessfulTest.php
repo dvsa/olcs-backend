@@ -71,10 +71,20 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
         $irhpPermitApplication->shouldReceive('getRequiredEuro6')
             ->andReturn($euro6PermitsGranted);
 
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($this->applicationEntity)
+            ->once()
+            ->globally()
+            ->ordered();
+
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
         $this->applicationEntity->shouldReceive('getFirstIrhpPermitApplication')
             ->andReturn($irhpPermitApplication);
-        $this->applicationEntity->shouldReceive('getLatestOutstandingIssueFee')
+        $this->applicationEntity->shouldReceive('getLatestIssueFee')
+            ->withNoArgs()
+            ->once()
+            ->globally()
+            ->ordered()
             ->andReturn($issueFee);
 
         $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($this->orgEmails);

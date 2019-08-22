@@ -63,6 +63,8 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $irhpApplication;
 
+    protected $isPostSubmissionUpload = 0;
+
     /**
      * Get filename
      *
@@ -311,5 +313,13 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getIrhpApplication()
     {
         return $this->irhpApplication;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIsPostSubmissionUpload()
+    {
+        return $this->isPostSubmissionUpload;
     }
 }

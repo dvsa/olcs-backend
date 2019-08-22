@@ -17,6 +17,8 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SubmitApplicationStep extends AbstractCommandHandler
 {
+    protected $repoServiceName = 'IrhpApplication';
+
     /** @var ApplicationStepObjectsProvider */
     private $applicationStepObjectsProvider;
 
@@ -58,6 +60,10 @@ class SubmitApplicationStep extends AbstractCommandHandler
 
         $formControlStrategy = $this->formControlStrategyProvider->get($applicationStep);
         $formControlStrategy->saveFormData($applicationStep, $irhpApplication, $command->getPostData());
+
+        // reset check answers and declaration
+        $irhpApplication->resetCheckAnswersAndDeclaration();
+        $this->getRepo()->save($irhpApplication);
 
         return $this->result;
     }

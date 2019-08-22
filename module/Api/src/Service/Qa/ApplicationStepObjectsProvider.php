@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 class ApplicationStepObjectsProvider
 {
@@ -47,6 +48,7 @@ class ApplicationStepObjectsProvider
      */
     public function getObjects($irhpApplicationId, $slug)
     {
+        /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->irhpApplicationRepo->fetchById($irhpApplicationId);
         if (!$irhpApplication->isNotYetSubmitted()) {
             throw new ForbiddenException(self::ERR_ALREADY_SUBMITTED);

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
@@ -47,16 +46,11 @@ class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
             $irhpApplicationEntity->getIssueFeeProductReference()
         );
 
-        $feePerPermit = $irhpApplicationEntity->getFeePerPermit($applicationFee, $issueFee);
-        $applicationFeeFixedValue = $applicationFee->getFixedValue();
-
         $questionText = $this->questionTextGenerator->generate($context);
         $guidanceTranslateableText = $questionText->getGuidance()->getTranslateableText();
 
-        $guidanceTranslateableText->getParameter(0)->setValue($feePerPermit);
-        $guidanceTranslateableText->getParameter(1)->setValue($applicationFeeFixedValue);
-        $guidanceTranslateableText->getParameter(2)->setValue($issueFee->getFixedValue());
-        $guidanceTranslateableText->getParameter(3)->setValue($applicationFeeFixedValue);
+        $guidanceTranslateableText->getParameter(0)->setValue($applicationFee->getFixedValue());
+        $guidanceTranslateableText->getParameter(1)->setValue($issueFee->getFixedValue());
 
         return $questionText;
     }

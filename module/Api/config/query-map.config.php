@@ -637,6 +637,9 @@ return [
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
     TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
     TransferQuery\IrhpApplication\ApplicationPath::class => QueryHandler\IrhpApplication\ApplicationPath::class,
+    TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,
+    TransferQuery\IrhpApplication\PermitsAvailableByYear::class =>
+        QueryHandler\IrhpApplication\PermitsAvailableByYear::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,

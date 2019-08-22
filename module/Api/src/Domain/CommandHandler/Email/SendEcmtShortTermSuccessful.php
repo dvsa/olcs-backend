@@ -31,8 +31,10 @@ class SendEcmtShortTermSuccessful extends AbstractEmailHandler implements Toggle
      */
     protected function getTemplateVariables($recordObject): array
     {
+        $this->getRepo()->refresh($recordObject);
+
         $irhpPermitApplication = $recordObject->getFirstIrhpPermitApplication();
-        $issueFee = $recordObject->getLatestOutstandingIssueFee();
+        $issueFee = $recordObject->getLatestIssueFee();
         $invoicedDateTime = $issueFee->getInvoicedDateTime();
         $irhpApplicationId = $recordObject->getId();
 
