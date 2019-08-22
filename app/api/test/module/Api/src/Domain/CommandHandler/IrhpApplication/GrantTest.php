@@ -168,7 +168,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn($irhpApplicationId);
 
         $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage('This application cannot be granted');
+        $this->expectExceptionMessage(Grant::ERR_IRHP_GRANT_CANNOT_GRANT);
 
         $this->sut->handleCommand($command);
     }
@@ -192,7 +192,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn($irhpApplicationId);
 
         $this->expectException(ForbiddenException::class);
-        $this->expectExceptionMessage('Insufficient permit availability to grant this application');
+        $this->expectExceptionMessage(Grant::ERR_IRHP_GRANT_TOO_MANY_PERMITS);
 
         $this->sut->handleCommand($command);
     }

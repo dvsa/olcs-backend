@@ -1128,6 +1128,7 @@ return [
     TransferCommand\IrhpApplication\UpdateFull::class => CommandHandler\IrhpApplication\UpdateFull::class,
     Command\IrhpApplication\CreateDefaultIrhpPermitApplications::class => CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications::class,
     Command\IrhpApplication\ResetIrhpPermitApplications::class => CommandHandler\IrhpApplication\ResetIrhpPermitApplications::class,
+    Command\IrhpApplication\Expire::class => CommandHandler\IrhpApplication\Expire::class,
 
     // Permits Create
     TransferCommand\Permits\CreateEcmtPermitApplication::class => CommandHandler\Permits\CreateEcmtPermitApplication::class,

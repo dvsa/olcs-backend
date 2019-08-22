@@ -90,7 +90,8 @@ class UpdateTest extends CommandHandlerTestCase
             'subCategory' => 22,
             'templateFolder' => 'root',
             'description' => 'description',
-            'suppressFromOp' => 0,
+            'suppressFromOp' => 'N',
+            'isNi' => 'N'
         ];
 
         $command = TransferCmd\DocTemplate\Update::create($data);
@@ -109,7 +110,7 @@ class UpdateTest extends CommandHandlerTestCase
                 m::type(Entity\System\Category::class),
                 m::type(Entity\System\SubCategory::class),
                 $command->getDescription(),
-                'N',
+                $command->getIsNi(),
                 $command->getSuppressFromOp()
             )
             ->once();
@@ -206,7 +207,8 @@ class UpdateTest extends CommandHandlerTestCase
             'subCategory' => 22,
             'templateFolder' => 'root',
             'description' => 'new description',
-            'suppressFromOp' => 0,
+            'suppressFromOp' => 'N',
+            'isNi' => 'N'
         ];
 
         $command = TransferCmd\DocTemplate\Create::create($data);

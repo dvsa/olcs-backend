@@ -24,4 +24,5 @@ interface WithdrawableInterface
     const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
 
     const ERR_CANT_WITHDRAW = 'Unable to withdraw this application';
+    const ERR_CANT_DECLINE = 'Unable to decline this application, not in awaiting fee state';
 }

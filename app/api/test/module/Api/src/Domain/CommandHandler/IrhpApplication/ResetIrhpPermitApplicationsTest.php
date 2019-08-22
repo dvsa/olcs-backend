@@ -143,13 +143,16 @@ class ResetIrhpPermitApplicationsTest extends CommandHandlerTestCase
         );
     }
 
-    public function testHandleCommandEcmtShortTerm()
+    /**
+     * @dataProvider dpTestHandleCommandQaBasedPermitType
+     */
+    public function testHandleCommandQaBasedPermitType($permitTypeId)
     {
         $irhpApplicationId = 9;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+            ->andReturn($permitTypeId);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
@@ -164,6 +167,14 @@ class ResetIrhpPermitApplicationsTest extends CommandHandlerTestCase
             ->once();
 
         $this->sut->handleCommand($command);
+    }
+
+    public function dpTestHandleCommandQaBasedPermitType()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+        ];
     }
 
     public function testHandleCommandPermitTypeUnsupported()

@@ -24,6 +24,8 @@ return [
     QueryHandler\IrhpApplication\FeePerPermit::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ApplicationStep::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\ApplicationPath::class => Permits\CanAccessIrhpApplicationWithId::class,
+    QueryHandler\IrhpApplication\PermitsAvailable::class => Permits\CanAccessIrhpApplicationWithId::class,
+    QueryHandler\IrhpApplication\PermitsAvailableByYear::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\Sectors::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtConstrainedCountriesList::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EcmtPermitApplication::class => CanAccessOrganisationWithOrganisation::class,

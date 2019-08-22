@@ -29,7 +29,8 @@ class CreateDocumentTest extends \PHPUnit\Framework\TestCase
                 'isExternal' => 1,
                 'issuedDate' => '2015-01-01',
                 'size' => 100,
-                'user' => 1
+                'user' => 1,
+                'isPostSubmissionUpload' => 0
             ]
         );
 
@@ -43,5 +44,6 @@ class CreateDocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('2015-01-01', $command->getIssuedDate());
         $this->assertEquals(100, $command->getSize());
         $this->assertEquals(1, $command->getUser());
+        $this->assertEquals(0, $command->getIsPostSubmissionUpload());
     }
 }
