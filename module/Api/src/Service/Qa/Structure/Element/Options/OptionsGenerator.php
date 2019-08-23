@@ -9,10 +9,28 @@ class OptionsGenerator
     /** @var array */
     private $sources = [];
 
+    /** @var OptionListFactory */
+    private $optionListFactory;
+
+    /** @var OptionFactory */
+    private $optionFactory;
+
     /**
-     * Get a key/value array representing the options from the appropriate registered source
+     * Create service instance
      *
-     * @param array $data
+     * @param OptionListFactory $optionListFactory
+     * @param OptionFactory $optionFactory
+     *
+     * @return OptionsGenerator
+     */
+    public function __construct(OptionListFactory $optionListFactory, OptionFactory $optionFactory)
+    {
+        $this->optionListFactory = $optionListFactory;
+        $this->optionFactory = $optionFactory;
+    }
+
+    /**
+     * Get the converted representation of the specified options to be returned by the API endpoint
      *
      * @return array
      *
@@ -26,7 +44,10 @@ class OptionsGenerator
             throw new RuntimeException('No source found for name ' . $sourceName);
         }
 
-        return $this->sources[$sourceName]->generateOptions($data['options']);
+        $optionList = $this->optionListFactory->create($this->optionFactory);
+        $this->sources[$sourceName]->populateOptionList($optionList, $data['options']);
+
+        return $optionList->getRepresentation();
     }
 
     /**

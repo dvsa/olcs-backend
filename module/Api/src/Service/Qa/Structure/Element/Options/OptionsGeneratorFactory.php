@@ -16,9 +16,13 @@ class OptionsGeneratorFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $optionsGenerator = new OptionsGenerator();
+        $optionsGenerator = new OptionsGenerator(
+            $serviceLocator->get('QaOptionListFactory'),
+            $serviceLocator->get('QaOptionFactory')
+        );
 
         $optionsGenerator->registerSource('refData', $serviceLocator->get('QaRefDataOptionsSource'));
+        $optionsGenerator->registerSource('repoQuery', $serviceLocator->get('QaRepoQueryOptionsSource'));
 
         return $optionsGenerator;
     }
