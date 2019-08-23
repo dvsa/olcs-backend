@@ -17,7 +17,7 @@ class Dashboard extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-    protected $extraRepos = ['Correspondence', 'Fee', 'Application'];
+    protected $extraRepos = ['Application'];
 
     /**
      * Handle query
@@ -64,8 +64,6 @@ class Dashboard extends AbstractQueryHandler
                             'licence',
                         ]
                     ),
-                    'correspondenceCount' => $this->getCorrespondenceCount($organisation->getId()),
-                    'feeCount' => $this->getFeeCount($organisation->getId()),
                 ],
             ]
         );
@@ -107,35 +105,5 @@ class Dashboard extends AbstractQueryHandler
         }
 
         return [$licences, $newApplications, $variations];
-    }
-
-    /**
-     * Get Correspondence Count
-     *
-     * @param int $organisationId Organisation Id
-     *
-     * @return int
-     */
-    protected function getCorrespondenceCount($organisationId)
-    {
-        /** @var Repository\Correspondence $repo */
-        $repo = $this->getRepo('Correspondence');
-
-        return $repo->getUnreadCountForOrganisation($organisationId);
-    }
-
-    /**
-     * Get Count of Fees
-     *
-     * @param int $organisationId Organisation Id
-     *
-     * @return int
-     */
-    protected function getFeeCount($organisationId)
-    {
-        /** @var Repository\Fee $repo */
-        $repo = $this->getRepo('Fee');
-
-        return $repo->getOutstandingFeeCountByOrganisationId($organisationId, true, true);
     }
 }
