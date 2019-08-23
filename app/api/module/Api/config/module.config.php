@@ -53,7 +53,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
             'QaSupplementedApplicationStepFactory' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
-            
+            'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
+            'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -191,6 +192,7 @@ return [
             'QaValidatorListGenerator' => ApiSrv\Qa\Structure\ValidatorListGeneratorFactory::class,
             'QaOptionsGenerator' => ApiSrv\Qa\Structure\Element\Options\OptionsGeneratorFactory::class,
             'QaRefDataOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RefDataSourceFactory::class,
+            'QaRepoQueryOptionsSource' => ApiSrv\Qa\Structure\Element\Options\RepoQuerySourceFactory::class,
 
             'QaEcmtRemovalNoOfPermitsAnswerWriter' =>
                 ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\AnswerWriterFactory::class,
