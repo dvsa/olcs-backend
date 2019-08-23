@@ -22,7 +22,6 @@ class CorrespondencesTest extends QueryHandlerTestCase
         $this->sut = new Correspondences();
 
         $this->mockRepo('Correspondence', Repository\Correspondence::class);
-        $this->mockRepo('Fee', Repository\Fee::class);
 
         parent::setUp();
     }
@@ -45,12 +44,6 @@ class CorrespondencesTest extends QueryHandlerTestCase
             ->andReturn([$mockEntity, clone $mockEntity])
             ->shouldReceive('fetchCount')->once()->andReturn(2);
 
-        $feeCnt = 123;
-        $this->repoMap['Fee']
-            ->shouldReceive('getOutstandingFeeCountByOrganisationId')
-            ->with(self::ORG_ID, true, true)
-            ->andReturn($feeCnt);
-
         $result = $this->sut->handleQuery($query);
 
         $this->assertEquals(
@@ -60,7 +53,6 @@ class CorrespondencesTest extends QueryHandlerTestCase
                     'EXPECT_ENTITY',
                 ],
                 'count' => 2,
-                'feeCount' => $feeCnt,
             ],
             $result
         );
