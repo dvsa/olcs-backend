@@ -750,7 +750,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeGranted(): bool
     {
-        return $this->isUnderConsideration()
+        return
+            $this->isUnderConsideration()
+            && $this->licence->isValid()
             && $this->getIrhpPermitType()->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
     }
 
