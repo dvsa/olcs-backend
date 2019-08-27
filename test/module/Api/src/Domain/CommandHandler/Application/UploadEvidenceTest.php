@@ -77,6 +77,11 @@ class UploadEvidenceTest extends CommandHandlerTestCase
                 $this->categoryReferences[CategoryEntity::CATEGORY_APPLICATION],
                 $this->subCategoryReferences[SubCategoryEntity::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL]
             )->once()->andReturn($documentCollection);
+        $application->shouldReceive('getPostSubmissionApplicationDocuments')
+            ->with(
+                $this->categoryReferences[CategoryEntity::CATEGORY_APPLICATION],
+                $this->subCategoryReferences[SubCategoryEntity::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL]
+            )->once()->andReturn($documentCollection);
         $application->shouldReceive('getLicence')
             ->andReturn(
                 m::mock()
@@ -145,7 +150,11 @@ class UploadEvidenceTest extends CommandHandlerTestCase
                 $this->categoryReferences[CategoryEntity::CATEGORY_APPLICATION],
                 $this->subCategoryReferences[SubCategoryEntity::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL]
             )->once()->andReturn($documentCollection);
-
+        $application->shouldReceive('getPostSubmissionApplicationDocuments')
+            ->with(
+                $this->categoryReferences[CategoryEntity::CATEGORY_APPLICATION],
+                $this->subCategoryReferences[SubCategoryEntity::DOC_SUB_CATEGORY_FINANCIAL_EVIDENCE_DIGITAL]
+            )->once()->andReturn($documentCollection);
         $this->repoMap['Application']
             ->shouldReceive('fetchById')->with(111)->once()->andReturn($application)
             ->shouldReceive('save')->with($application)->once()->andReturn();
