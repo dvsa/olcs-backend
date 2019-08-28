@@ -1254,6 +1254,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 => FeeTypeEntity::FEE_TYPE_IRHP_APP_MULTILATERAL_PRODUCT_REF,
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
                 => FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL
+                => FeeTypeEntity::FEE_TYPE_ECMT_REMOVAL_ISSUE_PRODUCT_REF,
         ];
 
         $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
