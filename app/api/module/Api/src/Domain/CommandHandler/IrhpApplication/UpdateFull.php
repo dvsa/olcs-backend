@@ -46,31 +46,30 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
         /** @var IrhpApplicationEntity $irhpApplication */
         $irhpApplication = $irhpApplicationRepo->fetchById($command->getId());
 
-        switch ($irhpApplication->getIrhpPermitType()->getId()) {
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
-                $this->handleSideEffect(
-                    SubmitApplicationPath::create(
-                        [
-                            'id' => $irhpApplication->getId(), 'postData' => $command->getPostData()
-                        ]
-                    )
-                );
-                break;
-            default:
-                $this->updateCountries($irhpApplication, $irhpApplication->getIrhpPermitType()->getId(), $command);
-                $irhpApplicationRepo->refresh($irhpApplication);
-                $irhpApplication->resetSectionCompletion();
+        if ($irhpApplication->getIrhpPermitType()->isApplicationPathEnabled()) {
+            $this->handleSideEffect(
+                SubmitApplicationPath::create(
+                    [
+                        'id' => $irhpApplication->getId(),
+                        'postData' => $command->getPostData()
+                    ]
+                )
+            );
+        } else {
+            $this->updateCountries($irhpApplication, $irhpApplication->getIrhpPermitType()->getId(), $command);
+            $irhpApplicationRepo->refresh($irhpApplication);
+            $irhpApplication->resetSectionCompletion();
 
-                $this->result->merge(
-                    $this->handleSideEffect(
-                        UpdateMultipleNoOfPermits::create([
-                            'id' => $irhpApplication->getId(),
-                            'permitsRequired' => $command->getPermitsRequired()])
-                    )
-                );
-                $irhpApplicationRepo->refresh($irhpApplication);
-                $irhpApplication->resetSectionCompletion();
-                break;
+            $this->result->merge(
+                $this->handleSideEffect(
+                    UpdateMultipleNoOfPermits::create([
+                        'id' => $irhpApplication->getId(),
+                        'permitsRequired' => $command->getPermitsRequired()
+                    ])
+                )
+            );
+            $irhpApplicationRepo->refresh($irhpApplication);
+            $irhpApplication->resetSectionCompletion();
         }
 
         if ($command->getDeclaration()) {
