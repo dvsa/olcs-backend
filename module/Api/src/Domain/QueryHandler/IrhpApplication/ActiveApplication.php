@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\ActiveApplication as ActiveApplicationQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -24,8 +25,8 @@ final class ActiveApplication extends AbstractQueryHandler implements ToggleRequ
 
     /**
      * @param QueryInterface|ActiveApplicationQuery $query query
+     *
      * @return Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     public function handleQuery(QueryInterface $query)
     {
@@ -35,7 +36,10 @@ final class ActiveApplication extends AbstractQueryHandler implements ToggleRequ
 
         /** @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication $application */
         foreach ($applicationsByLicence as $application) {
-            if (($application->getIrhpPermitType()->getId() == $query->getIrhpPermitType()) && $application->isActive()) {
+            if ($application->getIrhpPermitType()->getId() == $query->getIrhpPermitType() &&
+                $application->isActive() &&
+                $this->applicationMatchesYearCriteria($application, $query->getYear())
+            ) {
                 return $this->result(
                     $application,
                     $this->bundle
@@ -44,5 +48,27 @@ final class ActiveApplication extends AbstractQueryHandler implements ToggleRequ
         }
 
         return null;
+    }
+
+    /**
+     * Whether the validity year of the provided application matches that provided on the query
+     *
+     * @param IrhpApplication $application
+     * @param int|null $queryValidityYear
+     *
+     * @return bool
+     */
+    private function applicationMatchesYearCriteria(IrhpApplicationEntity $application, $queryValidityYear)
+    {
+        if (!$queryValidityYear) {
+            return true;
+        }
+
+        $applicationValidityYear = $application->getFirstIrhpPermitApplication()
+            ->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getValidityYear();
+
+        return $applicationValidityYear == $queryValidityYear;
     }
 }
