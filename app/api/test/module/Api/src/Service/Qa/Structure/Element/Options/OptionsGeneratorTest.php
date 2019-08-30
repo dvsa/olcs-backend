@@ -4,6 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Options;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\SourceInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionFactory;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListFactory;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;
@@ -17,13 +20,22 @@ class OptionsGeneratorTest extends MockeryTestCase
 {
     private $directSource;
 
+    private $optionListFactory;
+
+    private $optionFactory;
+
     private $optionsGenerator;
 
     public function setUp()
     {
         $this->directSource = m::mock(SourceInterface::class);
+
+        $this->optionListFactory = m::mock(OptionListFactory::class);
+
+        $this->optionFactory = m::mock(OptionFactory::class);
         
-        $this->optionsGenerator = new OptionsGenerator();
+        $this->optionsGenerator = new OptionsGenerator($this->optionListFactory, $this->optionFactory);
+
         $this->optionsGenerator->registerSource(
             'refData',
             m::mock(SourceInterface::class)
@@ -36,8 +48,6 @@ class OptionsGeneratorTest extends MockeryTestCase
             'other',
             m::mock(SourceInterface::class)
         );
-
-        $this->applicationStep = m::mock(ApplicationStep::class);
     }
 
     public function testGenerate()
@@ -54,13 +64,36 @@ class OptionsGeneratorTest extends MockeryTestCase
         ];
 
         $returnedOptions = [
-            '1' => 'Food',
-            '2' => 'Minerals',
-            '3' => 'Metal'
+            [
+                'value' => '1',
+                'label' => 'Food',
+                'hint' => 'Hint for Food option',
+            ],
+            [
+                'value' => '2',
+                'label' => 'Minerals',
+                'hint' => 'Hint for Minerals option',
+            ]
         ];
 
-        $this->directSource->shouldReceive('generateOptions')
-            ->with($sourceOptions)
+
+        $optionList = m::mock(OptionList::class);
+
+        $this->optionListFactory->shouldReceive('create')
+            ->with($this->optionFactory)
+            ->once()
+            ->andReturn($optionList);
+
+        $this->directSource->shouldReceive('populateOptionList')
+            ->with($optionList, $sourceOptions)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $optionList->shouldReceive('getRepresentation')
+            ->once()
+            ->globally()
+            ->ordered()
             ->andReturn($returnedOptions);
 
         $this->assertEquals(

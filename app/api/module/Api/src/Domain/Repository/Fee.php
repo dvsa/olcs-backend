@@ -142,39 +142,6 @@ class Fee extends AbstractRepository
     }
 
     /**
-     * Get Outstanding Fee Count
-     *
-     * @param int $organisationId organisation Id
-     * @param bool $hideForCeasedLicences if true, then hide fees where the licence has ceased
-     *
-     * @return int
-     */
-    public function getOutstandingFeeCountByOrganisationId(
-        $organisationId,
-        $hideForCeasedLicences = false,
-        $hideContinuationsFees = false
-    ) {
-        $doctrineQb = $this->createQueryBuilder();
-
-        $doctrineQb->select('COUNT(f)');
-        $this->whereOutstandingFee($doctrineQb);
-
-        // this is still slow, might be better doing 2 queries rather
-        // than an OR
-        $this->whereCurrentLicenceOrApplicationFee($doctrineQb, $organisationId);
-
-        if ($hideForCeasedLicences) {
-            $this->hideForCeasedLicences($doctrineQb);
-        }
-        if ($hideContinuationsFees) {
-            $this->hideContinuationFees($doctrineQb);
-        }
-
-
-        return $doctrineQb->getQuery()->getSingleScalarResult();
-    }
-
-    /**
      * Hide continuation fees
      *
      * @param QueryBuilder $doctrineQb query builder
@@ -561,6 +528,10 @@ class Fee extends AbstractRepository
      */
     private function whereCurrentLicenceOrApplicationFee(\Doctrine\ORM\QueryBuilder $doctrineQb, $organisationId)
     {
+        // NOTE: the way this query is built with all the left joins and orX conditions
+        // makes it very slow when a number of fees in the system increases
+        // as a full scan of the fee table is required to determine the results
+        // it should be redone as a UNION of 2 SELECTs with INNER JOINs
         $doctrineQb
             ->leftJoin($this->alias . '.application', 'a')
             ->leftJoin($this->alias . '.licence', 'l')

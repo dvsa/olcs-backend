@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Organisation - Outstanding Fees
@@ -20,7 +19,7 @@ class OutstandingFees extends AbstractQueryHandler
 {
     protected $repoServiceName = 'Organisation';
 
-    protected $extraRepos = ['Fee', 'Correspondence', 'SystemParameter'];
+    protected $extraRepos = ['Fee', 'SystemParameter'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -48,18 +47,8 @@ class OutstandingFees extends AbstractQueryHandler
                         ]
                     ]
                 ),
-                'correspondenceCount' => $this->getCorrespondenceCount($organisation->getId()),
                 'disableCardPayments' => $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments(),
             ]
         );
-    }
-
-    /**
-     * @param int $organisationId
-     * @return int
-     */
-    protected function getCorrespondenceCount($organisationId)
-    {
-        return $this->getRepo('Correspondence')->getUnreadCountForOrganisation($organisationId);
     }
 }

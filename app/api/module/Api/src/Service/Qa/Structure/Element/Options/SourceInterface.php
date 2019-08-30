@@ -5,11 +5,10 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 interface SourceInterface
 {
     /**
-     * Get an key/value array representing the options from the specified source data
+     * Populate the OptionList object with options from the specified source data
      *
-     * @param array $data
-     *
-     * @return array
+     * @param OptionList $optionList
+     * @param array $options
      */
-    public function generateOptions(array $data);
+    public function populateOptionList(OptionList $optionList, array $options);
 }

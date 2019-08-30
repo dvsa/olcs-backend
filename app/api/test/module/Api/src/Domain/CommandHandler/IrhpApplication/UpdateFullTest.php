@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateFull as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
@@ -74,8 +75,15 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
 
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
+
         $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(4);
+            ->withNoArgs()
+            ->once()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -159,8 +167,15 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('resetSectionCompletion')
             ->twice();
 
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
+
         $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(5);
+            ->withNoArgs()
+            ->once()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -198,14 +213,16 @@ class UpdateFullTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
     }
 
-    public function testHandleCommandShortTerm()
+    /**
+     * @dataProvider dpTestHandleCommandQandA
+     */
+    public function testHandleCommandQandA($irhpPermitTypeId)
     {
-        $permitTypeId = 2;
         $licenceId = 2;
 
         $cmdData = [
             'id' => 34,
-            'type' => $permitTypeId,
+            'type' => $irhpPermitTypeId,
             'licence' => $licenceId,
             'dateReceived' => '2090-01-03',
             'declaration' => 0,
@@ -231,8 +248,10 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->with($cmdData['dateReceived']);
 
 
-        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->getId')
-            ->andReturn(2);
+        $irhpApplicationEntity->shouldReceive('getIrhpPermitType->isApplicationPathEnabled')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
@@ -261,5 +280,13 @@ class UpdateFullTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
+    }
+
+    public function dpTestHandleCommandQandA()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL]
+        ];
     }
 }

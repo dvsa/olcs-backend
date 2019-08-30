@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use DateTime;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateIrhpPermitApplicationPermit;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit as Cmd;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -71,10 +70,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $irhpPermitRange1StockValidTo) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange1, $irhpPermit->getIrhpPermitRange());
-                $this->assertSame($irhpPermitRange1StockValidTo, $irhpPermit->getExpiryDate());
+                $this->assertNull($irhpPermit->getExpiryDate());
                 $this->assertEquals(502, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -135,10 +134,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $irhpPermitRange2StockValidTo) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange2, $irhpPermit->getIrhpPermitRange());
-                $this->assertSame($irhpPermitRange2StockValidTo, $irhpPermit->getExpiryDate());
+                $this->assertNull($irhpPermit->getExpiryDate());
                 $this->assertEquals(752, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -163,8 +162,6 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
      */
     public function testExceptionOnAllRangesFull($emissionsCategoryId)
     {
-        $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO6_REF;
-
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to find range with free permits for irhp permit application 400');
 

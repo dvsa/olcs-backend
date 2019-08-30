@@ -45,23 +45,32 @@ class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler impleme
 
         if (!in_array(
             $permitTypeId,
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM]
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+            ]
         )) {
             $this->result->addMessage('No default irhp permit applications need to be created');
             return $this->result;
         }
 
-        if (empty($command->getYear())) {
-            $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
-                $permitTypeId,
-                new DateTime()
-            );
-        } else {
-            $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByTypeYear(
-                $permitTypeId,
-                new DateTime(),
-                $command->getYear()
-            );
+        switch ($permitTypeId) {
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+                $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByType(
+                    $permitTypeId,
+                    new DateTime()
+                );
+                break;
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
+                $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByTypeYear(
+                    $permitTypeId,
+                    new DateTime(),
+                    $command->getYear()
+                );
+                break;
         }
 
         $irhpPermitApplicationRepo = $this->getRepo('IrhpPermitApplication');

@@ -24,15 +24,15 @@ class RefDataSource implements SourceInterface
     /**
      * {@inheritdoc}
      */
-    public function generateOptions(array $options)
+    public function populateOptionList(OptionList $optionList, array $options)
     {
         $refDatas = $this->refDataRepo->fetchByCategoryId($options['categoryId']);
 
-        $options = [];
         foreach ($refDatas as $refData) {
-            $options[$refData->getId()] = $refData->getDescription();
+            $optionList->add(
+                $refData->getId(),
+                $refData->getDescription()
+            );
         }
-
-        return $options;
     }
 }
