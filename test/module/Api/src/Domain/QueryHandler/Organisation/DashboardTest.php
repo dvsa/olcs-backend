@@ -6,8 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Dashboard;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -30,8 +28,6 @@ class DashboardTest extends QueryHandlerTestCase
 
         $this->mockRepo('Organisation', OrganisationRepo::class);
         $this->mockRepo('Application', ApplicationRepo::class);
-        $this->mockRepo('Correspondence', CorrespondenceRepo::class);
-        $this->mockRepo('Fee', FeeRepo::class);
 
         parent::setUp();
     }
@@ -101,16 +97,6 @@ class DashboardTest extends QueryHandlerTestCase
             ->once()
             ->andReturn([$mockApplication, $mockVariation]);
 
-        $this->repoMap['Correspondence']
-            ->shouldReceive('getUnreadCountForOrganisation')
-            ->with($organisationId)
-            ->andReturn(99);
-
-        $this->repoMap['Fee']
-            ->shouldReceive('getOutstandingFeeCountByOrganisationId')
-            ->with($organisationId, true, true)
-            ->andReturn(123);
-
         $result = $this->sut->handleQuery($query);
 
         $this->assertInstanceOf(Result::class, $result);
@@ -127,8 +113,6 @@ class DashboardTest extends QueryHandlerTestCase
                 'variations' =>[
                     [ 'id' => 2],
                 ],
-                'correspondenceCount' => 99,
-                'feeCount' => 123,
             ],
         ];
 

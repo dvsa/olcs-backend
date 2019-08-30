@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Options;
 
 use Dvsa\Olcs\Api\Domain\Repository\RefData as RefDataRepository;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\RefDataSource;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
@@ -48,16 +49,17 @@ class RefDataSourceTest extends MockeryTestCase
             ->with($categoryId)
             ->andReturn($refDataEntities);
 
-        $expected = [
-            $refData1Id => $refData1Description,
-            $refData2Id => $refData2Description
-        ];
+        $optionList = m::mock(OptionList::class);
+        $optionList->shouldReceive('add')
+            ->with($refData1Id, $refData1Description)
+            ->once()
+            ->ordered();
+        $optionList->shouldReceive('add')
+            ->with($refData2Id, $refData2Description)
+            ->once()
+            ->ordered();
 
         $refDataSource = new RefDataSource($refDataRepo);
-
-        $this->assertEquals(
-            $expected,
-            $refDataSource->generateOptions($options)
-        );
+        $refDataSource->populateOptionList($optionList, $options);
     }
 }

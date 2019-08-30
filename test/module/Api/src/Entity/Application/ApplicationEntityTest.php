@@ -3697,7 +3697,7 @@ class ApplicationEntityTest extends EntityTester
             ->andReturn('operatingCentre')
             ->once()
             ->shouldReceive('getisPostSubmissionUpload')
-            ->andReturn(1)
+            ->andReturn(true)
             ->once()
             ->getMock();
 
@@ -3712,7 +3712,7 @@ class ApplicationEntityTest extends EntityTester
             ->andReturn('operatingCentre1')
             ->never()
             ->shouldReceive('getisPostSubmissionUpload')
-            ->andReturn(0)
+            ->andReturn(false)
             ->never()
             ->getMock();
 
@@ -3727,7 +3727,7 @@ class ApplicationEntityTest extends EntityTester
             ->andReturn('operatingCentre')
             ->once()
             ->shouldReceive('getisPostSubmissionUpload')
-            ->andReturn(0)
+            ->andReturn(false)
             ->once()
             ->getMock();
 

@@ -10,7 +10,6 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\OutstandingFees;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\Repository\Correspondence as CorrespondenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Transfer\Query\Organisation\OutstandingFees as Qry;
@@ -28,7 +27,6 @@ class OutstandingFeesTest extends QueryHandlerTestCase
     {
         $this->sut = new OutstandingFees();
         $this->mockRepo('Organisation', OrganisationRepo::class);
-        $this->mockRepo('Correspondence', CorrespondenceRepo::class);
         $this->mockRepo('Fee', FeeRepo::class);
         $this->mockRepo('SystemParameter', \Dvsa\Olcs\Api\Domain\Repository\SystemParameter::class);
 
@@ -63,12 +61,6 @@ class OutstandingFeesTest extends QueryHandlerTestCase
             ->once()
             ->with($organisationId, false, true)
             ->andReturn($fees);
-
-        $this->repoMap['Correspondence']
-            ->shouldReceive('getUnreadCountForOrganisation')
-            ->once()
-            ->with($organisationId)
-            ->andReturn(123);
 
         $this->repoMap['SystemParameter']
             ->shouldReceive('getDisableSelfServeCardPayments')
