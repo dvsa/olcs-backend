@@ -40,12 +40,7 @@ class EcmtAnnualGenerator extends AbstractGenerator implements SnapshotGenerator
                 'ref' => $ecmtPermitApplication->getApplicationRef(),
                 'questionAnswerData' => $ecmtPermitApplication->getQuestionAnswerData(),
                 'guidanceDeclaration' => [
-                    'bullets' => [
-                        'permits.ecmt.declaration.bullet.guidance.note',
-                        'permits.ecmt.declaration.bullet.guidance.restricted.countries',
-                        'permits.ecmt.declaration.bullet.guidance.issued.logbook',
-                        'permits.ecmt.declaration.bullet.guidance.carry.logbook',
-                    ],
+                    'bullets' => 'markup-irhp-declaration-1',
                     'declaration' => 'permits.snapshot.declaration',
                 ],
             ],
