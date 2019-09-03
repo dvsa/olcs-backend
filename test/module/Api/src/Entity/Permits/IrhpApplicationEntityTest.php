@@ -866,23 +866,14 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpTestCanBeSubmitted
      */
-    public function testCanBeSubmitted($isNotYetSubmitted, $allSectionsCompleted, $canMakeIrhpApplication, $expected)
+    public function testCanBeSubmitted($isNotYetSubmitted, $allSectionsCompleted, $expected)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
-
-        $licence = m::mock(Licence::class);
-        $licence->shouldReceive('canMakeIrhpApplication')
-            ->with($irhpPermitType, $this->sut)
-            ->andReturn($canMakeIrhpApplication);
 
         $this->sut->shouldReceive('isNotYetSubmitted')
             ->andReturn($isNotYetSubmitted)
             ->shouldReceive('getSectionCompletion')
-            ->andReturn(['allCompleted' => $allSectionsCompleted])
-            ->shouldReceive('getLicence')
-            ->andReturn($licence)
-            ->shouldReceive('getIrhpPermitType')
-            ->andReturn($irhpPermitType);
+            ->andReturn(['allCompleted' => $allSectionsCompleted]);
 
         $this->assertSame($expected, $this->sut->canBeSubmitted());
     }
@@ -893,25 +884,16 @@ class IrhpApplicationEntityTest extends EntityTester
             'already active application' => [
                 'isNotYetSubmitted' => false,
                 'allSectionsCompleted' => false,
-                'canMakeIrhpApplication' => false,
                 'expected' => false,
             ],
             'some incomplete sections' => [
                 'isNotYetSubmitted' => true,
                 'allSectionsCompleted' => false,
-                'canMakeIrhpApplication' => false,
-                'expected' => false,
-            ],
-            'cannot make IRHP application' => [
-                'isNotYetSubmitted' => true,
-                'allSectionsCompleted' => true,
-                'canMakeIrhpApplication' => false,
                 'expected' => false,
             ],
             'can be submitted' => [
                 'isNotYetSubmitted' => true,
                 'allSectionsCompleted' => true,
-                'canMakeIrhpApplication' => true,
                 'expected' => true,
             ],
         ];
