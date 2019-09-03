@@ -834,11 +834,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         $sections = $this->getSectionCompletion();
 
-        if (!$sections['allCompleted']) {
-            return false;
-        }
-
-        return $this->getLicence()->canMakeIrhpApplication($this->getIrhpPermitType(), $this);
+        return $sections['allCompleted'];
     }
 
     /**
