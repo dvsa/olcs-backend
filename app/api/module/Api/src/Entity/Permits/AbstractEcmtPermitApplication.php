@@ -140,6 +140,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $emissions;
 
     /**
+     * Expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
+     */
+    protected $expiryDate;
+
+    /**
      * Has restricted countries
      *
      * @var boolean
@@ -622,6 +631,36 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     public function getEmissions()
     {
         return $this->emissions;
+    }
+
+    /**
+     * Set the expiry date
+     *
+     * @param \DateTime $expiryDate new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setExpiryDate($expiryDate)
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiryDate);
+        }
+
+        return $this->expiryDate;
     }
 
     /**
