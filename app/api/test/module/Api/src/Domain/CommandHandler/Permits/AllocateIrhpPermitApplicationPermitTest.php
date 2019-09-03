@@ -40,7 +40,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpEmissionsCategoryId
      */
-    public function testAllocatePermitInFirstRange($emissionsCategoryId)
+    public function testAllocatePermitInFirstRange($emissionsCategoryId, $expiryDate)
     {
         $irhpPermitApplicationId = 305;
 
@@ -70,10 +70,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $expiryDate) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange1, $irhpPermit->getIrhpPermitRange());
-                $this->assertNull($irhpPermit->getExpiryDate());
+                $this->assertSame($expiryDate, $irhpPermit->getExpiryDate());
                 $this->assertEquals(502, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -84,6 +84,8 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplicationId);
         $command->shouldReceive('getEmissionsCategory')
             ->andReturn($emissionsCategoryId);
+        $command->shouldReceive('getExpiryDate')
+            ->andReturn($expiryDate);
 
         $result = $this->sut->handleCommand($command);
 
@@ -96,7 +98,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpEmissionsCategoryId
      */
-    public function testFirstRangeFullAllocatePermitInSecondRange($emissionsCategoryId)
+    public function testFirstRangeFullAllocatePermitInSecondRange($emissionsCategoryId, $expiryDate)
     {
         $irhpPermitApplicationId = 400;
 
@@ -134,10 +136,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $expiryDate) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange2, $irhpPermit->getIrhpPermitRange());
-                $this->assertNull($irhpPermit->getExpiryDate());
+                $this->assertSame($expiryDate, $irhpPermit->getExpiryDate());
                 $this->assertEquals(752, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
                 return true;
@@ -148,6 +150,8 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplicationId);
         $command->shouldReceive('getEmissionsCategory')
             ->andReturn($emissionsCategoryId);
+        $command->shouldReceive('getExpiryDate')
+            ->andReturn($expiryDate);
 
         $result = $this->sut->handleCommand($command);
 
@@ -210,9 +214,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
     public function dpEmissionsCategoryId()
     {
         return [
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
-            [null],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, null],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, null],
+            [null, null],
+            [null, new DateTime('2030-10-22')],
         ];
     }
 

@@ -114,6 +114,7 @@ class IrhpPermit extends AbstractIrhpPermit
      * @param DateTime $issueDate
      * @param RefData $status
      * @param int $permitNumber
+     * @param DateTime|null $expiryDate
      *
      * @return IrhpPermit
      */
@@ -122,7 +123,8 @@ class IrhpPermit extends AbstractIrhpPermit
         IrhpPermitRange $irhpPermitRange,
         DateTime $issueDate,
         RefData $status,
-        $permitNumber
+        $permitNumber,
+        ?DateTime $expiryDate
     ) {
         $irhpPermit = new self();
         $irhpPermit->irhpPermitApplication = $irhpPermitApplication;
@@ -130,6 +132,7 @@ class IrhpPermit extends AbstractIrhpPermit
         $irhpPermit->issueDate = $issueDate;
         $irhpPermit->status = $status;
         $irhpPermit->permitNumber = $permitNumber;
+        $irhpPermit->expiryDate = $expiryDate;
 
         return $irhpPermit;
     }

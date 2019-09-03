@@ -23,10 +23,26 @@ class AllocateIrhpPermitApplicationPermit extends AbstractCommand
     protected $emissionsCategory = null;
 
     /**
+     * @var \DateTime
+     * @Transfer\Optional
+     */
+    protected $expiryDate;
+
+    /**
      * @return string|null
      */
     public function getEmissionsCategory()
     {
         return $this->emissionsCategory;
+    }
+
+    /**
+     * Gets the value of expiryDate.
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate()
+    {
+        return $this->expiryDate;
     }
 }
