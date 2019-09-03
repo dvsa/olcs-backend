@@ -169,7 +169,7 @@ class FeeTypeEntityTest extends EntityTester
 
     public function dpIsIrhpApplication(): array
     {
-        return $this->listTypes([Entity::FEE_TYPE_IRHP_ISSUE, Entity::FEE_TYPE_IRHP_APP]);
+        return $this->listTypes([Entity::FEE_TYPE_IRHP_ISSUE, Entity::FEE_TYPE_IRHP_APP, Entity::FEE_TYPE_IRFOGVPERMIT]);
     }
 
     /**
