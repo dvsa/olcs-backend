@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
+use DateInterval;
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as AllocateIrhpApplicationPermitsCmd;
@@ -71,6 +73,9 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
             case IrhpPermitType::ALLOCATION_MODE_STANDARD:
                 $this->processStandard($irhpPermitApplication);
                 break;
+            case IrhpPermitType::ALLOCATION_MODE_STANDARD_WITH_EXPIRY:
+                $this->processStandardWithExpiry($irhpPermitApplication);
+                break;
             case IrhpPermitType::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
                 $this->processForEmissionsCategories($irhpPermitApplication);
                 break;
@@ -88,6 +93,30 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     {
         $command = AllocateIrhpPermitApplicationPermitCmd::create(
             ['id' => $irhpPermitApplication->getId()]
+        );
+
+        $this->allocatePermits(
+            $command,
+            $irhpPermitApplication->getPermitsRequired()
+        );
+    }
+
+    /**
+     * Allocate the permits for an application that uses the standard allocation method with expiry date
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     */
+    private function processStandardWithExpiry(IrhpPermitApplication $irhpPermitApplication)
+    {
+        $expiryInterval = $irhpPermitApplication->getIrhpApplication()->getIrhpPermitType()->getExpiryInterval();
+        $expiryDate = new DateTime();
+        $expiryDate->add(new DateInterval($expiryInterval));
+
+        $command = AllocateIrhpPermitApplicationPermitCmd::create(
+            [
+                'id' => $irhpPermitApplication->getId(),
+                'expiryDate' => $expiryDate
+            ]
         );
 
         $this->allocatePermits(

@@ -60,7 +60,12 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
             );
 
             if (count($assignedPermitNumbers) < $irhpPermitRange->getSize()) {
-                $this->addIrhpPermit($irhpPermitApplication, $irhpPermitRange, $assignedPermitNumbers);
+                $this->addIrhpPermit(
+                    $irhpPermitApplication,
+                    $irhpPermitRange,
+                    $assignedPermitNumbers,
+                    $command->getExpiryDate()
+                );
                 return $this->result;
             }
         }
@@ -80,11 +85,13 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
      * @param IrhpPermitApplication $irhpPermitApplication
      * @param IrhpPermitRange $irhpPermitRange
      * @param array $assignedPermitNumbers
+     * @param DateTime|null $expiryDate
      */
     private function addIrhpPermit(
         IrhpPermitApplication $irhpPermitApplication,
         IrhpPermitRange $irhpPermitRange,
-        array $assignedPermitNumbers
+        array $assignedPermitNumbers,
+        ?DateTime $expiryDate
     ) {
         $permitNumber = $this->getNextPermitNumber($irhpPermitRange, $assignedPermitNumbers);
 
@@ -93,7 +100,8 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
             $irhpPermitRange,
             new DateTime(),
             $this->refData(IrhpPermit::STATUS_PENDING),
-            $permitNumber
+            $permitNumber,
+            $expiryDate
         );
 
         $this->getRepo('IrhpPermit')->save($irhpPermit);
