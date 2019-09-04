@@ -382,6 +382,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             );
         }
         $this->status = $expireStatus;
+        $this->expiryDate = new DateTime();
     }
 
     /**

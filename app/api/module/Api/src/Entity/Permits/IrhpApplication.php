@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -1508,6 +1509,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $expireStatus;
+        $this->expiryDate = new DateTime();
     }
 
     /**
