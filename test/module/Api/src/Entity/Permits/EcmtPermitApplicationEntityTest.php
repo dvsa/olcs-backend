@@ -1499,4 +1499,18 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity = $this->createApplicationWithCompletedDeclaration();
         $entity->calculateTotalPermitsRequired();
     }
+
+    public function testExpire()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('canBeExpired')
+            ->andReturn(true);
+
+        $this->assertNull($entity->getExpiryDate());
+        $status = m::mock(RefData::class);
+
+        $entity->expire($status);
+        $this->assertSame($status, $entity->getStatus());
+        $this->assertInstanceOf(DateTime::class, $entity->getExpiryDate());
+    }
 }

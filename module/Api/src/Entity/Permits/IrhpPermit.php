@@ -328,7 +328,7 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     private function proceedToTerminated(RefData $status)
     {
-        if ($this->isCeased() || $this->isTerminated()) {
+        if ($this->isCeased() || $this->isTerminated() || $this->isExpired()) {
             throw new ForbiddenException(
                 sprintf(
                     'The permit is not in the correct state to be terminated (%s)',

@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
@@ -119,5 +120,11 @@ class IrhpApplicationTest extends RepositoryTestCase
             $irhpApplications,
             $this->sut->fetchAllAwaitingFee()
         );
+    }
+
+    public function testMarkAsExpired()
+    {
+        $this->expectQueryWithData(ExpireIrhpApplicationsQuery::class, []);
+        $this->sut->markAsExpired();
     }
 }
