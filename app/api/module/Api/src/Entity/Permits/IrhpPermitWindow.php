@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * IrhpPermitWindow Entity
@@ -22,24 +21,18 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermitWindow extends AbstractIrhpPermitWindow
 {
-    const EMISSIONS_CATEGORY_EURO6_REF =    'emissions_cat_euro6';
-    const EMISSIONS_CATEGORY_EURO5_REF =    'emissions_cat_euro5';
-    const EMISSIONS_CATEGORY_NA_REF =       'emissions_cat_na';
-
     /**
      * @param IrhpPermitStock $irhpPermitStock
-     * @param RefData $emissionsCategory
      * @param string $startDate
      * @param string $endDate
      * @param int $daysForPayment
      * @return IrhpPermitWindow
      */
-    public static function create($irhpPermitStock, $emissionsCategory, $startDate, $endDate, $daysForPayment)
+    public static function create($irhpPermitStock, $startDate, $endDate, $daysForPayment)
     {
         $instance = new self;
 
         $instance->irhpPermitStock = $irhpPermitStock;
-        $instance->emissionsCategory = $emissionsCategory;
         $instance->startDate = new DateTime($startDate);
         $instance->endDate = new DateTime($endDate);
         $instance->daysForPayment = intval($daysForPayment) > 0 ? $daysForPayment : 0;
@@ -49,16 +42,14 @@ class IrhpPermitWindow extends AbstractIrhpPermitWindow
 
     /**
      * @param IrhpPermitStock $irhpPermitStock
-     * @param RefData $emissionsCategory
      * @param string $startDate
      * @param string $endDate
      * @param int $daysForPayment
      * @return $this
      */
-    public function update($irhpPermitStock, $emissionsCategory, $startDate, $endDate, $daysForPayment)
+    public function update($irhpPermitStock, $startDate, $endDate, $daysForPayment)
     {
         $this->irhpPermitStock = $irhpPermitStock;
-        $this->emissionsCategory = $emissionsCategory;
         $this->startDate = new DateTime($startDate);
         $this->endDate = new DateTime($endDate);
         $this->daysForPayment = intval($daysForPayment) > 0 ? $daysForPayment : 0;

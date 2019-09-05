@@ -19,17 +19,11 @@ final class UnpaidEcmtPermits extends AbstractListQueryHandler implements Toggle
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpCandidatePermit';
     protected $bundle = [
-        'irhpPermitApplication' => [
-            'ecmtPermitApplication' => [
-                'fees'
-            ]
-        ],
         'irhpPermitRange' => [
             'countrys' => [
                 'country'
             ],
-            'irhpPermitStock'
+            'emissionsCategory',
         ],
-        'status'
     ];
 }

@@ -74,11 +74,13 @@ class IrhpPermitTest extends RepositoryTestCase
         );
     }
 
-    public function testGetPermitCountWithEmissionsCategoryId()
+    /**
+     * @dataProvider dpTestGetPermitCountWithEmissionsCategoryId
+     */
+    public function testGetPermitCountWithEmissionsCategoryId($emissionsCategoryId)
     {
         $permitCount = 744;
         $stockId = 5;
-        $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO6_REF;
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
@@ -127,6 +129,14 @@ class IrhpPermitTest extends RepositoryTestCase
             $permitCount,
             $this->sut->getPermitCount($stockId, $emissionsCategoryId)
         );
+    }
+
+    public function dpTestGetPermitCountWithEmissionsCategoryId()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
     }
 
     public function testGetPermitCountByRange()
@@ -219,11 +229,12 @@ class IrhpPermitTest extends RepositoryTestCase
             ->shouldReceive('with')->with('irhpPermitApplication', 'ipa')->once()->andReturnSelf()
             ->shouldReceive('paginate')->once()->andReturnSelf();
 
-        $query = ValidEcmtPermits::create(['id' => 'ID']);
+        $query = ValidEcmtPermits::create(['licence' => 'LIC_ID']);
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
         $expectedQuery = 'BLAH '
-            . 'AND ipa.ecmtPermitApplication = [[ID]] '
+            . 'INNER JOIN ipa.ecmtPermitApplication epa '
+            . 'AND epa.licence = [[LIC_ID]] '
             . 'AND m.status IN [[["'.
             IrhpPermitEntity::STATUS_PENDING.'","'.
             IrhpPermitEntity::STATUS_AWAITING_PRINTING.'","'.

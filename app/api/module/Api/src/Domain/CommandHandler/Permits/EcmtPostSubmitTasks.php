@@ -9,6 +9,8 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
@@ -27,7 +29,7 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpCandidatePermit'];
+    protected $extraRepos = ['IrhpCandidatePermit', 'SystemParameter'];
 
     /**
      * Handles post-submission tasks for ECMT Permit Applications
@@ -46,8 +48,9 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
 
         // Create candidate permits for this application
         $this->createIrhpCandidatePermitRecords(
-            $application->getPermitsRequired(),
-            $application->getFirstIrhpPermitApplication()
+            $application->getFirstIrhpPermitApplication(),
+            $application->getRequiredEuro5(),
+            $application->getRequiredEuro6()
         );
 
         // Setup necessary data to create HTML snapshot of Ecmt Permit Application
@@ -65,17 +68,66 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
     }
 
     /**
-     * @param int $permitsRequired
+     * Create IRHP Candidate Permit records for each emissions category
+     *
      * @param IrhpPermitApplicationEntity $irhpPermitApplication
+     * @param int $requiredEuro5
+     * @param int $requiredEuro6
+     *
+     * @return void
      */
-    private function createIrhpCandidatePermitRecords(int $permitsRequired, IrhpPermitApplicationEntity $irhpPermitApplication)
-    {
-        $intensityOfUse = floatval($irhpPermitApplication->getPermitIntensityOfUse());
-        $applicationScore = floatval($irhpPermitApplication->getPermitApplicationScore());
+    private function createIrhpCandidatePermitRecords(
+        IrhpPermitApplicationEntity $irhpPermitApplication,
+        $requiredEuro5 = 0,
+        $requiredEuro6 = 0
+    ) {
+        if ($requiredEuro5 > 0) {
+            $this->createIrhpCandidatePermitRecordsForEmissionsCategory(
+                $irhpPermitApplication,
+                RefData::EMISSIONS_CATEGORY_EURO5_REF,
+                $requiredEuro5
+            );
+        }
+
+        if ($requiredEuro6 > 0) {
+            $this->createIrhpCandidatePermitRecordsForEmissionsCategory(
+                $irhpPermitApplication,
+                RefData::EMISSIONS_CATEGORY_EURO6_REF,
+                $requiredEuro6
+            );
+        }
+    }
+
+    /**
+     * Create IRHP Candidate Permit records for a given emissions category
+     *
+     * @param IrhpPermitApplicationEntity $irhpPermitApplication
+     * @param string $emissionsCategory
+     * @param int $permitsRequired
+     *
+     * @return void
+     */
+    private function createIrhpCandidatePermitRecordsForEmissionsCategory(
+        IrhpPermitApplicationEntity $irhpPermitApplication,
+        string $emissionsCategory,
+        int $permitsRequired
+    ) {
+        $useAltEcmtIouAlgorithm = $this->getRepo('SystemParameter')->fetchValue(
+            SystemParameter::USE_ALT_ECMT_IOU_ALGORITHM
+        );
+
+        $scoringEmissionsCategory = null;
+        if ($useAltEcmtIouAlgorithm) {
+            $scoringEmissionsCategory = $emissionsCategory;
+        }
+
+        $intensityOfUse = floatval($irhpPermitApplication->getPermitIntensityOfUse($scoringEmissionsCategory));
+        $applicationScore = floatval($irhpPermitApplication->getPermitApplicationScore($scoringEmissionsCategory));
 
         for ($i = 0; $i < $permitsRequired; $i++) {
             $candidatePermit = IrhpCandidatePermitEntity::createNew(
                 $irhpPermitApplication,
+                $this->refData($emissionsCategory),
                 $intensityOfUse,
                 $applicationScore
             );

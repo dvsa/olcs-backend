@@ -69,7 +69,8 @@ class GetListTest extends QueryHandlerTestCase
             'irhpPermitRange' => [
                 'countrys' => [
                     'country'
-                ]
+                ],
+                'emissionsCategory',
             ]
         ];
 
