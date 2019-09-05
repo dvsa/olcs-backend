@@ -27,6 +27,7 @@ trait EcmtAnnualPermitEmailTrait
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
+            'ecmtGuidanceUrl' => 'https://www.gov.uk/guidance/ecmt-international-road-haulage-permits',
             'applicationRef' => $recordObject->getApplicationRef(),
             'applicationFee' => $this->formatCurrency(
                 $this->getRepo('FeeType')->getLatestByProductReference(FeeTypeEntity::FEE_TYPE_ECMT_APP_PRODUCT_REF)->getAmount()
@@ -38,10 +39,13 @@ trait EcmtAnnualPermitEmailTrait
             $irhpPermitApplication = $recordObject->getIrhpPermitApplications()->first();
 
             $vars['awaitingFeeUrl'] = 'http://selfserve/permits/' . (int)$recordObject->getId() . '/ecmt-awaiting-fee/';
-            $vars['permitsRequired'] = $recordObject->getPermitsRequired();
+            $vars['permitsRequired'] = $recordObject->calculateTotalPermitsRequired();
             $vars['permitsGranted'] = $irhpPermitApplication->countPermitsAwarded();
             // TODO - OLCS-21979
             $vars['paymentDeadlineNumDays'] = '10';
+            $vars['validityYear'] = $irhpPermitApplication->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getValidityYear();
 
             $criteria = Criteria::create();
             $criteria->where(

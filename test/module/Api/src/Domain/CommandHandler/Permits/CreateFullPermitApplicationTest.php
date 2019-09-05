@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use DateTime;
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -50,14 +51,16 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
         $licenceId = 100;
         $windowId = 300;
         $ecmtPermitApplicationId = 400;
-        $permitsRequired = 500;
+        $totalPermitsRequired = 500;
         $dateReceived = '2018-11-10';
 
         $cmdData = [
             'licence' => $licenceId,
             'countryIds' => [],
-            'permitsRequired' => $permitsRequired,
-            'dateReceived' => $dateReceived
+            'requiredEuro5' => 200,
+            'requiredEuro6' => 300,
+            'dateReceived' => $dateReceived,
+            'year' => 3030
         ];
 
         $command = CreateFullPermitApplicationCmd::create($cmdData);
@@ -89,7 +92,12 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
-            ->with(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, m::type(DateTime::class))
+            ->with(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                m::type(DateTime::class),
+                Query::HYDRATE_OBJECT,
+                $command->getYear()
+            )
             ->once()
             ->andReturn($window);
 
@@ -98,7 +106,7 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
             [
                 'ecmtPermitApplicationId' => $ecmtPermitApplicationId,
                 'licenceId' => $licenceId,
-                'permitsRequired' => $permitsRequired,
+                'permitsRequired' => $totalPermitsRequired,
                 'permitType' =>  EcmtPermitApplication::PERMIT_TYPE,
                 'receivedDate' =>  new DateTime($dateReceived)
             ],

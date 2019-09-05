@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -598,7 +599,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      **
      * @return array
      */
-    public function getEligibleLicences()
+    public function getEligibleLicences(?IrhpPermitStock $stock = null)
     {
         $criteria = Criteria::create();
         $criteria->where(
@@ -650,7 +651,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 'totAuthVehicles' => $licence->getTotAuthVehicles(),
                 'licenceType' => $licence->getLicenceType(),
                 'restricted' => $licence->getLicenceType() === LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                'canMakeEcmtApplication' => $licence->canMakeEcmtApplication(),
+                'canMakeEcmtApplication' => $licence->canMakeEcmtApplication(null, $stock),
                 'canMakeBilateralApplication' => $licence->canMakeIrhpApplication($irhpBilateralPermitType),
                 'canMakeMultilateralApplication' => $licence->canMakeIrhpApplication($irhpMultilateralPermitType),
             ];

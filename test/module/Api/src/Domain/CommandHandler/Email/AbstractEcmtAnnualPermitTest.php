@@ -37,6 +37,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
+            'ecmtGuidanceUrl' => 'https://www.gov.uk/guidance/ecmt-international-road-haulage-permits',
             'applicationRef' => $this->applicationRef,
             'applicationFee' => '10',
         ];
@@ -92,11 +93,13 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
         $paymentDeadlineNumDays = '10';
         $issueFeeDeadlineDate = '21 March 2019';
         $awaitingFeeUrl = 'http://selfserve/permits/' . $this->permitAppId . '/ecmt-awaiting-fee/';
+        $validityYear = '2022';
 
         $templateVars = [
             'appUrl' => 'http://selfserve/',
             'permitsUrl' => 'http://selfserve/permits',
             'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
+            'ecmtGuidanceUrl' => 'https://www.gov.uk/guidance/ecmt-international-road-haulage-permits',
             'applicationRef' => $this->applicationRef,
             'awaitingFeeUrl' => $awaitingFeeUrl,
             'permitsRequired' => $permitsRequired,
@@ -106,12 +109,15 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             'issueFeeAmount' => $issueFeeAmount,
             'issueFeeTotal' => $permitsGrantedissueFeeTotal,
             'applicationFee' => '10',
+            'validityYear' => $validityYear,
         ];
 
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('first')->andReturn($irhpPermitApplication);
-        $irhpPermitApplication->shouldReceive('getPermitsRequired')->andReturn($permitsRequired);
+        $irhpPermitApplication->shouldReceive('calculateTotalPermitsRequired')->andReturn($permitsRequired);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')->andReturn($permitsAwarded);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getValidityYear')
+            ->andReturn($validityYear);
 
         $fee = m::mock(Fee::class);
         $fee->shouldReceive('isEcmtIssuingFee')->andReturn(true);
@@ -123,7 +129,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
         $fees = [$fee];
 
         $this->applicationEntity->shouldReceive('getIrhpPermitApplications')->andReturn($irhpPermitApplication);
-        $this->applicationEntity->shouldReceive('getPermitsRequired')->andReturn($permitsRequired);
+        $this->applicationEntity->shouldReceive('calculateTotalPermitsRequired')->andReturn($permitsRequired);
         $this->applicationEntity->shouldReceive('getFees->matching')->andReturn($fees);
         $this->applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(true);
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);

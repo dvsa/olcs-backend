@@ -48,10 +48,11 @@ final class Update extends AbstractCommandHandler implements ToggleRequiredInter
         }
 
         $permitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
+        $permitType = $permitStock->getIrhpPermitType();
 
-        if ($permitStock->getIrhpPermitType()->isEcmtShortTerm()
+        if (($permitType->isEcmtShortTerm() || $permitType->isEcmtAnnual())
             && $command->getEmissionsCategory() == RefData::EMISSIONS_CATEGORY_NA_REF) {
-            throw new ValidationException(['Emissions Category: N/A not valid for Short-term ECMT Stock']);
+            throw new ValidationException(['Emissions Category: N/A not valid for Short-term/Annual ECMT Stock']);
         }
 
         $countrys = [];

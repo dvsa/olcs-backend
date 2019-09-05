@@ -16,7 +16,7 @@ class IrhpPermitRange extends AbstractRepository
      * emissionsCategoryId. Will return NULL if no ranges were found against the specified constraints
      *
      * @param int $stockId
-     * @param int $emissionsCategoryId (optional)
+     * @param string $emissionsCategoryId (optional)
      *
      * @return int|null
      */
