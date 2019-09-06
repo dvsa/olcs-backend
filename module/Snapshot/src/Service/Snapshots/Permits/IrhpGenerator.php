@@ -33,19 +33,16 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
             throw new \Exception('Snapshot generator expects IRHP application record');
         }
 
+        $permitType = $irhpApplication->getIrhpPermitType();
+
         return $this->generateReadonly(
             [
-                'permitType' => $irhpApplication->getIrhpPermitType()->getName()->getDescription(),
+                'permitType' => $permitType->getName()->getDescription(),
                 'operator' => $irhpApplication->getLicence()->getOrganisation()->getName(),
                 'ref' => $irhpApplication->getApplicationRef(),
                 'questionAnswerData' => $irhpApplication->getQuestionAnswerData(true),
                 'guidanceDeclaration' => [
-                    'bullets' => [
-                        'permits.irhp.declaration.bullet.guidance.note',
-                        'permits.irhp.declaration.bullet.conditions',
-                        'permits.irhp.declaration.bullet.guidance.carry',
-                        'permits.irhp.declaration.bullet.guidance.transport',
-                    ],
+                    'bullets' => 'markup-irhp-declaration-' . $permitType->getId(),
                     'declaration' => 'permits.snapshot.declaration',
                 ],
             ],

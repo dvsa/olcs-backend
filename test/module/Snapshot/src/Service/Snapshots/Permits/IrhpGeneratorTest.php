@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use OlcsTest\Bootstrap;
@@ -49,7 +50,8 @@ class IrhpGeneratorTest extends MockeryTestCase
     public function testGenerate()
     {
         $operatorName = 'operator name';
-        $permitType = 'permit type';
+        $permitTypeDescription = 'permit type';
+        $permitTypeId = 111;
         $applicationRef = 'ref';
         $questionAnswerData = [
             'slug' => 'data1',
@@ -58,19 +60,19 @@ class IrhpGeneratorTest extends MockeryTestCase
 
         $html = '<html>';
 
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getName->getDescription')->once()->andReturn($permitTypeDescription);
+        $irhpPermitType->shouldReceive('getId')->once()->withNoArgs()->andReturn($permitTypeId);
+
         $irhpApplication = m::mock(IrhpApplication::class);
+
+        $irhpApplication->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($irhpPermitType);
 
         $irhpApplication
             ->shouldReceive('getLicence->getOrganisation->getName')
             ->once()
             ->withNoArgs()
             ->andReturn($operatorName);
-
-        $irhpApplication
-            ->shouldReceive('getIrhpPermitType->getName->getDescription')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($permitType);
 
         $irhpApplication
             ->shouldReceive('getApplicationRef')
@@ -85,17 +87,12 @@ class IrhpGeneratorTest extends MockeryTestCase
             ->andReturn($questionAnswerData);
 
         $config = [
-            'permitType' => $permitType,
+            'permitType' => $permitTypeDescription,
             'operator' => $operatorName,
             'ref' => $applicationRef,
             'questionAnswerData' => $questionAnswerData,
             'guidanceDeclaration' => [
-                'bullets' => [
-                    'permits.irhp.declaration.bullet.guidance.note',
-                    'permits.irhp.declaration.bullet.conditions',
-                    'permits.irhp.declaration.bullet.guidance.carry',
-                    'permits.irhp.declaration.bullet.guidance.transport',
-                ],
+                'bullets' => 'markup-irhp-declaration-' . $permitTypeId,
                 'declaration' => 'permits.snapshot.declaration',
             ],
         ];
