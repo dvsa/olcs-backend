@@ -108,13 +108,40 @@ class IrhpPermitEntityTest extends EntityTester
             $irhpPermitRange,
             $issueDate,
             $status,
-            $permitNumber
+            $permitNumber,
+            null
         );
 
         $this->assertSame($irhpPermitApplication, $entity->getIrhpPermitApplication());
         $this->assertSame($irhpPermitRange, $entity->getIrhpPermitRange());
         $this->assertSame($issueDate, $entity->getIssueDate());
         $this->assertNull($entity->getExpiryDate());
+        $this->assertSame($status, $entity->getStatus());
+        $this->assertEquals($permitNumber, $entity->getPermitNumber());
+    }
+
+    public function testCreateForIrhpApplicationWithExpiry()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $issueDate = m::mock(DateTime::class);
+        $status = m::mock(RefData::class);
+        $permitNumber = 473;
+        $expiryDate = new DateTime();
+
+        $entity = Entity::createForIrhpApplication(
+            $irhpPermitApplication,
+            $irhpPermitRange,
+            $issueDate,
+            $status,
+            $permitNumber,
+            $expiryDate
+        );
+
+        $this->assertSame($irhpPermitApplication, $entity->getIrhpPermitApplication());
+        $this->assertSame($irhpPermitRange, $entity->getIrhpPermitRange());
+        $this->assertSame($issueDate, $entity->getIssueDate());
+        $this->assertSame($expiryDate, $entity->getExpiryDate());
         $this->assertSame($status, $entity->getStatus());
         $this->assertEquals($permitNumber, $entity->getPermitNumber());
     }

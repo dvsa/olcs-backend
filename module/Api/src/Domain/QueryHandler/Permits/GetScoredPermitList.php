@@ -92,6 +92,8 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
                 'Permit Intensity of Use'           => $row['candidatePermitIntensityOfUse'],
                 'Random Factor'                     => $row['candidatePermitRandomFactor'],
                 'Randomised Permit Score'           => $row['candidatePermitRandomizedScore'],
+                'Requested Emissions Category'      => $row['candidatePermitRequestedEmissionsCategory'],
+                'Assigned Emissions Category'       => $row['candidatePermitAssignedEmissionsCategory'],
                 'Percentage International'          => $percentageInternationalName,
                 'Sector'                            => $applicationSectorName,
                 'Devolved Administration'           => $devolvedAdministrationName,

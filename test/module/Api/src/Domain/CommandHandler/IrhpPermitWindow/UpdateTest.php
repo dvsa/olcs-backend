@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitWindow;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow\Update as UpdateHandler;
@@ -32,17 +31,6 @@ class UpdateTest extends CommandHandlerTestCase
         parent::setUp();
     }
 
-    protected function initReferences()
-    {
-        $this->refData = [
-            PermitWindowEntity::EMISSIONS_CATEGORY_EURO5_REF,
-            PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF,
-            PermitWindowEntity::EMISSIONS_CATEGORY_NA_REF
-        ];
-
-        parent::initReferences();
-    }
-
     // Happy Path
     public function testHandleCommand()
     {
@@ -52,7 +40,6 @@ class UpdateTest extends CommandHandlerTestCase
             'startDate' => '2019-12-01',
             'endDate' => '2019-12-30',
             'daysForPayment' => 14,
-            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -65,8 +52,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->with($cmdData['id'])
             ->once()
             ->andReturn($permitWindowEntity);
-
-        $permitWindowEntity->shouldReceive('getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')->once()->andReturn(true);
 
         $permitWindowEntity
             ->shouldReceive('hasEnded')
@@ -94,7 +79,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->with(
                 $permitStockEntity,
-                m::type(RefData::class),
                 $cmdData['startDate'],
                 $cmdData['endDate'],
                 $cmdData['daysForPayment']
@@ -175,14 +159,11 @@ class UpdateTest extends CommandHandlerTestCase
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
             'daysForPayment' => 14,
-            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);
 
         $permitWindowEntity = m::mock(PermitWindowEntity::class);
-
-        $permitWindowEntity->shouldReceive('getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')->once()->andReturn(true);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchById')
@@ -220,14 +201,11 @@ class UpdateTest extends CommandHandlerTestCase
             'startDate' => '2017-12-01',
             'endDate' => '2017-12-30',
             'daysForPayment' => 14,
-            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);
 
         $permitWindowEntity = m::mock(PermitWindowEntity::class);
-
-        $permitWindowEntity->shouldReceive('getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')->once()->andReturn(true);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchById')
@@ -266,7 +244,6 @@ class UpdateTest extends CommandHandlerTestCase
             'startDate' => '2019-12-01',
             'endDate' => '2019-12-30',
             'daysForPayment' => 14,
-            'emissionsCategory' => PermitWindowEntity::EMISSIONS_CATEGORY_EURO6_REF
         ];
 
         $command = UpdateCmd::create($cmdData);
@@ -280,8 +257,6 @@ class UpdateTest extends CommandHandlerTestCase
 
         $permitWindowEntity->shouldReceive('hasEnded')->once()->andReturn(false);
         $permitWindowEntity->shouldReceive('isActive')->once()->andReturn(false);
-
-        $permitWindowEntity->shouldReceive('getIrhpPermitStock->getIrhpPermitType->isEcmtAnnual')->once()->andReturn(true);
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('findOverlappingWindowsByType')

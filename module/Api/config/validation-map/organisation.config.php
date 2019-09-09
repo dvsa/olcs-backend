@@ -8,6 +8,7 @@ return [
     // Queries
     QueryHandler\Organisation\Dashboard::class => Misc\CanAccessOrganisationWithId::class,
     QueryHandler\Organisation\Organisation::class => Misc\CanAccessOrganisationWithId::class,
+    QueryHandler\Organisation\OrganisationPermits::class => Misc\CanAccessOrganisationWithId::class,
     QueryHandler\Organisation\OutstandingFees::class => Misc\CanAccessOrganisationWithId::class,
     QueryHandler\Organisation\BusinessDetails::class => Misc\IsInternalUser::class,
     QueryHandler\Organisation\CpidOrganisation::class => Misc\IsInternalUser::class,

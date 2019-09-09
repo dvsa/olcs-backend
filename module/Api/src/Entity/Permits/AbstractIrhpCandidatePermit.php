@@ -27,7 +27,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_range_id"}),
  *        @ORM\Index(name="fk_irhp_candidate_permit_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_irhp_candidate_permit_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_requested_emissions_cat_ref_data_id",
+     *     columns={"requested_emissions_category"}),
+ *        @ORM\Index(name="fk_irhp_candidate_permit_assigned_emissions_cat_ref_data_id",
+     *     columns={"assigned_emissions_category"})
  *    }
  * )
  */
@@ -45,6 +49,16 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
      * @ORM\Column(type="decimal", name="application_score", precision=18, scale=9, nullable=true)
      */
     protected $applicationScore;
+
+    /**
+     * Assigned emissions category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="assigned_emissions_category", referencedColumnName="id", nullable=true)
+     */
+    protected $assignedEmissionsCategory;
 
     /**
      * Created by
@@ -153,6 +167,16 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     protected $randomizedScore;
 
     /**
+     * Requested emissions category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="requested_emissions_category", referencedColumnName="id", nullable=true)
+     */
+    protected $requestedEmissionsCategory;
+
+    /**
      * Successful
      *
      * @var boolean
@@ -225,6 +249,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     public function getApplicationScore()
     {
         return $this->applicationScore;
+    }
+
+    /**
+     * Set the assigned emissions category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $assignedEmissionsCategory entity being set as the value
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setAssignedEmissionsCategory($assignedEmissionsCategory)
+    {
+        $this->assignedEmissionsCategory = $assignedEmissionsCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the assigned emissions category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getAssignedEmissionsCategory()
+    {
+        return $this->assignedEmissionsCategory;
     }
 
     /**
@@ -477,6 +525,30 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     public function getRandomizedScore()
     {
         return $this->randomizedScore;
+    }
+
+    /**
+     * Set the requested emissions category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $requestedEmissionsCategory entity being set as the value
+     *
+     * @return IrhpCandidatePermit
+     */
+    public function setRequestedEmissionsCategory($requestedEmissionsCategory)
+    {
+        $this->requestedEmissionsCategory = $requestedEmissionsCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the requested emissions category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getRequestedEmissionsCategory()
+    {
+        return $this->requestedEmissionsCategory;
     }
 
     /**

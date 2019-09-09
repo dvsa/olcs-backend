@@ -6,14 +6,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as WindowEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Create as CreateWindowCmd;
-
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
@@ -50,16 +46,8 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         /** @var IrhpPermitStock $irhpPermitStock */
         $irhpPermitStock = $this->getRepo('IrhpPermitStock')->fetchById($command->getIrhpPermitStock());
 
-        if ($irhpPermitStock->getIrhpPermitType()->isEcmtAnnual()
-            && $command->getEmissionsCategory() == IrhpPermitWindow::EMISSIONS_CATEGORY_NA_REF) {
-            throw new ValidationException(['Emissions Category: N/A not valid for Annual ECMT Stock']);
-        }
-
-        $emissionsCategory = $this->refData($command->getEmissionsCategory());
-
         $window = WindowEntity::create(
             $irhpPermitStock,
-            $emissionsCategory,
             $command->getStartDate(),
             $command->getEndDate(),
             $command->getDaysForPayment()

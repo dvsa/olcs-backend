@@ -10,6 +10,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as PermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -41,8 +42,10 @@ class CreateTest extends CommandHandlerTestCase
 
     /**
      * Test the Happy Path
+     *
+     * @dataProvider dpShortTermAnnualTypeCombinations
      */
-    public function testHandleCommand()
+    public function testHandleCommand($isEcmtShortTerm, $isEcmtAnnual)
     {
         $cmdData = [
             'irhpPermitStock' => '1',
@@ -57,8 +60,12 @@ class CreateTest extends CommandHandlerTestCase
 
         $command = CreateCmd::create($cmdData);
 
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')->andReturn($isEcmtAnnual);
+
         $irhpPermitStock = m::mock(IrhpPermitStock::class);
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtShortTerm')->once()->andReturn(true);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType')->andReturn($irhpPermitType);
 
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('fetchById')
@@ -119,9 +126,11 @@ class CreateTest extends CommandHandlerTestCase
     }
 
     /**
-    * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
-    */
-    public function testHandleCommandBadEcmtEmissionsCategory()
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ValidationException
+     *
+     * @dataProvider dpShortTermAnnualTypeCombinations
+     */
+    public function testHandleCommandBadEcmtEmissionsCategory($isEcmtShortTerm, $isEcmtAnnual)
     {
         $cmdData = [
             'irhpPermitStock' => '1',
@@ -136,8 +145,12 @@ class CreateTest extends CommandHandlerTestCase
 
         $command = CreateCmd::create($cmdData);
 
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')->andReturn($isEcmtShortTerm);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')->andReturn($isEcmtAnnual);
+
         $irhpPermitStock = m::mock(IrhpPermitStock::class);
-        $irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtShortTerm')->once()->andReturn(true);
+        $irhpPermitStock->shouldReceive('getIrhpPermitType')->andReturn($irhpPermitType);
 
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('fetchById')
@@ -147,5 +160,13 @@ class CreateTest extends CommandHandlerTestCase
             ->andReturn([]);
 
         $this->sut->handleCommand($command);
+    }
+
+    public function dpShortTermAnnualTypeCombinations()
+    {
+        return [
+            [true, false],
+            [false, true],
+        ];
     }
 }

@@ -54,9 +54,14 @@ class AvailableYears extends AbstractQueryHandler implements ToggleRequiredInter
     {
         $permitType = $query->getType();
 
-        if ($permitType != IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
-            // year selection is currently applicable only to ecmt short term
+        $applicableTypes = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+        ];
+
+        if (!in_array($permitType, $applicableTypes)) {
             return [
+                'hasYears' => false,
                 'years' => []
             ];
         }
@@ -70,7 +75,12 @@ class AvailableYears extends AbstractQueryHandler implements ToggleRequiredInter
         foreach ($openWindows as $window) {
             $irhpPermitStock = $window->getIrhpPermitStock();
 
-            if ($this->stockAvailabilityChecker->hasAvailability($irhpPermitStock->getId())) {
+            $includeYear = true;
+            if ($permitType == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM) {
+                $includeYear = $this->stockAvailabilityChecker->hasAvailability($irhpPermitStock->getId());
+            }
+            
+            if ($includeYear) {
                 $availableYears[] = $irhpPermitStock->getValidityYear();
             }
         }
@@ -79,7 +89,8 @@ class AvailableYears extends AbstractQueryHandler implements ToggleRequiredInter
         sort($availableYears);
 
         return [
-            'years' => $availableYears
+            'hasYears' => (count($availableYears) > 0),
+            'years' => $availableYears,
         ];
     }
 }

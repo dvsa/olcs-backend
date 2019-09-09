@@ -65,11 +65,13 @@ class IrhpPermitRangeTest extends RepositoryTestCase
         );
     }
 
-    public function testGetCombinedRangeSizeWithEmissionsCategoryId()
+    /**
+     * @dataProvider dpTestGetCombinedRangeSizeWithEmissionsCategoryId
+     */
+    public function testGetCombinedRangeSizeWithEmissionsCategoryId($emissionsCategoryId)
     {
         $combinedRangeSize = 1002;
         $stockId = 5;
-        $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO5_REF;
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
@@ -114,6 +116,14 @@ class IrhpPermitRangeTest extends RepositoryTestCase
             $combinedRangeSize,
             $this->sut->getCombinedRangeSize($stockId, $emissionsCategoryId)
         );
+    }
+
+    public function dpTestGetCombinedRangeSizeWithEmissionsCategoryId()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
     }
 
     public function testGetByStockId()
