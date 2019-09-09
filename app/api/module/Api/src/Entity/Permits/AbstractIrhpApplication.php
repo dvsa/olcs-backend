@@ -96,6 +96,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $declaration = 0;
 
     /**
+     * Expiry date
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="expiry_date", nullable=true)
+     */
+    protected $expiryDate;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -415,6 +424,36 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getDeclaration()
     {
         return $this->declaration;
+    }
+
+    /**
+     * Set the expiry date
+     *
+     * @param \DateTime $expiryDate new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setExpiryDate($expiryDate)
+    {
+        $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    /**
+     * Get the expiry date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime
+     */
+    public function getExpiryDate($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->expiryDate);
+        }
+
+        return $this->expiryDate;
     }
 
     /**

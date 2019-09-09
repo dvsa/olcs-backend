@@ -19,18 +19,18 @@ class IrhpCandidatePermit extends AbstractRepository
     protected $entity = Entity::class;
 
     /**
-     * Returns the ids of in scope candidate permits within the specified stock where the randomised score is not empty
-     * and the associated application has requested the specified sector, ordered by randomised score descending
+     * Returns the ids and emissions categories of in scope candidate permits within the specified stock where
+     * the associated application has requested the specified sector, ordered by randomised score descending
      *
      * @param int $stockId
      * @param int $sectorsId
      *
      * @return array
      */
-    public function getScoreOrderedIdsBySectorInScope($stockId, $sectorsId)
+    public function getScoreOrderedBySectorInScope($stockId, $sectorsId)
     {
-        $result = $this->getEntityManager()->createQueryBuilder()
-            ->select('icp.id')
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('icp.id, IDENTITY(icp.requestedEmissionsCategory) as emissions_category')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
@@ -43,8 +43,6 @@ class IrhpCandidatePermit extends AbstractRepository
             ->setParameter(2, $sectorsId)
             ->getQuery()
             ->getScalarResult();
-
-        return array_column($result, 'id');
     }
 
     /**
@@ -82,19 +80,19 @@ class IrhpCandidatePermit extends AbstractRepository
     }
 
     /**
-     * Returns the ids of candidate permits within the specified stock that have a randomised score and are marked as
-     * unsuccessful, ordered by randomised score descending. Optional parameter to further filter the results by
-     * the traffic area of the associated application
+     * Returns the ids and requested emissions categories of candidate permits within the specified stock that are in
+     * scope and unsuccessful, ordered by randomised score descending. Optional parameter to further filter the results
+     * by the traffic area of the associated application
      *
      * @param int $stockId
      * @param int $trafficAreaId (optional)
      *
      * @return array
      */
-    public function getUnsuccessfulScoreOrderedIdsInScope($stockId, $trafficAreaId = null)
+    public function getUnsuccessfulScoreOrderedInScope($stockId, $trafficAreaId = null)
     {
         $queryBuilder = $this->getEntityManager()->createQueryBuilder()
-            ->select('icp.id')
+            ->select('icp.id, IDENTITY(icp.requestedEmissionsCategory) as emissions_category')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
@@ -111,30 +109,37 @@ class IrhpCandidatePermit extends AbstractRepository
             ->setParameter(2, $trafficAreaId);
         }
 
-        $result = $queryBuilder->getQuery()->getScalarResult();
-        return array_column($result, 'id');
+        return $queryBuilder->getQuery()->getScalarResult();
     }
 
     /**
-     * Returns the count of candidate permits in the specified stock marked as successful
+     * Returns the count of candidate permits in the specified stock marked as successful, filtered by emissions
+     * category if specified
      *
      * @param int $stockId
+     * @param string $assignedEmissionsCategoryId (optional)
      *
      * @return int
      */
-    public function getSuccessfulCountInScope($stockId)
+    public function getSuccessfulCountInScope($stockId, $assignedEmissionsCategoryId = null)
     {
-        return $this->getEntityManager()->createQueryBuilder()
+        $qb = $this->getEntityManager()->createQueryBuilder()
             ->select('count(icp)')
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
             ->innerJoin('ipa.ecmtPermitApplication', 'epa')
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->andWhere('icp.successful = 1')
-            ->andWhere('epa.inScope = 1')
             ->setParameter(1, $stockId)
-            ->getQuery()
+            ->andWhere('icp.successful = 1')
+            ->andWhere('epa.inScope = 1');
+
+        if (!is_null($assignedEmissionsCategoryId)) {
+            $qb->andWhere('IDENTITY(icp.assignedEmissionsCategory) = ?2')
+                ->setParameter(2, $assignedEmissionsCategoryId);
+        }
+
+        return $qb->getQuery()
             ->getSingleScalarResult();
     }
 
@@ -163,23 +168,6 @@ class IrhpCandidatePermit extends AbstractRepository
     }
 
     /**
-     * Marks a set of candidate permit ids as successful
-     *
-     * @param array $candidatePermitIds
-     */
-    public function markAsSuccessful(array $candidatePermitIds)
-    {
-        $query = $this->getEntityManager()->createQueryBuilder()
-            ->update(Entity::class, 'icp')
-            ->set('icp.successful', 1)
-            ->where('icp.id in (?1)')
-            ->setParameter(1, $candidatePermitIds)
-            ->getQuery();
-
-        $query->execute();
-    }
-
-    /**
      * Retrieves the ids of candidate permits and corresponding licence numbers in scope for the current scoring run
      *
      * @param int $irhpPermitStockId the Id of the IrhpPermitStock that the scoring will be for
@@ -189,7 +177,10 @@ class IrhpCandidatePermit extends AbstractRepository
     public function fetchDeviationSourceValues($irhpPermitStockId)
     {
         return $this->getEntityManager()->createQueryBuilder()
-            ->select('icp.id as candidatePermitId, l.licNo, epa.id as applicationId, epa.permitsRequired')
+            ->select(
+                'icp.id as candidatePermitId, l.licNo, epa.id as applicationId,' .
+                '(epa.requiredEuro5 + epa.requiredEuro6) as permitsRequired'
+            )
             ->from(Entity::class, 'icp')
             ->innerJoin('icp.irhpPermitApplication', 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
@@ -257,6 +248,8 @@ class IrhpCandidatePermit extends AbstractRepository
             'icp.intensityOfUse as candidatePermitIntensityOfUse',
             'icp.randomFactor as candidatePermitRandomFactor',
             'icp.randomizedScore as candidatePermitRandomizedScore',
+            'IDENTITY(icp.requestedEmissionsCategory) as candidatePermitRequestedEmissionsCategory',
+            'IDENTITY(icp.assignedEmissionsCategory) as candidatePermitAssignedEmissionsCategory',
             'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys',
             's.name as applicationSectorName',
             'l.licNo as licenceNo',

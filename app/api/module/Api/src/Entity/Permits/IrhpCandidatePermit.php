@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * IrhpCandidatePermit Entity
@@ -22,17 +24,28 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
 {
+    /**
+     * Create IRHP Candidate Permit entity
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param RefData $requestedEmissionsCategory
+     * @param float $intensityOfUse
+     * @param float $applicationScore
+     *
+     * @return void
+     */
     public static function createNew(
         IrhpPermitApplication $irhpPermitApplication,
+        RefData $requestedEmissionsCategory,
         float $intensityOfUse = null,
         float $applicationScore = null
     ) {
         $irhpCandidatePermit = new self();
         $irhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
+        $irhpCandidatePermit->requestedEmissionsCategory = $requestedEmissionsCategory;
         $irhpCandidatePermit->intensityOfUse = $intensityOfUse;
         $irhpCandidatePermit->applicationScore = $applicationScore;
         $irhpCandidatePermit->successful = 0;
-        $irhpCandidatePermit->inScope = 0;
 
         return $irhpCandidatePermit;
     }
@@ -43,6 +56,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     public function prepareForScoring()
     {
         $this->successful = 0;
+        $this->assignedEmissionsCategory = null;
         $this->irhpPermitRange = null;
     }
 
@@ -80,9 +94,34 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
      * Sets the range for this candidate permit
      *
      * @param IrhpPermitRange $range the range to be applied
+     *
+     * @throws ForbiddenException
      */
     public function applyRange(IrhpPermitRange $range)
     {
+        if ($this->assignedEmissionsCategory !== $range->getEmissionsCategory()) {
+            throw new ForbiddenException(
+                'A candidate permit can only be assigned to a range with a matching emissions category'
+            );
+        }
+
         $this->irhpPermitRange = $range;
+    }
+
+    /**
+     * Marks this candidate permit as successful and sets the assigned emissions category
+     *
+     * @param RefData $assignedEmissionsCategory
+     *
+     * @throws ForbiddenException
+     */
+    public function markAsSuccessful(RefData $assignedEmissionsCategory)
+    {
+        if ($this->successful == 1) {
+            throw new ForbiddenException('This candidate permit has already been marked as successful');
+        }
+
+        $this->successful = 1;
+        $this->assignedEmissionsCategory = $assignedEmissionsCategory;
     }
 }

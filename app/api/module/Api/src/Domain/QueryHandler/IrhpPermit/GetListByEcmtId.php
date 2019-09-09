@@ -26,7 +26,8 @@ class GetListByEcmtId extends AbstractQueryHandler implements ToggleRequiredInte
         'irhpPermitRange' => [
             'countrys' => [
                 'country'
-            ]
+            ],
+            'emissionsCategory',
         ],
     ];
 

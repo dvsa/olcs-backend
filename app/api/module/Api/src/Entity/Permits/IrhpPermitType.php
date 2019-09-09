@@ -31,6 +31,9 @@ class IrhpPermitType extends AbstractIrhpPermitType
 
     const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
     const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
+    const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
+
+    const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL = 'P1Y';
 
     /**
      * Gets calculated values
@@ -137,6 +140,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
      * Get the permit allocation mode used by this permit type
      *
      * @return string
+     * @throws RuntimeException
      */
     public function getAllocationMode()
     {
@@ -144,6 +148,7 @@ class IrhpPermitType extends AbstractIrhpPermitType
             self::IRHP_PERMIT_TYPE_ID_BILATERAL => self::ALLOCATION_MODE_STANDARD,
             self::IRHP_PERMIT_TYPE_ID_MULTILATERAL => self::ALLOCATION_MODE_STANDARD,
             self::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => self::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
+            self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => self::ALLOCATION_MODE_STANDARD_WITH_EXPIRY
         ];
 
         if (isset($mappings[$this->id])) {
@@ -151,5 +156,24 @@ class IrhpPermitType extends AbstractIrhpPermitType
         }
 
         throw new RuntimeException('No allocation mode set for permit type ' . $this->id);
+    }
+
+    /**
+     * Get the expiry interval string used by this permit type for DateTime expiry offset from issue_date
+     *
+     * @return string
+     * @throws RuntimeException
+     */
+    public function getExpiryInterval()
+    {
+        $mappings = [
+            self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL
+        ];
+
+        if (isset($mappings[$this->id])) {
+            return $mappings[$this->id];
+        }
+
+        throw new RuntimeException('No expiry interval defined for permit type ' . $this->id);
     }
 }

@@ -3,13 +3,15 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
-    as MarkSuccessfulRemainingPermitApplicationsCommand;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
+use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
+    as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Set the remaining successful permit applications
@@ -26,6 +28,25 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
     protected $repoServiceName = 'IrhpCandidatePermit';
 
     protected $extraRepos = ['IrhpPermit', 'IrhpPermitRange'];
+
+    /** @var SuccessfulCandidatePermitsFacade */
+    private $successfulCandidatePermitsFacade;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->successfulCandidatePermitsFacade = $serviceLocator->getServiceLocator()->get(
+            'PermitsScoringSuccessfulCandidatePermitsFacade'
+        );
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -55,18 +76,19 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
         $this->result->addMessage('    - #successfulPACount:   ' . $successfulPaCount);
         $this->result->addMessage('    - #remainingQuota:      ' . $remainingQuota);
 
-        // TODO: could remainingQuota ever be zero or less?
         if ($remainingQuota > 0) {
-            $candidatePermitIds = $this->getRepo()->getUnsuccessfulScoreOrderedIdsInScope($stockId);
+            $remainingCandidatePermits = $this->getRepo()->getUnsuccessfulScoreOrderedInScope($stockId);
 
-            $truncatedCandidatePermitIds = array_slice($candidatePermitIds, 0, $remainingQuota);
-            $this->getRepo()->markAsSuccessful($truncatedCandidatePermitIds);
+            $successfulCandidatePermits = $this->successfulCandidatePermitsFacade->generate(
+                $remainingCandidatePermits,
+                $command->getStockId(),
+                $remainingQuota
+            );
 
-            $this->result->addMessage('  Unsuccessful remaining permits found in stock: ' . count($candidatePermitIds));
-            $this->result->addMessage('  Marking the following' . count($truncatedCandidatePermitIds) . ' permits as successful');
-            foreach ($truncatedCandidatePermitIds as $candidatePermitId) {
-                $this->result->addMessage('    - id = ' . $candidatePermitId);
-            }
+            $this->successfulCandidatePermitsFacade->write($successfulCandidatePermits);
+
+            $this->result->addMessage('  Unsuccessful remaining permits found in stock: ' . count($remainingCandidatePermits));
+            $this->successfulCandidatePermitsFacade->log($successfulCandidatePermits, $this->result);
         } else {
             $this->result->addMessage('#remainingQuota < 1 - nothing to do');
         }

@@ -281,6 +281,7 @@ class IrhpPermitTypeEntityTest extends EntityTester
             [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, Entity::ALLOCATION_MODE_STANDARD],
             [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, Entity::ALLOCATION_MODE_STANDARD],
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, Entity::ALLOCATION_MODE_EMISSIONS_CATEGORIES],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, Entity::ALLOCATION_MODE_STANDARD_WITH_EXPIRY]
         ];
     }
 
@@ -300,7 +301,48 @@ class IrhpPermitTypeEntityTest extends EntityTester
     {
         return [
             [Entity::IRHP_PERMIT_TYPE_ID_ECMT],
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetExpiryInterval
+     */
+    public function testGetExpiryInterval($irhpPermitTypeId, $expiryInterval)
+    {
+        $this->sut->setId($irhpPermitTypeId);
+
+        $this->assertEquals(
+            $expiryInterval,
+            $this->sut->getExpiryInterval()
+        );
+    }
+
+    public function dpGetExpiryInterval()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL]
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetExpiryIntervalException
+     */
+    public function testGetExpiryIntervalException($irhpPermitTypeId)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('No expiry interval defined for permit type ' . $irhpPermitTypeId);
+
+        $this->sut->setId($irhpPermitTypeId);
+        $this->sut->getExpiryInterval();
+    }
+
+    public function dpGetExpiryIntervalException()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT],
         ];
     }
 }

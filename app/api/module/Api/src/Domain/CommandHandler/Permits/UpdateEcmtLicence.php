@@ -32,7 +32,7 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = ['Licence', 'IrhpPermitApplication'];
 
     /**
      * Handle command
@@ -63,6 +63,8 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
 
         // Update the licence but reset the previously answers questions to NULL
         $application->updateLicence($licence);
+        $irhpPermitApplication = $application->getFirstIrhpPermitApplication();
+        $irhpPermitApplication->updateLicence($licence);
         $fees = $application->getFees();
 
         /** @var Fee $fee */
@@ -73,6 +75,7 @@ final class UpdateEcmtLicence extends AbstractCommandHandler implements ToggleRe
         }
 
         $this->getRepo()->save($application);
+        $this->getRepo('IrhpPermitApplication')->save($irhpPermitApplication);
         $result->addId('ecmtPermitApplication', $application->getId());
         $result->addMessage('EcmtPermitApplication Licence Updated successfully');
 

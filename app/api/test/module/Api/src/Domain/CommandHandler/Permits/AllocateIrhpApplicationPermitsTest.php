@@ -119,6 +119,63 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         );
     }
 
+    public function testHandleCommandStandardWithExpiry()
+    {
+        $irhpPermitApplication1Id = 124;
+        $irhpPermitApplication1PermitsRequired = 10;
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getId')
+            ->andReturn($irhpPermitApplication1Id);
+        $irhpPermitApplication1->shouldReceive('getPermitsRequired')
+            ->andReturn($irhpPermitApplication1PermitsRequired);
+
+        $irhpPermitApplications = [$irhpPermitApplication1];
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitApplications')
+            ->andReturn($irhpPermitApplications);
+        $irhpApplication->shouldReceive('getIrhpPermitType->getAllocationMode')
+            ->andReturn(IrhpPermitType::ALLOCATION_MODE_STANDARD_WITH_EXPIRY);
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+        $irhpApplication->shouldReceive('proceedToValid')
+            ->with($this->refData[IrhpInterface::STATUS_VALID])
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->repoMap['IrhpApplication']->shouldReceive('save')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->once()
+            ->andReturn($irhpApplication);
+
+        $irhpPermitApplication1->shouldReceive('getIrhpApplication->getIrhpPermitType->getExpiryInterval')
+            ->once()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL);
+
+        $this->expectedSideEffect(
+            AllocateIrhpPermitApplicationPermit::class,
+            ['id' => $irhpPermitApplication1Id],
+            new Result(),
+            $irhpPermitApplication1PermitsRequired
+        );
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            $this->irhpApplicationId,
+            $result->getId('irhpApplication')
+        );
+    }
+
     public function testHandleCommandEmissionsCategories()
     {
         $irhpPermitApplication1Id = 57;

@@ -137,7 +137,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function getCalculatedBundleValues()
     {
-        return ['canDelete' => $this->canDelete()];
+        return [
+            'canDelete' => $this->canDelete(),
+            'hasEuro5Range' => $this->hasEuro5Range(),
+            'hasEuro6Range' => $this->hasEuro6Range(),
+            'validityYear' => $this->getValidityYear(),
+        ];
     }
 
     /**
@@ -504,5 +509,43 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     public function getValidityYear()
     {
         return $this->getValidTo(true)->format('Y');
+    }
+
+    /**
+     * Does stock have a Euro5 Range?
+     *
+     * @return bool
+     */
+    public function hasEuro5Range()
+    {
+        return($this->hasRangeWithEmissionsCat(RefData::EMISSIONS_CATEGORY_EURO5_REF));
+    }
+
+    /**
+     * Does stock have a Euro6 Range?
+     *
+     * @return bool
+     */
+    public function hasEuro6Range()
+    {
+        return($this->hasRangeWithEmissionsCat(RefData::EMISSIONS_CATEGORY_EURO6_REF));
+    }
+
+    /**
+     * Does stock have a range with given emissions category ref data id?
+     *
+     * @param string $emissionsRef
+     * @return bool
+     */
+    protected function hasRangeWithEmissionsCat(string $emissionsRef)
+    {
+        $ranges = $this->getIrhpPermitRanges();
+        foreach ($ranges as $range) {
+            if ($range->getEmissionsCategory()->getId() == $emissionsRef) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

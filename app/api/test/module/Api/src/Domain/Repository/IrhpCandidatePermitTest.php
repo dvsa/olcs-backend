@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**
@@ -24,26 +25,24 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->setUpSut(IrhpCandidatePermit::class);
     }
 
-    public function testGetScoreOrderedIdsBySectorInScope()
+    public function testGetScoreOrderedBySectorInScope()
     {
         $stockId = 6;
         $sectorsId = 8;
 
-        $nonNormalisedResult = [
-            ['id' => 18],
-            ['id' => 24],
-            ['id' => 25],
-            ['id' => 31],
-            ['id' => 34],
+        $result = [
+            ['id' => 18, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 24, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 25, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 31, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 34, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
         ];
-
-        $normalisedResult = [18, 24, 25, 31, 34];
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with('icp.id')
+            ->with('icp.id, IDENTITY(icp.requestedEmissionsCategory) as emissions_category')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')
@@ -88,11 +87,11 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('getQuery->getScalarResult')
             ->once()
-            ->andReturn($nonNormalisedResult);
+            ->andReturn($result);
 
         $this->assertEquals(
-            $normalisedResult,
-            $this->sut->getScoreOrderedIdsBySectorInScope($stockId, $sectorsId)
+            $result,
+            $this->sut->getScoreOrderedBySectorInScope($stockId, $sectorsId)
         );
     }
 
@@ -163,15 +162,13 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         );
     }
 
-    public function testGetUnsuccessfulScoreOrderedIdsInScopeWithoutTrafficAreaId()
+    public function testGetScoreOrderedInScopeWithoutTrafficAreaId()
     {
-        $nonNormalisedResult = [
-            ['id' => 35],
-            ['id' => 37],
-            ['id' => 41]
+        $result = [
+            ['id' => 35, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 37, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 41, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF]
         ];
-
-        $normalisedResult = [35, 37, 41];
 
         $stockId = 3;
 
@@ -179,7 +176,7 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with('icp.id')
+            ->with('icp.id, IDENTITY(icp.requestedEmissionsCategory) as emissions_category')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')
@@ -220,23 +217,21 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('getQuery->getScalarResult')
             ->once()
-            ->andReturn($nonNormalisedResult);
+            ->andReturn($result);
 
         $this->assertEquals(
-            $normalisedResult,
-            $this->sut->getUnsuccessfulScoreOrderedIdsInScope($stockId)
+            $result,
+            $this->sut->getUnsuccessfulScoreOrderedInScope($stockId)
         );
     }
 
     public function testGetUnsuccessfulScoreOrderedIdsInScopeWithTrafficAreaId()
     {
-        $nonNormalisedResult = [
-            ['id' => 35],
-            ['id' => 37],
-            ['id' => 41]
+        $result = [
+            ['id' => 35, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            ['id' => 37, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO6_REF],
+            ['id' => 41, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF]
         ];
-
-        $normalisedResult = [35, 37, 41];
 
         $stockId = 3;
         $trafficAreaId = 12;
@@ -245,7 +240,7 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with('icp.id')
+            ->with('icp.id, IDENTITY(icp.requestedEmissionsCategory) as emissions_category')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')
@@ -298,15 +293,15 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
             ->andReturnSelf()
             ->shouldReceive('getQuery->getScalarResult')
             ->once()
-            ->andReturn($nonNormalisedResult);
+            ->andReturn($result);
 
         $this->assertEquals(
-            $normalisedResult,
-            $this->sut->getUnsuccessfulScoreOrderedIdsInScope($stockId, $trafficAreaId)
+            $result,
+            $this->sut->getUnsuccessfulScoreOrderedInScope($stockId, $trafficAreaId)
         );
     }
 
-    public function testGetSuccessfulCountInScope()
+    public function testGetSuccessfulCountInScopeWithoutEmissionsCategoryId()
     {
         $stockId = 7;
         $successfulCount = 15;
@@ -359,40 +354,67 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         );
     }
 
-    public function testMarkAsSuccessful()
+    public function testGetSuccessfulCountInScopeWithEmissionsCategoryId()
     {
-        $candidatePermitIds = [3, 8, 12, 16];
+        $stockId = 7;
+        $assignedEmissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO5_REF;
+        $successfulCount = 15;
 
         $queryBuilder = m::mock(QueryBuilder::class);
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
-        $query = m::mock(AbstractQuery::class);
-        $query->shouldReceive('execute')
-            ->withNoArgs()
-            ->once();
-
-        $queryBuilder->shouldReceive('update')
+        $queryBuilder->shouldReceive('select')
+            ->with('count(icp)')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
             ->with(IrhpCandidatePermitEntity::class, 'icp')
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('set')
-            ->with('icp.successful', 1)
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.ecmtPermitApplication', 'epa')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('where')
-            ->with('icp.id in (?1)')
+            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('icp.successful = 1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('epa.inScope = 1')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')
-            ->with(1, $candidatePermitIds)
+            ->with(1, $stockId)
             ->once()
             ->andReturnSelf()
-            ->shouldReceive('getQuery')
-            ->withNoArgs()
+            ->shouldReceive('andWhere')
+            ->with('IDENTITY(icp.assignedEmissionsCategory) = ?2')
             ->once()
-            ->andReturn($query);
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, $assignedEmissionsCategoryId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getSingleScalarResult')
+            ->once()
+            ->andReturn($successfulCount);
 
-        $this->sut->markAsSuccessful($candidatePermitIds);
+        $this->assertEquals(
+            $successfulCount,
+            $this->sut->getSuccessfulCountInScope($stockId, $assignedEmissionsCategoryId)
+        );
     }
 
     public function testFetchDeviationSourceValues()
@@ -418,7 +440,10 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
         $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
 
         $queryBuilder->shouldReceive('select')
-            ->with('icp.id as candidatePermitId, l.licNo, epa.id as applicationId, epa.permitsRequired')
+            ->with(
+                'icp.id as candidatePermitId, l.licNo, epa.id as applicationId,' .
+                '(epa.requiredEuro5 + epa.requiredEuro6) as permitsRequired'
+            )
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')
@@ -547,6 +572,8 @@ class IrhpCandidatePermitTest extends RepositoryTestCase
                 'icp.intensityOfUse as candidatePermitIntensityOfUse, ' .
                 'icp.randomFactor as candidatePermitRandomFactor, ' .
                 'icp.randomizedScore as candidatePermitRandomizedScore, ' .
+                'IDENTITY(icp.requestedEmissionsCategory) as candidatePermitRequestedEmissionsCategory, ' .
+                'IDENTITY(icp.assignedEmissionsCategory) as candidatePermitAssignedEmissionsCategory, ' .
                 'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys, ' .
                 's.name as applicationSectorName, ' .
                 'l.licNo as licenceNo, ' .
