@@ -25,7 +25,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_queue_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_queue_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_queue_status_created_on_process_after_date",
-     *     columns={"status","created_on","process_after_date"})
+     *     columns={"status","created_on","process_after_date"}),
+ *        @ORM\Index(name="ix_queue_status_type", columns={"status","type"})
  *    }
  * )
  */
