@@ -16,6 +16,8 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class SelfservePageTest extends MockeryTestCase
 {
+    private $title;
+
     private $applicationReference;
 
     private $applicationStep;
@@ -28,6 +30,8 @@ class SelfservePageTest extends MockeryTestCase
 
     public function setUp()
     {
+        $this->title = 'title';
+
         $this->applicationReference = 'OB123456 / 12300';
 
         $this->applicationStep = m::mock(ApplicationStep::class);
@@ -37,6 +41,7 @@ class SelfservePageTest extends MockeryTestCase
         $this->nextStepSlug = 'removals-cabotage';
 
         $this->selfservePage = new SelfservePage(
+            $this->title,
             $this->applicationReference,
             $this->applicationStep,
             $this->questionText,
@@ -57,6 +62,7 @@ class SelfservePageTest extends MockeryTestCase
             ->andReturn($questionTextRepresentation);
 
         $expectedRepresentation = [
+            'title' => $this->title,
             'applicationReference' => $this->applicationReference,
             'applicationStep' => $applicationStepRepresentation,
             'questionText' => $questionTextRepresentation,
