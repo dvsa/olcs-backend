@@ -6,7 +6,6 @@ use DateTime;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -36,12 +35,18 @@ final class ActiveEcmtApplication extends AbstractQueryHandler implements Toggle
         $ecmtApplicationRepo = $this->getRepo();
         $applicationsByLicence = $ecmtApplicationRepo->fetchByLicence($query->getLicence());
 
+        $year = $query->getYear();
+        if ($query->getId()) {
+            $application = $this->getRepo()->fetchById($query->getId());
+            $year = $application->getFirstIrhpPermitApplication()->getIrhpPermitWindow()->getIrhpPermitStock()->getValidityYear();
+        }
+
         /** @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow $window */
         $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByIrhpPermitType(
             IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
             new DateTime(),
             Query::HYDRATE_OBJECT,
-            $query->getYear()
+            $year
         );
 
         /** @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication $application */

@@ -117,6 +117,104 @@ class ActiveEcmtApplicationTest extends QueryHandlerTestCase
         $this->assertEquals($licence, $result['licence']['id']);
     }
 
+    /**
+     * tests handle query
+     */
+    public function testHandleQueryExistingApp()
+    {
+        $licence = 1;
+
+        $query = $this->qryClass::create(
+            [
+                'licence' => $licence,
+                'year' => null,
+                'id' => 7
+            ]
+        );
+
+        $resultArray = [
+            0 => [
+                'id' => 7,
+                'licence' => ['id' => $licence]
+            ],
+        ];
+
+        $ecmtPermitApp = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitAppWrongStock = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitInactive = m::mock(EcmtPermitApplication::class);
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $year = 2030;
+
+        $appsByLicence = [$ecmtPermitAppWrongStock, $ecmtPermitInactive, $ecmtPermitApp];
+
+        $this->repoMap['EcmtPermitApplication']
+            ->shouldReceive('fetchByLicence')
+            ->with($query->getLicence())
+            ->once()
+            ->andReturn($appsByLicence);
+
+        $this->repoMap['EcmtPermitApplication']
+            ->shouldReceive('fetchById')
+            ->with($query->getId())
+            ->once()
+            ->andReturn($ecmtPermitApp);
+
+        $ecmtPermitApp->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getValidTo')
+            ->withNoArgs()
+            ->once()
+            ->andReturn('2030-01-01');
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
+            ->with(
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                m::type(\DateTime::class),
+                Query::HYDRATE_OBJECT,
+                $year
+            )
+            ->once()
+            ->andReturn($irhpPermitWindow);
+
+        $ecmtPermitAppWrongStock->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(12);
+
+        $ecmtPermitInactive->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(11);
+
+        $ecmtPermitInactive->shouldReceive('isActive')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(false);
+
+        $ecmtPermitApp->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getId')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(11);
+
+        $ecmtPermitApp->shouldReceive('isActive')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(true);
+
+        $ecmtPermitApp->shouldReceive('serialize')
+            ->once()
+            ->with($this->bundle)
+            ->andReturn($resultArray[0]);
+
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getId')
+            ->withNoArgs()
+            ->times(3)
+            ->andReturn(11);
+
+        $result = $this->sut->handleQuery($query)->serialize();
+
+        $this->assertEquals($licence, $result['licence']['id']);
+    }
+
     public function testNull()
     {
         $licence = 1;
