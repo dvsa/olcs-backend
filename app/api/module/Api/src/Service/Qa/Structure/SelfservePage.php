@@ -7,6 +7,9 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 class SelfservePage
 {
     /** @var string */
+    private $title;
+
+    /** @var string */
     private $applicationReference;
 
     /** @var ApplicationStep */
@@ -21,6 +24,7 @@ class SelfservePage
     /**
      * Create instance
      *
+     * @param string $title
      * @param string $applicationReference
      * @param ApplicationStep $applicationStep
      * @param QuestionText $questionText
@@ -29,11 +33,13 @@ class SelfservePage
      * @return SelfservePage
      */
     public function __construct(
+        $title,
         $applicationReference,
         ApplicationStep $applicationStep,
         QuestionText $questionText,
         $nextStepSlug
     ) {
+        $this->title = $title;
         $this->applicationReference = $applicationReference;
         $this->applicationStep = $applicationStep;
         $this->questionText = $questionText;
@@ -48,6 +54,7 @@ class SelfservePage
     public function getRepresentation()
     {
         return [
+            'title' => $this->title,
             'applicationReference' => $this->applicationReference,
             'applicationStep' => $this->applicationStep->getRepresentation(),
             'questionText' => $this->questionText->getRepresentation(),
