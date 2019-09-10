@@ -508,7 +508,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function getValidityYear()
     {
-        return $this->getValidTo(true)->format('Y');
+        return is_null($this->getValidTo(true)) ? null : $this->getValidTo(true)->format('Y');
     }
 
     /**
