@@ -1310,4 +1310,14 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $this->assertEquals(2015, $entity->getValidityYear());
     }
+
+    public function testGetValidityYearNullValidTo()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getValidTo')
+            ->with(true)
+            ->andReturn(null);
+
+        $this->assertNull($entity->getValidityYear());
+    }
 }
