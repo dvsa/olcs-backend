@@ -159,10 +159,10 @@ class ActiveEcmtApplicationTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($ecmtPermitApp);
 
-        $ecmtPermitApp->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getValidTo')
+        $ecmtPermitApp->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getValidityYear')
             ->withNoArgs()
             ->once()
-            ->andReturn('2030-01-01');
+            ->andReturn('2030');
 
         $this->repoMap['IrhpPermitWindow']
             ->shouldReceive('fetchLastOpenWindowByIrhpPermitType')
