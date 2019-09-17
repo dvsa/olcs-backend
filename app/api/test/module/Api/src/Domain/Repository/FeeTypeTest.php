@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Query\Fee\FeeTypeList as FeeTypeListQry;
+use Dvsa\Olcs\Transfer\Query\FeeType\GetList as AdminFeeTypeListQry;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit;
@@ -103,11 +104,11 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-            . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
             . ' AND ft.isMiscellaneous = [[0]]'
             . ' AND ft.feeType IN ["APP","VAR","GRANT","GRANTINT"]'
             . ' AND ft.goodsOrPsv = [[GOODS_OR_PSV]]'
             . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+            . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
@@ -159,9 +160,9 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-            . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
             . ' AND ft.feeType IN ["CONT"]'
             . ' AND ft.licenceType = [[LICENCE_TYPE]]'
+            . ' AND ft.effectiveFrom <= [[2014-10-26T00:00:00+00:00]]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
@@ -202,9 +203,9 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
             . ' AND ft.isMiscellaneous = [[0]]'
             . ' AND ft.feeType IN ["IRFOGVPERMIT","IRFOPSVANN","IRFOPSVAPP","IRFOPSVCOPY"]'
+            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
@@ -250,9 +251,9 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
             . ' AND ft.isMiscellaneous = [[0]]'
             . ' AND ft.feeType IN ["BUSAPP","BUSVAR"]'
+            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
@@ -291,13 +292,98 @@ class FeeTypeTest extends RepositoryTestCase
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
 
         $expectedQuery = 'QUERY'
-            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
             . ' AND ft.isMiscellaneous = [[1]]'
+            . ' AND ft.effectiveFrom <= [['.$expectedDate.']]'
             . ' ORDER BY ftft.id ASC'
             . ' ORDER BY ft.effectiveFrom DESC';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
+
+    public function testFetchListForGoodsOrPsv()
+    {
+        $now = new DateTime();
+        $expectedDate = $now->format(DateTime::W3C);
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('feeType', 'ftft')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
+            ->once()
+            ->andReturnSelf();
+
+        $this->sut->shouldReceive('fetchPaginatedList')
+            ->andReturn(['RESULTS']);
+
+        $queryDto = AdminFeeTypeListQry::create(
+            [
+                'goodsOrPsv' => 'lcat_gv',
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
+
+        $expectedQuery = 'QUERY'
+            . ' AND ft.goodsOrPsv = [[lcat_gv]]'
+            . ' AND ft.goodsOrPsv IS NOT NULL'
+            . ' ORDER BY ft.id ASC';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFetchListForFeeType()
+    {
+        $now = new DateTime();
+        $expectedDate = $now->format(DateTime::W3C);
+
+        $qb = $this->createMockQb('QUERY');
+
+        $this->mockCreateQueryBuilder($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('withRefdata')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->with('feeType', 'ftft')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('paginate')
+            ->once()
+            ->andReturnSelf();
+
+        $this->sut->shouldReceive('fetchPaginatedList')
+            ->andReturn(['RESULTS']);
+
+        $queryDto = AdminFeeTypeListQry::create(
+            [
+                'feeType' => 'ANN',
+            ]
+        );
+        $this->assertEquals(['RESULTS'], $this->sut->fetchList($queryDto, Query::HYDRATE_OBJECT));
+
+        $expectedQuery = 'QUERY'
+            . ' AND ft.feeType = [[ANN]]'
+            . ' AND ft.goodsOrPsv IS NOT NULL'
+            . ' ORDER BY ft.id ASC';
+
+        $this->assertEquals($expectedQuery, $this->query);
+    }
+
 
     public function testGetLatestIrfoFeeTypeForGvPermits()
     {
@@ -341,5 +427,32 @@ class FeeTypeTest extends RepositoryTestCase
         $irfoEntity = new \StdClass();
 
         $this->sut->getLatestIrfoFeeType($irfoEntity, $feeTypeFeeType);
+    }
+
+    public function testFetchDistinctFeeTypes()
+    {
+        $qb = m::mock(QueryBuilder::class);
+        $repo = m::mock(FeeType::class)->shouldAllowMockingProtectedMethods();
+
+        $this->em->shouldReceive('getRepository')->with(FeeType::class)->andReturn($repo);
+
+        $repo->shouldReceive('createQueryBuilder')->with('ft')->once()->andReturn($qb);
+
+        $this->queryBuilder
+            ->shouldReceive('modifyQuery')
+            ->once()
+            ->with($qb)
+            ->andReturnSelf()
+            ->shouldReceive('with')
+            ->once()
+            ->with('feeType', 'ftft')
+            ->andReturnSelf();
+
+        $qb->shouldReceive('distinct')->once()->andReturnSelf();
+        $qb->shouldReceive('select')->once()->with(['ftft.id'])->andReturnSelf();
+        $qb->shouldReceive('orderBy')->once()->with('ftft.id', 'ASC')->andReturnSelf();
+        $qb->shouldReceive('getQuery->getResult')->once()->andReturn(['RESULTS']);
+
+        $this->assertSame(['RESULTS'], $this->sut->fetchDistinctFeeTypes());
     }
 }
