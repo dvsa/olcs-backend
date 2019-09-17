@@ -29,6 +29,8 @@ class SelfservePageGeneratorTest extends MockeryTestCase
     {
         $selfservePage = m::mock(SelfservePage::class);
 
+        $questionShortKey = 'How will you use the permits';
+
         $applicationReference = 'OB1234567 / 12390';
 
         $nextStepSlug = 'removals-cabotage';
@@ -38,6 +40,8 @@ class SelfservePageGeneratorTest extends MockeryTestCase
         $questionText = m::mock(QuestionText::class);
 
         $questionTextEntity = m::mock(QuestionTextEntity::class);
+        $questionTextEntity->shouldReceive('getQuestionShortKey')
+            ->andReturn($questionShortKey);
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getQuestion->getActiveQuestionText')
@@ -58,7 +62,7 @@ class SelfservePageGeneratorTest extends MockeryTestCase
 
         $selfservePageFactory = m::mock(SelfservePageFactory::class);
         $selfservePageFactory->shouldReceive('create')
-            ->with($applicationReference, $applicationStep, $questionText, $nextStepSlug)
+            ->with($questionShortKey, $applicationReference, $applicationStep, $questionText, $nextStepSlug)
             ->andReturn($selfservePage);
        
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);

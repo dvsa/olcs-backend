@@ -62,6 +62,7 @@ class SelfservePageGenerator
         $formControlStrategy = $this->formControlStrategyProvider->get($applicationStepEntity);
 
         $selfservePage = $this->selfservePageFactory->create(
+            $applicationStepEntity->getQuestion()->getActiveQuestionText()->getQuestionShortKey(),
             $irhpApplicationEntity->getApplicationRef(),
             $this->applicationStepGenerator->generate($applicationStepEntity, $irhpApplicationEntity),
             $formControlStrategy->getQuestionText($questionTextGeneratorContext),
