@@ -1221,4 +1221,7 @@ return [
 
     // Templates
     TransferCommand\Template\UpdateTemplateSource::class => CommandHandler\Template\UpdateTemplateSource::class,
+
+    //FeeType
+    TransferCommand\FeeType\Update::class => CommandHandler\FeeType\Update::class,
 ];

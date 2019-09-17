@@ -164,26 +164,21 @@ class FeeType extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if ($query->getEffectiveDate()) {
+        if (method_exists($query, 'getEffectiveDate') && !empty($query->getEffectiveDate())) {
             $date = new DateTimeExtended($query->getEffectiveDate());
         } else {
             $date = new DateTimeExtended('now');
         }
 
-        $qb->andWhere(
-            $qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom')
-        );
-        $qb->setParameter('effectiveFrom', $date);
-
         // NOTE we can't do the required group by with DQL here so it's done in
         // the query handler
 
-        if (!empty($query->getIsMiscellaneous())) {
+        if (method_exists($query, 'getIsMiscellaneous') && !empty($query->getIsMiscellaneous())) {
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', $query->getIsMiscellaneous() === 'Y' ? 1 : 0);
         }
 
-        if ($query->getBusReg()) {
+        if (method_exists($query, 'getBusReg') && !empty($query->getBusReg())) {
             // is_miscellaneous = 0; AND
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
@@ -194,7 +189,7 @@ class FeeType extends AbstractRepository
                 Entity::FEE_TYPE_BUSVAR,
             ];
             $this->addFeeTypeClause($qb, $feeTypes);
-        } elseif ($query->getOrganisation()) {
+        } elseif (method_exists($query, 'getOrganisation') && !empty($query->getOrganisation())) {
             // is_miscellaneous = 0; AND
             $qb->andWhere($this->alias.'.isMiscellaneous = :isMiscellaneous')
                 ->setParameter('isMiscellaneous', 0);
@@ -207,7 +202,7 @@ class FeeType extends AbstractRepository
                 Entity::FEE_TYPE_IRFOPSVCOPY
             ];
             $this->addFeeTypeClause($qb, $feeTypes);
-        } elseif ($query->getLicence() !== null) {
+        } elseif (method_exists($query, 'getLicence') && $query->getLicence() !== null) {
             $licence = $this->getReference(LicenceEntity::class, $query->getLicence());
 
             // fee type is 'CONT'; AND
@@ -215,7 +210,7 @@ class FeeType extends AbstractRepository
 
             // fee_type.licence_type = <current licence type> AND
             $this->addLicenceTypeClause($qb, $licence->getLicenceType());
-        } elseif ($query->getApplication()) {
+        } elseif (method_exists($query, 'getApplication') && !empty($query->getApplication())) {
             $application = $this->getReference(ApplicationEntity::class, $query->getApplication());
 
             // is_miscellaneous = 0; AND
@@ -238,8 +233,27 @@ class FeeType extends AbstractRepository
             $this->addLicenceTypeClause($qb, $application->getLicenceType());
         }
 
-        $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
-        $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
+        if (method_exists($query, 'getGoodsOrPsv') && !empty($query->getGoodsOrPsv())) {
+            $qb->andWhere($qb->expr()->eq($this->alias.'.goodsOrPsv', ':goodsOrPsv'))
+                ->setParameter('goodsOrPsv', $query->getGoodsOrPsv());
+        }
+
+        if (method_exists($query, 'getFeeType') && !empty($query->getFeeType())) {
+            $qb->andWhere($qb->expr()->eq($this->alias.'.feeType', ':feeType'))
+                ->setParameter('feeType', $query->getFeeType());
+        }
+
+        if (method_exists($query, 'getIsFeeRateAdmin')) {
+            $qb->andWhere($qb->expr()->isNotNull('ft.goodsOrPsv'));
+            $qb->addOrderBy('ft.id', 'ASC');
+        } else {
+            $qb->andWhere(
+                $qb->expr()->lte($this->alias.'.effectiveFrom', ':effectiveFrom')
+            );
+            $qb->setParameter('effectiveFrom', $date);
+            $qb->addOrderBy('ftft.id', 'ASC'); // feeType.feeType.id
+            $qb->addOrderBy($this->alias.'.effectiveFrom', 'DESC');
+        }
     }
 
     /**
@@ -353,5 +367,25 @@ class FeeType extends AbstractRepository
             throw new Exception\NotFoundException('FeeType not found');
         }
         return $results[0];
+    }
+
+    /**
+     * Returns distinct Fee Type string IDs
+     *
+     * @return mixed
+     */
+    public function fetchDistinctFeeTypes()
+    {
+        $qb = $this->createQueryBuilder();
+
+        $this->getQueryBuilder()->modifyQuery($qb)->with('feeType', 'ftft');
+
+        $qb->distinct()
+            ->select(['ftft.id'])
+            ->orderBy('ftft.id', 'ASC');
+
+        $result = $qb->getQuery()->getResult();
+
+        return $result;
     }
 }
