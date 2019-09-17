@@ -1513,4 +1513,84 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $this->assertSame($status, $entity->getStatus());
         $this->assertInstanceOf(DateTime::class, $entity->getExpiryDate());
     }
+
+    /**
+     * @dataProvider dpTestHasOutstandingFees
+     */
+    public function testHasOutstandingFees($feeArray, $expected)
+    {
+        $mockEntity = m::mock(Entity::class)->makePartial();
+        $mockEntity->shouldReceive('getLatestOutstandingEcmtApplicationFee')
+            ->andReturn($feeArray);
+        $this->assertEquals($expected, $mockEntity->hasOutstandingFees());
+    }
+
+    public function dpTestHasOutstandingFees()
+    {
+        return [
+            [null, false],
+            [[1], true]
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetLatestOutstandingEcmtApplicationFee
+     */
+    public function testGetLatestOutstandingEcmtApplicationFee($fees, $expectedFee)
+    {
+        $entity = $this->createApplicationAwaitingFee();
+        $entity->setFees($fees);
+        $this->assertSame($expectedFee, $entity->getLatestOutstandingEcmtApplicationFee());
+    }
+
+    public function dpTestGetLatestOutstandingEcmtApplicationFee()
+    {
+        $appFeeOutstanding = m::mock(Fee::class);
+        $appFeeOutstanding
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true);
+        $appFeeOutstanding
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_ECMT_APP);
+        $appFeeOutstanding->allows('getInvoicedDate')
+            ->andReturn('2022-01-02 10:10:11');
+
+        $appFeePaid = m::mock(Fee::class);
+        $appFeePaid
+            ->shouldReceive('isOutstanding')
+            ->andReturn(false);
+        $appFeePaid->allows('getInvoicedDate')
+            ->andReturn('2022-01-02 10:10:11');
+
+        $issueFeeOutstanding = m::mock(Fee::class);
+        $issueFeeOutstanding
+            ->shouldReceive('isOutstanding')
+            ->andReturn(true);
+        $issueFeeOutstanding
+            ->shouldReceive('getFeeType->getFeeType->getId')
+            ->andReturn(FeeType::FEE_TYPE_ECMT_ISSUE);
+        $issueFeeOutstanding->allows('getInvoicedDate')
+            ->andReturn('2022-01-05 10:10:11');
+
+        $issueFeePaid = m::mock(Fee::class);
+        $issueFeePaid
+            ->shouldReceive('isOutstanding')
+            ->andReturn(false);
+        $issueFeePaid->allows('getInvoicedDate')
+            ->andReturn('2022-01-07 12:10:11');
+
+        $singleOutstanding = new ArrayCollection([$appFeeOutstanding]);
+        $noOutstanding = new ArrayCollection([$appFeePaid]);
+        $issueOutstanding = new ArrayCollection([$appFeePaid, $issueFeeOutstanding]);
+        $noFees = new ArrayCollection();
+        $allPaid = new ArrayCollection([$appFeePaid, $issueFeePaid]);
+
+        return [
+            [$singleOutstanding, $appFeeOutstanding],
+            [$noOutstanding, null],
+            [$issueOutstanding, $issueFeeOutstanding],
+            [$noFees, null],
+            [$allPaid, null]
+        ];
+    }
 }

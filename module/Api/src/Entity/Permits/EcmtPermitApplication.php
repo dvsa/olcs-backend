@@ -1107,7 +1107,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      */
     public function hasOutstandingFees()
     {
-        return count($this->getLatestOutstandingEcmtApplicationFee());
+        return !is_null($this->getLatestOutstandingEcmtApplicationFee());
     }
 
     /**
