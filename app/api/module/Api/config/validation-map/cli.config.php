@@ -28,6 +28,7 @@ return [
     CliCommandHandler\Permits\UploadScoringResult::class => IsSystemUser::class,
     CliCommandHandler\Permits\UploadScoringLog::class => IsSystemUser::class,
     CliCommandHandler\Permits\CloseExpiredWindows::class => IsSystemUser::class,
+    CliCommandHandler\Permits\MarkExpiredPermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\GeneratePermits::class => IsSystemUser::class,
     CliCommandHandler\Permits\WithdrawUnpaidEcmt::class => IsSystemUser::class,
     CliCommandHandler\Permits\WithdrawUnpaidIrhp::class => IsSystemUser::class,
