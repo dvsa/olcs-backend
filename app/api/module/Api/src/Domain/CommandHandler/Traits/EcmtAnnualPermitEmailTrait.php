@@ -82,6 +82,14 @@ trait EcmtAnnualPermitEmailTrait
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getTranslateToWelsh($recordObject)
+    {
+        return $recordObject->getLicence()->getTranslateToWelsh();
+    }
+
+    /**
      * Format a fee as currency
      *
      * param float $amount
