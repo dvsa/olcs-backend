@@ -249,6 +249,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, true],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -278,6 +279,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -307,6 +309,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, true],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -336,6 +339,37 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, true],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, true],
+            [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_TERMINATED, false],
+            [Entity::STATUS_EXPIRED, false]
+        ];
+    }
+
+    /**
+    * @dataProvider dpProceedToTerminated
+    */
+    public function testProceedToTerminated($statusId, $expected)
+    {
+        $this->sut->getStatus()->setId($statusId);
+
+        if (!$expected) {
+            $this->expectException(ForbiddenException::class);
+        }
+
+        $this->sut->proceedToStatus(new RefData(Entity::STATUS_TERMINATED));
+
+        $this->assertEquals(Entity::STATUS_TERMINATED, $this->sut->getStatus()->getId());
+    }
+
+    public function dpProceedToTerminated()
+    {
+        return [
+            [Entity::STATUS_PENDING, true],
+            [Entity::STATUS_AWAITING_PRINTING, true],
+            [Entity::STATUS_PRINTING, true],
+            [Entity::STATUS_PRINTED, true],
+            [Entity::STATUS_ERROR, true],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -366,6 +400,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -389,6 +424,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -412,6 +448,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, true],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -435,6 +472,7 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, true],
+            [Entity::STATUS_CEASED, false],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -483,11 +521,12 @@ class IrhpPermitEntityTest extends EntityTester
     public function dpIsCeased()
     {
         return [
-            [Entity::STATUS_CEASED, true],
+            [Entity::STATUS_PENDING, false],
             [Entity::STATUS_AWAITING_PRINTING, false],
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, true],
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
@@ -506,12 +545,13 @@ class IrhpPermitEntityTest extends EntityTester
     public function dpIsTerminated()
     {
         return [
-            [Entity::STATUS_TERMINATED, true],
+            [Entity::STATUS_PENDING, false],
             [Entity::STATUS_AWAITING_PRINTING, false],
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
             [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_TERMINATED, true],
             [Entity::STATUS_EXPIRED, false]
         ];
     }
@@ -529,12 +569,13 @@ class IrhpPermitEntityTest extends EntityTester
     public function dpIsValid()
     {
         return [
-            [Entity::STATUS_TERMINATED, false],
-            [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_PENDING, true],
             [Entity::STATUS_AWAITING_PRINTING, true],
             [Entity::STATUS_PRINTING, true],
             [Entity::STATUS_PRINTED, true],
             [Entity::STATUS_ERROR, true],
+            [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, false]
         ];
     }
@@ -551,12 +592,13 @@ class IrhpPermitEntityTest extends EntityTester
     public function dpIsExpired()
     {
         return [
-            [Entity::STATUS_TERMINATED, false],
-            [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_PENDING, false],
             [Entity::STATUS_AWAITING_PRINTING, false],
             [Entity::STATUS_PRINTING, false],
             [Entity::STATUS_PRINTED, false],
             [Entity::STATUS_ERROR, false],
+            [Entity::STATUS_CEASED, false],
+            [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, true]
         ];
     }

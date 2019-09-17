@@ -5,6 +5,7 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -101,5 +102,15 @@ class IrhpApplication extends AbstractRepository
             ->where('ia.status = :status')
             ->setParameter('status', IrhpInterface::STATUS_AWAITING_FEE)
             ->getQuery()->getResult();
+    }
+
+    /**
+     * Mark all applications without valid permits as expired
+     *
+     * @return void
+     */
+    public function markAsExpired()
+    {
+        $this->getDbQueryManager()->get(ExpireIrhpApplicationsQuery::class)->execute([]);
     }
 }

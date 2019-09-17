@@ -868,8 +868,6 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testCanBeSubmitted($isNotYetSubmitted, $allSectionsCompleted, $expected)
     {
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-
         $this->sut->shouldReceive('isNotYetSubmitted')
             ->andReturn($isNotYetSubmitted)
             ->shouldReceive('getSectionCompletion')
@@ -4086,10 +4084,12 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('canBeExpired')
             ->andReturn(true);
 
+        $this->assertNull($entity->getExpiryDate());
         $status = m::mock(RefData::class);
 
         $entity->expire($status);
         $this->assertSame($status, $entity->getStatus());
+        $this->assertInstanceOf(DateTime::class, $entity->getExpiryDate());
     }
 
     public function testExpireException()
