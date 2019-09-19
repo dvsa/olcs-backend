@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -169,5 +170,43 @@ class FeeType extends AbstractFeeType
     public function isIrhpApplication(): bool
     {
         return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP, self::FEE_TYPE_IRFOGVPERMIT]);
+    }
+
+    /**
+     * @param string $effectiveFrom
+     * @param int $fixedValue
+     * @param int $annualValue
+     * @param int $fiveYearValue
+     * @param FeeType $existingFeeType
+     *
+     * @return FeeType
+     */
+    public function updateNewFeeType(string $effectiveFrom, int $fixedValue, int $annualValue, int $fiveYearValue, FeeType $existingFeeType)
+    {
+        $newFeeType = new self();
+
+        //Set values specified on Admin form
+        $newFeeType->effectiveFrom = new DateTime($effectiveFrom);
+        $newFeeType->fixedValue = $fixedValue;
+        $newFeeType->annualValue = $annualValue;
+        $newFeeType->fiveYearValue = $fiveYearValue;
+
+        //Re-use existing values for all other fields
+        $newFeeType->accrualRule = $existingFeeType->getAccrualRule();
+        $newFeeType->costCentreRef = $existingFeeType->getCostCentreRef();
+        $newFeeType->description = $existingFeeType->getDescription();
+        $newFeeType->expireFeeWithLicence = $existingFeeType->getExpireFeeWithLicence();
+        $newFeeType->feeType = $existingFeeType->getFeeType();
+        $newFeeType->goodsOrPsv = $existingFeeType->getGoodsOrPsv();
+        $newFeeType->irfoFeeType = $existingFeeType->getIrfoFeeType();
+        $newFeeType->isMiscellaneous = $existingFeeType->getIsMiscellaneous();
+        $newFeeType->isNi = $existingFeeType->getIsNi();
+        $newFeeType->licenceType = $existingFeeType->getLicenceType();
+        $newFeeType->productReference = $existingFeeType->getProductReference();
+        $newFeeType->trafficArea = $existingFeeType->getTrafficArea();
+        $newFeeType->vatCode = $existingFeeType->getVatCode();
+        $newFeeType->vatRate = $existingFeeType->getVatRate();
+
+        return $newFeeType;
     }
 }
