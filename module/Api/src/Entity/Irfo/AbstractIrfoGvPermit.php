@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -34,6 +36,8 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Created by
@@ -45,15 +49,6 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Exemption details
@@ -143,15 +138,6 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     protected $lastModifiedBy;
 
     /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
-
-    /**
      * No of copies
      *
      * @var int
@@ -239,36 +225,6 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrfoGvPermit
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -500,36 +456,6 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     }
 
     /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrfoGvPermit
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
-    }
-
-    /**
      * Set the no of copies
      *
      * @param int $noOfCopies new value being set
@@ -695,29 +621,5 @@ abstract class AbstractIrfoGvPermit implements BundleSerializableInterface, Json
     public function getYearRequired()
     {
         return $this->yearRequired;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
     }
 }

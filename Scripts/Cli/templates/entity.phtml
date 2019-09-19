@@ -11,6 +11,15 @@ use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 <?php } else { ?>
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
 <?php } ?>
+<?php if ($details['hasCreatedOn']) { ?>
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+<?php } ?>
+<?php if ($details['hasModifiedOn']) { ?>
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+<?php } ?>
+<?php if ($details['softDeletable']) { ?>
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
+<?php } ?>
 use Doctrine\ORM\Mapping as ORM;
 <?php if ($details['hasCollections']): ?>
 use Doctrine\Common\Collections\ArrayCollection;
@@ -71,10 +80,21 @@ abstract class Abstract<?php echo $details['name']; ?> implements BundleSerializ
 <?php } else { ?>
     use ClearPropertiesTrait;
 <?php } ?>
+<?php if ($details['hasCreatedOn']) { ?>
+    use CreatedOnTrait;
+<?php } ?>
+<?php if ($details['hasModifiedOn']) { ?>
+    use ModifiedOnTrait;
+<?php } ?>
+<?php if ($details['softDeletable']) { ?>
+    use SoftDeletableTrait;
+<?php } ?>
 <?php foreach ($details['fields'] as $item): $field = $item['config']; ?>
+<?php if (!$this->isPropertyFromTrait($item)): ?>
 
 <?php include('property.phtml'); ?>
 
+<?php endif; ?>
 <?php endforeach; ?>
 <?php if ($details['hasCollections']): ?>
 
@@ -102,44 +122,9 @@ abstract class Abstract<?php echo $details['name']; ?> implements BundleSerializ
 <?php endif; ?>
 <?php if (count($details['fields'])): ?>
 <?php foreach ($details['fields'] as $item): $field = $item['config']; $fluidReturn = $className; ?>
-
+<?php if (!$this->isPropertyFromTrait($item)): ?>
 <?php include('methods.phtml'); ?>
+<?php endif; ?>
 <?php endforeach; ?>
 <?php endif;?>
-<?php
-if ($details['hasCreatedOn']) {
-?>
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-<?php
-}
-?>
-<?php
-if ($details['hasModifiedOn']) {
-?>
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-<?php
-}
-?>
 }
