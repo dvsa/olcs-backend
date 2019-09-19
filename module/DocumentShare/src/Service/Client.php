@@ -54,18 +54,18 @@ class Client
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
         try {
+
             $readStream = $this->filesystem->readStream($path);
             file_put_contents($tmpFileName, $readStream);
 
             $file = new File();
             $file->setContentFromStream($tmpFileName);
 
-            if ($file->getSize() !== 0) {
+            if ($file->getSize() !== 0 || $file === false) {
                 return $file;
             }
         } catch (FileNotFoundException $e) {
             unset($file);
-
             return false;
         } finally {
             if (is_file($tmpFileName)) {
