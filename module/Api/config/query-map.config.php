@@ -386,6 +386,8 @@ return [
     TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
     TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
     TransferQuery\Fee\GetLatestFeeType::class => QueryHandler\Fee\GetLatestFeeType::class,
+    TransferQuery\FeeType\GetList::class => QueryHandler\FeeType\GetList::class,
+    TransferQuery\FeeType\GetDistinctList::class => QueryHandler\FeeType\GetDistinctList::class,
 
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
