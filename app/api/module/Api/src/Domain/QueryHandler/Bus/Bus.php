@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -25,6 +26,7 @@ class Bus extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var BusReg $busReg */
         $busReg = $this->getRepo()->fetchUsingId($query);
 
         $this->auditRead($busReg);

@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -33,6 +35,8 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Addresses status
@@ -114,15 +118,6 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     protected $createdBy;
 
     /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
      * Declarations internal status
      *
      * @var int
@@ -179,15 +174,6 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Last section
@@ -500,36 +486,6 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     }
 
     /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return ApplicationCompletion
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
      * Set the declarations internal status
      *
      * @param int $declarationsInternalStatus new value being set
@@ -671,36 +627,6 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return ApplicationCompletion
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
     }
 
     /**
@@ -1013,29 +939,5 @@ abstract class AbstractApplicationCompletion implements BundleSerializableInterf
     public function getVersion()
     {
         return $this->version;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
     }
 }
