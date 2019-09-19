@@ -102,12 +102,6 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($this->applicationEntity);
 
-        $this->data = [
-            'to' => $this->userEmail,
-            'locale' => 'en_GB',
-            'subject' => $this->subject,
-        ];
-
         parent::setUp();
     }
 }

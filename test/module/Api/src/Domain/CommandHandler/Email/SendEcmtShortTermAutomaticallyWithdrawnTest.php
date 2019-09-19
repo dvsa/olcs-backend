@@ -47,7 +47,14 @@ class SendEcmtShortTermAutomaticallyWithdrawnTest extends AbstractPermitTest
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
-        $this->expectedSideEffect(SendEmail::class, $this->data, new Result());
+
+        $expectedData = [
+            'to' => $this->userEmail,
+            'locale' => 'en_GB',
+            'subject' => $this->subject,
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
