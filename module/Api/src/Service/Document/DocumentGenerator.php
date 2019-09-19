@@ -230,7 +230,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
             }
 
             $file = $this->contentStore->read($template);
-            if ($file === null || || $file === false) {
+            if ($file === null || $file === false) {
                 continue;
             }
 
