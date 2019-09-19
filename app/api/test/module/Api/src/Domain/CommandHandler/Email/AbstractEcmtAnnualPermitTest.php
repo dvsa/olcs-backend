@@ -30,8 +30,10 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 {
     /**
      * test handle command
+     *
+     * @dataProvider dpLocaleMappings
      */
-    public function testHandleCommand()
+    public function testHandleCommand($licenceTranslateToWelsh, $expectedLocale)
     {
         $templateVars = [
             'appUrl' => 'http://selfserve/',
@@ -44,6 +46,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $this->applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(false);
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
+        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')->andReturn($licenceTranslateToWelsh);
 
         $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($this->orgEmails);
 
@@ -67,7 +70,14 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
-        $this->expectedSideEffect(SendEmail::class, $this->data, new Result());
+
+        $expectedData = [
+            'to' => $this->userEmail,
+            'locale' => $expectedLocale,
+            'subject' => $this->subject,
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
@@ -83,8 +93,10 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
     /**
      * test handle command awaiting fee
+     *
+     * @dataProvider dpLocaleMappings
      */
-    public function testHandleCommandAwaitingFee()
+    public function testHandleCommandAwaitingFee($licenceTranslateToWelsh, $expectedLocale)
     {
         $permitsRequired = 2;
         $permitsAwarded = 2;
@@ -133,6 +145,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
         $this->applicationEntity->shouldReceive('getFees->matching')->andReturn($fees);
         $this->applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(true);
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
+        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')->andReturn($licenceTranslateToWelsh);
 
         $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($this->orgEmails);
 
@@ -156,7 +169,14 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
-        $this->expectedSideEffect(SendEmail::class, $this->data, new Result());
+
+        $expectedData = [
+            'to' => $this->userEmail,
+            'locale' => $expectedLocale,
+            'subject' => $this->subject,
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
 
         $result = $this->sut->handleCommand($this->commandEntity);
 
@@ -168,6 +188,14 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
         $this->assertSame($this->userEmail, $message->getTo());
         $this->assertSame($this->orgEmails, $message->getCc());
         $this->assertSame($this->subject, $message->getSubject());
+    }
+
+    public function dpLocaleMappings()
+    {
+        return [
+            ['N', 'en_GB'],
+            ['Y', 'cy_GB']
+        ];
     }
 
     /**
