@@ -61,7 +61,7 @@ class Client
             $file = new File();
             $file->setContentFromStream($tmpFileName);
 
-            if ($file->getSize() !== 0 || $file === false) {
+            if ($file->getSize() !== 0) {
                 return $file;
             }
         } catch (FileNotFoundException $e) {
