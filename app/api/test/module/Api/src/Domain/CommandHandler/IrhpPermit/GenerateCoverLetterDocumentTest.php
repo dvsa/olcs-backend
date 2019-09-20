@@ -37,6 +37,7 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
     public function testHandleCommand($irhpPermitTypeId, $expectedTemplate, $expectedDescription, $expectedMessages)
     {
         $irhpPermitId = 1;
+        $permitNo = 123;
         $licenceId = 10;
 
         $command = Cmd::Create(
@@ -58,6 +59,7 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
         $irhpPermit = m::mock(IrhpPermitEntity::class);
         $irhpPermit->shouldReceive('getIrhpPermitApplication')->andReturn($irhpPermitApplication);
         $irhpPermit->shouldReceive('getId')->andReturn($irhpPermitId);
+        $irhpPermit->shouldReceive('getPermitNumber')->andReturn($permitNo);
 
         $this->repoMap['IrhpPermit']->shouldReceive('fetchById')
             ->with($irhpPermitId, Query::HYDRATE_OBJECT)
@@ -100,33 +102,41 @@ class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
             'ECMT Annual' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT,
                 'expectedTemplate' => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
-                'expectedDescription' => 'IRHP PERMIT ECMT COVERING LETTER 1',
+                'expectedDescription' => 'IRHP PERMIT ECMT COVERING LETTER 123',
                 'expectedMessages' => [
-                    'IRHP PERMIT ECMT COVERING LETTER 1 RTF created and stored',
+                    'IRHP PERMIT ECMT COVERING LETTER 123 RTF created and stored',
                 ],
             ],
             'ECMT Short-term' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'expectedTemplate' => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER,
-                'expectedDescription' => 'IRHP PERMIT SHORT TERM ECMT COVER LETTER 1',
+                'expectedDescription' => 'IRHP PERMIT SHORT TERM ECMT COVER LETTER 123',
                 'expectedMessages' => [
-                    'IRHP PERMIT SHORT TERM ECMT COVER LETTER 1 RTF created and stored',
+                    'IRHP PERMIT SHORT TERM ECMT COVER LETTER 123 RTF created and stored',
+                ],
+            ],
+            'ECMT Removal' => [
+                'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'expectedTemplate' => DocumentEntity::IRHP_PERMIT_ECMT_REMOVAL_COVERING_LETTER,
+                'expectedDescription' => 'IRHP PERMIT ECMT REMOVALS COVERING LETTER 123',
+                'expectedMessages' => [
+                    'IRHP PERMIT ECMT REMOVALS COVERING LETTER 123 RTF created and stored',
                 ],
             ],
             'IRHP Bilateral' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 'expectedTemplate' => DocumentEntity::IRHP_PERMIT_ANN_BILAT_COVERING_LETTER,
-                'expectedDescription' => 'IRHP PERMIT ANN BILAT COVERING LETTER 1',
+                'expectedDescription' => 'IRHP PERMIT ANN BILAT COVERING LETTER 123',
                 'expectedMessages' => [
-                    'IRHP PERMIT ANN BILAT COVERING LETTER 1 RTF created and stored',
+                    'IRHP PERMIT ANN BILAT COVERING LETTER 123 RTF created and stored',
                 ],
             ],
             'IRHP Multilateral' => [
                 'irhpPermitTypeId' => IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 'expectedTemplate' => DocumentEntity::IRHP_PERMIT_ANN_MULTILAT_COVERING_LETTER,
-                'expectedDescription' => 'IRHP PERMIT ANN MULTILAT COVERING LETTER 1',
+                'expectedDescription' => 'IRHP PERMIT ANN MULTILAT COVERING LETTER 123',
                 'expectedMessages' => [
-                    'IRHP PERMIT ANN MULTILAT COVERING LETTER 1 RTF created and stored',
+                    'IRHP PERMIT ANN MULTILAT COVERING LETTER 123 RTF created and stored',
                 ],
             ],
         ];
