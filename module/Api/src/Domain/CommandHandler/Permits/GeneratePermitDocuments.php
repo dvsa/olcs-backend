@@ -70,7 +70,9 @@ final class GeneratePermitDocuments extends AbstractCommandHandler implements To
 
         $irhpPermitType = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getIrhpPermitType();
 
-        if ($irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral() || $irhpPermitType->isEcmtShortTerm()) {
+        if ($irhpPermitType->isBilateral() || $irhpPermitType->isMultilateral() || $irhpPermitType->isEcmtShortTerm()
+            || $irhpPermitType->isEcmtRemoval()
+        ) {
             $licenceId = $irhpPermitApplication->getRelatedApplication()->getLicence()->getId();
 
             if (isset($this->coverLetterLicenceIds[$licenceId])) {
