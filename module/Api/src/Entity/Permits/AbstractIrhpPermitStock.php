@@ -29,7 +29,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="fk_irhp_permit_stock_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_permit_stock_status", columns={"status"}),
- *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"})
+ *        @ORM\Index(name="fk_irhp_permit_stock_country_id", columns={"country_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_application_path_group_id",
+     *     columns={"application_path_group_id"}),
+ *        @ORM\Index(name="fk_irhp_permit_stock_business_process_ref_data_id",
+     *     columns={"business_process"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uniqueStock",
@@ -44,6 +48,26 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     use ClearPropertiesWithCollectionsTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+
+    /**
+     * Application path group
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup", fetch="LAZY")
+     * @ORM\JoinColumn(name="application_path_group_id", referencedColumnName="id", nullable=true)
+     */
+    protected $applicationPathGroup;
+
+    /**
+     * Business process
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="business_process", referencedColumnName="id", nullable=true)
+     */
+    protected $businessProcess;
 
     /**
      * Country
@@ -114,6 +138,15 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
+
+    /**
+     * Period name key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="period_name_key", length=255, nullable=true)
+     */
+    protected $periodNameKey;
 
     /**
      * Status
@@ -222,6 +255,54 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
         $this->irhpPermitRanges = new ArrayCollection();
         $this->irhpPermitSectorQuotas = new ArrayCollection();
         $this->irhpPermitWindows = new ArrayCollection();
+    }
+
+    /**
+     * Set the application path group
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup $applicationPathGroup entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setApplicationPathGroup($applicationPathGroup)
+    {
+        $this->applicationPathGroup = $applicationPathGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get the application path group
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup
+     */
+    public function getApplicationPathGroup()
+    {
+        return $this->applicationPathGroup;
+    }
+
+    /**
+     * Set the business process
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $businessProcess entity being set as the value
+     *
+     * @return IrhpPermitStock
+     */
+    public function setBusinessProcess($businessProcess)
+    {
+        $this->businessProcess = $businessProcess;
+
+        return $this;
+    }
+
+    /**
+     * Get the business process
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getBusinessProcess()
+    {
+        return $this->businessProcess;
     }
 
     /**
@@ -366,6 +447,30 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the period name key
+     *
+     * @param string $periodNameKey new value being set
+     *
+     * @return IrhpPermitStock
+     */
+    public function setPeriodNameKey($periodNameKey)
+    {
+        $this->periodNameKey = $periodNameKey;
+
+        return $this;
+    }
+
+    /**
+     * Get the period name key
+     *
+     * @return string
+     */
+    public function getPeriodNameKey()
+    {
+        return $this->periodNameKey;
     }
 
     /**
