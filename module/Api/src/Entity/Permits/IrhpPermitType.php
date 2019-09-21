@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
@@ -110,30 +109,6 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function isApplicationPathEnabled()
     {
         return $this->isEcmtShortTerm() || $this->isEcmtRemoval();
-    }
-
-    /**
-     * Get an active application path
-     *
-     * @param \DateTime $dateTime DateTime to check against
-     *
-     * @return ApplicationPath|null
-     */
-    public function getActiveApplicationPath(\DateTime $dateTime = null)
-    {
-        if (!isset($dateTime)) {
-            // get the latest active if specific datetime not provided
-            $dateTime = new DateTime();
-        }
-
-        $criteria = Criteria::create();
-        $criteria->where($criteria->expr()->lte('effectiveFrom', $dateTime));
-        $criteria->orderBy(['effectiveFrom' => Criteria::DESC]);
-        $criteria->setMaxResults(1);
-
-        $activeApplicationPaths = $this->getApplicationPaths()->matching($criteria);
-
-        return !$activeApplicationPaths->isEmpty() ? $activeApplicationPaths->first() : null;
     }
 
     /**
