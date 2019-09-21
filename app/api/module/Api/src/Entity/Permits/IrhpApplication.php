@@ -1466,7 +1466,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getActiveApplicationPath()
     {
         // get application path active at the time when the application path was locked
-        return $this->getIrhpPermitType()->getActiveApplicationPath($this->getApplicationPathLockedOn());
+        return $this->getFirstIrhpPermitApplication()
+            ->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getApplicationPathGroup()
+            ->getActiveApplicationPath($this->getApplicationPathLockedOn());
     }
 
     /**
