@@ -44,9 +44,14 @@ class GenericAnswerWriter
      * @param ApplicationStep $applicationStep
      * @param IrhpApplication $irhpApplication
      * @param mixed $answerValue
+     * @param string|null $forceQuestionType
      */
-    public function write(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, $answerValue)
-    {
+    public function write(
+        ApplicationStep $applicationStep,
+        IrhpApplication $irhpApplication,
+        $answerValue,
+        $forceQuestionType = null
+    ) {
         $question = $applicationStep->getQuestion();
 
         try {
@@ -58,7 +63,12 @@ class GenericAnswerWriter
             );
         }
 
-        $answer->setValue($question->getQuestionType(), $answerValue);
+        $questionType = $question->getQuestionType();
+        if (!is_null($forceQuestionType)) {
+            $questionType = $forceQuestionType;
+        }
+
+        $answer->setValue($questionType, $answerValue);
         $this->answerRepo->save($answer);
     }
 }
