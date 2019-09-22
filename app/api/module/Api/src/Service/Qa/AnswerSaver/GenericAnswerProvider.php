@@ -5,12 +5,9 @@ namespace Dvsa\Olcs\Api\Service\Qa\AnswerSaver;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
-use RuntimeException;
 
 class GenericAnswerProvider
 {
-    const ERR_CUSTOM_UNSUPPORTED = 'GenericAnswerProvider should not be used by custom questions';
-
     /** @var AnswerRepository */
     private $answerRepo;
 
@@ -34,13 +31,8 @@ class GenericAnswerProvider
      */
     public function get(ApplicationStep $applicationStep, IrhpApplication $irhpApplication)
     {
-        $question = $applicationStep->getQuestion();
-        if ($question->isCustom()) {
-            throw new RuntimeException(self::ERR_CUSTOM_UNSUPPORTED);
-        }
-
         return $this->answerRepo->fetchByQuestionIdAndIrhpApplicationId(
-            $question->getId(),
+            $applicationStep->getQuestion()->getId(),
             $irhpApplication->getId()
         );
     }
