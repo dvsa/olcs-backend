@@ -57,7 +57,7 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($ecmtPermitApplicationId);
 
-        $this->expectedQueueSideEffect($ecmtPermitApplicationId, Queue::TYPE_ECMT_POST_SUBMISSION, []);
+        $this->expectedQueueSideEffect($ecmtPermitApplicationId, Queue::TYPE_PERMITS_POST_SUBMIT, []);
 
         $result = $this->sut->handleCommand($command);
 
