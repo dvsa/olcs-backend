@@ -18,11 +18,11 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntit
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
 
 /**
- * Handles actions necessary once EcmtPermitApplication is marked as submitted.
+ * Handles actions necessary once permit application is submitted.
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class EcmtPostSubmitTasks extends AbstractCommandHandler implements ToggleRequiredInterface
+final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use QueueAwareTrait, ToggleAwareTrait;
 

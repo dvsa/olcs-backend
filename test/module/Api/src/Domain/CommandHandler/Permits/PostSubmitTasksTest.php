@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtPostSubmitTasks;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\PostSubmitTasks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as S
 use Mockery as m;
 use RuntimeException;
 
-class EcmtPostSubmitTasksTest extends CommandHandlerTestCase
+class PostSubmitTasksTest extends CommandHandlerTestCase
 {
     private $requiredEuro5;
 
@@ -39,7 +39,7 @@ class EcmtPostSubmitTasksTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
         $this->mockRepo('SystemParameter', SystemParameterRepo::class);
 
-        $this->sut = new EcmtPostSubmitTasks();
+        $this->sut = new PostSubmitTasks();
 
         $this->requiredEuro5 = 1;
         $this->requiredEuro6 = 2;
