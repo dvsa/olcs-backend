@@ -19,9 +19,16 @@ class PostSubmitTasksTest extends AbstractConsumerTestCase
     {
         $item = new QueueEntity();
         $item->setEntityId(187);
+        $item->setOptions(json_encode(['irhpPermitType' => 1]));
 
         $result = $this->sut->getCommandData($item);
 
-        $this->assertEquals(['id' => 187], $result);
+        $this->assertEquals(
+            [
+                'id' => 187,
+                'irhpPermitType' => 1,
+            ],
+            $result
+        );
     }
 }

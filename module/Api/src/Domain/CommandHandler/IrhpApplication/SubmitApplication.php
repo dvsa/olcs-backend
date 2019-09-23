@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as SnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -46,12 +45,13 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
         $irhpApplicationId = $command->getId();
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
 
-        switch ($irhpApplication->getIrhpPermitType()->getId()) {
+        $irhpPermitTypeId = $irhpApplication->getIrhpPermitType()->getId();
+
+        switch ($irhpPermitTypeId) {
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
                 $irhpApplication->submit($this->refData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
                 $sideEffects = [
                     $this->getCreateTaskCommand($irhpApplication),
-                    SnapshotCmd::create(['id' => $irhpApplicationId])
                 ];
                 break;
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
@@ -59,7 +59,6 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
                 $irhpApplication->submit($this->refData(IrhpInterface::STATUS_ISSUING));
                 $sideEffects = [
-                    SnapshotCmd::create(['id' => $irhpApplicationId]),
                     $this->createQueue($irhpApplicationId, Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE, [])
                 ];
                 break;
@@ -68,6 +67,12 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
         }
 
         $this->getRepo()->save($irhpApplication);
+
+        $sideEffects[] = $this->createQueue(
+            $irhpApplicationId,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => $irhpPermitTypeId]
+        );
 
         $this->result->merge(
             $this->handleSideEffects($sideEffects)

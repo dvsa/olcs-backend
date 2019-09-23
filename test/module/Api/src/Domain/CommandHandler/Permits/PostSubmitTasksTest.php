@@ -4,17 +4,20 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicationSnapshotCmd;
+use Dvsa\Olcs\Api\Domain\Command\Permits\PostSubmitTasks as PostSubmitTasksCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\PostSubmitTasks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
 use Mockery as m;
 use RuntimeException;
@@ -30,8 +33,6 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
     private $ecmtPermitApplicationId;
 
     private $ecmtPermitApplication;
-
-    private $command;
 
     public function setUp()
     {
@@ -59,17 +60,6 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($this->irhpPermitApplication);
 
-        $this->command = m::mock(CommandInterface::class);
-        $this->command->shouldReceive('getId')
-            ->once()
-            ->withNoArgs()
-            ->andReturn($this->ecmtPermitApplicationId);
-
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->once()
-            ->with($this->ecmtPermitApplicationId)
-            ->andReturn($this->ecmtPermitApplication);
-
         parent::setUp();
     }
 
@@ -83,10 +73,74 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommandForIrhp
+     */
+    public function testHandleCommandForIrhp($irhpPermitTypeId)
+    {
+        $id = 100;
+
+        $this->expectedSideEffect(
+            IrhpApplicationSnapshotCmd::class,
+            [
+                'id' => $id,
+            ],
+            (new Result())->addMessage('Snapshot created')
+        );
+
+        $result = $this->sut->handleCommand(
+            PostSubmitTasksCmd::create(
+                [
+                    'id' => $id,
+                    'irhpPermitType' => $irhpPermitTypeId,
+                ]
+            )
+        );
+
+        $this->assertEquals(
+            [
+                'Snapshot created'
+            ],
+            $result->getMessages()
+        );
+    }
+
+    public function dpHandleCommandForIrhp()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+        ];
+    }
+
+    public function testHandleCommandForUnsupported()
+    {
+        $id = 100;
+        $irhpPermitTypeId = 1000;
+
+        $this->expectException(ValidationException::class);
+
+        $this->sut->handleCommand(
+            PostSubmitTasksCmd::create(
+                [
+                    'id' => $id,
+                    'irhpPermitType' => $irhpPermitTypeId,
+                ]
+            )
+        );
+    }
+
+    public function testHandleCommandForEcmtAnnual()
     {
         $intensityOfUse = 3;
         $applicationScore = 4;
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
+            ->once()
+            ->with($this->ecmtPermitApplicationId)
+            ->andReturn($this->ecmtPermitApplication);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(SystemParameter::USE_ALT_ECMT_IOU_ALGORITHM)
@@ -149,7 +203,14 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $result = $this->sut->handleCommand($this->command);
+        $result = $this->sut->handleCommand(
+            PostSubmitTasksCmd::create(
+                [
+                    'id' => $this->ecmtPermitApplicationId,
+                    'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                ]
+            )
+        );
 
         $this->assertEquals($this->requiredEuro5, $savedEuro5);
         $this->assertEquals($this->requiredEuro6, $savedEuro6);
@@ -162,12 +223,17 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
         );
     }
 
-    public function testHandleCommandWithAltEcmtIouAlgorithm()
+    public function testHandleCommandForEcmtAnnualWithAltEcmtIouAlgorithm()
     {
         $euro5IntensityOfUse = 3;
         $euro5ApplicationScore = 4;
         $euro6IntensityOfUse = 5;
         $euro6ApplicationScore = 6;
+
+        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
+            ->once()
+            ->with($this->ecmtPermitApplicationId)
+            ->andReturn($this->ecmtPermitApplication);
 
         $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
             ->with(SystemParameter::USE_ALT_ECMT_IOU_ALGORITHM)
@@ -243,7 +309,14 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $result = $this->sut->handleCommand($this->command);
+        $result = $this->sut->handleCommand(
+            PostSubmitTasksCmd::create(
+                [
+                    'id' => $this->ecmtPermitApplicationId,
+                    'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                ]
+            )
+        );
 
         $this->assertEquals($this->requiredEuro5, $savedEuro5);
         $this->assertEquals($this->requiredEuro6, $savedEuro6);

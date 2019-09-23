@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\EcmtSubmitApplication as EcmtSubmitApplicationCmd;
 
@@ -55,7 +56,11 @@ final class EcmtSubmitApplication extends AbstractCommandHandler implements Togg
         $result->addId('ecmtPermitApplication', $id);
         $result->addMessage('Permit application updated');
 
-        $postSubmissionCmd = $this->createQueue($id, Queue::TYPE_PERMITS_POST_SUBMIT, []);
+        $postSubmissionCmd = $this->createQueue(
+            $id,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT]
+        );
         $result->merge(
             $this->handleSideEffect($postSubmissionCmd)
         );
