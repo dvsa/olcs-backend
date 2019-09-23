@@ -1236,7 +1236,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $countriesAnswer
     ) {
         $licNo = 'OB1234567';
-        $internationalJourneysDesc = 'international journey desc';
+        $internationalJourneysRefDataId = 'international journey ref data id';
         $sectorName = 'sector name';
         $dateReceived = '2017-12-25';
         $emissionsValue = 1;
@@ -1253,10 +1253,10 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $statusRefData = m::mock(RefData::class);
         $permitTypeRefData = m::mock(RefData::class);
         $internationalJourneysRefData = m::mock(RefData::class);
-        $internationalJourneysRefData->shouldReceive('getDescription')
+        $internationalJourneysRefData->shouldReceive('getId')
             ->once()
             ->withNoArgs()
-            ->andReturn($internationalJourneysDesc);
+            ->andReturn($internationalJourneysRefDataId);
 
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
@@ -1323,7 +1323,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             ],
             [
                 'question' => 'permits.page.international.journey.question',
-                'answer' => $internationalJourneysDesc,
+                'answer' => $internationalJourneysRefDataId,
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
