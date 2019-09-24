@@ -2263,6 +2263,12 @@ return array(
                 'property' => 'applicationPath'
             )
         ),
+        'application_path_group_id' => array(
+            'inversedBy' => array(
+                'entity' => 'ApplicationPathGroup',
+                'property' => 'applicationPath'
+            )
+        ),
     ),
     'application_step' => array(
         'application_path_id' => array(
