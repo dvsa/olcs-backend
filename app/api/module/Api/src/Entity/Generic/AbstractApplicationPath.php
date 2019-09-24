@@ -27,7 +27,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_permit_type_id"}),
  *        @ORM\Index(name="fk_application_path_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_application_path_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_application_path_application_path_group_id",
+     *     columns={"application_path_group_id"})
  *    }
  * )
  */
@@ -38,6 +40,20 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
     use ClearPropertiesWithCollectionsTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+
+    /**
+     * Application path group
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup",
+     *     fetch="LAZY",
+     *     inversedBy="applicationPaths"
+     * )
+     * @ORM\JoinColumn(name="application_path_group_id", referencedColumnName="id", nullable=true)
+     */
+    protected $applicationPathGroup;
 
     /**
      * Created by
@@ -145,6 +161,30 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
     public function initCollections()
     {
         $this->applicationSteps = new ArrayCollection();
+    }
+
+    /**
+     * Set the application path group
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup $applicationPathGroup entity being set as the value
+     *
+     * @return ApplicationPath
+     */
+    public function setApplicationPathGroup($applicationPathGroup)
+    {
+        $this->applicationPathGroup = $applicationPathGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get the application path group
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup
+     */
+    public function getApplicationPathGroup()
+    {
+        return $this->applicationPathGroup;
     }
 
     /**
