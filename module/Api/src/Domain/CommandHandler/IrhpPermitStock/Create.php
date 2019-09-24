@@ -26,6 +26,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
+    protected $extraRepos = ['ApplicationPathGroup'];
 
     /**
      * @param CommandInterface $command
@@ -45,6 +46,9 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $references['country'],
             $command->getInitialStock(),
             $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN),
+            $references['applicationPathGroup'],
+            $this->getRepo()->getRefdataReference($command->getBusinessProcess()),
+            $command->getPeriodNameKey(),
             $command->getValidFrom(),
             $command->getValidTo()
         );

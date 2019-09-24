@@ -8,6 +8,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup as ApplicationPathGroupEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 
@@ -23,13 +24,16 @@ trait IrhpPermitStockTrait
      */
     public function duplicateStockCheck($command)
     {
+        $editingId = method_exists($command, 'getId') ? $command->getId() : 0;
+
         // Stocks for bilateral type are permitted to share shame type ID and validFrom/validTo
         if ((int) $command->getIrhpPermitType() !== IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL) {
             $existingStock = $this->getRepo('IrhpPermitStock')
                 ->getPermitStockCountByTypeDate(
                     $command->getIrhpPermitType(),
                     $command->getValidFrom(),
-                    $command->getValidTo()
+                    $command->getValidTo(),
+                    $editingId
                 );
 
             if ($existingStock > 0) {
@@ -82,6 +86,10 @@ trait IrhpPermitStockTrait
             $references['country'] = $this->getRepo('IrhpPermitStock')->getReference(Country::class, $command->getCountry());
         }
 
+        $references['applicationPathGroup'] = null;
+        if (method_exists($command, 'getApplicationPathGroup')) {
+            $references['applicationPathGroup'] = $this->getRepo('IrhpPermitStock')->getReference(ApplicationPathGroupEntity::class, $command->getApplicationPathGroup());
+        }
         return $references;
     }
 }
