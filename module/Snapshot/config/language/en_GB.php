@@ -399,6 +399,10 @@ return [
     'st_permit_usage_cross_trade_only' => 'Cross-trade only',
     'st_permit_usage_both' => 'Both transit and cross-trade',
 
+    'inter_journey_less_60' => 'Less than 60%',
+    'inter_journey_60_90' => '60% to 90%',
+    'inter_journey_more_90' => 'More than 90%',
+
     'qanda.ecmt-short-term.permit-usage.question' => 'How will you use your Short-term ECMT permits?',
     'qanda.ecmt-short-term.cabotage.question' => 'Short-term ECMT permits do not allow you to carry out cabotage',
     'qanda.ecmt-short-term.certificates.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
