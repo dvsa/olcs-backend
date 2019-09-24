@@ -3,8 +3,10 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
+use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicationSnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -12,17 +14,18 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
 
 /**
- * Handles actions necessary once EcmtPermitApplication is marked as submitted.
+ * Handles actions necessary once permit application is submitted.
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-final class EcmtPostSubmitTasks extends AbstractCommandHandler implements ToggleRequiredInterface
+final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use QueueAwareTrait, ToggleAwareTrait;
 
@@ -39,6 +42,50 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
      * @return Result
      */
     public function handleCommand(CommandInterface $command)
+    {
+        switch ($command->getIrhpPermitType()) {
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT:
+                $this->handleEcmtPermitApplication($command);
+                break;
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
+            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
+                $this->handleIrhpApplication($command);
+                break;
+            default:
+                throw new ValidationException(['Unsupported permit type, cannot proceed with post submission tasks.']);
+        }
+
+        return $this->result;
+    }
+
+    /**
+     * Handles post-submission tasks for IRHP Applications
+     *
+     * @param CommandInterface $command
+     *
+     * @return void
+     */
+    private function handleIrhpApplication($command)
+    {
+        $sideEffects = [
+            IrhpApplicationSnapshotCmd::create(['id' => $command->getId()]),
+        ];
+
+        $this->result->merge(
+            $this->handleSideEffects($sideEffects)
+        );
+    }
+
+    /**
+     * Handles post-submission tasks for ECMT Permit Applications
+     *
+     * @param CommandInterface $command
+     *
+     * @return void
+     */
+    private function handleEcmtPermitApplication($command)
     {
         /**
          * @var EcmtPermitApplication       $application
@@ -63,8 +110,6 @@ final class EcmtPostSubmitTasks extends AbstractCommandHandler implements Toggle
         $this->result->merge(
             $this->handleSideEffects([$emailCmd, $snapshotCmd])
         );
-
-        return $this->result;
     }
 
     /**

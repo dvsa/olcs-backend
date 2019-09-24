@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtSubmitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
@@ -57,7 +58,11 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($ecmtPermitApplicationId);
 
-        $this->expectedQueueSideEffect($ecmtPermitApplicationId, Queue::TYPE_ECMT_POST_SUBMISSION, []);
+        $this->expectedQueueSideEffect(
+            $ecmtPermitApplicationId,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT]
+        );
 
         $result = $this->sut->handleCommand($command);
 

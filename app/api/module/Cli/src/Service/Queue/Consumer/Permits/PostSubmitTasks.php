@@ -1,17 +1,17 @@
 <?php
 
 /**
- * EcmtPostSubmitTasks Consumer
+ * PostSubmitTasks Consumer
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits;
 
-use Dvsa\Olcs\Api\Domain\Command\Permits\EcmtPostSubmitTasks as Cmd;
+use Dvsa\Olcs\Api\Domain\Command\Permits\PostSubmitTasks as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;
 
-class EcmtPostSubmitTasks extends AbstractCommandConsumer
+class PostSubmitTasks extends AbstractCommandConsumer
 {
     protected $commandName = Cmd::class;
 
@@ -24,6 +24,10 @@ class EcmtPostSubmitTasks extends AbstractCommandConsumer
      */
     public function getCommandData(QueueEntity $item)
     {
-        return ['id' => $item->getEntityId()];
+        $options = json_decode($item->getOptions(), true);
+        return [
+            'id' => $item->getEntityId(),
+            'irhpPermitType' => $options['irhpPermitType'],
+        ];
     }
 }
