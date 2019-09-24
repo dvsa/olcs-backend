@@ -26,7 +26,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     protected $toggleConfig = [FeatureToggle::ADMIN_PERMITS];
     protected $repoServiceName = 'IrhpPermitStock';
-    protected $extraRepos = ['ApplicationPathGroup'];
 
     /**
      * @param CommandInterface $command
