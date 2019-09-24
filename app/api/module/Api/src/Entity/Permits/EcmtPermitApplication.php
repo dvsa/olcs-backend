@@ -1260,7 +1260,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             ],
             [
                 'question' => 'permits.page.international.journey.question',
-                'answer' => $this->internationalJourneys->getDescription(),
+                'answer' => $this->internationalJourneys->getId(),
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [
