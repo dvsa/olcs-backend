@@ -506,10 +506,10 @@ return [
             'IrhpPermitType' => RepositoryFactory::class,
             'IrhpPermitWindow' => RepositoryFactory::class,
             'IrhpPermitRange' => RepositoryFactory::class,
-            'IrhpApplication' => RepositoryFactory::class,
             'Template' => RepositoryFactory::class,
             'ApplicationStep' => RepositoryFactory::class,
             'Answer' => RepositoryFactory::class,
+            'ApplicationPathGroup' => RepositoryFactory::class,
         ]
     ],
     'entity_namespaces' => include(__DIR__ . '/namespace.config.php'),

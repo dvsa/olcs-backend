@@ -640,6 +640,7 @@ return [
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
     TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
     TransferQuery\IrhpApplication\ApplicationPath::class => QueryHandler\IrhpApplication\ApplicationPath::class,
+    TransferQuery\IrhpApplication\ApplicationPathGroupList::class => QueryHandler\IrhpApplication\ApplicationPathGroupList::class,
     TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,
     TransferQuery\IrhpApplication\PermitsAvailableByYear::class =>
         QueryHandler\IrhpApplication\PermitsAvailableByYear::class,
