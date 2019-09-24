@@ -352,7 +352,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
             );
         }
 
-        // standard Q&A
+        return $this->getStandardQaAnswer($question);
+    }
+
+    /**
+     * Get the answer corresponding to a question for a non-custom question type
+     *
+     * @param Question $question
+     *
+     * @return mixed|null
+     */
+    private function getStandardQaAnswer(Question $question)
+    {
         $activeQuestionText = $question->getActiveQuestionText($this->getApplicationPathLockedOn());
 
         if (!isset($activeQuestionText)) {
@@ -444,7 +455,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     private function getEcmtShortTermRestrictedCountriesAnswer($question)
     {
-        return ['TODO: restricted countries answer'];
+        $answer = $this->getStandardQaAnswer($question);
+        if (is_null($answer)) {
+            return $answer;
+        }
+
+        if ($answer) {
+            $countryNames = [];
+            foreach ($this->countrys as $country) {
+                $countryNames[] = $country->getCountryDesc();
+            }
+
+            return [
+                'Yes',
+                implode(', ', $countryNames)
+            ];
+        }
+
+        return ['No'];
     }
 
     /**
