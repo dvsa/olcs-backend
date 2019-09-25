@@ -21,7 +21,7 @@ class EcmtShortTermPermitUsageFormControlStrategyFactory implements FactoryInter
             $serviceLocator->get('QaRadioElementGenerator'),
             $serviceLocator->get('QaGenericAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
-            $serviceLocator->get('QaEcmtShortTermPermitUsageQuestionTextGenerator')
+            $serviceLocator->get('QaQuestionTextGenerator')
         );
     }
 }

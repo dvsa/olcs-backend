@@ -62,7 +62,7 @@ class RefData extends AbstractRepository
             ->select('r')
             ->from(Entity::class, 'r')
             ->where('r.refDataCategoryId = ?1')
-            ->orderBy('r.displayOrder', 'DESC')
+            ->orderBy('r.displayOrder', 'ASC')
             ->setParameter(1, $categoryId)
             ->getQuery()
             ->getResult();
