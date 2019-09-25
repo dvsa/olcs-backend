@@ -104,6 +104,31 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($updatePeriodNameKey, $entity->getPeriodNameKey());
     }
 
+    public function testHasOpenWindowTrue()
+    {
+        $window1 = m::mock(IrhpPermitWindow::class);
+        $window1->shouldReceive('isActive')->once()->withNoArgs()->andReturnFalse();
+
+        $window2 = m::mock(IrhpPermitWindow::class);
+        $window2->shouldReceive('isActive')->once()->withNoArgs()->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitWindows(new ArrayCollection([$window1, $window2]));
+
+        $this->assertTrue($entity->hasOpenWindow());
+    }
+
+    public function testHasOpenWindowFalse()
+    {
+        $window1 = m::mock(IrhpPermitWindow::class);
+        $window1->shouldReceive('isActive')->once()->withNoArgs()->andReturnFalse();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitWindows(new ArrayCollection([$window1]));
+
+        $this->assertFalse($entity->hasOpenWindow());
+    }
+
     public function testGetStatusDescription()
     {
         $statusDescription = 'status description';

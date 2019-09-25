@@ -178,6 +178,27 @@ class IrhpPermitTypeEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpIsMultiStock
+     */
+    public function testIsMultiStock($id, $expected)
+    {
+        $this->sut->setId($id);
+
+        $this->assertEquals($expected, $this->sut->isMultiStock());
+    }
+
+    public function dpIsMultiStock()
+    {
+        return [
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
+            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, true],
+            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, true],
+        ];
+    }
+
+    /**
     * @dataProvider dpIsApplicationPathEnabled
     */
     public function testIsApplicationPathEnabled($id, $expected)

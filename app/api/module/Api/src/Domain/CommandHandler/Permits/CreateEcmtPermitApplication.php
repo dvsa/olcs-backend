@@ -12,10 +12,11 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
@@ -54,7 +55,12 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
          */
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
-        if (!$licence->canMakeEcmtApplication()) {
+        /** @var IrhpPermitWindow $window */
+        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId(
+            $command->getIrhpPermitStock()
+        );
+
+        if (!$licence->canMakeEcmtApplication($window->getIrhpPermitStock())) {
             $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
             throw new ForbiddenException($message);
         }
@@ -88,10 +94,6 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
         $this->result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $this->result->addMessage('ECMT Permit Application created successfully');
 
-        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId(
-            $command->getIrhpPermitStock()
-        );
-
         $this->result->merge(
             $this->handleSideEffect(
                 CreateIrhpPermitApplication::create(
@@ -117,7 +119,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     {
         return EcmtPermitApplication::createNew(
             $this->refData(IrhpInterface::SOURCE_SELFSERVE),
-            $this->refData(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+            $this->refData(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
             $this->refData(EcmtPermitApplication::PERMIT_TYPE),
             $licence,
             date('Y-m-d')
@@ -143,8 +145,8 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
         }
 
         return EcmtPermitApplication::createNewInternal(
-            $this->getRepo()->getRefdataReference(EcmtPermitApplication::SOURCE_INTERNAL),
-            $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+            $this->getRepo()->getRefdataReference(IrhpInterface::SOURCE_INTERNAL),
+            $this->getRepo()->getRefdataReference(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
             $licence,
             $command->getDateReceived(),
