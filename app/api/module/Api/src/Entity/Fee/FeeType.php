@@ -183,29 +183,20 @@ class FeeType extends AbstractFeeType
      */
     public function updateNewFeeType(string $effectiveFrom, int $fixedValue, int $annualValue, int $fiveYearValue, FeeType $existingFeeType)
     {
-        $newFeeType = new self();
+        // Clone existing object and null meta-data so Doctrine sets correct values on save
+        $newFeeType = clone $existingFeeType;
+        $newFeeType->setId(null);
+        $newFeeType->setVersion(1);
+        $newFeeType->setLastModifiedBy(null);
+        $newFeeType->setLastModifiedOn(null);
+        $newFeeType->setCreatedBy(null);
+        $newFeeType->setCreatedOn(null);
 
-        //Set values specified on Admin form
+        // Set values specified on Admin form
         $newFeeType->effectiveFrom = new DateTime($effectiveFrom);
         $newFeeType->fixedValue = $fixedValue;
         $newFeeType->annualValue = $annualValue;
         $newFeeType->fiveYearValue = $fiveYearValue;
-
-        //Re-use existing values for all other fields
-        $newFeeType->accrualRule = $existingFeeType->getAccrualRule();
-        $newFeeType->costCentreRef = $existingFeeType->getCostCentreRef();
-        $newFeeType->description = $existingFeeType->getDescription();
-        $newFeeType->expireFeeWithLicence = $existingFeeType->getExpireFeeWithLicence();
-        $newFeeType->feeType = $existingFeeType->getFeeType();
-        $newFeeType->goodsOrPsv = $existingFeeType->getGoodsOrPsv();
-        $newFeeType->irfoFeeType = $existingFeeType->getIrfoFeeType();
-        $newFeeType->isMiscellaneous = $existingFeeType->getIsMiscellaneous();
-        $newFeeType->isNi = $existingFeeType->getIsNi();
-        $newFeeType->licenceType = $existingFeeType->getLicenceType();
-        $newFeeType->productReference = $existingFeeType->getProductReference();
-        $newFeeType->trafficArea = $existingFeeType->getTrafficArea();
-        $newFeeType->vatCode = $existingFeeType->getVatCode();
-        $newFeeType->vatRate = $existingFeeType->getVatRate();
 
         return $newFeeType;
     }
