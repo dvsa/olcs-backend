@@ -11,9 +11,10 @@ use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
@@ -39,8 +40,8 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
     {
         $this->refData = [
             IrhpInterface::SOURCE_SELFSERVE,
-            EcmtPermitApplication::SOURCE_INTERNAL,
-            EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
+            IrhpInterface::SOURCE_INTERNAL,
+            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
             EcmtPermitApplication::PERMIT_TYPE
         ];
 
@@ -57,8 +58,23 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
 
         $command = CreateEcmtPermitApplicationCmd::create($cmdData);
 
+        $stock = m::mock(IrhpPermitStock::class);
+
+        $window = m::mock(IrhpPermitWindow::class);
+        $window->shouldReceive('getId')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($windowId);
+        $window->shouldReceive('getIrhpPermitStock')->once()->withNoArgs()->andReturn($stock);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchLastOpenWindowByStockId')
+            ->with($cmdData['irhpPermitStock'])
+            ->once()
+            ->andReturn($window);
+
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn(true);
+        $licence->shouldReceive('canMakeEcmtApplication')->once()->with($stock)->andReturn(true);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
@@ -77,18 +93,6 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
                     $app->setId($ecmtPermitApplicationId);
                 }
             );
-
-        $window = m::mock(IrhpPermitWindow::class);
-        $window->shouldReceive('getId')
-            ->andReturn($windowId);
-
-        $this->repoMap['IrhpPermitWindow']
-            ->shouldReceive('fetchLastOpenWindowByStockId')
-            ->with(
-                $command->getIrhpPermitStock()
-            )
-            ->once()
-            ->andReturn($window);
 
         $this->expectedSideEffect(
             CreateIrhpPermitApplication::class,
@@ -115,7 +119,7 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
             $ecmtPermitApplication->getSource()->getId()
         );
         $this->assertEquals(
-            EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
+            IrhpInterface::STATUS_NOT_YET_SUBMITTED,
             $ecmtPermitApplication->getStatus()->getId()
         );
         $this->assertEquals(
@@ -174,21 +178,40 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
         ];
 
         return [
-            [$ssCmdData, EcmtPermitApplication::SOURCE_SELFSERVE, $ssExpected],
-            [$intCmdData, EcmtPermitApplication::SOURCE_INTERNAL, $intExpected]
+            [$ssCmdData, IrhpInterface::SOURCE_SELFSERVE, $ssExpected],
+            [$intCmdData, IrhpInterface::SOURCE_INTERNAL, $intExpected]
         ];
     }
 
     public function testHandleCommandForbidden()
     {
         $licenceId = 200;
+        $windowId = 300;
+        $irhpPermitStockId = 400;
         $licNo = 'OB1234567';
-        $command = CreateEcmtPermitApplicationCmd::create(['licence' => $licenceId]);
+
+        $command = CreateEcmtPermitApplicationCmd::create(
+            [
+                'licence' => $licenceId,
+                'irhpPermitStock' => $irhpPermitStockId
+            ]
+        );
+
+        $stock = m::mock(IrhpPermitStock::class);
+
+        $window = m::mock(IrhpPermitWindow::class);
+        $window->shouldReceive('getIrhpPermitStock')->once()->withNoArgs()->andReturn($stock);
 
         $licence = m::mock(Licence::class);
-        $licence->shouldReceive('canMakeEcmtApplication')->once()->withNoArgs()->andReturn(false);
+        $licence->shouldReceive('canMakeEcmtApplication')->once()->with($stock)->andReturn(false);
         $licence->shouldReceive('getId')->once()->withNoArgs()->andReturn($licenceId);
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
+
+        $this->repoMap['IrhpPermitWindow']
+            ->shouldReceive('fetchLastOpenWindowByStockId')
+            ->with($irhpPermitStockId)
+            ->once()
+            ->andReturn($window);
 
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')

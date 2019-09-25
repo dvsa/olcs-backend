@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
 
 return [
     QueryHandler\IrhpApplication\ById::class => Permits\CanAccessIrhpApplicationWithId::class,
-    QueryHandler\IrhpApplication\ActiveApplication::class => NotIsAnonymousUser::class,
     QueryHandler\IrhpApplication\QuestionAnswer::class => Permits\CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\GetList::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\MaxStockPermits::class => CanAccessLicenceWithLicence::class,
@@ -35,12 +34,12 @@ return [
     QueryHandler\Permits\ValidEcmtPermits::class => CanAccessLicenceWithLicence::class,
     QueryHandler\Permits\UnpaidEcmtPermits::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\AvailableLicences::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableYears::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableStocks::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EmissionsByYear::class => IsInternalUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
-    QueryHandler\Permits\ActiveEcmtApplication::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueRunScoringPermitted::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\CheckRunScoringPrerequisites::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\QueueAcceptScoringPermitted::class => NotIsAnonymousUser::class,
