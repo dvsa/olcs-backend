@@ -63,6 +63,8 @@ return [
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsLogger' =>
                 ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
+            'PermitsScoringIrhpCandidatePermitFactory' =>
+                ApiSrv\Permits\Scoring\IrhpCandidatePermitFactory::class,
             'PermitsApplyRangesEntityIdsExtractor' =>
                 ApiSrv\Permits\ApplyRanges\EntityIdsExtractor::class,
             'PermitsApplyRangesRangeSubsetGenerator' =>
@@ -263,6 +265,8 @@ return [
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
+            'PermitsScoringCandidatePermitsCreator'
+                => ApiSrv\Permits\Scoring\CandidatePermitsCreatorFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsGenerator'
                 => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsGeneratorFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsWriter'

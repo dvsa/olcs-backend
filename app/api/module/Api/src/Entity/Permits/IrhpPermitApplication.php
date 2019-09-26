@@ -99,7 +99,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getPermitIntensityOfUse($emissionsCategoryId = null)
     {
-        return $this->ecmtPermitApplication->getPermitIntensityOfUse($emissionsCategoryId);
+        return $this->getRelatedApplication()->getPermitIntensityOfUse($emissionsCategoryId);
     }
 
     /**
@@ -111,7 +111,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function getPermitApplicationScore($emissionsCategoryId = null)
     {
-        return $this->ecmtPermitApplication->getPermitApplicationScore($emissionsCategoryId);
+        return $this->getRelatedApplication()->getPermitApplicationScore($emissionsCategoryId);
     }
 
     /**
