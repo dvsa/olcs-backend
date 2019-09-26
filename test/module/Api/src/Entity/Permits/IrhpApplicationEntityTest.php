@@ -3310,12 +3310,17 @@ class IrhpApplicationEntityTest extends EntityTester
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive(
+            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
+        )->once()->with($createdOn)->andReturn(null);
+
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
-        $irhpPermitType->shouldReceive('getActiveApplicationPath')->once()->with($createdOn)->andReturn(null);
 
         $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
         $entity->setCreatedOn($createdOn);
 
         $this->assertEquals($expected, $entity->getQuestionAnswerData());
@@ -3332,15 +3337,17 @@ class IrhpApplicationEntityTest extends EntityTester
         $applicationPath = m::mock(ApplicationPath::class);
         $applicationPath->shouldReceive('getApplicationSteps')->once()->withNoArgs()->andReturn($applicationSteps);
 
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive(
+            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
+        )->once()->with($data['createdOn'])->andReturn($applicationPath);
+
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
-        $irhpPermitType->shouldReceive('getActiveApplicationPath')
-            ->with($data['createdOn'])
-            ->once()
-            ->andReturn($applicationPath);
 
         $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
         $entity->setAnswers($data['answers']);
         $entity->setCreatedOn($data['createdOn']);
         $entity->setCheckedAnswers($data['checkedAnswers']);
