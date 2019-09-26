@@ -6,21 +6,19 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicationSnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\PostSubmitTasks as PostSubmitTasksCmd;
+use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\PostSubmitTasks;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
-use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
+use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\CandidatePermitsCreator;
 use Mockery as m;
-use RuntimeException;
 
 class PostSubmitTasksTest extends CommandHandlerTestCase
 {
@@ -30,35 +28,20 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
 
     private $irhpPermitApplication;
 
-    private $ecmtPermitApplicationId;
-
-    private $ecmtPermitApplication;
-
     public function setUp()
     {
-        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
-        $this->mockRepo('SystemParameter', SystemParameterRepo::class);
-
-        $this->sut = new PostSubmitTasks();
-
-        $this->requiredEuro5 = 1;
-        $this->requiredEuro6 = 2;
-
+        $this->requiredEuro5 = 2;
+        $this->requiredEuro6 = 3;
         $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
 
-        $this->ecmtPermitApplicationId = 129;
+        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
+        $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
-        $this->ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $this->ecmtPermitApplication->shouldReceive('getRequiredEuro5')
-            ->withNoArgs()
-            ->andReturn($this->requiredEuro5);
-        $this->ecmtPermitApplication->shouldReceive('getRequiredEuro6')
-            ->withNoArgs()
-            ->andReturn($this->requiredEuro6);
-        $this->ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
-            ->withNoArgs()
-            ->andReturn($this->irhpPermitApplication);
+        $this->mockedSmServices = [
+            'PermitsScoringCandidatePermitsCreator' => m::mock(CandidatePermitsCreator::class),
+        ];
+
+        $this->sut = new PostSubmitTasks();
 
         parent::setUp();
     }
@@ -76,9 +59,25 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
     /**
      * @dataProvider dpHandleCommandForIrhp
      */
-    public function testHandleCommandForIrhp($irhpPermitTypeId)
+    public function testHandleCommandForIrhp($irhpPermitTypeId, $businessProcessId)
     {
         $id = 100;
+
+        $this->mockedSmServices['PermitsScoringCandidatePermitsCreator']->shouldReceive('create')
+            ->never();
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getBusinessProcess->getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->withNoArgs()
+            ->andReturn($this->irhpPermitApplication);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->once()
+            ->with($id)
+            ->andReturn($irhpApplication);
 
         $this->expectedSideEffect(
             IrhpApplicationSnapshotCmd::class,
@@ -108,10 +107,80 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
     public function dpHandleCommandForIrhp()
     {
         return [
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, RefData::BUSINESS_PROCESS_APG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, RefData::BUSINESS_PROCESS_APG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, RefData::BUSINESS_PROCESS_APG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, RefData::BUSINESS_PROCESS_APG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, RefData::BUSINESS_PROCESS_APGG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, RefData::BUSINESS_PROCESS_APGG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, RefData::BUSINESS_PROCESS_APGG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, RefData::BUSINESS_PROCESS_APGG],
+        ];
+    }
+
+    /**
+     * @dataProvider dpHandleCommandForIrhpWithCreateCandidatePermits
+     */
+    public function testHandleCommandForIrhpWithCreateCandidatePermits($irhpPermitTypeId, $businessProcessId)
+    {
+        $id = 100;
+
+        $this->mockedSmServices['PermitsScoringCandidatePermitsCreator']->shouldReceive('create')
+            ->with($this->irhpPermitApplication, $this->requiredEuro5, $this->requiredEuro6)
+            ->once();
+
+        $this->irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->withNoArgs()
+            ->andReturn($this->requiredEuro5);
+        $this->irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->withNoArgs()
+            ->andReturn($this->requiredEuro6);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getBusinessProcess->getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->withNoArgs()
+            ->andReturn($this->irhpPermitApplication);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->once()
+            ->with($id)
+            ->andReturn($irhpApplication);
+
+        $this->expectedSideEffect(
+            IrhpApplicationSnapshotCmd::class,
+            [
+                'id' => $id,
+            ],
+            (new Result())->addMessage('Snapshot created')
+        );
+
+        $result = $this->sut->handleCommand(
+            PostSubmitTasksCmd::create(
+                [
+                    'id' => $id,
+                    'irhpPermitType' => $irhpPermitTypeId,
+                ]
+            )
+        );
+
+        $this->assertEquals(
+            [
+                'Snapshot created'
+            ],
+            $result->getMessages()
+        );
+    }
+
+    public function dpHandleCommandForIrhpWithCreateCandidatePermits()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, RefData::BUSINESS_PROCESS_APSG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, RefData::BUSINESS_PROCESS_APSG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, RefData::BUSINESS_PROCESS_APSG],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, RefData::BUSINESS_PROCESS_APSG],
         ];
     }
 
@@ -134,192 +203,52 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
 
     public function testHandleCommandForEcmtAnnual()
     {
-        $intensityOfUse = 3;
-        $applicationScore = 4;
+        $ecmtPermitApplicationId = 129;
 
+        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('getRequiredEuro5')
+            ->withNoArgs()
+            ->andReturn($this->requiredEuro5);
+        $ecmtPermitApplication->shouldReceive('getRequiredEuro6')
+            ->withNoArgs()
+            ->andReturn($this->requiredEuro6);
+        $ecmtPermitApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->withNoArgs()
+            ->andReturn($this->irhpPermitApplication);
         $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
             ->once()
-            ->with($this->ecmtPermitApplicationId)
-            ->andReturn($this->ecmtPermitApplication);
-
-        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(SystemParameter::USE_ALT_ECMT_IOU_ALGORITHM)
-            ->andReturn(0);
-
-        $this->irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
-            ->with(null)
-            ->andReturn($intensityOfUse);
-        $this->irhpPermitApplication->shouldReceive('getPermitApplicationScore')
-            ->with(null)
-            ->andReturn($applicationScore);
-
-        $refData = $this->refData;
-        $savedEuro5 = 0;
-        $savedEuro6 = 0;
-
-        $irhpPermitApplication = $this->irhpPermitApplication;
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
-            ->with(m::type(IrhpCandidatePermit::class))
-            ->andReturnUsing(
-                function (
-                    $irhpCandidatePermit
-                ) use (
-                    $irhpPermitApplication,
-                    $intensityOfUse,
-                    $applicationScore,
-                    $refData,
-                    &$savedEuro5,
-                    &$savedEuro6
-                ) {
-                    $this->assertEquals($irhpPermitApplication, $irhpCandidatePermit->getIrhpPermitApplication());
-                    $this->assertEquals($intensityOfUse, $irhpCandidatePermit->getIntensityOfUse());
-                    $this->assertEquals($applicationScore, $irhpCandidatePermit->getApplicationScore());
-
-                    $requestedEmissionsCategory = $irhpCandidatePermit->getRequestedEmissionsCategory();
-                    if ($requestedEmissionsCategory === $refData[RefData::EMISSIONS_CATEGORY_EURO5_REF]) {
-                        $savedEuro5++;
-                    } elseif ($requestedEmissionsCategory === $refData[RefData::EMISSIONS_CATEGORY_EURO6_REF]) {
-                        $savedEuro6++;
-                    } else {
-                        throw new RuntimeException('Unexpected emissions category parameter');
-                    }
-                }
-            );
+            ->with($ecmtPermitApplicationId)
+            ->andReturn($ecmtPermitApplication);
 
         $result1 = new Result();
         $result1->addMessage('Snapshot created');
         $this->expectedSideEffect(
             SnapshotCmd::class,
             [
-                'id' => $this->ecmtPermitApplicationId,
+                'id' => $ecmtPermitApplicationId,
             ],
             $result1
         );
 
         $this->expectedEmailQueueSideEffect(
             SendEcmtAppSubmitted::class,
-            ['id' => $this->ecmtPermitApplicationId],
-            $this->ecmtPermitApplicationId,
+            ['id' => $ecmtPermitApplicationId],
+            $ecmtPermitApplicationId,
             new Result()
         );
+
+        $this->mockedSmServices['PermitsScoringCandidatePermitsCreator']->shouldReceive('create')
+            ->with($this->irhpPermitApplication, $this->requiredEuro5, $this->requiredEuro6)
+            ->once();
 
         $result = $this->sut->handleCommand(
             PostSubmitTasksCmd::create(
                 [
-                    'id' => $this->ecmtPermitApplicationId,
+                    'id' => $ecmtPermitApplicationId,
                     'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
                 ]
             )
         );
-
-        $this->assertEquals($this->requiredEuro5, $savedEuro5);
-        $this->assertEquals($this->requiredEuro6, $savedEuro6);
-
-        $this->assertEquals(
-            [
-                'Snapshot created'
-            ],
-            $result->getMessages()
-        );
-    }
-
-    public function testHandleCommandForEcmtAnnualWithAltEcmtIouAlgorithm()
-    {
-        $euro5IntensityOfUse = 3;
-        $euro5ApplicationScore = 4;
-        $euro6IntensityOfUse = 5;
-        $euro6ApplicationScore = 6;
-
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchById')
-            ->once()
-            ->with($this->ecmtPermitApplicationId)
-            ->andReturn($this->ecmtPermitApplication);
-
-        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
-            ->with(SystemParameter::USE_ALT_ECMT_IOU_ALGORITHM)
-            ->andReturn(1);
-
-        $this->irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
-            ->with(RefData::EMISSIONS_CATEGORY_EURO5_REF)
-            ->andReturn($euro5IntensityOfUse);
-        $this->irhpPermitApplication->shouldReceive('getPermitIntensityOfUse')
-            ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF)
-            ->andReturn($euro6IntensityOfUse);
-        $this->irhpPermitApplication->shouldReceive('getPermitApplicationScore')
-            ->with(RefData::EMISSIONS_CATEGORY_EURO5_REF)
-            ->andReturn($euro5ApplicationScore);
-        $this->irhpPermitApplication->shouldReceive('getPermitApplicationScore')
-            ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF)
-            ->andReturn($euro6ApplicationScore);
-
-        $refData = $this->refData;
-        $savedEuro5 = 0;
-        $savedEuro6 = 0;
-
-        $irhpPermitApplication = $this->irhpPermitApplication;
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('save')
-            ->with(m::type(IrhpCandidatePermit::class))
-            ->andReturnUsing(
-                function (
-                    $irhpCandidatePermit
-                ) use (
-                    $irhpPermitApplication,
-                    $euro5IntensityOfUse,
-                    $euro6IntensityOfUse,
-                    $euro5ApplicationScore,
-                    $euro6ApplicationScore,
-                    $refData,
-                    &$savedEuro5,
-                    &$savedEuro6
-                ) {
-                    $this->assertEquals($irhpPermitApplication, $irhpCandidatePermit->getIrhpPermitApplication());
-
-                    $savedIntensityOfUse = $irhpCandidatePermit->getIntensityOfUse();
-                    $savedApplicationScore = $irhpCandidatePermit->getApplicationScore();
-
-                    $requestedEmissionsCategory = $irhpCandidatePermit->getRequestedEmissionsCategory();
-                    if ($requestedEmissionsCategory === $refData[RefData::EMISSIONS_CATEGORY_EURO5_REF]) {
-                        $this->assertEquals($euro5IntensityOfUse, $savedIntensityOfUse);
-                        $this->assertEquals($euro5ApplicationScore, $savedApplicationScore);
-                        $savedEuro5++;
-                    } elseif ($requestedEmissionsCategory === $refData[RefData::EMISSIONS_CATEGORY_EURO6_REF]) {
-                        $this->assertEquals($euro6IntensityOfUse, $savedIntensityOfUse);
-                        $this->assertEquals($euro6ApplicationScore, $savedApplicationScore);
-                        $savedEuro6++;
-                    } else {
-                        throw new RuntimeException('Unexpected emissions category parameter');
-                    }
-                }
-            );
-
-        $result1 = new Result();
-        $result1->addMessage('Snapshot created');
-        $this->expectedSideEffect(
-            SnapshotCmd::class,
-            [
-                'id' => $this->ecmtPermitApplicationId,
-            ],
-            $result1
-        );
-
-        $this->expectedEmailQueueSideEffect(
-            SendEcmtAppSubmitted::class,
-            ['id' => $this->ecmtPermitApplicationId],
-            $this->ecmtPermitApplicationId,
-            new Result()
-        );
-
-        $result = $this->sut->handleCommand(
-            PostSubmitTasksCmd::create(
-                [
-                    'id' => $this->ecmtPermitApplicationId,
-                    'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
-                ]
-            )
-        );
-
-        $this->assertEquals($this->requiredEuro5, $savedEuro5);
-        $this->assertEquals($this->requiredEuro6, $savedEuro6);
 
         $this->assertEquals(
             [

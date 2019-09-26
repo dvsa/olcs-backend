@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList as QryClass;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -44,7 +45,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'candidatePermitRandomizedScore' => 0.823322,
                 'candidatePermitRequestedEmissionsCategory' => 'emissions_cat_euro6',
                 'candidatePermitAssignedEmissionsCategory' => 'emissions_cat_euro5',
-                'applicationInternationalJourneys' => 'inter_journey_less_60',
+                'applicationInternationalJourneys' => RefData::INTER_JOURNEY_LESS_60,
                 'applicationSectorName' => 'Coke and refined petroleum products',
                 'licenceNo' => 'OB4234565',
                 'trafficAreaId' => 'K',
@@ -62,7 +63,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'candidatePermitRandomizedScore' => 0.223338,
                 'candidatePermitRequestedEmissionsCategory' => 'emissions_cat_euro6',
                 'candidatePermitAssignedEmissionsCategory' => 'emissions_cat_euro6',
-                'applicationInternationalJourneys' => 'inter_journey_60_90',
+                'applicationInternationalJourneys' => RefData::INTER_JOURNEY_60_90,
                 'applicationSectorName' => 'None/More than one of these sectors',
                 'licenceNo' => 'TS1234568',
                 'trafficAreaId' => 'M',
@@ -80,7 +81,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
                 'candidatePermitRandomizedScore' => 0.102045,
                 'candidatePermitRequestedEmissionsCategory' => 'emissions_cat_euro5',
                 'candidatePermitAssignedEmissionsCategory' => 'emissions_cat_euro5',
-                'applicationInternationalJourneys' => 'inter_journey_more_90',
+                'applicationInternationalJourneys' => RefData::INTER_JOURNEY_MORE_90,
                 'applicationSectorName' => 'Municipal wastes and other wastes',
                 'licenceNo' => 'OG4567723',
                 'trafficAreaId' => 'G',

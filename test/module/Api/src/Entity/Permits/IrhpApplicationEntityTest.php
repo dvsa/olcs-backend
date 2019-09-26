@@ -4348,4 +4348,119 @@ class IrhpApplicationEntityTest extends EntityTester
             $entity->getCountrys()
         );
     }
+
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUse($emissionsCategoryId, $expectedIntensityOfUse)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn(2);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn(5);
+
+        $entity = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $entity->shouldReceive('calculateTotalPermitsRequired')
+            ->andReturn(7);
+        $entity->shouldReceive('getAnswerValueByQuestionSlug')
+            ->with('st-annual-trips-abroad')
+            ->andReturn(35);
+
+        $this->assertEquals(
+            $expectedIntensityOfUse,
+            $entity->getPermitIntensityOfUse($emissionsCategoryId)
+        );
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Permit intensity of use cannot be calculated with zero number of permits');
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn(0);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn(0);
+
+        $entity = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $entity->shouldReceive('calculateTotalPermitsRequired')
+            ->andReturn(0);
+        $entity->shouldReceive('getAnswerValueByQuestionSlug')
+            ->with('st-annual-trips-abroad')
+            ->andReturn(0);
+
+        $entity->getPermitIntensityOfUse($emissionsCategoryId);
+    }
+
+    public function testGetPermitIntensityOfUseBadEmissionsCategory()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: xyz');
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $entity->getPermitIntensityOfUse('xyz');
+    }
+
+    public function dpTestGetPermitIntensityOfUse()
+    {
+        return [
+            [null, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 17.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 7],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitApplicationScore
+     */
+    public function testGetPermitApplicationScore(
+        $emissionsCategoryId,
+        $internationalJourneys,
+        $expectedPermitApplicationScore
+    ) {
+        $intensityOfUse = 5;
+
+        $entity = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $entity->shouldReceive('getPermitIntensityOfUse')
+            ->with($emissionsCategoryId)
+            ->andReturn($intensityOfUse);
+
+        $refData = m::mock(RefData::class);
+        $refData->shouldReceive('getId')
+            ->andReturn($internationalJourneys);
+        $entity->setInternationalJourneys($refData);
+
+        $this->assertEquals(
+            $expectedPermitApplicationScore,
+            $entity->getPermitApplicationScore($emissionsCategoryId)
+        );
+    }
+
+    public function dpTestGetPermitApplicationScore()
+    {
+        return [
+            [null, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [null, RefData::INTER_JOURNEY_60_90, 3.75],
+            [null, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+        ];
+    }
 }
