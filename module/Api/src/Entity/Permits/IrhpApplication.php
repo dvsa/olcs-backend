@@ -1632,7 +1632,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         } catch (RuntimeException $ex) {
             // do nothing if getFirstIrhpPermitApplication() throws an exception
         }
-    }    
+    }
        
     /**
      * Get the answer value corresponding to the specified question slug
@@ -1680,7 +1680,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function updateCountries(ArrayCollection $countries)
     {
         $this->countrys = $countries;
-    }   
+    }
    
     /**
      * Get the total number of permits required by this application

@@ -8,7 +8,9 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Check run scoring prerequisites
@@ -23,7 +25,26 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
 
     protected $repoServiceName = 'IrhpPermitRange';
 
-    protected $extraRepos = ['EcmtPermitApplication', 'IrhpPermitWindow', 'IrhpPermit'];
+    protected $extraRepos = ['IrhpPermitWindow', 'IrhpPermit'];
+
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle query
@@ -50,7 +71,7 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler implements Toggl
             );
         }
 
-        $applicationIds = $this->getRepo('EcmtPermitApplication')->fetchApplicationIdsAwaitingScoring($stockId);
+        $applicationIds = $this->scoringQueryProxy->fetchApplicationIdsAwaitingScoring($stockId);
         if (count($applicationIds) == 0) {
             return $this->generateResponse(
                 false,

@@ -7,7 +7,9 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQuery;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Initialise Scope
@@ -20,7 +22,24 @@ class InitialiseScope extends ScoringCommandHandler implements ToggleRequiredInt
 
     protected $repoServiceName = 'IrhpCandidatePermit';
 
-    protected $extraRepos = ['EcmtPermitApplication'];
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
     * Handle command
@@ -32,20 +51,19 @@ class InitialiseScope extends ScoringCommandHandler implements ToggleRequiredInt
     public function handleCommand(CommandInterface $command)
     {
         $candidatePermitRepo = $this->getRepo();
-        $ecmtPermitApplicationRepo = $this->getRepo('EcmtPermitApplication');
         $stockId = $command->getStockId();
 
         $this->profileMessage('clear scope...');
-        $ecmtPermitApplicationRepo->clearScope($stockId);
+        $this->scoringQueryProxy->clearScope($stockId);
 
         $this->profileMessage('apply scope...');
-        $ecmtPermitApplicationRepo->applyScope($stockId);
+        $this->scoringQueryProxy->applyScope($stockId);
 
         // TODO: should the deviation data calculations use the scope of candidate ids that don't have randomized
         // scores set, or the full list of candidate permit ids in scope?
 
         $this->profileMessage('fetch deviation source values...');
-        $candidatePermitSourceValues = $candidatePermitRepo->fetchDeviationSourceValues($stockId);
+        $candidatePermitSourceValues = $this->scoringQueryProxy->fetchDeviationSourceValues($stockId);
 
         $totalPermitCount = count($candidatePermitSourceValues);
         $randomizedScoreCount = 0;
