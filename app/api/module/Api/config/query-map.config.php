@@ -655,6 +655,7 @@ return [
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\AvailableYears::class => QueryHandler\Permits\AvailableYears::class,
+    TransferQuery\Permits\AvailableStocks::class => QueryHandler\Permits\AvailableStocks::class,
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
