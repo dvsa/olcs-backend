@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 use Dvsa\Olcs\Api\Service\Qa\Common\ArrayCollectionFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
@@ -30,6 +31,9 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
     /** @var GenericAnswerWriter */
     private $genericAnswerWriter;
 
+    /** @var StockBasedRestrictedCountryIdsProvider */
+    private $stockBasedRestrictedCountryIdsProvider;
+
     /**
      * Create service instance
      *
@@ -38,6 +42,7 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
      * @param ArrayCollectionFactory $arrayCollectionFactory
      * @param NamedAnswerFetcher $namedAnswerFetcher
      * @param GenericAnswerWriter $genericAnswerWriter
+     * @param StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider
      *
      * @return RestrictedCountriesAnswerSaver
      */
@@ -46,13 +51,15 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
         CountryRepository $countryRepo,
         ArrayCollectionFactory $arrayCollectionFactory,
         NamedAnswerFetcher $namedAnswerFetcher,
-        GenericAnswerWriter $genericAnswerWriter
+        GenericAnswerWriter $genericAnswerWriter,
+        StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider
     ) {
         $this->irhpApplicationRepo = $irhpApplicationRepo;
         $this->countryRepo = $countryRepo;
         $this->arrayCollectionFactory = $arrayCollectionFactory;
         $this->namedAnswerFetcher = $namedAnswerFetcher;
         $this->genericAnswerWriter = $genericAnswerWriter;
+        $this->stockBasedRestrictedCountryIdsProvider = $stockBasedRestrictedCountryIdsProvider;
     }
 
     /**
@@ -78,10 +85,17 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
                 'yesContent'
             );
 
-            foreach (RestrictedCountryCodes::CODES as $code) {
-                if (in_array($code, $selectedCountries)) {
+            $stockId = $irhpApplicationEntity->getFirstIrhpPermitApplication()
+                ->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getId();
+
+            $countryIds = $this->stockBasedRestrictedCountryIdsProvider->getIds($stockId);
+
+            foreach ($countryIds as $countryId) {
+                if (in_array($countryId, $selectedCountries)) {
                     $countryReferences->add(
-                        $this->irhpApplicationRepo->getReference(Country::class, $code)
+                        $this->irhpApplicationRepo->getReference(Country::class, $countryId)
                     );
                 }
             }

@@ -11,6 +11,8 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRe
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpProvider;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications
     as ApplyRangesToSuccessfulPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications
@@ -37,7 +39,8 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
 
         $this->mockedSmServices = [
-            'PermitsApplyRangesForCpProvider' => m::mock(ForCpProvider::class)
+           'PermitsApplyRangesStockBasedForCpProviderFactory' => m::mock(StockBasedForCpProviderFactory::class),
+           'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class)
         ];
 
         parent::setUp();
@@ -113,6 +116,12 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             ['id' => 9, 'selectedRange' => 1, 'randomizedScore' => '0.91'],
         ];
 
+        $forCpProvider = m::mock(ForCpProvider::class);
+
+        $this->mockedSmServices['PermitsApplyRangesStockBasedForCpProviderFactory']->shouldReceive('create')
+            ->with($stockId)
+            ->andReturn($forCpProvider);
+
         $irhpCandidatePermits = [];
         foreach ($candidatePermits as $candidatePermit) {
             $irhpCandidatePermit = $this->createCandidatePermit(
@@ -122,7 +131,7 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
 
             $selectedIrhpPermitRange = $irhpPermitRangesByRangeId[$candidatePermit['selectedRange']];
 
-            $this->mockedSmServices['PermitsApplyRangesForCpProvider']->shouldReceive('selectRange')
+            $forCpProvider->shouldReceive('selectRange')
                 ->with(m::type(Result::class), $irhpCandidatePermit, m::type('array'))
                 ->andReturn($selectedIrhpPermitRange);
 
@@ -141,7 +150,7 @@ class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCa
             $irhpCandidatePermits[] = $irhpCandidatePermit;
         }
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulScoreOrderedInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulScoreOrderedInScope')
             ->with($stockId)
             ->andReturn($irhpCandidatePermits);
 

@@ -33,7 +33,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_irhp_application_withdrawn_date", columns={"withdrawn_date"}),
  *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"}),
  *        @ORM\Index(name="fk_irhp_application_international_journeys",
-     *     columns={"international_journeys"})
+     *     columns={"international_journeys"}),
+ *        @ORM\Index(name="fk_irhp_application_sectors_id", columns={"sectors_id"})
  *    }
  * )
  */
@@ -134,6 +135,15 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $id;
 
     /**
+     * In scope
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="in_scope", nullable=true, options={"default": 0})
+     */
+    protected $inScope = 0;
+
+    /**
      * International journeys
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -177,6 +187,16 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=false)
      */
     protected $licence;
+
+    /**
+     * Sectors
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\Sectors", fetch="LAZY")
+     * @ORM\JoinColumn(name="sectors_id", referencedColumnName="id", nullable=true)
+     */
+    protected $sectors;
 
     /**
      * Source
@@ -534,6 +554,30 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the in scope
+     *
+     * @param boolean $inScope new value being set
+     *
+     * @return IrhpApplication
+     */
+    public function setInScope($inScope)
+    {
+        $this->inScope = $inScope;
+
+        return $this;
+    }
+
+    /**
+     * Get the in scope
+     *
+     * @return boolean
+     */
+    public function getInScope()
+    {
+        return $this->inScope;
+    }
+
+    /**
      * Set the international journeys
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $internationalJourneys entity being set as the value
@@ -627,6 +671,30 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the sectors
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Permits\Sectors $sectors entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setSectors($sectors)
+    {
+        $this->sectors = $sectors;
+
+        return $this;
+    }
+
+    /**
+     * Get the sectors
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Permits\Sectors
+     */
+    public function getSectors()
+    {
+        return $this->sectors;
     }
 
     /**
