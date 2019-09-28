@@ -114,6 +114,19 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     protected $irfoPsvAuths;
 
     /**
+     * Irhp application
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
+     *     mappedBy="countrys",
+     *     fetch="LAZY"
+     * )
+     */
+    protected $irhpApplications;
+
+    /**
      * Irhp permit stock range
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
@@ -203,6 +216,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
         $this->ecmtApplications = new ArrayCollection();
         $this->constraints = new ArrayCollection();
         $this->irfoPsvAuths = new ArrayCollection();
+        $this->irhpApplications = new ArrayCollection();
         $this->irhpPermitStockRanges = new ArrayCollection();
         $this->irhpPermitStocks = new ArrayCollection();
     }
@@ -463,6 +477,69 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     {
         if ($this->irfoPsvAuths->contains($irfoPsvAuths)) {
             $this->irfoPsvAuths->removeElement($irfoPsvAuths);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the irhp application
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being set as the value
+     *
+     * @return Country
+     */
+    public function setIrhpApplications($irhpApplications)
+    {
+        $this->irhpApplications = $irhpApplications;
+
+        return $this;
+    }
+
+    /**
+     * Get the irhp applications
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getIrhpApplications()
+    {
+        return $this->irhpApplications;
+    }
+
+    /**
+     * Add a irhp applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being added
+     *
+     * @return Country
+     */
+    public function addIrhpApplications($irhpApplications)
+    {
+        if ($irhpApplications instanceof ArrayCollection) {
+            $this->irhpApplications = new ArrayCollection(
+                array_merge(
+                    $this->irhpApplications->toArray(),
+                    $irhpApplications->toArray()
+                )
+            );
+        } elseif (!$this->irhpApplications->contains($irhpApplications)) {
+            $this->irhpApplications->add($irhpApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a irhp applications
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being removed
+     *
+     * @return Country
+     */
+    public function removeIrhpApplications($irhpApplications)
+    {
+        if ($this->irhpApplications->contains($irhpApplications)) {
+            $this->irhpApplications->removeElement($irhpApplications);
         }
 
         return $this;
