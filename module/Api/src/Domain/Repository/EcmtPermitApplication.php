@@ -39,6 +39,8 @@ class EcmtPermitApplication extends AbstractScoringRepository
     protected $applicationTableName = 'ecmt_permit_application';
     protected $applicationEntityName = 'ecmtPermitApplication';
     protected $permitsRequiredEntityAlias = 'epa';
+    protected $linkTableName = 'ecmt_application_country_link';
+    protected $linkTableApplicationIdName = 'ecmt_application_id';
 
     /**
      * @param QueryBuilder $qb
@@ -128,31 +130,6 @@ class EcmtPermitApplication extends AbstractScoringRepository
             ->setParameter('appStatuses', $appStatuses);
 
         return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Fetch a flat list of application to country associations within the specified stock
-     *
-     * @param int $stockId
-     *
-     * @return array
-     */
-    public function fetchApplicationIdToCountryIdAssociations($stockId)
-    {
-        $statement = $this->getEntityManager()->getConnection()->executeQuery(
-            'select e.id as ecmtApplicationId, eacl.country_id as countryId ' .
-            'from ecmt_application_country_link eacl ' .
-            'inner join ecmt_permit_application as e on e.id = eacl.ecmt_application_id ' .
-            'where e.id in (' .
-            '    select ecmt_permit_application_id from irhp_permit_application where irhp_permit_window_id in (' .
-            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
-            '    )' .
-            ') ' .
-            'and e.in_scope = 1 ',
-            ['stockId' => $stockId]
-        );
-
-        return $statement->fetchAll();
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Transfer\Query\Permits\UnpaidEcmtPermits;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -53,52 +52,5 @@ class IrhpCandidatePermit extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('irhpPermitApplication', 'ipa')
             ->with('ipa.ecmtPermitApplication', 'epa');
-    }
-
-    /**
-     * Retrieves a partial list of column values for the scoring report
-     *
-     * @param int $irhpPermitStockId the Id of the IrhpPermitStock that the scoring will be for
-     *
-     * @return array
-     */
-    public function fetchScoringReport($irhpPermitStockId)
-    {
-        $columns = [
-            'icp.id as candidatePermitId',
-            'epa.id as applicationId',
-            'o.name as organisationName',
-            'icp.applicationScore as candidatePermitApplicationScore',
-            'icp.intensityOfUse as candidatePermitIntensityOfUse',
-            'icp.randomFactor as candidatePermitRandomFactor',
-            'icp.randomizedScore as candidatePermitRandomizedScore',
-            'IDENTITY(icp.requestedEmissionsCategory) as candidatePermitRequestedEmissionsCategory',
-            'IDENTITY(icp.assignedEmissionsCategory) as candidatePermitAssignedEmissionsCategory',
-            'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys',
-            's.name as applicationSectorName',
-            'l.licNo as licenceNo',
-            'ta.id as trafficAreaId',
-            'ta.name as trafficAreaName',
-            'icp.successful as candidatePermitSuccessful',
-            'IDENTITY(icp.irhpPermitRange) as candidatePermitRangeId'
-        ];
-
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select(implode(', ', $columns))
-            ->from(Entity::class, 'icp')
-            ->innerJoin('icp.irhpPermitApplication', 'ipa')
-            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
-            ->innerJoin('ipa.ecmtPermitApplication', 'epa')
-            ->innerJoin('epa.licence', 'l')
-            ->innerJoin('epa.sectors', 's')
-            ->innerJoin('l.trafficArea', 'ta')
-            ->innerJoin('l.organisation', 'o')
-            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
-            ->andWhere('epa.status = ?2')
-            ->andWhere('epa.inScope = 1')
-            ->setParameter(1, $irhpPermitStockId)
-            ->setParameter(2, EcmtPermitApplication::STATUS_UNDER_CONSIDERATION)
-            ->getQuery()
-            ->getScalarResult();
     }
 }
