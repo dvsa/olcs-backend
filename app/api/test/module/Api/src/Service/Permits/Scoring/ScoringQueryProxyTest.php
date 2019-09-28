@@ -289,6 +289,52 @@ class ScoringQueryProxyTest extends MockeryTestCase
     /**
      * @dataProvider dpIsEcmtAnnualToRepoName
      */
+    public function testFetchApplicationIdToCountryIdAssociations($isEcmtAnnual, $expectedRepoName)
+    {
+        $this->irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
+
+        $this->applicationRepo->shouldReceive('fetchApplicationIdToCountryIdAssociations')
+            ->with($this->stockId)
+            ->once()
+            ->andReturn($this->queryResult);
+
+        $this->repoServiceManager->shouldReceive('get')
+            ->with($expectedRepoName)
+            ->andReturn($this->applicationRepo);
+
+        $this->assertEquals(
+            $this->queryResult,
+            $this->scoringQueryProxy->fetchApplicationIdToCountryIdAssociations($this->stockId)
+        );
+    }
+
+    /**
+     * @dataProvider dpIsEcmtAnnualToRepoName
+     */
+    public function testFetchScoringReport($isEcmtAnnual, $expectedRepoName)
+    {
+        $this->irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
+
+        $this->applicationRepo->shouldReceive('fetchScoringReport')
+            ->with($this->stockId)
+            ->once()
+            ->andReturn($this->queryResult);
+
+        $this->repoServiceManager->shouldReceive('get')
+            ->with($expectedRepoName)
+            ->andReturn($this->applicationRepo);
+
+        $this->assertEquals(
+            $this->queryResult,
+            $this->scoringQueryProxy->fetchScoringReport($this->stockId)
+        );
+    }
+
+    /**
+     * @dataProvider dpIsEcmtAnnualToRepoName
+     */
     public function testFetchDeviationSourceValues($isEcmtAnnual, $expectedRepoName)
     {
         $this->irhpPermitStock->shouldReceive('getIrhpPermitType->isEcmtAnnual')

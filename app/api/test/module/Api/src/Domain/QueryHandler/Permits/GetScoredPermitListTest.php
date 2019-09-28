@@ -3,12 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\GetScoredPermitList as GetScoredPermitListHandler;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList as QryClass;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -22,10 +21,12 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new GetScoredPermitListHandler();
-        $this->mockRepo('EcmtPermitApplication', EcmtPermitApplicationRepo::class);
         $this->mockRepo('Country', CountryRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
+
+        $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
+        ];
 
         parent::setUp();
     }
@@ -91,7 +92,7 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
             ],
         ];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('fetchScoringReport')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchScoringReport')
             ->with($stockId)
             ->andReturn($scoringReport);
 
@@ -124,24 +125,24 @@ class GetScoredPermitListTest extends QueryHandlerTestCase
 
         $applicationIdToCountryIdAssociations = [
             [
-                'ecmtApplicationId' => 200,
+                'applicationId' => 200,
                 'countryId' => 'IT'
             ],
             [
-                'ecmtApplicationId' => 202,
+                'applicationId' => 202,
                 'countryId' => 'GR'
             ],
             [
-                'ecmtApplicationId' => 202,
+                'applicationId' => 202,
                 'countryId' => 'HU'
             ],
             [
-                'ecmtApplicationId' => 202,
+                'applicationId' => 202,
                 'countryId' => 'IT'
             ]
         ];
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchApplicationIdToCountryIdAssociations')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchApplicationIdToCountryIdAssociations')
             ->with($stockId)
             ->andReturn($applicationIdToCountryIdAssociations);
 

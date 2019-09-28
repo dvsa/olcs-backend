@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
 
 /**
  * Abstract scoring repository
@@ -16,6 +16,8 @@ class AbstractScoringRepository extends AbstractRepository
     protected $applicationTableName = 'changeMe';
     protected $applicationEntityName = 'changeMe';
     protected $permitsRequiredEntityAlias = 'changeMe';
+    protected $linkTableName = 'changeMe';
+    protected $linkTableApplicationIdName = 'changeMe';
 
     /**
      * Fetch application ids within a stock that are awaiting scoring
@@ -307,6 +309,78 @@ class AbstractScoringRepository extends AbstractRepository
             ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
             ->andWhere('epa.inScope = 1')
             ->setParameter(1, $stockId)
+            ->getQuery()
+            ->getScalarResult();
+    }
+
+    /**
+     * Fetch a flat list of application to country associations within the specified stock
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function fetchApplicationIdToCountryIdAssociations($stockId)
+    {
+        $statement = $this->getEntityManager()->getConnection()->executeQuery(
+            'select e.id as applicationId, eacl.country_id as countryId ' .
+            'from ' . $this->linkTableName . ' eacl ' .
+            'inner join ' . $this->applicationTableName . ' as e on e.id = eacl.' . $this->linkTableApplicationIdName . ' ' .
+            'where e.id in (' .
+            '    select ' . $this->applicationTableName . '_id from irhp_permit_application where irhp_permit_window_id in (' .
+            '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+            '    )' .
+            ') ' .
+            'and e.in_scope = 1 ',
+            ['stockId' => $stockId]
+        );
+
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Retrieves a partial list of column values for the scoring report
+     *
+     * @param int $irhpPermitStockId the Id of the IrhpPermitStock that the scoring will be for
+     *
+     * @return array
+     */
+    public function fetchScoringReport($irhpPermitStockId)
+    {
+        $columns = [
+            'icp.id as candidatePermitId',
+            'epa.id as applicationId',
+            'o.name as organisationName',
+            'icp.applicationScore as candidatePermitApplicationScore',
+            'icp.intensityOfUse as candidatePermitIntensityOfUse',
+            'icp.randomFactor as candidatePermitRandomFactor',
+            'icp.randomizedScore as candidatePermitRandomizedScore',
+            'IDENTITY(icp.requestedEmissionsCategory) as candidatePermitRequestedEmissionsCategory',
+            'IDENTITY(icp.assignedEmissionsCategory) as candidatePermitAssignedEmissionsCategory',
+            'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys',
+            'COALESCE(s.name, \'N/A\') as applicationSectorName',
+            'l.licNo as licenceNo',
+            'ta.id as trafficAreaId',
+            'ta.name as trafficAreaName',
+            'icp.successful as candidatePermitSuccessful',
+            'IDENTITY(icp.irhpPermitRange) as candidatePermitRangeId'
+        ];
+
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select(implode(', ', $columns))
+            ->from(IrhpCandidatePermitEntity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpPermitWindow', 'ipw')
+            ->innerJoin('ipa.' . $this->applicationEntityName, 'epa')
+            ->innerJoin('epa.licence', 'l')
+            ->leftJoin('epa.sectors', 's')
+            ->innerJoin('l.trafficArea', 'ta')
+            ->innerJoin('l.organisation', 'o')
+            ->where('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->andWhere('epa.status = ?2')
+            ->andWhere('epa.inScope = 1')
+            ->setParameter(1, $irhpPermitStockId)
+            ->setParameter(2, IrhpInterface::STATUS_UNDER_CONSIDERATION)
             ->getQuery()
             ->getScalarResult();
     }
