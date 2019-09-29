@@ -27,7 +27,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQueryEcmtShortTerm2020()
+    public function testHandleQueryEcmtShortTerm()
     {
         $irhpPermitType = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
         $year = 2020;
@@ -87,12 +87,15 @@ class AvailableStocksTest extends QueryHandlerTestCase
 
         $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($ips1Id)
+            ->once()
             ->andReturn(true);
         $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($ips2Id)
+            ->once()
             ->andReturn(true);
         $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
             ->with($ips3Id)
+            ->once()
             ->andReturn(false);
 
         $this->assertSame(
@@ -112,15 +115,67 @@ class AvailableStocksTest extends QueryHandlerTestCase
         );
     }
 
-    /**
-     * @dataProvider dpTestHandleQueryUnsupportedType
-     */
-    public function testHandleQueryUnsupportedType($irhpPermitType, $year)
+    public function testHandleQueryEcmtAnnual()
     {
+        $irhpPermitType = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT;
+        $year = 2020;
+
+        $ips1Id = 20;
+
+        $ips1 = m::mock(IrhpPermitStock::class);
+        $ips1->shouldReceive('getId')
+            ->andReturn($ips1Id);
+        $ips1->shouldReceive('getPeriodNameKey')
+            ->andReturn('');
+
+        $ipw1 = m::mock(IrhpPermitWindow::class);
+        $ipw1->shouldReceive('getIrhpPermitStock')
+            ->andReturn($ips1);
+
+        $irhpPermitWindows = [
+            $ipw1,
+        ];
+
         $query = AvailableStocksQuery::create(
             [
                 'irhpPermitType' => $irhpPermitType,
                 'year' => $year,
+            ]
+        );
+
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByTypeYear')
+            ->with(
+                $query->getIrhpPermitType(),
+                m::type(DateTime::class),
+                $query->getYear()
+            )
+            ->andReturn($irhpPermitWindows);
+
+        $this->mockedSmServices['PermitsShortTermEcmtStockAvailabilityChecker']->shouldReceive('hasAvailability')
+            ->never();
+
+        $this->assertSame(
+            [
+                'stocks' => [
+                    $ips1Id => [
+                        'id' => $ips1Id,
+                        'periodNameKey' => '',
+                    ],
+                ],
+            ],
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    /**
+     * @dataProvider dpTestHandleQueryUnsupportedType
+     */
+    public function testHandleQueryUnsupportedType($irhpPermitType)
+    {
+        $query = AvailableStocksQuery::create(
+            [
+                'irhpPermitType' => $irhpPermitType,
+                'year' => 2020,
             ]
         );
 
@@ -135,23 +190,20 @@ class AvailableStocksTest extends QueryHandlerTestCase
     public function dpTestHandleQueryUnsupportedType()
     {
         return [
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, 2019],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, 2020],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, 2019],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, 2019],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, 2020],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, 2019],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, 2020],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, 2019],
-            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, 2020],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
         ];
     }
 
-    public function testHandleQueryNoStocks()
+    /**
+     * @dataProvider dpHandleQueryNoStocks
+     */
+    public function testHandleQueryNoStocks($irhpPermitType)
     {
         $query = AvailableStocksQuery::create(
             [
-                'irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'irhpPermitType' => $irhpPermitType,
                 'year' => 2020,
             ]
         );
@@ -162,6 +214,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
                 m::type(DateTime::class),
                 $query->getYear()
             )
+            ->once()
             ->andReturn([]);
 
         $this->assertEquals(
@@ -170,5 +223,13 @@ class AvailableStocksTest extends QueryHandlerTestCase
             ],
             $this->sut->handleQuery($query)
         );
+    }
+
+    public function dpHandleQueryNoStocks()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
+        ];
     }
 }

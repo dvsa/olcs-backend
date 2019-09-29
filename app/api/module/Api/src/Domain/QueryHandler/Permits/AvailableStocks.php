@@ -53,14 +53,19 @@ class AvailableStocks extends AbstractQueryHandler implements ToggleRequiredInte
     public function handleQuery(QueryInterface $query)
     {
         $irhpPermitType = $query->getIrhpPermitType();
-        $year = $query->getYear();
 
-        // only ECMT Short-term for 2020 should use it
-        if ($irhpPermitType != IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM || $year != 2020) {
+        $supportedTypes = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+        ];
+
+        if (!in_array($irhpPermitType, $supportedTypes)) {
             return [
                 'stocks' => []
             ];
         }
+
+        $year = $query->getYear();
 
         $openWindows = $this->getRepo()->fetchOpenWindowsByTypeYear(
             $irhpPermitType,
@@ -75,7 +80,9 @@ class AvailableStocks extends AbstractQueryHandler implements ToggleRequiredInte
             $irhpPermitStockId = $irhpPermitStock->getId();
 
             $includeStock = !isset($availableStocks[$irhpPermitStockId])
-                && $this->stockAvailabilityChecker->hasAvailability($irhpPermitStockId);
+                && ($irhpPermitType != IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+                    || $this->stockAvailabilityChecker->hasAvailability($irhpPermitStockId)
+                );
 
             if ($includeStock) {
                 $availableStocks[$irhpPermitStockId] = [
