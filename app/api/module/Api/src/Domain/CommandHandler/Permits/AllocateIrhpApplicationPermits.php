@@ -6,12 +6,14 @@ use DateInterval;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits as AllocateCandidatePermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as AllocateIrhpApplicationPermitsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit as AllocateIrhpPermitApplicationPermitCmd;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -46,9 +48,14 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
         $irhpApplication = $repo->fetchById($command->getId());
         $repo->refresh($irhpApplication);
 
-        $allocationMode = $irhpApplication->getIrhpPermitType()->getAllocationMode();
+        $irhpPermitApplications = $irhpApplication->getIrhpPermitApplications();
 
-        foreach ($irhpApplication->getIrhpPermitApplications() as $irhpPermitApplication) {
+        $allocationMode = $irhpPermitApplications->first()
+            ->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getAllocationMode();
+
+        foreach ($irhpPermitApplications as $irhpPermitApplication) {
             $this->processIrhpPermitApplication($irhpPermitApplication, $allocationMode);
         }
 
@@ -70,14 +77,17 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     private function processIrhpPermitApplication(IrhpPermitApplication $irhpPermitApplication, $allocationMode)
     {
         switch ($allocationMode) {
-            case IrhpPermitType::ALLOCATION_MODE_STANDARD:
+            case IrhpPermitStock::ALLOCATION_MODE_STANDARD:
                 $this->processStandard($irhpPermitApplication);
                 break;
-            case IrhpPermitType::ALLOCATION_MODE_STANDARD_WITH_EXPIRY:
+            case IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY:
                 $this->processStandardWithExpiry($irhpPermitApplication);
                 break;
-            case IrhpPermitType::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
+            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
                 $this->processForEmissionsCategories($irhpPermitApplication);
+                break;
+            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
+                $this->processForCandidatePermits($irhpPermitApplication);
                 break;
             default:
                 throw new RuntimeException('Unknown allocation mode: ' . $allocationMode);
@@ -146,6 +156,22 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
     }
 
     /**
+     * Allocate the permits based upon the candidate permits associated with the irhp permit application
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     */
+    private function processForCandidatePermits(IrhpPermitApplication $irhpPermitApplication)
+    {
+        $command = AllocateCandidatePermitsCmd::create(
+            ['id' => $irhpPermitApplication->getId()]
+        );
+
+        $this->result->merge(
+            $this->handleSideEffect($command)
+        );
+    }
+
+    /**
      * Allocate the permits for a single emissions category within an application that uses the emissions categories
      * allocation method
      *
@@ -173,7 +199,7 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
      */
     private function allocatePermits($command, $permitsRequired)
     {
-        for ($index = 0; $index< $permitsRequired; $index++) {
+        for ($index = 0; $index < $permitsRequired; $index++) {
             $this->result->merge(
                 $this->handleSideEffect($command)
             );

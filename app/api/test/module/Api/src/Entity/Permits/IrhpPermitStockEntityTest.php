@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Mockery as m;
+use RuntimeException;
 
 /**
  * IrhpPermitStock Entity Unit Tests
@@ -1369,5 +1370,77 @@ class IrhpPermitStockEntityTest extends EntityTester
             ->andReturn(null);
 
         $this->assertNull($entity->getValidityYear());
+    }
+
+    /**
+     * @dataProvider dpGetAllocationMode
+     */
+    public function testGetAllocationMode($irhpPermitTypeId, $businessProcessId, $expectedAllocationMode)
+    {
+        $businessProcess = m::mock(RefData::class);
+        $businessProcess->shouldReceive('getId')
+            ->andReturn($businessProcessId);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->andReturn($irhpPermitTypeId);
+        $entity->setBusinessProcess($businessProcess);
+
+        $this->assertEquals(
+            $expectedAllocationMode,
+            $entity->getAllocationMode()
+        );
+    }
+
+    public function dpGetAllocationMode()
+    {
+        return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                RefData::BUSINESS_PROCESS_APG,
+                Entity::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                RefData::BUSINESS_PROCESS_APG,
+                Entity::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                RefData::BUSINESS_PROCESS_APGG,
+                Entity::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                RefData::BUSINESS_PROCESS_APSG,
+                Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                RefData::BUSINESS_PROCESS_APG,
+                Entity::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
+            ],
+        ];
+    }
+
+    public function testGetAllocationModeException()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(
+            'No allocation mode set for permit type ' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
+        );
+
+        $businessProcess = m::mock(RefData::class);
+        $businessProcess->shouldReceive('getId')
+            ->andReturn(RefData::BUSINESS_PROCESS_APSG);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getIrhpPermitType->getId')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+        $entity->setBusinessProcess($businessProcess);
+
+        $entity->getAllocationMode();
     }
 }
