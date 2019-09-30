@@ -337,6 +337,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
                     return $this->getEcmtShortTermNoOfPermitsAnswer($isSnapshot);
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
+                    return $this->getInternationalJourneysAnswer();
             }
 
             throw new RuntimeException(
@@ -416,6 +418,20 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         // TODO: how should these values be returned to accommodate translation etc?
         return $answer;
+    }
+
+    /**
+     * Get the international journeys answer value
+     *
+     * @return int|null
+     */
+    private function getInternationalJourneysAnswer()
+    {
+        if (!is_null($this->internationalJourneys)) {
+            return $this->internationalJourneys->getId();
+        }
+
+        return null;
     }
 
     /**
@@ -1536,5 +1552,23 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return true;
+    }
+
+    /**
+     * Update the international journeys answer value
+     *
+     * @param RefData $internationalJourneys
+     */
+    public function updateInternationalJourneys(RefData $internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+    }
+
+    /**
+     * Clear the international journeys answer value
+     */
+    public function clearInternationalJourneys()
+    {
+        $this->internationalJourneys = null;
     }
 }
