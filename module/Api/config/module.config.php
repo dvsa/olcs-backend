@@ -183,6 +183,8 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
             'QaEcmtShortTermPermitUsageFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
+            'QaEcmtShortTermIntJourneysFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -228,10 +230,14 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\ConditionalFeeUpdaterFactory::class,
             'QaEcmtShortTermFeeUpdater' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\FeeUpdaterFactory::class,
+            'QaEcmtShortTermIntJourneysAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerSaverFactory::class,
+            'QaEcmtShortTermIntJourneysAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerClearerFactory::class,
+
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
-    
-                'PermitsShortTermEcmtWindowAvailabilityChecker' =>
+            'PermitsShortTermEcmtWindowAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtStockAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\StockAvailabilityCheckerFactory::class,
