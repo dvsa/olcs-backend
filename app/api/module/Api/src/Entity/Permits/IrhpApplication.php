@@ -192,6 +192,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'permitsRequired' => $this->getPermitsRequired(),
             'canUpdateCountries' => $this->canUpdateCountries(),
             'questionAnswerData' => $this->getQuestionAnswerData(),
+            'businessProcess' => $this->getBusinessProcess(),
         ];
     }
 
@@ -1570,5 +1571,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function clearInternationalJourneys()
     {
         $this->internationalJourneys = null;
+    }
+
+    /**
+     * Get the business process
+     *
+     * @return RefData|null
+     */
+    public function getBusinessProcess()
+    {
+        // get the business process related to the application
+        try {
+            return $this->getFirstIrhpPermitApplication()
+                ->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getBusinessProcess();
+        } catch (RuntimeException $ex) {
+            // do nothing if getFirstIrhpPermitApplication() throws an exception
+        }
+
+        return null;
     }
 }

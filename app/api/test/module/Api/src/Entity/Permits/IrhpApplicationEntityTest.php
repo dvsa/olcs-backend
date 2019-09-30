@@ -56,6 +56,8 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetCalculatedBundleValues()
     {
+        $businessProcess = m::mock(RefData::class);
+
         $this->sut->shouldReceive('getApplicationRef')
             ->once()
             ->withNoArgs()
@@ -155,7 +157,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('getQuestionAnswerData')
             ->once()
             ->withNoArgs()
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('getBusinessProcess')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($businessProcess);
 
         $this->assertSame(
             [
@@ -188,6 +194,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'permitsRequired' => 0,
                 'canUpdateCountries' => true,
                 'questionAnswerData' => [],
+                'businessProcess' => $businessProcess,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -4267,5 +4274,27 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->clearInternationalJourneys();
 
         $this->assertNull($entity->getInternationalJourneys());
+    }
+
+    public function testGetBusinessProcess()
+    {
+        $businessProcess = m::mock(RefData::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive(
+            'getIrhpPermitWindow->getIrhpPermitStock->getBusinessProcess'
+        )->once()->withNoArgs()->andReturn($businessProcess);
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals($businessProcess, $entity->getBusinessProcess());
+    }
+
+    public function testGetBusinessProcessWithoutIrhpPermitApplication()
+    {
+        $entity = $this->createNewEntity();
+
+        $this->assertNull($entity->getBusinessProcess());
     }
 }
