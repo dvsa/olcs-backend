@@ -31,7 +31,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"}),
  *        @ORM\Index(name="ix_irhp_application_withdrawn_date", columns={"withdrawn_date"}),
- *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"})
+ *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"}),
+ *        @ORM\Index(name="fk_irhp_application_international_journeys",
+     *     columns={"international_journeys"})
  *    }
  * )
  */
@@ -130,6 +132,16 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     protected $id;
+
+    /**
+     * International journeys
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="international_journeys", referencedColumnName="id", nullable=true)
+     */
+    protected $internationalJourneys;
 
     /**
      * Irhp permit type
@@ -519,6 +531,30 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set the international journeys
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $internationalJourneys entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setInternationalJourneys($internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+
+        return $this;
+    }
+
+    /**
+     * Get the international journeys
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getInternationalJourneys()
+    {
+        return $this->internationalJourneys;
     }
 
     /**

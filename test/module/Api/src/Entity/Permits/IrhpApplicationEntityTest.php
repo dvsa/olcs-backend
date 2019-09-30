@@ -3815,6 +3815,52 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($entity->getAnswer($step));
     }
 
+    public function testGetAnswerForCustomEcmtShortTermInternationalJourneys()
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $internationalJourneysKey = 'int_journeys_ref_data_key';
+
+        $refData = m::mock(RefData::class);
+        $refData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($internationalJourneysKey);
+
+        $entity = $this->createNewEntity();
+        $entity->setInternationalJourneys($refData);
+
+        $this->assertSame(
+            $internationalJourneysKey,
+            $entity->getAnswer($step)
+        );
+    }
+
+    public function testGetAnswerForCustomEcmtShortTermInternationalJourneysNull()
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->setInternationalJourneys(null);
+
+        $this->assertNull(
+            $entity->getAnswer($step)
+        );
+    }
+
     public function testGetAnswerForQuestionWithoutActiveQuestionText()
     {
         $createdOn = new DateTime();
@@ -4197,5 +4243,29 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUING, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
             [IrhpInterface::STATUS_EXPIRED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
         ];
+    }
+
+    public function testUpdateInternationalJourneys()
+    {
+        $refData = m::mock(RefData::class);
+
+        $entity = $this->createNewEntity();
+        $entity->updateInternationalJourneys($refData);
+
+        $this->assertSame(
+            $refData,
+            $entity->getInternationalJourneys()
+        );
+    }
+
+    public function testClearInternationalJourneys()
+    {
+        $refData = m::mock(RefData::class);
+
+        $entity = $this->createNewEntity();
+        $entity->setInternationalJourneys($refData);
+        $entity->clearInternationalJourneys();
+
+        $this->assertNull($entity->getInternationalJourneys());
     }
 }
