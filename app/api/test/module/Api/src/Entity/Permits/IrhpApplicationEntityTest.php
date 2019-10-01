@@ -4117,7 +4117,7 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage(
-            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+            'IrhpApplication has zero linked IrhpPermitApplication instances'
         );
 
         $entity = $this->createNewEntity();
@@ -4126,16 +4126,17 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetFirstIrhpPermitApplicationExceptionOnMoreThanOne()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage(
-            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
-        );
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
 
         $entity = $this->createNewEntity();
-        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
-        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+        $entity->addIrhpPermitApplications($irhpPermitApplication1);
+        $entity->addIrhpPermitApplications($irhpPermitApplication2);
 
-        $entity->getFirstIrhpPermitApplication();
+        $this->assertSame(
+            $irhpPermitApplication1,
+            $entity->getFirstIrhpPermitApplication()
+        );
     }
 
     public function testExpire()
