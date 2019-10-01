@@ -50,7 +50,10 @@ class CreateTest extends CommandHandlerTestCase
             'irhpPermitType' => '2',
             'validFrom' => '2119-01-01',
             'validTo' => '2119-02-01',
-            'initialStock' => '1500'
+            'initialStock' => '1500',
+            'applicationPath' => 2,
+            'businessProcess' => 'app_business_process_apg',
+            'periodNameKey' => 'period.name.translation.key'
         ];
 
         $command = CreateCmd::create($cmdData);
@@ -58,7 +61,7 @@ class CreateTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermitStock']
             ->shouldReceive('getPermitStockCountByTypeDate')
             ->once()
-            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'])
+            ->with($cmdData['irhpPermitType'], $cmdData['validFrom'], $cmdData['validTo'], 0)
             ->andReturn(0);
 
         $this->repoMap['IrhpPermitStock']
@@ -159,7 +162,8 @@ class CreateTest extends CommandHandlerTestCase
      * Tests method on IrhpPermitStockTrait
      *
      */
-    public function testDuplicateStockCheckGood(){
+    public function testDuplicateStockCheckGood()
+    {
         $cmdData = [
             'initialStock' => 1000,
             'validFrom' => '2100-01-01',
@@ -175,7 +179,8 @@ class CreateTest extends CommandHandlerTestCase
             ->with(
                 $cmd->getIrhpPermitType(),
                 $cmd->getValidFrom(),
-                $cmd->getValidTo()
+                $cmd->getValidTo(),
+                0
             )
             ->andReturn(0);
 
@@ -187,7 +192,8 @@ class CreateTest extends CommandHandlerTestCase
      * Tests method on IrhpPermitStockTrait
      *
      */
-    public function testDuplicateStockCheckBad(){
+    public function testDuplicateStockCheckBad()
+    {
         $cmdData = [
             'initialStock' => 1000,
             'validFrom' => '2100-01-01',
@@ -203,7 +209,8 @@ class CreateTest extends CommandHandlerTestCase
             ->with(
                 $cmd->getIrhpPermitType(),
                 $cmd->getValidFrom(),
-                $cmd->getValidTo()
+                $cmd->getValidTo(),
+                0
             )
             ->andReturn(1);
 

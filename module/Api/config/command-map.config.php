@@ -1180,7 +1180,7 @@ return [
     Command\Permits\AcceptScoring::class => CommandHandler\Permits\AcceptScoring::class,
     Command\Permits\ProceedToStatus::class => CommandHandler\Permits\ProceedToStatus::class,
     Command\Permits\ExpireEcmtPermitApplication::class => CommandHandler\Permits\ExpireEcmtPermitApplication::class,
-    Command\Permits\EcmtPostSubmitTasks::class => CommandHandler\Permits\EcmtPostSubmitTasks::class,
+    Command\Permits\PostSubmitTasks::class => CommandHandler\Permits\PostSubmitTasks::class,
 
     // Create HTML Snapshot
     Command\Permits\StoreEcmtPermitApplicationSnapshot::class =>
@@ -1221,4 +1221,7 @@ return [
 
     // Templates
     TransferCommand\Template\UpdateTemplateSource::class => CommandHandler\Template\UpdateTemplateSource::class,
+
+    //FeeType
+    TransferCommand\FeeType\Update::class => CommandHandler\FeeType\Update::class,
 ];

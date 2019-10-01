@@ -56,6 +56,8 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetCalculatedBundleValues()
     {
+        $businessProcess = m::mock(RefData::class);
+
         $this->sut->shouldReceive('getApplicationRef')
             ->once()
             ->withNoArgs()
@@ -155,7 +157,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('getQuestionAnswerData')
             ->once()
             ->withNoArgs()
-            ->andReturn([]);
+            ->andReturn([])
+            ->shouldReceive('getBusinessProcess')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($businessProcess);
 
         $this->assertSame(
             [
@@ -188,6 +194,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'permitsRequired' => 0,
                 'canUpdateCountries' => true,
                 'questionAnswerData' => [],
+                'businessProcess' => $businessProcess,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -868,8 +875,6 @@ class IrhpApplicationEntityTest extends EntityTester
      */
     public function testCanBeSubmitted($isNotYetSubmitted, $allSectionsCompleted, $expected)
     {
-        $irhpPermitType = m::mock(IrhpPermitType::class);
-
         $this->sut->shouldReceive('isNotYetSubmitted')
             ->andReturn($isNotYetSubmitted)
             ->shouldReceive('getSectionCompletion')
@@ -3312,12 +3317,17 @@ class IrhpApplicationEntityTest extends EntityTester
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')->once()->withNoArgs()->andReturn($licNo);
 
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive(
+            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
+        )->once()->with($createdOn)->andReturn(null);
+
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
-        $irhpPermitType->shouldReceive('getActiveApplicationPath')->once()->with($createdOn)->andReturn(null);
 
         $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
         $entity->setCreatedOn($createdOn);
 
         $this->assertEquals($expected, $entity->getQuestionAnswerData());
@@ -3334,15 +3344,17 @@ class IrhpApplicationEntityTest extends EntityTester
         $applicationPath = m::mock(ApplicationPath::class);
         $applicationPath->shouldReceive('getApplicationSteps')->once()->withNoArgs()->andReturn($applicationSteps);
 
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive(
+            'getIrhpPermitWindow->getIrhpPermitStock->getApplicationPathGroup->getActiveApplicationPath'
+        )->once()->with($data['createdOn'])->andReturn($applicationPath);
+
         $irhpPermitType = m::mock(IrhpPermitType::class);
         $irhpPermitType->shouldReceive('isBilateral')->once()->withNoArgs()->andReturn(false);
         $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn(false);
-        $irhpPermitType->shouldReceive('getActiveApplicationPath')
-            ->with($data['createdOn'])
-            ->once()
-            ->andReturn($applicationPath);
 
         $entity = $this->createNewEntity(null, null, $irhpPermitType, $licence);
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
         $entity->setAnswers($data['answers']);
         $entity->setCreatedOn($data['createdOn']);
         $entity->setCheckedAnswers($data['checkedAnswers']);
@@ -3810,6 +3822,52 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($entity->getAnswer($step));
     }
 
+    public function testGetAnswerForCustomEcmtShortTermInternationalJourneys()
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $internationalJourneysKey = 'int_journeys_ref_data_key';
+
+        $refData = m::mock(RefData::class);
+        $refData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($internationalJourneysKey);
+
+        $entity = $this->createNewEntity();
+        $entity->setInternationalJourneys($refData);
+
+        $this->assertSame(
+            $internationalJourneysKey,
+            $entity->getAnswer($step)
+        );
+    }
+
+    public function testGetAnswerForCustomEcmtShortTermInternationalJourneysNull()
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->setInternationalJourneys(null);
+
+        $this->assertNull(
+            $entity->getAnswer($step)
+        );
+    }
+
     public function testGetAnswerForQuestionWithoutActiveQuestionText()
     {
         $createdOn = new DateTime();
@@ -4059,7 +4117,7 @@ class IrhpApplicationEntityTest extends EntityTester
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage(
-            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+            'IrhpApplication has zero linked IrhpPermitApplication instances'
         );
 
         $entity = $this->createNewEntity();
@@ -4068,16 +4126,17 @@ class IrhpApplicationEntityTest extends EntityTester
 
     public function testGetFirstIrhpPermitApplicationExceptionOnMoreThanOne()
     {
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage(
-            'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
-        );
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication2 = m::mock(IrhpPermitApplication::class);
 
         $entity = $this->createNewEntity();
-        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
-        $entity->addIrhpPermitApplications(m::mock(IrhpPermitApplication::class));
+        $entity->addIrhpPermitApplications($irhpPermitApplication1);
+        $entity->addIrhpPermitApplications($irhpPermitApplication2);
 
-        $entity->getFirstIrhpPermitApplication();
+        $this->assertSame(
+            $irhpPermitApplication1,
+            $entity->getFirstIrhpPermitApplication()
+        );
     }
 
     public function testExpire()
@@ -4086,10 +4145,12 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->shouldReceive('canBeExpired')
             ->andReturn(true);
 
+        $this->assertNull($entity->getExpiryDate());
         $status = m::mock(RefData::class);
 
         $entity->expire($status);
         $this->assertSame($status, $entity->getStatus());
+        $this->assertInstanceOf(DateTime::class, $entity->getExpiryDate());
     }
 
     public function testExpireException()
@@ -4190,5 +4251,101 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_ISSUING, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
             [IrhpInterface::STATUS_EXPIRED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
         ];
+    }
+
+    public function testUpdateInternationalJourneys()
+    {
+        $refData = m::mock(RefData::class);
+
+        $entity = $this->createNewEntity();
+        $entity->updateInternationalJourneys($refData);
+
+        $this->assertSame(
+            $refData,
+            $entity->getInternationalJourneys()
+        );
+    }
+
+    public function testClearInternationalJourneys()
+    {
+        $refData = m::mock(RefData::class);
+
+        $entity = $this->createNewEntity();
+        $entity->setInternationalJourneys($refData);
+        $entity->clearInternationalJourneys();
+
+        $this->assertNull($entity->getInternationalJourneys());
+    }
+
+    public function testGetBusinessProcess()
+    {
+        $businessProcess = m::mock(RefData::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive(
+            'getIrhpPermitWindow->getIrhpPermitStock->getBusinessProcess'
+        )->once()->withNoArgs()->andReturn($businessProcess);
+
+        $entity = $this->createNewEntity();
+        $entity->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals($businessProcess, $entity->getBusinessProcess());
+    }
+
+    public function testGetBusinessProcessWithoutIrhpPermitApplication()
+    {
+        $entity = $this->createNewEntity();
+
+        $this->assertNull($entity->getBusinessProcess());
+    }
+
+    /**
+     * @dataProvider dpTestHasCountryId
+     */
+    public function testHasCountryId($countryId, $expected)
+    {
+        $country1Id = 'FR';
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getId')
+            ->andReturn($country1Id);
+
+        $country2Id = 'RU';
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getId')
+            ->andReturn($country2Id);
+
+        $country3Id = 'DE';
+        $country3 = m::mock(Country::class);
+        $country3->shouldReceive('getId')
+            ->andReturn($country3Id);
+
+        $countries = new ArrayCollection([$country1, $country2, $country3]);
+        $entity = $this->createNewEntity();
+        $entity->updateCountries($countries);
+
+        $this->assertEquals($expected, $entity->hasCountryId($countryId));
+    }
+
+    public function dpTestHasCountryId()
+    {
+        return [
+            ['FR', true],
+            ['RU', true],
+            ['DE', true],
+            ['ES', false],
+        ];
+    }
+
+    public function updateCountries()
+    {
+        $arrayCollection = m::mock(ArrayCollection::class);
+
+        $entity = $this->createNewEntity();
+        $entity->updateCountries($arrayCollection);
+
+        $this->assertSame(
+            $arrayCollection,
+            $entity->getCountrys()
+        );
     }
 }

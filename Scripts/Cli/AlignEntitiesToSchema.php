@@ -206,7 +206,6 @@ class AlignEntitiesToSchema
                 . "-u" . $this->defaultOptions['u'] . " "
                 . "-p" . $this->defaultOptions['p'] . " "
                 . "-d" . $this->defaultOptions['d'] . "'\n\n"
-
             );
         }
 
@@ -344,7 +343,6 @@ class AlignEntitiesToSchema
     private function maybeImportSchema()
     {
         if (isset($this->options['import-schema'])) {
-
             $schema = $this->options['import-schema'];
 
             $this->respond('Importing schema: ' . $schema, 'info');
@@ -515,7 +513,6 @@ class AlignEntitiesToSchema
     {
         $this->respond('Compiling entity configuration...', 'info');
         foreach ($this->mappingFiles as $className => $fileName) {
-
             $config = $this->getConfigFromMappingFile($fileName);
 
             $comments = $this->getCommentsFromTable($config['entity']['@attributes']['table']);
@@ -572,7 +569,6 @@ class AlignEntitiesToSchema
             }
 
             foreach ($this->inverseFields[$className] as $fieldDetails) {
-
                 $property = $fieldDetails['relationship'] == 'oneToMany' || $fieldDetails['relationship'] == 'oneToOne'
                     ? 'mapped-by' : 'inversed-by';
 
@@ -666,7 +662,6 @@ class AlignEntitiesToSchema
         $ids = array();
 
         foreach ($fields as $field) {
-
             if ($field['isId']) {
                 $ids[] = $this->formatPropertyName($field);
             }
@@ -789,6 +784,56 @@ class AlignEntitiesToSchema
     }
 
     /**
+     * Check if the field is a createdOn field
+     *
+     * @param array $field array of field info
+     *
+     * @return bool
+     */
+    private function isCreatedOnField($field): bool
+    {
+        return ($this->formatPropertyName($field) === 'createdOn');
+    }
+
+    /**
+     * Check if the field is a lastModifiedOn field
+     *
+     * @param array $field array of field info
+     *
+     * @return bool
+     */
+    private function isLastModifiedOnField($field): bool
+    {
+        return ($this->formatPropertyName($field) === 'lastModifiedOn');
+    }
+
+    /**
+     * Check if the field is a deletedDate field
+     *
+     * @param array $field array of field info
+     *
+     * @return bool
+     */
+    private function isDeletedDateField(array $field): bool
+    {
+        return ($this->formatPropertyName($field) === 'deletedDate');
+    }
+
+    /**
+     * Whether the field is stored in a trait rather than directly in the entity
+     *
+     * @param array $field array of field info
+     *
+     * @return bool
+     */
+    private function isPropertyFromTrait(array $field): bool
+    {
+        return $this->isCreatedOnField($field)
+            || $this->isLastModifiedOnField($field)
+            || $this->isDeletedDateField($field);
+    }
+
+    /**
      * Create entities
      */
     private function createEntities()
@@ -798,7 +843,6 @@ class AlignEntitiesToSchema
         $error = false;
 
         foreach ($this->entities as $className => $details) {
-
             ob_start();
                 include(__DIR__ . '/templates/entity.phtml');
                 $content = ob_get_contents();
@@ -809,7 +853,6 @@ class AlignEntitiesToSchema
             file_put_contents($details['entityFileName'], $content);
 
             if (!file_exists($details['entityConcreteFileName'])) {
-
                 ob_start();
                     include(__DIR__ . '/templates/concrete.phtml');
                     $content = ob_get_contents();
@@ -866,12 +909,11 @@ class AlignEntitiesToSchema
 
         passthru('cd /var/www/olcs/olcs-etl/ && make create-db && make update', $result);
 
-        if($result !== 0) {
+        if ($result !== 0) {
             $this->exitResponse('Unable to rebuild database', 'error');
         }
 
         $this->respond('Database rebuilt and updated', 'success');
-
     }
 
     private function restartApache()
@@ -880,12 +922,11 @@ class AlignEntitiesToSchema
 
         passthru('sudo service httpd restart', $result);
 
-        if($result !== 0) {
+        if ($result !== 0) {
             $this->exitResponse('Unable to restart Apache', 'error');
         }
 
         $this->respond('Apache restarted', 'success');
-
     }
 
     /**
@@ -934,7 +975,6 @@ class AlignEntitiesToSchema
         $error = false;
 
         foreach ($this->entities as $className => $details) {
-
             // Skip the file if it exists
             if (file_exists($details['testFileName'])) {
                 continue;
@@ -971,7 +1011,6 @@ class AlignEntitiesToSchema
     private function cacheFields($fields)
     {
         foreach ($fields as $field) {
-
             $encode = json_encode($field);
 
             $key = array_search($encode, $this->fields);
@@ -1034,7 +1073,6 @@ class AlignEntitiesToSchema
         $defaults = array();
 
         foreach ($description as $row) {
-
             $defaults[$row['Field']] = $row['Default'];
         }
 
@@ -1054,7 +1092,6 @@ class AlignEntitiesToSchema
         $nullables = array();
 
         foreach ($description as $row) {
-
             $nullables[$row['Field']] = $row['Null'];
         }
 
@@ -1106,7 +1143,6 @@ class AlignEntitiesToSchema
 
         // Standardise the ids
         if (isset($config['entity']['id'])) {
-
             if (!is_numeric(array_keys($config['entity']['id'])[0])) {
                 $ids[$config['entity']['id']['@attributes']['name']] = $config['entity']['id'];
             } else {
@@ -1123,7 +1159,6 @@ class AlignEntitiesToSchema
             if (isset($item['@attributes']['association-key'])) {
                 $associationKeys[$item['@attributes']['name']] = true;
             } else {
-
                 $columnName = $this->formatColumnFromItem($item, 'id');
 
                 $default = isset($defaults[$columnName]) ? $defaults[$columnName] : null;
@@ -1154,9 +1189,7 @@ class AlignEntitiesToSchema
 
         // This checks if any many-to-one should actually be a one-to-one
         if (isset($config['entity']['unique-constraints']['unique-constraint'])) {
-
             foreach ($config['entity']['unique-constraints']['unique-constraint'] as $key => $uniqueConstraint) {
-
                 if (is_numeric($key)) {
                     $attributes = $uniqueConstraint['@attributes'];
                 } else {
@@ -1171,7 +1204,6 @@ class AlignEntitiesToSchema
                     foreach ($config['entity']['many-to-one'] as $key => $manyToOneItem) {
                         if (isset($manyToOneItem['join-columns']['join-column']['@attributes']['name'])
                             && $manyToOneItem['join-columns']['join-column']['@attributes']['name'] == $ukName) {
-
                             $config['entity']['one-to-one'][] = $manyToOneItem;
                             unset($config['entity']['many-to-one'][$key]);
                         }
@@ -1198,7 +1230,6 @@ class AlignEntitiesToSchema
 
         foreach (['manyToOne', 'manyToMany', 'oneToMany', 'oneToOne', 'field'] as $which) {
             foreach ($$which as $item) {
-
                 $key = ($which == 'field' ? 'name' : 'field');
 
                 $columnName = $this->formatColumnFromItem($item, $which);
@@ -1234,7 +1265,6 @@ class AlignEntitiesToSchema
                 }
 
                 if (isset($extraConfig['cascade'])) {
-
                     $cascade = $extraConfig['cascade'];
 
                     if (isset($fieldConfig['config']['@attributes']['cascade'])) {
@@ -1619,9 +1649,7 @@ class AlignEntitiesToSchema
         $options = array();
 
         foreach ($attributes as $key => $value) {
-
             if ($key === 'options') {
-
                 $settings = [];
 
                 foreach ($value as $label => $val) {
@@ -1640,7 +1668,6 @@ class AlignEntitiesToSchema
             }
 
             if (is_array($value)) {
-
                 $values = array();
 
                 foreach ($value as $index => $val) {

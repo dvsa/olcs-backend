@@ -115,6 +115,10 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->with('ips.validTo = ?3')
             ->once()
             ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('ips.id != ?4')
+            ->once()
+            ->andReturnSelf()
             ->shouldReceive('setParameter')
             ->with(1, $permitTypeId)
             ->once()
@@ -127,13 +131,17 @@ class IrhpPermitStockTest extends RepositoryTestCase
             ->with(3, $validTo)
             ->once()
             ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(4, 0)
+            ->once()
+            ->andReturnSelf()
             ->shouldReceive('getQuery->getSingleScalarResult')
             ->once()
             ->andReturn($permitCount);
 
         $this->assertEquals(
             $permitCount,
-            $this->sut->getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
+            $this->sut->getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo, 0)
         );
     }
 

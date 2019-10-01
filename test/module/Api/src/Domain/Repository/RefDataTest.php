@@ -97,7 +97,7 @@ class RefDataTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('orderBy')
-            ->with('r.displayOrder', 'DESC')
+            ->with('r.displayOrder', 'ASC')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('setParameter')

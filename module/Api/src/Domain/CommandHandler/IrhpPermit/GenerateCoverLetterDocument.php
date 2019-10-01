@@ -36,6 +36,8 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
             => EcmtPermitApplicationEntity::PERMIT_COVERING_LETTER_TEMPLATE_NAME,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
             => DocumentEntity::IRHP_PERMIT_SHORT_TERM_ECMT_COVER_LETTER,
+        IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL
+            => DocumentEntity::IRHP_PERMIT_ECMT_REMOVAL_COVERING_LETTER,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL
             => DocumentEntity::IRHP_PERMIT_ANN_BILAT_COVERING_LETTER,
         IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL
@@ -60,7 +62,7 @@ final class GenerateCoverLetterDocument extends AbstractCommandHandler implement
         $description = sprintf(
             '%s %d',
             strtoupper(str_replace('_', ' ', $template)),
-            $irhpPermit->getId()
+            $irhpPermit->getPermitNumber()
         );
 
         $document = $this->handleSideEffect(

@@ -83,6 +83,7 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
         $this->message->setSubjectVariables($subjectVariables);
         $this->message->setCc($recipients['cc']);
         $this->message->setBcc($recipients['bcc']);
+        $this->message->setTranslateToWelsh($this->getTranslateToWelsh($recordObject));
 
         $this->sendEmailTemplate($this->message, $this->template, $templateVariables);
 
@@ -113,6 +114,18 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
     protected function getSubjectVariables($recordObject)
     {
         return [];
+    }
+
+    /**
+     * Override this method to determine whether the message should be sent in welsh
+     *
+     * @param object $recordObject record will be a doctrine entity
+     *
+     * @return string
+     */
+    protected function getTranslateToWelsh($recordObject)
+    {
+        return 'N';
     }
 
     /**

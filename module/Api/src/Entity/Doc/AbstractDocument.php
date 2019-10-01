@@ -7,6 +7,9 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\SoftDeletableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -54,6 +57,9 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
+    use SoftDeletableTrait;
 
     /**
      * Application
@@ -127,24 +133,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
-
-    /**
-     * Deleted date
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="deleted_date", nullable=true)
-     */
-    protected $deletedDate;
 
     /**
      * Description
@@ -224,6 +212,18 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $isExternal = 0;
 
     /**
+     * Is post submission upload
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="is_post_submission_upload",
+     *     nullable=true,
+     *     options={"default": 0})
+     */
+    protected $isPostSubmissionUpload = 0;
+
+    /**
      * Is scan
      *
      * @var boolean
@@ -251,15 +251,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Licence
@@ -481,15 +472,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $slaTargetDate;
 
     /**
-     * Was uploaded post submission
-     *
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_post_submission_upload", nullable=false, options={"default": 0})
-     */
-    protected $isPostSubmissionUpload = 0;
-
-    /**
      * Initialise the collections
      *
      * @return void
@@ -652,66 +634,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return Document
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
-    }
-
-    /**
-     * Set the deleted date
-     *
-     * @param \DateTime $deletedDate new value being set
-     *
-     * @return Document
-     */
-    public function setDeletedDate($deletedDate)
-    {
-        $this->deletedDate = $deletedDate;
-
-        return $this;
-    }
-
-    /**
-     * Get the deleted date
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getDeletedDate($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->deletedDate);
-        }
-
-        return $this->deletedDate;
     }
 
     /**
@@ -907,6 +829,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     }
 
     /**
+     * Set the is post submission upload
+     *
+     * @param boolean $isPostSubmissionUpload new value being set
+     *
+     * @return Document
+     */
+    public function setIsPostSubmissionUpload($isPostSubmissionUpload)
+    {
+        $this->isPostSubmissionUpload = $isPostSubmissionUpload;
+
+        return $this;
+    }
+
+    /**
+     * Get the is post submission upload
+     *
+     * @return boolean
+     */
+    public function getIsPostSubmissionUpload()
+    {
+        return $this->isPostSubmissionUpload;
+    }
+
+    /**
      * Set the is scan
      *
      * @param boolean $isScan new value being set
@@ -982,36 +928,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return Document
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
     }
 
     /**
@@ -1546,45 +1462,5 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getSlaTargetDate()
     {
         return $this->slaTargetDate;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getIsPostSubmissionUpload()
-    {
-        return $this->isPostSubmissionUpload;
-    }
-
-    /**
-     * @param boolean $isPostSubmissionUpload
-     */
-    public function setIsPostSubmissionUpload($isPostSubmissionUpload)
-    {
-        $this->isPostSubmissionUpload = $isPostSubmissionUpload;
     }
 }

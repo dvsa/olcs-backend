@@ -350,5 +350,9 @@ return [
     'section.name.application/check-answers' => 'Gwiriwch eich atebion',
     'section.name.application/declaration' => 'Datganiad',
 
+    'inter_journey_less_60' => 'Llai na 60%',
+    'inter_journey_60_90' => 'O 60% i 90%',
+    'inter_journey_more_90' => 'Mwy na 90%',
+
     // Potentially unused translations
 ];

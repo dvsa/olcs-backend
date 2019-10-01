@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -191,6 +192,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'permitsRequired' => $this->getPermitsRequired(),
             'canUpdateCountries' => $this->canUpdateCountries(),
             'questionAnswerData' => $this->getQuestionAnswerData(),
+            'businessProcess' => $this->getBusinessProcess(),
         ];
     }
 
@@ -336,6 +338,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
                     return $this->getEcmtShortTermNoOfPermitsAnswer($isSnapshot);
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
+                    return $this->getInternationalJourneysAnswer();
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
+                    return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
             }
 
             throw new RuntimeException(
@@ -415,6 +421,30 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         // TODO: how should these values be returned to accommodate translation etc?
         return $answer;
+    }
+
+    /**
+     * Get the international journeys answer value
+     *
+     * @return int|null
+     */
+    private function getInternationalJourneysAnswer()
+    {
+        if (!is_null($this->internationalJourneys)) {
+            return $this->internationalJourneys->getId();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the number of permits answer values for a custom element of type ecmt short term
+     *
+     * @return array|null
+     */
+    private function getEcmtShortTermRestrictedCountriesAnswer($question)
+    {
+        return ['TODO: restricted countries answer'];
     }
 
     /**
@@ -1465,7 +1495,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getActiveApplicationPath()
     {
         // get application path active at the time when the application path was locked
-        return $this->getIrhpPermitType()->getActiveApplicationPath($this->getApplicationPathLockedOn());
+        return $this->getFirstIrhpPermitApplication()
+            ->getIrhpPermitWindow()
+            ->getIrhpPermitStock()
+            ->getApplicationPathGroup()
+            ->getActiveApplicationPath($this->getApplicationPathLockedOn());
     }
 
     /**
@@ -1485,9 +1519,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getFirstIrhpPermitApplication()
     {
-        if ($this->irhpPermitApplications->count() != 1) {
+        if ($this->irhpPermitApplications->count() == 0) {
             throw new RuntimeException(
-                'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+                'IrhpApplication has zero linked IrhpPermitApplication instances'
             );
         }
 
@@ -1508,6 +1542,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         $this->status = $expireStatus;
+        $this->expiryDate = new DateTime();
     }
 
     /**
@@ -1530,5 +1565,71 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return true;
+    }
+
+    /**
+     * Update the international journeys answer value
+     *
+     * @param RefData $internationalJourneys
+     */
+    public function updateInternationalJourneys(RefData $internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+    }
+
+    /**
+     * Clear the international journeys answer value
+     */
+    public function clearInternationalJourneys()
+    {
+        $this->internationalJourneys = null;
+    }
+
+    /**
+     * Get the business process
+     *
+     * @return RefData|null
+     */
+    public function getBusinessProcess()
+    {
+        // get the business process related to the application
+        try {
+            return $this->getFirstIrhpPermitApplication()
+                ->getIrhpPermitWindow()
+                ->getIrhpPermitStock()
+                ->getBusinessProcess();
+        } catch (RuntimeException $ex) {
+            // do nothing if getFirstIrhpPermitApplication() throws an exception
+        }
+
+        return null;
+    }
+
+    /**
+     * Whether the application has an association with the specified country id
+     *
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function hasCountryId($id)
+    {
+        foreach ($this->countrys as $country) {
+            if ($country->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Update the list of countries associated with this application
+     *
+     * @param ArrayCollection $countries
+     */
+    public function updateCountries(ArrayCollection $countries)
+    {
+        $this->countrys = $countries;
     }
 }

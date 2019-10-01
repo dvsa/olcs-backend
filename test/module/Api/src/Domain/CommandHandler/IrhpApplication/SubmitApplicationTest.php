@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -37,7 +36,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         parent::initReferences();
     }
 
-    public function testHandleCommand()
+    /**
+     * @dataProvider dpHandleCommand
+     */
+    public function testHandleCommand($irhpPermitTypeId)
     {
         $irhpApplicationId = 44;
 
@@ -51,7 +53,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
             ->once()
             ->withNoArgs()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL);
+            ->andReturn($irhpPermitTypeId);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->with($irhpApplicationId)
@@ -63,13 +65,13 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->ordered()
             ->globally();
 
-        $this->expectedSideEffect(
-            StoreSnapshot::class,
-            ['id' => $irhpApplicationId],
-            new Result()
-        );
-
         $this->expectedQueueSideEffect($irhpApplicationId, Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE, []);
+
+        $this->expectedQueueSideEffect(
+            $irhpApplicationId,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => $irhpPermitTypeId]
+        );
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')
@@ -85,9 +87,19 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $this->assertEquals($irhpApplicationId, $result->getId('irhpApplication'));
     }
 
+    public function dpHandleCommand()
+    {
+        return [
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
+            [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL],
+        ];
+    }
+
     public function testHandleCommandShortTerm()
     {
         $irhpApplicationId = 55;
+        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('submit')
@@ -99,12 +111,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
             ->once()
             ->withNoArgs()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+            ->andReturn($irhpPermitTypeId);
 
         $irhpApplication->shouldReceive('getId')
             ->once()
             ->withNoArgs()
-            ->andReturn(55);
+            ->andReturn($irhpApplicationId);
 
         $irhpApplication->shouldReceive('getLicence->getId')
             ->once()
@@ -133,12 +145,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(CreateTask::class, $taskParams, $taskResult);
 
-        $this->expectedSideEffect(
-            StoreSnapshot::class,
-            ['id' => $irhpApplicationId],
-            new Result()
+        $this->expectedQueueSideEffect(
+            $irhpApplicationId,
+            Queue::TYPE_PERMITS_POST_SUBMIT,
+            ['irhpPermitType' => $irhpPermitTypeId]
         );
-
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')

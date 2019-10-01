@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\DeletableInterface;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -41,13 +42,26 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @param Country $country
      * @param int $quota
      * @param RefData $status
+     * @param ApplicationPathGroup|null $applicationPathGroup
+     * @param RefData|null $businessProcess
+     * @param string|null $periodNameKey
      * @param mixed $validFrom
      * @param mixed $validTo
+     *
      * @return IrhpPermitStock
      * @throws ValidationException
      */
-    public static function create($type, $country, $quota, RefData $status, $validFrom = null, $validTo = null)
-    {
+    public static function create(
+        $type,
+        $country,
+        $quota,
+        RefData $status,
+        ?ApplicationPathGroup $applicationPathGroup,
+        ?RefData $businessProcess,
+        ?string $periodNameKey = null,
+        $validFrom = null,
+        $validTo = null
+    ) {
         static::validateCountry($type, $country);
 
         $instance = new self;
@@ -58,6 +72,9 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $instance->validTo = static::processDate($validTo, 'Y-m-d');
         $instance->initialStock = intval($quota) > 0 ? $quota : 0;
         $instance->status = $status;
+        $instance->applicationPathGroup = $applicationPathGroup;
+        $instance->businessProcess = $businessProcess;
+        $instance->periodNameKey = $periodNameKey;
 
         return $instance;
     }
@@ -66,12 +83,13 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * @param IrhpPermitType $type
      * @param Country $country
      * @param int $quota
+     * @param string|null $periodNameKey
      * @param mixed $validFrom
      * @param mixed $validTo
      * @return $this
      * @throws ValidationException
      */
-    public function update($type, $country, $quota, $validFrom = null, $validTo = null)
+    public function update($type, $country, $quota, $periodNameKey = null, $validFrom = null, $validTo = null)
     {
         static::validateCountry($type, $country);
 
@@ -80,6 +98,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $this->validFrom = static::processDate($validFrom, 'Y-m-d');
         $this->validTo = static::processDate($validTo, 'Y-m-d');
         $this->initialStock = intval($quota) > 0 ? $quota : 0;
+        $this->periodNameKey = $periodNameKey;
 
         return $this;
     }
@@ -508,7 +527,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function getValidityYear()
     {
-        return $this->getValidTo(true)->format('Y');
+        return is_null($this->getValidTo(true)) ? null : $this->getValidTo(true)->format('Y');
     }
 
     /**

@@ -386,6 +386,8 @@ return [
     TransferQuery\Fee\FeeType::class => QueryHandler\Fee\FeeType::class,
     TransferQuery\Fee\FeeTypeList::class => QueryHandler\Fee\FeeTypeList::class,
     TransferQuery\Fee\GetLatestFeeType::class => QueryHandler\Fee\GetLatestFeeType::class,
+    TransferQuery\FeeType\GetList::class => QueryHandler\FeeType\GetList::class,
+    TransferQuery\FeeType\GetDistinctList::class => QueryHandler\FeeType\GetDistinctList::class,
 
     // Operator
     TransferQuery\Operator\BusinessDetails::class => QueryHandler\Operator\BusinessDetails::class,
@@ -638,6 +640,7 @@ return [
     TransferQuery\IrhpApplication\FeePerPermit::class => QueryHandler\IrhpApplication\FeePerPermit::class,
     TransferQuery\IrhpApplication\ApplicationStep::class => QueryHandler\IrhpApplication\ApplicationStep::class,
     TransferQuery\IrhpApplication\ApplicationPath::class => QueryHandler\IrhpApplication\ApplicationPath::class,
+    TransferQuery\IrhpApplication\ApplicationPathGroupList::class => QueryHandler\IrhpApplication\ApplicationPathGroupList::class,
     TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,
     TransferQuery\IrhpApplication\PermitsAvailableByYear::class =>
         QueryHandler\IrhpApplication\PermitsAvailableByYear::class,
@@ -652,6 +655,7 @@ return [
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\AvailableYears::class => QueryHandler\Permits\AvailableYears::class,
+    TransferQuery\Permits\AvailableStocks::class => QueryHandler\Permits\AvailableStocks::class,
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,

@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetList;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByEcmtId;
@@ -227,5 +227,15 @@ class IrhpPermit extends AbstractRepository
         );
 
         return $statement->fetchAll();
+    }
+
+    /**
+     * Mark all permits with validity date in the past as expired
+     *
+     * @return void
+     */
+    public function markAsExpired()
+    {
+        $this->getDbQueryManager()->get(ExpireIrhpPermitsQuery::class)->execute([]);
     }
 }
