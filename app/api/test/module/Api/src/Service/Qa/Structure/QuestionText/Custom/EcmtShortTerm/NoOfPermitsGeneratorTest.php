@@ -38,27 +38,27 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $irhpApplicationEntity->shouldReceive('getIssueFeeProductReference')
             ->andReturn(FeeTypeEntity::FEE_TYPE_ECMT_SHORT_TERM_ISSUE_PRODUCT_REF);
 
-        $guidanceTranslateableTextParameterIndex0 = m::mock(TranslateableTextParameter::class);
-        $guidanceTranslateableTextParameterIndex0->shouldReceive('setValue')
+        $additionalGuidanceTranslateableTextParameterIndex0 = m::mock(TranslateableTextParameter::class);
+        $additionalGuidanceTranslateableTextParameterIndex0->shouldReceive('setValue')
             ->with($applicationFeePerPermit)
             ->once();
 
-        $guidanceTranslateableTextParameterIndex1 = m::mock(TranslateableTextParameter::class);
-        $guidanceTranslateableTextParameterIndex1->shouldReceive('setValue')
+        $additionalGuidanceTranslateableTextParameterIndex1 = m::mock(TranslateableTextParameter::class);
+        $additionalGuidanceTranslateableTextParameterIndex1->shouldReceive('setValue')
             ->with($issueFeePerPermit)
             ->once();
 
-        $guidanceTranslateableText = m::mock(TranslateableText::class);
-        $guidanceTranslateableText->shouldReceive('getParameter')
+        $additionalGuidanceTranslateableText = m::mock(TranslateableText::class);
+        $additionalGuidanceTranslateableText->shouldReceive('getParameter')
             ->with(0)
-            ->andReturn($guidanceTranslateableTextParameterIndex0);
-        $guidanceTranslateableText->shouldReceive('getParameter')
+            ->andReturn($additionalGuidanceTranslateableTextParameterIndex0);
+        $additionalGuidanceTranslateableText->shouldReceive('getParameter')
             ->with(1)
-            ->andReturn($guidanceTranslateableTextParameterIndex1);
+            ->andReturn($additionalGuidanceTranslateableTextParameterIndex1);
 
         $questionText = m::mock(QuestionText::class);
-        $questionText->shouldReceive('getGuidance->getTranslateableText')
-            ->andReturn($guidanceTranslateableText);
+        $questionText->shouldReceive('getAdditionalGuidance->getTranslateableText')
+            ->andReturn($additionalGuidanceTranslateableText);
 
         $questionTextGeneratorContext = m::mock(QuestionTextGeneratorContext::class);
         $questionTextGeneratorContext->shouldReceive('getIrhpApplicationEntity')
