@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Fee;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -169,5 +170,34 @@ class FeeType extends AbstractFeeType
     public function isIrhpApplication(): bool
     {
         return in_array($this->feeType->getId(), [self::FEE_TYPE_IRHP_ISSUE, self::FEE_TYPE_IRHP_APP, self::FEE_TYPE_IRFOGVPERMIT]);
+    }
+
+    /**
+     * @param string $effectiveFrom
+     * @param int $fixedValue
+     * @param int $annualValue
+     * @param int $fiveYearValue
+     * @param FeeType $existingFeeType
+     *
+     * @return FeeType
+     */
+    public function updateNewFeeType(string $effectiveFrom, int $fixedValue, int $annualValue, int $fiveYearValue, FeeType $existingFeeType)
+    {
+        // Clone existing object and null meta-data so Doctrine sets correct values on save
+        $newFeeType = clone $existingFeeType;
+        $newFeeType->setId(null);
+        $newFeeType->setVersion(1);
+        $newFeeType->setLastModifiedBy(null);
+        $newFeeType->setLastModifiedOn(null);
+        $newFeeType->setCreatedBy(null);
+        $newFeeType->setCreatedOn(null);
+
+        // Set values specified on Admin form
+        $newFeeType->effectiveFrom = new DateTime($effectiveFrom);
+        $newFeeType->fixedValue = $fixedValue;
+        $newFeeType->annualValue = $annualValue;
+        $newFeeType->fiveYearValue = $fiveYearValue;
+
+        return $newFeeType;
     }
 }

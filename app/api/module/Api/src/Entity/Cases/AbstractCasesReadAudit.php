@@ -7,6 +7,7 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +34,7 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesTrait;
+    use CreatedOnTrait;
 
     /**
      * Case
@@ -47,15 +49,6 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
      * @ORM\JoinColumn(name="case_id", referencedColumnName="id", nullable=false)
      */
     protected $case;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=false)
-     */
-    protected $createdOn;
 
     /**
      * Identifier - Id
@@ -100,36 +93,6 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     public function getCase()
     {
         return $this->case;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return CasesReadAudit
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -178,17 +141,5 @@ abstract class AbstractCasesReadAudit implements BundleSerializableInterface, Js
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
     }
 }

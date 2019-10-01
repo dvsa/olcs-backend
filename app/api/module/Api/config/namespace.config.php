@@ -193,6 +193,7 @@ return [
     'ApplicationStep' => 'Generic',
     'ApplicationValidation' => 'Generic',
     'ApplicationPath' => 'Generic',
+    'ApplicationPathGroup' => 'Generic',
     'Question' => 'Generic',
     'Answer' => 'Generic',
     'QuestionText' => 'Generic',

@@ -3,9 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Driver\Statement;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireEcmtPermitApplications as ExpireEcmtPermitApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as EcmtPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Mockery as m;
@@ -244,5 +243,11 @@ class EcmtPermitApplicationTest extends RepositoryTestCase
             $associations,
             $this->sut->fetchApplicationIdToCountryIdAssociations($stockId)
         );
+    }
+
+    public function testMarkAsExpired()
+    {
+        $this->expectQueryWithData(ExpireEcmtPermitApplicationsQuery::class, []);
+        $this->sut->markAsExpired();
     }
 }

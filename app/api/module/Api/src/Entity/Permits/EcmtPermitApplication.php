@@ -382,6 +382,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             );
         }
         $this->status = $expireStatus;
+        $this->expiryDate = new DateTime();
     }
 
     /**
@@ -1106,7 +1107,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      */
     public function hasOutstandingFees()
     {
-        return count($this->getLatestOutstandingEcmtApplicationFee());
+        return !is_null($this->getLatestOutstandingEcmtApplicationFee());
     }
 
     /**
@@ -1259,7 +1260,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             ],
             [
                 'question' => 'permits.page.international.journey.question',
-                'answer' => $this->internationalJourneys->getDescription(),
+                'answer' => $this->internationalJourneys->getId(),
                 'questionType' => Question::QUESTION_TYPE_STRING,
             ],
             [

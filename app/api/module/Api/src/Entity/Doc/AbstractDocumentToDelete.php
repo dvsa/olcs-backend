@@ -7,6 +7,7 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,6 +24,7 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesTrait;
+    use CreatedOnTrait;
 
     /**
      * Attempts
@@ -32,15 +34,6 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
      * @ORM\Column(type="smallint", name="attempts", nullable=false, options={"default": 0})
      */
     protected $attempts = 0;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=false)
-     */
-    protected $createdOn;
 
     /**
      * Document id
@@ -102,36 +95,6 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
     public function getAttempts()
     {
         return $this->attempts;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return DocumentToDelete
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -234,17 +197,5 @@ abstract class AbstractDocumentToDelete implements BundleSerializableInterface, 
         }
 
         return $this->processAfterDate;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
     }
 }

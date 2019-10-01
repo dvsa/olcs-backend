@@ -6,6 +6,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use \Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireEcmtPermitApplications as ExpireEcmtPermitApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use \Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -265,5 +266,15 @@ class EcmtPermitApplication extends AbstractRepository
         );
 
         return $statement->fetchAll();
+    }
+
+    /**
+     * Mark all applications without valid permits as expired
+     *
+     * @return void
+     */
+    public function markAsExpired()
+    {
+        $this->getDbQueryManager()->get(ExpireEcmtPermitApplicationsQuery::class)->execute([]);
     }
 }

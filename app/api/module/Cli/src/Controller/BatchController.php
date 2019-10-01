@@ -660,6 +660,10 @@ class BatchController extends AbstractConsoleController
             return $this->handleExitStatus(
                 $this->handleCommand([CliCommand\Permits\CloseExpiredWindows::create($params)])
             );
+        } elseif ($this->params('mark-expired-permits')) {
+            return $this->handleExitStatus(
+                $this->handleCommand([CliCommand\Permits\MarkExpiredPermits::create([])])
+            );
         }
     }
 }

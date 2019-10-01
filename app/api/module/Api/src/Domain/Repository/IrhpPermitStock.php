@@ -59,7 +59,7 @@ class IrhpPermitStock extends AbstractRepository
      * @param string $validTo
      * @return int
      */
-    public function getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo)
+    public function getPermitStockCountByTypeDate($permitTypeId, $validFrom, $validTo, $excludeId)
     {
         return $this->getEntityManager()->createQueryBuilder()
             ->select('count(ips.id)')
@@ -67,9 +67,11 @@ class IrhpPermitStock extends AbstractRepository
             ->where('ips.irhpPermitType = ?1')
             ->andWhere('ips.validFrom = ?2')
             ->andWhere('ips.validTo = ?3')
+            ->andWhere('ips.id != ?4')
             ->setParameter(1, $permitTypeId)
             ->setParameter(2, $validFrom)
             ->setParameter(3, $validTo)
+            ->setParameter(4, $excludeId)
             ->getQuery()
             ->getSingleScalarResult();
     }

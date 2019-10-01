@@ -2,8 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
-
 class EmissionsCategory
 {
     /** @var string */

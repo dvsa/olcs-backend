@@ -1145,6 +1145,15 @@ class BatchControllerTest extends MockeryTestCase
                     'data' => ['since' => '-1 month'],
                 ]
             ],
+            'mark expired permits' => [
+                [
+                    'mark-expired-permits' => true,
+                ],
+                [
+                    'command' => \Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits::class,
+                    'data' => [],
+                ]
+            ],
         ];
     }
 }

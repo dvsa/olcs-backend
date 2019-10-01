@@ -45,6 +45,9 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
             $references['country'],
             $command->getInitialStock(),
             $this->getRepo()->getRefDataReference(StockEntity::STATUS_SCORING_NEVER_RUN),
+            $references['applicationPathGroup'],
+            $this->getRepo()->getRefdataReference($command->getBusinessProcess()),
+            $command->getPeriodNameKey(),
             $command->getValidFrom(),
             $command->getValidTo()
         );

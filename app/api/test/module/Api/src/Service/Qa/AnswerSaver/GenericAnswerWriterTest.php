@@ -23,8 +23,6 @@ class GenericAnswerWriterTest extends MockeryTestCase
 {
     private $questionId;
 
-    private $questionType;
-
     private $irhpApplicationId;
 
     private $answerValue;
@@ -64,8 +62,6 @@ class GenericAnswerWriterTest extends MockeryTestCase
         $this->question = m::mock(Question::class);
         $this->question->shouldReceive('getId')
             ->andReturn($this->questionId);
-        $this->question->shouldReceive('getQuestionType')
-            ->andReturn($this->questionType);
 
         $this->applicationStep = m::mock(ApplicationStep::class);
         $this->applicationStep->shouldReceive('getQuestion')
@@ -84,10 +80,13 @@ class GenericAnswerWriterTest extends MockeryTestCase
         );
     }
 
-    public function testSaveAnswerAlreadyExists()
+    /**
+     * @dataProvider dpForceQuestionType
+     */
+    public function testSaveAnswerAlreadyExists($questionType, $forcedType, $expectedType)
     {
         $this->answer->shouldReceive('setValue')
-            ->with($this->questionType, $this->answerValue)
+            ->with($expectedType, $this->answerValue)
             ->once()
             ->ordered()
             ->globally();
@@ -97,26 +96,39 @@ class GenericAnswerWriterTest extends MockeryTestCase
             ->ordered()
             ->globally();
 
+        $this->question->shouldReceive('getQuestionType')
+            ->andReturn($questionType);
+
         $this->genericAnswerProvider->shouldReceive('get')
             ->with($this->applicationStep, $this->irhpApplication)
             ->andReturn($this->answer);
 
-        $this->genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $this->answerValue);
+        $this->genericAnswerWriter->write(
+            $this->applicationStep,
+            $this->irhpApplication,
+            $this->answerValue,
+            $forcedType
+        );
     }
 
-    public function testSaveAnswerRequiresCreation()
+    /**
+     * @dataProvider dpForceQuestionType
+     */
+    public function testSaveAnswerRequiresCreation($questionType, $forcedType, $expectedType)
     {
         $questionText = m::mock(QuestionText::class);
 
         $this->question->shouldReceive('getActiveQuestionText')
             ->andReturn($questionText);
+        $this->question->shouldReceive('getQuestionType')
+            ->andReturn($questionType);
 
         $this->genericAnswerProvider->shouldReceive('get')
             ->with($this->applicationStep, $this->irhpApplication)
             ->andThrow(new NotFoundException());
 
         $this->answer->shouldReceive('setValue')
-            ->with($this->questionType, $this->answerValue)
+            ->with($expectedType, $this->answerValue)
             ->once()
             ->ordered()
             ->globally();
@@ -131,6 +143,21 @@ class GenericAnswerWriterTest extends MockeryTestCase
             ->with($questionText, $this->irhpApplication)
             ->andReturn($this->answer);
 
-        $this->genericAnswerWriter->write($this->applicationStep, $this->irhpApplication, $this->answerValue);
+        $this->genericAnswerWriter->write(
+            $this->applicationStep,
+            $this->irhpApplication,
+            $this->answerValue,
+            $forcedType
+        );
+    }
+
+    public function dpForceQuestionType()
+    {
+        return [
+            [Question::QUESTION_TYPE_INTEGER, null, Question::QUESTION_TYPE_INTEGER],
+            [Question::QUESTION_TYPE_STRING, null, Question::QUESTION_TYPE_STRING],
+            [Question::QUESTION_TYPE_STRING, Question::QUESTION_TYPE_INTEGER, Question::QUESTION_TYPE_INTEGER],
+            [Question::QUESTION_TYPE_STRING, Question::QUESTION_TYPE_BOOLEAN, Question::QUESTION_TYPE_BOOLEAN],
+        ];
     }
 }

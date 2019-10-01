@@ -48,7 +48,7 @@
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "2.0.0",
         "twig/twig": "^2.0",
-        "olcs/olcs-cpms": "^1.0",
+        "olcs/olcs-cpms": "~4.206.0",
         "aws/aws-sdk-php": "^3.99"
     },
     "require-dev": {

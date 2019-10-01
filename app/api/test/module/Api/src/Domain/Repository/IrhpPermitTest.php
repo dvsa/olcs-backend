@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpPermits as ExpireIrhpPermitsQuery;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByIrhpId;
 use Dvsa\Olcs\Transfer\Query\Permits\ReadyToPrint;
@@ -488,5 +489,11 @@ class IrhpPermitTest extends RepositoryTestCase
         $expectedQuery = 'BLAH '
             . 'AND ipa.irhpApplication = [[2]]';
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testMarkAsExpired()
+    {
+        $this->expectQueryWithData(ExpireIrhpPermitsQuery::class, []);
+        $this->sut->markAsExpired();
     }
 }

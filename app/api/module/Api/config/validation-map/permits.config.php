@@ -37,6 +37,7 @@ return [
     QueryHandler\IrhpPermitStock\AvailableCountries::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableTypes::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\AvailableYears::class => NotIsAnonymousUser::class,
+    QueryHandler\Permits\AvailableStocks::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\EmissionsByYear::class => IsInternalUser::class,
     QueryHandler\Permits\OpenWindows::class => NotIsAnonymousUser::class,
     QueryHandler\Permits\ActiveEcmtApplication::class => NotIsAnonymousUser::class,

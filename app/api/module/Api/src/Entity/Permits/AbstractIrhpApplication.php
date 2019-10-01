@@ -7,6 +7,8 @@ use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
+use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,7 +31,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_irhp_application_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_irhp_application_cancellation_date", columns={"cancellation_date"}),
  *        @ORM\Index(name="ix_irhp_application_withdrawn_date", columns={"withdrawn_date"}),
- *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"})
+ *        @ORM\Index(name="ix_irhp_application_withdraw_reason", columns={"withdraw_reason"}),
+ *        @ORM\Index(name="fk_irhp_application_international_journeys",
+     *     columns={"international_journeys"})
  *    }
  * )
  */
@@ -38,6 +42,8 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesWithCollectionsTrait;
+    use CreatedOnTrait;
+    use ModifiedOnTrait;
 
     /**
      * Cancellation date
@@ -58,6 +64,27 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $checkedAnswers = 0;
 
     /**
+     * Country
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\ContactDetails\Country",
+     *     inversedBy="irhpApplications",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinTable(name="irhp_application_country_link",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    protected $countrys;
+
+    /**
      * Created by
      *
      * @var \Dvsa\Olcs\Api\Entity\User\User
@@ -67,15 +94,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @Gedmo\Blameable(on="create")
      */
     protected $createdBy;
-
-    /**
-     * Created on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="created_on", nullable=true)
-     */
-    protected $createdOn;
 
     /**
      * Date received
@@ -116,6 +134,16 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     protected $id;
 
     /**
+     * International journeys
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
+     * @ORM\JoinColumn(name="international_journeys", referencedColumnName="id", nullable=true)
+     */
+    protected $internationalJourneys;
+
+    /**
      * Irhp permit type
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType
@@ -135,15 +163,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
-
-    /**
-     * Last modified on
-     *
-     * @var \DateTime
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     */
-    protected $lastModifiedOn;
 
     /**
      * Licence
@@ -259,6 +278,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      */
     public function initCollections()
     {
+        $this->countrys = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
@@ -319,6 +339,69 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the country
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setCountrys($countrys)
+    {
+        $this->countrys = $countrys;
+
+        return $this;
+    }
+
+    /**
+     * Get the countrys
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getCountrys()
+    {
+        return $this->countrys;
+    }
+
+    /**
+     * Add a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     *
+     * @return IrhpApplication
+     */
+    public function addCountrys($countrys)
+    {
+        if ($countrys instanceof ArrayCollection) {
+            $this->countrys = new ArrayCollection(
+                array_merge(
+                    $this->countrys->toArray(),
+                    $countrys->toArray()
+                )
+            );
+        } elseif (!$this->countrys->contains($countrys)) {
+            $this->countrys->add($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a countrys
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being removed
+     *
+     * @return IrhpApplication
+     */
+    public function removeCountrys($countrys)
+    {
+        if ($this->countrys->contains($countrys)) {
+            $this->countrys->removeElement($countrys);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
@@ -340,36 +423,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getCreatedBy()
     {
         return $this->createdBy;
-    }
-
-    /**
-     * Set the created on
-     *
-     * @param \DateTime $createdOn new value being set
-     *
-     * @return IrhpApplication
-     */
-    public function setCreatedOn($createdOn)
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the created on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getCreatedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->createdOn);
-        }
-
-        return $this->createdOn;
     }
 
     /**
@@ -481,6 +534,30 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     }
 
     /**
+     * Set the international journeys
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $internationalJourneys entity being set as the value
+     *
+     * @return IrhpApplication
+     */
+    public function setInternationalJourneys($internationalJourneys)
+    {
+        $this->internationalJourneys = $internationalJourneys;
+
+        return $this;
+    }
+
+    /**
+     * Get the international journeys
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getInternationalJourneys()
+    {
+        return $this->internationalJourneys;
+    }
+
+    /**
      * Set the irhp permit type
      *
      * @param \Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType $irhpPermitType entity being set as the value
@@ -526,36 +603,6 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
-    }
-
-    /**
-     * Set the last modified on
-     *
-     * @param \DateTime $lastModifiedOn new value being set
-     *
-     * @return IrhpApplication
-     */
-    public function setLastModifiedOn($lastModifiedOn)
-    {
-        $this->lastModifiedOn = $lastModifiedOn;
-
-        return $this;
-    }
-
-    /**
-     * Get the last modified on
-     *
-     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
-     *
-     * @return \DateTime
-     */
-    public function getLastModifiedOn($asDateTime = false)
-    {
-        if ($asDateTime === true) {
-            return $this->asDateTime($this->lastModifiedOn);
-        }
-
-        return $this->lastModifiedOn;
     }
 
     /**
@@ -895,29 +942,5 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
         }
 
         return $this;
-    }
-
-    /**
-     * Set the createdOn field on persist
-     *
-     * @ORM\PrePersist
-     *
-     * @return void
-     */
-    public function setCreatedOnBeforePersist()
-    {
-        $this->createdOn = new \DateTime();
-    }
-
-    /**
-     * Set the lastModifiedOn field on persist
-     *
-     * @ORM\PreUpdate
-     *
-     * @return void
-     */
-    public function setLastModifiedOnBeforeUpdate()
-    {
-        $this->lastModifiedOn = new \DateTime();
     }
 }

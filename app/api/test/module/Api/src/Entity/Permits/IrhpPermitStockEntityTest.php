@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as Entity;
@@ -48,7 +49,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $irhpPermitType->shouldReceive('getId')
             ->andReturn(3);
 
-        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $validFrom, $validTo);
+        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, null, null, null, $validFrom, $validTo);
 
         $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
         $this->assertEquals($expectedFrom, $entity->getValidFrom());
@@ -56,11 +57,50 @@ class IrhpPermitStockEntityTest extends EntityTester
         $this->assertEquals($initialStock, $entity->getInitialStock());
         $this->assertEquals($status, $entity->getStatus());
 
-        $entity->update($irhpPermitType, null, $updateInitialStock, $updateValidFrom, $updateValidTo);
+        $entity->update($irhpPermitType, null, $updateInitialStock, null, $updateValidFrom, $updateValidTo);
 
         $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
         $this->assertEquals($updateExpectedTo, $entity->getValidTo());
         $this->assertEquals($updateInitialStock, $entity->getInitialStock());
+    }
+
+    public function testCreateUpdateAppPath()
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
+        $validFrom = '2019-01-01';
+        $expectedFrom = $this->processDate($validFrom, 'Y-m-d');
+        $validTo = '2019-02-01';
+        $expectedTo = $this->processDate($validTo, 'Y-m-d');
+        $initialStock = 1400;
+        $applicationPathGroup = m::mock(ApplicationPathGroup::class);
+        $businessProcess = m::mock(RefData::class);
+        $periodNameKey = 'initial.period.name.key';
+
+        $updateValidFrom = '2019-02-01';
+        $updateExpectedFrom = $this->processDate($updateValidFrom, 'Y-m-d');
+        $updateValidTo = '2019-02-02';
+        $updateExpectedTo = $this->processDate($updateValidTo, 'Y-m-d');
+        $updateInitialStock = 1401;
+        $status = m::mock(RefData::class);
+        $updatePeriodNameKey = 'updated.period.name.key';
+
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn(3);
+
+        $entity = Entity::create($irhpPermitType, null, $initialStock, $status, $applicationPathGroup, $businessProcess, $periodNameKey, $validFrom, $validTo);
+
+        $this->assertEquals($irhpPermitType, $entity->getIrhpPermitType());
+        $this->assertEquals($expectedFrom, $entity->getValidFrom());
+        $this->assertEquals($expectedTo, $entity->getValidTo());
+        $this->assertEquals($initialStock, $entity->getInitialStock());
+        $this->assertEquals($status, $entity->getStatus());
+
+        $entity->update($irhpPermitType, null, $updateInitialStock, $updatePeriodNameKey, $updateValidFrom, $updateValidTo);
+
+        $this->assertEquals($updateExpectedFrom, $entity->getValidFrom());
+        $this->assertEquals($updateExpectedTo, $entity->getValidTo());
+        $this->assertEquals($updateInitialStock, $entity->getInitialStock());
+        $this->assertEquals($updatePeriodNameKey, $entity->getPeriodNameKey());
     }
 
     public function testGetStatusDescription()
@@ -77,6 +117,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             null,
             1400,
             $status,
+            null,
+            null,
             null,
             '2019-01-01',
             '2019-02-01'
@@ -105,6 +147,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             1400,
             $status,
             null,
+            null,
+            null,
             '2019-01-01',
             '2019-02-01'
         );
@@ -132,6 +176,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             1400,
             $status,
             null,
+            null,
+            null,
             '2019-01-01',
             '2019-02-01'
         );
@@ -154,6 +200,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             null,
             1400,
             $status,
+            null,
+            null,
             null,
             '2019-01-01',
             '2019-02-01'
@@ -1210,6 +1258,8 @@ class IrhpPermitStockEntityTest extends EntityTester
             1400,
             $status,
             null,
+            null,
+            null,
             '2019-01-01',
             '2019-02-01'
         );
@@ -1309,5 +1359,15 @@ class IrhpPermitStockEntityTest extends EntityTester
             ->andReturn($dateTime);
 
         $this->assertEquals(2015, $entity->getValidityYear());
+    }
+
+    public function testGetValidityYearNullValidTo()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getValidTo')
+            ->with(true)
+            ->andReturn(null);
+
+        $this->assertNull($entity->getValidityYear());
     }
 }
