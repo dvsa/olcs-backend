@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -96,7 +97,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     private function createPermitApplicationObject(LicenceEntity $licence): EcmtPermitApplication
     {
         return EcmtPermitApplication::createNew(
-            $this->getRepo()->getRefDataReference(EcmtPermitApplication::SOURCE_SELFSERVE),
+            $this->getRepo()->getRefDataReference(IrhpInterface::SOURCE_SELFSERVE),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
             $licence,

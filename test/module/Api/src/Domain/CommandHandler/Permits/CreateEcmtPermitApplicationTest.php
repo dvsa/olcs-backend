@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicati
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
@@ -37,7 +38,7 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::SOURCE_SELFSERVE,
+            IrhpInterface::SOURCE_SELFSERVE,
             EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
             EcmtPermitApplication::PERMIT_TYPE
         ];
@@ -107,7 +108,7 @@ class CreateEcmtPermitApplicationTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(EcmtPermitApplication::class, $ecmtPermitApplication);
         $this->assertEquals(
-            EcmtPermitApplication::SOURCE_SELFSERVE,
+            IrhpInterface::SOURCE_SELFSERVE,
             $ecmtPermitApplication->getSource()->getId()
         );
         $this->assertEquals(

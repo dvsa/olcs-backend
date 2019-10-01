@@ -628,4 +628,18 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
             )
         );
     }
+
+    /**
+     * Return the repository name to be used for fetching applications within this stock
+     *
+     * @return string
+     */
+    public function getApplicationRepoName()
+    {
+        if ($this->irhpPermitType->isEcmtAnnual()) {
+            return 'EcmtPermitApplication';
+        }
+
+        return 'IrhpApplication';
+    }
 }

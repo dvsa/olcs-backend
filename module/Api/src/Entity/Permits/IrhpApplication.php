@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -23,6 +26,9 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
@@ -50,9 +56,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     SectionableInterface,
     CancelableInterface,
     WithdrawableInterface,
-    ContextProviderInterface
+    ContextProviderInterface,
+    ApplicationAcceptScoringInterface
 {
-    use SectionTrait, CandidatePermitCreationTrait;
+    use SectionTrait, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait;
 
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
@@ -1341,7 +1348,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      * Gets the issue fee product reference for this application
      * Applicable only to ecmt short term
      *
-     * @return array
+     * @return string
      *
      * @throws ForbiddenException if the permit type is unsupported
      */
@@ -1753,5 +1760,33 @@ class IrhpApplication extends AbstractIrhpApplication implements
             $this->getPermitIntensityOfUse($emissionsCategoryId),
             $this->internationalJourneys->getId()
         );
+    }
+
+    /**
+     * Return the entity name in camel case
+     *
+     * @return string
+     */
+    public function getCamelCaseEntityName()
+    {
+        return 'irhpApplication';
+    }
+
+    /**
+     * Return an array of mappings between success levels and email commands
+     *
+     * @return array
+     */
+    public function getEmailCommandLookup()
+    {
+        if (!$this->irhpPermitType->isEcmtShortTerm()) {
+            throw new RuntimeException('getEmailCommandLookup is only applicable to ECMT short term');
+        }
+
+        return [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
+        ];
     }
 }

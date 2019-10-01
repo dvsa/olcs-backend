@@ -781,6 +781,7 @@ return [
     Command\Email\SendEcmtAutomaticallyWithdrawn::class => CommandHandler\Email\SendEcmtAutomaticallyWithdrawn::class,
     Command\Email\SendEcmtShortTermSuccessful::class => CommandHandler\Email\SendEcmtShortTermSuccessful::class,
     Command\Email\SendEcmtShortTermUnsuccessful::class => CommandHandler\Email\SendEcmtShortTermUnsuccessful::class,
+    Command\Email\SendEcmtShortTermApsgPartSuccessful::class => CommandHandler\Email\SendEcmtShortTermApsgPartSuccessful::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
