@@ -27,6 +27,8 @@ return [
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
             'QaCommonCurrentDateTimeFactory' =>
                 ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
+            'QaCommonArrayCollectionFactory' =>
+                ApiSrv\Qa\Common\ArrayCollectionFactory::class,
             'QaAnswerFactory' => ApiSrv\Qa\AnswerSaver\AnswerFactory::class,
             'QaApplicationStepFactory' => ApiSrv\Qa\Structure\ApplicationStepFactory::class,
             'QaCheckboxElementFactory' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxFactory::class,
@@ -51,6 +53,10 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
             'QaEcmtShortTermEmissionsCategoryFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\EmissionsCategoryFactory::class,
+            'QaEcmtShortTermRestrictedCountriesElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesFactory::class,
+            'QaEcmtShortTermRestrictedCountryFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountryFactory::class,
             'QaSupplementedApplicationStepFactory' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
@@ -185,6 +191,8 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtShortTermPermitUsageFormControlStrategyFactory::class,
             'QaEcmtShortTermIntJourneysFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
+            'QaEcmtShortTermRestrictedCountriesFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermRestrictedCountriesFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -235,8 +243,16 @@ return [
             'QaEcmtShortTermIntJourneysAnswerClearer' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerClearerFactory::class,
 
+            'QaEcmtShortTermRestrictedCountriesAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSaverFactory::class,
+            'QaEcmtShortTermRestrictedCountriesAnswerClearer' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerClearerFactory::class,
+            'QaEcmtShortTermRestrictedCountriesElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
+
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
+
             'PermitsShortTermEcmtWindowAvailabilityChecker' =>
                 ApiSrv\Permits\ShortTermEcmt\WindowAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtStockAvailabilityChecker' =>

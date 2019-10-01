@@ -340,6 +340,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtShortTermNoOfPermitsAnswer($isSnapshot);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
                     return $this->getInternationalJourneysAnswer();
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
+                    return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
             }
 
             throw new RuntimeException(
@@ -433,6 +435,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return null;
+    }
+
+    /**
+     * Get the number of permits answer values for a custom element of type ecmt short term
+     *
+     * @return array|null
+     */
+    private function getEcmtShortTermRestrictedCountriesAnswer($question)
+    {
+        return ['TODO: restricted countries answer'];
     }
 
     /**
@@ -1591,5 +1603,33 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return null;
+    }
+
+    /**
+     * Whether the application has an association with the specified country id
+     *
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function hasCountryId($id)
+    {
+        foreach ($this->countrys as $country) {
+            if ($country->getId() == $id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Update the list of countries associated with this application
+     *
+     * @param ArrayCollection $countries
+     */
+    public function updateCountries(ArrayCollection $countries)
+    {
+        $this->countrys = $countries;
     }
 }
