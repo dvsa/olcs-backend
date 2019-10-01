@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as EcmtPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
@@ -38,7 +39,7 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
     protected function initReferences()
     {
         $this->refData = [
-            EcmtPermitApplication::SOURCE_INTERNAL,
+            IrhpInterface::SOURCE_INTERNAL,
             EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED,
             EcmtPermitApplication::PERMIT_TYPE
         ];
@@ -126,7 +127,7 @@ class CreateFullPermitApplicationTest extends CommandHandlerTestCase
 
         $this->assertInstanceOf(EcmtPermitApplication::class, $ecmtPermitApplication);
         $this->assertEquals(
-            EcmtPermitApplication::SOURCE_INTERNAL,
+            IrhpInterface::SOURCE_INTERNAL,
             $ecmtPermitApplication->getSource()->getId()
         );
         $this->assertEquals(

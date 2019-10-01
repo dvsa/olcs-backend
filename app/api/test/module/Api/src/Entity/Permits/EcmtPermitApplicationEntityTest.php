@@ -3,22 +3,26 @@
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * EcmtPermitApplication Entity Unit Tests
@@ -1020,12 +1024,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpProvideSuccessLevel()
     {
         return [
-            [5,5, 1, Entity::SUCCESS_LEVEL_PARTIAL],
-            [5,5, 9, Entity::SUCCESS_LEVEL_PARTIAL],
-            [5,5, 0, Entity::SUCCESS_LEVEL_NONE],
-            [1,0, 0, Entity::SUCCESS_LEVEL_NONE],
-            [0,1, 1, Entity::SUCCESS_LEVEL_FULL],
-            [5,5, 10, Entity::SUCCESS_LEVEL_FULL]
+            [5,5, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [5,5, 9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [5,5, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [1,0, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [0,1, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [5,5, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL]
         ];
     }
 
@@ -1069,8 +1073,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpProvideOutcomeNotificationType()
     {
         return [
-            [Entity::SOURCE_SELFSERVE, Entity::NOTIFICATION_TYPE_EMAIL],
-            [Entity::SOURCE_INTERNAL, Entity::NOTIFICATION_TYPE_MANUAL]
+            [IrhpInterface::SOURCE_SELFSERVE, ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL],
+            [IrhpInterface::SOURCE_INTERNAL, ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL]
         ];
     }
 
@@ -1096,7 +1100,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [Entity::STATUS_CANCELLED],
             [Entity::STATUS_UNDER_CONSIDERATION],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE ],
+            [Entity::STATUS_AWAITING_FEE],
             [Entity::STATUS_FEE_PAID],
             [Entity::STATUS_UNSUCCESSFUL],
             [Entity::STATUS_ISSUED],
@@ -1592,5 +1596,45 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             [$noFees, null],
             [$allPaid, null]
         ];
+    }
+
+    public function testGetCamelCaseEntityName()
+    {
+        $application = $this->createApplication();
+
+        $this->assertEquals(
+            'ecmtPermitApplication',
+            $application->getCamelCaseEntityName()
+        );
+    }
+
+    public function testGetEmailCommandLookup()
+    {
+        $expectedEmailCommandLookup = [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+        ];
+
+        $application = $this->createApplication();
+
+        $this->assertEquals(
+            $expectedEmailCommandLookup,
+            $application->getEmailCommandLookup()
+        );
+    }
+
+    public function testGetIssueFeeProductReference()
+    {
+        $productReference = 'PRODUCT_REFERENCE_FOR_TIER';
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getProductReferenceForTier')
+            ->andReturn($productReference);
+
+        $this->assertSame(
+            $productReference,
+            $entity->getIssueFeeProductReference()
+        );
     }
 }
