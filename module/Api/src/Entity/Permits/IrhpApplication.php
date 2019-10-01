@@ -1507,9 +1507,9 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function getFirstIrhpPermitApplication()
     {
-        if ($this->irhpPermitApplications->count() != 1) {
+        if ($this->irhpPermitApplications->count() == 0) {
             throw new RuntimeException(
-                'IrhpApplication has either zero or more than one linked IrhpPermitApplication instances'
+                'IrhpApplication has zero linked IrhpPermitApplication instances'
             );
         }
 
