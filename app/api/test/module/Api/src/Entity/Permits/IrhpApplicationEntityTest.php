@@ -4298,4 +4298,54 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertNull($entity->getBusinessProcess());
     }
+
+    /**
+     * @dataProvider dpTestHasCountryId
+     */
+    public function testHasCountryId($countryId, $expected)
+    {
+        $country1Id = 'FR';
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getId')
+            ->andReturn($country1Id);
+
+        $country2Id = 'RU';
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getId')
+            ->andReturn($country2Id);
+
+        $country3Id = 'DE';
+        $country3 = m::mock(Country::class);
+        $country3->shouldReceive('getId')
+            ->andReturn($country3Id);
+
+        $countries = new ArrayCollection([$country1, $country2, $country3]);
+        $entity = $this->createNewEntity();
+        $entity->updateCountries($countries);
+
+        $this->assertEquals($expected, $entity->hasCountryId($countryId));
+    }
+
+    public function dpTestHasCountryId()
+    {
+        return [
+            ['FR', true],
+            ['RU', true],
+            ['DE', true],
+            ['ES', false],
+        ];
+    }
+
+    public function updateCountries()
+    {
+        $arrayCollection = m::mock(ArrayCollection::class);
+
+        $entity = $this->createNewEntity();
+        $entity->updateCountries($arrayCollection);
+
+        $this->assertSame(
+            $arrayCollection,
+            $entity->getCountrys()
+        );
+    }
 }
