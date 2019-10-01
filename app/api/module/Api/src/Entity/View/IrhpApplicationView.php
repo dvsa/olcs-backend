@@ -127,6 +127,15 @@ class IrhpApplicationView implements BundleSerializableInterface, JsonSerializab
     protected $stockValidTo;
 
     /**
+     * Period name key
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="period_name_key")
+     */
+    protected $periodNameKey;
+
+    /**
      * Date received
      *
      * @var \DateTime
@@ -243,6 +252,16 @@ class IrhpApplicationView implements BundleSerializableInterface, JsonSerializab
     public function getStockValidTo()
     {
         return $this->stockValidTo;
+    }
+
+    /**
+     * Get the period name key
+     *
+     * @return string
+     */
+    public function getPeriodNameKey()
+    {
+        return $this->periodNameKey;
     }
 
     /**
