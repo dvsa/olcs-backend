@@ -27,6 +27,8 @@ class FormControlStrategyProviderFactory implements FactoryInterface
             Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS => 'QaEcmtShortTermIntJourneysFormControlStrategy',
             Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES =>
                 'QaEcmtShortTermRestrictedCountriesFormControlStrategy',
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD =>
+                'QaEcmtShortTermAnnualTripsAbroadFormControlStrategy',
         ];
 
         $provider = new FormControlStrategyProvider($mappings);

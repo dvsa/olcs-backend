@@ -342,6 +342,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getInternationalJourneysAnswer();
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES:
                     return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
+                    return $this->getStandardQaAnswer($question);
             }
 
             throw new RuntimeException(
