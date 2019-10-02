@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtShortTermSuccessful as Sen
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -26,36 +27,43 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
     protected $permitApplicationRepo = 'IrhpApplication';
     protected $applicationEntityClass = IrhpApplication::class;
 
-    /**
-     * test handle command
-     */
-    public function testHandleCommand()
-    {
-        $euro5PermitsGranted = 3;
-        $euro6PermitsGranted = 8;
+    private $previousLocale = 'aa_DJ';
+    private $periodNameKey = 'period.name.translation.key';
+    private $periodName = 'Permits for journeys in January and Feburary 2020';
 
-        $issueFeeAmount = '10.00';
-        $issueFeeAmountFormatted = '10';
-        $issueFeeTotal = '110.00';
-        $issueFeeTotalFormatted = '110';
+    private $euro5PermitsGranted = 3;
+    private $euro6PermitsGranted = 8;
+
+    private $issueFeeAmount = '10.00';
+    private $issueFeeAmountFormatted = '10';
+    private $issueFeeTotal = '110.00';
+    private $issueFeeTotalFormatted = '110';
+
+    private $irhpPermitStock;
+    private $irhpPermitApplication;
+
+    public function setUp()
+    {
+        parent::setUp();
 
         $issueFee = m::mock(Fee::class);
         $issueFee->shouldReceive('getFeeTypeAmount')
-            ->andReturn($issueFeeAmount);
+            ->andReturn($this->issueFeeAmount);
         $issueFee->shouldReceive('getOutstandingAmount')
-            ->andReturn($issueFeeTotal);
+            ->andReturn($this->issueFeeTotal);
         $issueFee->shouldReceive('getInvoicedDateTime')
             ->andReturn(new DateTime('8 March 2019'));
 
         $templateVars = [
             'applicationRef' => $this->applicationRef,
-            'euro5PermitsGranted' => $euro5PermitsGranted,
-            'euro6PermitsGranted' => $euro6PermitsGranted,
-            'issueFeeAmount' => $issueFeeAmountFormatted,
-            'issueFeeTotal' => $issueFeeTotalFormatted,
+            'euro5PermitsGranted' => $this->euro5PermitsGranted,
+            'euro6PermitsGranted' => $this->euro6PermitsGranted,
+            'issueFeeAmount' => $this->issueFeeAmountFormatted,
+            'issueFeeTotal' => $this->issueFeeTotalFormatted,
             'paymentDeadlineNumDays' => '10',
             'issueFeeDeadlineDate' => '21 March 2019',
             'paymentUrl' => 'http://selfserve/permits/application/' . $this->permitAppId . '/awaiting-fee',
+            'periodName' => 'Permits for journeys in January and Feburary 2020',
         ];
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
@@ -65,11 +73,13 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
             'default'
         );
 
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
-            ->andReturn($euro5PermitsGranted);
-        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
-            ->andReturn($euro6PermitsGranted);
+        $this->irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $this->irhpPermitStock->shouldReceive('getPeriodNameKey')
+            ->andReturn($this->periodNameKey);
+
+        $this->irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $this->irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($this->irhpPermitStock);
 
         $this->repoMap['IrhpApplication']->shouldReceive('refresh')
             ->with($this->applicationEntity)
@@ -79,7 +89,7 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
 
         $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
         $this->applicationEntity->shouldReceive('getFirstIrhpPermitApplication')
-            ->andReturn($irhpPermitApplication);
+            ->andReturn($this->irhpPermitApplication);
         $this->applicationEntity->shouldReceive('getLatestIssueFee')
             ->withNoArgs()
             ->once()
@@ -91,10 +101,52 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
+    }
+
+    /**
+     * @dataProvider dpTranslateToWelshLocaleMappings
+     */
+    public function testHandleCommandApsgBusinessProcess($translateToWelsh, $expectedLocale)
+    {
+        $this->irhpPermitStock->shouldReceive('getBusinessProcess->getId')
+            ->andReturn(RefData::BUSINESS_PROCESS_APSG);
+
+        $this->mockedSmServices['translator']->shouldReceive('getLocale')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($this->previousLocale)
+            ->globally()
+            ->ordered();
+        $this->mockedSmServices['translator']->shouldReceive('setLocale')
+            ->with($expectedLocale)
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->mockedSmServices['translator']->shouldReceive('translate')
+            ->with($this->periodNameKey, 'snapshot')
+            ->once()
+            ->globally()
+            ->ordered()
+            ->andReturn($this->periodName);
+        $this->mockedSmServices['translator']->shouldReceive('setLocale')
+            ->with($this->previousLocale)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')
+            ->withNoArgs()
+            ->andReturn($translateToWelsh);
+        $this->irhpPermitApplication->shouldReceive('countPermitsAwarded')
+            ->with(RefData::EMISSIONS_CATEGORY_EURO5_REF)
+            ->andReturn($this->euro5PermitsGranted);
+        $this->irhpPermitApplication->shouldReceive('countPermitsAwarded')
+            ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF)
+            ->andReturn($this->euro6PermitsGranted);
 
         $expectedData = [
             'to' => $this->userEmail,
-            'locale' => 'en_GB',
+            'locale' => $expectedLocale,
             'subject' => $this->subject,
         ];
 
@@ -110,5 +162,73 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
         $this->assertSame($this->userEmail, $message->getTo());
         $this->assertSame($this->orgEmails, $message->getCc());
         $this->assertSame($this->subject, $message->getSubject());
+    }
+
+    /**
+     * @dataProvider dpTranslateToWelshLocaleMappings
+     */
+    public function testHandleCommandApggBusinessProcess($translateToWelsh, $expectedLocale)
+    {
+        $this->irhpPermitStock->shouldReceive('getBusinessProcess->getId')
+            ->andReturn(RefData::BUSINESS_PROCESS_APGG);
+
+        $this->mockedSmServices['translator']->shouldReceive('getLocale')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($this->previousLocale)
+            ->globally()
+            ->ordered();
+        $this->mockedSmServices['translator']->shouldReceive('setLocale')
+            ->with($expectedLocale)
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->mockedSmServices['translator']->shouldReceive('translate')
+            ->with($this->periodNameKey, 'snapshot')
+            ->once()
+            ->globally()
+            ->ordered()
+            ->andReturn($this->periodName);
+        $this->mockedSmServices['translator']->shouldReceive('setLocale')
+            ->with($this->previousLocale)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')
+            ->withNoArgs()
+            ->andReturn($translateToWelsh);
+
+        $this->irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn($this->euro5PermitsGranted);
+        $this->irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn($this->euro6PermitsGranted);
+
+        $expectedData = [
+            'to' => $this->userEmail,
+            'locale' => $expectedLocale,
+            'subject' => $this->subject,
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
+
+        $result = $this->sut->handleCommand($this->commandEntity);
+
+        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['Email sent'], $result->getMessages());
+
+        /** @var Message $message */
+        $message = $this->sut->getMessage();
+        $this->assertSame($this->userEmail, $message->getTo());
+        $this->assertSame($this->orgEmails, $message->getCc());
+        $this->assertSame($this->subject, $message->getSubject());
+    }
+
+    public function dpTranslateToWelshLocaleMappings()
+    {
+        return [
+            ['Y', 'cy_GB'],
+            ['N', 'en_GB'],
+        ];
     }
 }
