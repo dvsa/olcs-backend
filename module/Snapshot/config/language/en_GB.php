@@ -416,6 +416,6 @@ return [
     'permits.page.stock.select.option.2' => 'Permits for journeys starting between 1 March and 31 May 2020',
     'permits.page.stock.select.option.3' => 'Permits for journeys starting between 1 June and 31 July 2020',
     'permits.page.stock.select.option.4' => 'Permits for journeys starting between 1 August and 31 December 2020',
-    
+
     // Potentially unused translations
 ];
