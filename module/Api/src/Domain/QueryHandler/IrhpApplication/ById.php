@@ -2,15 +2,17 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryByIdHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Retrieve IRHP application by id
  */
-final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInterface
+final class ById extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
@@ -22,4 +24,25 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
         'fees' => ['feeType' => ['feeType'], 'feeStatus'],
         'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country']]],
     ];
+
+    /**
+     * Handle query
+     *
+     * @param QueryInterface $query query
+     *
+     * @return array
+     */
+    public function handleQuery(QueryInterface $query)
+    {
+        /** @var IrhpApplication $irhpApplication */
+        $irhpApplication = $this->getRepo()->fetchUsingId($query);
+
+        return $this->result(
+            $irhpApplication,
+            $this->bundle,
+            [
+                'canViewCandidatePermits' => $irhpApplication->canViewCandidatePermits(),
+            ]
+        );
+    }
 }
