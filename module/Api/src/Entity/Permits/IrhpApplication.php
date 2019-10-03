@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use RuntimeException;
@@ -51,7 +52,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     WithdrawableInterface,
     ContextProviderInterface
 {
-    use SectionTrait;
+    use SectionTrait, CandidatePermitCreationTrait;
 
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
@@ -1631,6 +1632,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
         } catch (RuntimeException $ex) {
             // do nothing if getFirstIrhpPermitApplication() throws an exception
         }
+    }    
+       
+    /**
+     * Get the answer value corresponding to the specified question slug
+     *
+     * @param string slug
+     *
+     * @throws mixed|null
+     */
+    protected function getAnswerValueByQuestionSlug($slug)
+    {
+        $applicationSteps = $this->getActiveApplicationPath()->getApplicationSteps();
+
+        foreach ($applicationSteps as $applicationStep) {
+            if ($applicationStep->getQuestion()->getSlug() == $slug) {
+                return $this->getAnswer($applicationStep, false);
+            }
+        }
 
         return null;
     }
@@ -1661,5 +1680,78 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function updateCountries(ArrayCollection $countries)
     {
         $this->countrys = $countries;
+    }   
+   
+    /**
+     * Get the total number of permits required by this application
+     *
+     * @return int
+     *
+     * @throws RuntimeException
+     */
+    public function calculateTotalPermitsRequired()
+    {
+        if (!$this->getIrhpPermitType()->isEcmtShortTerm()) {
+            throw new RuntimeException('calculateTotalPermitsRequired is only applicable to ECMT short term');
+        }
+    
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+        $requiredEuro5 = $irhpPermitApplication->getRequiredEuro5();
+        $requiredEuro6 = $irhpPermitApplication->getRequiredEuro6();
+
+        if (is_null($requiredEuro5) || is_null($requiredEuro6)) {
+            throw new RuntimeException('This IRHP Application has not had number of required permits set yet.');
+        }
+
+        return $requiredEuro5 + $requiredEuro6;
+    }
+
+    /**
+     * Calculates the intensity_of_use value for permits requested by an irhpApplication
+     *
+     * @param string $emissionsCategoryId|null
+     *
+     * return float
+     *
+     * @throws RuntimeException
+     */
+    public function getPermitIntensityOfUse($emissionsCategoryId = null)
+    {
+        $firstIrhpPermitApplication = $this->getFirstIrhpPermitApplication();
+
+        if ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO5_REF) {
+            $numberOfPermits = $firstIrhpPermitApplication->getRequiredEuro5();
+        } elseif ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF) {
+            $numberOfPermits = $firstIrhpPermitApplication->getRequiredEuro6();
+        } elseif (is_null($emissionsCategoryId)) {
+            $numberOfPermits = $this->calculateTotalPermitsRequired();
+        } else {
+            throw new RuntimeException(
+                'Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: ' . $emissionsCategoryId
+            );
+        }
+
+        // TODO: once scoring is used by more than one Q&A type, we'll need a more general method than using the
+        // question slug to derive the answer to the annual trips abroad question
+
+        return $this->calculatePermitIntensityOfUse(
+            $this->getAnswerValueByQuestionSlug('st-annual-trips-abroad'),
+            $numberOfPermits
+        );
+    }
+
+    /**
+     * Calculates the application_score value for permits requested by an irhpApplication
+     *
+     * @param string $emissionsCategoryId|null
+     *
+     * @return float
+     */
+    public function getPermitApplicationScore($emissionsCategoryId = null)
+    {
+        return $this->calculatePermitApplicationScore(
+            $this->getPermitIntensityOfUse($emissionsCategoryId),
+            $this->internationalJourneys->getId()
+        );
     }
 }

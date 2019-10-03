@@ -32,7 +32,7 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
      * @param float $intensityOfUse
      * @param float $applicationScore
      *
-     * @return void
+     * @return self
      */
     public static function createNew(
         IrhpPermitApplication $irhpPermitApplication,
