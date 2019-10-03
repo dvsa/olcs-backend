@@ -132,7 +132,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $required_euro5 = 199;
         $required_euro6 = 800;
         $trips = 666;
-        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
+        $internationalJourneys = RefData::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
         $dateReceived = '2017-12-25';
 
@@ -425,13 +425,13 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testUpdateInternationalJourneys()
     {
-        $internationalJourneys = new RefData(Entity::INTER_JOURNEY_60_90);
+        $internationalJourneys = new RefData(RefData::INTER_JOURNEY_60_90);
 
         $entity = $this->createApplicationWithCompletedDeclaration();
 
         $entity->updateInternationalJourneys($internationalJourneys);
 
-        $this->assertEquals(Entity::INTER_JOURNEY_60_90, $entity->getInternationalJourneys()->getId());
+        $this->assertEquals(RefData::INTER_JOURNEY_60_90, $entity->getInternationalJourneys()->getId());
         $this->assertFalse($entity->getCheckedAnswers());
         $this->assertFalse($entity->getDeclaration());
     }
@@ -470,7 +470,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
      */
     public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Permit intensity of use cannot be calculated with zero number of permits');
 
         $entity = m::mock(Entity::class)->makePartial();
@@ -525,15 +525,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpTestGetPermitApplicationScore()
     {
         return [
-            [null, Entity::INTER_JOURNEY_LESS_60, 1.5],
-            [null, Entity::INTER_JOURNEY_60_90, 3.75],
-            [null, Entity::INTER_JOURNEY_MORE_90, 5],
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF, Entity::INTER_JOURNEY_LESS_60, 1.5],
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF, Entity::INTER_JOURNEY_60_90, 3.75],
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF, Entity::INTER_JOURNEY_MORE_90, 5],
-            [RefData::EMISSIONS_CATEGORY_EURO6_REF, Entity::INTER_JOURNEY_LESS_60, 1.5],
-            [RefData::EMISSIONS_CATEGORY_EURO6_REF, Entity::INTER_JOURNEY_60_90, 3.75],
-            [RefData::EMISSIONS_CATEGORY_EURO6_REF, Entity::INTER_JOURNEY_MORE_90, 5],
+            [null, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [null, RefData::INTER_JOURNEY_60_90, 3.75],
+            [null, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_MORE_90, 5],
         ];
     }
 
@@ -607,7 +607,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $requiredEuro5 = 199;
         $requiredEuro6 = 800;
         $trips = 666;
-        $internationalJourneys = Entity::INTER_JOURNEY_60_90;
+        $internationalJourneys = RefData::INTER_JOURNEY_60_90;
         $internationalJourneyRefData = new RefData($internationalJourneys);
         $dateReceived = '2017-12-25';
 

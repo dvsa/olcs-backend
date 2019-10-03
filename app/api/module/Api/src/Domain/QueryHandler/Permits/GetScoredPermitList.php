@@ -11,13 +11,14 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 
 /**
  * Get a list of scored irhp candidate permit records and associated data
  */
 class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequiredInterface
 {
-    use ToggleAwareTrait;
+    use ToggleAwareTrait, CandidatePermitCreationTrait;
 
     const DEVOLVED_ADMINISTRATION_TRAFFIC_AREAS = [
         TrafficArea::SCOTTISH_TRAFFIC_AREA_CODE,
@@ -45,6 +46,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
         $countryIdsByRangeId = $this->getCountryIdsByRangeIdLookup($stockId);
         $countryIdsByApplicationId = $this->getCountryIdsByApplicationIdLookup($stockId);
         $countryNamesById = $this->getCountryNamesByIdLookup();
+        $internationalJourneysDecimalMap = $this->getInternationalJourneysDecimalMap();
 
         $rows = $this->getRepo('IrhpCandidatePermit')->fetchScoringReport($stockId);
 
@@ -56,9 +58,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
                 $devolvedAdministrationName = $row['trafficAreaName'];
             }
 
-            $percentageInternationalName = EcmtPermitApplication::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[
-                $row['applicationInternationalJourneys']
-            ];
+            $percentageInternationalName = $internationalJourneysDecimalMap[$row['applicationInternationalJourneys']];
 
             $applicationSectorName = $row['applicationSectorName'];
             if ($row['applicationSectorName'] == Sectors::SECTOR_OPTION_NAME__NONE) {
