@@ -47,10 +47,10 @@ class NoOfPermitsGenerator implements QuestionTextGeneratorInterface
         );
 
         $questionText = $this->questionTextGenerator->generate($context);
-        $guidanceTranslateableText = $questionText->getGuidance()->getTranslateableText();
+        $additionalGuidanceTranslateableText = $questionText->getAdditionalGuidance()->getTranslateableText();
 
-        $guidanceTranslateableText->getParameter(0)->setValue($applicationFee->getFixedValue());
-        $guidanceTranslateableText->getParameter(1)->setValue($issueFee->getFixedValue());
+        $additionalGuidanceTranslateableText->getParameter(0)->setValue($applicationFee->getFixedValue());
+        $additionalGuidanceTranslateableText->getParameter(1)->setValue($issueFee->getFixedValue());
 
         return $questionText;
     }
