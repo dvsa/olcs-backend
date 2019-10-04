@@ -14,10 +14,12 @@ class RestrictedCountryIdsProviderTest extends MockeryTestCase
 {
     public function testGetIds()
     {
-        $restrictedCountryIdsProvider = new RestrictedCountryIdsProvider();
+        $restrictedCountryIds = ['AT', 'GR', 'HU', 'IT', 'RU'];
+
+        $restrictedCountryIdsProvider = new RestrictedCountryIdsProvider($restrictedCountryIds);
 
         $this->assertEquals(
-            ['AT', 'GR', 'HU', 'IT', 'RU'],
+            $restrictedCountryIds,
             $restrictedCountryIdsProvider->getIds()
         );
     }

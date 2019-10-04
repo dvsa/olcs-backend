@@ -5,10 +5,10 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Permits\CheckAcceptScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckAcceptScoringPrerequisites as CheckAcceptScoringPrerequisitesQry;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
@@ -17,9 +17,12 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
     public function setUp()
     {
         $this->sut = new CheckAcceptScoringPrerequisites();
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermitRangeRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
+
+        $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
+        ];
 
         parent::setUp();
     }
@@ -47,7 +50,7 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             ->with($stockId, RefData::EMISSIONS_CATEGORY_EURO5_REF)
             ->andReturn($euro5PermitCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId, RefData::EMISSIONS_CATEGORY_EURO5_REF)
             ->andReturn($euro5SuccessfulCount);
 
@@ -59,7 +62,7 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             ->with($stockId, RefData::EMISSIONS_CATEGORY_EURO6_REF)
             ->andReturn($euro6PermitCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId, RefData::EMISSIONS_CATEGORY_EURO6_REF)
             ->andReturn($euro6SuccessfulCount);
 

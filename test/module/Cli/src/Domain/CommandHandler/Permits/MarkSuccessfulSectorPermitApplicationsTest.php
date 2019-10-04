@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuotaRepo;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsCommand;
@@ -24,10 +24,10 @@ class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new MarkSuccessfulSectorPermitApplicationsHandler();
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
         $this->mockRepo('IrhpPermitSectorQuota', IrhpPermitSectorQuotaRepo::class);
 
         $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
             'PermitsScoringSuccessfulCandidatePermitsFacade' => m::mock(SuccessfulCandidatePermitsFacade::class)
         ];
 
@@ -53,7 +53,7 @@ class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
             ['id' => 5, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
         ];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedBySectorInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getScoreOrderedBySectorInScope')
             ->with($stockId, 7)
             ->andReturn($candidatePermitsInSectorId7);
 
@@ -85,7 +85,7 @@ class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
             ['id' => 16, 'emissions_category' => RefData::EMISSIONS_CATEGORY_EURO5_REF],
         ];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedBySectorInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getScoreOrderedBySectorInScope')
             ->with($stockId, 3)
             ->andReturn($candidatePermitsInSectorId3);
 
@@ -112,7 +112,7 @@ class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
 
         $candidatePermitsInSectorId2 = [];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getScoreOrderedBySectorInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getScoreOrderedBySectorInScope')
             ->with($stockId, 2)
             ->andReturn($candidatePermitsInSectorId2);
 

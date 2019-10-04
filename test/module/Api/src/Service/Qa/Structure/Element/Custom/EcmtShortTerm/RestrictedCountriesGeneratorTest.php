@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Answer as AnswerEntity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountries;
@@ -27,6 +28,10 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
     {
         $yesNoValue = 1;
 
+        $irhpPermitStockId = 43;
+
+        $restrictedCountryIds = ['GR', 'HU', 'IT', 'RU'];
+
         $yesNo = m::mock(AnswerEntity::class);
         $yesNo->shouldReceive('getValue')
             ->andReturn($yesNoValue);
@@ -44,6 +49,8 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
         $irhpApplication->shouldReceive('hasCountryId')
             ->with('RU')
             ->andReturn(false);
+        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getId')
+            ->andReturn($irhpPermitStockId);
 
         $applicationStep = m::mock(ApplicationStepEntity::class);
 
@@ -127,11 +134,17 @@ class RestrictedCountriesGeneratorTest extends MockeryTestCase
             ->with($applicationStep, $irhpApplication)
             ->andReturn($yesNo);
 
+        $stockBasedRestrictedCountryIdsProvider = m::mock(StockBasedRestrictedCountryIdsProvider::class);
+        $stockBasedRestrictedCountryIdsProvider->shouldReceive('getIds')
+            ->with($irhpPermitStockId)
+            ->andReturn($restrictedCountryIds);
+
         $restrictedCountriesGenerator = new RestrictedCountriesGenerator(
             $restrictedCountriesFactory,
             $restrictedCountryFactory,
             $countryRepo,
-            $genericAnswerProvider
+            $genericAnswerProvider,
+            $stockBasedRestrictedCountryIdsProvider
         );
 
         $this->assertSame(

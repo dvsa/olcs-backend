@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Scoring;
 
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\EmissionsCategoryAvailabilityCounter;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -40,8 +40,8 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
             ->once()
             ->andReturn($allocatedCount);
 
-        $irhpCandidatePermitRepo = m::mock(IrhpCandidatePermitRepository::class);
-        $irhpCandidatePermitRepo->shouldReceive('getSuccessfulCountInScope')
+        $scoringQueryProxy = m::mock(ScoringQueryProxy::class);
+        $scoringQueryProxy->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId, $emissionsCategoryId)
             ->once()
             ->andReturn($successfulCount);
@@ -49,7 +49,7 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
         $emissionsCategoryAvailabilityCounter = new EmissionsCategoryAvailabilityCounter(
             $irhpPermitRangeRepo,
             $irhpPermitRepo,
-            $irhpCandidatePermitRepo
+            $scoringQueryProxy
         );
 
         $this->assertEquals(
