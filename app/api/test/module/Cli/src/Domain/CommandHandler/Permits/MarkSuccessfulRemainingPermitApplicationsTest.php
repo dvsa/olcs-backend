@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidate as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
@@ -25,11 +25,11 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
     public function setUp()
     {
         $this->sut = new MarkSuccessfulRemainingPermitApplicationsHandler();
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidateRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermit::class);
         $this->mockRepo('IrhpPermitRange', IrhpPermit::class);
 
         $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
             'PermitsScoringSuccessfulCandidatePermitsFacade' => m::mock(SuccessfulCandidatePermitsFacade::class)
         ];
 
@@ -68,11 +68,11 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
             ->with($stockId)
             ->andReturn($permitCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn($successfulCount);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
             ->with($stockId)
             ->andReturn($underConsiderationCandidatePermits);
 
@@ -119,7 +119,7 @@ class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCa
             ->with($stockId)
             ->andReturn(75);
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId)
             ->andReturn(75);
 

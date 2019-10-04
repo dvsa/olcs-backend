@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsCommand;
@@ -25,9 +26,12 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
-    protected $repoServiceName = 'IrhpCandidatePermit';
+    protected $repoServiceName = 'IrhpPermit';
 
-    protected $extraRepos = ['IrhpPermit', 'IrhpPermitRange'];
+    protected $extraRepos = ['IrhpPermitRange'];
+
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
 
     /** @var SuccessfulCandidatePermitsFacade */
     private $successfulCandidatePermitsFacade;
@@ -41,7 +45,11 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->successfulCandidatePermitsFacade = $serviceLocator->getServiceLocator()->get(
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        $this->successfulCandidatePermitsFacade = $mainServiceLocator->get(
             'PermitsScoringSuccessfulCandidatePermitsFacade'
         );
 
@@ -62,10 +70,10 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
         $stockId = $command->getStockId();
 
         $availableStockCount = $this->getRepo('IrhpPermitRange')->getCombinedRangeSize($stockId);
-        $validPermitCount = $this->getRepo('IrhpPermit')->getPermitCount($stockId);
+        $validPermitCount = $this->getRepo()->getPermitCount($stockId);
         $allocationQuota = $availableStockCount - $validPermitCount;
 
-        $successfulPaCount = $this->getRepo()->getSuccessfulCountInScope($stockId);
+        $successfulPaCount = $this->scoringQueryProxy->getSuccessfulCountInScope($stockId);
         $remainingQuota = $allocationQuota - $successfulPaCount;
 
         $this->result->addMessage('STEP 2d:');
@@ -77,7 +85,7 @@ class MarkSuccessfulRemainingPermitApplications extends ScoringCommandHandler im
         $this->result->addMessage('    - #remainingQuota:      ' . $remainingQuota);
 
         if ($remainingQuota > 0) {
-            $remainingCandidatePermits = $this->getRepo()->getUnsuccessfulScoreOrderedInScope($stockId);
+            $remainingCandidatePermits = $this->scoringQueryProxy->getUnsuccessfulScoreOrderedInScope($stockId);
 
             $successfulCandidatePermits = $this->successfulCandidatePermitsFacade->generate(
                 $remainingCandidatePermits,

@@ -2,25 +2,64 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\ApplyRanges;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
-
-class ForCpProviderFactory implements FactoryInterface
+class ForCpProviderFactory
 {
     /**
-     * Create service
+     * Create instance of ForCpProvider with the specified restricted countries list
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param array $restrictedCountryIds
      *
      * @return ForCpProvider
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function create(array $restrictedCountryIds)
     {
+        $restrictedCountryIdsProvider = new RestrictedCountryIdsProvider($restrictedCountryIds);
+
+        $restrictedRangesProvider = new RestrictedRangesProvider();
+
+        $unrestrictedWithLowestStartNumberProvider = new UnrestrictedWithLowestStartNumberProvider();
+
+        $restrictedWithFewestCountriesProvider = new RestrictedWithFewestCountriesProvider(
+            $restrictedRangesProvider
+        );
+
+        $withFewestNonRequestedCountriesProvider = new WithFewestNonRequestedCountriesProvider(
+            $restrictedCountryIdsProvider
+        );
+
+        $restrictedWithMostMatchingCountriesProvider = new RestrictedWithMostMatchingCountriesProvider(
+            $restrictedRangesProvider
+        );
+
+        $forCpWithCountriesAndNoMatchingRangesProvider = new ForCpWithCountriesAndNoMatchingRangesProvider(
+            $unrestrictedWithLowestStartNumberProvider,
+            $restrictedWithFewestCountriesProvider
+        );
+
+        $forCpWithCountriesAndMultipleMatchingRangesProvider = new ForCpWithCountriesAndMultipleMatchingRangesProvider(
+            $withFewestNonRequestedCountriesProvider
+        );
+
+        $forCpWithCountriesProvider = new ForCpWithCountriesProvider(
+            $restrictedWithMostMatchingCountriesProvider,
+            $forCpWithCountriesAndNoMatchingRangesProvider,
+            $forCpWithCountriesAndMultipleMatchingRangesProvider
+        );
+
+        $forCpWithNoCountriesProvider = new ForCpWithNoCountriesProvider(
+            $unrestrictedWithLowestStartNumberProvider,
+            $restrictedWithFewestCountriesProvider
+        );
+
+        $entityIdsExtractor = new EntityIdsExtractor();
+
+        $rangeSubsetGenerator = new RangeSubsetGenerator();
+
         return new ForCpProvider(
-            $serviceLocator->get('PermitsApplyRangesForCpWithCountriesProvider'),
-            $serviceLocator->get('PermitsApplyRangesForCpWithNoCountriesProvider'),
-            $serviceLocator->get('PermitsApplyRangesEntityIdsExtractor'),
-            $serviceLocator->get('PermitsApplyRangesRangeSubsetGenerator')
+            $forCpWithCountriesProvider,
+            $forCpWithNoCountriesProvider,
+            $entityIdsExtractor,
+            $rangeSubsetGenerator
         );
     }
 }

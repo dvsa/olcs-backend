@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsCommand;
@@ -28,7 +29,8 @@ class MarkSuccessfulSectorPermitApplications extends ScoringCommandHandler imple
 
     protected $repoServiceName = 'IrhpPermitSectorQuota';
 
-    protected $extraRepos = ['IrhpCandidatePermit'];
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
 
     /** @var SuccessfulCandidatePermitsFacade */
     private $successfulCandidatePermitsFacade;
@@ -42,7 +44,11 @@ class MarkSuccessfulSectorPermitApplications extends ScoringCommandHandler imple
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->successfulCandidatePermitsFacade = $serviceLocator->getServiceLocator()->get(
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        $this->successfulCandidatePermitsFacade = $mainServiceLocator->get(
             'PermitsScoringSuccessfulCandidatePermitsFacade'
         );
 
@@ -70,7 +76,7 @@ class MarkSuccessfulSectorPermitApplications extends ScoringCommandHandler imple
         $totalSuccessfulCandidatePermits = 0;
 
         foreach ($sectorQuotas as $sectorQuota) {
-            $sectorCandidatePermits = $this->getRepo('IrhpCandidatePermit')->getScoreOrderedBySectorInScope(
+            $sectorCandidatePermits = $this->scoringQueryProxy->getScoreOrderedBySectorInScope(
                 $command->getStockId(),
                 $sectorQuota['sectorId']
             );
