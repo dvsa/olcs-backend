@@ -818,4 +818,139 @@ class IrhpApplicationTest extends RepositoryTestCase
             $this->sut->fetchDeviationSourceValues($stockId)
         );
     }
+
+    public function testFetchApplicationIdToCountryIdAssociations()
+    {
+        $stockId = 14;
+
+        $associations = [
+            102 => 'AT',
+            102 => 'RU',
+            103 => 'GR'
+        ];
+
+        $statement = m::mock(Statement::class);
+        $statement->shouldReceive('fetchAll')
+            ->once()
+            ->andReturn($associations);
+
+        $connection = m::mock(Connection::class);
+        $connection->shouldReceive('executeQuery')
+            ->with(
+                'select e.id as applicationId, eacl.country_id as countryId ' .
+                'from irhp_application_country_link eacl ' .
+                'inner join irhp_application as e on e.id = eacl.irhp_application_id ' .
+                'where e.id in (' .
+                '    select irhp_application_id from irhp_permit_application where irhp_permit_window_id in (' .
+                '        select id from irhp_permit_window where irhp_permit_stock_id = :stockId' .
+                '    )' .
+                ') ' .
+                'and e.in_scope = 1 ',
+                ['stockId' => $stockId]
+            )
+            ->once()
+            ->andReturn($statement);
+
+        $this->em->shouldReceive('getConnection')->once()->andReturn($connection);
+
+        $this->assertEquals(
+            $associations,
+            $this->sut->fetchApplicationIdToCountryIdAssociations($stockId)
+        );
+    }
+
+    public function testFetchScoringReport()
+    {
+        $scoringReport = [
+            'row1' => 'rowContent1',
+            'row2' => 'rowContent2'
+        ];
+
+        $stockId = 3;
+
+        $queryBuilder = m::mock(QueryBuilder::class);
+        $this->em->shouldReceive('createQueryBuilder')->once()->andReturn($queryBuilder);
+
+        $queryBuilder->shouldReceive('select')
+            ->with(
+                'icp.id as candidatePermitId, ' .
+                'epa.id as applicationId, ' .
+                'o.name as organisationName, ' .
+                'icp.applicationScore as candidatePermitApplicationScore, ' .
+                'icp.intensityOfUse as candidatePermitIntensityOfUse, ' .
+                'icp.randomFactor as candidatePermitRandomFactor, ' .
+                'icp.randomizedScore as candidatePermitRandomizedScore, ' .
+                'IDENTITY(icp.requestedEmissionsCategory) as candidatePermitRequestedEmissionsCategory, ' .
+                'IDENTITY(icp.assignedEmissionsCategory) as candidatePermitAssignedEmissionsCategory, ' .
+                'IDENTITY(epa.internationalJourneys) as applicationInternationalJourneys, ' .
+                'COALESCE(s.name, \'N/A\') as applicationSectorName, ' .
+                'l.licNo as licenceNo, ' .
+                'ta.id as trafficAreaId, ' .
+                'ta.name as trafficAreaName, ' .
+                'icp.successful as candidatePermitSuccessful, ' .
+                'IDENTITY(icp.irhpPermitRange) as candidatePermitRangeId'
+            )
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('from')
+            ->with(IrhpCandidatePermitEntity::class, 'icp')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('icp.irhpPermitApplication', 'ipa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpPermitWindow', 'ipw')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('ipa.irhpApplication', 'epa')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('epa.licence', 'l')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('leftJoin')
+            ->with('epa.sectors', 's')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('l.trafficArea', 'ta')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('innerJoin')
+            ->with('l.organisation', 'o')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('where')
+            ->with('IDENTITY(ipw.irhpPermitStock) = ?1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('epa.status = ?2')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('andWhere')
+            ->with('epa.inScope = 1')
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(1, $stockId)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->with(2, IrhpInterface::STATUS_UNDER_CONSIDERATION)
+            ->once()
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getScalarResult')
+            ->once()
+            ->andReturn($scoringReport);
+
+        $this->assertEquals(
+            $scoringReport,
+            $this->sut->fetchScoringReport($stockId)
+        );
+    }
 }
