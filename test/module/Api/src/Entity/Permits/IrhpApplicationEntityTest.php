@@ -3822,6 +3822,139 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($entity->getAnswer($step));
     }
 
+    /**
+     * @dataProvider dpGetAnswerForCustomEcmtShortTermNoOfPermits
+     */
+    public function testGetAnswerForCustomEcmtShortTermNoOfPermits(
+        $requiredEuro5,
+        $requiredEuro6,
+        $isSnapshot,
+        $validityYear,
+        $periodNameKey,
+        $expectedAnswer
+    ) {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getValidityYear')
+            ->andReturn($validityYear);
+        $irhpPermitStock->shouldReceive('getPeriodNameKey')
+            ->andReturn($periodNameKey);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->andReturn($irhpPermitStock);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn($requiredEuro6);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+
+        $this->assertSame(
+            $expectedAnswer,
+            $entity->getAnswer($step, $isSnapshot)
+        );
+    }
+
+    public function dpGetAnswerForCustomEcmtShortTermNoOfPermits()
+    {
+        return [
+            [
+                'requiredEuro5' => 5,
+                'requiredEuro6' => 7,
+                'isSnapshot' => true,
+                'validityYear' => 2019,
+                'periodNameKey' => null,
+                'expectedAnswer' => [
+                    'Permits for 2019',
+                    '5 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+            ],
+            [
+                'requiredEuro5' => 5,
+                'requiredEuro6' => 7,
+                'isSnapshot' => true,
+                'validityYear' => 2020,
+                'periodNameKey' => 'period.name.key',
+                'expectedAnswer' => [
+                    'period.name.key',
+                    '5 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+            ],
+            [
+                'requiredEuro5' => 5,
+                'requiredEuro6' => 0,
+                'isSnapshot' => true,
+                'validityYear' => 2020,
+                'periodNameKey' => 'period.name.key',
+                'expectedAnswer' => [
+                    'period.name.key',
+                    '5 permits for Euro 5 minimum emission standard',
+                ],
+            ],
+            [
+                'requiredEuro5' => null,
+                'requiredEuro6' => 5,
+                'isSnapshot' => true,
+                'validityYear' => 2020,
+                'periodNameKey' => 'period.name.key',
+                'expectedAnswer' => null,
+            ],
+            [
+                'requiredEuro5' => 5,
+                'requiredEuro6' => 7,
+                'isSnapshot' => false,
+                'validityYear' => 2019,
+                'periodNameKey' => null,
+                'expectedAnswer' => [
+                    '5 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+            ],
+            [
+                'requiredEuro5' => 5,
+                'requiredEuro6' => 7,
+                'isSnapshot' => false,
+                'validityYear' => 2020,
+                'periodNameKey' => 'period.name.key',
+                'expectedAnswer' => [
+                    '5 permits for Euro 5 minimum emission standard',
+                    '7 permits for Euro 6 minimum emission standard',
+                ],
+            ],
+            [
+                'requiredEuro5' => 5,
+                'requiredEuro6' => 0,
+                'isSnapshot' => false,
+                'validityYear' => 2020,
+                'periodNameKey' => 'period.name.key',
+                'expectedAnswer' => [
+                    '5 permits for Euro 5 minimum emission standard',
+                ],
+            ],
+            [
+                'requiredEuro5' => null,
+                'requiredEuro6' => 5,
+                'isSnapshot' => false,
+                'validityYear' => 2020,
+                'periodNameKey' => 'period.name.key',
+                'expectedAnswer' => null,
+            ],
+        ];
+    }
+
     public function testGetAnswerForCustomEcmtShortTermInternationalJourneys()
     {
         $question = m::mock(Question::class);

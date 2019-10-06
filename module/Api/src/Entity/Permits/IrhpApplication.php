@@ -416,13 +416,20 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return null;
         }
 
+        $answer = [];
+
         //for snapshots we include a heading containing the validity year
         if ($isSnapshot) {
-            $year = $this->getFirstIrhpPermitApplication()
+            $irhpPermitStock = $this->getFirstIrhpPermitApplication()
                 ->getIrhpPermitWindow()
-                ->getIrhpPermitStock()
-                ->getValidityYear();
-            $answer = ['Permits for '  . $year];
+                ->getIrhpPermitStock();
+
+            $year = $irhpPermitStock->getValidityYear();
+            if ($year == 2019) {
+                $answer[] = 'Permits for '  . $year;
+            } else {
+                $answer[] = $irhpPermitStock->getPeriodNameKey();
+            }
         }
 
         if ($requiredEuro5) {
