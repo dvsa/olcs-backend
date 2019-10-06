@@ -147,6 +147,30 @@ class ScoringQueryProxy
     }
 
     /**
+     * Fetch a flat list of application to country associations within the specified stock
+     *
+     * @param int $stockId
+     *
+     * @return array
+     */
+    public function fetchApplicationIdToCountryIdAssociations($stockId)
+    {
+        return $this->getApplicationRepo($stockId)->fetchApplicationIdToCountryIdAssociations($stockId);
+    }
+
+    /**
+     * Retrieves a partial list of column values for the scoring report
+     *
+     * @param int $stockId the Id of the IrhpPermitStock that the scoring will be for
+     *
+     * @return array
+     */
+    public function fetchScoringReport($stockId)
+    {
+        return $this->getApplicationRepo($stockId)->fetchScoringReport($stockId);
+    }
+
+    /**
      * Return the repository instance corresponding to the specified stock id
      *
      * @param int $stockId

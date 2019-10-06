@@ -20,6 +20,8 @@ class IrhpApplication extends AbstractScoringRepository
     protected $applicationTableName = 'irhp_application';
     protected $applicationEntityName = 'irhpApplication';
     protected $permitsRequiredEntityAlias = 'ipa';
+    protected $linkTableName = 'irhp_application_country_link';
+    protected $linkTableApplicationIdName = 'irhp_application_id';
 
     /**
      * @param QueryBuilder $qb

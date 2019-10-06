@@ -7,11 +7,12 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Get a list of scored irhp candidate permit records and associated data
@@ -28,9 +29,28 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
-    protected $repoServiceName = 'EcmtPermitApplication';
+    protected $repoServiceName = 'Country';
 
-    protected $extraRepos = ['Country', 'IrhpPermitRange', 'IrhpCandidatePermit'];
+    protected $extraRepos = ['IrhpPermitRange'];
+
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Return a list of scored irhp candidate permit records and associated data
@@ -48,7 +68,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
         $countryNamesById = $this->getCountryNamesByIdLookup();
         $internationalJourneysDecimalMap = $this->getInternationalJourneysDecimalMap();
 
-        $rows = $this->getRepo('IrhpCandidatePermit')->fetchScoringReport($stockId);
+        $rows = $this->scoringQueryProxy->fetchScoringReport($stockId);
 
         foreach ($rows as $row) {
             $permitReference = $row['licenceNo'] . ' / ' . $row['applicationId'] . ' / ' . $row['candidatePermitId'];
@@ -151,8 +171,8 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
     private function getCountryIdsByApplicationIdLookup($stockId)
     {
         return $this->getCountryIdLookup(
-            $this->getRepo('EcmtPermitApplication')->fetchApplicationIdToCountryIdAssociations($stockId),
-            'ecmtApplicationId'
+            $this->scoringQueryProxy->fetchApplicationIdToCountryIdAssociations($stockId),
+            'applicationId'
         );
     }
 
@@ -189,7 +209,7 @@ class GetScoredPermitList extends AbstractQueryHandler implements ToggleRequired
      */
     private function getCountryNamesByIdLookup()
     {
-        $countries = $this->getRepo('Country')->fetchIdsAndDescriptions();
+        $countries = $this->getRepo()->fetchIdsAndDescriptions();
 
         $countriesLookup = [];
         foreach ($countries as $country) {
