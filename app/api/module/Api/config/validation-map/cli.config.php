@@ -90,6 +90,7 @@ return [
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,
     CommandHandler\Permits\AllocatePermits::class => IsSystemUser::class,
+    CommandHandler\Permits\AllocateCandidatePermits::class => IsSystemUser::class,
     CommandHandler\Permits\PostSubmitTasks::class => IsSystemUser::class,
     CommandHandler\Permits\AllocateIrhpApplicationPermits::class => IsSystemUser::class,
     CommandHandler\Permits\AllocateIrhpPermitApplicationPermit::class => IsSystemUser::class,

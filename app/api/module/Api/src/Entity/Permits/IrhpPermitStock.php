@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\DeletableInterface;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use RuntimeException;
 
 /**
  * IrhpPermitStock Entity
@@ -36,6 +37,11 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const STATUS_ACCEPT_SUCCESSFUL = 'stock_accept_successful';
     const STATUS_ACCEPT_PREREQUISITE_FAIL = 'stock_accept_prereq_fail';
     const STATUS_ACCEPT_UNEXPECTED_FAIL = 'stock_accept_unexpected_fail';
+
+    const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
+    const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
+    const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
+    const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
 
     /**
      * @param IrhpPermitType $type
@@ -566,5 +572,60 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         }
 
         return false;
+    }
+
+    /**
+     * Get the permit allocation mode used by this stock
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getAllocationMode()
+    {
+        $mappings = [
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                'business_process' => RefData::BUSINESS_PROCESS_APG,
+                'allocation_mode' => self::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                'business_process' => RefData::BUSINESS_PROCESS_APG,
+                'allocation_mode' => self::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'business_process' => RefData::BUSINESS_PROCESS_APGG,
+                'allocation_mode' => self::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                'business_process' => RefData::BUSINESS_PROCESS_APSG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                'business_process' => RefData::BUSINESS_PROCESS_APG,
+                'allocation_mode' => self::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
+            ],
+        ];
+
+        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
+        $businessProcessId = $this->businessProcess->getId();
+
+        foreach ($mappings as $mapping) {
+            if ($mapping['type'] == $irhpPermitTypeId && $mapping['business_process'] == $businessProcessId) {
+                return $mapping['allocation_mode'];
+            }
+        }
+
+        throw new RuntimeException(
+            sprintf(
+                'No allocation mode set for permit type %s and business process %s',
+                $irhpPermitTypeId,
+                $businessProcessId
+            )
+        );
     }
 }

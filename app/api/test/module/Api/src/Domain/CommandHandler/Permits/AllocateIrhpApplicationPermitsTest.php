@@ -2,14 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateIrhpApplicationPermits;
+use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpApplicationPermits as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateIrhpPermitApplicationPermit;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
@@ -70,13 +73,13 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication3->shouldReceive('getPermitsRequired')
             ->andReturn($irhpPermitApplication3PermitsRequired);
 
-        $irhpPermitApplications = [$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3];
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
-        $irhpApplication->shouldReceive('getIrhpPermitType->getAllocationMode')
-            ->andReturn(IrhpPermitType::ALLOCATION_MODE_STANDARD);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_STANDARD);
         $this->repoMap['IrhpApplication']->shouldReceive('refresh')
             ->with($irhpApplication)
             ->once()
@@ -129,13 +132,13 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication1->shouldReceive('getPermitsRequired')
             ->andReturn($irhpPermitApplication1PermitsRequired);
 
-        $irhpPermitApplications = [$irhpPermitApplication1];
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
-        $irhpApplication->shouldReceive('getIrhpPermitType->getAllocationMode')
-            ->andReturn(IrhpPermitType::ALLOCATION_MODE_STANDARD_WITH_EXPIRY);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY);
         $this->repoMap['IrhpApplication']->shouldReceive('refresh')
             ->with($irhpApplication)
             ->once()
@@ -211,13 +214,13 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $irhpPermitApplication3->shouldReceive('getRequiredEuro6')
             ->andReturn($irhpPermitApplication3RequiredEuro6);
 
-        $irhpPermitApplications = [$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3];
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1, $irhpPermitApplication2, $irhpPermitApplication3]);
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitApplications')
             ->andReturn($irhpPermitApplications);
-        $irhpApplication->shouldReceive('getIrhpPermitType->getAllocationMode')
-            ->andReturn(IrhpPermitType::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
         $this->repoMap['IrhpApplication']->shouldReceive('refresh')
             ->with($irhpApplication)
             ->once()
@@ -276,6 +279,54 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ],
             new Result(),
             $irhpPermitApplication3RequiredEuro5
+        );
+
+        $result = $this->sut->handleCommand($this->command);
+
+        $this->assertEquals(
+            $this->irhpApplicationId,
+            $result->getId('irhpApplication')
+        );
+    }
+
+    public function testHandleCommandCandidatePermits()
+    {
+        $irhpPermitApplication1Id = 57;
+        $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication1->shouldReceive('getId')
+            ->andReturn($irhpPermitApplication1Id);
+
+        $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitApplications')
+            ->andReturn($irhpPermitApplications);
+        $irhpPermitApplication1->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS);
+        $this->repoMap['IrhpApplication']->shouldReceive('refresh')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+        $irhpApplication->shouldReceive('proceedToValid')
+            ->with($this->refData[IrhpInterface::STATUS_VALID])
+            ->once()
+            ->globally()
+            ->ordered();
+        $this->repoMap['IrhpApplication']->shouldReceive('save')
+            ->with($irhpApplication)
+            ->once()
+            ->globally()
+            ->ordered();
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($this->irhpApplicationId)
+            ->andReturn($irhpApplication);
+
+        $this->expectedSideEffect(
+            AllocateCandidatePermits::class,
+            ['id' => $irhpPermitApplication1Id],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($this->command);
