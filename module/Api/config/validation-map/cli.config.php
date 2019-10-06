@@ -87,6 +87,7 @@ return [
     CommandHandler\Email\SendEcmtShortTermAutomaticallyWithdrawn::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtShortTermUnsuccessful::class => IsSystemUser::class,
     CommandHandler\Email\SendEcmtShortTermApsgPartSuccessful::class => IsSystemUser::class,
+    CommandHandler\Email\SendEcmtShortTermAppSubmitted::class => IsSystemUser::class,
     CommandHandler\Cases\Si\SendResponse::class => IsSystemUser::class,
     CommandHandler\PrintScheduler\PrintJob::class => IsSystemUser::class,
     CommandHandler\TransportManagerApplication\Snapshot::class => IsSystemUser::class,

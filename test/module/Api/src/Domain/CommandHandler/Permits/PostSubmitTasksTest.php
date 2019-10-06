@@ -3,7 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted as SendEcmtShortTermAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicationSnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\PostSubmitTasks as PostSubmitTasksCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
@@ -143,6 +144,9 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
             ->withNoArgs()
             ->andReturn($this->irhpPermitApplication);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(false);
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
             ->once()
@@ -182,6 +186,72 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, RefData::BUSINESS_PROCESS_APSG],
             [IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, RefData::BUSINESS_PROCESS_APSG],
         ];
+    }
+
+    public function testHandleCommandForIrhpWithCreateCandidatePermitsAndAppSubmittedEmail()
+    {
+        $irhpPermitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
+        $businessProcessId = RefData::BUSINESS_PROCESS_APSG;
+
+        $id = 100;
+
+        $this->mockedSmServices['PermitsScoringCandidatePermitsCreator']->shouldReceive('create')
+            ->with($this->irhpPermitApplication, $this->requiredEuro5, $this->requiredEuro6)
+            ->once();
+
+        $this->irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->withNoArgs()
+            ->andReturn($this->requiredEuro5);
+        $this->irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->withNoArgs()
+            ->andReturn($this->requiredEuro6);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getBusinessProcess->getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
+            ->withNoArgs()
+            ->andReturn($this->irhpPermitApplication);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->once()
+            ->with($id)
+            ->andReturn($irhpApplication);
+
+        $this->expectedSideEffect(
+            IrhpApplicationSnapshotCmd::class,
+            [
+                'id' => $id,
+            ],
+            (new Result())->addMessage('Snapshot created')
+        );
+
+        $this->expectedEmailQueueSideEffect(
+            SendEcmtShortTermAppSubmittedCmd::class,
+            ['id' => $id],
+            $id,
+            new Result()
+        );
+
+        $result = $this->sut->handleCommand(
+            PostSubmitTasksCmd::create(
+                [
+                    'id' => $id,
+                    'irhpPermitType' => $irhpPermitTypeId,
+                ]
+            )
+        );
+
+        $this->assertEquals(
+            [
+                'Snapshot created'
+            ],
+            $result->getMessages()
+        );
     }
 
     public function testHandleCommandForUnsupported()
@@ -231,7 +301,7 @@ class PostSubmitTasksTest extends CommandHandlerTestCase
         );
 
         $this->expectedEmailQueueSideEffect(
-            SendEcmtAppSubmitted::class,
+            SendEcmtAppSubmittedCmd::class,
             ['id' => $ecmtPermitApplicationId],
             $ecmtPermitApplicationId,
             new Result()
