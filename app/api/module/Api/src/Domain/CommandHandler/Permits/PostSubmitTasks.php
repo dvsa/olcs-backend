@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted as SendEcmtShortTermAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicationSnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -88,6 +89,10 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
     {
         $id = $command->getId();
 
+        $sideEffects = [
+            IrhpApplicationSnapshotCmd::create(['id' => $id]),
+        ];
+
         $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($id);
         $firstIrhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
 
@@ -97,11 +102,11 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
                 $firstIrhpPermitApplication->getRequiredEuro5(),
                 $firstIrhpPermitApplication->getRequiredEuro6()
             );
-        }
 
-        $sideEffects = [
-            IrhpApplicationSnapshotCmd::create(['id' => $id]),
-        ];
+            if ($irhpApplication->getIrhpPermitType()->isEcmtShortTerm()) {
+                $sideEffects[] = $this->emailQueue(SendEcmtShortTermAppSubmittedCmd::class, ['id' => $id], $id);
+            }
+        }
 
         $this->result->merge(
             $this->handleSideEffects($sideEffects)
