@@ -408,6 +408,9 @@ return [
     'qanda.ecmt-short-term.certificates.question' => 'Mandatory ECMT certificates for vehicles and trailers you intend to use',
     'qanda.ecmt-short-term.emissions.question' => 'You must only use the appropriate Euro emission standards vehicles that the permit allows',
     'qanda.ecmt-short-term.number-of-permits.question' => 'How many permits do you require for this licence?',
+    'qanda.ecmt-short-term.restricted-countries.question' => 'Will you be transporting goods to Greece, Hungary, Italy or Russia?',
+    'qanda.ecmt-short-term.annual-trips-abroad.question' => 'How many international trips did you make in the last 12 months using this licence?',
+    'qanda.ecmt-short-term.percentage-international-journeys.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
 
     // Potentially unused translations
 ];
