@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 
 class NoOfPermitsGenerator implements ElementGeneratorInterface
 {
+    const TOT_AUTH_VEHICLES_MULTIPLIER = 2;
+
     /** @var NoOfPermitsFactory */
     private $noOfPermitsFactory;
 
@@ -42,7 +44,7 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
 
         $noOfPermits = $this->noOfPermitsFactory->create(
             $irhpPermitStock->getValidityYear(),
-            $irhpApplication->getLicence()->getTotAuthVehicles()
+            $irhpApplication->getLicence()->getTotAuthVehicles() * self::TOT_AUTH_VEHICLES_MULTIPLIER
         );
 
         $this->emissionsCategoryConditionalAdder->addIfRequired(

@@ -28,10 +28,6 @@ class IrhpPermitType extends AbstractIrhpPermitType
     const IRHP_PERMIT_TYPE_ID_BILATERAL = 4;
     const IRHP_PERMIT_TYPE_ID_MULTILATERAL = 5;
 
-    const ALLOCATION_MODE_STANDARD = 'allocation_mode_standard';
-    const ALLOCATION_MODE_EMISSIONS_CATEGORIES = 'allocation_mode_emissions_categories';
-    const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
-
     const IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL = 'P1Y';
 
     /**
@@ -109,28 +105,6 @@ class IrhpPermitType extends AbstractIrhpPermitType
     public function isApplicationPathEnabled()
     {
         return $this->isEcmtShortTerm() || $this->isEcmtRemoval();
-    }
-
-    /**
-     * Get the permit allocation mode used by this permit type
-     *
-     * @return string
-     * @throws RuntimeException
-     */
-    public function getAllocationMode()
-    {
-        $mappings = [
-            self::IRHP_PERMIT_TYPE_ID_BILATERAL => self::ALLOCATION_MODE_STANDARD,
-            self::IRHP_PERMIT_TYPE_ID_MULTILATERAL => self::ALLOCATION_MODE_STANDARD,
-            self::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => self::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
-            self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => self::ALLOCATION_MODE_STANDARD_WITH_EXPIRY
-        ];
-
-        if (isset($mappings[$this->id])) {
-            return $mappings[$this->id];
-        }
-
-        throw new RuntimeException('No allocation mode set for permit type ' . $this->id);
     }
 
     /**

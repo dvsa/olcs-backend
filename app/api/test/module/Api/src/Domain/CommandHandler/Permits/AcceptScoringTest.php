@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as SystemParameterEntity;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -35,6 +36,10 @@ class AcceptScoringTest extends CommandHandlerTestCase
         $this->mockRepo('FeeType', FeeType::class);
         $this->mockRepo('IrhpPermitStock', IrhpPermitStock::class);
         $this->mockRepo('SystemParameter', SystemParameter::class);
+
+        $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
+        ];
 
         $this->sut = m::mock(AcceptScoring::class)
             ->makePartial()
@@ -336,7 +341,7 @@ class AcceptScoringTest extends CommandHandlerTestCase
             );
         }
 
-        $this->repoMap['EcmtPermitApplication']->shouldReceive('fetchInScopeUnderConsiderationApplicationIds')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('fetchInScopeUnderConsiderationApplicationIds')
             ->with($stockId)
             ->andReturn(
                 [

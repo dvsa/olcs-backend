@@ -8,7 +8,9 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Check accept scoring prerequisites
@@ -23,7 +25,26 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements To
 
     protected $repoServiceName = 'IrhpPermitRange';
 
-    protected $extraRepos = ['IrhpPermit', 'IrhpCandidatePermit'];
+    protected $extraRepos = ['IrhpPermit'];
+
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle query
@@ -42,7 +63,7 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements To
         ];
 
         foreach ($emissionsCategories as $emissionsCategoryId => $emissionsCategoryCaption) {
-            $permitsRequired = $this->getRepo('IrhpCandidatePermit')->getSuccessfulCountInScope(
+            $permitsRequired = $this->scoringQueryProxy->getSuccessfulCountInScope(
                 $stockId,
                 $emissionsCategoryId
             );

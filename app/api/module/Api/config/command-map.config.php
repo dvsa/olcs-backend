@@ -1171,6 +1171,7 @@ return [
     // Permits - internal backend
     Command\Permits\UpdatePermitFee::class => CommandHandler\Permits\UpdatePermitFee::class,
     Command\Permits\AllocatePermits::class => CommandHandler\Permits\AllocatePermits::class,
+    Command\Permits\AllocateCandidatePermits::class => CommandHandler\Permits\AllocateCandidatePermits::class,
     Command\Permits\AllocateIrhpApplicationPermits::class => CommandHandler\Permits\AllocateIrhpApplicationPermits::class,
     Command\Permits\AllocateIrhpPermitApplicationPermit::class =>
         CommandHandler\Permits\AllocateIrhpPermitApplicationPermit::class,

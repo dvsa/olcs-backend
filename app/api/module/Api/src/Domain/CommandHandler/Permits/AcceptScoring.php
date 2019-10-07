@@ -21,9 +21,11 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
 use Exception;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Accept scoring
@@ -39,6 +41,25 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     protected $repoServiceName = 'EcmtPermitApplication';
 
     protected $extraRepos = ['IrhpPermitStock', 'FeeType', 'SystemParameter'];
+
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -94,7 +115,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
                 )
             );
 
-            $applicationIds = $this->getRepo()->fetchInScopeUnderConsiderationApplicationIds($stockId);
+            $applicationIds = $this->scoringQueryProxy->fetchInScopeUnderConsiderationApplicationIds($stockId);
 
             $this->result->addMessage(
                 sprintf('%d under consideration applications found', count($applicationIds))

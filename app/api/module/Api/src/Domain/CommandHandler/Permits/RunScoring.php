@@ -124,7 +124,7 @@ class RunScoring extends AbstractCommandHandler implements ToggleRequiredInterfa
                 )
             );
         } catch (Exception $e) {
-            Logger::err('Unable to update status/write scoring log file for stock id' . $this->stockId);
+            Logger::err('Unable to update status/write scoring log file for stock id ' . $this->stockId);
         }
 
         $stockRepo->save($stock);

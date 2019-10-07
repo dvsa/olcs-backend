@@ -3868,6 +3868,116 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    /**
+     * @dataProvider dpTestGetAnswerForCustomEcmtShortTermRestrictedCountries
+     */
+    public function testGetAnswerForCustomEcmtShortTermRestrictedCountries($answerValue, $expectedAnswer)
+    {
+        $createdOn = new DateTime();
+        $questionTextId = 1;
+
+        $questionText = m::mock(QuestionText::class);
+        $questionText->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($questionTextId);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturn(true);
+        $question->shouldReceive('getFormControlType')
+            ->andReturn(Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES);
+        $question->shouldReceive('getActiveQuestionText')
+            ->with($createdOn)
+            ->once()
+            ->andReturn($questionText);
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $answer = m::mock(Answer::class);
+        $answer->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
+
+        $country1 = m::mock(Country::class);
+        $country1->shouldReceive('getCountryDesc')
+            ->andReturn('Belgium');
+
+        $country2 = m::mock(Country::class);
+        $country2->shouldReceive('getCountryDesc')
+            ->andReturn('France');
+
+        $entity = $this->createNewEntity();
+        $entity->setCreatedOn($createdOn);
+        $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
+        $entity->setCountrys(new ArrayCollection([$country1, $country2]));
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getAnswer($applicationStep)
+        );
+    }
+
+    public function dpTestGetAnswerForCustomEcmtShortTermRestrictedCountries()
+    {
+        return [
+            [
+                true,
+                ['Yes', 'Belgium, France']
+            ],
+            [
+                false,
+                ['No']
+            ],
+        ];
+    }
+
+    public function testGetAnswerNullForCustomEcmtShortTermRestrictedCountries()
+    {
+        $createdOn = new DateTime();
+        $answerValue = null;
+        $questionTextId = 1;
+
+        $questionText = m::mock(QuestionText::class);
+        $questionText->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($questionTextId);
+
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')
+            ->withNoArgs()
+            ->andReturn(true);
+        $question->shouldReceive('getFormControlType')
+            ->andReturn(Question::FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES);
+        $question->shouldReceive('getActiveQuestionText')
+            ->with($createdOn)
+            ->once()
+            ->andReturn($questionText);
+
+        $applicationStep = m::mock(ApplicationStep::class);
+        $applicationStep->shouldReceive('getQuestion')
+            ->withNoArgs()
+            ->andReturn($question);
+
+        $answer = m::mock(Answer::class);
+        $answer->shouldReceive('getValue')
+            ->withNoArgs()
+            ->andReturn($answerValue);
+
+        $entity = $this->createNewEntity();
+        $entity->setCreatedOn($createdOn);
+        $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
+
+        $expectedAnswer = null;
+
+        $this->assertNull(
+            $entity->getAnswer($applicationStep)
+        );
+    }
+
     public function testGetAnswerForQuestionWithoutActiveQuestionText()
     {
         $createdOn = new DateTime();
@@ -4347,5 +4457,120 @@ class IrhpApplicationEntityTest extends EntityTester
             $arrayCollection,
             $entity->getCountrys()
         );
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUse($emissionsCategoryId, $expectedIntensityOfUse)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn(2);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn(5);
+
+        $entity = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $entity->shouldReceive('calculateTotalPermitsRequired')
+            ->andReturn(7);
+        $entity->shouldReceive('getAnswerValueByQuestionSlug')
+            ->with('st-annual-trips-abroad')
+            ->andReturn(35);
+
+        $this->assertEquals(
+            $expectedIntensityOfUse,
+            $entity->getPermitIntensityOfUse($emissionsCategoryId)
+        );
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitIntensityOfUse
+     */
+    public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Permit intensity of use cannot be calculated with zero number of permits');
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn(0);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn(0);
+
+        $entity = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $entity->shouldReceive('calculateTotalPermitsRequired')
+            ->andReturn(0);
+        $entity->shouldReceive('getAnswerValueByQuestionSlug')
+            ->with('st-annual-trips-abroad')
+            ->andReturn(0);
+
+        $entity->getPermitIntensityOfUse($emissionsCategoryId);
+    }
+
+    public function testGetPermitIntensityOfUseBadEmissionsCategory()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unexpected emissionsCategoryId parameter for getPermitIntensityOfUse: xyz');
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getFirstIrhpPermitApplication')
+            ->andReturn($irhpPermitApplication);
+        $entity->getPermitIntensityOfUse('xyz');
+    }
+
+    public function dpTestGetPermitIntensityOfUse()
+    {
+        return [
+            [null, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 17.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 7],
+        ];
+    }
+
+    /**
+     * @dataProvider dpTestGetPermitApplicationScore
+     */
+    public function testGetPermitApplicationScore(
+        $emissionsCategoryId,
+        $internationalJourneys,
+        $expectedPermitApplicationScore
+    ) {
+        $intensityOfUse = 5;
+
+        $entity = m::mock(Entity::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $entity->shouldReceive('getPermitIntensityOfUse')
+            ->with($emissionsCategoryId)
+            ->andReturn($intensityOfUse);
+
+        $refData = m::mock(RefData::class);
+        $refData->shouldReceive('getId')
+            ->andReturn($internationalJourneys);
+        $entity->setInternationalJourneys($refData);
+
+        $this->assertEquals(
+            $expectedPermitApplicationScore,
+            $entity->getPermitApplicationScore($emissionsCategoryId)
+        );
+    }
+
+    public function dpTestGetPermitApplicationScore()
+    {
+        return [
+            [null, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [null, RefData::INTER_JOURNEY_60_90, 3.75],
+            [null, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_LESS_60, 1.5],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_60_90, 3.75],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_MORE_90, 5],
+        ];
     }
 }

@@ -199,48 +199,6 @@ class IrhpPermitTypeEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpGetAllocationMode
-     */
-    public function testGetAllocationMode($irhpPermitTypeId, $allocationMode)
-    {
-        $this->sut->setId($irhpPermitTypeId);
-
-        $this->assertEquals(
-            $allocationMode,
-            $this->sut->getAllocationMode()
-        );
-    }
-
-    public function dpGetAllocationMode()
-    {
-        return [
-            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL, Entity::ALLOCATION_MODE_STANDARD],
-            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL, Entity::ALLOCATION_MODE_STANDARD],
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, Entity::ALLOCATION_MODE_EMISSIONS_CATEGORIES],
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, Entity::ALLOCATION_MODE_STANDARD_WITH_EXPIRY]
-        ];
-    }
-
-    /**
-     * @dataProvider dpGetAllocationModeException
-     */
-    public function testGetAllocationModeException($irhpPermitTypeId)
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No allocation mode set for permit type ' . $irhpPermitTypeId);
-
-        $this->sut->setId($irhpPermitTypeId);
-        $this->sut->getAllocationMode();
-    }
-
-    public function dpGetAllocationModeException()
-    {
-        return [
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT],
-        ];
-    }
-
-    /**
      * @dataProvider dpGetExpiryInterval
      */
     public function testGetExpiryInterval($irhpPermitTypeId, $expiryInterval)

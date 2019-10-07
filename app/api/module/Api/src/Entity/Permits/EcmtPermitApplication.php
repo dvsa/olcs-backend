@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -12,15 +13,13 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 
@@ -45,7 +44,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     WithdrawableInterface,
     LicenceProviderInterface
 {
-    use TieredProductReference;
+    use TieredProductReference, CandidatePermitCreationTrait;
 
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
@@ -73,10 +72,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
     const SECTION_COMPLETION_COMPLETED = 'ecmt_section_sts_com';
 
-    const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
-    const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
-    const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
-
     const SUCCESS_LEVEL_FULL = 'success_level_full';
     const SUCCESS_LEVEL_PARTIAL = 'success_level_partial';
     const SUCCESS_LEVEL_NONE = 'success_level_none';
@@ -102,12 +97,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     const CONFIRMATION_SECTIONS = [
         'checkedAnswers' => 'fieldIsAgreed',
         'declaration' => 'fieldIsAgreed',
-    ];
-
-    const INTERNATIONAL_JOURNEYS_DECIMAL_MAP = [
-        self::INTER_JOURNEY_LESS_60 => 0.3,
-        self::INTER_JOURNEY_60_90 => 0.75,
-        self::INTER_JOURNEY_MORE_90 => 1
     ];
 
     const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
@@ -1001,11 +990,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             );
         }
 
-        if ($numberOfPermits == 0) {
-            throw new RuntimeException('Permit intensity of use cannot be calculated with zero number of permits');
-        }
-
-        return $this->trips / $numberOfPermits;
+        return $this->calculatePermitIntensityOfUse($this->trips, $numberOfPermits);
     }
 
     /**
@@ -1017,8 +1002,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      */
     public function getPermitApplicationScore($emissionsCategoryId = null)
     {
-        $interJourneysDecValue = self::INTERNATIONAL_JOURNEYS_DECIMAL_MAP[$this->internationalJourneys->getId()];
-        return $this->getPermitIntensityOfUse($emissionsCategoryId) * $interJourneysDecValue;
+        return $this->calculatePermitApplicationScore(
+            $this->getPermitIntensityOfUse($emissionsCategoryId),
+            $this->internationalJourneys->getId()
+        );
     }
 
     /**
@@ -1064,11 +1051,11 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     /**
      * Get Latest Outstanding Ecmt Application Fee
      *
-     * @return FeeEntity|null
+     * @return Fee|null
      */
     public function getLatestOutstandingEcmtApplicationFee()
     {
-        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
+        $feeTypeIds = [FeeType::FEE_TYPE_ECMT_APP, FeeType::FEE_TYPE_ECMT_ISSUE];
         $criteria = Criteria::create()
             ->orderBy(['invoicedDate' => Criteria::DESC]);
 
@@ -1089,7 +1076,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
      */
     public function getOutstandingFees(): array
     {
-        $feeTypeIds = [FeeTypeEntity::FEE_TYPE_ECMT_APP, FeeTypeEntity::FEE_TYPE_ECMT_ISSUE];
+        $feeTypeIds = [FeeType::FEE_TYPE_ECMT_APP, FeeType::FEE_TYPE_ECMT_ISSUE];
         $fees = [];
 
         /** @var Fee $fee */
