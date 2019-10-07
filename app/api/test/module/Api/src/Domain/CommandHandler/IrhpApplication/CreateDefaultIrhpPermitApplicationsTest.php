@@ -2,16 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\CreateDefaultIrhpPermitApplications;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
@@ -81,9 +80,6 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
         $command->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
 
-        $command->shouldReceive('getYear')
-            ->andReturn(null);
-
         $result = $this->sut->handleCommand($command);
 
         $this->assertSame($openWindow1, $windowsWithCreatedIrhpPermitApplications[0]);
@@ -126,7 +122,7 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
     public function testHandleCommandQandAYear($irhpPermitTypeId)
     {
         $irhpApplicationId = 5;
-        $year = 3000;
+        $stockId = 22;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
@@ -138,23 +134,9 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
 
         $openWindow1 = m::mock(IrhpPermitWindow::class);
 
-        $openWindows = [
-            $openWindow1
-        ];
-
-        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindowsByTypeYear')
+        $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchLastOpenWindowByStockId')
             ->once()
-            ->andReturnUsing(
-                function ($irhpPermitTypeIdParam, $now) use ($irhpPermitTypeId, $openWindows) {
-                    $this->assertEquals($irhpPermitTypeId, $irhpPermitTypeIdParam);
-                    $this->assertEquals(
-                        date('Y-m-d'),
-                        $now->format('Y-m-d')
-                    );
-
-                    return $openWindows;
-                }
-            );
+            ->andReturn($openWindow1);
 
         $windowsWithCreatedIrhpPermitApplications = [];
 
@@ -175,10 +157,14 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
         $command = m::mock(CommandInterface::class);
 
         $command->shouldReceive('getId')
+            ->once()
+            ->withNoArgs()
             ->andReturn($irhpApplicationId);
 
-        $command->shouldReceive('getYear')
-            ->andReturn($year);
+        $command->shouldReceive('getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stockId);
 
         $result = $this->sut->handleCommand($command);
 
@@ -196,7 +182,6 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
     public function testHandleCommandQandANoYear($irhpPermitTypeId)
     {
         $irhpApplicationId = 5;
-        $year = 3000;
 
         $irhpApplication = m::mock(IrhpApplication::class);
         $irhpApplication->shouldReceive('getIrhpPermitType->getId')
@@ -247,8 +232,8 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
         $command->shouldReceive('getId')
             ->andReturn($irhpApplicationId);
 
-        $command->shouldReceive('getYear')
-            ->andReturn($year);
+        $command->shouldReceive('getIrhpPermitStock')
+            ->andReturn(22);
 
         $result = $this->sut->handleCommand($command);
 
