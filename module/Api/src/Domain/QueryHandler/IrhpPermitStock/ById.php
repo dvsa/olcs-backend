@@ -21,6 +21,7 @@ final class ById extends AbstractQueryByIdHandler implements ToggleRequiredInter
     protected $bundle = [
         'irhpPermitType' => ['name'],
         'country',
-        'applicationPathGroup'
+        'applicationPathGroup',
+        'irhpPermitRanges' => ['emissionsCategory']
     ];
 }
