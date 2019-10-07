@@ -2,22 +2,23 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Doctrine\ORM\Query;
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
+use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
+use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
-use Dvsa\Olcs\Api\Domain\Command\Permits\CreateIrhpPermitApplication;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication as CreateEcmtPermitApplicationCmd;
 
 /**
  * Create an ECMT Permit application
@@ -35,7 +36,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitWindow', 'Licence'];
+    protected $extraRepos = ['IrhpPermitWindow', 'Licence', 'Country'];
 
     /**
      * Handle command
@@ -48,7 +49,7 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     public function handleCommand(CommandInterface $command)
     {
         /**
-         * @var LicenceEntity                  $licence
+         * @var LicenceEntity $licence
          * @var CreateEcmtPermitApplicationCmd $command
          */
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
@@ -58,19 +59,37 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
             throw new ForbiddenException($message);
         }
 
-        /** @var CreateEcmtPermitApplicationCmd $ecmtPermitApplication */
-        $ecmtPermitApplication = $this->createPermitApplicationObject($licence);
+        /** @var EcmtPermitApplication $ecmtPermitApplication */
+        $ecmtPermitApplication =
+            $command->getFromInternal()
+                ? $this->createInternalPermitApplicationObject($command, $licence)
+                : $this->createPermitApplicationObject($licence);
+
 
         $this->getRepo()->save($ecmtPermitApplication);
+
+        if ($command->getFromInternal()) {
+            $totalPermitsRequired = $command->getRequiredEuro5() + $command->getRequiredEuro6();
+            if ($totalPermitsRequired > 0) {
+                $this->result->merge($this->handleSideEffect(
+                    UpdatePermitFee::create(
+                        [
+                            'ecmtPermitApplicationId' => $ecmtPermitApplication->getId(),
+                            'licenceId' => $command->getLicence(),
+                            'permitsRequired' => $totalPermitsRequired,
+                            'permitType' => $ecmtPermitApplication::PERMIT_TYPE,
+                            'receivedDate' => $ecmtPermitApplication->getDateReceived()
+                        ]
+                    )
+                ));
+            }
+        }
 
         $this->result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());
         $this->result->addMessage('ECMT Permit Application created successfully');
 
-        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByIrhpPermitType(
-            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
-            new DateTime(),
-            Query::HYDRATE_OBJECT,
-            $command->getYear()
+        $window = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId(
+            $command->getIrhpPermitStock()
         );
 
         $this->result->merge(
@@ -97,11 +116,48 @@ final class CreateEcmtPermitApplication extends AbstractCommandHandler implement
     private function createPermitApplicationObject(LicenceEntity $licence): EcmtPermitApplication
     {
         return EcmtPermitApplication::createNew(
-            $this->getRepo()->getRefDataReference(IrhpInterface::SOURCE_SELFSERVE),
+            $this->refData(IrhpInterface::SOURCE_SELFSERVE),
+            $this->refData(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
+            $this->refData(EcmtPermitApplication::PERMIT_TYPE),
+            $licence,
+            date('Y-m-d')
+        );
+    }
+
+    /**
+     * Create EcmtPermitApplication object
+     *
+     * @param CreateEcmtPermitApplicationCmd $command Command
+     * @param LicenceEntity $licence
+     *
+     * @return EcmtPermitApplication
+     *
+     */
+    private function createInternalPermitApplicationObject(
+        CreateEcmtPermitApplicationCmd $command,
+        LicenceEntity $licence
+    ): EcmtPermitApplication {
+        $countrys = new ArrayCollection();
+        foreach ($command->getCountryIds() as $countryId) {
+            $countrys->add($this->getRepo('Country')->getReference(Country::class, $countryId));
+        }
+
+        return EcmtPermitApplication::createNewInternal(
+            $this->getRepo()->getRefdataReference(EcmtPermitApplication::SOURCE_INTERNAL),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
             $licence,
-            date('Y-m-d')
+            $command->getDateReceived(),
+            $this->getRepo()->getReference(Sectors::class, $command->getSectors()),
+            $countrys,
+            $command->getCabotage(),
+            $command->getRoadworthiness(),
+            $command->getDeclaration(),
+            $command->getEmissions(),
+            $command->getRequiredEuro5(),
+            $command->getRequiredEuro6(),
+            $command->getTrips(),
+            $this->getRepo()->getRefdataReference($command->getInternationalJourneys())
         );
     }
 }
