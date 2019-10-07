@@ -2,9 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AcceptScoring as AcceptScoringCmd;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
@@ -16,7 +13,9 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
@@ -40,7 +39,9 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpPermitStock', 'FeeType', 'SystemParameter'];
+    protected $extraRepos = ['IrhpPermitStock', 'FeeType', 'SystemParameter', 'IrhpApplication'];
+
+    protected $applicationRepoName;
 
     /** @var ScoringQueryProxy */
     private $scoringQueryProxy;
@@ -75,6 +76,8 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
         $stockRepo = $this->getRepo('IrhpPermitStock');
         $stock = $stockRepo->fetchById($stockId);
         $stockRepo->refresh($stock);
+
+        $this->applicationRepoName = $stock->getApplicationRepoName();
 
         if ($stock->statusAllowsAcceptScoring()) {
             $prerequisiteResult = $this->handleQuery(
@@ -123,7 +126,7 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
             foreach ($applicationIds as $applicationId) {
                 $this->processApplication(
-                    $this->getRepo()->fetchById($applicationId)
+                    $this->getRepo($this->applicationRepoName)->fetchById($applicationId)
                 );
             }
 
@@ -141,42 +144,42 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Send outcome notification and create fees as required for an application
      *
-     * @param EcmtPermitApplication $ecmtPermitApplication
+     * @param ApplicationAcceptScoringInterface $application
      *
      * @throws Exception
      */
-    private function processApplication(EcmtPermitApplication $ecmtPermitApplication)
+    private function processApplication(ApplicationAcceptScoringInterface $application)
     {
         $this->result->addMessage(
-            sprintf('processing ecmt application with id %d:', $ecmtPermitApplication->getId())
+            sprintf('processing %s with id %d:', $application->getCamelCaseEntityName(), $application->getId())
         );
 
-        $outcomeNotificationType = $ecmtPermitApplication->getOutcomeNotificationType();
+        $outcomeNotificationType = $application->getOutcomeNotificationType();
         switch ($outcomeNotificationType) {
-            case EcmtPermitApplication::NOTIFICATION_TYPE_EMAIL:
-                $this->triggerEmailNotification($ecmtPermitApplication);
+            case ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL:
+                $this->triggerEmailNotification($application);
                 break;
-            case EcmtPermitApplication::NOTIFICATION_TYPE_MANUAL:
-                $this->triggerManualNotification($ecmtPermitApplication);
+            case ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL:
+                $this->triggerManualNotification($application);
                 break;
             default:
                 throw new Exception('Unknown notification type: ' . $outcomeNotificationType);
         }
 
-        $this->createApplicationFeesAndUpdateStatus($ecmtPermitApplication);
-        $this->getRepo()->save($ecmtPermitApplication);
+        $this->createApplicationFeesAndUpdateStatus($application);
+        $this->getRepo($this->applicationRepoName)->save($application);
     }
 
     /**
      * Send the outcome notification for an application requiring manual notification
      *
-     * @param EcmtPermitApplication $ecmtPermitApplication
+     * @param ApplicationAcceptScoringInterface $application
      */
-    private function triggerManualNotification(EcmtPermitApplication $ecmtPermitApplication)
+    private function triggerManualNotification(ApplicationAcceptScoringInterface $application)
     {
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getCreateTaskCommand($ecmtPermitApplication)
+                $this->getCreateTaskCommand($application)
             )
         );
     }
@@ -184,39 +187,34 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Send the outcome notification for an application requiring email notification
      *
-     * @param EcmtPermitApplication $ecmtPermitApplication
+     * @param ApplicationAcceptScoringInterface $application
      */
-    private function triggerEmailNotification(EcmtPermitApplication $ecmtPermitApplication)
+    private function triggerEmailNotification(ApplicationAcceptScoringInterface $application)
     {
-        $successLevel = $ecmtPermitApplication->getSuccessLevel();
+        $successLevel = $application->getSuccessLevel();
 
-        if ($successLevel === EcmtPermitApplication::SUCCESS_LEVEL_NONE
+        if ($successLevel === ApplicationAcceptConsts::SUCCESS_LEVEL_NONE
             && $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_ECMT_ALLOC_EMAIL_NONE)
         ) {
             $this->result->addMessage(sprintf('- email sending disabled for %s', $successLevel));
             return;
         }
 
-        $emailCommandLookup = [
-            EcmtPermitApplication::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
-            EcmtPermitApplication::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
-            EcmtPermitApplication::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
-        ];
-
+        $emailCommandLookup = $application->getEmailCommandLookup();
         $emailCommand = $emailCommandLookup[$successLevel];
 
         $this->result->addMessage(
             sprintf('- sending email using command %s', $emailCommand)
         );
 
-        $ecmtPermitApplicationId = $ecmtPermitApplication->getId();
+        $applicationId = $application->getId();
 
         $this->result->merge(
             $this->handleSideEffect(
                 $this->emailQueue(
                     $emailCommand,
-                    [ 'id' => $ecmtPermitApplicationId ],
-                    $ecmtPermitApplicationId
+                    [ 'id' => $applicationId ],
+                    $applicationId
                 )
             )
         );
@@ -225,15 +223,15 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Create any applicable fees for an application and update the status accordingly
      *
-     * @param EcmtPermitApplication $ecmtPermitApplication
+     * @param ApplicationAcceptScoringInterface $application
      */
-    private function createApplicationFeesAndUpdateStatus(EcmtPermitApplication $ecmtPermitApplication)
+    private function createApplicationFeesAndUpdateStatus(ApplicationAcceptScoringInterface $application)
     {
-        if ($ecmtPermitApplication->getSuccessLevel() == EcmtPermitApplication::SUCCESS_LEVEL_NONE) {
+        if ($application->getSuccessLevel() == ApplicationAcceptConsts::SUCCESS_LEVEL_NONE) {
             $this->result->addMessage('- no fee applicable, set application to unsuccessful');
 
-            $ecmtPermitApplication->proceedToUnsuccessful(
-                $this->refData(EcmtPermitApplication::STATUS_UNSUCCESSFUL)
+            $application->proceedToUnsuccessful(
+                $this->refData(IrhpInterface::STATUS_UNSUCCESSFUL)
             );
 
             return;
@@ -241,29 +239,30 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
         $this->result->merge(
             $this->handleSideEffect(
-                $this->getCreateIssueFeeCommand($ecmtPermitApplication)
+                $this->getCreateIssueFeeCommand($application)
             )
         );
 
         $this->result->addMessage('- create fee and set application to awaiting fee');
 
-        $ecmtPermitApplication->proceedToAwaitingFee(
-            $this->refData(EcmtPermitApplication::STATUS_AWAITING_FEE)
+        $application->proceedToAwaitingFee(
+            $this->refData(IrhpInterface::STATUS_AWAITING_FEE)
         );
     }
 
     /**
      * Get issue fee creation command for an application
      *
-     * @param EcmtPermitApplication $ecmtPermitApplication
+     * @param ApplicationAcceptScoringInterface $application
      *
      * @return CreateFee
      */
-    private function getCreateIssueFeeCommand(EcmtPermitApplication $ecmtPermitApplication)
+    private function getCreateIssueFeeCommand(ApplicationAcceptScoringInterface $application)
     {
-        $feeType = $this->getRepo('FeeType')
-            ->getLatestByProductReference($ecmtPermitApplication->getProductReferenceForTier());
-        $permitsAwarded = $ecmtPermitApplication->getPermitsAwarded();
+        $productReference = $application->getIssueFeeProductReference();
+
+        $feeType = $this->getRepo('FeeType')->getLatestByProductReference($productReference);
+        $permitsAwarded = $application->getPermitsAwarded();
 
         $feeDescription = sprintf(
             '%s - %d permits',
@@ -273,8 +272,8 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
 
         return CreateFee::create(
             [
-                'licence' => $ecmtPermitApplication->getLicence()->getId(),
-                'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
+                'licence' => $application->getLicence()->getId(),
+                $application->getCamelCaseEntityName() => $application->getId(),
                 'invoicedDate' => date('Y-m-d'),
                 'description' => $feeDescription,
                 'feeType' => $feeType->getId(),
@@ -287,19 +286,19 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
     /**
      * Get task creation command for an application
      *
-     * @param EcmtPermitApplication $application
+     * @param ApplicationAcceptScoringInterface $application
      *
      * @return CreateTask
      */
-    private function getCreateTaskCommand(EcmtPermitApplication $ecmtPermitApplication)
+    private function getCreateTaskCommand(ApplicationAcceptScoringInterface $application)
     {
         return CreateTask::create(
             [
                 'category' => Task::CATEGORY_PERMITS,
                 'subCategory' => Task::SUBCATEGORY_PERMITS_APPLICATION_OUTCOME,
                 'description' => Task::TASK_DESCRIPTION_SEND_OUTCOME_LETTER,
-                'ecmtPermitApplication' => $ecmtPermitApplication->getId(),
-                'licence' => $ecmtPermitApplication->getLicence()->getId()
+                $application->getCamelCaseEntityName() => $application->getId(),
+                'licence' => $application->getLicence()->getId()
             ]
         );
     }

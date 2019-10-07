@@ -6,6 +6,9 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\CancelableInterface;
@@ -18,6 +21,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
@@ -42,9 +48,10 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     OrganisationProviderInterface,
     CancelableInterface,
     WithdrawableInterface,
-    LicenceProviderInterface
+    LicenceProviderInterface,
+    ApplicationAcceptScoringInterface
 {
-    use TieredProductReference, CandidatePermitCreationTrait;
+    use TieredProductReference, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait;
 
     const STATUS_CANCELLED = 'permit_app_cancelled';
     const STATUS_NOT_YET_SUBMITTED = 'permit_app_nys';
@@ -58,12 +65,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     const STATUS_DECLINED = 'permit_app_declined';
     const STATUS_EXPIRED = 'permit_app_expired';
 
-    const SOURCE_INTERNAL = 'app_source_internal';
-    const SOURCE_SELFSERVE = 'app_source_selfserve';
-
-    const NOTIFICATION_TYPE_EMAIL = 'notification_type_email';
-    const NOTIFICATION_TYPE_MANUAL = 'notification_type_manual';
-
     const PERMIT_TYPE = 'permit_ecmt';
     const PERMIT_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT';
     const PERMIT_COVERING_LETTER_TEMPLATE_NAME = 'IRHP_PERMIT_ECMT_COVERING_LETTER';
@@ -71,10 +72,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     const SECTION_COMPLETION_CANNOT_START = 'ecmt_section_sts_csy';
     const SECTION_COMPLETION_NOT_STARTED = 'ecmt_section_sts_nys';
     const SECTION_COMPLETION_COMPLETED = 'ecmt_section_sts_com';
-
-    const SUCCESS_LEVEL_FULL = 'success_level_full';
-    const SUCCESS_LEVEL_PARTIAL = 'success_level_partial';
-    const SUCCESS_LEVEL_NONE = 'success_level_none';
 
     /**
      * @todo this needs to be much more robust, not least because how we store certain data is going to change
@@ -372,38 +369,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
         }
         $this->status = $expireStatus;
         $this->expiryDate = new DateTime();
-    }
-
-    /**
-     * Proceeds the application from under consideration to awaiting fee during the accept scoring process
-     *
-     * @param RefData $awaitingFeeStatus
-     *
-     * @throws ForbiddenException
-     */
-    public function proceedToAwaitingFee(RefData $awaitingFeeStatus)
-    {
-        if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee ('.$this->status->getId().')');
-        }
-
-        $this->status = $awaitingFeeStatus;
-    }
-
-    /**
-     * Proceeds the application from under consideration to unsuccessful during the accept scoring process
-     *
-     * @param RefData $unsuccessfulStatus
-     *
-     * @throws ForbiddenException
-     */
-    public function proceedToUnsuccessful(RefData $unsuccessfulStatus)
-    {
-        if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful ('.$this->status->getId().')');
-        }
-
-        $this->status = $unsuccessfulStatus;
     }
 
     /**
@@ -1119,62 +1084,6 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     }
 
     /**
-     * Return the number of permits awarded to this application. Only applicable to applications that are currently
-     * under consideration
-     *
-     * @return int
-     *
-     * @throws ForbiddenException
-     */
-    public function getPermitsAwarded()
-    {
-        if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException(
-                'This application is not in the correct state to return permits awarded ('.$this->status->getId().')'
-            );
-        }
-
-        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
-        return $irhpPermitApplication->countPermitsAwarded();
-    }
-
-    /**
-     * Indicate whether this application is either unsuccessful, partially successful or fully successful, returning
-     * one of the class constants SUCCESS_LEVEL_NONE, SUCCESS_LEVEL_PARTIAL or SUCCESS_LEVEL_FULL accordingly
-     *
-     * @return string
-     */
-    public function getSuccessLevel()
-    {
-        $permitsAwarded = $this->getPermitsAwarded();
-
-        $successLevel = self::SUCCESS_LEVEL_PARTIAL;
-        if ($permitsAwarded == 0) {
-            $successLevel = self::SUCCESS_LEVEL_NONE;
-        } elseif ($this->calculateTotalPermitsRequired() == $permitsAwarded) {
-            $successLevel = self::SUCCESS_LEVEL_FULL;
-        }
-
-        return $successLevel;
-    }
-
-    /**
-     * Indicate the type of notification required upon completion of scoring acceptance, returning one of the
-     * NOTIFICATION_TYPE_* constants
-     *
-     * @return string
-     */
-    public function getOutcomeNotificationType()
-    {
-        $mappings = [
-            self::SOURCE_SELFSERVE => self::NOTIFICATION_TYPE_EMAIL,
-            self::SOURCE_INTERNAL => self::NOTIFICATION_TYPE_MANUAL
-        ];
-
-        return $mappings[$this->source->getId()];
-    }
-
-    /**
      * Get question and answer data - note this is a bit of a fudge, future permit types can get most of this from DB
      *
      * @return array
@@ -1270,5 +1179,39 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             throw new RuntimeException('This ECMT Application has not had number of required permits set yet.');
         }
         return $this->requiredEuro5 + $this->requiredEuro6;
+    }
+
+    /**
+     * Return the entity name in camel case
+     *
+     * @return string
+     */
+    public function getCamelCaseEntityName()
+    {
+        return 'ecmtPermitApplication';
+    }
+
+    /**
+     * Return an array of mappings between success levels and email commands
+     *
+     * @return array
+     */
+    public function getEmailCommandLookup()
+    {
+        return [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtSuccessful::class
+        ];
+    }
+
+    /**
+     * Return the product reference to be used for the issue fee
+     *
+     * @return string
+     */
+    public function getIssueFeeProductReference()
+    {
+        return $this->getProductReferenceForTier();
     }
 }

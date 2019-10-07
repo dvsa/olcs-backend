@@ -10,6 +10,9 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
@@ -22,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -4572,5 +4576,224 @@ class IrhpApplicationEntityTest extends EntityTester
             [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_60_90, 3.75],
             [RefData::EMISSIONS_CATEGORY_EURO6_REF, RefData::INTER_JOURNEY_MORE_90, 5],
         ];
+    }
+
+    public function testGetCamelCaseEntityName()
+    {
+        $application = $this->createNewEntity();
+
+        $this->assertEquals(
+            'irhpApplication',
+            $application->getCamelCaseEntityName()
+        );
+    }
+
+    public function testGetEmailCommandLookup()
+    {
+        $expectedEmailCommandLookup = [
+            ApplicationAcceptConsts::SUCCESS_LEVEL_NONE => SendEcmtShortTermUnsuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
+            ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
+        ];
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(true);
+
+        $application = $this->createNewEntity();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedEmailCommandLookup,
+            $application->getEmailCommandLookup()
+        );
+    }
+
+    public function testGetEmailCommandLookupException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('getEmailCommandLookup is only applicable to ECMT short term');
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+
+        $application = $this->createNewEntity();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $application->getEmailCommandLookup();
+    }
+
+    /**
+     * @dataProvider dpProvideOutcomeNotificationType
+     */
+    public function testGetOutcomeNotificationType($source, $expectedNotificationType)
+    {
+        $sourceRefData = m::mock(RefData::class);
+        $sourceRefData->shouldReceive('getId')
+            ->andReturn($source);
+
+        $entity = Entity::createNew(
+            $sourceRefData,
+            m::mock(RefData::class),
+            m::mock(IrhpPermitType::class),
+            m::mock(Licence::class)
+        );
+
+        $this->assertEquals(
+            $expectedNotificationType,
+            $entity->getOutcomeNotificationType()
+        );
+    }
+
+    /**
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpProvideOutcomeNotificationType()
+    {
+        return [
+            [IrhpInterface::SOURCE_SELFSERVE, ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL],
+            [IrhpInterface::SOURCE_INTERNAL, ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL]
+        ];
+    }
+
+    /**
+     * @dataProvider dpProvideSuccessLevel
+     */
+    public function testGetSuccessLevel($permitsRequired, $permitsAwarded, $expectedSuccessLevel)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $entity->shouldReceive('calculateTotalPermitsRequired')
+            ->andReturn($permitsRequired);
+        $entity->shouldReceive('getPermitsAwarded')
+            ->andReturn($permitsAwarded);
+
+        $this->assertEquals(
+            $expectedSuccessLevel,
+            $entity->getSuccessLevel()
+        );
+    }
+
+    /**
+     * Pass array of app statuses to make sure an exception is thrown
+     *
+     * @return array
+     */
+    public function dpProvideSuccessLevel()
+    {
+        return [
+            [10,  1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [10,  9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [10,  0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [ 1,  0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [ 1,  1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [10, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL]
+        ];
+    }
+
+    public function testProceedToUnsuccessful()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isUnderConsideration')
+            ->andReturn(true);
+
+        $unsuccessfulStatus = m::mock(RefData::class);
+        $entity->proceedToUnsuccessful($unsuccessfulStatus);
+
+        $this->assertSame(
+            $unsuccessfulStatus,
+            $entity->getStatus()
+        );
+    }
+
+    public function testProceedToUnsuccessfulException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'This application is not in the correct state to proceed to unsuccessful (current_status)'
+        );
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isUnderConsideration')
+            ->andReturn(false);
+
+        $currentStatus = m::mock(RefData::class);
+        $currentStatus->shouldReceive('getId')
+            ->andReturn('current_status');
+        $entity->setStatus($currentStatus);
+
+        $entity->proceedToUnsuccessful(m::mock(RefData::class));
+    }
+
+    public function testProceedToAwaitingFee()
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isUnderConsideration')
+            ->andReturn(true);
+
+        $awaitingFeeStatus = m::mock(RefData::class);
+        $entity->proceedToAwaitingFee($awaitingFeeStatus);
+
+        $this->assertSame(
+            $awaitingFeeStatus,
+            $entity->getStatus()
+        );
+    }
+
+    public function testProceedToAwaitingFeeException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'This application is not in the correct state to proceed to awaiting fee (current_status)'
+        );
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isUnderConsideration')
+            ->andReturn(false);
+
+        $currentStatus = m::mock(RefData::class);
+        $currentStatus->shouldReceive('getId')
+            ->andReturn('current_status');
+        $entity->setStatus($currentStatus);
+
+        $entity->proceedToAwaitingFee(m::mock(RefData::class));
+    }
+
+    public function testGetPermitsAwarded()
+    {
+        $permitsAwarded = 14;
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isUnderConsideration')
+            ->andReturn(true);
+        $entity->shouldReceive('getFirstIrhpPermitApplication->countPermitsAwarded')
+            ->andReturn($permitsAwarded);
+
+        $this->assertSame(
+            $permitsAwarded,
+            $entity->getPermitsAwarded()
+        );
+    }
+
+    public function testGetPermitsAwardedException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage(
+            'This application is not in the correct state to return permits awarded (current_status)'
+        );
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('isUnderConsideration')
+            ->andReturn(false);
+
+        $currentStatus = m::mock(RefData::class);
+        $currentStatus->shouldReceive('getId')
+            ->andReturn('current_status');
+        $entity->setStatus($currentStatus);
+
+        $entity->getPermitsAwarded(m::mock(RefData::class));
     }
 }

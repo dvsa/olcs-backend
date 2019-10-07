@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -127,7 +128,7 @@ final class CreateFullPermitApplication extends AbstractCommandHandler implement
         }
 
         return EcmtPermitApplication::createNewInternal(
-            $this->getRepo()->getRefdataReference(EcmtPermitApplication::SOURCE_INTERNAL),
+            $this->getRepo()->getRefdataReference(IrhpInterface::SOURCE_INTERNAL),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::STATUS_NOT_YET_SUBMITTED),
             $this->getRepo()->getRefdataReference(EcmtPermitApplication::PERMIT_TYPE),
             $licence,
