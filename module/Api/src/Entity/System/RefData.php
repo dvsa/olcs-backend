@@ -80,6 +80,16 @@ class RefData extends AbstractRefData
     const EMISSIONS_CATEGORY_EURO5_REF = 'emissions_cat_euro5';
     const EMISSIONS_CATEGORY_NA_REF = 'emissions_cat_na';
 
+    // Business process
+    const BUSINESS_PROCESS_APG = 'app_business_process_apg';
+    const BUSINESS_PROCESS_APGG = 'app_business_process_apgg';
+    const BUSINESS_PROCESS_APSG = 'app_business_process_apsg';
+
+    // International journeys
+    const INTER_JOURNEY_LESS_60 = 'inter_journey_less_60';
+    const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
+    const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
+
     /**
      * RefData constructor.
      *

@@ -5,17 +5,23 @@
  */
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Domain\Repository\Query\Permits\ExpireIrhpApplications as ExpireIrhpApplicationsQuery;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-class IrhpApplication extends AbstractRepository
+class IrhpApplication extends AbstractScoringRepository
 {
     protected $entity = Entity::class;
     protected $alias = 'ia';
+
+    protected $applicationTableName = 'irhp_application';
+    protected $applicationEntityName = 'irhpApplication';
+    protected $permitsRequiredEntityAlias = 'ipa';
+    protected $linkTableName = 'irhp_application_country_link';
+    protected $linkTableApplicationIdName = 'irhp_application_id';
 
     /**
      * @param QueryBuilder $qb

@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJurisdictionQuotaRepo;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulDaPermitApplications
     as MarkSuccessfulDaPermitApplicationsCommand;
@@ -24,10 +24,10 @@ class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->sut = new MarkSuccessfulDaPermitApplicationsHandler();
-        $this->mockRepo('IrhpCandidatePermit', IrhpCandidatePermitRepo::class);
         $this->mockRepo('IrhpPermitJurisdictionQuota', IrhpPermitJurisdictionQuotaRepo::class);
 
         $this->mockedSmServices = [
+            'PermitsScoringScoringQueryProxy' => m::mock(ScoringQueryProxy::class),
             'PermitsScoringSuccessfulCandidatePermitsFacade' => m::mock(SuccessfulCandidatePermitsFacade::class)
         ];
 
@@ -51,13 +51,13 @@ class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
                 ]
             );
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulDaCountInScope')
             ->with($stockId, 4)
             ->andReturn(9);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulDaCountInScope')
             ->with($stockId, 6)
             ->andReturn(6);
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getSuccessfulDaCountInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulDaCountInScope')
             ->with($stockId, 8)
             ->andReturn(13);
 
@@ -71,7 +71,7 @@ class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
             ['id' => 4, RefData::EMISSIONS_CATEGORY_EURO6_REF]
         ];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
             ->with($stockId, 4)
             ->andReturn($candidatePermitsInJurisdictionId4);
 
@@ -102,7 +102,7 @@ class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
             ['id' => 20, RefData::EMISSIONS_CATEGORY_EURO5_REF]
         ];
 
-        $this->repoMap['IrhpCandidatePermit']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getUnsuccessfulScoreOrderedInScope')
             ->with($stockId, 8)
             ->andReturn($candidatePermitsInJurisdictionId8);
 

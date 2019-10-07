@@ -4,6 +4,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
 use Dvsa\Olcs\Api\Domain\Util;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 
@@ -63,16 +64,10 @@ return [
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsLogger' =>
                 ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
-            'PermitsApplyRangesEntityIdsExtractor' =>
-                ApiSrv\Permits\ApplyRanges\EntityIdsExtractor::class,
-            'PermitsApplyRangesRangeSubsetGenerator' =>
-                ApiSrv\Permits\ApplyRanges\RangeSubsetGenerator::class,
-            'PermitsApplyRangesRestrictedCountryIdsProvider' =>
-                ApiSrv\Permits\ApplyRanges\RestrictedCountryIdsProvider::class,
-            'PermitsApplyRangesRestrictedRangesProvider' =>
-                ApiSrv\Permits\ApplyRanges\RestrictedRangesProvider::class,
-            'PermitsApplyRangesUnrestrictedWithLowestStartNumberProvider' =>
-                ApiSrv\Permits\ApplyRanges\UnrestrictedWithLowestStartNumberProvider::class,
+            'PermitsScoringIrhpCandidatePermitFactory' =>
+                ApiSrv\Permits\Scoring\IrhpCandidatePermitFactory::class,
+            'PermitsApplyRangesForCpProviderFactory' =>
+                ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -193,6 +188,8 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtShortTermIntJourneysFormControlStrategyFactory::class,
             'QaEcmtShortTermRestrictedCountriesFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermRestrictedCountriesFormControlStrategyFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -249,6 +246,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerClearerFactory::class,
             'QaEcmtShortTermRestrictedCountriesElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadAnswerSaverFactory::class,
 
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
@@ -263,6 +262,10 @@ return [
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
+            'PermitsScoringCandidatePermitsCreator'
+                => ApiSrv\Permits\Scoring\CandidatePermitsCreatorFactory::class,
+            'PermitsScoringScoringQueryProxy'
+                => ApiSrv\Permits\Scoring\ScoringQueryProxyFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsGenerator'
                 => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsGeneratorFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsWriter'
@@ -271,22 +274,10 @@ return [
                 => ApiSrv\Permits\Scoring\EmissionsCategoryAvailabilityCounterFactory::class,
             'PermitsScoringSuccessfulCandidatePermitsFacade'
                 => ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsFacadeFactory::class,
-            'PermitsApplyRangesForCpProvider'
-                => ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
-            'PermitsApplyRangesForCpWithCountriesAndMultipleMatchingRangesProvider'
-                => ApiSrv\Permits\ApplyRanges\ForCpWithCountriesAndMultipleMatchingRangesProviderFactory::class,
-            'PermitsApplyRangesForCpWithCountriesAndNoMatchingRangesProvider'
-                => ApiSrv\Permits\ApplyRanges\ForCpWithCountriesAndNoMatchingRangesProviderFactory::class,
-            'PermitsApplyRangesForCpWithCountriesProvider'
-                => ApiSrv\Permits\ApplyRanges\ForCpWithCountriesProviderFactory::class,
-            'PermitsApplyRangesForCpWithNoCountriesProvider'
-                => ApiSrv\Permits\ApplyRanges\ForCpWithNoCountriesProviderFactory::class,
-            'PermitsApplyRangesRestrictedWithFewestCountriesProvider'
-                => ApiSrv\Permits\ApplyRanges\RestrictedWithFewestCountriesProviderFactory::class,
-            'PermitsApplyRangesRestrictedWithMostMatchingCountriesProvider'
-                => ApiSrv\Permits\ApplyRanges\RestrictedWithMostMatchingCountriesProviderFactory::class,
-            'PermitsApplyRangesWithFewestNonRequestedCountriesProvider'
-                => ApiSrv\Permits\ApplyRanges\WithFewestNonRequestedCountriesProviderFactory::class,
+            'PermitsApplyRangesStockBasedForCpProviderFactory'
+                => ApiSrv\Permits\ApplyRanges\StockBasedForCpProviderFactoryFactory::class,
+            'PermitsCommonStockBasedRestrictedCountryIdsProvider'
+                => ApiSrv\Permits\Common\StockBasedRestrictedCountryIdsProviderFactory::class,
         ],
     ],
     'view_manager' => [
@@ -595,6 +586,16 @@ return [
             'can-update-licence-licence-type' => \Dvsa\Olcs\Api\Assertion\Licence\UpdateLicenceType::class,
             'can-manage-user-selfserve' => \Dvsa\Olcs\Api\Assertion\User\ManageUserSelfserve::class,
             'can-read-user-selfserve' => \Dvsa\Olcs\Api\Assertion\User\ReadUserSelfserve::class,
+        ]
+    ],
+    'permits' => [
+        'types' => [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => [
+                'restricted_countries' => ['AT', 'GR', 'HU', 'IT', 'RU'],
+            ],
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => [
+                'restricted_countries' => ['GR', 'HU', 'IT', 'RU'],
+            ],
         ]
     ],
     'publication_context' => [

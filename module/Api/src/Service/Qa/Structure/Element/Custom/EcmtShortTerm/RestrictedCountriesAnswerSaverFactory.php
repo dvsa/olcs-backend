@@ -23,7 +23,8 @@ class RestrictedCountriesAnswerSaverFactory implements FactoryInterface
             $repoServiceManager->get('Country'),
             $serviceLocator->get('QaCommonArrayCollectionFactory'),
             $serviceLocator->get('QaNamedAnswerFetcher'),
-            $serviceLocator->get('QaGenericAnswerWriter')
+            $serviceLocator->get('QaGenericAnswerWriter'),
+            $serviceLocator->get('PermitsCommonStockBasedRestrictedCountryIdsProvider')
         );
     }
 }

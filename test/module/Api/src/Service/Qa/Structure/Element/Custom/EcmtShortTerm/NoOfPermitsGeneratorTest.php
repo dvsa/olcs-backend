@@ -27,6 +27,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
         $stockId = 22;
         $validityYear = 2015;
         $totAuthVehicles = 12;
+        $totAuthVehiclesMultipliedBy2 = 24;
         $requiredEuro5 = 13;
         $requiredEuro6 = 7;
 
@@ -54,7 +55,7 @@ class NoOfPermitsGeneratorTest extends MockeryTestCase
 
         $noOfPermitsFactory = m::mock(NoOfPermitsFactory::class);
         $noOfPermitsFactory->shouldReceive('create')
-            ->with($validityYear, $totAuthVehicles)
+            ->with($validityYear, $totAuthVehiclesMultipliedBy2)
             ->once()
             ->andReturn($noOfPermits);
 

@@ -12,13 +12,11 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Handles actions necessary once permit application is submitted.
@@ -32,7 +30,26 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
 
-    protected $extraRepos = ['IrhpCandidatePermit', 'SystemParameter'];
+    protected $extraRepos = ['IrhpApplication'];
+
+    /** @var CandidatePermitsCreator */
+    private $candidatePermitsCreator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->candidatePermitsCreator = $mainServiceLocator->get('PermitsScoringCandidatePermitsCreator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handles post-submission tasks for ECMT Permit Applications
@@ -69,8 +86,21 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
      */
     private function handleIrhpApplication($command)
     {
+        $id = $command->getId();
+
+        $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($id);
+        $firstIrhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
+
+        if ($irhpApplication->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG) {
+            $this->candidatePermitsCreator->create(
+                $firstIrhpPermitApplication,
+                $firstIrhpPermitApplication->getRequiredEuro5(),
+                $firstIrhpPermitApplication->getRequiredEuro6()
+            );
+        }
+
         $sideEffects = [
-            IrhpApplicationSnapshotCmd::create(['id' => $command->getId()]),
+            IrhpApplicationSnapshotCmd::create(['id' => $id]),
         ];
 
         $this->result->merge(
@@ -94,7 +124,7 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
         $application = $this->getRepo()->fetchById($id);
 
         // Create candidate permits for this application
-        $this->createIrhpCandidatePermitRecords(
+        $this->candidatePermitsCreator->create(
             $application->getFirstIrhpPermitApplication(),
             $application->getRequiredEuro5(),
             $application->getRequiredEuro6()
@@ -110,73 +140,5 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
         $this->result->merge(
             $this->handleSideEffects([$emailCmd, $snapshotCmd])
         );
-    }
-
-    /**
-     * Create IRHP Candidate Permit records for each emissions category
-     *
-     * @param IrhpPermitApplicationEntity $irhpPermitApplication
-     * @param int $requiredEuro5
-     * @param int $requiredEuro6
-     *
-     * @return void
-     */
-    private function createIrhpCandidatePermitRecords(
-        IrhpPermitApplicationEntity $irhpPermitApplication,
-        $requiredEuro5 = 0,
-        $requiredEuro6 = 0
-    ) {
-        if ($requiredEuro5 > 0) {
-            $this->createIrhpCandidatePermitRecordsForEmissionsCategory(
-                $irhpPermitApplication,
-                RefData::EMISSIONS_CATEGORY_EURO5_REF,
-                $requiredEuro5
-            );
-        }
-
-        if ($requiredEuro6 > 0) {
-            $this->createIrhpCandidatePermitRecordsForEmissionsCategory(
-                $irhpPermitApplication,
-                RefData::EMISSIONS_CATEGORY_EURO6_REF,
-                $requiredEuro6
-            );
-        }
-    }
-
-    /**
-     * Create IRHP Candidate Permit records for a given emissions category
-     *
-     * @param IrhpPermitApplicationEntity $irhpPermitApplication
-     * @param string $emissionsCategory
-     * @param int $permitsRequired
-     *
-     * @return void
-     */
-    private function createIrhpCandidatePermitRecordsForEmissionsCategory(
-        IrhpPermitApplicationEntity $irhpPermitApplication,
-        string $emissionsCategory,
-        int $permitsRequired
-    ) {
-        $useAltEcmtIouAlgorithm = $this->getRepo('SystemParameter')->fetchValue(
-            SystemParameter::USE_ALT_ECMT_IOU_ALGORITHM
-        );
-
-        $scoringEmissionsCategory = null;
-        if ($useAltEcmtIouAlgorithm) {
-            $scoringEmissionsCategory = $emissionsCategory;
-        }
-
-        $intensityOfUse = floatval($irhpPermitApplication->getPermitIntensityOfUse($scoringEmissionsCategory));
-        $applicationScore = floatval($irhpPermitApplication->getPermitApplicationScore($scoringEmissionsCategory));
-
-        for ($i = 0; $i < $permitsRequired; $i++) {
-            $candidatePermit = IrhpCandidatePermitEntity::createNew(
-                $irhpPermitApplication,
-                $this->refData($emissionsCategory),
-                $intensityOfUse,
-                $applicationScore
-            );
-            $this->getRepo('IrhpCandidatePermit')->save($candidatePermit);
-        }
     }
 }

@@ -57,7 +57,7 @@ class ForCpProvider
         array $ranges
     ) {
         $applicationCountries = $candidatePermit->getIrhpPermitApplication()
-            ->getEcmtPermitApplication()
+            ->getRelatedApplication()
             ->getCountrys()
             ->getValues();
 

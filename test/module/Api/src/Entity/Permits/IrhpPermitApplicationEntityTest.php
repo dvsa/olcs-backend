@@ -88,14 +88,11 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         $intensityOfUse = 0.75;
 
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication->shouldReceive('getPermitIntensityOfUse')
+        $irhpPermitApplication = m::mock(Entity::class)->makePartial();
+        $irhpPermitApplication->shouldReceive('getRelatedApplication->getPermitIntensityOfUse')
             ->with($emissionsCategoryId)
             ->once()
             ->andReturn($intensityOfUse);
-
-        $irhpPermitApplication = m::mock(Entity::class)->makePartial();
-        $irhpPermitApplication->setEcmtPermitApplication($ecmtPermitApplication);
 
         $this->assertEquals(
             $intensityOfUse,
@@ -108,16 +105,13 @@ class IrhpPermitApplicationEntityTest extends EntityTester
      */
     public function testGetPermitApplicationScore($emissionsCategoryId)
     {
-        $applicationScore = 0.75;
+        $applicationScore = 1.25;
 
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication->shouldReceive('getPermitApplicationScore')
+        $irhpPermitApplication = m::mock(Entity::class)->makePartial();
+        $irhpPermitApplication->shouldReceive('getRelatedApplication->getPermitApplicationScore')
             ->with($emissionsCategoryId)
             ->once()
             ->andReturn($applicationScore);
-
-        $irhpPermitApplication = m::mock(Entity::class)->makePartial();
-        $irhpPermitApplication->setEcmtPermitApplication($ecmtPermitApplication);
 
         $this->assertEquals(
             $applicationScore,

@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Common\ArrayCollectionFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
@@ -39,6 +40,8 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
     private $genericAnswerWriter;
 
+    private $stockBasedRestrictedCountryIdsProvider;
+
     private $restrictedCountriesAnswerSaver;
 
     public function setUp()
@@ -62,17 +65,22 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
 
         $this->genericAnswerWriter = m::mock(GenericAnswerWriter::class);
 
+        $this->stockBasedRestrictedCountryIdsProvider = m::mock(StockBasedRestrictedCountryIdsProvider::class);
+
         $this->restrictedCountriesAnswerSaver = new RestrictedCountriesAnswerSaver(
             $this->irhpApplicationRepo,
             $this->countryRepo,
             $this->arrayCollectionFactory,
             $this->namedAnswerFetcher,
-            $this->genericAnswerWriter
+            $this->genericAnswerWriter,
+            $this->stockBasedRestrictedCountryIdsProvider
         );
     }
 
     public function testSaveWhenYes()
     {
+        $stockId = 81;
+
         $selectedCountry1Code = 'HU';
         $selectedCountry1Reference = m::mock(Country::class);
 
@@ -116,6 +124,9 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
             ->globally()
             ->ordered();
 
+        $this->irhpApplication->shouldReceive('getFirstIrhpPermitApplication->getIrhpPermitWindow->getIrhpPermitStock->getId')
+            ->andReturn($stockId);
+
         $this->irhpApplication->shouldReceive('updateCountries')
             ->with($this->arrayCollection)
             ->once()
@@ -136,6 +147,10 @@ class RestrictedCountriesAnswerSaverTest extends MockeryTestCase
                 Question::QUESTION_TYPE_BOOLEAN
             )
             ->once();
+
+        $this->stockBasedRestrictedCountryIdsProvider->shouldReceive('getIds')
+            ->with($stockId)
+            ->andReturn(['GR', 'HU', 'IT', 'RU']);
 
         $this->restrictedCountriesAnswerSaver->save($this->applicationStep, $this->irhpApplication, $postData);
     }

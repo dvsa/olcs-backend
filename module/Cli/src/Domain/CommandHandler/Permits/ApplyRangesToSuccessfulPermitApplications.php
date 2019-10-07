@@ -11,7 +11,8 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpProvider;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\ScoringQueryProxy;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use RuntimeException;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -37,8 +38,11 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
 
     protected $extraRepos = ['IrhpPermit', 'IrhpPermitRange'];
 
-    /** @var ForCpProvider */
-    private $forCpProvider;
+    /** @var StockBasedForCpProviderFactory */
+    private $stockBasedForCpProviderFactory;
+
+    /** @var ScoringQueryProxy */
+    private $scoringQueryProxy;
 
     /** @var array */
     private $ranges;
@@ -52,9 +56,13 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->forCpProvider = $serviceLocator->getServiceLocator()->get(
-            'PermitsApplyRangesForCpProvider'
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->stockBasedForCpProviderFactory = $mainServiceLocator->get(
+            'PermitsApplyRangesStockBasedForCpProviderFactory'
         );
+
+        $this->scoringQueryProxy = $mainServiceLocator->get('PermitsScoringScoringQueryProxy');
 
         return parent::createService($serviceLocator);
     }
@@ -70,11 +78,13 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
     {
         $stockId = $command->getStockId();
 
+        $forCpProvider = $this->stockBasedForCpProviderFactory->create($stockId);
+
         $this->populateRanges(
             $this->getRepo('IrhpPermitRange')->getByStockId($stockId)
         );
 
-        $candidatePermits = $this->getRepo()->getSuccessfulScoreOrderedInScope($stockId);
+        $candidatePermits = $this->scoringQueryProxy->getSuccessfulScoreOrderedInScope($stockId);
 
         $this->profileMessage('apply ranges to successful permit applications...');
 
@@ -86,7 +96,7 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
             );
             $this->result->addMessage($message);
 
-            $selectedRangeEntity = $this->forCpProvider->selectRange(
+            $selectedRangeEntity = $forCpProvider->selectRange(
                 $this->result,
                 $candidatePermit,
                 $this->ranges
