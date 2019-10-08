@@ -576,6 +576,8 @@ return [
 
     // IRHP Candidate Permits
     TransferQuery\IrhpCandidatePermit\GetList::class => QueryHandler\IrhpCandidatePermit\GetList::class,
+    TransferQuery\IrhpCandidatePermit\GetListByIrhpApplication::class
+        => QueryHandler\IrhpCandidatePermit\GetListByIrhpApplication::class,
 
     // Admin :: Data Retention
     TransferQuery\DataRetention\GetRule::class => QueryHandler\DataRetention\GetRule::class,

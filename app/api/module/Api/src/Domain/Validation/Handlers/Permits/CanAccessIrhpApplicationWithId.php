@@ -20,6 +20,18 @@ class CanAccessIrhpApplicationWithId extends AbstractHandler
      */
     public function isValid($dto)
     {
-        return $this->canAccessIrhpApplicationWithId($dto->getId());
+        return $this->canAccessIrhpApplicationWithId($this->getId($dto));
+    }
+
+    /**
+     * Get id
+     *
+     * @param CommandInterface|QueryInterface $dto transfer object
+     *
+     * @return int
+     */
+    protected function getId($dto)
+    {
+        return $dto->getId();
     }
 }
