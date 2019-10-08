@@ -1606,6 +1606,20 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Whether can view candidate permits
+     *
+     * @return bool
+     */
+    public function canViewCandidatePermits(): bool
+    {
+        $businessProcess = $this->getBusinessProcess();
+
+        return $this->isAwaitingFee()
+            && isset($businessProcess)
+            && $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
+    }
+
+    /**
      * Update the international journeys answer value
      *
      * @param RefData $internationalJourneys

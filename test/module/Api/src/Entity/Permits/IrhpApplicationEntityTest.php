@@ -3975,8 +3975,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->setCreatedOn($createdOn);
         $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
 
-        $expectedAnswer = null;
-
         $this->assertNull(
             $entity->getAnswer($applicationStep)
         );
@@ -4327,6 +4325,38 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpTestCanViewCandidatePermits
+     */
+    public function testCanViewCandidatePermits($isAwaitingFee, $businessProcess, $expected)
+    {
+        $this->sut->shouldReceive('isAwaitingFee')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($isAwaitingFee);
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($businessProcess ? new RefData($businessProcess) : null);
+
+        $this->assertSame($expected, $this->sut->canViewCandidatePermits());
+    }
+
+    public function dpTestCanViewCandidatePermits()
+    {
+        return [
+            [true, null, false],
+            [true, RefData::BUSINESS_PROCESS_APSG, true],
+            [true, RefData::BUSINESS_PROCESS_APGG, false],
+            [true, RefData::BUSINESS_PROCESS_APG, false],
+            [false, null, false],
+            [false, RefData::BUSINESS_PROCESS_APSG, false],
+            [false, RefData::BUSINESS_PROCESS_APGG, false],
+            [false, RefData::BUSINESS_PROCESS_APG, false],
+        ];
+    }
+
+    /**
      * @dataProvider dpCanBeGranted
      */
     public function testCanBeGranted($status, $licenceValid, $permitTypeId, $expected)
@@ -4491,6 +4521,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
     /**
      * @dataProvider dpTestGetPermitIntensityOfUse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
     {
