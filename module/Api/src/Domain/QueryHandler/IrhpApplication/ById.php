@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Exception;
 
 /**
  * Retrieve IRHP application by id
@@ -37,11 +38,21 @@ final class ById extends AbstractQueryHandler implements ToggleRequiredInterface
         /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->getRepo()->fetchUsingId($query);
 
+        try {
+            $totalPermitsRequired = $irhpApplication->calculateTotalPermitsRequired();
+            $totalPermitsAwarded = $irhpApplication->getPermitsAwarded();
+        } catch (Exception $e) {
+            $totalPermitsRequired = null;
+            $totalPermitsAwarded = null;
+        }
+
         return $this->result(
             $irhpApplication,
             $this->bundle,
             [
                 'canViewCandidatePermits' => $irhpApplication->canViewCandidatePermits(),
+                'totalPermitsAwarded' => $totalPermitsAwarded,
+                'totalPermitsRequired' => $totalPermitsRequired,
             ]
         );
     }
