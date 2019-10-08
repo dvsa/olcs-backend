@@ -17,8 +17,8 @@ class EcmtShortTermIntJourneysFormControlStrategyFactory implements FactoryInter
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new BaseFormControlStrategy(
-            'radio',
-            $serviceLocator->get('QaRadioElementGenerator'),
+            'ecmt_st_international_journeys',
+            $serviceLocator->get('QaEcmtShortTermIntJourneysElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermIntJourneysAnswerSaver'),
             $serviceLocator->get('QaEcmtShortTermIntJourneysAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator')
