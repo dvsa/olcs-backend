@@ -5019,4 +5019,52 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $entity->getPermitsAwarded(m::mock(RefData::class));
     }
+
+    /**
+     * @dataProvider dpGetIntensityOfUseWarningThreshold
+     */
+    public function testGetIntensityOfUseWarningThreshold($requiredEuro5, $requiredEuro6, $expectedThreshold)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(true);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn($requiredEuro6);
+
+        $application = $this->createNewEntity();
+        $application->setIrhpPermitType($irhpPermitType);
+        $application->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals(
+            $expectedThreshold,
+            $application->getIntensityOfUseWarningThreshold()
+        );
+    }
+
+    public function dpGetIntensityOfUseWarningThreshold()
+    {
+        return [
+            [5, 8, 800],
+            [4, 2, 400],
+        ];
+    }
+
+    public function testGetIntensityOfUseWarningThresholdException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+
+        $application = $this->createNewEntity();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $application->getIntensityOfUseWarningThreshold();
+    }
 }
