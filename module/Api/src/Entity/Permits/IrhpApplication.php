@@ -1851,4 +1851,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
         ];
     }
+
+    /**
+     * Return the number of trips above which the intensity of use should be classed as high intensity
+     *
+     * @return int
+     */
+    public function getIntensityOfUseWarningThreshold()
+    {
+        if (!$this->irhpPermitType->isEcmtShortTerm()) {
+            throw new RuntimeException('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+        }
+
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+
+        $highestRequiredPermits = max(
+            $irhpPermitApplication->getRequiredEuro5(),
+            $irhpPermitApplication->getRequiredEuro6()
+        );
+
+        return $highestRequiredPermits * 100;
+    }
 }
