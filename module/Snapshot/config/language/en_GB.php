@@ -411,6 +411,7 @@ return [
     'qanda.ecmt-short-term.restricted-countries.question' => 'Will you be transporting goods to Greece, Hungary, Italy or Russia?',
     'qanda.ecmt-short-term.annual-trips-abroad.question' => 'How many international trips did you make in the last 12 months using this licence?',
     'qanda.ecmt-short-term.percentage-international-journeys.question' => 'In the last 12 months, what percentage of international trips did you make using this licence?',
+    'qanda.ecmt-short-term.sectors.question' => 'Select one sector you mainly transport goods in using this licence',
 
     'permits.page.stock.select.option.1' => 'Permits for journeys starting between 1 January and 29 February 2020',
     'permits.page.stock.select.option.2' => 'Permits for journeys starting between 1 March and 31 May 2020',
