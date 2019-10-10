@@ -30,6 +30,7 @@ class Question extends AbstractQuestion
     const FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS = 'form_control_ecmt_st_int_journ';
     const FORM_CONTROL_ECMT_SHORT_TERM_RESTRICTED_COUNTRIES = 'form_control_ecmt_st_rest_count';
     const FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD = 'form_control_ecmt_st_ann_trips';
+    const FORM_CONTROL_ECMT_SHORT_TERM_SECTORS = 'form_control_ecmt_st_sectors';
 
     // Question data types
     const QUESTION_TYPE_STRING = 'question_type_string';
