@@ -13,6 +13,7 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Zend\I18n\Translator\Translator;
 
 /**
  * Abstract permit email tester
@@ -74,6 +75,7 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
+            'translator' => m::mock(Translator::class),
         ];
 
         $this->userEmail = 'email1@test.com';

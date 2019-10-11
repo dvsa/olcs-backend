@@ -471,6 +471,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     /**
      * @dataProvider dpTestGetPermitIntensityOfUse
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function testGetPermitIntensityOfUseZeroPermitsRequested($emissionsCategoryId, $expectedIntensityOfUse)
     {
@@ -974,16 +975,27 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         $entity->getFirstIrhpPermitApplication();
     }
 
-    public function testGetPermitsAwarded()
+    /**
+     * @dataProvider dpTestGetPermitsAwarded
+     */
+    public function testGetPermitsAwarded($status)
     {
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')
             ->andReturn(5);
 
-        $entity = $this->createApplicationUnderConsideration();
+        $entity = $this->createApplication($status);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
 
         $this->assertEquals(5, $entity->getPermitsAwarded());
+    }
+
+    public function dpTestGetPermitsAwarded()
+    {
+        return [
+            [Entity::STATUS_UNDER_CONSIDERATION],
+            [Entity::STATUS_AWAITING_FEE],
+        ];
     }
 
     /**
@@ -991,7 +1003,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     */
     public function testGetPermitsAwardedException()
     {
-        $entity = $this->createApplicationAwaitingFee();
+        $entity = $this->createApplication();
 
         $entity->getPermitsAwarded();
     }
@@ -999,13 +1011,13 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpProvideSuccessLevel
      */
-    public function testGetSuccessLevel($requiredEuro5, $requiredEuro6, $permitsAwarded, $expectedSuccessLevel)
+    public function testGetSuccessLevel($status, $requiredEuro5, $requiredEuro6, $permitsAwarded, $expectedSuccessLevel)
     {
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('countPermitsAwarded')
             ->andReturn($permitsAwarded);
 
-        $entity = $this->createApplicationUnderConsideration();
+        $entity = $this->createApplication($status);
         $entity->setRequiredEuro5($requiredEuro5);
         $entity->setRequiredEuro6($requiredEuro6);
         $entity->addIrhpPermitApplications($irhpPermitApplication);
@@ -1024,12 +1036,18 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpProvideSuccessLevel()
     {
         return [
-            [5,5, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
-            [5,5, 9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
-            [5,5, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
-            [1,0, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
-            [0,1, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
-            [5,5, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL]
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_UNDER_CONSIDERATION, 1, 0, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_UNDER_CONSIDERATION, 0, 1, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [Entity::STATUS_UNDER_CONSIDERATION, 5, 5, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 9, ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_AWAITING_FEE, 1, 0, 0, ApplicationAcceptConsts::SUCCESS_LEVEL_NONE],
+            [Entity::STATUS_AWAITING_FEE, 0, 1, 1, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
+            [Entity::STATUS_AWAITING_FEE, 5, 5, 10, ApplicationAcceptConsts::SUCCESS_LEVEL_FULL],
         ];
     }
 
@@ -1038,7 +1056,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     */
     public function testGetSuccessLevelException()
     {
-        $entity = $this->createApplicationAwaitingFee();
+        $entity = $this->createApplication();
 
         $entity->getSuccessLevel();
     }
