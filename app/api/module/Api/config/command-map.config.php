@@ -782,6 +782,7 @@ return [
     Command\Email\SendEcmtShortTermSuccessful::class => CommandHandler\Email\SendEcmtShortTermSuccessful::class,
     Command\Email\SendEcmtShortTermUnsuccessful::class => CommandHandler\Email\SendEcmtShortTermUnsuccessful::class,
     Command\Email\SendEcmtShortTermApsgPartSuccessful::class => CommandHandler\Email\SendEcmtShortTermApsgPartSuccessful::class,
+    Command\Email\SendEcmtShortTermAppSubmitted::class => CommandHandler\Email\SendEcmtShortTermAppSubmitted::class,
 
     // Person
     Command\Person\Create::class => CommandHandler\Person\Create::class,
