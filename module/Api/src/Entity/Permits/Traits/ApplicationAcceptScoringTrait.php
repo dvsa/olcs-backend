@@ -89,7 +89,7 @@ trait ApplicationAcceptScoringTrait
      */
     public function getPermitsAwarded()
     {
-        if (!$this->isUnderConsideration()) {
+        if (!$this->isUnderConsideration() && !$this->isAwaitingFee()) {
             throw new ForbiddenException(
                 'This application is not in the correct state to return permits awarded ('.$this->status->getId().')'
             );
