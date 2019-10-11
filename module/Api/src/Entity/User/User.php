@@ -44,6 +44,10 @@ class User extends AbstractUser implements OrganisationProviderInterface
     const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
     const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
 
+    // user operating system
+    const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
+    const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
+
     /**
      * List of all roles available by user type
      *
