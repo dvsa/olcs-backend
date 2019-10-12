@@ -18,7 +18,7 @@ class StockBasedRestrictedCountryIdsProviderFactory implements FactoryInterface
     {
         return new StockBasedRestrictedCountryIdsProvider(
             $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitStock'),
-            $serviceLocator->get('Config')
+            $serviceLocator->get('PermitsCommonTypeBasedRestrictedCountriesProvider')
         );
     }
 }

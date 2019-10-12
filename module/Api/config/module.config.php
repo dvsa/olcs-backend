@@ -282,6 +282,10 @@ return [
                 => ApiSrv\Permits\ApplyRanges\StockBasedForCpProviderFactoryFactory::class,
             'PermitsCommonStockBasedRestrictedCountryIdsProvider'
                 => ApiSrv\Permits\Common\StockBasedRestrictedCountryIdsProviderFactory::class,
+            'PermitsCommonRangeBasedRestrictedCountriesProvider'
+                => ApiSrv\Permits\Common\RangeBasedRestrictedCountriesProviderFactory::class,
+            'PermitsCommonTypeBasedRestrictedCountriesProvider'
+                => ApiSrv\Permits\Common\TypeBasedRestrictedCountriesProviderFactory::class,
         ],
     ],
     'view_manager' => [
