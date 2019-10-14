@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
-use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
+use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
@@ -34,10 +34,10 @@ class ClientTest extends MockeryTestCase
     {
         $this->mockClient = $this->createMock(\Zend\Http\Client::class);
 
-        $this->sut = new WebDavClient(
-            $this->mockClient,
-            self::BASE_URI,
-            self::WORKSPACE
+        $this->sut = new DocManClient(
+            ['httpClient' =>$this->mockClient,
+            'baseuri'=>self::BASE_URI,
+            'workspace'=>self::WORKSPACE ]
         );
         $this->sut->setUuid('UUID1');
 
@@ -77,7 +77,7 @@ class ClientTest extends MockeryTestCase
         $this->mockClient
             ->expects(static::once())
             ->method('setStream')
-            ->with(static::stringContains('/' . WebDavClient::DS_DOWNLOAD_FILE_PREFIX))
+            ->with(static::stringContains('/' . DocManClient::DS_DOWNLOAD_FILE_PREFIX))
             ->willReturnCallback(
                 function ($filePath) use ($content) {
                     file_put_contents($filePath, $content);
@@ -137,7 +137,7 @@ class ClientTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('log')
             ->once()
-            ->with(\Zend\Log\Logger::ERR, WebDavClient::ERR_RESP_FAIL, []);
+            ->with(\Zend\Log\Logger::ERR, DocManClient::ERR_RESP_FAIL, []);
 
         //  call & check
         $actual = $this->sut->read('test');
