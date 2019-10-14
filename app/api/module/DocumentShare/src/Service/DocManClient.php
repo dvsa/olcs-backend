@@ -35,6 +35,9 @@ class DocManClient
         $this->httpClient = $clientOptions['httpClient'];
         $this->baseUri = $clientOptions['baseuri'];
         $this->workspace = $clientOptions['workspace'];
+        if (isset($clientOptions['uuid'])) {
+            $this->setUuid($clientOptions['uuid']);
+        }
     }
 
     /**

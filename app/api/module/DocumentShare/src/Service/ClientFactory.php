@@ -28,9 +28,8 @@ class ClientFactory implements AbstractFactoryInterface
      * @return \Dvsa\Olcs\DocumentShare\Service\WebDavClient
      * @throws \RuntimeException
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
+    public function getHttpClient(ServiceLocatorInterface $serviceLocator)
     {
-        $clientOptions = $this->getConfiguration($serviceLocator);
 
         $options = $this->getOptions($serviceLocator, 'http');
         $httpClient = new HttpClient();
@@ -40,17 +39,7 @@ class ClientFactory implements AbstractFactoryInterface
         $wrapper->wrapAdapter($httpClient);
         $wrapper->setShouldLogData(false);
 
-        $client = new WebDavClient(
-            $httpClient,
-            $clientOptions['baseuri'],
-            $clientOptions['workspace']
-        );
-
-        if (isset($clientOptions['uuid'])) {
-            $client->setUuid($clientOptions['uuid']);
-        }
-
-        return $client;
+        return $httpClient;
 
     }
 
@@ -102,8 +91,6 @@ class ClientFactory implements AbstractFactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        $clientOptions['httpClient'] = new HttpClient();
-
         if($requestedName === WebDavClient::class)
         {
             if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
@@ -115,6 +102,7 @@ class ClientFactory implements AbstractFactoryInterface
             }
         }
 
+        $clientOptions['httpClient'] = $this->getHttpClient($serviceLocator);
         return $clientOptions;
 }
 
@@ -144,5 +132,6 @@ class ClientFactory implements AbstractFactoryInterface
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
         $clientOptions = $this->getConfiguration($serviceLocator, $requestedName);
-        return $requestedName($clientOptions);
+
+        return new $requestedName($clientOptions);
 }}
