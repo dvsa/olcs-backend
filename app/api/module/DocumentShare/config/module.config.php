@@ -10,7 +10,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            Dvsa\Olcs\DocumentShare\Service\Client::class => Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
+            Dvsa\Olcs\DocumentShare\Service\WebDavClient::class => Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
         ]
     ]
 ];
