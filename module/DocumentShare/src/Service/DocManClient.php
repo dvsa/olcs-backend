@@ -4,6 +4,13 @@
 namespace Dvsa\Olcs\DocumentShare\Service;
 
 
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Olcs\Logging\Log\Logger;
+use Zend\Http\Client as HttpClient;
+use Zend\Http\Request;
+use Zend\Http\Response;
+
+
 class DocManClient
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
