@@ -102,9 +102,8 @@ class ClientFactory implements AbstractFactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        if($requestedName !== WebDavClient::class)
+        if($requestedName === WebDavClient::class)
         {
-
             if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
                 throw new RuntimeException('Missing required option document_share.client.username for webdav client');
             }
