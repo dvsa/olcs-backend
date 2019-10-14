@@ -25,12 +25,11 @@ class ClientFactory implements AbstractFactoryInterface
      *
      * @param ServiceLocatorInterface $serviceLocator Service manager
      *
-     * @return \Dvsa\Olcs\DocumentShare\Service\WebDavClient
+     * @return HttpClient
      * @throws \RuntimeException
      */
-    public function getHttpClient(ServiceLocatorInterface $serviceLocator)
+    public function getHttpClient(ServiceLocatorInterface $serviceLocator): HttpClient
     {
-
         $options = $this->getOptions($serviceLocator, 'http');
         $httpClient = new HttpClient();
         $httpClient->setOptions($options);
@@ -40,7 +39,6 @@ class ClientFactory implements AbstractFactoryInterface
         $wrapper->setShouldLogData(false);
 
         return $httpClient;
-
     }
 
     /**
@@ -49,10 +47,10 @@ class ClientFactory implements AbstractFactoryInterface
      * @param ServiceLocatorInterface $sl  Service Manager
      * @param string                  $key Key
      *
-     * @return \Zend\Stdlib\AbstractOptions
+     * @return array
      * @throws \RuntimeException
      */
-    public function getOptions(ServiceLocatorInterface $sl, $key)
+    public function getOptions(ServiceLocatorInterface $sl, $key): array
     {
         if (is_null($this->options)) {
             $options = $sl->get('Configuration');
@@ -78,9 +76,9 @@ class ClientFactory implements AbstractFactoryInterface
      *
      * @param                         $requestedName
      *
-     * @return \Zend\Stdlib\AbstractOptions
+     * @return array
      */
-    private function getConfiguration(ServiceLocatorInterface $serviceLocator, $requestedName): \Zend\Stdlib\AbstractOptions
+    private function getConfiguration(ServiceLocatorInterface $serviceLocator, $requestedName): array
     {
         $clientOptions = $this->getOptions($serviceLocator, 'client');
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
@@ -115,7 +113,7 @@ class ClientFactory implements AbstractFactoryInterface
      *
      * @return bool
      */
-    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName): bool
     {
         return in_array($requestedName, [WebDavClient::class, DocManClient::class]);
     }

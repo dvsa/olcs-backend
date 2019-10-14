@@ -68,6 +68,8 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $this->documentService = $serviceLocator->get('Document');
         $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
         $this->uploader = $serviceLocator->get('FileUploader');
+
+        // write conditional statement here
         $this->contentStore = $serviceLocator->get('ContentStore');
         $this->documentRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 
