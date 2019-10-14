@@ -36,14 +36,12 @@ class WebDavClient
      * @param string     $baseUri    base uri path to storage
      * @param string     $workspace  path
      */
-    public function __construct(
-        HttpClient $httpClient,
-        $baseUri,
-        $workspace
+    public function __construct(array $config
+
     ) {
-        $this->httpClient = $httpClient;
-        $this->baseUri = trim($baseUri);
-        $this->workspace = trim($workspace);
+        $this->httpClient = $config['httpClient'];
+        $this->baseUri = $config['webdav_baseUri'];
+        $this->workspace = $config['workspace'];
     }
 
     /**
