@@ -11,7 +11,7 @@ use Zend\Http\Response;
 /**
  * Class Client
  */
-class Client
+class WebDavClient
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
 

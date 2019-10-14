@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
+use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as HttpClient;
@@ -12,7 +13,7 @@ use Zend\Http\Request;
 /**
  * Class ClientFactory
  */
-class ClientFactory implements FactoryInterface
+class ClientFactory implements AbstractFactoryInterface
 {
     /**
      * @var array
@@ -24,19 +25,12 @@ class ClientFactory implements FactoryInterface
      *
      * @param ServiceLocatorInterface $serviceLocator Service manager
      *
-     * @return \Dvsa\Olcs\DocumentShare\Service\Client
+     * @return \Dvsa\Olcs\DocumentShare\Service\WebDavClient
      * @throws \RuntimeException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $clientOptions = $this->getOptions($serviceLocator, 'client');
-        if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
-            throw new RuntimeException('Missing required option document_share.client.baseuri');
-        }
-
-        if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
-            throw new RuntimeException('Missing required option document_share.client.workspace');
-        }
+        $clientOptions = $this->getConfiguration($serviceLocator);
 
         $options = $this->getOptions($serviceLocator, 'http');
         $httpClient = new HttpClient();
@@ -46,7 +40,7 @@ class ClientFactory implements FactoryInterface
         $wrapper->wrapAdapter($httpClient);
         $wrapper->setShouldLogData(false);
 
-        $client = new Client(
+        $client = new WebDavClient(
             $httpClient,
             $clientOptions['baseuri'],
             $clientOptions['workspace']
@@ -89,4 +83,65 @@ class ClientFactory implements FactoryInterface
 
         return $options;
     }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @param                         $requestedName
+     *
+     * @return \Zend\Stdlib\AbstractOptions
+     */
+    private function getConfiguration(ServiceLocatorInterface $serviceLocator, $requestedName): \Zend\Stdlib\AbstractOptions
+    {
+        $clientOptions = $this->getOptions($serviceLocator, 'client');
+        if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
+            throw new RuntimeException('Missing required option document_share.client.baseuri');
+        }
+
+        if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
+            throw new RuntimeException('Missing required option document_share.client.workspace');
+        }
+
+        if($requestedName !== WebDavClient::class)
+        {
+
+            if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
+                throw new RuntimeException('Missing required option document_share.client.username for webdav client');
+            }
+
+            if (!isset($clientOptions['password']) || empty($clientOptions['password'])) {
+                throw new RuntimeException('Missing required option document_share.client.password for webdav client');
+            }
+        }
+
+        return $clientOptions;
 }
+
+    /**
+     * Determine if we can create a service with name
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param                         $name
+     * @param                         $requestedName
+     *
+     * @return bool
+     */
+    public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        return in_array($requestedName, [WebDavClient::class, DocManClient::class]);
+    }
+
+    /**
+     * Create service with name
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     * @param                         $name
+     * @param                         $requestedName
+     *
+     * @return mixed
+     */
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    {
+        $clientOptions = $this->getConfiguration($serviceLocator, $requestedName);
+        return $requestedName($clientOptions);
+}}
