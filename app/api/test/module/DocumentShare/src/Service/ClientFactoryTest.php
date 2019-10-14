@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
+use Dvsa\Olcs\DocumentShare\Service\Client;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
 
 /**
@@ -63,51 +64,15 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @dataProvider provideCreateService
-     * @param $config
-     * @param $expected
-     */
-    public function testCreateService($config, $expected = null)
+    public function testCanCreateServiceWithName()
     {
         $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $mockSl
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('Configuration'))
-            ->willReturn($config);
 
         $sut = new ClientFactory();
-        if ($expected instanceof \Exception) {
-            $passed = false;
-            try {
-                $service = $sut->createService($mockSl);
-            } catch (\Exception $e) {
-                if (
-                    $e->getMessage() == $expected->getMessage() &&
-                    get_class($e) == get_class($expected)
-                ) {
-                    $passed = true;
-                }
-            }
-
-            $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
-        } else {
-            $service = $sut->createService($mockSl);
-
-            $this->assertInstanceOf('\Zend\Http\Client', $service->getHttpClient());
-            $this->assertEquals($config['document_share']['client']['workspace'], $service->getWorkspace());
-            $this->assertEquals($config['document_share']['client']['baseuri'], $service->getBaseUri());
-
-            if (isset($config['document_share']['client']['uuid'])) {
-                $this->assertEquals(
-                    $config['document_share']['client']['uuid'],
-                    $service->getUuid()
-                );
-            }
-        }
-
+        $this->assertTrue($sut->canCreateServiceWithName($mockSl, '', Client::class));
+        $this->assertFalse($sut->canCreateServiceWithName($mockSl, '', 'Data\\Service\\Backend\\Dummy'));
     }
+
 
     public function provideCreateService()
     {

@@ -128,7 +128,7 @@ class ClientFactory implements AbstractFactoryInterface
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return Client::class;
+        return $requestedName === Client::class;
     }
 
     /**
