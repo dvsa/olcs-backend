@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
-use Dvsa\Olcs\DocumentShare\Service\Client;
+use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
 
 /**
@@ -69,7 +69,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
 
         $sut = new ClientFactory();
-        $this->assertTrue($sut->canCreateServiceWithName($mockSl, '', Client::class));
+        $this->assertTrue($sut->canCreateServiceWithName($mockSl, '', WebDavClient::class));
         $this->assertFalse($sut->canCreateServiceWithName($mockSl, '', 'Data\\Service\\Backend\\Dummy'));
     }
 

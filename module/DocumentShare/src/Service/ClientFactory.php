@@ -25,7 +25,7 @@ class ClientFactory implements AbstractFactoryInterface
      *
      * @param ServiceLocatorInterface $serviceLocator Service manager
      *
-     * @return \Dvsa\Olcs\DocumentShare\Service\Client
+     * @return \Dvsa\Olcs\DocumentShare\Service\WebDavClient
      * @throws \RuntimeException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
@@ -40,7 +40,7 @@ class ClientFactory implements AbstractFactoryInterface
         $wrapper->wrapAdapter($httpClient);
         $wrapper->setShouldLogData(false);
 
-        $client = new Client(
+        $client = new WebDavClient(
             $httpClient,
             $clientOptions['baseuri'],
             $clientOptions['workspace']
@@ -102,7 +102,7 @@ class ClientFactory implements AbstractFactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        if($requestedName !== Client::class)
+        if($requestedName !== WebDavClient::class)
         {
 
             if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
@@ -128,7 +128,7 @@ class ClientFactory implements AbstractFactoryInterface
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
     {
-        return $requestedName === Client::class;
+        return in_array($requestedName, [WebDavClient::class, DocManClient::class]);
     }
 
     /**
