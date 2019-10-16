@@ -72,22 +72,22 @@ class IrhpPermitWindow extends AbstractRepository
      */
     public function findOverlappingWindowsByType($irhpPermitStock, $proposedStartDate, $proposedEndDate, $irhpPermitWindow = null)
     {
-        $doctrineQb = $this->createQueryBuilder();
-        $doctrineQb
-            ->orWhere($doctrineQb->expr()->between($this->alias . '.startDate', ':proposedStartDate', ':proposedEndDate'))
-            ->orWhere($doctrineQb->expr()->between($this->alias . '.endDate', ':proposedStartDate', ':proposedEndDate'))
-            ->orWhere($doctrineQb->expr()->between(':proposedStartDate', $this->alias . '.startDate', $this->alias . '.endDate'))
-            ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
+        $qb = $this->createQueryBuilder();
+        $qb
+            ->orWhere($qb->expr()->between($this->alias . '.startDate', ':proposedStartDate', ':proposedEndDate'))
+            ->orWhere($qb->expr()->between($this->alias . '.endDate', ':proposedStartDate', ':proposedEndDate'))
+            ->orWhere($qb->expr()->between(':proposedStartDate', $this->alias . '.startDate', $this->alias . '.endDate'))
+            ->andWhere($qb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
             ->setParameter('irhpPermitStock', $irhpPermitStock)
-            ->setParameter('proposedStartDate', $proposedStartDate)
-            ->setParameter('proposedEndDate', $proposedEndDate);
+            ->setParameter('proposedStartDate', new DateTime($proposedStartDate))
+            ->setParameter('proposedEndDate', new DateTime($proposedEndDate));
         if ($irhpPermitWindow !== null) {
-            $doctrineQb
-                ->andWhere($doctrineQb->expr()->neq($this->alias . '.id', ':irhpPermitWindow'))
+            $qb
+                ->andWhere($qb->expr()->neq($this->alias . '.id', ':irhpPermitWindow'))
                 ->setParameter('irhpPermitWindow', $irhpPermitWindow);
         }
 
-        return $doctrineQb->getQuery()->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**
