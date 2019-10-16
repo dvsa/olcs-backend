@@ -4492,41 +4492,33 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpCanBeGranted
      */
-    public function testCanBeGranted($status, $licenceValid, $permitTypeId, $expected)
+    public function testCanBeGranted($isUnderConsideration, $licenceValid, $businessProcess, $expected)
     {
-        $entity = $this->createNewEntity();
-        $entity->setStatus(new RefData($status));
+        $this->sut->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
 
         $licence = m::mock(Licence::class);
-        $permitType = m::mock(IrhpPermitType::class);
-
-        $entity->setLicence($licence);
-        $entity->setIrhpPermitType($permitType);
+        $this->sut->setLicence($licence);
 
         $licence->allows('isValid')
             ->andReturn($licenceValid);
 
-        $permitType->allows('getId')
-            ->andReturn($permitTypeId);
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn(new RefData($businessProcess));
 
-        $this->assertEquals($expected, $entity->canBeGranted());
+        $this->assertEquals($expected, $this->sut->canBeGranted());
     }
 
     public function dpCanBeGranted()
     {
         return [
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
-            [IrhpInterface::STATUS_VALID, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_CANCELLED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_WITHDRAWN, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_AWAITING_FEE, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_FEE_PAID, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_UNSUCCESSFUL, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_ISSUED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_ISSUING, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_EXPIRED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [true, true, RefData::BUSINESS_PROCESS_APGG, true],
+            [false, true, RefData::BUSINESS_PROCESS_APGG, false],
+            [true, false, RefData::BUSINESS_PROCESS_APGG, false],
+            [true, true, RefData::BUSINESS_PROCESS_APSG, false],
+            [true, true, RefData::BUSINESS_PROCESS_APG, false],
         ];
     }
 
