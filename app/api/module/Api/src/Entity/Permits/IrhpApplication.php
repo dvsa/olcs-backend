@@ -828,7 +828,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return
             $this->isUnderConsideration()
             && $this->licence->isValid()
-            && $this->getIrhpPermitType()->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
+            && (string)$this->getBusinessProcess() === RefData::BUSINESS_PROCESS_APGG;
     }
 
     /**
