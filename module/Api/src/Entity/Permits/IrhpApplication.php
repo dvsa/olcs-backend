@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -352,6 +353,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
                     return $this->getStandardQaAnswer($question);
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
+                    return $this->getEcmtShortTermSectorsAnswer($isSnapshot);
             }
 
             throw new RuntimeException(
@@ -490,6 +493,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return ['No'];
+    }
+
+    /**
+     * Get the sectors answer value
+     *
+     * @param bool $isSnapshot
+     *
+     * @return int|null
+     */
+    private function getEcmtShortTermSectorsAnswer($isSnapshot)
+    {
+        if (!is_null($this->sectors)) {
+            if ($isSnapshot) {
+                return $this->sectors->getName();
+            }
+
+            return $this->sectors->getId();
+        }
+
+        return null;
     }
 
     /**
@@ -1642,6 +1665,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function clearInternationalJourneys()
     {
         $this->internationalJourneys = null;
+    }
+
+    /**
+     * Update the sectors answer value
+     *
+     * @param Sectors $sectors
+     */
+    public function updateSectors(Sectors $sectors)
+    {
+        $this->sectors = $sectors;
+    }
+
+    /**
+     * Clear the sectors answer value
+     */
+    public function clearSectors()
+    {
+        $this->sectors = null;
     }
 
     /**

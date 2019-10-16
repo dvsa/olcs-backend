@@ -22,6 +22,7 @@ class ByIdTest extends QueryHandlerTestCase
         'irhpPermitType' => ['name'],
         'fees' => ['feeType' => ['feeType'], 'feeStatus'],
         'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country']]],
+        'sectors',
     ];
 
     public function setUp()
