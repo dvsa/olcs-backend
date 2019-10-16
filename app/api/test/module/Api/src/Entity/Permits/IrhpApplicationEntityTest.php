@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -4113,6 +4114,48 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    /**
+     * @dataProvider dpTestGetAnswerForCustomEcmtShortTermSectors
+     */
+    public function testGetAnswerForCustomEcmtShortTermSectors($sectorsEntity, $isSnapshot, $expectedAnswer)
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->setSectors($sectorsEntity);
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getAnswer($step, $isSnapshot)
+        );
+    }
+
+    public function dpTestGetAnswerForCustomEcmtShortTermSectors()
+    {
+        $sectorId = 7;
+        $sectorName = 'Wood';
+
+        $sectors = m::mock(Sectors::class);
+        $sectors->shouldReceive('getId')
+            ->andReturn($sectorId);
+        $sectors->shouldReceive('getName')
+            ->andReturn($sectorName);
+
+        return [
+            [$sectors, false, $sectorId],
+            [$sectors, true, $sectorName],
+            [null, false, null],
+            [null, true, null],
+        ];
+    }
+
     public function testGetAnswerForQuestionWithoutActiveQuestionText()
     {
         $createdOn = new DateTime();
@@ -4544,6 +4587,30 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->clearInternationalJourneys();
 
         $this->assertNull($entity->getInternationalJourneys());
+    }
+
+    public function testUpdateSectors()
+    {
+        $sectors = m::mock(Sectors::class);
+
+        $entity = $this->createNewEntity();
+        $entity->updateSectors($sectors);
+
+        $this->assertSame(
+            $sectors,
+            $entity->getSectors()
+        );
+    }
+
+    public function testClearSectors()
+    {
+        $sectors = m::mock(Sectors::class);
+
+        $entity = $this->createNewEntity();
+        $entity->setSectors($sectors);
+        $entity->clearSectors();
+
+        $this->assertNull($entity->getSectors());
     }
 
     public function testGetBusinessProcess()
