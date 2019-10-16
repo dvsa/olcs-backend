@@ -18,7 +18,7 @@ class EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory implements Factor
     {
         return new BaseFormControlStrategy(
             'ecmt_st_annual_trips_abroad',
-            $serviceLocator->get('QaTextElementGenerator'),
+            $serviceLocator->get('QaEcmtShortTermAnnualTripsAbroadElementGenerator'),
             $serviceLocator->get('QaEcmtShortTermAnnualTripsAbroadAnswerSaver'),
             $serviceLocator->get('QaGenericAnswerClearer'),
             $serviceLocator->get('QaQuestionTextGenerator')

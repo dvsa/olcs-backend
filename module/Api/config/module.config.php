@@ -60,6 +60,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountryFactory::class,
             'QaEcmtShortTermIntJourneysElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadFactory::class,
             'QaSupplementedApplicationStepFactory' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
@@ -245,6 +247,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysAnswerClearerFactory::class,
             'QaEcmtShortTermIntJourneysElementGenerator' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysGeneratorFactory::class,
+            'QaEcmtShortTermAnnualTripsAbroadElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadGeneratorFactory::class,
             'QaEcmtShortTermRestrictedCountriesAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\RestrictedCountriesAnswerSaverFactory::class,
             'QaEcmtShortTermRestrictedCountriesAnswerClearer' =>
