@@ -11,7 +11,7 @@ use Zend\Http\Request;
 use Zend\Http\Response;
 
 
-class DocManClient
+class DocManClient implements DocumentStoreInterface
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
 

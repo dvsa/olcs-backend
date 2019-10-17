@@ -3,10 +3,13 @@
 namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
+use League\Flysystem\Filesystem;
+use League\Flysystem\WebDAV\WebDAVAdapter;
 use RuntimeException;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as HttpClient;
+use Sabre\HTTP\Client as SabreClient;
 
 /**
  * Class ClientFactory
@@ -28,7 +31,7 @@ class ClientFactory implements AbstractFactoryInterface
      */
     public function getHttpClient(ServiceLocatorInterface $serviceLocator): HttpClient
     {
-        $options = $this->getOptions($serviceLocator, 'http');
+        $options = $this->getClientOptions($serviceLocator, 'http');
         $httpClient = new HttpClient();
         $httpClient->setOptions($options);
 
@@ -48,7 +51,7 @@ class ClientFactory implements AbstractFactoryInterface
      * @return array
      * @throws \RuntimeException
      */
-    public function getOptions(ServiceLocatorInterface $sl, $key): array
+    public function getClientOptions(ServiceLocatorInterface $sl, $key, $requestedName): DocumentStoreClientOptions
     {
         if (is_null($this->options)) {
             $options = $sl->get('Configuration');
@@ -78,7 +81,7 @@ class ClientFactory implements AbstractFactoryInterface
      */
     private function getConfiguration(ServiceLocatorInterface $serviceLocator, $requestedName): array
     {
-        $clientOptions = $this->getOptions($serviceLocator, 'client');
+        $clientOptions = $this->getClientOptions($serviceLocator, 'client');
 
 
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
@@ -89,8 +92,7 @@ class ClientFactory implements AbstractFactoryInterface
             throw new RuntimeException('Missing required option document_share.client.workspace');
         }
 
-        if($requestedName === WebDavClient::class)
-        {
+        if ($requestedName === WebDavClient::class) {
             if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
                 throw new RuntimeException('Missing required option document_share.client.username for webdav client');
             }
@@ -102,7 +104,7 @@ class ClientFactory implements AbstractFactoryInterface
 
         $clientOptions['httpClient'] = $this->getHttpClient($serviceLocator);
         return $clientOptions;
-}
+    }
 
     /**
      * Determine if we can create a service with name
@@ -127,9 +129,34 @@ class ClientFactory implements AbstractFactoryInterface
      *
      * @return mixed
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName): DocumentStoreInterface
     {
         $clientOptions = $this->getConfiguration($serviceLocator, $requestedName);
 
-        return new $requestedName($clientOptions);
-}}
+        if ($requestedName === WebDavClient::class) {
+            $sabreClient = new SabreClient(
+                [
+                    'baseUri' => $clientOptions['webdav_baseuri'],
+                    'username' => $clientOptions['username'],
+                    'password' => $clientOptions['password']
+                ]
+            );
+
+            $adapter = new WebDAVAdapter($sabreClient, $clientOptions['workspace']);
+            $fileSystem = new Filesystem($adapter);
+            return WebDavClient($fileSystem);
+        } elseif ($requestedName == DocManClient::class) {
+            $client = new DocManClient(
+                $this->getHttpClient($serviceLocator),
+                $clientOptions['baseuri'],
+                $clientOptions['workspace']
+            );
+
+            if (isset($clientOptions['uuid'])) {
+                $client->setUuid($clientOptions['uuid']);
+            }
+
+            return $client;
+        }
+    }
+}
