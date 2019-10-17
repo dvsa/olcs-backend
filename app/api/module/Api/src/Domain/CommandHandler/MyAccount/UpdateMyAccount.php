@@ -44,7 +44,6 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
-        $command->getOsType();
         $data = $command->getArrayCopy();
 
         /** @var UserEntity $user */
