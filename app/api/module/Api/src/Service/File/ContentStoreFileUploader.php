@@ -2,11 +2,16 @@
 
 namespace Dvsa\Olcs\Api\Service\File;
 
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Service\DocManClient;
+use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
 use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Content Store File Uploader
@@ -30,7 +35,17 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->contentStoreClient = $serviceLocator->get('ContentStore');
+        $authService = $serviceLocator->get(AuthorizationService::class);
+
+        /** @var User $currentUser */
+        $currentUser = $authService->getIdentity()->getUser();
+
+        // do windows 10 check here
+        if ($currentUser->getOsType() === User::USER_OS_TYPE_WINDOWS_10) {
+            $this->contentStoreClient = $serviceLocator->get(WebDavClient::class);
+        } else {
+            $this->contentStoreClient = $serviceLocator->get(DocManClient::class);
+        }
 
         return $this;
     }

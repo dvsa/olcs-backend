@@ -5,10 +5,8 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use RuntimeException;
 use Zend\ServiceManager\AbstractFactoryInterface;
-use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as HttpClient;
-use Zend\Http\Request;
 
 /**
  * Class ClientFactory
@@ -81,6 +79,8 @@ class ClientFactory implements AbstractFactoryInterface
     private function getConfiguration(ServiceLocatorInterface $serviceLocator, $requestedName): array
     {
         $clientOptions = $this->getOptions($serviceLocator, 'client');
+
+
         if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
             throw new RuntimeException('Missing required option document_share.client.baseuri');
         }
