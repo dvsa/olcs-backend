@@ -3,30 +3,30 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Common;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
-use RuntimeException;
+use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedRestrictedCountriesProvider;
 
 class StockBasedRestrictedCountryIdsProvider
 {
     /** @var IrhpPermitStockRepository */
     private $irhpPermitStockRepo;
 
-    /** @var array */
-    private $config;
+    /** @var TypeBasedRestrictedCountriesProvider */
+    private $typeBasedRestrictedCountriesProvider;
 
     /**
      * Create service instance
      *
      * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param array $config
+     * @param TypeBasedRestrictedCountriesProvider $typeBasedRestrictedCountriesProvider
      *
      * @return StockBasedRestrictedCountryIdsProvider
      */
     public function __construct(
         IrhpPermitStockRepository $irhpPermitStockRepo,
-        array $config
+        TypeBasedRestrictedCountriesProvider $typeBasedRestrictedCountriesProvider
     ) {
         $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->config = $config;
+        $this->typeBasedRestrictedCountriesProvider = $typeBasedRestrictedCountriesProvider;
     }
 
     /**
@@ -40,12 +40,7 @@ class StockBasedRestrictedCountryIdsProvider
     {
         $irhpPermitStock = $this->irhpPermitStockRepo->fetchById($stockId);
         $irhpPermitTypeId = $irhpPermitStock->getIrhpPermitType()->getId();
-        $typesConfig = $this->config['permits']['types'];
 
-        if (!isset($typesConfig[$irhpPermitTypeId]['restricted_countries'])) {
-            throw new RuntimeException('No restricted countries config found for permit type ' . $irhpPermitTypeId);
-        }
-
-        return $typesConfig[$irhpPermitTypeId]['restricted_countries'];
+        return $this->typeBasedRestrictedCountriesProvider->getIds($irhpPermitTypeId);
     }
 }

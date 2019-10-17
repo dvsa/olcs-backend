@@ -24,4 +24,19 @@ class Sectors extends AbstractRepository
     {
         $qb->addOrderBy($this->alias . '.' . $query->getSort(), $query->getOrder());
     }
+
+    /**
+     * Fetch an array of sectors for use by the Q&A options component
+     *
+     * @return array
+     */
+    public function fetchQaOptions()
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('s.id as value, s.name as label, s.description as hint')
+            ->from(Entity::class, 's')
+            ->orderBy('s.displayOrder', 'ASC')
+            ->getQuery()
+            ->getScalarResult();
+    }
 }

@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -352,6 +353,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getEcmtShortTermRestrictedCountriesAnswer($question);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD:
                     return $this->getStandardQaAnswer($question);
+                case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
+                    return $this->getEcmtShortTermSectorsAnswer($isSnapshot);
             }
 
             throw new RuntimeException(
@@ -490,6 +493,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return ['No'];
+    }
+
+    /**
+     * Get the sectors answer value
+     *
+     * @param bool $isSnapshot
+     *
+     * @return int|null
+     */
+    private function getEcmtShortTermSectorsAnswer($isSnapshot)
+    {
+        if (!is_null($this->sectors)) {
+            if ($isSnapshot) {
+                return $this->sectors->getName();
+            }
+
+            return $this->sectors->getId();
+        }
+
+        return null;
     }
 
     /**
@@ -828,7 +851,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         return
             $this->isUnderConsideration()
             && $this->licence->isValid()
-            && $this->getIrhpPermitType()->getId() === IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM;
+            && (string)$this->getBusinessProcess() === RefData::BUSINESS_PROCESS_APGG;
     }
 
     /**
@@ -1645,6 +1668,24 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Update the sectors answer value
+     *
+     * @param Sectors $sectors
+     */
+    public function updateSectors(Sectors $sectors)
+    {
+        $this->sectors = $sectors;
+    }
+
+    /**
+     * Clear the sectors answer value
+     */
+    public function clearSectors()
+    {
+        $this->sectors = null;
+    }
+
+    /**
      * Get the business process
      *
      * @return RefData|null
@@ -1809,5 +1850,26 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ApplicationAcceptConsts::SUCCESS_LEVEL_PARTIAL => SendEcmtShortTermApsgPartSuccessful::class,
             ApplicationAcceptConsts::SUCCESS_LEVEL_FULL => SendEcmtShortTermSuccessful::class
         ];
+    }
+
+    /**
+     * Return the number of trips above which the intensity of use should be classed as high intensity
+     *
+     * @return int
+     */
+    public function getIntensityOfUseWarningThreshold()
+    {
+        if (!$this->irhpPermitType->isEcmtShortTerm()) {
+            throw new RuntimeException('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+        }
+
+        $irhpPermitApplication = $this->getFirstIrhpPermitApplication();
+
+        $highestRequiredPermits = max(
+            $irhpPermitApplication->getRequiredEuro5(),
+            $irhpPermitApplication->getRequiredEuro6()
+        );
+
+        return $highestRequiredPermits * 100;
     }
 }

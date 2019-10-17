@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -4113,6 +4114,48 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    /**
+     * @dataProvider dpTestGetAnswerForCustomEcmtShortTermSectors
+     */
+    public function testGetAnswerForCustomEcmtShortTermSectors($sectorsEntity, $isSnapshot, $expectedAnswer)
+    {
+        $question = m::mock(Question::class);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
+        $question->shouldReceive('getFormControlType')->andReturn(
+            Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS
+        );
+
+        $step = m::mock(ApplicationStep::class);
+        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
+
+        $entity = $this->createNewEntity();
+        $entity->setSectors($sectorsEntity);
+
+        $this->assertEquals(
+            $expectedAnswer,
+            $entity->getAnswer($step, $isSnapshot)
+        );
+    }
+
+    public function dpTestGetAnswerForCustomEcmtShortTermSectors()
+    {
+        $sectorId = 7;
+        $sectorName = 'Wood';
+
+        $sectors = m::mock(Sectors::class);
+        $sectors->shouldReceive('getId')
+            ->andReturn($sectorId);
+        $sectors->shouldReceive('getName')
+            ->andReturn($sectorName);
+
+        return [
+            [$sectors, false, $sectorId],
+            [$sectors, true, $sectorName],
+            [null, false, null],
+            [null, true, null],
+        ];
+    }
+
     public function testGetAnswerForQuestionWithoutActiveQuestionText()
     {
         $createdOn = new DateTime();
@@ -4492,41 +4535,33 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpCanBeGranted
      */
-    public function testCanBeGranted($status, $licenceValid, $permitTypeId, $expected)
+    public function testCanBeGranted($isUnderConsideration, $licenceValid, $businessProcess, $expected)
     {
-        $entity = $this->createNewEntity();
-        $entity->setStatus(new RefData($status));
+        $this->sut->shouldReceive('isUnderConsideration')
+            ->withNoArgs()
+            ->andReturn($isUnderConsideration);
 
         $licence = m::mock(Licence::class);
-        $permitType = m::mock(IrhpPermitType::class);
-
-        $entity->setLicence($licence);
-        $entity->setIrhpPermitType($permitType);
+        $this->sut->setLicence($licence);
 
         $licence->allows('isValid')
             ->andReturn($licenceValid);
 
-        $permitType->allows('getId')
-            ->andReturn($permitTypeId);
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn(new RefData($businessProcess));
 
-        $this->assertEquals($expected, $entity->canBeGranted());
+        $this->assertEquals($expected, $this->sut->canBeGranted());
     }
 
     public function dpCanBeGranted()
     {
         return [
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, true],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, false],
-            [IrhpInterface::STATUS_VALID, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_CANCELLED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_WITHDRAWN, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_AWAITING_FEE, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_FEE_PAID, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_UNSUCCESSFUL, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_ISSUED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_ISSUING, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
-            [IrhpInterface::STATUS_EXPIRED, true, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM, false],
+            [true, true, RefData::BUSINESS_PROCESS_APGG, true],
+            [false, true, RefData::BUSINESS_PROCESS_APGG, false],
+            [true, false, RefData::BUSINESS_PROCESS_APGG, false],
+            [true, true, RefData::BUSINESS_PROCESS_APSG, false],
+            [true, true, RefData::BUSINESS_PROCESS_APG, false],
         ];
     }
 
@@ -4552,6 +4587,30 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->clearInternationalJourneys();
 
         $this->assertNull($entity->getInternationalJourneys());
+    }
+
+    public function testUpdateSectors()
+    {
+        $sectors = m::mock(Sectors::class);
+
+        $entity = $this->createNewEntity();
+        $entity->updateSectors($sectors);
+
+        $this->assertSame(
+            $sectors,
+            $entity->getSectors()
+        );
+    }
+
+    public function testClearSectors()
+    {
+        $sectors = m::mock(Sectors::class);
+
+        $entity = $this->createNewEntity();
+        $entity->setSectors($sectors);
+        $entity->clearSectors();
+
+        $this->assertNull($entity->getSectors());
     }
 
     public function testGetBusinessProcess()
@@ -4959,5 +5018,53 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->setStatus($currentStatus);
 
         $entity->getPermitsAwarded(m::mock(RefData::class));
+    }
+
+    /**
+     * @dataProvider dpGetIntensityOfUseWarningThreshold
+     */
+    public function testGetIntensityOfUseWarningThreshold($requiredEuro5, $requiredEuro6, $expectedThreshold)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(true);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
+            ->andReturn($requiredEuro5);
+        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
+            ->andReturn($requiredEuro6);
+
+        $application = $this->createNewEntity();
+        $application->setIrhpPermitType($irhpPermitType);
+        $application->addIrhpPermitApplications($irhpPermitApplication);
+
+        $this->assertEquals(
+            $expectedThreshold,
+            $application->getIntensityOfUseWarningThreshold()
+        );
+    }
+
+    public function dpGetIntensityOfUseWarningThreshold()
+    {
+        return [
+            [5, 8, 800],
+            [4, 2, 400],
+        ];
+    }
+
+    public function testGetIntensityOfUseWarningThresholdException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('getIntensityOfUseWarningThreshold is only applicable to ECMT short term');
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn(false);
+
+        $application = $this->createNewEntity();
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $application->getIntensityOfUseWarningThreshold();
     }
 }
