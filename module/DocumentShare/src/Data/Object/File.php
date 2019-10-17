@@ -176,4 +176,68 @@ class File
         //  reset dependant properties
         $this->mimeType = null;
     }
+
+    /**
+     * @param $streamFileName
+     *
+     * @throws \Exception
+     */
+    public function setContentFromDsStream($streamFileName)
+    {
+        $fhTrg = null;
+        try {
+            //  get content from stream
+            $fhSrc = @fopen($streamFileName, 'rb');
+            if ($fhSrc === false) {
+                throw new \Exception(self::ERR_CANT_OPEN_DOWNLOAD_STREAM);
+            }
+
+            //  get resouce file
+            $fhTrg = @fopen($this->file, 'wb');
+            if ($fhTrg === false) {
+                throw new \Exception(self::ERR_CANT_OPEN_RES);
+            }
+
+            //  set filter for auto base 64 decoding on write to file
+            $filter = stream_filter_append($fhTrg, 'convert.base64-decode', STREAM_FILTER_WRITE);
+
+            //  read and push content
+            $chunkPrev = '';
+            $posStart = false;
+            $tokenStart = '"content":"';
+            $tokenEnd = '"';
+
+            while (!feof($fhSrc)) {
+                $chunk = fread($fhSrc, self::CHUNK_SIZE);
+
+                //  looking for begin of content
+                if ($posStart === false) {
+                    if (false !== ($posStart = strpos($chunkPrev . $chunk, $tokenStart))) {
+                        $chunk = substr($chunkPrev . $chunk, $posStart + strlen($tokenStart));
+                    }
+
+                    $chunkPrev = $chunk;
+                }
+
+                //  content is found, so write content to separate file until end
+                if ($posStart !== false) {
+                    if (false !== ($posEnd = strpos($chunk, $tokenEnd))) {
+                        fwrite($fhTrg, $chunk, $posEnd);
+
+                        break;
+                    }
+
+                    fwrite($fhTrg, $chunk);
+                }
+            }
+
+            fflush($fhTrg);
+
+            stream_filter_remove($filter);
+
+        } finally {
+            @fclose($fhTrg);
+            @fclose($fhSrc);
+        }
+    }
 }
