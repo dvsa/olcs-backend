@@ -14,8 +14,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class AvailableLicences extends AbstractQueryHandler
 {
-If the licence has an active IRHP application we
-
     protected $repoServiceName = 'IrhpApplication';
 
     public function handleQuery(QueryInterface $query)
