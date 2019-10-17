@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\CreateDefaultIrhpPermitApplications;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
@@ -13,10 +13,9 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as Cmd;
+use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 
 /**
  * Create Irhp Permit Application
@@ -31,14 +30,14 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
     /**
      * Handle command
      *
-     * @param Cmd $command command
+     * @param CommandInterface $command command
      *
      * @return Result
      * @throws NotFoundException
      */
     public function handleCommand(CommandInterface $command)
     {
-        $permitTypeId = $command->getType();
+        $permitTypeId = $command->getIrhpPermitType();
 
         /** @var IrhpApplicationRepo $irhpApplicationRepo */
         $irhpApplicationRepo = $this->getRepo();
@@ -49,24 +48,41 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             throw new NotFoundException('Permit type not found');
         }
 
-        $irhpApplication = IrhpApplicationEntity::createNew(
-            $this->refData(IrhpInterface::SOURCE_SELFSERVE),
-            $this->refData(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
-            $irhpApplicationRepo->getReference(IrhpPermitTypeEntity::class, $permitTypeId),
-            $irhpApplicationRepo->getReference(LicenceEntity::class, $command->getLicence()),
-            date('Y-m-d')
-        );
+        if ($permitType->isEcmtAnnual()) {
+            $this->result->merge(
+                $this->handleSideEffect(
+                    CreateEcmtPermitApplication::create(
+                        $command->getArrayCopy()
+                    )
+                )
+            );
+            $this->result->addId('ecmtPermitApplication', $this->result->getIds()['ecmtPermitApplication']);
+        } else {
+            $source = $command->getFromInternal() ? IrhpInterface::SOURCE_INTERNAL : IrhpInterface::SOURCE_SELFSERVE;
+            $irhpApplication = IrhpApplicationEntity::createNew(
+                $this->refData($source),
+                $this->refData(IrhpInterface::STATUS_NOT_YET_SUBMITTED),
+                $permitType,
+                $irhpApplicationRepo->getReference(LicenceEntity::class, $command->getLicence()),
+                date('Y-m-d')
+            );
 
-        $irhpApplicationRepo->save($irhpApplication);
+            $irhpApplicationRepo->save($irhpApplication);
 
-        $this->result->merge(
-            $this->handleSideEffect(
-                CreateDefaultIrhpPermitApplications::create(['id' => $irhpApplication->getId(), 'year' => $command->getYear()])
-            )
-        );
+            $this->result->merge(
+                $this->handleSideEffect(
+                    CreateDefaultIrhpPermitApplications::create(
+                        [
+                            'id' => $irhpApplication->getId(),
+                            'irhpPermitStock' => $command->getIrhpPermitStock()
+                        ]
+                    )
+                )
+            );
 
-        $this->result->addId('irhpApplication', $irhpApplication->getId());
-        $this->result->addMessage('IRHP Application created successfully');
+            $this->result->addId('irhpApplication', $irhpApplication->getId());
+            $this->result->addMessage('IRHP Application created successfully');
+        }
 
         return $this->result;
     }
