@@ -65,23 +65,19 @@ class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler impleme
                 );
                 break;
             case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
-                $irhpPermitWindows = $this->getRepo('IrhpPermitWindow')->fetchOpenWindowsByTypeYear(
-                    $permitTypeId,
-                    new DateTime(),
-                    $command->getYear()
+                $irhpPermitWindow = $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId(
+                    $command->getIrhpPermitStock()
                 );
+                $irhpPermitWindows = [$irhpPermitWindow];
                 break;
         }
-
-        $irhpPermitApplicationRepo = $this->getRepo('IrhpPermitApplication');
 
         foreach ($irhpPermitWindows as $irhpPermitWindow) {
             $irhpPermitApplication = IrhpPermitApplication::createNewForIrhpApplication(
                 $irhpApplication,
                 $irhpPermitWindow
             );
-
-            $irhpPermitApplicationRepo->save($irhpPermitApplication);
+            $this->getRepo('IrhpPermitApplication')->save($irhpPermitApplication);
         }
 
         $this->result->addMessage('Created ' . count($irhpPermitWindows) . ' irhp permit applications');

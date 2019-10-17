@@ -44,9 +44,6 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
      */
     public function handleCommand(CommandInterface $command)
     {
-        /** @var IrhpApplication $application */
-        $application = $this->getRepo()->fetchById($command->getId());
-
         /** @var Licence $licence */
         $licence = $this->getRepo('Licence')->fetchById($command->getLicence());
 
@@ -54,7 +51,12 @@ final class UpdateLicence extends AbstractCommandHandler implements ToggleRequir
             throw new ForbiddenException(self::LICENCE_ORG_MSG);
         }
 
-        if (!$licence->canMakeIrhpApplication($application->getIrhpPermitType())) {
+        /** @var IrhpApplication $application */
+        $application = $this->getRepo()->fetchById($command->getId());
+
+        if (!$application->isMultiStock()
+            && !$licence->canMakeIrhpApplication($application->getAssociatedStock(), $application)
+        ) {
             $message = sprintf(self::LICENCE_INVALID_MSG, $licence->getId(), $licence->getLicNo());
             throw new ForbiddenException($message);
         }
