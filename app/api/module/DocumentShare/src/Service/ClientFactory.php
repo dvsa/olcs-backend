@@ -51,7 +51,7 @@ class ClientFactory implements AbstractFactoryInterface
      * @return array
      * @throws \RuntimeException
      */
-    public function getClientOptions(ServiceLocatorInterface $sl, $key, $requestedName): DocumentStoreClientOptions
+    public function getClientOptions(ServiceLocatorInterface $sl, $key)
     {
         if (is_null($this->options)) {
             $options = $sl->get('Configuration');
