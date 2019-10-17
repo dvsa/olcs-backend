@@ -2,10 +2,10 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
-use Common\Service\Helper\TranslationHelperService;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Zend\I18n\Translator\Translator;
@@ -26,7 +26,7 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler impl
     protected $template = 'ecmt-short-term-app-successful';
     protected $subject = 'email.ecmt.short.term.response.subject';
 
-    /** @var Translator; */
+    /** @var Translator */
     private $translator;
 
     /**
@@ -94,17 +94,5 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler impl
             'paymentUrl' => 'http://selfserve/permits/application/' . $irhpApplicationId . '/awaiting-fee',
             'periodName' => $periodName
         ];
-    }
-
-    /**
-     * Format a fee as currency
-     *
-     * param float $amount
-     *
-     * @return array
-     */
-    private function formatCurrency($amount)
-    {
-         return str_replace('.00', '', $amount);
     }
 }

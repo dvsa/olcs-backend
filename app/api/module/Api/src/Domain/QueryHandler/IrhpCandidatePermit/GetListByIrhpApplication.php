@@ -6,9 +6,8 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Common\RangeBasedRestrictedCountriesProvider;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -21,7 +20,6 @@ class GetListByIrhpApplication extends AbstractQueryHandler implements ToggleReq
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpCandidatePermit';
-    protected $extraRepos = ['IrhpApplication', 'Country'];
     protected $bundle = [
         'irhpPermitRange' => [
             'countrys' => [
@@ -31,11 +29,8 @@ class GetListByIrhpApplication extends AbstractQueryHandler implements ToggleReq
         ],
     ];
 
-    /** @var array */
-    private $config = [];
-
-    /** @var array */
-    private $constrainedCountries = [];
+    /** @var RangeBasedRestrictedCountriesProvider */
+    private $restrictedCountriesProvider;
 
     /**
      * Create service
@@ -48,7 +43,8 @@ class GetListByIrhpApplication extends AbstractQueryHandler implements ToggleReq
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->config = $mainServiceLocator->get('config');
+        $this->restrictedCountriesProvider
+            = $mainServiceLocator->get('PermitsCommonRangeBasedRestrictedCountriesProvider');
 
         return parent::createService($serviceLocator);
     }
@@ -62,95 +58,28 @@ class GetListByIrhpApplication extends AbstractQueryHandler implements ToggleReq
      */
     public function handleQuery(QueryInterface $query)
     {
-        // fetch list of candidate permits
         $repo = $this->getRepo();
 
+        // fetch list of candidate permits
         $irhpCandidatePermits = $this->resultList(
             $repo->fetchList($query, Query::HYDRATE_OBJECT),
             $this->bundle
         );
 
-        if (!empty($irhpCandidatePermits)) {
-            // fetch the application
-            /** @var IrhpApplication $irhpApplication */
-            $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($query->getIrhpApplication());
+        foreach ($irhpCandidatePermits as $i => $irhpCandidatePermit) {
+            // set value of permit number
+            $irhpCandidatePermit['permitNumber'] = ($query->getPage() - 1) * $query->getLimit() + $i + 1;
 
-            // get list of restricted countries
-            $restrictedCountries = $this->getRestrictedCountries($irhpApplication->getIrhpPermitType());
+            // set value of constrained countries
+            $irhpCandidatePermit['constrainedCountries']
+                = $this->restrictedCountriesProvider->getList($irhpCandidatePermit['irhpPermitRange']['id']);
 
-            foreach ($irhpCandidatePermits as $i => $irhpCandidatePermit) {
-                // set value of permit number
-                $irhpCandidatePermit['permitNumber'] = ($query->getPage() - 1) * $query->getLimit() + $i + 1;
-
-                // set value of constrained countries
-                $irhpCandidatePermit['constrainedCountries']
-                    = $this->getConstrainedCountries($irhpCandidatePermit, $restrictedCountries);
-
-                $irhpCandidatePermits[$i] = $irhpCandidatePermit;
-            }
+            $irhpCandidatePermits[$i] = $irhpCandidatePermit;
         }
 
         return [
             'results' => $irhpCandidatePermits,
             'count' => $repo->fetchCount($query)
         ];
-    }
-
-    /**
-     * Get restricted countries
-     *
-     * @param IrhpPermitType $irhpPermitType
-     *
-     * @return array
-     */
-    protected function getRestrictedCountries(IrhpPermitType $irhpPermitType)
-    {
-        $irhpPermitTypeId = $irhpPermitType->getId();
-
-        if (empty($this->config['permits']['types'][$irhpPermitTypeId]['restricted_countries'])) {
-            return [];
-        }
-
-        return $this->getRepo('Country')->fetchByIds(
-            $this->config['permits']['types'][$irhpPermitTypeId]['restricted_countries'],
-            Query::HYDRATE_ARRAY
-        );
-    }
-
-    /**
-     * Get constrained countries
-     *
-     * @param array $irhpCandidatePermit
-     * @param array $restrictedCountries
-     *
-     * @return array
-     */
-    protected function getConstrainedCountries(array $irhpCandidatePermit, array $restrictedCountries)
-    {
-        if (empty($irhpCandidatePermit['irhpPermitRange'])) {
-            return $restrictedCountries;
-        }
-
-        $irhpPermitRange = $irhpCandidatePermit['irhpPermitRange'];
-        $irhpPermitRangeId = $irhpPermitRange['id'];
-
-        if (!isset($this->constrainedCountries[$irhpPermitRangeId])) {
-            // ids of countries included in the range
-            $includedCountryIds = array_column($irhpPermitRange['countrys'], 'id');
-
-            $constrainedCountries = [];
-
-            foreach ($restrictedCountries as $country) {
-                if (!in_array($country['id'], $includedCountryIds)) {
-                    // the restricted country is not specifically included in the range
-                    // therefore it is a constrained country
-                    $constrainedCountries[] = $country;
-                }
-            }
-
-            $this->constrainedCountries[$irhpPermitRangeId] = $constrainedCountries;
-        }
-
-        return $this->constrainedCountries[$irhpPermitRangeId];
     }
 }
