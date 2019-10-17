@@ -152,6 +152,7 @@ class Document implements ServiceLocatorAwareInterface
 
             if ($bookmark instanceof FileStoreAwareInterface) {
                 $bookmark->setFileStore(
+                    // do windows 7 check here
                     $this->getServiceLocator()->get('ContentStore')
                 );
             }
