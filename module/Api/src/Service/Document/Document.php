@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\FileStoreAwareInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
+use Dvsa\Olcs\DocumentShare\Service\DocumentClientFactory;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -150,11 +151,10 @@ class Document implements ServiceLocatorAwareInterface
                 $bookmark->setDateHelper($dateSrvHlpr);
             }
 
+            $documentClientFactory = new DocumentClientFactory($this->getServiceLocator());
+
             if ($bookmark instanceof FileStoreAwareInterface) {
-                $bookmark->setFileStore(
-                    // do windows 7 check here
-                    $this->getServiceLocator()->get('ContentStore')
-                );
+                $bookmark->setFileStore($documentClientFactory->getDocumentClient());
             }
 
             $bookmarks[$token] = $bookmark;
