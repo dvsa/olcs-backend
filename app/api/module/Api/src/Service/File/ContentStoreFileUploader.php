@@ -5,12 +5,11 @@ namespace Dvsa\Olcs\Api\Service\File;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
+use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
-use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
 use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use ZfcRbac\Service\AuthorizationService;
 
 /**
@@ -23,7 +22,9 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
 {
     const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
 
-    /** @var ContentStoreClient */
+    /**
+     * @var DocumentStoreInterface
+     */
     private $contentStoreClient;
 
     /**
@@ -35,17 +36,7 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $authService = $serviceLocator->get(AuthorizationService::class);
-
-        /** @var User $currentUser */
-        $currentUser = $authService->getIdentity()->getUser();
-
-        // do windows 10 check here
-        if ($currentUser->getOsType() === User::USER_OS_TYPE_WINDOWS_10) {
-            $this->contentStoreClient = $serviceLocator->get(WebDavClient::class);
-        } else {
-            $this->contentStoreClient = $serviceLocator->get(DocManClient::class);
-        }
+        $this->getContentStore($serviceLocator);
 
         return $this;
     }
@@ -112,5 +103,23 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
     private function write($identifier, ContentStoreFile $file)
     {
         return $this->contentStoreClient->write($identifier, $file);
+    }
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    private function getContentStore(ServiceLocatorInterface $serviceLocator): void
+    {
+        $authService = $serviceLocator->get(AuthorizationService::class);
+
+        /** @var User $currentUser */
+        $currentUser = $authService->getIdentity()->getUser();
+
+        // do windows 10 check here
+        if ($currentUser->getOsType() === User::USER_OS_TYPE_WINDOWS_10) {
+            $this->contentStoreClient = $serviceLocator->get(WebDavClient::class);
+        } else {
+            $this->contentStoreClient = $serviceLocator->get(DocManClient::class);
+        }
     }
 }

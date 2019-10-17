@@ -7,14 +7,12 @@ use Exception;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
-use League\Flysystem\Filesystem;
-use League\Flysystem\WebDAV\WebDAVAdapter;
 
 
 /**
  * Class Client
  */
-class WebDavClient
+class WebDavClient implements DocumentStoreInterface
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
 
@@ -40,21 +38,8 @@ class WebDavClient
      *
      * @param FilesystemInterface $filesystem File System
      */
-    public function __construct(array $clientOptions)
+    public function __construct(FilesystemInterface $filesystem)
     {
-        $webDAVClient = new WebDAVClient(
-            [
-                'baseUri' => $clientOptions['webdav_baseuri'],
-                'username' => $clientOptions['username'],
-                'password' => $clientOptions['password']
-            ]
-        );
-
-
-        $adapter = new WebDAVAdapter($webDAVClient, $clientOptions['workspace']);
-        $fileSystem = new Filesystem($adapter);
-
-
         $this->filesystem = $filesystem;
     }
 
