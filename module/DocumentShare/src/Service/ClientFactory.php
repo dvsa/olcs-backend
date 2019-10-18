@@ -10,6 +10,7 @@ use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Http\Client as HttpClient;
 use Sabre\HTTP\Client as SabreClient;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Class ClientFactory
@@ -136,7 +137,7 @@ class ClientFactory implements AbstractFactoryInterface
     ): DocumentStoreInterface {
         $clientOptions = $this->getConfiguration($serviceLocator, $requestedName);
 
-        if ($requestedName === WebDavClient::class) {
+        if ($requestedName === WebDavClient::class && $this->getClientType($serviceLocator) === WebDavClient::class) {
             $sabreClient = new SabreClient(
                 [
                     'baseUri' => $clientOptions['webdav_baseuri'],
@@ -161,5 +162,21 @@ class ClientFactory implements AbstractFactoryInterface
 
             return $client;
         }
+    }
+
+
+    /**
+     * @param ServiceLocatorInterface $serviceLocator
+     *
+     * @return string
+     */
+    private function getClientType(ServiceLocatorInterface $serviceLocator): string
+    {
+        $authService = $serviceLocator->get(AuthorizationService::class);
+
+        /** @var User $currentUser */
+        $currentUser = $authService->getIdentity()->getUser();
+
+        return ($currentUser->getOsType() === User::USER_OS_TYPE_WINDOWS_10) ? WebDavClient::class : DocManClient::class;
     }
 }

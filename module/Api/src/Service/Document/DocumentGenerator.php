@@ -69,14 +69,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $this->documentService = $serviceLocator->get('Document');
         $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
         $this->uploader = $serviceLocator->get('FileUploader');
-
-        /**
-         * @var DocumentClientStrategy documentClientStrategy
-         */
-        $documentStrategy = $serviceLocator->get(DocumentClientStrategy::class);
-
-        $this->contentStore = $serviceLocator->get($documentStrategy->getClientClass());
-
+        $this->contentStore = $serviceLocator->get('ContentStore');
         $this->documentRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 
         return $this;

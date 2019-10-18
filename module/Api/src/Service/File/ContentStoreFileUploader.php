@@ -37,8 +37,8 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $this->getContentStore($serviceLocator);
 
+        $this->contentStoreClient = $serviceLocator->get('ContentStore');
         return $this;
     }
 
@@ -104,14 +104,5 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
     private function write($identifier, ContentStoreFile $file)
     {
         return $this->contentStoreClient->write($identifier, $file);
-    }
-
-    /**
-     * @param ServiceLocatorInterface $serviceLocator
-     */
-    private function getContentStore(ServiceLocatorInterface $serviceLocator): void
-    {
-        $documentClientStrategy = $serviceLocator->get(DocumentClientStrategy::class);
-        $this->contentStoreClient = $serviceLocator->get($documentClientStrategy->getClientClass());
     }
 }
