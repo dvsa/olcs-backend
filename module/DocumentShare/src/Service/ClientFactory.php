@@ -45,7 +45,7 @@ class ClientFactory implements AbstractFactoryInterface
     /**
      * Gets options from configuration based on name.
      *
-     * @param ServiceLocatorInterface $sl  Service Manager
+     * @param ServiceLocatorInterface $sl Service Manager
      * @param string                  $key Key
      *
      * @return array
@@ -129,8 +129,11 @@ class ClientFactory implements AbstractFactoryInterface
      *
      * @return mixed
      */
-    public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName): DocumentStoreInterface
-    {
+    public function createServiceWithName(
+        ServiceLocatorInterface $serviceLocator,
+        $name,
+        $requestedName
+    ): DocumentStoreInterface {
         $clientOptions = $this->getConfiguration($serviceLocator, $requestedName);
 
         if ($requestedName === WebDavClient::class) {
