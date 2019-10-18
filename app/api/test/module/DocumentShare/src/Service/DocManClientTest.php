@@ -12,9 +12,9 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\Request;
 
 /**
- * @covers \Dvsa\Olcs\DocumentShare\Service\WebDavClient
+ * @covers \Dvsa\Olcs\DocumentShare\Service\DocManClient
  */
-class ClientTest extends MockeryTestCase
+class DocManClientTest extends MockeryTestCase
 {
     const BASE_URI = 'http://testing';
     const WORKSPACE = 'unit_Workspace';
