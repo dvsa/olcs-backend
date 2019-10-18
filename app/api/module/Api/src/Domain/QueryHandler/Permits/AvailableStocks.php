@@ -61,7 +61,8 @@ class AvailableStocks extends AbstractQueryHandler implements ToggleRequiredInte
 
         if (!in_array($irhpPermitType, $supportedTypes)) {
             return [
-                'stocks' => []
+                'stocks' => [],
+                'hasStocks' => false,
             ];
         }
 
@@ -97,6 +98,7 @@ class AvailableStocks extends AbstractQueryHandler implements ToggleRequiredInte
 
         return [
             'stocks' => $availableStocks,
+            'hasStocks' => !empty($availableStocks),
         ];
     }
 }
