@@ -19,6 +19,15 @@ interface IrhpInterface
     const STATUS_VALID = 'permit_app_valid';
     const STATUS_EXPIRED = 'permit_app_expired';
 
+    const ACTIVE_STATUSES = [
+        self::STATUS_NOT_YET_SUBMITTED,
+        self::STATUS_UNDER_CONSIDERATION,
+        self::STATUS_AWAITING_FEE,
+        self::STATUS_FEE_PAID,
+    ];
+
     const SOURCE_SELFSERVE = 'app_source_selfserve';
     const SOURCE_INTERNAL = 'app_source_internal';
+
+    public function getId();
 }

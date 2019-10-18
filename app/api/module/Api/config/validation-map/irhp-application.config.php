@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationWithOrgan
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessLicenceWithLicence;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Permits\CanAccessIrhpApplicationWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Permits\CanEditIrhpApplicationWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 
@@ -16,6 +17,7 @@ return [
     CommandHandler\IrhpApplication\UpdateFull::class => CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\StoreSnapshot::class => IsSideEffect::class,
     CommandHandler\IrhpApplication\Expire::class => IsSideEffect::class,
+    QueryHandler\IrhpApplication\AvailableLicences::class => CanAccessIrhpApplicationWithId::class,
     QueryHandler\IrhpApplication\GetAllByLicence::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\GetAllByOrganisation::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\ApplicationPathGroupList::class => IsSystemAdmin::class,

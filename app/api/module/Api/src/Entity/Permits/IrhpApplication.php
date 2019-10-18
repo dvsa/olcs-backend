@@ -68,7 +68,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     const ERR_CANT_SUBMIT = 'This application cannot be submitted';
     const ERR_CANT_ISSUE = 'This application cannot be issued';
     const ERR_CANT_GRANT = 'Unable to grant this application';
-    const ERR_ONLY_SUPPORTS_BILATERAL = 'This method only supports bilateral applications';
 
     const SECTIONS = [
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
@@ -1146,7 +1145,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function clearAnswers()
     {
         if ($this->canBeUpdated()) {
-            $this->irhpPermitApplications = new ArrayCollection();
             $this->resetCheckAnswersAndDeclaration();
         }
     }
@@ -1594,6 +1592,31 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $this->irhpPermitApplications->first();
+    }
+
+    /**
+     * Is this application a multi stock application?
+     *
+     * @return bool
+     */
+    public function isMultiStock(): bool
+    {
+        return $this->irhpPermitType->isMultiStock();
+    }
+
+    /**
+     * Get the associated stock for this application
+     *
+     * @return IrhpPermitStock
+     * @throws RuntimeException
+     */
+    public function getAssociatedStock(): IrhpPermitStock
+    {
+        if ($this->isMultiStock()) {
+            throw new RuntimeException('Multi stock permit types can\'t use this method');
+        }
+
+        return $this->getFirstIrhpPermitApplication()->getIrhpPermitWindow()->getIrhpPermitStock();
     }
 
     /**
