@@ -23,7 +23,7 @@ final class ById extends AbstractQueryHandler implements ToggleRequiredInterface
         'licence' => ['trafficArea', 'organisation'],
         'irhpPermitType' => ['name'],
         'fees' => ['feeType' => ['feeType'], 'feeStatus'],
-        'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country']]],
+        'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country', 'irhpPermitType']]],
         'sectors',
     ];
 
