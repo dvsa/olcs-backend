@@ -153,8 +153,8 @@ class Document implements ServiceLocatorAwareInterface
 
 
             if ($bookmark instanceof FileStoreAwareInterface) {
-                $documentClientFactory = $this->serviceLocator->get(DocumentClientStrategy::class);
-                $bookmark->setFileStore($this->serviceLocator->get($documentClientFactory->getClientClass()));
+
+                $bookmark->setFileStore($this->serviceLocator->get('ContentStore'));
             }
 
             $bookmarks[$token] = $bookmark;
