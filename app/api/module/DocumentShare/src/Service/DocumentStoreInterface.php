@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Dvsa\Olcs\DocumentShare\Service;
-
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Exception;

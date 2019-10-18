@@ -234,7 +234,6 @@ class File
             fflush($fhTrg);
 
             stream_filter_remove($filter);
-
         } finally {
             @fclose($fhTrg);
             @fclose($fhSrc);
