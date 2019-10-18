@@ -707,12 +707,12 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider trueOrFalseProvider
      */
-    public function testIsMultilateral($isMultilateral)
+    public function testIsMultiStock($isMultiStock)
     {
         $irhpPermitType = m::mock(IrhpPermitType::class);
-        $irhpPermitType->shouldReceive('isMultilateral')->once()->withNoArgs()->andReturn($isMultilateral);
+        $irhpPermitType->shouldReceive('isMultiStock')->once()->withNoArgs()->andReturn($isMultiStock);
         $entity = $this->createNewEntity(null, null, $irhpPermitType);
-        $this->assertEquals($isMultilateral, $entity->isMultilateral());
+        $this->assertEquals($isMultiStock, $entity->isMultiStock());
     }
 
     public function trueOrFalseProvider()
@@ -721,6 +721,38 @@ class IrhpApplicationEntityTest extends EntityTester
             [true],
             [false],
         ];
+    }
+
+    public function testGetAssociatedStock()
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isMultiStock')->once()->withNoArgs()->andReturn(false);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $this->assertEquals($irhpPermitStock, $entity->getAssociatedStock());
+    }
+
+    public function testGetAssociatedStockMultiStockException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Multi stock permit types can\'t use this method');
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isMultiStock')->once()->withNoArgs()->andReturn(true);
+
+        $entity = $this->createNewEntity(null, null, $irhpPermitType);
+
+        $entity->getAssociatedStock();
     }
 
     /**
@@ -2879,22 +2911,12 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertFalse($entity->hasCheckedAnswers());
         $this->assertFalse($entity->hasMadeDeclaration());
-        $this->assertEmpty($entity->getIrhpPermitApplications());
 
-        $entity->setIrhpPermitApplications(
-            new ArrayCollection(
-                [
-                    0 => m::mock(IrhpPermitApplication::class),
-                    1 => m::mock(IrhpPermitApplication::class),
-                ]
-            )
-        );
         $entity->setCheckedAnswers(true);
         $entity->setDeclaration(true);
 
         $this->assertTrue($entity->hasCheckedAnswers());
         $this->assertTrue($entity->hasMadeDeclaration());
-        $this->assertNotEmpty($entity->getIrhpPermitApplications());
 
         $entity
             ->shouldReceive('canBeUpdated')
@@ -2904,7 +2926,6 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertFalse($entity->hasCheckedAnswers());
         $this->assertFalse($entity->hasMadeDeclaration());
-        $this->assertEmpty($entity->getIrhpPermitApplications());
     }
 
     public function testUpdateLicence()
