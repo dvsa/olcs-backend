@@ -36,15 +36,14 @@ class DocManClient implements DocumentStoreInterface
      * @param string     $baseUri    base uri path to storage
      * @param string     $workspace  path
      */
-    public function __construct(array $clientOptions
-
+    public function __construct(
+        $httpClient,
+        $baseUri,
+        $workspace
     ) {
-        $this->httpClient = $clientOptions['httpClient'];
-        $this->baseUri = $clientOptions['baseuri'];
-        $this->workspace = $clientOptions['workspace'];
-        if (isset($clientOptions['uuid'])) {
-            $this->setUuid($clientOptions['uuid']);
-        }
+        $this->httpClient = $httpClient;
+        $this->baseUri = $baseUri;
+        $this->workspace = $workspace;
     }
 
     /**
