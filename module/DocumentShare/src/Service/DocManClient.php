@@ -1,15 +1,12 @@
 <?php
 
-
 namespace Dvsa\Olcs\DocumentShare\Service;
-
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Olcs\Logging\Log\Logger;
 use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
 use Zend\Http\Response;
-
 
 class DocManClient implements DocumentStoreInterface
 {
@@ -152,12 +149,9 @@ class DocManClient implements DocumentStoreInterface
             }
 
             $data = (array)json_decode(file_get_contents($tmpFileName));
-
         } catch (\Exception $e) {
             unset($file);
-
             throw $e;
-
         } finally {
             if (is_file($tmpFileName)) {
                 unlink($tmpFileName);

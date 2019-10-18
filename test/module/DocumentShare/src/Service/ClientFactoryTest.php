@@ -14,6 +14,7 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideSetOptions
+     *
      * @param $config
      * @param $expected
      */
@@ -26,15 +27,14 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             ->with($this->equalTo('Configuration'))
             ->willReturn($config);
 
-        $sut  = new ClientFactory();
+        $sut = new ClientFactory();
 
         if ($expected instanceof \Exception) {
             $passed = false;
             try {
                 $sut->getOptions($mockSl, 'testkey');
             } catch (\Exception $e) {
-                if (
-                    $e->getMessage() == $expected->getMessage() &&
+                if ($e->getMessage() == $expected->getMessage() &&
                     get_class($e) == get_class($expected)
                 ) {
                     $passed = true;
@@ -54,12 +54,12 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         return array(
             array(array(), new \RuntimeException('Options could not be found in "document_share.testkey".')),
             array(
-                array('document_share'=>array()),
+                array('document_share' => array()),
                 new \RuntimeException('Options could not be found in "document_share.testkey".')
             ),
             array(
-                array('document_share'=>array('testkey'=>array('foo'=>'bar'))),
-                array('foo'=>'bar')
+                array('document_share' => array('testkey' => array('foo' => 'bar'))),
+                array('foo' => 'bar')
             )
         );
     }

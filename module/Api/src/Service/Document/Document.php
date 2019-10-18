@@ -90,11 +90,9 @@ class Document implements ServiceLocatorAwareInterface
 
             if ($bookmark->isStatic()) {
                 $result = $bookmark->render();
-
             } elseif (isset($data[$token])) {
                 $bookmark->setData($data[$token]);
                 $result = $bookmark->render();
-
             } else {
                 // no data to fulfil this dynamic bookmark, but that's okay
                 $result = null;
@@ -153,7 +151,6 @@ class Document implements ServiceLocatorAwareInterface
 
 
             if ($bookmark instanceof FileStoreAwareInterface) {
-
                 $bookmark->setFileStore($this->serviceLocator->get('ContentStore'));
             }
 

@@ -7,7 +7,6 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 
-
 /**
  * Class Client
  */
@@ -54,7 +53,6 @@ class WebDavClient implements DocumentStoreInterface
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
         try {
-
             $readStream = $this->filesystem->readStream($path);
             file_put_contents($tmpFileName, $readStream);
 
