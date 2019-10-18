@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
-use Dvsa\Olcs\DocumentShare\Service\DocumentClientFactory;
+use Dvsa\Olcs\DocumentShare\Service\DocumentClientStrategy;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Zend\ServiceManager\FactoryInterface;
@@ -70,8 +70,12 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
         $this->queryHandlerManager = $serviceLocator->get('QueryHandlerManager');
         $this->uploader = $serviceLocator->get('FileUploader');
 
-        $documentClientFactory = new DocumentClientFactory($serviceLocator);
-        $this->contentStore = $documentClientFactory->getDocumentClient();
+        /**
+         * @var DocumentClientStrategy documentClientStrategy
+         */
+        $documentStrategy = $serviceLocator->get(DocumentClientStrategy::class);
+
+        $this->contentStore = $serviceLocator->get($documentStrategy->getClientClass());
 
         $this->documentRepo = $serviceLocator->get('RepositoryServiceManager')->get('Document');
 

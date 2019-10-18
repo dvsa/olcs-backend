@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
-use Exception;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
@@ -100,7 +99,7 @@ class WebDavClient implements DocumentStoreInterface
      * @param File   $file File
      *
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function write($path, File $file)
     {
