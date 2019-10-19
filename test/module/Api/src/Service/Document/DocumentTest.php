@@ -183,9 +183,13 @@ TXT;
 
         $this->sut->setServiceLocator($serviceLocator);
 
-        $this->sut->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             []
+        );
+        $this->assertEquals(
+            $content,
+            $replaced
         );
     }
 
@@ -196,9 +200,13 @@ TXT;
         $file = new File();
         $file->setContent($content);
 
-        $this->sut->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             []
+        );
+        $this->assertEquals(
+            $content,
+            $replaced
         );
     }
 
@@ -206,13 +214,9 @@ TXT;
     {
         $this->docManClient = m::mock(DocManClient::class);
         $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
-            ->shouldReceive('get')->with(DocumentClientStrategy::class)->andReturn(
-                m::mock(DocumentClientStrategy::class)->shouldReceive('ContentStore')->andReturn(
-                    DocManClient::class
-                )->getMock()
-            )
-            ->shouldReceive('get')->with(DocManClient::class)->andReturn($this->docManClient)
-            ->getMock();
+            ->shouldReceive('get')->with('ContentStore')->andReturn(
+                $this->docManClient
+            )->getMock();
         $this->sut->setServiceLocator($sm);
     }
 }
