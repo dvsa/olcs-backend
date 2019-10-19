@@ -7,9 +7,6 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
-use Dvsa\Olcs\DocumentShare\Service\DocManClient;
-use Dvsa\Olcs\DocumentShare\Service\DocumentClientStrategy;
-use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -34,23 +31,17 @@ class DocumentGeneratorTest extends MockeryTestCase
     protected $namingService;
     /** @var  m\MockInterface */
     protected $documentRepo;
-    /**
-     * @var m\MockInterface
-     */
-    protected $docManClient;
 
     public function setUp()
     {
         $this->sut = new DocumentGenerator();
 
-
+        $this->contentStore = m::mock();
         $this->document = m::mock();
         $this->queryHandlerManager = m::mock();
         $this->fileUploader = m::mock();
         $this->namingService = m::mock(NamingService::class);
         $this->documentRepo = m::mock();
-        $this->docManClient = m::mock();
-
 
         /** @var \Zend\ServiceManager\ServiceLocatorInterface $sm */
         $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
@@ -62,12 +53,6 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->shouldReceive('get')->with('RepositoryServiceManager')->andReturn(
                 m::mock()->shouldReceive('get')->with('Document')->andReturn($this->documentRepo)->getMock()
             )
-            ->shouldReceive('get')->with(DocumentClientStrategy::class)->andReturn(
-                m::mock(DocumentClientStrategy::class)->shouldReceive('getClientClass')->andReturn(
-                    DocManClient::class
-                )->getMock()
-            )
-            ->shouldReceive('get')->with(DocManClient::class)->andReturn($this->docManClient)
             ->getMock();
 
         $this->sut->createService($sm);
@@ -75,9 +60,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testGenerateFromTemplateWithEmptyQuery()
     {
-
-
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('x')
             ->andReturn(null)
             ->shouldReceive('read')
@@ -104,7 +87,7 @@ class DocumentGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('x')
             ->andReturn(null)
             ->shouldReceive('read')
@@ -137,7 +120,7 @@ class DocumentGeneratorTest extends MockeryTestCase
     {
         $this->expectException(\Exception::class);
 
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('x')
             ->andReturn(null)
             ->shouldReceive('read')
@@ -164,7 +147,7 @@ class DocumentGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('x')
             ->andReturn(null)
             ->shouldReceive('read')
@@ -195,7 +178,7 @@ class DocumentGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('x')
             ->andReturn(null)
             ->shouldReceive('read')
@@ -240,7 +223,7 @@ class DocumentGeneratorTest extends MockeryTestCase
             ]
         ];
 
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('x')
             ->andReturn(null)
             ->shouldReceive('read')
@@ -279,7 +262,7 @@ class DocumentGeneratorTest extends MockeryTestCase
     {
         $this->expectException('\Exception');
 
-        $this->docManClient
+        $this->contentStore
             ->shouldReceive('read')->with('x')->andReturn(null)
             ->shouldReceive('read')->with('/templates/x.rtf')->andReturn(null)
             ->shouldReceive('read')->with('/templates/NI/x.rtf')->andReturn(null);
@@ -329,7 +312,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
         $this->documentRepo->shouldReceive('fetchById')->with(412)->once()->andReturn($document);
 
-        $this->docManClient->shouldReceive('read')
+        $this->contentStore->shouldReceive('read')
             ->with('IDENTIFIER')
             ->andReturn('TEMPLATE');
 
