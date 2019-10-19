@@ -35,9 +35,9 @@ class DocManClientTest extends MockeryTestCase
         $this->mockClient = $this->createMock(\Zend\Http\Client::class);
 
         $this->sut = new DocManClient(
-            ['httpClient' =>$this->mockClient,
-            'baseuri'=>self::BASE_URI,
-            'workspace'=>self::WORKSPACE ]
+            $this->mockClient,
+            self::BASE_URI,
+            self::WORKSPACE
         );
         $this->sut->setUuid('UUID1');
 

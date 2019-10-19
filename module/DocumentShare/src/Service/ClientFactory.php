@@ -138,7 +138,7 @@ class ClientFactory implements FactoryInterface
         }
 
         if (!isset($clientOptions['webdav_baseuri']) || empty($clientOptions['webdav_baseuri'])) {
-            throw new RuntimeException('Missing required option document_share.webdav_baseuri');
+            throw new RuntimeException('Missing required option document_share.client.webdav_baseuri');
         }
 
         if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
