@@ -2,15 +2,23 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
-use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Cpms\Client\HttpClient;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
+use Dvsa\Olcs\DocumentShare\Service\DocManClient;
+use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use ZfcRbac\Identity\IdentityInterface;
+use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Client Factory Test
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class ClientFactoryTest extends \PHPUnit\Framework\TestCase
+class ClientFactoryTest extends MockeryTestCase
 {
     /**
      * @dataProvider provideSetOptions
@@ -20,12 +28,8 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetOptions($config, $expected)
     {
-        $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
-        $mockSl
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->equalTo('Configuration'))
-            ->willReturn($config);
+        $mockSl = m::mock('Zend\ServiceManager\ServiceLocatorInterface');
+        $mockSl->shouldReceive('get')->once()->with('Configuration')->andReturn($config);
 
         $sut = new ClientFactory();
 
@@ -34,7 +38,8 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
             try {
                 $sut->getOptions($mockSl, 'testkey');
             } catch (\Exception $e) {
-                if ($e->getMessage() == $expected->getMessage() &&
+                if (
+                    $e->getMessage() == $expected->getMessage() &&
                     get_class($e) == get_class($expected)
                 ) {
                     $passed = true;
@@ -64,72 +69,196 @@ class ClientFactoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testCanCreateServiceWithName()
+    /**
+     * @dataProvider provideCreateService
+     *
+     * @param $config
+     * @param $expected
+     */
+    public function testCreateService($config, $expected, $client)
     {
-        $mockSl = $this->createMock('Zend\ServiceManager\ServiceLocatorInterface');
-
         $sut = new ClientFactory();
-        $this->assertTrue($sut->canCreateServiceWithName($mockSl, '', WebDavClient::class));
-        $this->assertFalse($sut->canCreateServiceWithName($mockSl, '', 'Data\\Service\\Backend\\Dummy'));
-    }
 
+        $mockSl = m::mock(ServiceLocatorInterface::class);
+
+        $mockUser = m::mock(User::class)
+            ->shouldReceive('getOstype')
+            ->andReturn($client)->getMock();
+
+        $authService = m::mock(AuthorizationService::class)
+            ->shouldReceive('getIdentity')->once()
+            ->andReturn(
+                m::mock(IdentityInterface::class)->shouldReceive('getUser')->once()
+                    ->andReturn($mockUser)->getMock()
+            )->getMock();
+
+        $mockSl->shouldReceive('get')
+            ->once()
+            ->with(AuthorizationService::class)
+            ->andReturn(
+            $authService
+        )->getMock();
+
+
+
+
+
+        $mockSl->shouldReceive('get')->once()->with('Configuration')->andReturn($config);
+        if ($expected instanceof \Exception) {
+            $passed = false;
+            try {
+                $service = $sut->createService($mockSl);
+            } catch (\Exception $e) {
+
+                if (
+                    $e->getMessage() === $expected->getMessage() &&
+                    get_class($e) === get_class($expected)
+                ) {
+                    $passed = true;
+                }
+            }
+
+            $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
+        } else {
+
+            $service = $sut->createService($mockSl);
+
+            if($client === User::USER_OS_TYPE_WINDOWS_7){
+                $this->assertInstanceOf(DocManClient::class, $service);
+                $this->assertInstanceOf('\Zend\Http\Client', $service->getHttpClient());
+                $this->assertEquals($config['document_share']['client']['workspace'], $service->getWorkspace());
+                $this->assertEquals($config['document_share']['client']['baseuri'], $service->getBaseUri());
+                if (isset($config['document_share']['client']['uuid'])) {
+                    $this->assertEquals(
+                        $config['document_share']['client']['uuid'],
+                        $service->getUuid()
+                    );
+                }
+            }
+            else {
+                $this->assertInstanceOf(WebDavClient::class, $service);
+            }
+        }
+
+    }
 
     public function provideCreateService()
     {
-        $configMissingBaseUri = array(
-            'document_share' => array(
-                'http' => array(),
-                'client' => array(
+        $configMissingBaseUri = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
                     'workspace' => 'test'
-                )
-            )
-        );
+                ]
+            ],
+        ];
 
-        $configMisingWorkspace = array(
-            'document_share' => array(
-                'http' => array(),
-                'client' => array(
+        $configMissingWorkspace = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
                     'baseuri' => 'http://testdocument_share'
-                )
-            )
-        );
+                ]
+            ],
+        ];
 
-        $config = array(
-            'document_share' => array(
-                'http' => array(),
-                'client' => array(
+        $config = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
                     'baseuri' => 'http://testdocument_share',
                     'workspace' => 'test'
-                )
-            )
-        );
+                ]
+            ],
+        ];
 
-        $configWithUuid = array(
-            'document_share' => array(
-                'http' => array(),
-                'client' => array(
+        $configWebDavMissingUsername = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'webdav_baseuri' => 'http://testdocument_share',
+                    'workspace' => 'test',
+                    'password' => 'test'
+                ]
+            ]
+        ];
+
+        $configWebDavMissingPassword = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'webdav_baseuri' => 'http://testdocument_share',
+                    'workspace' => 'test',
+                    'username' => 'test'
+                ]
+            ]
+        ];
+
+        $webDavConfig = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'baseuri' => 'http://testdocument_share',
+                    'workspace' => 'testwebdav',
+                    'username' => 'testwebdav',
+                    'password' => 'ttestwebdavest',
+                    'webdav_baseuri' => 'http://testdocument_share',
+                    'uuid' => 'u1234'
+                ]
+            ]
+        ];
+
+        $configWithUuid = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
                     'baseuri' => 'http://testdocument_share',
                     'workspace' => 'test',
                     'uuid' => 'u1234'
-                )
-            )
-        );
+                ]
+            ],
+        ];
 
-        return array(
-            array(
+        return [
+            "missingBaseUri" => [
                 $configMissingBaseUri,
-                new \RuntimeException('Missing required option document_share.client.baseuri')
-            ),
-            array(
-                $configMisingWorkspace,
-                new \RuntimeException('Missing required option document_share.client.workspace')
-            ),
-            array(
-                $config
-            ),
-            array(
-                $configWithUuid
-            )
-        );
+                new \RuntimeException('Missing required option document_share.client.baseuri'),
+                User::USER_OS_TYPE_WINDOWS_7
+            ],
+            "missingWorkspace" => [
+                $configMissingWorkspace,
+                new \RuntimeException('Missing required option document_share.client.workspace'),
+                User::USER_OS_TYPE_WINDOWS_7
+            ],
+            "goodDocManConfig" => [
+                $config,
+                null,
+                User::USER_OS_TYPE_WINDOWS_7
+            ],
+            "docManwithUuId" => [
+                $configWithUuid,
+                null,
+                User::USER_OS_TYPE_WINDOWS_7
+            ],
+            "goodWebDavConfig" => [
+                $webDavConfig,
+                null,
+                User::USER_OS_TYPE_WINDOWS_10
+            ],
+
+            "WebDavConfigMissingUsername" => [
+                $configWebDavMissingUsername,
+                new \RuntimeException('Missing required option document_share.client.username'),
+                User::USER_OS_TYPE_WINDOWS_10
+
+            ],
+            "WebDavConfigMissingPassword" => [
+                $configWebDavMissingPassword,
+                new \RuntimeException('Missing required option document_share.client.password'),
+                User::USER_OS_TYPE_WINDOWS_10
+
+            ]
+
+        ];
     }
 }

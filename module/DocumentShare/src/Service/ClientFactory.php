@@ -70,49 +70,21 @@ class ClientFactory implements FactoryInterface
                 )
             );
         }
-
         return $options;
     }
 
     /**
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @param                         $requestedName
-     *
-     * @return array
-     */
-    private function getConfiguration(ServiceLocatorInterface $serviceLocator): array
-    {
-        $clientOptions = $this->getOptions($serviceLocator, 'client');
-
-
-        if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
-            throw new RuntimeException('Missing required option document_share.client.baseuri');
-        }
-
-        if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
-            throw new RuntimeException('Missing required option document_share.client.workspace');
-        }
-
-        $clientOptions['httpClient'] = $this->getHttpClient($serviceLocator);
-        return $clientOptions;
-    }
-
-    /**
-     * Create service with name
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param                         $name
-     * @param                         $requestedName
-     *
-     * @return mixed
+     * @return DocumentStoreInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator): DocumentStoreInterface
     {
-        $clientOptions = $this->getConfiguration($serviceLocator);
+        $clientOptions = $this->getOptions($serviceLocator, 'client');
+        $clientOptions['httpClient'] = $this->getHttpClient($serviceLocator);
 
         if ($this->getClientType($serviceLocator) === WebDavClient::class) {
-            $clientOptions = $this->getWebDavConfig($clientOptions);
+            $this->validateWebDavConfig($clientOptions);
             $sabreClient = new SabreClient(
                 [
                     'baseUri' => $clientOptions['webdav_baseuri'],
@@ -125,6 +97,7 @@ class ClientFactory implements FactoryInterface
             $fileSystem = new Filesystem($adapter);
             return new WebDavClient($fileSystem);
         } else {
+            $this->validateDocManConfig($clientOptions);
             $client = new DocManClient(
                 $this->getHttpClient($serviceLocator),
                 $clientOptions['baseuri'],
@@ -133,7 +106,6 @@ class ClientFactory implements FactoryInterface
             if (isset($clientOptions['uuid'])) {
                 $client->setUuid($clientOptions['uuid']);
             }
-
             return $client;
         }
     }
@@ -158,17 +130,39 @@ class ClientFactory implements FactoryInterface
      * @param $requestedName
      * @param $clientOptions
      *
-     * @return mixed
      */
-    private function getWebDavConfig($clientOptions)
+    private function validateWebDavConfig($clientOptions)
     {
+        if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
+            throw new RuntimeException('Missing required option document_share.client.workspace');
+        }
+
+        if (!isset($clientOptions['webdav_baseuri']) || empty($clientOptions['webdav_baseuri'])) {
+            throw new RuntimeException('Missing required option document_share.webdav_baseuri');
+        }
+
         if (!isset($clientOptions['username']) || empty($clientOptions['username'])) {
-            throw new RuntimeException('Missing required option document_share.client.username for webdav client');
+            throw new RuntimeException('Missing required option document_share.client.username');
         }
 
         if (!isset($clientOptions['password']) || empty($clientOptions['password'])) {
-            throw new RuntimeException('Missing required option document_share.client.password for webdav client');
+            throw new RuntimeException('Missing required option document_share.client.password');
         }
-        return $clientOptions;
+
+    }
+
+    /**
+     * @param $clientOptions
+     *
+     */
+    private function validateDocManConfig($clientOptions)
+    {
+        if (!isset($clientOptions['workspace']) || empty($clientOptions['workspace'])) {
+            throw new RuntimeException('Missing required option document_share.client.workspace');
+        }
+
+        if (!isset($clientOptions['baseuri']) || empty($clientOptions['baseuri'])) {
+            throw new RuntimeException('Missing required option document_share.client.baseuri');
+        }
     }
 }
