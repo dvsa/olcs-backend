@@ -29,12 +29,17 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
     {
         $frontendType = 'checkbox';
         $fieldsetName = 'fieldset123';
+        $questionShortKey = 'Cabotage';
         $questionId = 47;
         $irhpApplicationId = 82;
 
         $question = m::mock(Question::class);
         $question->shouldReceive('getId')
             ->andReturn($questionId);
+        $question->shouldReceive('getActiveQuestionText->getQuestionShortKey')
+            ->withNoArgs()
+            ->andReturn($questionShortKey);
+
 
         $applicationStepEntity = m::mock(ApplicationStepEntity::class);
         $applicationStepEntity->shouldReceive('getFieldsetName')
@@ -68,7 +73,7 @@ class ApplicationStepGeneratorTest extends MockeryTestCase
 
         $applicationStepFactory = m::mock(ApplicationStepFactory::class);
         $applicationStepFactory->shouldReceive('create')
-            ->with($frontendType, $fieldsetName, $element, $validatorList)
+            ->with($frontendType, $fieldsetName, $questionShortKey, $element, $validatorList)
             ->andReturn($applicationStep);
 
         $validatorListGenerator = m::mock(ValidatorListGenerator::class);

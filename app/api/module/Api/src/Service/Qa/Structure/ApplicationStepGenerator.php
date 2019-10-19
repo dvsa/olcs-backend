@@ -66,6 +66,7 @@ class ApplicationStepGenerator
         return $this->applicationStepFactory->create(
             $formControlStrategy->getFrontendType(),
             $applicationStepEntity->getFieldsetName(),
+            $applicationStepEntity->getQuestion()->getActiveQuestionText()->getQuestionShortKey(),
             $formControlStrategy->getElement($elementGeneratorContext),
             $validatorList
         );

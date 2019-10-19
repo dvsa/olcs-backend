@@ -15,9 +15,11 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ApplicationStepTest extends MockeryTestCase
 {
-    private $type;
+    private $type = 'checkbox';
 
-    private $fieldsetName;
+    private $fieldsetName = 'fields123';
+
+    private $shortName = 'Cabotage';
 
     private $elementRepresentation;
 
@@ -29,8 +31,6 @@ class ApplicationStepTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->type = 'checkbox';
-        $this->fieldsetName = 'fields123';
         $this->elementRepresentation = ['elementRepresentation'];
         $this->validatorListRepresentation = ['validatorListRepresentation'];
 
@@ -42,7 +42,13 @@ class ApplicationStepTest extends MockeryTestCase
         $this->validatorList->shouldReceive('getRepresentation')
             ->andReturn($this->validatorListRepresentation);
 
-        $this->applicationStep = new ApplicationStep($this->type, $this->fieldsetName, $element, $this->validatorList);
+        $this->applicationStep = new ApplicationStep(
+            $this->type,
+            $this->fieldsetName,
+            $this->shortName,
+            $element,
+            $this->validatorList
+        );
     }
 
     public function testGetRepresentation()
@@ -50,6 +56,7 @@ class ApplicationStepTest extends MockeryTestCase
         $expectedRepresentation = [
             'type' => $this->type,
             'fieldsetName' => $this->fieldsetName,
+            'shortName' => $this->shortName,
             'element' => $this->elementRepresentation,
             'validators' => $this->validatorListRepresentation
         ];
