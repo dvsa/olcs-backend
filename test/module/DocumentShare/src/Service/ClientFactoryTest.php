@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Cpms\Client\HttpClient;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
@@ -98,11 +97,6 @@ class ClientFactoryTest extends MockeryTestCase
             ->andReturn(
             $authService
         )->getMock();
-
-
-
-
-
         $mockSl->shouldReceive('get')->once()->with('Configuration')->andReturn($config);
         if ($expected instanceof \Exception) {
             $passed = false;
@@ -208,6 +202,30 @@ class ClientFactoryTest extends MockeryTestCase
             ]
         ];
 
+        $webDavConfigMissingBaseUri = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'workspace' => 'testwebdav',
+                    'username' => 'testwebdav',
+                    'password' => 'ttestwebdavest',
+                    'uuid' => 'u1234'
+                ]
+            ]
+        ];
+
+        $webDavConfigMissingWorkspace = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'username' => 'testwebdav',
+                    'password' => 'ttestwebdavest',
+                    'webdav_baseuri' => 'http://testdocument_share',
+                    'uuid' => 'u1234'
+                ]
+            ]
+        ];
+
         $configWithUuid = [
             'document_share' => [
                 'http' => [],
@@ -255,6 +273,18 @@ class ClientFactoryTest extends MockeryTestCase
             "WebDavConfigMissingPassword" => [
                 $configWebDavMissingPassword,
                 new \RuntimeException('Missing required option document_share.client.password'),
+                User::USER_OS_TYPE_WINDOWS_10
+
+            ],
+            "WebDavConfigMissingWorkspace" => [
+                $webDavConfigMissingWorkspace,
+                new \RuntimeException('Missing required option document_share.client.workspace'),
+                User::USER_OS_TYPE_WINDOWS_10
+
+            ],
+            "WebDavConfigMissingPWebDavBaseUri" => [
+                $webDavConfigMissingBaseUri,
+                new \RuntimeException('Missing required option document_share.client.webdav_baseuri'),
                 User::USER_OS_TYPE_WINDOWS_10
 
             ]
