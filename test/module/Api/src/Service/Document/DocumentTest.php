@@ -207,7 +207,7 @@ TXT;
         $this->docManClient = m::mock(DocManClient::class);
         $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
             ->shouldReceive('get')->with(DocumentClientStrategy::class)->andReturn(
-                m::mock(DocumentClientStrategy::class)->shouldReceive('getClientClass')->andReturn(
+                m::mock(DocumentClientStrategy::class)->shouldReceive('ContentStore')->andReturn(
                     DocManClient::class
                 )->getMock()
             )
