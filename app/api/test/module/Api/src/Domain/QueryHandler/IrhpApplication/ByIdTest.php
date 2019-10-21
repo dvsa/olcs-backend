@@ -21,7 +21,7 @@ class ByIdTest extends QueryHandlerTestCase
         'licence' => ['trafficArea', 'organisation'],
         'irhpPermitType' => ['name'],
         'fees' => ['feeType' => ['feeType'], 'feeStatus'],
-        'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country']]],
+        'irhpPermitApplications' => ['irhpPermitWindow' => ['irhpPermitStock' => ['country', 'irhpPermitType']]],
         'sectors',
     ];
 
