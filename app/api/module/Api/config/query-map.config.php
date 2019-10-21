@@ -137,7 +137,7 @@ return [
     // Organisation
     TransferQuery\Organisation\BusinessDetails::class => QueryHandler\Organisation\BusinessDetails::class,
     TransferQuery\Organisation\Organisation::class => QueryHandler\Organisation\Organisation::class,
-    TransferQuery\Organisation\OrganisationPermits::class => QueryHandler\Organisation\OrganisationPermits::class,
+    TransferQuery\Organisation\OrganisationAvailableLicences::class => QueryHandler\Organisation\OrganisationAvailableLicences::class,
     TransferQuery\Organisation\OutstandingFees::class => QueryHandler\Organisation\OutstandingFees::class,
     TransferQuery\Organisation\Dashboard::class => QueryHandler\Organisation\Dashboard::class,
     TransferQuery\Organisation\People::class => QueryHandler\Organisation\People::class,
@@ -629,11 +629,11 @@ return [
 
     // Permits
     TransferQuery\IrhpApplication\ById::class => QueryHandler\IrhpApplication\ById::class,
+    TransferQuery\IrhpApplication\AvailableLicences::class => QueryHandler\IrhpApplication\AvailableLicences::class,
     TransferQuery\IrhpApplication\GetList::class => QueryHandler\IrhpApplication\GetList::class,
     TransferQuery\IrhpApplication\GetAllByLicence::class => QueryHandler\IrhpApplication\GetAllByLicence::class,
     TransferQuery\IrhpApplication\GetAllByOrganisation::class
         => QueryHandler\IrhpApplication\GetAllByOrganisation::class,
-    TransferQuery\IrhpApplication\ActiveApplication::class => QueryHandler\IrhpApplication\ActiveApplication::class,
     TransferQuery\IrhpApplication\QuestionAnswer::class => QueryHandler\IrhpApplication\QuestionAnswer::class,
     TransferQuery\IrhpApplication\MaxStockPermits::class => QueryHandler\IrhpApplication\MaxStockPermits::class,
     TransferQuery\IrhpApplication\MaxStockPermitsByApplication::class =>
@@ -644,8 +644,6 @@ return [
     TransferQuery\IrhpApplication\ApplicationPath::class => QueryHandler\IrhpApplication\ApplicationPath::class,
     TransferQuery\IrhpApplication\ApplicationPathGroupList::class => QueryHandler\IrhpApplication\ApplicationPathGroupList::class,
     TransferQuery\IrhpApplication\PermitsAvailable::class => QueryHandler\IrhpApplication\PermitsAvailable::class,
-    TransferQuery\IrhpApplication\PermitsAvailableByYear::class =>
-        QueryHandler\IrhpApplication\PermitsAvailableByYear::class,
     TransferQuery\Permits\Sectors::class => QueryHandler\Permits\Sectors::class,
     TransferQuery\Permits\EcmtConstrainedCountriesList::class => QueryHandler\Permits\EcmtConstrainedCountriesList::class,
     TransferQuery\Permits\EcmtPermitApplication::class => QueryHandler\Permits\EcmtPermitApplication::class,
@@ -655,13 +653,13 @@ return [
     TransferQuery\IrhpPermitStock\AvailableCountries::class => QueryHandler\IrhpPermitStock\AvailableCountries::class,
     TransferQuery\Permits\ValidEcmtPermits::class => QueryHandler\Permits\ValidEcmtPermits::class,
     TransferQuery\Permits\UnpaidEcmtPermits::class => QueryHandler\Permits\UnpaidEcmtPermits::class,
+    TransferQuery\Permits\AvailableLicences::class => QueryHandler\Permits\AvailableLicences::class,
     TransferQuery\Permits\AvailableTypes::class => QueryHandler\Permits\AvailableTypes::class,
     TransferQuery\Permits\AvailableYears::class => QueryHandler\Permits\AvailableYears::class,
     TransferQuery\Permits\AvailableStocks::class => QueryHandler\Permits\AvailableStocks::class,
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
-    TransferQuery\Permits\ActiveEcmtApplication::class => QueryHandler\Permits\ActiveEcmtApplication::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,

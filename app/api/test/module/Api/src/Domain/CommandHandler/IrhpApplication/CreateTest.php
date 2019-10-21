@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateCmd;
+use Dvsa\Olcs\Transfer\Command\Permits\CreateEcmtPermitApplication;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
@@ -32,7 +33,11 @@ class CreateTest extends CommandHandlerTestCase
     {
         $this->references = [
             IrhpPermitType::class => [
-                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => m::mock(IrhpPermitType::class)
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT => m::mock(IrhpPermitType::class),
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => m::mock(IrhpPermitType::class),
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => m::mock(IrhpPermitType::class),
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => m::mock(IrhpPermitType::class),
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL => m::mock(IrhpPermitType::class)
             ],
             Licence::class => [
                 2 => m::mock(Licence::class),
@@ -44,25 +49,35 @@ class CreateTest extends CommandHandlerTestCase
 
         $this->refData = [
             IrhpInterface::SOURCE_SELFSERVE,
+            IrhpInterface::SOURCE_INTERNAL,
             IrhpInterface::STATUS_NOT_YET_SUBMITTED,
         ];
 
         parent::initReferences();
     }
 
-    public function testHandleCommand()
-    {
-        $permitTypeId = IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL;
-        $licenceId = 2;
-
+    /**
+     * @dataProvider dpTestHandleCommand
+     */
+    public function testHandleCommand(
+        $permitTypeId,
+        $licenceId,
+        $fromInternal,
+        $expectedSource,
+        $expectedSideEffect,
+        $sideEffectMsg,
+        $resultEntity,
+        $expected,
+        $times
+    ) {
         $this->repoMap['IrhpApplication']
             ->shouldReceive('save')
             ->with(m::type(IrhpApplication::class))
-            ->once()
+            ->times($times)
             ->andReturnUsing(
-                function ($irhpApplication) {
+                function ($irhpApplication) use ($permitTypeId, $expectedSource) {
                     $this->assertSame(
-                        $this->refData[IrhpInterface::SOURCE_SELFSERVE],
+                        $this->refData[$expectedSource],
                         $irhpApplication->getSource()
                     );
 
@@ -72,7 +87,7 @@ class CreateTest extends CommandHandlerTestCase
                     );
 
                     $this->assertSame(
-                        $this->references[IrhpPermitType::class][IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL],
+                        $this->references[IrhpPermitType::class][$permitTypeId],
                         $irhpApplication->getIrhpPermitType()
                     );
 
@@ -93,24 +108,30 @@ class CreateTest extends CommandHandlerTestCase
             );
 
         $sideEffectResult = new Result();
-        $sideEffectResult->addMessage('Message from CreateDefaultIrhpPermitApplications');
+        $sideEffectResult->addId($resultEntity, 4);
+        $sideEffectResult->addMessage($sideEffectMsg);
 
         $this->expectedSideEffect(
-            CreateDefaultIrhpPermitApplications::class,
-            ['id' => 4],
+            $expectedSideEffect,
+            [],
             $sideEffectResult
         );
 
         $command = CreateCmd::create(
             [
-                'type' => $permitTypeId,
-                'licence' => $licenceId
+                'irhpPermitType' => $permitTypeId,
+                'licence' => $licenceId,
+                'fromInternal' => $fromInternal
             ]
         );
 
         $result = $this->sut->handleCommand($command);
+        $this->assertEquals($expected, $result->toArray());
+    }
 
-        $expected = [
+    public function dpTestHandleCommand()
+    {
+        $expectedIrhp = [
             'id' => [
                 'irhpApplication' => 4,
             ],
@@ -120,7 +141,36 @@ class CreateTest extends CommandHandlerTestCase
             ]
         ];
 
-        $this->assertEquals($expected, $result->toArray());
+        $expectedEcmt = [
+            'id' => [
+                'ecmtPermitApplication' => 4,
+            ],
+            'messages' => [
+                'ECMT Permit Application created successfully'
+            ]
+        ];
+
+        $ssSource = IrhpInterface::SOURCE_SELFSERVE;
+        $inSource = IrhpInterface::SOURCE_INTERNAL;
+
+        $irhpSideEffect = CreateDefaultIrhpPermitApplications::class;
+        $ecmtSideEffect = CreateEcmtPermitApplication::class;
+        $ecmtSideEffectMsg = 'ECMT Permit Application created successfully';
+        $irhpSideEffectMsg = 'Message from CreateDefaultIrhpPermitApplications';
+
+        return
+            [
+                [ 1, 2, 0, $ssSource, $ecmtSideEffect,  $ecmtSideEffectMsg, 'ecmtPermitApplication', $expectedEcmt, 0],
+                [ 2, 2, 0, $ssSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 3, 2, 0, $ssSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 4, 2, 0, $ssSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 5, 2, 0, $ssSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 1, 2, 1, $inSource, $ecmtSideEffect,  $ecmtSideEffectMsg, 'ecmtPermitApplication', $expectedEcmt, 0],
+                [ 2, 2, 1, $inSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 3, 2, 1, $inSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 4, 2, 1, $inSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+                [ 5, 2, 1, $inSource, $irhpSideEffect,  $irhpSideEffectMsg, 'irhpApplication', $expectedIrhp, 1],
+            ];
     }
 
     public function testHandleCommandNoPermitTypeFound()
@@ -129,8 +179,9 @@ class CreateTest extends CommandHandlerTestCase
         $licenceId = 2;
 
         $cmdData = [
-            'type' => $permitTypeId,
+            'irhpPermitType' => $permitTypeId,
             'licence' => $licenceId,
+            'fromInternal' => 0
         ];
 
         $command = CreateCmd::create($cmdData);
