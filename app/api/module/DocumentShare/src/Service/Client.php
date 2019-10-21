@@ -8,7 +8,10 @@ use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
-class DocManClient implements DocumentStoreInterface
+/**
+ * Class Client
+ */
+class Client
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
 
@@ -39,8 +42,8 @@ class DocManClient implements DocumentStoreInterface
         $workspace
     ) {
         $this->httpClient = $httpClient;
-        $this->baseUri = $baseUri;
-        $this->workspace = $workspace;
+        $this->baseUri = trim($baseUri);
+        $this->workspace = trim($workspace);
     }
 
     /**
@@ -149,9 +152,12 @@ class DocManClient implements DocumentStoreInterface
             }
 
             $data = (array)json_decode(file_get_contents($tmpFileName));
+
         } catch (\Exception $e) {
             unset($file);
+
             throw $e;
+
         } finally {
             if (is_file($tmpFileName)) {
                 unlink($tmpFileName);

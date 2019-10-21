@@ -12,17 +12,11 @@ class File
     const ERR_CANT_OPEN_DOWNLOAD_STREAM = 'Can not access temp file with downloaded content';
     const ERR_CANT_OPEN_RES = 'Can not access temp file for record downloaded content';
 
-    /**
-     * @var string
-     */
+    /** @var  string */
     protected $file;
-    /**
-     * @var string
-     */
+    /** @var  string */
     private $mimeType;
-    /**
-     * @var string
-     */
+    /** @var  string */
     private $identifier;
 
     /**
@@ -178,9 +172,11 @@ class File
     }
 
     /**
-     * @param $streamFileName
+     * Set from content field downloader data and push it to File
      *
-     * @throws \Exception
+     * @param string $streamFileName Document Storeage Downloaded stream
+     *
+     * @return void
      */
     public function setContentFromDsStream($streamFileName)
     {
@@ -234,6 +230,7 @@ class File
             fflush($fhTrg);
 
             stream_filter_remove($filter);
+
         } finally {
             @fclose($fhTrg);
             @fclose($fhSrc);

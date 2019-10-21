@@ -68,11 +68,11 @@ class DocumentGeneratorTest extends MockeryTestCase
             ->andReturn('file');
 
         $this->document
-            ->shouldReceive('getBookmarkQueries')
-            ->with('file', [])
-            ->andReturn([])
-            ->shouldReceive('populateBookmarks')
-            ->with('file', []);
+                ->shouldReceive('getBookmarkQueries')
+                ->with('file', [])
+                ->andReturn([])
+                ->shouldReceive('populateBookmarks')
+                ->with('file', []);
 
         $this->sut->generateFromTemplate('x');
     }
