@@ -51,7 +51,10 @@ class FileProcessorTest extends TestCase
         $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
         $sut->setSubDirPath($extraPath);
 
-        $this->assertEquals($xmlFilename, $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier));
+        $this->assertEquals(
+            $xmlFilename,
+            str_replace("\\", "/", $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier))
+        );
     }
 
     /**
