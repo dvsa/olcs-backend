@@ -104,9 +104,9 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
     private function checkFileContent($fileName)
     {
         static::assertSame(
-            'col1,col2' . PHP_EOL .
-            'val11,"v""\'-/\,"' . PHP_EOL .
-            'val21,val22' . PHP_EOL,
+            'col1,col2' . "\n" .
+            'val11,"v""\'-/\,"' . "\n" .
+            'val21,val22' . "\n",
             file_get_contents($this->tmpPath . '/' . $fileName . '.csv')
         );
     }
