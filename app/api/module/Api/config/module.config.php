@@ -47,8 +47,6 @@ return [
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
             'QaQuestionTextGeneratorContextFactory' =>
                 ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
-            'QaEcmtRemovalNoOfPermitsIrhpPermitApplicationFactory' =>
-                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\IrhpPermitApplicationFactory::class,
             'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
             'QaEcmtShortTermNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
