@@ -6,11 +6,11 @@ return [
         'client' => [
             'baseuri' => '',
             'workspace' => '',
-            'username' => '',
-            'password' => ''
         ]
     ],
     'service_manager' => [
-
+        'factories' => [
+            Dvsa\Olcs\DocumentShare\Service\Client::class => Dvsa\Olcs\DocumentShare\Service\ClientFactory::class,
+        ]
     ]
 ];

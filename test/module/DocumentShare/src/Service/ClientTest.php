@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
-use Dvsa\Olcs\DocumentShare\Service\DocManClient;
+use Dvsa\Olcs\DocumentShare\Service\Client;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
@@ -12,14 +12,14 @@ use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\Request;
 
 /**
- * @covers \Dvsa\Olcs\DocumentShare\Service\DocManClient
+ * @covers \Dvsa\Olcs\DocumentShare\Service\Client
  */
-class DocManClientTest extends MockeryTestCase
+class ClientTest extends MockeryTestCase
 {
     const BASE_URI = 'http://testing';
     const WORKSPACE = 'unit_Workspace';
 
-    /** @var  DocManClient */
+    /** @var  Client */
     protected $sut;
 
     /** @var  MockObj | \Zend\Http\Client */
@@ -34,7 +34,7 @@ class DocManClientTest extends MockeryTestCase
     {
         $this->mockClient = $this->createMock(\Zend\Http\Client::class);
 
-        $this->sut = new DocManClient(
+        $this->sut = new Client(
             $this->mockClient,
             self::BASE_URI,
             self::WORKSPACE
@@ -77,7 +77,7 @@ class DocManClientTest extends MockeryTestCase
         $this->mockClient
             ->expects(static::once())
             ->method('setStream')
-            ->with(static::stringContains('/' . DocManClient::DS_DOWNLOAD_FILE_PREFIX))
+            ->with(static::stringContains('/' . Client::DS_DOWNLOAD_FILE_PREFIX))
             ->willReturnCallback(
                 function ($filePath) use ($content) {
                     file_put_contents($filePath, $content);
@@ -137,7 +137,7 @@ class DocManClientTest extends MockeryTestCase
         $this->logger
             ->shouldReceive('log')
             ->once()
-            ->with(\Zend\Log\Logger::ERR, DocManClient::ERR_RESP_FAIL, []);
+            ->with(\Zend\Log\Logger::ERR, Client::ERR_RESP_FAIL, []);
 
         //  call & check
         $actual = $this->sut->read('test');
