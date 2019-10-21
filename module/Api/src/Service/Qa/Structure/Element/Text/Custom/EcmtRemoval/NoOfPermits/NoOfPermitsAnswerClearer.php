@@ -15,7 +15,7 @@ class NoOfPermitsAnswerClearer implements AnswerClearerInterface
     /**
      * Create service instance
      *
-     * @param AnswerRepository $answerRepo
+     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
      *
      * @return NoOfPermitsAnswerClearer
      */
@@ -29,10 +29,8 @@ class NoOfPermitsAnswerClearer implements AnswerClearerInterface
      */
     public function clear(ApplicationStepEntity $applicationStepEntity, IrhpApplicationEntity $irhpApplicationEntity)
     {
-        $irhpPermitApplications = $irhpApplicationEntity->getIrhpPermitApplications();
-        if ($irhpPermitApplications->count()) {
-            $irhpPermitApplication = $irhpPermitApplications->first();
-            $this->irhpPermitApplicationRepo->delete($irhpPermitApplication);
-        }
+        $irhpPermitApplication = $irhpApplicationEntity->getFirstIrhpPermitApplication();
+        $irhpPermitApplication->clearPermitsRequired();
+        $this->irhpPermitApplicationRepo->save($irhpPermitApplication);
     }
 }

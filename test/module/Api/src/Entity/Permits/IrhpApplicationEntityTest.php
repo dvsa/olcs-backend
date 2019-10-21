@@ -3834,20 +3834,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertEquals($permitsRequired, $entity->getAnswer($step));
     }
 
-    public function testGetAnswerNullForCustomEcmtRemovalNoOfPermits()
-    {
-        $question = m::mock(Question::class);
-        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(true);
-        $question->shouldReceive('getFormControlType')->andReturn(Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS);
-
-        $step = m::mock(ApplicationStep::class);
-        $step->shouldReceive('getQuestion')->withNoArgs()->once()->andReturn($question);
-
-        $entity = $this->createNewEntity();
-
-        $this->assertNull($entity->getAnswer($step));
-    }
-
     /**
      * @dataProvider dpGetAnswerForCustomEcmtShortTermNoOfPermits
      */
