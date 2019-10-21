@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Service\Document;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\DateHelperAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Interfaces\FileStoreAwareInterface;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
-use Dvsa\Olcs\DocumentShare\Service\DocumentClientStrategy;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -151,7 +150,7 @@ class Document implements ServiceLocatorAwareInterface
 
 
             if ($bookmark instanceof FileStoreAwareInterface) {
-                $bookmark->setFileStore($this->serviceLocator->get('ContentStore'));
+                $bookmark->setFileStore($this->getServiceLocator()->get('ContentStore'));
             }
 
             $bookmarks[$token] = $bookmark;
