@@ -2,16 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\File;
 
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
-use Dvsa\Olcs\DocumentShare\Service\DocManClient;
-use Dvsa\Olcs\DocumentShare\Service\DocumentClientStrategy;
 use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
-use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Zend\Http\Response;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use ZfcRbac\Service\AuthorizationService;
 
 /**
  * Content Store File Uploader

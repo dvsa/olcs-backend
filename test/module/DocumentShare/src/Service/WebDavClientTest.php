@@ -3,8 +3,6 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
-namespace Dvsa\OlcsTest\DocumentShare\Service;
-
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient as Client;
 use Hamcrest\Core\IsTypeOf;
