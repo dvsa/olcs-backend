@@ -34,7 +34,7 @@ class DocManClient implements DocumentStoreInterface
      * @param string     $workspace  path
      */
     public function __construct(
-        $httpClient,
+        HttpClient $httpClient,
         $baseUri,
         $workspace
     ) {
