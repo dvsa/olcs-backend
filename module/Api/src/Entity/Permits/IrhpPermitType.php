@@ -98,6 +98,16 @@ class IrhpPermitType extends AbstractIrhpPermitType
     }
 
     /**
+     * Can this permit type have apply for more than one stock on a single application?
+     *
+     * @return bool
+     */
+    public function isMultiStock(): bool
+    {
+        return $this->isMultilateral() || $this->isBilateral();
+    }
+
+    /**
      * Is application path enabled
      *
      * @return bool

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\StockAvailabilityChecker;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\PermitsAvailable as PermitsAvailableQuery;
@@ -50,6 +51,7 @@ class PermitsAvailable extends AbstractQueryHandler implements ToggleRequiredInt
      */
     public function handleQuery(QueryInterface $query)
     {
+        /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->getRepo()->fetchUsingId($query);
         if (!$irhpApplication->getIrhpPermitType()->isEcmtShortTerm()) {
             return $this->createResponse(true);

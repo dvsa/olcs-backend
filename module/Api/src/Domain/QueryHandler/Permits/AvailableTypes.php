@@ -2,7 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Query\Permits\AvailableTypes as AvailableTypesQuery;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitType as IrhpPermitTypeRepo;
+use Dvsa\Olcs\Transfer\Query\Permits\AvailableTypes as AvailableTypesQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -52,7 +53,10 @@ class AvailableTypes extends AbstractQueryHandler implements ToggleRequiredInter
     public function handleQuery(QueryInterface $query)
     {
         $now = new DateTime();
-        $availableTypes = $this->getRepo()->fetchAvailableTypes($now);
+
+        /** @var IrhpPermitTypeRepo $repo */
+        $repo = $this->getRepo('IrhpPermitType');
+        $availableTypes = $repo->fetchAvailableTypes($now);
 
         $filteredAvailableTypes = [];
         foreach ($availableTypes as $type) {

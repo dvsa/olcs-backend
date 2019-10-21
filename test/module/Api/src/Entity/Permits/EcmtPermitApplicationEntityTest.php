@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -221,9 +222,9 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testAccept()
     {
         $entity = $this->createApplicationAwaitingFee();
-        $entity->completeIssueFee(new RefData(Entity::STATUS_FEE_PAID));
-        $entity->accept(new RefData(Entity::STATUS_VALID));
-        $this->assertEquals(Entity::STATUS_VALID, $entity->getStatus()->getId());
+        $entity->completeIssueFee(new RefData(IrhpInterface::STATUS_FEE_PAID));
+        $entity->accept(new RefData(IrhpInterface::STATUS_VALID));
+        $this->assertEquals(IrhpInterface::STATUS_VALID, $entity->getStatus()->getId());
     }
 
     /**
@@ -233,7 +234,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testAcceptException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->accept(new RefData(Entity::STATUS_VALID));
+        $entity->accept(new RefData(IrhpInterface::STATUS_VALID));
     }
 
     /**
@@ -242,8 +243,8 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testCancel()
     {
         $entity = $this->createApplication();
-        $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
-        $this->assertEquals(Entity::STATUS_CANCELLED, $entity->getStatus()->getId());
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
+        $this->assertEquals(IrhpInterface::STATUS_CANCELLED, $entity->getStatus()->getId());
         $this->assertEquals(date('Y-m-d'), $entity->getCancellationDate()->format('Y-m-d'));
     }
 
@@ -254,7 +255,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testCancelException($status)
     {
         $entity = $this->createApplication($status);
-        $entity->cancel(new RefData(Entity::STATUS_CANCELLED));
+        $entity->cancel(new RefData(IrhpInterface::STATUS_CANCELLED));
     }
 
     /**
@@ -265,12 +266,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpWithdrawException()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
         ];
     }
 
@@ -282,12 +283,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpDeclineAcceptException()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
         ];
     }
 
@@ -299,12 +300,12 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpCancelException()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_UNDER_CONSIDERATION]
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION]
         ];
     }
 
@@ -542,17 +543,33 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         ];
     }
 
+    public function testGetAssociatedStock()
+    {
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $entity = $this->createApplication();
+        $entity->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $this->assertEquals($irhpPermitStock, $entity->getAssociatedStock());
+    }
+
     private function createApplicationUnderConsideration()
     {
-        return $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        return $this->createApplication(IrhpInterface::STATUS_UNDER_CONSIDERATION);
     }
 
     private function createApplicationAwaitingFee()
     {
-        return $this->createApplication(Entity::STATUS_AWAITING_FEE);
+        return $this->createApplication(IrhpInterface::STATUS_AWAITING_FEE);
     }
 
-    private function createApplication($status = Entity::STATUS_NOT_YET_SUBMITTED)
+    private function createApplication($status = IrhpInterface::STATUS_NOT_YET_SUBMITTED)
     {
         $entity = Entity::createNew(
             m::mock(RefData::class),
@@ -564,7 +581,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         return $entity;
     }
 
-    private function createApplicationWithCompletedDeclaration($status = Entity::STATUS_NOT_YET_SUBMITTED)
+    private function createApplicationWithCompletedDeclaration($status = IrhpInterface::STATUS_NOT_YET_SUBMITTED)
     {
         $entity = $this->createApplication($status);
 
@@ -584,7 +601,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     private function createValidApplication()
     {
-        return $this->createApplication(Entity::STATUS_VALID);
+        return $this->createApplication(IrhpInterface::STATUS_VALID);
     }
 
     public function testIsValid()
@@ -656,7 +673,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToIssuing()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $entity = $this->createApplication(IrhpInterface::STATUS_FEE_PAID);
         $entity->proceedToIssuing($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -674,7 +691,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToValid()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $entity = $this->createApplication(IrhpInterface::STATUS_ISSUING);
         $entity->proceedToValid($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -691,7 +708,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
 
     public function testIsReadyForIssuingSuccess()
     {
-        $entity = $this->createApplication(Entity::STATUS_FEE_PAID);
+        $entity = $this->createApplication(IrhpInterface::STATUS_FEE_PAID);
         $this->assertTrue($entity->isReadyForIssuing());
     }
 
@@ -712,22 +729,21 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsReadyForIssuingFail()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_ISSUING],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
     public function testIsIssueInProgressSuccess()
     {
-        $entity = $this->createApplication(Entity::STATUS_ISSUING);
+        $entity = $this->createApplication(IrhpInterface::STATUS_ISSUING);
         $this->assertTrue($entity->isIssueInProgress());
     }
 
@@ -748,16 +764,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsIssueInProgressFail()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_FEE_PAID],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
@@ -776,17 +791,16 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsFeePaid()
     {
         return [
-            [Entity::STATUS_CANCELLED, false],
-            [Entity::STATUS_NOT_YET_SUBMITTED, false],
-            [Entity::STATUS_UNDER_CONSIDERATION, false],
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false],
             [IrhpInterface::STATUS_WITHDRAWN, false],
-            [Entity::STATUS_AWAITING_FEE, false],
-            [Entity::STATUS_FEE_PAID, true],
-            [Entity::STATUS_UNSUCCESSFUL, false],
-            [Entity::STATUS_ISSUED, false],
-            [Entity::STATUS_ISSUING, false],
-            [Entity::STATUS_VALID, false],
-            [Entity::STATUS_DECLINED, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, false],
+            [IrhpInterface::STATUS_FEE_PAID, true],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_VALID, false],
         ];
     }
 
@@ -873,7 +887,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToAwaitingFee()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity = $this->createApplication(IrhpInterface::STATUS_UNDER_CONSIDERATION);
         $entity->proceedToAwaitingFee($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -891,7 +905,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testProceedToUnsuccessful()
     {
         $refData = m::mock(RefData::class);
-        $entity = $this->createApplication(Entity::STATUS_UNDER_CONSIDERATION);
+        $entity = $this->createApplication(IrhpInterface::STATUS_UNDER_CONSIDERATION);
         $entity->proceedToUnsuccessful($refData);
         $this->assertSame($refData, $entity->getStatus());
     }
@@ -914,16 +928,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpIsApplicationUnderConsiderationFail()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_NOT_YET_SUBMITTED],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_FEE_PAID],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_ISSUING],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
@@ -1115,16 +1128,15 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpCantBeSubmittedByStatus()
     {
         return [
-            [Entity::STATUS_CANCELLED],
-            [Entity::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
             [IrhpInterface::STATUS_WITHDRAWN],
-            [Entity::STATUS_AWAITING_FEE],
-            [Entity::STATUS_FEE_PAID],
-            [Entity::STATUS_UNSUCCESSFUL],
-            [Entity::STATUS_ISSUED],
-            [Entity::STATUS_ISSUING],
-            [Entity::STATUS_VALID],
-            [Entity::STATUS_DECLINED],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
         ];
     }
 
@@ -1137,7 +1149,7 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function testCanBeSubmittedTrue($licenceCanMakeApplication)
     {
         $sourceRefData = m::mock(RefData::class);
-        $statusRefData = new RefData(Entity::STATUS_NOT_YET_SUBMITTED);
+        $statusRefData = new RefData(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
         $permitTypeRefData = m::mock(RefData::class);
         $licence = m::mock(Licence::class);
         $dateReceived = '2017-12-25';
@@ -1170,9 +1182,19 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $internationalJourneysRefData
         );
 
+        $stock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stock);
+
+        $application->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
         $licence->shouldReceive('canMakeEcmtApplication')
             ->once()
-            ->with($application)
+            ->with($stock, $application)
             ->andReturn($licenceCanMakeApplication);
 
         self::assertEquals($licenceCanMakeApplication, $application->canBeSubmitted());
@@ -1474,30 +1496,28 @@ class EcmtPermitApplicationEntityTest extends EntityTester
     public function dpCanBeExpired()
     {
         return [
-            [Entity::STATUS_CANCELLED, true, false],
-            [Entity::STATUS_NOT_YET_SUBMITTED, true, false],
-            [Entity::STATUS_UNDER_CONSIDERATION, true, false],
+            [IrhpInterface::STATUS_CANCELLED, true, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true, false],
             [IrhpInterface::STATUS_WITHDRAWN, true, false],
-            [Entity::STATUS_AWAITING_FEE, true, false],
-            [Entity::STATUS_FEE_PAID, true, false],
-            [Entity::STATUS_UNSUCCESSFUL, true, false],
-            [Entity::STATUS_ISSUED, true, false],
-            [Entity::STATUS_ISSUING, true, false],
-            [Entity::STATUS_VALID, true, false],
-            [Entity::STATUS_DECLINED, true, false],
-            [Entity::STATUS_EXPIRED, true, false],
-            [Entity::STATUS_CANCELLED, false, false],
-            [Entity::STATUS_NOT_YET_SUBMITTED, false, false],
-            [Entity::STATUS_UNDER_CONSIDERATION, false, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, true, false],
+            [IrhpInterface::STATUS_FEE_PAID, true, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, true, false],
+            [IrhpInterface::STATUS_ISSUED, true, false],
+            [IrhpInterface::STATUS_ISSUING, true, false],
+            [IrhpInterface::STATUS_VALID, true, false],
+            [IrhpInterface::STATUS_EXPIRED, true, false],
+            [IrhpInterface::STATUS_CANCELLED, false, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, false, false],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, false, false],
             [IrhpInterface::STATUS_WITHDRAWN, false, false],
-            [Entity::STATUS_AWAITING_FEE, false, false],
-            [Entity::STATUS_FEE_PAID, false, false],
-            [Entity::STATUS_UNSUCCESSFUL, false, false],
-            [Entity::STATUS_ISSUED, false, false],
-            [Entity::STATUS_ISSUING, false, false],
-            [Entity::STATUS_VALID, false, true],
-            [Entity::STATUS_DECLINED, false, false],
-            [Entity::STATUS_EXPIRED, false, false]
+            [IrhpInterface::STATUS_AWAITING_FEE, false, false],
+            [IrhpInterface::STATUS_FEE_PAID, false, false],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false, false],
+            [IrhpInterface::STATUS_ISSUED, false, false],
+            [IrhpInterface::STATUS_ISSUING, false, false],
+            [IrhpInterface::STATUS_VALID, false, true],
+            [IrhpInterface::STATUS_EXPIRED, false, false]
         ];
     }
 
