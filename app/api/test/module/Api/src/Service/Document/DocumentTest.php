@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 use Dvsa\Olcs\Api\Service\Document\Document;
 use Dvsa\Olcs\DocumentShare\Data\object\File;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
-use Dvsa\Olcs\DocumentShare\Service\DocumentClientStrategy;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
