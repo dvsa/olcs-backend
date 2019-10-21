@@ -198,10 +198,10 @@ class DataGovUkExportTest extends CommandHandlerTestCase
             'create csv file: ' . $expectedFile;
 
         $this->assertSame(
-            '"Licence number",col1,col2' . "\n" .
-            'LicNo1,val11,"v""\'-/\\,"' . "\n" .
-            'LicNo2,val21,val22' . "\n" .
-            'LicNo3,val31,val32' . "\n" .
+            '"Licence number",col1,col2' . PHP_EOL .
+            'LicNo1,val11,"v""\'-/\\,"' . PHP_EOL .
+            'LicNo2,val21,val22' . PHP_EOL .
+            'LicNo3,val31,val32' . PHP_EOL .
             '',
             file_get_contents($expectedFile)
         );
@@ -386,13 +386,13 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
 
         static::assertSame(
-            'GeographicRegion,col1,col2' . "\n" .
-            'areaName1,val11,"v""\'-/\,"' . "\n" .
-            'areaName1,val31,val32' . "\n",
+            'GeographicRegion,col1,col2' . PHP_EOL .
+            'areaName1,val11,"v""\'-/\,"' . PHP_EOL .
+            'areaName1,val31,val32' . PHP_EOL,
             file_get_contents($expectFile1)
         );
         static::assertSame(
-            'GeographicRegion,col1,col2' . "\n" . 'areaName2,val21,val22' . "\n",
+            'GeographicRegion,col1,col2' . PHP_EOL . 'areaName2,val21,val22' . PHP_EOL,
             file_get_contents($expectFile2)
         );
     }
@@ -444,9 +444,9 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
 
         static::assertSame(
-            '"Current Traffic Area",col1,col2' . "\n" .
-            'areaId1,val11,"v""\'-/\,"' . "\n" .
-            'areaId1,val21,val22' . "\n",
+            '"Current Traffic Area",col1,col2' . PHP_EOL .
+            'areaId1,val11,"v""\'-/\,"' . PHP_EOL .
+            'areaId1,val21,val22' . PHP_EOL,
             file_get_contents($expectFile1)
         );
     }
@@ -492,8 +492,8 @@ class DataGovUkExportTest extends CommandHandlerTestCase
         );
 
         static::assertSame(
-            '"Current Traffic Area",col1,col2' . "\n" .
-            'areaId1,val11,"v""\'-/\,"' . "\n",
+            '"Current Traffic Area",col1,col2' . PHP_EOL .
+            'areaId1,val11,"v""\'-/\,"' . PHP_EOL,
             file_get_contents($expectFile1)
         );
     }
