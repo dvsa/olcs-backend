@@ -3,17 +3,17 @@
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Service\Document\Document;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Data\object\File;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Dvsa\Olcs\DocumentShare\Service\DocumentClientStrategy;
-use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document
  */
-class DocumentTest extends \PHPUnit\Framework\TestCase
+class DocumentTest extends TestCase
 {
     protected $docManClient;
 
@@ -22,11 +22,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-
-
         $this->sut = new Document();
-
-
     }
 
     public function testGetBookmarkQueriesForNoBookmarks()
@@ -41,8 +37,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
     public function testGetBookmarkQueriesForStaticBookmarks()
     {
-
-
         $content = <<<TXT
 Bookmark 1: {\*\bkmkstart letter_date_add_14_days} {\*\bkmkend letter_date_add_14_days}.
 Boomkark 2: {\*\bkmkstart todays_date}{\*\bkmkend todays_date}

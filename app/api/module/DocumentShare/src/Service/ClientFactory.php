@@ -148,7 +148,6 @@ class ClientFactory implements FactoryInterface
         if (!isset($clientOptions['password']) || empty($clientOptions['password'])) {
             throw new RuntimeException('Missing required option document_share.client.password');
         }
-
     }
 
     /**
