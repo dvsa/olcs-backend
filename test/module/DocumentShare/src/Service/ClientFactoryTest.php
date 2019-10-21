@@ -37,10 +37,7 @@ class ClientFactoryTest extends MockeryTestCase
             try {
                 $sut->getOptions($mockSl, 'testkey');
             } catch (\Exception $e) {
-                if (
-                    $e->getMessage() == $expected->getMessage() &&
-                    get_class($e) == get_class($expected)
-                ) {
+                if ($e->getMessage() == $expected->getMessage() && get_class($e) == get_class($expected)) {
                     $passed = true;
                 }
             }
@@ -54,7 +51,6 @@ class ClientFactoryTest extends MockeryTestCase
 
     public function provideSetOptions()
     {
-
         return array(
             array(array(), new \RuntimeException('Options could not be found in "document_share.testkey".')),
             array(
@@ -95,29 +91,24 @@ class ClientFactoryTest extends MockeryTestCase
             ->once()
             ->with(AuthorizationService::class)
             ->andReturn(
-            $authService
-        )->getMock();
+                $authService
+            )->getMock();
         $mockSl->shouldReceive('get')->once()->with('Configuration')->andReturn($config);
         if ($expected instanceof \Exception) {
             $passed = false;
             try {
                 $service = $sut->createService($mockSl);
             } catch (\Exception $e) {
-
-                if (
-                    $e->getMessage() === $expected->getMessage() &&
-                    get_class($e) === get_class($expected)
-                ) {
+                if ($e->getMessage() === $expected->getMessage() && get_class($e) === get_class($expected)) {
                     $passed = true;
                 }
             }
 
             $this->assertTrue($passed, 'Expected exception not thrown or message didn\'t match expected value');
         } else {
-
             $service = $sut->createService($mockSl);
 
-            if($client === User::USER_OS_TYPE_WINDOWS_7){
+            if ($client === User::USER_OS_TYPE_WINDOWS_7) {
                 $this->assertInstanceOf(DocManClient::class, $service);
                 $this->assertInstanceOf('\Zend\Http\Client', $service->getHttpClient());
                 $this->assertEquals($config['document_share']['client']['workspace'], $service->getWorkspace());
@@ -128,12 +119,10 @@ class ClientFactoryTest extends MockeryTestCase
                         $service->getUuid()
                     );
                 }
-            }
-            else {
+            } else {
                 $this->assertInstanceOf(WebDavClient::class, $service);
             }
         }
-
     }
 
     public function provideCreateService()

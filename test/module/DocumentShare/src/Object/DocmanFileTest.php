@@ -1,15 +1,15 @@
 <?php
 
 
-namespace Dvsa\OlcsTest\DocumentShare\Data\Object;
+namespace Dvsa\OlcsTest\DocumentShare\Data\object;
 
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Data\object\File;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
-class DocmanFileTest extends \PHPUnit\Framework\TestCase
+class DocmanFileTest extends TestCase
 {
     protected $vfs;
-
 
     public function setUp()
     {
@@ -65,5 +65,4 @@ class DocmanFileTest extends \PHPUnit\Framework\TestCase
             ->setResource(null)
             ->setContentFromDsStream($stream);
     }
-
 }
