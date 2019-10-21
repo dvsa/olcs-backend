@@ -13,13 +13,14 @@ class ApplicationStepFactory
      *
      * @param string $type
      * @param string $fieldsetName
+     * @param string $shortName
      * @param ElementInterface $element
      * @param ValidatorList $validatorList
      *
      * @return ApplicationStep
      */
-    public function create($type, $fieldsetName, ElementInterface $element, ValidatorList $validatorList)
+    public function create($type, $fieldsetName, $shortName, ElementInterface $element, ValidatorList $validatorList)
     {
-        return new ApplicationStep($type, $fieldsetName, $element, $validatorList);
+        return new ApplicationStep($type, $fieldsetName, $shortName, $element, $validatorList);
     }
 }

@@ -12,6 +12,9 @@ class ApplicationStep
     /** @var string */
     private $fieldsetName;
 
+    /** @var string */
+    private $shortName;
+
     /** @var ElementInterface */
     private $element;
 
@@ -23,15 +26,22 @@ class ApplicationStep
      *
      * @param string $type
      * @param string $fieldsetName
+     * @param string $shortName
      * @param ElementInterface $element
      * @param ValidatorList $validatorList
      *
      * @return ApplicationStep
      */
-    public function __construct($type, $fieldsetName, ElementInterface $element, ValidatorList $validatorList)
-    {
+    public function __construct(
+        $type,
+        $fieldsetName,
+        $shortName,
+        ElementInterface $element,
+        ValidatorList $validatorList
+    ) {
         $this->type = $type;
         $this->fieldsetName = $fieldsetName;
+        $this->shortName = $shortName;
         $this->element = $element;
         $this->validatorList = $validatorList;
     }
@@ -46,6 +56,7 @@ class ApplicationStep
         return [
             'type' => $this->type,
             'fieldsetName' => $this->fieldsetName,
+            'shortName' => $this->shortName,
             'element' => $this->element->getRepresentation(),
             'validators' => $this->validatorList->getRepresentation(),
         ];
