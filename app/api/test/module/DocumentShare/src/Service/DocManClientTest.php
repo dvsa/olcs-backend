@@ -19,7 +19,7 @@ class DocManClientTest extends MockeryTestCase
     const BASE_URI = 'http://testing';
     const WORKSPACE = 'unit_Workspace';
 
-    /** @var  WebDavClient */
+    /** @var  DocManClient */
     protected $sut;
 
     /** @var  MockObj | \Zend\Http\Client */
