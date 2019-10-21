@@ -319,7 +319,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * )
      * @ORM\JoinColumn(name="os_type", referencedColumnName="id", nullable=true)
      */
-    protected $osType = 'windows_7';
+    protected $osType;
 
     /**
      * Size
