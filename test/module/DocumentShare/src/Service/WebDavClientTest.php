@@ -17,7 +17,7 @@ use org\bovigo\vfs\vfsStream;
 /**
  * @covers \Dvsa\Olcs\DocumentShare\Service\Client
  */
-class ClientTest extends MockeryTestCase
+class WebDavClientTest extends MockeryTestCase
 {
     const BASE_URI = 'http://testing';
     const WORKSPACE = 'unit_Workspace';
