@@ -101,11 +101,14 @@ return [
     'document_share' => [
         'client' => [
             // Document service URI *Environment specific*
-            'baseuri' => 'http://docman.shd.da.nonprod.dvsa.aws:8080/hfs/',
+            'baseuri' => "http://docman.shd.qa.nonprod.dvsa.aws:8080/hfs/",
             // Document service user ID *Environment specific*
             'uuid' => 'uD12345',
             // Document service workspace "olcs"
-            'workspace' => 'olcs'
+            'workspace' => 'olcs',
+            'webdav_baseuri' => '',
+            'username' => '',
+            'password' => ''
         ],
         'invalid_defined_mime_types' => [
             'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
@@ -238,7 +241,7 @@ return [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
             'uri' => 'http://testServiceAddress',
-            'adapter'   => Zend\Http\Client\Adapter\Curl::class,
+            'adapter' => Zend\Http\Client\Adapter\Curl::class,
             'options' => [
                 'sslcert' => 'client_cert.pem',
                 'sslverifypeer' => 1, //debug only, must be set to 1 in production
@@ -326,14 +329,14 @@ return [
         'extensions' => [
             // for external users
             'external'
-                => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
+            => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
                 . ',odt,ods,odp,odt,odm,odg,odp,ods,odi,odg'
                 . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
                 . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
                 . ',zip,7z',
             // for internal users
             'internal'
-                => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
+            => 'doc,docb,docm,docx,ppt,pptx,pptm,pps,ppsm,ppsx,sldx,sldm,xls,xlsb,xlsx,xlsm,xlw'
                 . ',odt,ods,odp,odt,odm,odg,odp,ods,odi,odg'
                 . ',txt,csv,rtf,xml,htm,html,pdf,log,xml,json,djvu,xps,oxps'
                 . ',jpeg,jpg,png,tif,tiff,gif,jfif,bmp,webp,emf,dwg,dxf,wmf'
@@ -351,7 +354,7 @@ return [
         'Skipping import of schema'
     ],
 
-	  // Specifies the batch size to use for disc printing
+    // Specifies the batch size to use for disc printing
     'disc_printing' => [
         // Number of discs to print for each queue job
         'disc_batch_size' => 120,
@@ -373,7 +376,7 @@ return [
         'federation_metadata_url' =>
             'https://compliance-tool-reference.ida.digital.cabinet-office.gov.uk/SAML2/metadata/sp',
         // URL of Matching Service Adapter metadata
-        'msa_metadata_url' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/msa-certs/metadata.xml',
+        'msa_metadata_url' => __DIR__ . '/../../module/GdsVerify/data/compliance-tool/msa-certs/metadata.xml',
         // Cache settings used to cache the above two metadata documents
         //'cache' => [
         //    'adapter' => [
@@ -384,11 +387,11 @@ return [
         // Entity identifier
         'entity_identifier' => 'http://olcs-selfserve.olcs.gov.uk',
         // Key used to sign authentication requests
-        'signature_key' => __DIR__ .'/../../module/GdsVerify/data/compliance-tool/signing.key',
+        'signature_key' => __DIR__ . '/../../module/GdsVerify/data/compliance-tool/signing.key',
         // Key used to decrypt data from hub
         'encryption_keys' => [
             // Array of encryption keys, they will be tried in order
-            __DIR__ .'/../../module/GdsVerify/data/compliance-tool/enc.key',
+            __DIR__ . '/../../module/GdsVerify/data/compliance-tool/enc.key',
         ],
     ],
 
