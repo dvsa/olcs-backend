@@ -48,10 +48,6 @@ class AvailableTypesTest extends QueryHandlerTestCase
             $this->irhpPermitType3
         ];
 
-        $this->repoMap['IrhpPermitType']->shouldReceive('fetchAvailableTypes')
-            ->with(m::type(DateTime::class))
-            ->andReturn($this->irhpPermitTypes);
-
         parent::setUp();
     }
 
@@ -60,8 +56,14 @@ class AvailableTypesTest extends QueryHandlerTestCase
         $query = AvailableTypesQuery::create([]);
 
         $this->mockedSmServices['PermitsShortTermEcmtWindowAvailabilityChecker']->shouldReceive('hasAvailability')
+            ->once()
             ->with(m::type(DateTime::class))
             ->andReturn(true);
+
+        $this->repoMap['IrhpPermitType']->shouldReceive('fetchAvailableTypes')
+            ->once()
+            ->with(m::type(DateTime::class))
+            ->andReturn($this->irhpPermitTypes);
 
         $expectedIrhpPermitTypes = [
             $this->irhpPermitType1,
@@ -70,7 +72,10 @@ class AvailableTypesTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals(
-            ['types' => $expectedIrhpPermitTypes],
+            [
+                'types' => $expectedIrhpPermitTypes,
+                'hasTypes' => true,
+            ],
             $this->sut->handleQuery($query)
         );
     }
@@ -80,8 +85,14 @@ class AvailableTypesTest extends QueryHandlerTestCase
         $query = AvailableTypesQuery::create([]);
 
         $this->mockedSmServices['PermitsShortTermEcmtWindowAvailabilityChecker']->shouldReceive('hasAvailability')
+            ->once()
             ->with(m::type(DateTime::class))
             ->andReturn(false);
+
+        $this->repoMap['IrhpPermitType']->shouldReceive('fetchAvailableTypes')
+            ->once()
+            ->with(m::type(DateTime::class))
+            ->andReturn($this->irhpPermitTypes);
 
         $expectedIrhpPermitTypes = [
             $this->irhpPermitType1,
@@ -89,7 +100,28 @@ class AvailableTypesTest extends QueryHandlerTestCase
         ];
 
         $this->assertEquals(
-            ['types' => $expectedIrhpPermitTypes],
+            [
+                'types' => $expectedIrhpPermitTypes,
+                'hasTypes' => true,
+            ],
+            $this->sut->handleQuery($query)
+        );
+    }
+
+    public function testHandleQueryNoTypesAvailable()
+    {
+        $query = AvailableTypesQuery::create([]);
+
+        $this->repoMap['IrhpPermitType']->shouldReceive('fetchAvailableTypes')
+            ->once()
+            ->with(m::type(DateTime::class))
+            ->andReturn([]);
+
+        $this->assertEquals(
+            [
+                'types' => [],
+                'hasTypes' => false,
+            ],
             $this->sut->handleQuery($query)
         );
     }
