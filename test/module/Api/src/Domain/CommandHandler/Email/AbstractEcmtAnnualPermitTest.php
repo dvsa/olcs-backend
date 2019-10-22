@@ -3,24 +3,14 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEcmtAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Exception\MissingEmailException;
-use Dvsa\Olcs\Api\Domain\Repository\EcmtPermitApplication as PermitApplicationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -69,6 +59,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             ->andReturn($feeTypeEntity);
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
+        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(false);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
 
         $expectedData = [
@@ -88,6 +79,69 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
         $message = $this->sut->getMessage();
         $this->assertSame($this->userEmail, $message->getTo());
         $this->assertSame($this->orgEmails, $message->getCc());
+        $this->assertSame($this->subject, $message->getSubject());
+    }
+
+    /**
+     * test handle command when the application created by internal user
+     *
+     * @dataProvider dpLocaleMappings
+     */
+    public function testHandleCommandForCreatedByInternalUser($licenceTranslateToWelsh, $expectedLocale)
+    {
+        $templateVars = [
+            'appUrl' => 'http://selfserve/',
+            'permitsUrl' => 'http://selfserve/permits',
+            'guidanceUrl' => 'https://www.gov.uk/guidance/international-authorisations-and-permits-for-road-haulage',
+            'ecmtGuidanceUrl' => 'https://www.gov.uk/guidance/ecmt-international-road-haulage-permits',
+            'applicationRef' => $this->applicationRef,
+            'applicationFee' => '10',
+        ];
+
+        $this->applicationEntity->shouldReceive('isAwaitingFee')->once()->withNoArgs()->andReturn(false);
+        $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
+        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')->andReturn($licenceTranslateToWelsh);
+
+        $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($this->orgEmails);
+
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
+            m::type(Message::class),
+            $this->template,
+            $templateVars,
+            'default'
+        );
+
+        $applicationFee = '10.00';
+
+        $feeTypeEntity = m::mock(FeeType::class);
+        $feeTypeEntity->shouldReceive('getAmount')
+            ->withNoArgs()
+            ->andReturn($applicationFee);
+        $this->repoMap['FeeType']->shouldReceive('getLatestByProductReference')
+            ->once()
+            ->with(FeeType::FEE_TYPE_ECMT_APP_PRODUCT_REF)
+            ->andReturn($feeTypeEntity);
+
+        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(true);
+        $this->userEntity->shouldReceive('getContactDetails')->never();
+
+        $expectedData = [
+            'to' => $this->orgEmail1,
+            'locale' => $expectedLocale,
+            'subject' => $this->subject,
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
+
+        $result = $this->sut->handleCommand($this->commandEntity);
+
+        $this->assertSame(['EcmtPermitApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['Email sent'], $result->getMessages());
+
+        /** @var Message $message */
+        $message = $this->sut->getMessage();
+        $this->assertSame($this->orgEmail1, $message->getTo());
+        $this->assertSame([1 => $this->orgEmail2], $message->getCc());
         $this->assertSame($this->subject, $message->getSubject());
     }
 
@@ -168,6 +222,7 @@ abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
             ->andReturn($feeTypeEntity);
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
+        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(false);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
 
         $expectedData = [

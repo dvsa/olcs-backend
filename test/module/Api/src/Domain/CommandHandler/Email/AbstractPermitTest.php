@@ -79,10 +79,9 @@ abstract class AbstractPermitTest extends CommandHandlerTestCase
         ];
 
         $this->userEmail = 'email1@test.com';
-        $this->orgEmails = [
-            'orgEmail1@test.com',
-            'orgEmail2@test.com'
-        ];
+        $this->orgEmail1 = 'orgEmail1@test.com';
+        $this->orgEmail2 = 'orgEmail2@test.com';
+        $this->orgEmails = [$this->orgEmail1, $this->orgEmail2];
 
         $this->contactDetails = m::mock(ContactDetails::class);
 
