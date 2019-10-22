@@ -83,7 +83,7 @@ trait EmailAwareTrait
         $orgEmailAddresses = $organisation->getAdminEmailAddresses();
 
         //on rare occasions a user may have been soft deleted, or may not have contact details
-        if ($user instanceof User) {
+        if ($user instanceof User && !$user->isInternal()) {
             $contactDetails = $user->getContactDetails();
 
             if ($contactDetails instanceof ContactDetails) {
