@@ -5109,4 +5109,22 @@ class IrhpApplicationEntityTest extends EntityTester
             [false, RefData::BUSINESS_PROCESS_APSG, null],
         ];
     }
+
+    public function testGetAllocationMode()
+    {
+        $allocationMode = 'ALLOCATION_MODE';
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getAllocationMode')
+            ->andReturn($allocationMode);
+
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('getAssociatedStock')
+            ->andReturn($irhpPermitStock);
+
+        $this->assertEquals(
+            $allocationMode,
+            $application->getAllocationMode()
+        );
+    }
 }

@@ -55,6 +55,9 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         'Dec' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF,
     ];
 
+    const REQUESTED_PERMITS_KEY = 'requestedPermits';
+    const RANGE_ENTITY_KEY = 'rangeEntity';
+
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
         Licence $licence,
@@ -385,5 +388,32 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
             default:
                 return $requiredEuro5 + $requiredEuro6;
         }
+    }
+
+    /**
+     * Get an array where each element contains a range entity and the number of candidate permits requested within
+     * the range
+     *
+     * @return array
+     */
+    public function getRangesWithCandidatePermitCounts()
+    {
+        $ranges = [];
+
+        foreach ($this->irhpCandidatePermits as $irhpCandidatePermit) {
+            $irhpPermitRange = $irhpCandidatePermit->getIrhpPermitRange();
+            $irhpPermitRangeId = $irhpPermitRange->getId();
+
+            if (!array_key_exists($irhpPermitRangeId, $ranges)) {
+                $ranges[$irhpPermitRangeId] = [
+                    self::REQUESTED_PERMITS_KEY => 0,
+                    self::RANGE_ENTITY_KEY => $irhpPermitRange,
+                ];
+            }
+
+            $ranges[$irhpPermitRangeId][self::REQUESTED_PERMITS_KEY]++;
+        }
+
+        return $ranges;
     }
 }
