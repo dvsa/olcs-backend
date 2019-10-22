@@ -399,12 +399,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     private function getEcmtRemovalNoOfPermitsAnswer()
     {
-        if ($this->irhpPermitApplications->count() == 0) {
-            return null;
-        }
-
-        $irhpPermitApplication = $this->irhpPermitApplications->first();
-        return $irhpPermitApplication->getPermitsRequired();
+        return $this->getFirstIrhpPermitApplication()->getPermitsRequired();
     }
 
     /**
