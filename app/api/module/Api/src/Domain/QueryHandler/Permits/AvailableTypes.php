@@ -70,6 +70,9 @@ class AvailableTypes extends AbstractQueryHandler implements ToggleRequiredInter
             }
         }
 
-        return ['types' => $filteredAvailableTypes];
+        return [
+            'types' => $filteredAvailableTypes,
+            'hasTypes' => !empty($filteredAvailableTypes),
+        ];
     }
 }
