@@ -46,6 +46,7 @@ class SendEcmtShortTermAutomaticallyWithdrawnTest extends AbstractPermitTest
         $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($this->orgEmails);
 
         $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
+        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(false);
         $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
 
         $expectedData = [
@@ -65,6 +66,47 @@ class SendEcmtShortTermAutomaticallyWithdrawnTest extends AbstractPermitTest
         $message = $this->sut->getMessage();
         $this->assertSame($this->userEmail, $message->getTo());
         $this->assertSame($this->orgEmails, $message->getCc());
+        $this->assertSame($this->subject, $message->getSubject());
+    }
+
+    public function testHandleCommandForCreatedByInternalUser()
+    {
+        $templateVars = [
+            'applicationRef' => $this->applicationRef,
+            'paymentDeadlineNumDays' => '10',
+        ];
+
+        $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->once()->with(
+            m::type(Message::class),
+            $this->template,
+            $templateVars,
+            'default'
+        );
+
+        $this->applicationEntity->shouldReceive('getCreatedBy')->once()->withNoArgs()->andReturn($this->userEntity);
+
+        $this->organisation->shouldReceive('getAdminEmailAddresses')->once()->andReturn($this->orgEmails);
+
+        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(true);
+        $this->userEntity->shouldReceive('getContactDetails')->never();
+
+        $expectedData = [
+            'to' => $this->orgEmail1,
+            'locale' => 'en_GB',
+            'subject' => $this->subject,
+        ];
+
+        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
+
+        $result = $this->sut->handleCommand($this->commandEntity);
+
+        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
+        $this->assertSame(['Email sent'], $result->getMessages());
+
+        /** @var Message $message */
+        $message = $this->sut->getMessage();
+        $this->assertSame($this->orgEmail1, $message->getTo());
+        $this->assertSame([1 => $this->orgEmail2], $message->getCc());
         $this->assertSame($this->subject, $message->getSubject());
     }
 }
