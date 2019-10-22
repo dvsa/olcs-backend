@@ -3,9 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits\ShortTermEcmt;
 
 use Doctrine\DBAL\Connection;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
 use Mockery as m;
@@ -27,6 +30,10 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
     private $irhpPermitRepo;
 
+    private $irhpPermitStockRepo;
+
+    private $irhpCandidatePermitRepo;
+
     private $emissionsCategoryAvailabilityCounter;
 
     public function setUp()
@@ -39,18 +46,28 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
         $this->irhpPermitRepo = m::mock(IrhpPermitRepository::class);
 
+        $this->irhpPermitStockRepo = m::mock(IrhpPermitStockRepository::class);
+
+        $this->irhpCandidatePermitRepo = m::mock(IrhpCandidatePermitRepository::class);
+
         $this->emissionsCategoryAvailabilityCounter = new EmissionsCategoryAvailabilityCounter(
             $this->connection,
             $this->irhpPermitRangeRepo,
             $this->irhpPermitApplicationRepo,
-            $this->irhpPermitRepo
+            $this->irhpPermitRepo,
+            $this->irhpPermitStockRepo,
+            $this->irhpCandidatePermitRepo
         );
     }
 
-    public function testGetCount()
+    public function testGetCountEmissionsCategoriesAllocationMode()
     {
         $irhpPermitStockId = 22;
         $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO5_REF;
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
 
         $this->connection->shouldReceive('getTransactionIsolation')
             ->withNoArgs()
@@ -68,6 +85,13 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
             ->ordered()
             ->globally()
             ->andReturn(40);
+
+        $this->irhpPermitStockRepo->shouldReceive('fetchById')
+            ->with($irhpPermitStockId)
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn($irhpPermitStock);
 
         $this->irhpPermitApplicationRepo->shouldReceive('getRequiredPermitCountWhereApplicationAwaitingPayment')
             ->with($irhpPermitStockId, $emissionsCategoryId)
@@ -91,6 +115,65 @@ class EmissionsCategoryAvailabilityCounterTest extends MockeryTestCase
 
         $this->assertEquals(
             18,
+            $this->emissionsCategoryAvailabilityCounter->getCount($irhpPermitStockId, $emissionsCategoryId)
+        );
+    }
+
+    public function testGetCountCandidatePermitsAllocationMode()
+    {
+        $irhpPermitStockId = 22;
+        $emissionsCategoryId = RefData::EMISSIONS_CATEGORY_EURO5_REF;
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+        $irhpPermitStock->shouldReceive('getAllocationMode')
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS);
+
+        $this->connection->shouldReceive('getTransactionIsolation')
+            ->withNoArgs()
+            ->andReturn(Connection::TRANSACTION_REPEATABLE_READ);
+
+        $this->connection->shouldReceive('beginTransaction')
+            ->withNoArgs()
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->irhpPermitRangeRepo->shouldReceive('getCombinedRangeSize')
+            ->with($irhpPermitStockId, $emissionsCategoryId)
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn(40);
+
+        $this->irhpPermitStockRepo->shouldReceive('fetchById')
+            ->with($irhpPermitStockId)
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn($irhpPermitStock);
+
+        $this->irhpCandidatePermitRepo->shouldReceive('fetchCountInStockWhereApplicationAwaitingFee')
+            ->with($irhpPermitStockId, $emissionsCategoryId)
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn(10);
+
+        $this->irhpPermitRepo->shouldReceive('getPermitCount')
+            ->with($irhpPermitStockId, $emissionsCategoryId)
+            ->once()
+            ->ordered()
+            ->globally()
+            ->andReturn(14);
+
+        $this->connection->shouldReceive('commit')
+            ->withNoArgs()
+            ->once()
+            ->ordered()
+            ->globally();
+
+        $this->assertEquals(
+            16,
             $this->emissionsCategoryAvailabilityCounter->getCount($irhpPermitStockId, $emissionsCategoryId)
         );
     }

@@ -1909,4 +1909,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
         return null;
     }
+
+    /**
+     * Get the permit allocation mode used by the stock associated with this application
+     *
+     * @return string
+     */
+    public function getAllocationMode()
+    {
+        return $this->getAssociatedStock()->getAllocationMode();
+    }
 }

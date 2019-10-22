@@ -17,7 +17,8 @@ class GrantabilityCheckerFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new GrantabilityChecker(
-            $serviceLocator->get('PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter')
+            $serviceLocator->get('PermitsShortTermEcmtEmissionsCategoriesGrantabilityChecker'),
+            $serviceLocator->get('PermitsShortTermEcmtCandidatePermitsGrantabilityChecker')
         );
     }
 }

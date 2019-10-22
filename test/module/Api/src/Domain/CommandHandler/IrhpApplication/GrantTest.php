@@ -68,7 +68,7 @@ class GrantTest extends CommandHandlerTestCase
             ->with($irhpApplicationId)
             ->andReturn($irhpApplication);
 
-        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication->getTotalEmissionsCategoryPermitsRequired')
+        $irhpApplication->shouldReceive('getFirstIrhpPermitApplication->countPermitsAwarded')
             ->once()
             ->withNoArgs()
             ->andReturn(10);

@@ -1557,6 +1557,18 @@ class IrhpPermitStockEntityTest extends EntityTester
                 2020,
                 Entity::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
             ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                RefData::BUSINESS_PROCESS_APSG,
+                2019,
+                Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                RefData::BUSINESS_PROCESS_APSG,
+                2020,
+                Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
         ];
     }
 

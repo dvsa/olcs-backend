@@ -3,25 +3,33 @@
 namespace Dvsa\Olcs\Api\Service\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsGrantabilityChecker;
 use RuntimeException;
 
 class GrantabilityChecker
 {
-    /** @var EmissionsCategoryAvailabilityCounter */
-    private $emissionsCategoryAvailabilityCounter;
+    /** @var EmissionsCategoriesGrantabilityChecker */
+    private $emissionsCategoriesGrantabilityChecker;
+
+    /** @var CandidatePermitsGrantabilityChecker */
+    private $candidatePermitsGrantabilityChecker;
 
     /**
      * Create service instance
      *
-     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
+     * @param EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker
+     * @param CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker
      *
-     * @return EmissionsCategoryAvailabilityChecker
+     * @return GrantabilityChecker
      */
-    public function __construct(EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
-    {
-        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
+    public function __construct(
+        EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker,
+        CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker
+    ) {
+        $this->emissionsCategoriesGrantabilityChecker = $emissionsCategoriesGrantabilityChecker;
+        $this->candidatePermitsGrantabilityChecker = $candidatePermitsGrantabilityChecker;
     }
 
     /**
@@ -37,42 +45,13 @@ class GrantabilityChecker
             throw new RuntimeException('GrantabilityChecker is only implemented for ecmt short term');
         }
 
-        $irhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
-        $irhpPermitStockId = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock()->getId();
-
-        $isEuro5Grantable = $this->isEmissionsCategoryGrantable(
-            $irhpPermitStockId,
-            RefData::EMISSIONS_CATEGORY_EURO5_REF,
-            $irhpPermitApplication->getRequiredEuro5()
-        );
-
-        if (!$isEuro5Grantable) {
-            return false;
+        switch ($irhpApplication->getAllocationMode()) {
+            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
+                return $this->emissionsCategoriesGrantabilityChecker->isGrantable($irhpApplication);
+            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
+                return $this->candidatePermitsGrantabilityChecker->isGrantable($irhpApplication);
         }
 
-        return $this->isEmissionsCategoryGrantable(
-            $irhpPermitStockId,
-            RefData::EMISSIONS_CATEGORY_EURO6_REF,
-            $irhpPermitApplication->getRequiredEuro6()
-        );
-    }
-
-    /**
-     * Whether there is sufficient stock to grant the required number of permits in a specific emissions category
-     *
-     * @param int $irhpPermitStockId
-     * @param int $emissionsCategoryId
-     * @param int $requiredCount
-     *
-     * @return bool
-     */
-    private function isEmissionsCategoryGrantable($irhpPermitStockId, $emissionsCategoryId, $requiredCount)
-    {
-        $availableCount = $this->emissionsCategoryAvailabilityCounter->getCount(
-            $irhpPermitStockId,
-            $emissionsCategoryId
-        );
-
-        return ($requiredCount <= $availableCount);
+        throw new RuntimeException('Unable to grant application due to unsupported allocation mode');
     }
 }
