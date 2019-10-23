@@ -70,6 +70,9 @@ return [
                 ApiSrv\Permits\Scoring\IrhpCandidatePermitFactory::class,
             'PermitsApplyRangesForCpProviderFactory' =>
                 ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
+            'PermitsCandidatePermitsApggCandidatePermitFactory' =>
+                ApiSrv\Permits\CandidatePermits\ApggCandidatePermitFactory::class,
+            
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -295,6 +298,12 @@ return [
                 => ApiSrv\Permits\Common\RangeBasedRestrictedCountriesProviderFactory::class,
             'PermitsCommonTypeBasedRestrictedCountriesProvider'
                 => ApiSrv\Permits\Common\TypeBasedRestrictedCountriesProviderFactory::class,
+            'PermitsCandidatePermitsApggCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\ApggCandidatePermitsCreatorFactory::class,
+            'PermitsCandidatePermitsApggEmissionsCatCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\ApggEmissionsCatCandidatePermitsCreatorFactory::class,
+            'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\IrhpCandidatePermitsCreatorFactory::class,
         ],
     ],
     'view_manager' => [

@@ -46,6 +46,25 @@ class IrhpCandidatePermitEntityTest extends EntityTester
         $this->assertEquals(0, $candidatePermit->getSuccessful());
     }
 
+    public function testCreateForApgg()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+
+        $emissionsCategory = m::mock(RefData::class);
+
+        $irhpPermitRange = m::mock(IrhpPermitRangeEntity::class);
+        $irhpPermitRange->shouldReceive('getEmissionsCategory')
+            ->andReturn($emissionsCategory);
+
+        $candidatePermit = Entity::createForApgg($irhpPermitApplication, $irhpPermitRange);
+
+        $this->assertInstanceOf(Entity::class, $candidatePermit);
+        $this->assertSame($irhpPermitApplication, $candidatePermit->getIrhpPermitApplication());
+        $this->assertSame($irhpPermitRange, $candidatePermit->getIrhpPermitRange());
+        $this->assertSame($emissionsCategory, $candidatePermit->getAssignedEmissionsCategory());
+        $this->assertEquals(true, $candidatePermit->getSuccessful());
+    }
+
     public function testPrepareForScoring()
     {
         $requestedEmissionsCategory = new RefData(RefData::EMISSIONS_CATEGORY_EURO6_REF);

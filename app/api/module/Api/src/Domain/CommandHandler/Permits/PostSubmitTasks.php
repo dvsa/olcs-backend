@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtAppSubmitted as SendEcmtAppSubmittedCmd;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted as SendEcmtShortTermAppSubmittedCmd;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as IrhpApplicationSnapshotCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -12,9 +11,10 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\CandidatePermitsCreator as ScoringCandidatePermitsCreator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Permits\StoreEcmtPermitApplicationSnapshot as SnapshotCmd;
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -33,8 +33,11 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
 
     protected $extraRepos = ['IrhpApplication'];
 
-    /** @var CandidatePermitsCreator */
-    private $candidatePermitsCreator;
+    /** @var IrhpCandidatePermitsCreator */
+    private $irhpCandidatePermitsCreator;
+
+    /** @var ScoringCandidatePermitsCreator */
+    private $scoringCandidatePermitsCreator;
 
     /**
      * Create service
@@ -47,7 +50,11 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
     {
         $mainServiceLocator = $serviceLocator->getServiceLocator();
 
-        $this->candidatePermitsCreator = $mainServiceLocator->get('PermitsScoringCandidatePermitsCreator');
+        $this->irhpCandidatePermitsCreator = $mainServiceLocator->get(
+            'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
+        );
+
+        $this->scoringCandidatePermitsCreator = $mainServiceLocator->get('PermitsScoringCandidatePermitsCreator');
 
         return parent::createService($serviceLocator);
     }
@@ -94,18 +101,11 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
         ];
 
         $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($id);
-        $firstIrhpPermitApplication = $irhpApplication->getFirstIrhpPermitApplication();
+        $this->irhpCandidatePermitsCreator->createIfRequired($irhpApplication);
 
-        if ($irhpApplication->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG) {
-            $this->candidatePermitsCreator->create(
-                $firstIrhpPermitApplication,
-                $firstIrhpPermitApplication->getRequiredEuro5(),
-                $firstIrhpPermitApplication->getRequiredEuro6()
-            );
-
-            if ($irhpApplication->getIrhpPermitType()->isEcmtShortTerm()) {
-                $sideEffects[] = $this->emailQueue(SendEcmtShortTermAppSubmittedCmd::class, ['id' => $id], $id);
-            }
+        $appSubmittedEmailCommand = $irhpApplication->getAppSubmittedEmailCommand();
+        if ($appSubmittedEmailCommand) {
+            $sideEffects[] = $this->emailQueue($appSubmittedEmailCommand, ['id' => $id], $id);
         }
 
         $this->result->merge(
@@ -129,7 +129,7 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
         $application = $this->getRepo()->fetchById($id);
 
         // Create candidate permits for this application
-        $this->candidatePermitsCreator->create(
+        $this->scoringCandidatePermitsCreator->create(
             $application->getFirstIrhpPermitApplication(),
             $application->getRequiredEuro5(),
             $application->getRequiredEuro6()

@@ -51,6 +51,25 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
     }
 
     /**
+     * Create an instance for use in an APGG context
+     *
+     * @param IrhpPermitApplication $irhpPermitApplication
+     * @param IrhpPermitRange $irhpPermitRange
+     *
+     * @return self
+     */
+    public static function createForApgg(IrhpPermitApplication $irhpPermitApplication, IrhpPermitRange $irhpPermitRange)
+    {
+        $irhpCandidatePermit = new self();
+        $irhpCandidatePermit->irhpPermitApplication = $irhpPermitApplication;
+        $irhpCandidatePermit->irhpPermitRange = $irhpPermitRange;
+        $irhpCandidatePermit->assignedEmissionsCategory = $irhpPermitRange->getEmissionsCategory();
+        $irhpCandidatePermit->successful = 1;
+
+        return $irhpCandidatePermit;
+    }
+
+    /**
      * Prepares this candidate permit for use in a scoring run
      */
     public function prepareForScoring()
