@@ -318,6 +318,26 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
+     * Return permits required in accordance with the specified emissions category
+     *
+     * @param string $emissionsCategoryId
+     *
+     * @return int|null
+     *
+     * @throws RuntimeException
+     */
+    public function getRequiredPermitsByEmissionsCategory($emissionsCategoryId)
+    {
+        if ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO5_REF) {
+            return $this->requiredEuro5;
+        } elseif ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF) {
+            return $this->requiredEuro6;
+        }
+
+        throw new RuntimeException('Unsupported emissions category for getRequiredPermitsByEmissionsCategory');
+    }
+
+    /**
      * Set licence associated with application
      *
      * @param Licence $licence

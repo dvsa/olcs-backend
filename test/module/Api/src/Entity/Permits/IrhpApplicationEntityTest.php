@@ -13,6 +13,7 @@ use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
@@ -5073,5 +5074,39 @@ class IrhpApplicationEntityTest extends EntityTester
         $application->setIrhpPermitType($irhpPermitType);
 
         $application->getIntensityOfUseWarningThreshold();
+    }
+
+    /**
+     * @dataProvider dpGetAppSubmittedEmailCommand
+     */
+    public function testGetAppSubmittedEmailCommand($isEcmtShortTerm, $businessProcessId, $expectedCommand)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn($isEcmtShortTerm);
+
+        $application = m::mock(Entity::class)->makePartial();
+        $application->shouldReceive('getBusinessProcess->getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+
+        $application->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedCommand,
+            $application->getAppSubmittedEmailCommand()
+        );
+    }
+
+    public function dpGetAppSubmittedEmailCommand()
+    {
+        return [
+            [true, RefData::BUSINESS_PROCESS_APG, null],
+            [true, RefData::BUSINESS_PROCESS_APGG, null],
+            [true, RefData::BUSINESS_PROCESS_APSG, SendEcmtShortTermAppSubmitted::class],
+            [false, RefData::BUSINESS_PROCESS_APG, null],
+            [false, RefData::BUSINESS_PROCESS_APGG, null],
+            [false, RefData::BUSINESS_PROCESS_APSG, null],
+        ];
     }
 }
