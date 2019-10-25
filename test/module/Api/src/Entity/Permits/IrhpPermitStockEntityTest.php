@@ -1400,16 +1400,24 @@ class IrhpPermitStockEntityTest extends EntityTester
     /**
      * @dataProvider dpGetAllocationMode
      */
-    public function testGetAllocationMode($irhpPermitTypeId, $businessProcessId, $expectedAllocationMode)
+    public function testGetAllocationMode($irhpPermitTypeId, $businessProcessId, $validityYear, $expectedAllocationMode)
     {
         $businessProcess = m::mock(RefData::class);
         $businessProcess->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn($businessProcessId);
 
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
             ->withNoArgs()
             ->andReturn($irhpPermitTypeId);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getValidityYear')
+            ->withNoArgs()
+            ->andReturn($validityYear);
+
+        $entity->setIrhpPermitType($irhpPermitType);
         $entity->setBusinessProcess($businessProcess);
 
         $this->assertEquals(
@@ -1424,26 +1432,61 @@ class IrhpPermitStockEntityTest extends EntityTester
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
                 RefData::BUSINESS_PROCESS_APG,
+                2019,
                 Entity::ALLOCATION_MODE_STANDARD,
             ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 RefData::BUSINESS_PROCESS_APG,
+                2019,
                 Entity::ALLOCATION_MODE_STANDARD,
             ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 RefData::BUSINESS_PROCESS_APGG,
+                2019,
                 Entity::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
             ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 RefData::BUSINESS_PROCESS_APSG,
+                2019,
                 Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
             ],
             [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
                 RefData::BUSINESS_PROCESS_APG,
+                2019,
+                Entity::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                RefData::BUSINESS_PROCESS_APG,
+                2020,
+                Entity::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                RefData::BUSINESS_PROCESS_APG,
+                2020,
+                Entity::ALLOCATION_MODE_STANDARD,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                RefData::BUSINESS_PROCESS_APGG,
+                2020,
+                Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                RefData::BUSINESS_PROCESS_APSG,
+                2020,
+                Entity::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                RefData::BUSINESS_PROCESS_APG,
+                2020,
                 Entity::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
             ],
         ];
@@ -1458,13 +1501,17 @@ class IrhpPermitStockEntityTest extends EntityTester
 
         $businessProcess = m::mock(RefData::class);
         $businessProcess->shouldReceive('getId')
+            ->withNoArgs()
             ->andReturn(RefData::BUSINESS_PROCESS_APSG);
 
-        $entity = m::mock(Entity::class)->makePartial();
-        $entity->shouldReceive('getIrhpPermitType->getId')
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
             ->withNoArgs()
             ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL);
+
+        $entity = m::mock(Entity::class)->makePartial();
         $entity->setBusinessProcess($businessProcess);
+        $entity->setIrhpPermitType($irhpPermitType);
 
         $entity->getAllocationMode();
     }

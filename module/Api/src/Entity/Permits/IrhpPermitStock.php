@@ -43,6 +43,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
     const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
 
+    const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
+
     /**
      * @param IrhpPermitType $type
      * @param Country $country
@@ -600,6 +602,16 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function getAllocationMode()
     {
+        $irhpPermitTypeId = $this->irhpPermitType->getId();
+        $businessProcessId = $this->businessProcess->getId();
+
+        $isEcmtShortTerm = ($irhpPermitTypeId == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+        $isApgg = ($businessProcessId == RefData::BUSINESS_PROCESS_APGG);
+
+        if ($isEcmtShortTerm && $isApgg && $this->getValidityYear() == self::APGG_SHORT_TERM_NO_CANDIDATES_YEAR) {
+            return self::ALLOCATION_MODE_EMISSIONS_CATEGORIES;
+        }
+
         $mappings = [
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
@@ -614,7 +626,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'business_process' => RefData::BUSINESS_PROCESS_APGG,
-                'allocation_mode' => self::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
             ],
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
@@ -627,9 +639,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 'allocation_mode' => self::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
             ],
         ];
-
-        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
-        $businessProcessId = $this->businessProcess->getId();
 
         foreach ($mappings as $mapping) {
             if ($mapping['type'] == $irhpPermitTypeId && $mapping['business_process'] == $businessProcessId) {
