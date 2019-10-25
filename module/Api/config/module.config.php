@@ -201,6 +201,8 @@ return [
             'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
             'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
