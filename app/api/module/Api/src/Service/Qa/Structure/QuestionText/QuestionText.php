@@ -67,6 +67,16 @@ class QuestionText
     }
 
     /**
+     * Get the embedded FilteredTranslateableText instance representing the question
+     *
+     * @return FilteredTranslateableText|null
+     */
+    public function getQuestion()
+    {
+        return $this->question;
+    }
+
+    /**
      * Get the embedded FilteredTranslateableText instance representing the guidance
      *
      * @return FilteredTranslateableText|null

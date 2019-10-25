@@ -96,6 +96,23 @@ class QuestionTextTest extends MockeryTestCase
         ];
     }
 
+    public function testGetQuestion()
+    {
+        $questionFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
+
+        $questionText = new QuestionText(
+            $questionFilteredTranslateableText,
+            m::mock(FilteredTranslateableText::class),
+            m::mock(FilteredTranslateableText::class),
+            m::mock(FilteredTranslateableText::class)
+        );
+
+        $this->assertSame(
+            $questionFilteredTranslateableText,
+            $questionText->getQuestion()
+        );
+    }
+
     public function testGetGuidance()
     {
         $guidanceFilteredTranslateableText = m::mock(FilteredTranslateableText::class);
