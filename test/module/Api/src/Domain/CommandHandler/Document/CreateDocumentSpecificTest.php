@@ -7,20 +7,17 @@
  */
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateEbsrSubmissionCmd;
-use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocumentSpecific;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
-use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
-use ZfcRbac\Service\AuthorizationService;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocumentSpecific;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
+use Dvsa\Olcs\Api\Entity\Doc\Document as Entity;
+use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateEbsrSubmissionCmd;
 
 /**
  * Create Document Test
@@ -33,10 +30,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateDocumentSpecific();
         $this->mockRepo('Document', Document::class);
-
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-        ];
 
         parent::setUp();
     }
@@ -94,12 +87,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                 }
             );
 
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
@@ -156,12 +143,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                 }
             );
 
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
         $this->expectedSideEffect(CreateEbsrSubmissionCmd::class, ['document' => 111], $result);
@@ -212,12 +193,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                 }
             );
 
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
@@ -265,12 +240,6 @@ class CreateDocumentSpecificTest extends CommandHandlerTestCase
                     $this->assertNull($document->getLicence());
                 }
             );
-
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
 
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
