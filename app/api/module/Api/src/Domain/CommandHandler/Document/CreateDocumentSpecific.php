@@ -2,8 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -17,12 +15,8 @@ use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLin
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateDocumentSpecific extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateDocumentSpecific extends AbstractCommandHandler
 {
-    use AuthAwareTrait;
-
-    const DEFAULT_OS = 'windows_7';
-
     /**
      * @var string
      */
@@ -113,10 +107,6 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
         if ($command->getMetadata() !== null) {
             $document->setMetadata($command->getMetadata());
         }
-
-        $osType = $this->getCurrentUser()->getOsType() ??
-            $this->getRepo()->getRefdataReference(static::DEFAULT_OS);
-        $document->setOsType($osType);
     }
 
     /**
