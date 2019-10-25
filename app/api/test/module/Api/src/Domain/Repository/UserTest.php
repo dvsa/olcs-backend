@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
@@ -241,15 +240,13 @@ class UserTest extends RepositoryTestCase
         $partnerContactDetailsId = 3;
         $localAuthorityId = 4;
         $role = 'foo-role';
-        $osType = 'windows_10';
 
         $data = [
             'team' => $teamId,
             'transportManager' => $transportManagerId,
             'partnerContactDetails' => $partnerContactDetailsId,
             'localAuthority' => $localAuthorityId,
-            'roles' => [$role],
-            'osType' => $osType
+            'roles' => [$role]
         ];
 
         $teamEntity = m::mock(TeamEntity::class);
@@ -282,12 +279,6 @@ class UserTest extends RepositoryTestCase
             ->with($role)
             ->andReturn($roleEntity);
 
-        $refdataEntity = m::mock(RefDataEntity::class);
-        $this->em->shouldReceive('getReference')
-            ->once()
-            ->with(RefDataEntity::class, $osType)
-            ->andReturn($refdataEntity);
-
         $result = $this->sut->populateRefDataReference($data);
 
         $this->assertEquals(
@@ -297,7 +288,6 @@ class UserTest extends RepositoryTestCase
                 'partnerContactDetails' => $partnerContactDetailsEntity,
                 'localAuthority' => $localAuthorityEntity,
                 'roles' => [$roleEntity],
-                'osType' => $refdataEntity
             ],
             $result
         );

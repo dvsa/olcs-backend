@@ -341,10 +341,6 @@ class User extends AbstractUser implements OrganisationProviderInterface
             $this->team = $data['team'];
         }
 
-        if (isset($data['osType'])) {
-            $this->osType = $data['osType'];
-        }
-
         return $this;
     }
 
