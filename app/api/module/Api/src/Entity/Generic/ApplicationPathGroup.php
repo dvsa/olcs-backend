@@ -19,6 +19,10 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class ApplicationPathGroup extends AbstractApplicationPathGroup
 {
+    const ECMT_SHORT_TERM_2020_APSG_WITHOUT_SECTORS_ID = 3;
+    const ECMT_SHORT_TERM_2020_APSG_WITH_SECTORS_ID = 4;
+    const ECMT_SHORT_TERM_2020_APGG = 5;
+
     /**
      * Get an active application path
      *
