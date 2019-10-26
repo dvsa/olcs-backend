@@ -4511,17 +4511,16 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpTestCanViewCandidatePermits
      */
-    public function testCanViewCandidatePermits($isAwaitingFee, $businessProcess, $expected)
+    public function testCanViewCandidatePermits($isAwaitingFee, $allocationMode, $expected)
     {
         $this->sut->shouldReceive('isAwaitingFee')
             ->once()
             ->withNoArgs()
             ->andReturn($isAwaitingFee);
 
-        $this->sut->shouldReceive('getBusinessProcess')
-            ->once()
+        $this->sut->shouldReceive('getAllocationMode')
             ->withNoArgs()
-            ->andReturn($businessProcess ? new RefData($businessProcess) : null);
+            ->andReturn($allocationMode);
 
         $this->assertSame($expected, $this->sut->canViewCandidatePermits());
     }
@@ -4529,14 +4528,14 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpTestCanViewCandidatePermits()
     {
         return [
-            [true, null, false],
-            [true, RefData::BUSINESS_PROCESS_APSG, true],
-            [true, RefData::BUSINESS_PROCESS_APGG, false],
-            [true, RefData::BUSINESS_PROCESS_APG, false],
-            [false, null, false],
-            [false, RefData::BUSINESS_PROCESS_APSG, false],
-            [false, RefData::BUSINESS_PROCESS_APGG, false],
-            [false, RefData::BUSINESS_PROCESS_APG, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, true],
+            [false, IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
+            [false, IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
+            [false, IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
+            [false, IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, false],
         ];
     }
 
