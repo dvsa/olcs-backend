@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Mockery as m;
 use RuntimeException;
 
@@ -131,81 +132,52 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
     public function testGetCalculatedBundleValues()
     {
-        $this->assertSame(
-            [
-                'permitsAwarded' => 0,
-                'euro5PermitsAwarded' => 0,
-                'euro6PermitsAwarded' => 0,
-                'validPermits' => 0,
-                'relatedApplication' => null,
-            ],
-            $this->sut->getCalculatedBundleValues()
-        );
-    }
+        $serializationParameters = [
+            'licence' => [
+                'organisation'
+            ]
+        ];
 
-    public function testGetCalculatedBundleValuesForEcmtPermitApplication()
-    {
-        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-        $licence = m::mock(Licence::class);
-        $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
-        $ecmtPermitApplication->shouldReceive('serialize')
-            ->with(
-                [
-                    'licence' => [
-                        'organisation'
-                    ]
-                ]
-            )
-            ->once()
-            ->andReturn(['EcmtPermitApplication']);
+        $serializedRelatedApplication = [
+            'prop1' => 'value1',
+            'prop2' => 'value2',
+        ];
 
-        $irhpPermitApplication = Entity::createNew(
-            $irhpPermitWindow,
-            $licence,
-            $ecmtPermitApplication
-        );
+        $permitsAwarded = 10;
+        $euro5PermitsAwarded = 7;
+        $euro6PermitsAwarded = 3;
+        $validPermitsCount = 14;
 
-        $this->assertSame(
-            [
-                'permitsAwarded' => 0,
-                'euro5PermitsAwarded' => 0,
-                'euro6PermitsAwarded' => 0,
-                'validPermits' => 0,
-                'relatedApplication' => ['EcmtPermitApplication'],
-            ],
-            $irhpPermitApplication->getCalculatedBundleValues()
-        );
-    }
+        $relatedApplication = m::mock(BundleSerializableInterface::class);
+        $relatedApplication->shouldReceive('serialize')
+            ->with($serializationParameters)
+            ->andReturn($serializedRelatedApplication);
 
-    public function testGetCalculatedBundleValuesForIrhpApplication()
-    {
-        $irhpApplication = m::mock(IrhpApplication::class);
-        $irhpApplication->shouldReceive('serialize')
-            ->with(
-                [
-                    'licence' => [
-                        'organisation'
-                    ]
-                ]
-            )
-            ->once()
-            ->andReturn(['IrhpApplication']);
-        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
-
-        $irhpPermitApplication = Entity::createNewForIrhpApplication(
-            $irhpApplication,
-            $irhpPermitWindow
-        );
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getRelatedApplication')
+            ->andReturn($relatedApplication);
+        $entity->shouldReceive('countPermitsAwarded')
+            ->withNoArgs()
+            ->andReturn($permitsAwarded);
+        $entity->shouldReceive('countPermitsAwarded')
+            ->with(RefData::EMISSIONS_CATEGORY_EURO5_REF)
+            ->andReturn($euro5PermitsAwarded);
+        $entity->shouldReceive('countPermitsAwarded')
+            ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF)
+            ->andReturn($euro6PermitsAwarded);
+        $entity->shouldReceive('countValidPermits')
+            ->withNoArgs()
+            ->andReturn($validPermitsCount);
 
         $this->assertSame(
             [
-                'permitsAwarded' => 0,
-                'euro5PermitsAwarded' => 0,
-                'euro6PermitsAwarded' => 0,
-                'validPermits' => 0,
-                'relatedApplication' => ['IrhpApplication'],
+                'permitsAwarded' => $permitsAwarded,
+                'euro5PermitsAwarded' => $euro5PermitsAwarded,
+                'euro6PermitsAwarded' => $euro6PermitsAwarded,
+                'validPermits' => $validPermitsCount,
+                'relatedApplication' => $serializedRelatedApplication,
             ],
-            $irhpPermitApplication->getCalculatedBundleValues()
+            $entity->getCalculatedBundleValues()
         );
     }
 
@@ -260,25 +232,65 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpTestCountPermitsAwarded
      */
-    public function testCountPermitsAwarded($assignedEmissionsCategoryId, $expectedCount)
+    public function testCountPermitsAwardedForAllocationModeEmissionsCategories($emissionsCategoryId)
     {
-        $irhpCandidatePermits = $this->getPermitsAwardedMocks();
-        foreach ($irhpCandidatePermits as $irhpCandidatePermit) {
-            $this->sut->addIrhpCandidatePermits($irhpCandidatePermit);
-        }
+        $permitsAwarded = 14;
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getAllocationMode')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $entity->shouldReceive('getTotalEmissionsCategoryPermitsRequired')
+            ->with($emissionsCategoryId)
+            ->andReturn($permitsAwarded);
 
         $this->assertEquals(
-            $expectedCount,
-            $this->sut->countPermitsAwarded($assignedEmissionsCategoryId)
+            $permitsAwarded,
+            $entity->countPermitsAwarded($emissionsCategoryId)
+        );
+    }
+
+    /**
+     * @dataProvider dpTestCountPermitsAwarded
+     */
+    public function testCountPermitsAwardedForAllocationModeCandidatePermits($emissionsCategoryId)
+    {
+        $successfulIrhpCandidatePermits = [
+            m::mock(IrhpCandidatePermit::class),
+            m::mock(IrhpCandidatePermit::class),
+            m::mock(IrhpCandidatePermit::class),
+        ];
+
+        $expectedPermitsAwarded = 3;
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
+        $irhpPermitWindow->shouldReceive('getIrhpPermitStock->getAllocationMode')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS);
+        $entity->setIrhpPermitWindow($irhpPermitWindow);
+
+        $entity->shouldReceive('getSuccessfulIrhpCandidatePermits')
+            ->with($emissionsCategoryId)
+            ->andReturn($successfulIrhpCandidatePermits);
+
+        $this->assertEquals(
+            $expectedPermitsAwarded,
+            $entity->countPermitsAwarded($emissionsCategoryId)
         );
     }
 
     public function dpTestCountPermitsAwarded()
     {
         return [
-            [null, 3],
-            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 2],
-            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 1],
+            [null],
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
         ];
     }
 
@@ -616,8 +628,8 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     {
         return [
             [null, null, 0],
-            [null, 4, 0],
-            [4, null, 0],
+            [null, 4, 4],
+            [4, null, 4],
             [4, 5, 9]
         ];
     }

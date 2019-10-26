@@ -147,7 +147,16 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function countPermitsAwarded($assignedEmissionsCategoryId = null)
     {
-        return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId));
+        $allocationMode = $this->irhpPermitWindow->getIrhpPermitStock()->getAllocationMode();
+
+        switch ($allocationMode) {
+            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
+                return $this->getTotalEmissionsCategoryPermitsRequired($assignedEmissionsCategoryId);
+            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
+                return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId));
+        }
+
+        return 0;
     }
 
     /**
@@ -359,16 +368,22 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     /**
      * Get total permits required when in an emissions category context
      *
-     * @return int
+     * @param string|null $emissionsCategoryId
      *
-     * @throws RuntimeException
+     * @return int
      */
-    public function getTotalEmissionsCategoryPermitsRequired()
+    public function getTotalEmissionsCategoryPermitsRequired($emissionsCategoryId = null)
     {
-        if (is_null($this->requiredEuro5) || is_null($this->requiredEuro6)) {
-            return 0;
-        }
+        $requiredEuro5 = is_null($this->requiredEuro5) ? 0 : $this->requiredEuro5;
+        $requiredEuro6 = is_null($this->requiredEuro6) ? 0 : $this->requiredEuro6;
 
-        return $this->requiredEuro5 + $this->requiredEuro6;
+        switch ($emissionsCategoryId) {
+            case RefData::EMISSIONS_CATEGORY_EURO5_REF:
+                return $requiredEuro5;
+            case RefData::EMISSIONS_CATEGORY_EURO6_REF:
+                return $requiredEuro6;
+            default:
+                return $requiredEuro5 + $requiredEuro6;
+        }
     }
 }
