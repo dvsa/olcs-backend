@@ -1398,6 +1398,74 @@ class IrhpPermitStockEntityTest extends EntityTester
     }
 
     /**
+     * @dataProvider dpGetFirstAvailableRangeWithNoCountries
+     */
+    public function testGetFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $range1 = m::mock(IrhpPermitRange::class);
+        $range1->shouldReceive('hasCountries')
+            ->andReturn(true);
+
+        $range2 = m::mock(IrhpPermitRange::class);
+        $range2->shouldReceive('hasCountries')
+            ->andReturn(false);
+
+        $range3 = m::mock(IrhpPermitRange::class);
+        $range3->shouldReceive('hasCountries')
+            ->andReturn(true);
+
+        $ranges = [$range1, $range2, $range3];
+
+        $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
+            ->with($emissionsCategoryId)
+            ->once()
+            ->andReturn($ranges);
+
+        $this->assertSame(
+            $range2,
+            $entity->getFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+        );
+    }
+
+    /**
+     * @dataProvider dpGetFirstAvailableRangeWithNoCountries
+     */
+    public function testGetFirstAvailableRangeWithNoCountriesException($emissionsCategoryId)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to find range with no countries');
+
+        $entity = m::mock(Entity::class)->makePartial();
+
+        $range1 = m::mock(IrhpPermitRange::class);
+        $range1->shouldReceive('hasCountries')
+            ->andReturn(true);
+
+        $range2 = m::mock(IrhpPermitRange::class);
+        $range2->shouldReceive('hasCountries')
+            ->andReturn(true);
+
+        $ranges = [$range1, $range2];
+
+        $entity->shouldReceive('getNonReservedNonReplacementRangesOrderedByFromNo')
+            ->with($emissionsCategoryId)
+            ->once()
+            ->andReturn($ranges);
+
+        $entity->getFirstAvailableRangeWithNoCountries($emissionsCategoryId);
+    }
+
+    public function dpGetFirstAvailableRangeWithNoCountries()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF],
+        ];
+    }
+
+    /**
      * @dataProvider dpGetAllocationMode
      */
     public function testGetAllocationMode($irhpPermitTypeId, $businessProcessId, $validityYear, $expectedAllocationMode)
@@ -1514,5 +1582,97 @@ class IrhpPermitStockEntityTest extends EntityTester
         $entity->setIrhpPermitType($irhpPermitType);
 
         $entity->getAllocationMode();
+    }
+
+    /**
+     * @dataProvider dpGetCandidatePermitCreationMode
+     */
+    public function testGetCandidatePermitCreationMode(
+        $businessProcessId,
+        $isEcmtShortTerm,
+        $validityYear,
+        $expectedCandidatePermitCreationMode
+    ) {
+        $businessProcess = m::mock(RefData::class);
+        $businessProcess->shouldReceive('getId')
+            ->andReturn($businessProcessId);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->andReturn($isEcmtShortTerm);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setBusinessProcess($businessProcess);
+        $entity->setIrhpPermitType($irhpPermitType);
+
+        $entity->shouldReceive('getValidityYear')
+            ->andReturn($validityYear);
+
+        $this->assertEquals(
+            $expectedCandidatePermitCreationMode,
+            $entity->getCandidatePermitCreationMode()
+        );
+    }
+
+    public function dpGetCandidatePermitCreationMode()
+    {
+        return [
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                true,
+                2019,
+                Entity::CANDIDATE_MODE_NONE
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APGG,
+                true,
+                2020,
+                Entity::CANDIDATE_MODE_APGG
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APSG,
+                true,
+                2020,
+                Entity::CANDIDATE_MODE_APSG
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APG,
+                false,
+                2019,
+                Entity::CANDIDATE_MODE_NONE
+            ],
+            [
+                RefData::BUSINESS_PROCESS_APG,
+                false,
+                2020,
+                Entity::CANDIDATE_MODE_NONE
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetApplicationRepoName
+     */
+    public function testGetApplicationRepoName($isEcmtAnnual, $expectedRepoName)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtAnnual')
+            ->andReturn($isEcmtAnnual);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedRepoName,
+            $entity->getApplicationRepoName()
+        );
+    }
+
+    public function dpGetApplicationRepoName()
+    {
+        return [
+            [true, 'EcmtPermitApplication'],
+            [false, 'IrhpApplication'],
+        ];
     }
 }

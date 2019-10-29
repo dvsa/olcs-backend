@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
+use RuntimeException;
 
 /**
  * IrhpPermitApplication Entity Unit Tests
@@ -619,6 +620,38 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             [4, null, 0],
             [4, 5, 9]
         ];
+    }
+
+    /**
+     * @dataProvider dpTestGetRequiredPermitsByEmissionsCategory
+     */
+    public function testGetRequiredPermitsByEmissionsCategory($emissionsCategoryId, $expectedRequiredPermits)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setRequiredEuro5(10);
+        $entity->setRequiredEuro6(15);
+
+        $this->assertEquals(
+            $expectedRequiredPermits,
+            $entity->getRequiredPermitsByEmissionsCategory($emissionsCategoryId)
+        );
+    }
+
+    public function dpTestGetRequiredPermitsByEmissionsCategory()
+    {
+        return [
+            [RefData::EMISSIONS_CATEGORY_EURO5_REF, 10],
+            [RefData::EMISSIONS_CATEGORY_EURO6_REF, 15],
+        ];
+    }
+
+    public function testGetRequiredPermitsByEmissionsCategoryException()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unsupported emissions category for getRequiredPermitsByEmissionsCategory');
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->getRequiredPermitsByEmissionsCategory(RefData::EMISSIONS_CATEGORY_NA_REF);
     }
 
     public function testUpdateLicence()
