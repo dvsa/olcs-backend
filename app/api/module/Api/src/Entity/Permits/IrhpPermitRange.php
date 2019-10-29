@@ -118,4 +118,14 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
     {
         return(($this->toNo - $this->fromNo) + 1);
     }
+
+    /**
+     * Whether this range has one or more restricted countries
+     *
+     * @return bool
+     */
+    public function hasCountries()
+    {
+        return count($this->countrys) > 0;
+    }
 }
