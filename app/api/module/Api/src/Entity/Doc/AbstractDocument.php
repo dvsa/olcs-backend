@@ -45,7 +45,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
      *     columns={"irhp_application_id"}),
  *        @ORM\Index(name="fk_document_ecmt_permit_app_id_ecmt_permit_app_id",
      *     columns={"ecmt_permit_application_id"}),
- *        @ORM\Index(name="ix_document_surrender_id", columns={"surrender_id"})
+ *        @ORM\Index(name="ix_document_surrender_id", columns={"surrender_id"}),
+ *        @ORM\Index(name="ix_document_os_type", columns={"os_type"})
  *    },
  *    uniqueConstraints={
  *        @ORM\UniqueConstraint(name="uk_document_olbs_key_olbs_type", columns={"olbs_key","olbs_type"})
@@ -306,6 +307,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="operating_centre_id", referencedColumnName="id", nullable=true)
      */
     protected $operatingCentre;
+
+    /**
+     * Os type
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinColumn(name="os_type", referencedColumnName="id", nullable=true)
+     */
+    protected $osType;
 
     /**
      * Size
@@ -1048,6 +1062,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getOperatingCentre()
     {
         return $this->operatingCentre;
+    }
+
+    /**
+     * Set the os type
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\RefData $osType entity being set as the value
+     *
+     * @return Document
+     */
+    public function setOsType($osType)
+    {
+        $this->osType = $osType;
+
+        return $this;
+    }
+
+    /**
+     * Get the os type
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
+     */
+    public function getOsType()
+    {
+        return $this->osType;
     }
 
     /**
