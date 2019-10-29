@@ -128,7 +128,7 @@ class IrhpPermitWindow extends AbstractRepository
      * @param DateTime $now Current datetime
      * @param int $hydrationMode Hydration mode
      * @param int|null $year
-     * @return array
+     * @return Entity
      * @throws NotFoundException
      */
     public function fetchLastOpenWindowByIrhpPermitType(
