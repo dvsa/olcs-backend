@@ -103,11 +103,8 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
     /**
      * @dataProvider dpTranslateToWelshLocaleMappings
      */
-    public function testHandleCommandApsgBusinessProcess($translateToWelsh, $expectedLocale)
+    public function testHandleCommand($translateToWelsh, $expectedLocale)
     {
-        $this->irhpPermitStock->shouldReceive('getBusinessProcess->getId')
-            ->andReturn(RefData::BUSINESS_PROCESS_APSG);
-
         $this->mockedSmServices['translator']->shouldReceive('getLocale')
             ->withNoArgs()
             ->once()
@@ -168,11 +165,8 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
     /**
      * @dataProvider dpTranslateToWelshLocaleMappings
      */
-    public function testHandleCommandApsgBusinessProcessForCreatedByInternalUser($translateToWelsh, $expectedLocale)
+    public function testHandleCommandForCreatedByInternalUser($translateToWelsh, $expectedLocale)
     {
-        $this->irhpPermitStock->shouldReceive('getBusinessProcess->getId')
-            ->andReturn(RefData::BUSINESS_PROCESS_APSG);
-
         $this->mockedSmServices['translator']->shouldReceive('getLocale')
             ->withNoArgs()
             ->once()
@@ -204,133 +198,6 @@ class SendEcmtShortTermSuccessfulTest extends AbstractPermitTest
             ->andReturn($this->euro5PermitsGranted);
         $this->irhpPermitApplication->shouldReceive('countPermitsAwarded')
             ->with(RefData::EMISSIONS_CATEGORY_EURO6_REF)
-            ->andReturn($this->euro6PermitsGranted);
-
-        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(true);
-        $this->userEntity->shouldReceive('getContactDetails')->never();
-
-        $expectedData = [
-            'to' => $this->orgEmail1,
-            'locale' => $expectedLocale,
-            'subject' => $this->subject,
-        ];
-
-        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
-
-        $result = $this->sut->handleCommand($this->commandEntity);
-
-        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
-        $this->assertSame(['Email sent'], $result->getMessages());
-
-        /** @var Message $message */
-        $message = $this->sut->getMessage();
-        $this->assertSame($this->orgEmail1, $message->getTo());
-        $this->assertSame([1 => $this->orgEmail2], $message->getCc());
-        $this->assertSame($this->subject, $message->getSubject());
-    }
-
-    /**
-     * @dataProvider dpTranslateToWelshLocaleMappings
-     */
-    public function testHandleCommandApggBusinessProcess($translateToWelsh, $expectedLocale)
-    {
-        $this->irhpPermitStock->shouldReceive('getBusinessProcess->getId')
-            ->andReturn(RefData::BUSINESS_PROCESS_APGG);
-
-        $this->mockedSmServices['translator']->shouldReceive('getLocale')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($this->previousLocale)
-            ->globally()
-            ->ordered();
-        $this->mockedSmServices['translator']->shouldReceive('setLocale')
-            ->with($expectedLocale)
-            ->once()
-            ->globally()
-            ->ordered();
-        $this->mockedSmServices['translator']->shouldReceive('translate')
-            ->with($this->periodNameKey, 'snapshot')
-            ->once()
-            ->globally()
-            ->ordered()
-            ->andReturn($this->periodName);
-        $this->mockedSmServices['translator']->shouldReceive('setLocale')
-            ->with($this->previousLocale)
-            ->once()
-            ->globally()
-            ->ordered();
-
-        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')
-            ->withNoArgs()
-            ->andReturn($translateToWelsh);
-
-        $this->irhpPermitApplication->shouldReceive('getRequiredEuro5')
-            ->andReturn($this->euro5PermitsGranted);
-        $this->irhpPermitApplication->shouldReceive('getRequiredEuro6')
-            ->andReturn($this->euro6PermitsGranted);
-
-        $this->contactDetails->shouldReceive('getEmailAddress')->once()->withNoArgs()->andReturn($this->userEmail);
-        $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(false);
-        $this->userEntity->shouldReceive('getContactDetails')->once()->withNoArgs()->andReturn($this->contactDetails);
-
-        $expectedData = [
-            'to' => $this->userEmail,
-            'locale' => $expectedLocale,
-            'subject' => $this->subject,
-        ];
-
-        $this->expectedSideEffect(SendEmail::class, $expectedData, new Result());
-
-        $result = $this->sut->handleCommand($this->commandEntity);
-
-        $this->assertSame(['IrhpApplication' => $this->permitAppId], $result->getIds());
-        $this->assertSame(['Email sent'], $result->getMessages());
-
-        /** @var Message $message */
-        $message = $this->sut->getMessage();
-        $this->assertSame($this->userEmail, $message->getTo());
-        $this->assertSame($this->orgEmails, $message->getCc());
-        $this->assertSame($this->subject, $message->getSubject());
-    }
-
-    /**
-     * @dataProvider dpTranslateToWelshLocaleMappings
-     */
-    public function testHandleCommandApggBusinessProcessForCreatedByInternalUser($translateToWelsh, $expectedLocale)
-    {
-        $this->irhpPermitStock->shouldReceive('getBusinessProcess->getId')
-            ->andReturn(RefData::BUSINESS_PROCESS_APGG);
-
-        $this->mockedSmServices['translator']->shouldReceive('getLocale')
-            ->withNoArgs()
-            ->once()
-            ->andReturn($this->previousLocale)
-            ->globally()
-            ->ordered();
-        $this->mockedSmServices['translator']->shouldReceive('setLocale')
-            ->with($expectedLocale)
-            ->once()
-            ->globally()
-            ->ordered();
-        $this->mockedSmServices['translator']->shouldReceive('translate')
-            ->with($this->periodNameKey, 'snapshot')
-            ->once()
-            ->globally()
-            ->ordered()
-            ->andReturn($this->periodName);
-        $this->mockedSmServices['translator']->shouldReceive('setLocale')
-            ->with($this->previousLocale)
-            ->once()
-            ->globally()
-            ->ordered();
-
-        $this->applicationEntity->shouldReceive('getLicence->getTranslateToWelsh')
-            ->withNoArgs()
-            ->andReturn($translateToWelsh);
-
-        $this->irhpPermitApplication->shouldReceive('getRequiredEuro5')
-            ->andReturn($this->euro5PermitsGranted);
-        $this->irhpPermitApplication->shouldReceive('getRequiredEuro6')
             ->andReturn($this->euro6PermitsGranted);
 
         $this->userEntity->shouldReceive('isInternal')->once()->withNoArgs()->andReturn(true);
