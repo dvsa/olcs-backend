@@ -23,8 +23,9 @@ class PluginManager extends AbstractPluginManager
      */
     public function validatePlugin($plugin)
     {
-        if (!($plugin instanceof ProcessInterface)) {
-            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ProcessInterface::class);
-        }
+        // TODO - OLCS-26007
+        // if (!($plugin instanceof ProcessInterface)) {
+        //     throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ProcessInterface::class);
+        // }
     }
 }
