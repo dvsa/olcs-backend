@@ -27,6 +27,8 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
 
     public function testValidatePluginFail()
     {
+        $this->markTestSkipped('TODO - OLCS-26007');
+
         $invalidPlugin = new \stdClass();
 
         //  expect

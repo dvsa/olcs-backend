@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL & ~E_USER_DEPRECATED);
 date_default_timezone_set('Europe/London');
 chdir(dirname(__DIR__));
 

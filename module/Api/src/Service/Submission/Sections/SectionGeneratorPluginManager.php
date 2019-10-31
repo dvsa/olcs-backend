@@ -13,11 +13,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class SectionGeneratorPluginManager extends AbstractPluginManager
 {
-    public function __construct(ConfigInterface $configuration = null)
-    {
-        parent::__construct($configuration);
-    }
-
     /**
      * Validate the plugin
      *
@@ -30,10 +25,11 @@ class SectionGeneratorPluginManager extends AbstractPluginManager
      */
     public function validatePlugin($plugin)
     {
-        if (!($plugin instanceof SectionGeneratorInterface)) {
-            throw new Exception\RuntimeException(
-                get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class
-            );
-        }
+        // TODO - OLCS-26007
+        // if (!($plugin instanceof SectionGeneratorInterface)) {
+        //     throw new Exception\RuntimeException(
+        //         get_class($plugin) . ' should implement: ' . SectionGeneratorInterface::class
+        //     );
+        // }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
+use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\AbstractPluginManager;
-use Zend\ServiceManager\ConfigInterface;
 use Zend\ServiceManager\Exception;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
  */
 class PluginManager extends AbstractPluginManager
 {
-    public function __construct(ConfigInterface $configuration = null)
+    public function __construct(ContainerInterface $configuration = null)
     {
         parent::__construct($configuration);
         $this->addAbstractFactory(new AbstractFactory());
@@ -33,9 +33,10 @@ class PluginManager extends AbstractPluginManager
      */
     public function validatePlugin($plugin)
     {
-        if (!($plugin instanceof ContextInterface)) {
-            throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ContextInterface::class);
-        }
+        // TODO - OLCS-26007
+        // if (!($plugin instanceof ContextInterface)) {
+        //     throw new Exception\RuntimeException(get_class($plugin) . ' should implement: ' . ContextInterface::class);
+        // }
     }
 
     public function injectAddressFormatter($service, ServiceLocatorInterface $serviceLocator)
