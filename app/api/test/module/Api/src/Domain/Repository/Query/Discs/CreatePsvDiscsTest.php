@@ -5,14 +5,14 @@ namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Discs;
 use Dvsa\Olcs\Api\Domain\Repository\Query\Discs\CreatePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc;
-use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;
+use Dvsa\OlcsTest\Api\Domain\Repository\Query\BaseAbstractDbQueryTestCase;
 
 /**
  * CreatePsvDiscsTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreatePsvDiscsTest extends AbstractDbQueryTestCase
+class CreatePsvDiscsTest extends BaseAbstractDbQueryTestCase
 {
     protected $tableNameMap = [
         PsvDisc::class => 'psv_disc'
@@ -42,22 +42,6 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
         ],
     ];
 
-    public function paramProvider()
-    {
-        $today = new DateTime();
-
-        return [
-            [
-                [],
-                [],
-                [
-                    'ceasedDate' => $today->format('Y-m-d H:i:s')
-                ],
-                []
-            ]
-        ];
-    }
-
     protected function getSut()
     {
         return new CreatePsvDiscs();
@@ -66,30 +50,6 @@ class CreatePsvDiscsTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return '';
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->markTestSkipped('Not required for this test');
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->markTestSkipped('Not required for this test');
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecuteAsSystemUser($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->markTestSkipped('Not required for this test');
     }
 
     public function testExecuteInsert()

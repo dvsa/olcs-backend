@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Conviction;
  * Class ConvictionFpnOffenceHistoryTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class ConvictionFpnOffenceHistoryTest extends SubmissionSectionTest
+class ConvictionFpnOffenceHistoryTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ConvictionFpnOffenceHistory';
 

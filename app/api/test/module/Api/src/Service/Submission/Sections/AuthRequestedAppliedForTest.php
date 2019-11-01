@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class AuthRequestedAppliedForTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class AuthRequestedAppliedForTest extends SubmissionSectionTest
+class AuthRequestedAppliedForTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor';
 

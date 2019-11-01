@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class PenaltiesTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class PenaltiesTest extends SubmissionSectionTest
+class PenaltiesTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\Penalties';
 
