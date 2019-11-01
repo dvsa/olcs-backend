@@ -43,12 +43,13 @@ abstract class AbstractReviewService implements ReviewServiceInterface, ServiceL
      * Format date
      *
      * @param \DateTime|string $date   Date
-     * @param string           $format Date Format
      *
      * @return bool|string
      */
-    protected function formatDate($date, $format = 'd M Y')
+    protected function formatDate($date)
     {
+        $format = 'd M Y';
+
         if ($date instanceof \DateTime) {
             return $date->format($format);
         }

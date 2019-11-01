@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class ComplianceComplaintsTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class ComplianceComplaintsTest extends SubmissionSectionTest
+class ComplianceComplaintsTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\ComplianceComplaints::class;
 

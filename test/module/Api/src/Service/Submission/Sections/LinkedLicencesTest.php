@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class LinkedLicencesTest extends SubmissionSectionTest
+class LinkedLicencesTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences';
 

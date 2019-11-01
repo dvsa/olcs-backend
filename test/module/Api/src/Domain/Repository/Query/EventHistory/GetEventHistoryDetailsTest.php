@@ -51,17 +51,6 @@ class GetEventHistoryDetailsTest extends AbstractDbQueryTestCase
      */
     protected function getExpectedQuery()
     {
-        return 'SELECT * FROM application_hist WHERE id = :id AND version IN (:version) ORDER BY version
-DESC LIMIT 2';
-    }
-
-    /**
-     * Test execute with exception
-     *
-     * @dataProvider paramProvider
-     */
-    public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->markTestSkipped('Not required for this test');
+        return 'SELECT * FROM application_hist WHERE id = :id AND version IN (:version) ORDER BY version DESC LIMIT 2';
     }
 }

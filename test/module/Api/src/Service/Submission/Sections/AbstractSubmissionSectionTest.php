@@ -45,10 +45,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Zend\View\Renderer\PhpRenderer;
 
 /**
- * Class SubmissionSectionTest
+ * Class AbstractSubmissionSectionTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class SubmissionSectionTest extends MockeryTestCase
+abstract class AbstractSubmissionSectionTest extends MockeryTestCase
 {
     protected $submissionSection = '';
     protected $licenceStatus = 'lic_status';
@@ -81,10 +81,7 @@ class SubmissionSectionTest extends MockeryTestCase
      *
      * @return array
      */
-    public function sectionTestProvider()
-    {
-        return [];
-    }
+    abstract public function sectionTestProvider();
 
     /**
      * Return a case attached to an application
