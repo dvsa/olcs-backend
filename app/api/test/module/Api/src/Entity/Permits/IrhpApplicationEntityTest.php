@@ -387,8 +387,9 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_FEE_PAID, true],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
             [IrhpInterface::STATUS_ISSUED, false],
-            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_EXPIRED, false],
         ];
     }
 
