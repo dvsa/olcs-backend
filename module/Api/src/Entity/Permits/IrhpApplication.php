@@ -764,8 +764,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function isActive()
     {
-        return $this->isNotYetSubmitted() || $this->isUnderConsideration() || $this->isAwaitingFee()
-            || $this->isFeePaid();
+        return in_array($this->status->getId(), IrhpInterface::ACTIVE_STATUSES);
     }
 
     /**
