@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplication;
@@ -63,5 +64,67 @@ class IrhpCandidatePermit extends AbstractRepository
             ->with('irhpPermitApplication', 'ipa')
             ->with('ipa.ecmtPermitApplication', 'epa')
             ->with('ipa.irhpApplication', 'ia');
+    }
+
+    /**
+     * Get the number of candidate permits in the specified range that belong to an application that is awaiting
+     * payment of the issue fee
+     *
+     * @param int $rangeId
+     *
+     * @return int
+     */
+    public function fetchCountInRangeWhereApplicationAwaitingFee($rangeId)
+    {
+        $result = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(icp.id)')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('ipa.irhpApplication', 'ia')
+            ->where('IDENTITY(icp.irhpPermitRange) = ?1')
+            ->andWhere('ia.status = ?2')
+            ->setParameter(1, $rangeId)
+            ->setParameter(2, IrhpInterface::STATUS_AWAITING_FEE)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if (is_null($result)) {
+            return 0;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the number of candidate permits in the specified stock that belong to an application that is awaiting
+     * payment of the issue fee
+     *
+     * @param int $stockId
+     * @param string $emissionsCategoryId
+     *
+     * @return int
+     */
+    public function fetchCountInStockWhereApplicationAwaitingFee($stockId, $emissionsCategoryId)
+    {
+        $result = $this->getEntityManager()->createQueryBuilder()
+            ->select('count(icp.id)')
+            ->from(Entity::class, 'icp')
+            ->innerJoin('icp.irhpPermitApplication', 'ipa')
+            ->innerJoin('icp.irhpPermitRange', 'ipr')
+            ->innerJoin('ipa.irhpApplication', 'ia')
+            ->where('IDENTITY(ipr.irhpPermitStock) = ?1')
+            ->andWhere('ia.status = ?2')
+            ->andWhere('IDENTITY(ipr.emissionsCategory) = ?3')
+            ->setParameter(1, $stockId)
+            ->setParameter(2, IrhpInterface::STATUS_AWAITING_FEE)
+            ->setParameter(3, $emissionsCategoryId)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if (is_null($result)) {
+            return 0;
+        }
+
+        return $result;
     }
 }

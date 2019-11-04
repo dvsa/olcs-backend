@@ -675,4 +675,78 @@ class IrhpPermitApplicationEntityTest extends EntityTester
 
         $this->assertSame($licence, $entity->getLicence());
     }
+
+    public function testGetRangesWithCandidatePermitCounts()
+    {
+        $irhpPermitRange1Id = 43;
+        $irhpPermitRange1 = m::mock(IrhpPermitRange::class);
+        $irhpPermitRange1->shouldReceive('getId')
+            ->andReturn($irhpPermitRange1Id);
+
+        $irhpPermitRange2Id = 71;
+        $irhpPermitRange2 = m::mock(IrhpPermitRange::class);
+        $irhpPermitRange2->shouldReceive('getId')
+            ->andReturn($irhpPermitRange2Id);
+
+        $irhpPermitRange3Id = 103;
+        $irhpPermitRange3 = m::mock(IrhpPermitRange::class);
+        $irhpPermitRange3->shouldReceive('getId')
+            ->andReturn($irhpPermitRange3Id);
+
+        $irhpCandidatePermit1 = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit1->shouldReceive('getIrhpPermitRange')
+            ->andReturn($irhpPermitRange1);
+
+        $irhpCandidatePermit2 = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit2->shouldReceive('getIrhpPermitRange')
+            ->andReturn($irhpPermitRange3);
+
+        $irhpCandidatePermit3 = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit3->shouldReceive('getIrhpPermitRange')
+            ->andReturn($irhpPermitRange2);
+
+        $irhpCandidatePermit4 = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit4->shouldReceive('getIrhpPermitRange')
+            ->andReturn($irhpPermitRange1);
+
+        $irhpCandidatePermit5 = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit5->shouldReceive('getIrhpPermitRange')
+            ->andReturn($irhpPermitRange2);
+
+        $irhpCandidatePermit6 = m::mock(IrhpCandidatePermit::class);
+        $irhpCandidatePermit6->shouldReceive('getIrhpPermitRange')
+            ->andReturn($irhpPermitRange1);
+
+        $irhpCandidatePermits = [
+            $irhpCandidatePermit1,
+            $irhpCandidatePermit2,
+            $irhpCandidatePermit3,
+            $irhpCandidatePermit4,
+            $irhpCandidatePermit5,
+            $irhpCandidatePermit6
+        ];
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpCandidatePermits(new ArrayCollection($irhpCandidatePermits));
+
+        $expectedResponse = [
+            $irhpPermitRange1Id => [
+                Entity::REQUESTED_PERMITS_KEY => 3,
+                Entity::RANGE_ENTITY_KEY => $irhpPermitRange1
+            ],
+            $irhpPermitRange3Id => [
+                Entity::REQUESTED_PERMITS_KEY => 1,
+                Entity::RANGE_ENTITY_KEY => $irhpPermitRange3
+            ],
+            $irhpPermitRange2Id => [
+                Entity::REQUESTED_PERMITS_KEY => 2,
+                Entity::RANGE_ENTITY_KEY => $irhpPermitRange2
+            ],
+        ];
+
+        $this->assertEquals(
+            $expectedResponse,
+            $entity->getRangesWithCandidatePermitCounts()
+        );
+    }
 }

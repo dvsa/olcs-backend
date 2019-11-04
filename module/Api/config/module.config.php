@@ -276,6 +276,13 @@ return [
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator' =>
+                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculatorFactory::class,
+            'PermitsShortTermEcmtCandidatePermitsGrantabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsGrantabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoriesGrantabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityCheckerFactory::class,
+
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
             'PermitsScoringCandidatePermitsCreator'
