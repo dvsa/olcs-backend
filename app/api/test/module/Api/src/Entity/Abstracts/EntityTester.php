@@ -55,29 +55,6 @@ abstract class EntityTester extends MockeryTestCase
         return $object;
     }
 
-    public function testClearProperties()
-    {
-        $classToTestName = $this->getClassToTestName();
-        $entity = $this->instantiate($classToTestName);
-
-        $methodName = $this->getGettersAndSetters()[0][0];
-
-        $properties = ['duntExist', lcfirst($methodName)];
-
-        // Test clear properties (Non collection)
-        $entity->{'set' . $methodName}('foo');
-        $this->assertEquals('foo', $entity->{'get' . $methodName}());
-        $entity->clearProperties($properties);
-        $this->assertEquals(null, $entity->{'get' . $methodName}());
-
-        // Test clear properties (Collection)
-        $collection = new ArrayCollection(['foo', 'bar']);
-        $entity->{'set' . $methodName}($collection);
-        $this->assertSame($collection, $entity->{'get' . $methodName}());
-        $entity->clearProperties($properties);
-        $this->assertNotSame($collection, $entity->{'get' . $methodName}());
-    }
-
     public function testLifecycleCallbacks()
     {
         $classToTestName = $this->getClassToTestName();
@@ -100,41 +77,6 @@ abstract class EntityTester extends MockeryTestCase
         if ($tested === false) {
             $this->assertTrue(true); // Mark the test as passed (None exist)
         }
-    }
-
-    /**
-     * @dataProvider dataProviderAsDateTime
-     */
-    public function testGetDates($expected, $dateTime)
-    {
-        $hasAssert = false;
-
-        $classToTestName = $this->getClassToTestName();
-
-        $dateProperties = ['createdOn', 'lastModifiedOn', 'deletedDate'];
-        foreach ($dateProperties as $property) {
-            if (property_exists($classToTestName, $property)) {
-                $entity = $this->instantiate($classToTestName);
-                $setMethod = 'set'. $property;
-                $getMethod = 'get'. $property;
-                $entity->$setMethod($dateTime);
-                $this->assertEquals($expected, $entity->$getMethod(true));
-                $hasAssert = true;
-            }
-        }
-
-        if (!$hasAssert) {
-            $this->markTestSkipped(vsprintf('Does not have any of the following properties: %s', $dateProperties));
-        }
-    }
-
-    public function dataProviderAsDateTime()
-    {
-        return [
-            [new \DateTime('2017-09-29'), '2017-09-29'],
-            [new \DateTime('2017-09-29'), new \DateTime('2017-09-29')],
-            [null, null],
-        ];
     }
 
     public function testGettersAndSetters()
