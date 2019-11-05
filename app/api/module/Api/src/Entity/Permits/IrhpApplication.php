@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -1660,11 +1661,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canViewCandidatePermits(): bool
     {
-        $businessProcess = $this->getBusinessProcess();
-
         return $this->isAwaitingFee()
-            && isset($businessProcess)
-            && $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
+            && $this->getAllocationMode() == IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS;
     }
 
     /**
