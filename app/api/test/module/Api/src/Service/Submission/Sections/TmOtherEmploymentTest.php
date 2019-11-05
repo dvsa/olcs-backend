@@ -2,13 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Class TmOtherEmploymentTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class TmOtherEmploymentTest extends SubmissionSectionTest
+class TmOtherEmploymentTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TmOtherEmployment';
 
