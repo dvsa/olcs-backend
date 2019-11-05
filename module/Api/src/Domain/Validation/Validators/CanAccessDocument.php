@@ -24,7 +24,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
     public function isValid($entityId)
     {
         // check if can validate through parent
-        $valid = parent::isValid($entityId);
+        $valid = $this->callParentIsValid($entityId);
         if ($valid) {
             // if passed validation then return
             return true;
@@ -53,5 +53,17 @@ class CanAccessDocument extends AbstractCanAccessEntity
         }
 
         return false;
+    }
+
+    /**
+     * Call parent isValid method (to facilitate unit testing)
+     *
+     * @param int $entityId Document ID
+     *
+     * @return bool
+     */
+    protected function callParentIsValid($entityId)
+    {
+        return parent::isValid($entityId);
     }
 }

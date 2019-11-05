@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class TmPreviousHistoryTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class TmPreviousHistoryTest extends SubmissionSectionTest
+class TmPreviousHistoryTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TmPreviousHistory';
 

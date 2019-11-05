@@ -3,11 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessDocument;
-use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
+use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Mockery as m;
 
 /**
- * @todo olcs-14494 emergency fix, have marked tests as skipped
  * Can Access Document Test
  */
 class CanAccessDocumentTest extends AbstractValidatorsTestCase
@@ -19,70 +19,112 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
 
     public function setUp()
     {
-        $this->sut = new CanAccessDocument();
+        $this->sut = m::mock(CanAccessDocument::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         parent::setUp();
     }
 
     public function testIsValidParentTrue()
     {
-        $this->setIsGranted(Permission::INTERNAL_USER, true);
+        $txcInboxId = 52;
 
-        $this->assertEquals(true, $this->sut->isValid(111));
+        $this->sut->shouldReceive('callParentIsValid')
+            ->with($txcInboxId)
+            ->andReturn(true);
+
+        $this->assertEquals(true, $this->sut->isValid($txcInboxId));
     }
 
-    public function testIsValidTxcInboxTrue()
+    public function testIsValidNoTxcEntitiesFalse()
     {
-        $this->markTestSkipped();
-        // make parent isValid return false
-        $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->auth->shouldReceive('getIdentity')->andReturn(null);
-        $documentEntity = m::mock();
-        $repo = $this->mockRepo('Document');
-        $repo->shouldReceive('fetchById')->with('723')->andReturn($documentEntity);
-        $this->setIsValid('isOwner', [$documentEntity], false);
+        $txcInboxId = 47;
 
-        $mockTxcInboxEntity = m::mock();
-        $repo = $this->mockRepo('TxcInbox');
-        $repo->shouldReceive('fetchLinkedToDocument')->with('723')->andReturn([$mockTxcInboxEntity]);
-        $this->setIsValid('isOwner', [$mockTxcInboxEntity], true);
+        $this->sut->shouldReceive('callParentIsValid')
+            ->with($txcInboxId)
+            ->andReturn(false);
 
-        $this->assertEquals(true, $this->sut->isValid('723'));
+        $linkedTxcInboxEntities = [];
+
+        $txcInboxRepo = $this->mockRepo('TxcInbox');
+        $txcInboxRepo->shouldReceive('fetchLinkedToDocument')
+            ->andReturn($linkedTxcInboxEntities);
+
+        $this->assertFalse($this->sut->isValid($txcInboxId));
     }
 
-    public function testIsValidTxcInboxFalse()
+    public function testIsValidNoMatchingLocalAuthoritiesFalse()
     {
-        $this->markTestSkipped();
-        // make parent isValid return false
-        $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->auth->shouldReceive('getIdentity')->andReturn(null);
-        $documentEntity = m::mock();
-        $repo = $this->mockRepo('Document');
-        $repo->shouldReceive('fetchById')->with('723')->andReturn($documentEntity);
-        $this->setIsValid('isOwner', [$documentEntity], false);
+        $txcInboxId = 47;
 
-        $mockTxcInboxEntity = m::mock();
-        $repo = $this->mockRepo('TxcInbox');
-        $repo->shouldReceive('fetchLinkedToDocument')->with('723')->andReturn([$mockTxcInboxEntity]);
-        $this->setIsValid('isOwner', [$mockTxcInboxEntity], false);
+        $this->sut->shouldReceive('callParentIsValid')
+            ->with($txcInboxId)
+            ->andReturn(false);
 
-        $this->assertEquals(false, $this->sut->isValid('723'));
+        $localAuthority1 = m::mock(LocalAuthority::class)->makePartial();
+        $localAuthority1->setId(1);
+
+        $localAuthority2 = m::mock(LocalAuthority::class)->makePartial();
+        $localAuthority2->setId(2);
+
+        $this->sut->shouldReceive('getCurrentLocalAuthority')
+            ->withNoArgs()
+            ->andReturn($localAuthority1);
+
+        $txcInboxEntity1 = m::mock(TxcInboxEntity::class);
+        $txcInboxEntity1->shouldReceive('getLocalAuthority')
+            ->andReturn(null);
+
+        $txcInboxEntity2 = m::mock(TxcInboxEntity::class);
+        $txcInboxEntity2->shouldReceive('getLocalAuthority')
+            ->andReturn($localAuthority2);
+
+        $linkedTxcInboxEntities = [$txcInboxEntity1, $txcInboxEntity2];
+
+        $txcInboxRepo = $this->mockRepo('TxcInbox');
+        $txcInboxRepo->shouldReceive('fetchLinkedToDocument')
+            ->andReturn($linkedTxcInboxEntities);
+
+        $this->assertFalse($this->sut->isValid($txcInboxId));
     }
 
-    public function testIsValidTxcInboxNotFound()
+    public function testIsValidMatchingLocalAuthoritiesTrue()
     {
-        $this->markTestSkipped();
-        // make parent isValid return false
-        $this->setIsGranted(Permission::INTERNAL_USER, false);
-        $this->auth->shouldReceive('getIdentity')->andReturn(null);
-        $documentEntity = m::mock();
-        $repo = $this->mockRepo('Document');
-        $repo->shouldReceive('fetchById')->with('723')->andReturn($documentEntity);
-        $this->setIsValid('isOwner', [$documentEntity], false);
+        $txcInboxId = 47;
 
-        $repo = $this->mockRepo('TxcInbox');
-        $repo->shouldReceive('fetchLinkedToDocument')->with('723')->andReturn([]);
+        $this->sut->shouldReceive('callParentIsValid')
+            ->with($txcInboxId)
+            ->andReturn(false);
 
-        $this->assertEquals(false, $this->sut->isValid('723'));
+        $localAuthority1 = m::mock(LocalAuthority::class)->makePartial();
+        $localAuthority1->setId(1);
+
+        $localAuthority2 = m::mock(LocalAuthority::class)->makePartial();
+        $localAuthority2->setId(2);
+
+        $this->sut->shouldReceive('getCurrentLocalAuthority')
+            ->withNoArgs()
+            ->andReturn($localAuthority2);
+
+        $txcInboxEntity1 = m::mock(TxcInboxEntity::class);
+        $txcInboxEntity1->shouldReceive('getLocalAuthority')
+            ->andReturn($localAuthority1);
+
+        $txcInboxEntity2 = m::mock(TxcInboxEntity::class);
+        $txcInboxEntity2->shouldReceive('getLocalAuthority')
+            ->andReturn(null);
+
+        $txcInboxEntity3 = m::mock(TxcInboxEntity::class);
+        $txcInboxEntity3->shouldReceive('getLocalAuthority')
+            ->andReturn($localAuthority2);
+
+        $linkedTxcInboxEntities = [$txcInboxEntity1, $txcInboxEntity2, $txcInboxEntity3];
+
+        $txcInboxRepo = $this->mockRepo('TxcInbox');
+        $txcInboxRepo->shouldReceive('fetchLinkedToDocument')
+            ->andReturn($linkedTxcInboxEntities);
+
+        $this->assertTrue($this->sut->isValid($txcInboxId));
     }
 }
