@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
+use DateInterval;
+use DateTime;
 use RuntimeException;
 
 /**
@@ -118,21 +118,22 @@ class IrhpPermitType extends AbstractIrhpPermitType
     }
 
     /**
-     * Get the expiry interval string used by this permit type for DateTime expiry offset from issue_date
+     * Generate an expiry date for this permit type using the supplied date time as an issue date
      *
-     * @return string
-     * @throws RuntimeException
+     * @param DateTime $issueDateTime
+     *
+     * @return DateTime
      */
-    public function getExpiryInterval()
+    public function generateExpiryDate(DateTime $issueDateTime)
     {
-        $mappings = [
-            self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => self::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL
-        ];
-
-        if (isset($mappings[$this->id])) {
-            return $mappings[$this->id];
+        if (!$this->isEcmtRemoval()) {
+            throw new RuntimeException('Unable to generate an expiry date for permit type ' . $this->id);
         }
 
-        throw new RuntimeException('No expiry interval defined for permit type ' . $this->id);
+        $expiryDateTime = clone $issueDateTime;
+        $expiryDateTime->add(new DateInterval('P1Y'));
+        $expiryDateTime->sub(new DateInterval('P1D'));
+
+        return $expiryDateTime;
     }
 }

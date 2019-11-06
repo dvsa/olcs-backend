@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use DateTime;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as Entity;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath as ApplicationPathEntity;
@@ -220,44 +221,42 @@ class IrhpPermitTypeEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpGetExpiryInterval
-     */
-    public function testGetExpiryInterval($irhpPermitTypeId, $expiryInterval)
+    * @dataProvider dpGenerateExpiryDateEcmtRemoval
+    */
+    public function testGenerateExpiryDateEcmtRemoval($issueDateString, $expectedExpiryDateString)
     {
-        $this->sut->setId($irhpPermitTypeId);
+        $this->sut->shouldReceive('isEcmtRemoval')
+            ->andReturn(true);
+
+        $issueDate = new DateTime($issueDateString);
+        $expiryDate = $this->sut->generateExpiryDate($issueDate);
+
+        $this->assertNotSame($expiryDate, $issueDate);
 
         $this->assertEquals(
-            $expiryInterval,
-            $this->sut->getExpiryInterval()
+            $expectedExpiryDateString,
+            $expiryDate->format('Y-m-d')
         );
     }
 
-    public function dpGetExpiryInterval()
+    public function dpGenerateExpiryDateEcmtRemoval()
     {
         return [
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL, Entity::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL]
+            ['2019-04-15', '2020-04-14'],
+            ['2019-05-01', '2020-04-30'],
+            ['2019-01-01', '2019-12-31'],
         ];
     }
 
-    /**
-     * @dataProvider dpGetExpiryIntervalException
-     */
-    public function testGetExpiryIntervalException($irhpPermitTypeId)
+    public function testApplyExpiryIntervalException()
     {
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('No expiry interval defined for permit type ' . $irhpPermitTypeId);
+        $this->expectExceptionMessage('Unable to generate an expiry date for permit type 77');
 
-        $this->sut->setId($irhpPermitTypeId);
-        $this->sut->getExpiryInterval();
-    }
+        $this->sut->shouldReceive('isEcmtRemoval')
+            ->andReturn(false);
 
-    public function dpGetExpiryIntervalException()
-    {
-        return [
-            [Entity::IRHP_PERMIT_TYPE_ID_BILATERAL],
-            [Entity::IRHP_PERMIT_TYPE_ID_MULTILATERAL],
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM],
-            [Entity::IRHP_PERMIT_TYPE_ID_ECMT],
-        ];
+        $this->sut->setId(77);
+        $this->sut->generateExpiryDate(new DateTime());
     }
 }

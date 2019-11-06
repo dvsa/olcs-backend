@@ -118,9 +118,9 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler implem
      */
     private function processStandardWithExpiry(IrhpPermitApplication $irhpPermitApplication)
     {
-        $expiryInterval = $irhpPermitApplication->getIrhpApplication()->getIrhpPermitType()->getExpiryInterval();
-        $expiryDate = new DateTime();
-        $expiryDate->add(new DateInterval($expiryInterval));
+        $expiryDate = $irhpPermitApplication->generateExpiryDate(
+            new DateTime()
+        );
 
         $command = AllocateIrhpPermitApplicationPermitCmd::create(
             [
