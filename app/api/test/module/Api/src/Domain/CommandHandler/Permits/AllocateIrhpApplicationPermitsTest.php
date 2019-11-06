@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -160,13 +161,19 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($irhpApplication);
 
-        $irhpPermitApplication1->shouldReceive('getIrhpApplication->getIrhpPermitType->getExpiryInterval')
+        $expiryDate = m::mock(DateTime::class);
+
+        $irhpPermitApplication1->shouldReceive('generateExpiryDate')
             ->once()
-            ->andReturn(IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL_EXPIRY_INTERVAL);
+            ->with(m::type(DateTime::class))
+            ->andReturn($expiryDate);
 
         $this->expectedSideEffect(
             AllocateIrhpPermitApplicationPermit::class,
-            ['id' => $irhpPermitApplication1Id],
+            [
+                'id' => $irhpPermitApplication1Id,
+                'expiryDate' => $expiryDate
+            ],
             new Result(),
             $irhpPermitApplication1PermitsRequired
         );
