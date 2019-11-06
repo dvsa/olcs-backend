@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as IrhpPermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Mockery as m;
+use Zend\Db\Sql\Predicate\Between;
 
 /**
  * IRHP Permit Window test
@@ -384,5 +385,69 @@ class IrhpPermitWindowTest extends RepositoryTestCase
             . 'AND ipw.endDate > [[2019-04-08T09:51:10+0000]] AND ';
 
         $this->assertEquals($expectedQuery, $this->query);
+    }
+
+    public function testFindOverlappingWindowsByType()
+    {
+        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $this->em->shouldReceive('getRepository->createQueryBuilder')->once()->andReturn($mockQb);
+        $mockWindow = m::mock(IrhpPermitWindowEntity::class);
+
+        $betweenFn = m::mock(Between::class);
+
+        $mockQb->shouldReceive('expr->between')
+            ->once()
+            ->with('ipw.startDate', ':proposedStartDate', ':proposedEndDate')
+            ->andReturn($betweenFn);
+
+        $mockQb->shouldReceive('expr->between')
+            ->once()
+            ->with('ipw.endDate', ':proposedStartDate', ':proposedEndDate')
+            ->andReturn($betweenFn);
+
+        $mockQb->shouldReceive('expr->between')
+            ->once()
+            ->with(':proposedStartDate', 'ipw.startDate', 'ipw.endDate')
+            ->andReturn($betweenFn);
+
+        $mockQb->shouldReceive('expr->eq')
+            ->once()
+            ->with('ipw.irhpPermitStock', ':irhpPermitStock')
+            ->andReturn('eqcond');
+
+        $mockQb->shouldReceive('expr->neq')
+            ->once()
+            ->with('ipw.id', ':irhpPermitWindow')
+            ->andReturn('neqcond');
+
+        $mockQb->shouldReceive('orWhere')
+            ->once()
+            ->with($betweenFn)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('orWhere')
+            ->once()
+            ->with($betweenFn)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('orWhere')
+            ->once()
+            ->with($betweenFn)
+            ->andReturnSelf();
+
+        $mockQb->shouldReceive('andWhere')
+            ->andReturnSelf()
+            ->shouldReceive('setParameter')
+            ->times(4)
+            ->andReturnSelf()
+            ->shouldReceive('getQuery->getResult')
+            ->withNoArgs()
+            ->once()
+            ->andReturn(['RESULTS']);
+
+        $this->assertEquals(
+            ['RESULTS'],
+            $this->sut->findOverlappingWindowsByType(11, '2029-01-01 11:11:11', '2029-01-02 12:12:12', $mockWindow)
+        );
     }
 }
