@@ -2,12 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtSubmitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtSubmitApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 
 class EcmtSubmitApplicationTest extends CommandHandlerTestCase
@@ -33,8 +36,23 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function testHandleCommand()
     {
         $ecmtPermitApplicationId = 129;
+        $licenceId = 705;
+        $taskCreationMessage = 'Task created';
+
+        $expectedTaskParams = [
+            'category' => Task::CATEGORY_PERMITS,
+            'subCategory' => Task::SUBCATEGORY_APPLICATION,
+            'description' => Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED,
+            'ecmtPermitApplication' => $ecmtPermitApplicationId,
+            'licence' => $licenceId,
+        ];
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
+        $ecmtPermitApplication->shouldReceive('getId')
+            ->andReturn($ecmtPermitApplicationId);
+        $ecmtPermitApplication->shouldReceive('getLicence->getId')
+            ->withNoArgs()
+            ->andReturn($licenceId);
         $ecmtPermitApplication->shouldReceive('submit')
             ->with($this->mapRefData(EcmtPermitApplication::STATUS_UNDER_CONSIDERATION))
             ->once()
@@ -64,6 +82,12 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ['irhpPermitType' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT]
         );
 
+        $this->expectedSideEffect(
+            CreateTask::class,
+            $expectedTaskParams,
+            (new Result())->addMessage($taskCreationMessage)
+        );
+
         $result = $this->sut->handleCommand($command);
 
         $this->assertEquals(
@@ -73,7 +97,8 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
 
         $this->assertEquals(
             [
-                'Permit application updated'
+                'Permit application updated',
+                $taskCreationMessage
             ],
             $result->getMessages()
         );
