@@ -1197,6 +1197,10 @@ return [
         => CommandHandler\IrhpPermit\GenerateCoverLetterDocument::class,
     Command\IrhpPermit\GeneratePermitDocument::class => CommandHandler\IrhpPermit\GeneratePermitDocument::class,
 
+    TransferCommand\IrhpCandidatePermit\Delete::class => CommandHandler\IrhpCandidatePermit\Delete::class,
+    TransferCommand\IrhpCandidatePermit\Update::class => CommandHandler\IrhpCandidatePermit\Update::class,
+    TransferCommand\IrhpCandidatePermit\Create::class => CommandHandler\IrhpCandidatePermit\Create::class,
+
     // IrhpApplication update
     TransferCommand\IrhpApplication\UpdateCheckAnswers::class => CommandHandler\IrhpApplication\UpdateCheckAnswers::class,
 

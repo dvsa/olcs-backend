@@ -27,6 +27,10 @@ interface IrhpInterface
         self::STATUS_ISSUING,
     ];
 
+    const PRE_GRANT_STATUSES = [
+        self::STATUS_UNDER_CONSIDERATION
+    ];
+
     const SOURCE_SELFSERVE = 'app_source_selfserve';
     const SOURCE_INTERNAL = 'app_source_internal';
 

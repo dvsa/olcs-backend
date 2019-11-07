@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Entity\DeletableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
@@ -22,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *    }
  * )
  */
-class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
+class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements DeletableInterface
 {
     /**
      * Create IRHP Candidate Permit entity
@@ -142,5 +143,39 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit
 
         $this->successful = 1;
         $this->assignedEmissionsCategory = $assignedEmissionsCategory;
+    }
+
+    /**
+     * Updates permit range against candidate permit
+     *
+     * @param IrhpPermitRange $irhpPermitRange
+     *
+     * @throws ForbiddenException
+     */
+    public function updateIrhpPermitRange(IrhpPermitRange $irhpPermitRange)
+    {
+        if (!$this->isApplicationUnderConsideration()) {
+            throw new ForbiddenException('IRHP Application status does not support changing IRHP Permit Range');
+        }
+        $this->irhpPermitRange = $irhpPermitRange;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canDelete()
+    {
+        return $this->isApplicationUnderConsideration();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApplicationUnderConsideration()
+    {
+        return
+            $this->getIrhpPermitApplication()
+                ->getIrhpApplication()
+                ->isUnderConsideration();
     }
 }
