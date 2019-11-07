@@ -36,7 +36,7 @@ if ($profile) {
     $start = microtime(true);
 }
 
-error_reporting(-1);
+error_reporting(E_ALL & ~E_USER_DEPRECATED);
 
 /**
  * This makes our life easier when dealing with paths. Everything is relative
@@ -58,7 +58,12 @@ try {
 } catch (Zend\ServiceManager\Exception\ServiceNotCreatedException $e) {
     do {
         $lastException = sprintf(
-            "%s:%d %s (%d) [%s]\n", $e->getFile(), $e->getLine(), $e->getMessage(), $e->getCode(), get_class($e)
+            "%s:%d %s (%d) [%s]\n",
+            $e->getFile(),
+            $e->getLine(),
+            $e->getMessage(),
+            $e->getCode(),
+            get_class($e)
         );
     } while ($e = $e->getPrevious());
     // re-throw initial exception to get rid of plain passwords in stack trace
