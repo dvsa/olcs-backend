@@ -23,10 +23,7 @@ class AbstractFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
         $mainSl = $serviceLocator->getServiceLocator();
-        $config = $mainSl->get('Config')['submissions']['sections']['aliases'];
-        $className = $config[$requestedName];
-        $viewRenderer = $mainSl->get('viewrenderer');
 
-        return new $className($mainSl->get('QueryHandlerManager'), $viewRenderer);
+        return new $requestedName($mainSl->get('QueryHandlerManager'), $mainSl->get('viewrenderer'));
     }
 }
