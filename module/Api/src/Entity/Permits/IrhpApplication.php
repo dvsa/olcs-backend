@@ -28,6 +28,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
@@ -1915,5 +1916,82 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function getAllocationMode()
     {
         return $this->getAssociatedStock()->getAllocationMode();
+    }
+
+    /**
+     * Whether permits should be immediately allocated on submission for this application
+     *
+     * @return bool
+     */
+    public function shouldAllocatePermitsOnSubmission()
+    {
+        return $this->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APG;
+    }
+
+    /**
+     * Get the description associated with the task to be created on application submission
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getSubmissionTaskDescription()
+    {
+        $mappings = [
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM
+                => Task::TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL
+                => Task::TASK_DESCRIPTION_ECMT_INTERNATIONAL_REMOVALS_RECEIVED,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL
+                => Task::TASK_DESCRIPTION_BILATERAL_RECEIVED,
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL
+                => Task::TASK_DESCRIPTION_MULTILATERAL_RECEIVED,
+        ];
+
+        $irhpPermitTypeId = $this->irhpPermitType->getId();
+
+        if (!isset($mappings[$irhpPermitTypeId])) {
+            throw new RuntimeException('No submission task description defined for permit type ' . $irhpPermitTypeId);
+        }
+
+        return $mappings[$irhpPermitTypeId];
+    }
+
+    /**
+     * Get the status that this application should be set to upon submission
+     *
+     * @return string
+     *
+     * @throws RuntimeException
+     */
+    public function getSubmissionStatus()
+    {
+        $mappings = [
+            RefData::BUSINESS_PROCESS_APG => IrhpInterface::STATUS_ISSUING,
+            RefData::BUSINESS_PROCESS_APGG => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+            RefData::BUSINESS_PROCESS_APSG => IrhpInterface::STATUS_UNDER_CONSIDERATION,
+        ];
+
+        $businessProcessId = $this->getBusinessProcess()->getId();
+
+        if (!isset($mappings[$businessProcessId])) {
+            throw new RuntimeException('No submission status defined for business process ' . $businessProcessId);
+        }
+
+        return $mappings[$businessProcessId];
+    }
+
+    /**
+     * Get the candidate permit creation mode associated with this application
+     *
+     * @return string
+     */
+    public function getCandidatePermitCreationMode()
+    {
+        if ($this->isMultiStock()) {
+            return IrhpPermitStock::CANDIDATE_MODE_NONE;
+        }
+
+        return $this->getAssociatedStock()->getCandidatePermitCreationMode();
     }
 }

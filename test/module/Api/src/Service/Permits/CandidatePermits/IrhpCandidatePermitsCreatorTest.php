@@ -53,7 +53,7 @@ class IrhpCandidatePermitsCreatorTest extends MockeryTestCase
             ->withNoArgs()
             ->andReturn($requiredEuro6);
 
-        $this->irhpApplication->shouldReceive('getAssociatedStock->getCandidatePermitCreationMode')
+        $this->irhpApplication->shouldReceive('getCandidatePermitCreationMode')
             ->withNoArgs()
             ->andReturn(IrhpPermitStock::CANDIDATE_MODE_APSG);
         $this->irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
@@ -69,7 +69,7 @@ class IrhpCandidatePermitsCreatorTest extends MockeryTestCase
 
     public function testCreateIfRequiredApgg()
     {
-        $this->irhpApplication->shouldReceive('getAssociatedStock->getCandidatePermitCreationMode')
+        $this->irhpApplication->shouldReceive('getCandidatePermitCreationMode')
             ->withNoArgs()
             ->andReturn(IrhpPermitStock::CANDIDATE_MODE_APGG);
 
