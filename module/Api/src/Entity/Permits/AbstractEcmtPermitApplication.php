@@ -67,6 +67,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $cancellationDate;
 
     /**
+     * Checked
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="checked", nullable=true)
+     */
+    protected $checked;
+
+    /**
      * Checked answers
      *
      * @var boolean
@@ -343,6 +352,15 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     protected $irhpPermitApplications;
 
     /**
+     * Task
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Task\Task", mappedBy="ecmtPermitApplication")
+     */
+    protected $tasks;
+
+    /**
      * Initialise the collections
      *
      * @return void
@@ -362,6 +380,7 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
         $this->countrys = new ArrayCollection();
         $this->fees = new ArrayCollection();
         $this->irhpPermitApplications = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     /**
@@ -416,6 +435,30 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
         }
 
         return $this->cancellationDate;
+    }
+
+    /**
+     * Set the checked
+     *
+     * @param boolean $checked new value being set
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setChecked($checked)
+    {
+        $this->checked = $checked;
+
+        return $this;
+    }
+
+    /**
+     * Get the checked
+     *
+     * @return boolean
+     */
+    public function getChecked()
+    {
+        return $this->checked;
     }
 
     /**
@@ -1196,6 +1239,69 @@ abstract class AbstractEcmtPermitApplication implements BundleSerializableInterf
     {
         if ($this->irhpPermitApplications->contains($irhpPermitApplications)) {
             $this->irhpPermitApplications->removeElement($irhpPermitApplications);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the task
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     *
+     * @return EcmtPermitApplication
+     */
+    public function setTasks($tasks)
+    {
+        $this->tasks = $tasks;
+
+        return $this;
+    }
+
+    /**
+     * Get the tasks
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getTasks()
+    {
+        return $this->tasks;
+    }
+
+    /**
+     * Add a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     *
+     * @return EcmtPermitApplication
+     */
+    public function addTasks($tasks)
+    {
+        if ($tasks instanceof ArrayCollection) {
+            $this->tasks = new ArrayCollection(
+                array_merge(
+                    $this->tasks->toArray(),
+                    $tasks->toArray()
+                )
+            );
+        } elseif (!$this->tasks->contains($tasks)) {
+            $this->tasks->add($tasks);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a tasks
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being removed
+     *
+     * @return EcmtPermitApplication
+     */
+    public function removeTasks($tasks)
+    {
+        if ($this->tasks->contains($tasks)) {
+            $this->tasks->removeElement($tasks);
         }
 
         return $this;

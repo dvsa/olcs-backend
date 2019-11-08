@@ -1131,6 +1131,18 @@ return array(
                 'property' => 'task'
             )
         ),
+        'irhp_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'IrhpApplication',
+                'property' => 'task'
+            )
+        ),
+        'ecmt_permit_application_id' => array(
+            'inversedBy' => array(
+                'entity' => 'EcmtPermitApplication',
+                'property' => 'task'
+            )
+        ),
         'bus_reg_id' => array(
             'inversedBy' => array(
                 'entity' => 'BusReg',

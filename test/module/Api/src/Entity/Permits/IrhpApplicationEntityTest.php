@@ -168,7 +168,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('getBusinessProcess')
             ->once()
             ->withNoArgs()
-            ->andReturn($businessProcess);
+            ->andReturn($businessProcess)
+            ->shouldReceive('requiresPreAllocationCheck')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true);
 
         $this->assertSame(
             [
@@ -202,6 +206,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canUpdateCountries' => true,
                 'questionAnswerData' => [],
                 'businessProcess' => $businessProcess,
+                'requiresPreAllocationCheck' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -5147,6 +5152,23 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    /**
+     * @dataProvider dpUpdateChecked
+     */
+    public function testUpdateChecked($checked)
+    {
+        $this->sut->updateChecked($checked);
+        $this->assertEquals($checked, $this->sut->getChecked());
+    }
+
+    public function dpUpdateChecked()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
     public function dpShouldAllocatePermitsOnSubmission()
     {
         return [
@@ -5280,5 +5302,94 @@ class IrhpApplicationEntityTest extends EntityTester
             $creationMode,
             $this->sut->getCandidatePermitCreationMode()
         );
+    }
+
+    /**
+     * @dataProvider dpRequiresPreAllocationCheck
+     */
+    public function testRequiresPreAllocationCheck($isEcmtShortTerm, $expected)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->requiresPreAllocationCheck()
+        );
+    }
+
+    public function dpRequiresPreAllocationCheck()
+    {
+        return [
+            [true, true],
+            [false, false],
+        ];
+    }
+
+    public function testFetchOpenSubmissionTask()
+    {
+        $this->sut->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task6 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $this->sut->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5, $task6])
+        );
+
+        $this->assertSame(
+            $task5,
+            $this->sut->fetchOpenSubmissionTask()
+        );
+    }
+
+    public function testFetchOpenSubmissionTaskNull()
+    {
+        $this->sut->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $this->sut->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5])
+        );
+
+        $this->assertNull(
+            $this->sut->fetchOpenSubmissionTask()
+        );
+    }
+
+    private function createMockTask($description, $isClosed, $categoryId, $subcategoryId)
+    {
+        $task = m::mock(Task::class);
+        $task->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->andReturn($description);
+        $task->shouldReceive('getIsClosed')
+            ->withNoArgs()
+            ->andReturn($isClosed);
+        $task->shouldReceive('getCategory->getId')
+            ->withNoArgs()
+            ->andReturn($categoryId);
+        $task->shouldReceive('getSubcategory->getId')
+            ->withNoArgs()
+            ->andReturn($subcategoryId);
+
+        return $task;
     }
 }
