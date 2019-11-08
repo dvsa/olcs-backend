@@ -4,14 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
-use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Task\Task;
@@ -37,7 +34,6 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
      * @param SubmitApplicationCmd|CommandInterface $command command
      *
      * @return Result
-     * @throws ValidationException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -45,33 +41,28 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
         $irhpApplicationId = $command->getId();
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
 
-        $irhpPermitTypeId = $irhpApplication->getIrhpPermitType()->getId();
-
-        switch ($irhpPermitTypeId) {
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
-                $irhpApplication->submit($this->refData(IrhpInterface::STATUS_UNDER_CONSIDERATION));
-                $sideEffects = [
-                    $this->getCreateTaskCommand($irhpApplication),
-                ];
-                break;
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
-                $irhpApplication->submit($this->refData(IrhpInterface::STATUS_ISSUING));
-                $sideEffects = [
-                    $this->createQueue($irhpApplicationId, Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE, [])
-                ];
-                break;
-            default:
-                throw new ValidationException(['Unsupported permit type, cannot proceed with submission.']);
-        }
+        $irhpApplication->submit(
+            $this->refData($irhpApplication->getSubmissionStatus())
+        );
 
         $this->getRepo()->save($irhpApplication);
+
+        $sideEffects = [];
+
+        if ($irhpApplication->shouldAllocatePermitsOnSubmission()) {
+            $sideEffects[] = $this->createQueue(
+                $irhpApplicationId,
+                Queue::TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE,
+                []
+            );
+        }
+
+        $sideEffects[] = $this->getCreateTaskCommand($irhpApplication);
 
         $sideEffects[] = $this->createQueue(
             $irhpApplicationId,
             Queue::TYPE_PERMITS_POST_SUBMIT,
-            ['irhpPermitType' => $irhpPermitTypeId]
+            ['irhpPermitType' => $irhpApplication->getIrhpPermitType()->getId()]
         );
 
         $this->result->merge(
@@ -88,6 +79,7 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
      * Get task creation command for an application
      *
      * @param IrhpApplication $irhpApplication
+     *
      * @return CreateTask
      */
     private function getCreateTaskCommand(IrhpApplication $irhpApplication)
@@ -96,7 +88,7 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
             [
                 'category' => Task::CATEGORY_PERMITS,
                 'subCategory' => Task::SUBCATEGORY_APPLICATION,
-                'description' => Task::TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED,
+                'description' => $irhpApplication->getSubmissionTaskDescription(),
                 'irhpApplication' => $irhpApplication->getId(),
                 'licence' => $irhpApplication->getLicence()->getId()
             ]
