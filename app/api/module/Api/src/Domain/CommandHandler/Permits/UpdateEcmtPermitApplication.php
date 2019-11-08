@@ -17,8 +17,10 @@ use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\Permits\UpdatePermitFee;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitApplication as UpdateEcmtPermitApplicationCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update ECMT Permit Application
@@ -32,6 +34,25 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'EcmtPermitApplication';
     protected $extraRepos = ['Sectors', 'Country'];
+
+    /** @var CheckedValueUpdater */
+    private $checkedValueUpdater;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->checkedValueUpdater = $mainServiceLocator->get('PermitsCheckableCheckedValueUpdater');
+
+        return parent::createService($serviceLocator);
+    }
 
     public function handleCommand(CommandInterface $command)
     {
@@ -89,6 +110,7 @@ final class UpdateEcmtPermitApplication extends AbstractCommandHandler implement
             $command->getRoadworthiness()
         );
 
+        $this->checkedValueUpdater->updateIfRequired($ecmtPermitApplication, $command->getChecked());
         $this->getRepo()->save($ecmtPermitApplication);
 
         $result->addId('ecmtPermitApplication', $ecmtPermitApplication->getId());

@@ -21,6 +21,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
@@ -1700,5 +1701,110 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             $productReference,
             $entity->getIssueFeeProductReference()
         );
+    }
+
+    /**
+     * @dataProvider dpUpdateChecked
+     */
+    public function testUpdateChecked($checked)
+    {
+        $entity = $this->createApplication();
+
+        $entity->updateChecked($checked);
+        $this->assertEquals($checked, $entity->getChecked());
+    }
+
+    public function dpUpdateChecked()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    public function testGetSubmissionTaskDescription()
+    {
+        $entity = $this->createApplication();
+
+        $this->assertEquals(
+            Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED,
+            $entity->getSubmissionTaskDescription()
+        );
+    }
+
+    public function testRequiresPreAllocationCheck()
+    {
+        $entity = $this->createApplication();
+
+        $this->assertTrue(
+            $entity->requiresPreAllocationCheck()
+        );
+    }
+
+    public function testFetchOpenSubmissionTask()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task6 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $application->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5, $task6])
+        );
+
+        $this->assertSame(
+            $task5,
+            $application->fetchOpenSubmissionTask()
+        );
+    }
+
+    public function testFetchOpenSubmissionTaskNull()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $application->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5])
+        );
+
+        $this->assertNull(
+            $application->fetchOpenSubmissionTask()
+        );
+    }
+
+    private function createMockTask($description, $isClosed, $categoryId, $subcategoryId)
+    {
+        $task = m::mock(Task::class);
+        $task->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->andReturn($description);
+        $task->shouldReceive('getIsClosed')
+            ->withNoArgs()
+            ->andReturn($isClosed);
+        $task->shouldReceive('getCategory->getId')
+            ->withNoArgs()
+            ->andReturn($categoryId);
+        $task->shouldReceive('getSubcategory->getId')
+            ->withNoArgs()
+            ->andReturn($subcategoryId);
+
+        return $task;
     }
 }
