@@ -7,7 +7,8 @@ return [
             'baseuri' => '',
             'workspace' => '',
             'username' => '',
-            'password' => ''
+            'password' => '',
+            'webdav_baseuri' => '',
         ]
     ],
     'service_manager' => [

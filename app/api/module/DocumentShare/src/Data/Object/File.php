@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\DocumentShare\Data\Object;
 
+use Exception;
+
 /**
  * Class File
  */
@@ -180,7 +182,7 @@ class File
     /**
      * @param $streamFileName
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function setContentFromDsStream($streamFileName)
     {
