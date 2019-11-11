@@ -15,10 +15,10 @@ interface DocumentStoreInterface
      * @param string $path File Path on storage
      * @param File   $file File
      *
-     * @return bool
+     * @return mixed
      * @throws Exception
      */
-    public function write($path, File $file): bool;
+    public function write($path, File $file);
 
     /**
      * Remove file on storage
@@ -36,7 +36,7 @@ interface DocumentStoreInterface
      *
      * @param string $path Path
      *
-     * @return File|null
+     * @return mixed
      */
-    public function read($path): ?File;
+    public function read($path);
 }

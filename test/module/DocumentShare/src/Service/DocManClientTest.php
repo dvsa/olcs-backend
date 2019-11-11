@@ -210,12 +210,13 @@ class DocManClientTest extends MockeryTestCase
                 return $this->mockClient;
             }
         );
-        $mockResponse = m::mock(Response::class)->shouldReceive('isOk')->andReturn(true);
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('isOk')->andReturn(true);
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         $actual = $this->sut->write($expectPath, $mockFile);
 
-        static::assertEquals('EXPECTED', $actual);
+        static::assertTrue($actual);
     }
 
     /**
@@ -231,7 +232,8 @@ class DocManClientTest extends MockeryTestCase
                 return $this->mockClient;
             }
         );
-        $mockResponse = m::mock(Response::class)->shouldReceive('isOk')->andReturn(true);
+        $mockResponse = m::mock(Response::class);
+        $mockResponse->shouldReceive('isOk')->andReturn(true);
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         $result = $this->sut->remove('test', $hard);

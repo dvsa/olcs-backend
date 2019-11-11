@@ -173,7 +173,7 @@ class DocManClient implements DocumentStoreInterface
      * @param string $path Path to file on storage
      * @param bool   $hard Something
      *
-     * @return Response
+     * @return bool
      */
     public function remove($path, $hard = false): bool
     {
@@ -181,7 +181,8 @@ class DocManClient implements DocumentStoreInterface
         $request->setUri($this->getContentUri($path, $hard))
             ->setMethod(Request::METHOD_DELETE);
 
-        return $this->getHttpClient()->setRequest($request)->send();
+        $response = $this->getHttpClient()->setRequest($request)->send();
+        return $response->isOk();
     }
 
     /**

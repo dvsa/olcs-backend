@@ -52,9 +52,9 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
         $this->mockContentStoreCli->shouldReceive('remove')
             ->once()
             ->with(self::IDENTIFIER)
-            ->andReturn('EXPECT');
+            ->andReturn(true);
 
-        static::assertEquals('EXPECT', $this->sut->remove(self::IDENTIFIER));
+        static::assertTrue($this->sut->remove(self::IDENTIFIER));
     }
 
     public function testUpload()
