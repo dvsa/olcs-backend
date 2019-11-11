@@ -3,7 +3,7 @@
 
 namespace Dvsa\OlcsTest\DocumentShare\Data\object;
 
-use Dvsa\Olcs\DocumentShare\Data\object\File;
+use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
