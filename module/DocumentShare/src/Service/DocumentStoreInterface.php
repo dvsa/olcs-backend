@@ -27,9 +27,9 @@ interface DocumentStoreInterface
      *
      * @param bool   $hard
      *
-     * @return bool
+     * @return mixed
      */
-    public function remove($path, $hard = false): bool;
+    public function remove($path, $hard = false);
 
     /**
      * Read content from document store

@@ -173,16 +173,15 @@ class DocManClient implements DocumentStoreInterface
      * @param string $path Path to file on storage
      * @param bool   $hard Something
      *
-     * @return bool
+     * @return Response
      */
-    public function remove($path, $hard = false): bool
+    public function remove($path, $hard = false)
     {
         $request = $this->getRequest();
         $request->setUri($this->getContentUri($path, $hard))
             ->setMethod(Request::METHOD_DELETE);
 
-        $response = $this->getHttpClient()->setRequest($request)->send();
-        return $response->isOk();
+        return $this->getHttpClient()->setRequest($request)->send();
     }
 
     /**
@@ -191,10 +190,10 @@ class DocManClient implements DocumentStoreInterface
      * @param string $path File Path on storage
      * @param File   $file File
      *
-     * @return bool
+     * @return Response
      * @throws \Exception
      */
-    public function write($path, File $file): bool
+    public function write($path, File $file)
     {
         try {
             $fh = fopen($file->getResource(), 'rb');
@@ -231,8 +230,7 @@ class DocManClient implements DocumentStoreInterface
             $request->getHeaders()
                 ->addHeaderLine('Content-Length', fstat($fhT)['size']);
 
-            $response = $this->getHttpClient()->setRequest($request)->send();
-            return $response->isOk();
+            return $this->getHttpClient()->setRequest($request)->send();
         } finally {
             @fclose($fh);
             @fclose($fhT);
