@@ -43,6 +43,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     const ALLOCATION_MODE_STANDARD_WITH_EXPIRY = 'allocation_mode_standard_expiry';
     const ALLOCATION_MODE_CANDIDATE_PERMITS = 'allocation_mode_candidate_permits';
 
+    const CANDIDATE_MODE_APSG = 'candidate_mode_apsg';
+    const CANDIDATE_MODE_APGG = 'candidate_mode_apgg';
+    const CANDIDATE_MODE_NONE = 'candidate_mode_none';
+    
+    const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
+
     /**
      * @param IrhpPermitType $type
      * @param Country $country
@@ -592,6 +598,28 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     }
 
     /**
+     * Get the first available unreserved range with no countries matching the specified emissions category
+     *
+     * @param string $emissionsCategoryId
+     *
+     * @return IrhpPermitRange
+     *
+     * @throws RuntimeException
+     */
+    public function getFirstAvailableRangeWithNoCountries($emissionsCategoryId)
+    {
+        $ranges = $this->getNonReservedNonReplacementRangesOrderedByFromNo($emissionsCategoryId);
+
+        foreach ($ranges as $range) {
+            if (!$range->hasCountries()) {
+                return $range;
+            }
+        }
+
+        throw new RuntimeException('Unable to find range with no countries');
+    }
+
+    /**
      * Get the permit allocation mode used by this stock
      *
      * @return string
@@ -600,6 +628,16 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      */
     public function getAllocationMode()
     {
+        $irhpPermitTypeId = $this->irhpPermitType->getId();
+        $businessProcessId = $this->businessProcess->getId();
+
+        $isEcmtShortTerm = ($irhpPermitTypeId == IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM);
+        $isApgg = ($businessProcessId == RefData::BUSINESS_PROCESS_APGG);
+
+        if ($isEcmtShortTerm && $isApgg && $this->getValidityYear() == self::APGG_SHORT_TERM_NO_CANDIDATES_YEAR) {
+            return self::ALLOCATION_MODE_EMISSIONS_CATEGORIES;
+        }
+
         $mappings = [
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
@@ -614,7 +652,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 'business_process' => RefData::BUSINESS_PROCESS_APGG,
-                'allocation_mode' => self::ALLOCATION_MODE_EMISSIONS_CATEGORIES,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
             ],
             [
                 'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
@@ -626,10 +664,12 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 'business_process' => RefData::BUSINESS_PROCESS_APG,
                 'allocation_mode' => self::ALLOCATION_MODE_STANDARD_WITH_EXPIRY,
             ],
+            [
+                'type' => IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
+                'business_process' => RefData::BUSINESS_PROCESS_APSG,
+                'allocation_mode' => self::ALLOCATION_MODE_CANDIDATE_PERMITS,
+            ],
         ];
-
-        $irhpPermitTypeId = $this->getIrhpPermitType()->getId();
-        $businessProcessId = $this->businessProcess->getId();
 
         foreach ($mappings as $mapping) {
             if ($mapping['type'] == $irhpPermitTypeId && $mapping['business_process'] == $businessProcessId) {
@@ -644,6 +684,30 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 $businessProcessId
             )
         );
+    }
+
+    /**
+     * Get the method to be used for candidate permit creation upon application submission
+     *
+     * @return string
+     */
+    public function getCandidatePermitCreationMode()
+    {
+        $businessProcessId = $this->businessProcess->getId();
+
+        switch ($businessProcessId) {
+            case RefData::BUSINESS_PROCESS_APGG:
+                $isShortTerm = $this->irhpPermitType->isEcmtShortTerm();
+                if ($isShortTerm && $this->getValidityYear() == self::APGG_SHORT_TERM_NO_CANDIDATES_YEAR) {
+                    return self::CANDIDATE_MODE_NONE;
+                }
+
+                return self::CANDIDATE_MODE_APGG;
+            case RefData::BUSINESS_PROCESS_APSG:
+                return self::CANDIDATE_MODE_APSG;
+        }
+
+        return self::CANDIDATE_MODE_NONE;
     }
 
     /**

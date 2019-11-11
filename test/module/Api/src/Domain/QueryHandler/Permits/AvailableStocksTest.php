@@ -110,6 +110,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
                         'periodNameKey' => 'period.name.key.2',
                     ],
                 ],
+                'hasStocks' => true,
             ],
             $this->sut->handleQuery($query)
         );
@@ -162,6 +163,7 @@ class AvailableStocksTest extends QueryHandlerTestCase
                         'periodNameKey' => '',
                     ],
                 ],
+                'hasStocks' => true,
             ],
             $this->sut->handleQuery($query)
         );
@@ -181,7 +183,8 @@ class AvailableStocksTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
-                'stocks' => []
+                'stocks' => [],
+                'hasStocks' => false,
             ],
             $this->sut->handleQuery($query)
         );
@@ -219,7 +222,8 @@ class AvailableStocksTest extends QueryHandlerTestCase
 
         $this->assertEquals(
             [
-                'stocks' => []
+                'stocks' => [],
+                'hasStocks' => false,
             ],
             $this->sut->handleQuery($query)
         );

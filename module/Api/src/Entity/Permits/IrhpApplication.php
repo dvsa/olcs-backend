@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Entity\CancelableInterface;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermApsgPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtShortTermAppSubmitted;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -399,12 +400,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     private function getEcmtRemovalNoOfPermitsAnswer()
     {
-        if ($this->irhpPermitApplications->count() == 0) {
-            return null;
-        }
-
-        $irhpPermitApplication = $this->irhpPermitApplications->first();
-        return $irhpPermitApplication->getPermitsRequired();
+        return $this->getFirstIrhpPermitApplication()->getPermitsRequired();
     }
 
     /**
@@ -1894,5 +1890,33 @@ class IrhpApplication extends AbstractIrhpApplication implements
         );
 
         return $highestRequiredPermits * 100;
+    }
+
+    /**
+     * Return the command class name that represents the application submitted email for this application, or null if
+     * no email command is applicable
+     *
+     * @return string|null
+     */
+    public function getAppSubmittedEmailCommand()
+    {
+        $isEcmtShortTerm = $this->irhpPermitType->isEcmtShortTerm();
+        $isApsg = $this->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG;
+
+        if ($isEcmtShortTerm && $isApsg) {
+            return SendEcmtShortTermAppSubmitted::class;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the permit allocation mode used by the stock associated with this application
+     *
+     * @return string
+     */
+    public function getAllocationMode()
+    {
+        return $this->getAssociatedStock()->getAllocationMode();
     }
 }

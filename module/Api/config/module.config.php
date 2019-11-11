@@ -47,8 +47,6 @@ return [
             'QaNamedAnswerFetcher' => ApiSrv\Qa\Structure\Element\NamedAnswerFetcher::class,
             'QaQuestionTextGeneratorContextFactory' =>
                 ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorContextFactory::class,
-            'QaEcmtRemovalNoOfPermitsIrhpPermitApplicationFactory' =>
-                ApiSrv\Qa\Structure\Element\Text\Custom\EcmtRemoval\NoOfPermits\IrhpPermitApplicationFactory::class,
             'QaCommandCreator' => ApiSrv\Qa\Cqrs\CommandCreator::class,
             'QaEcmtShortTermNoOfPermitsElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\NoOfPermitsFactory::class,
@@ -72,6 +70,9 @@ return [
                 ApiSrv\Permits\Scoring\IrhpCandidatePermitFactory::class,
             'PermitsApplyRangesForCpProviderFactory' =>
                 ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
+            'PermitsCandidatePermitsApggCandidatePermitFactory' =>
+                ApiSrv\Permits\CandidatePermits\ApggCandidatePermitFactory::class,
+            
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -203,6 +204,8 @@ return [
             'QaQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\QuestionTextGeneratorFactory::class,
             'QaEcmtRemovalNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
+            'QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
@@ -273,6 +276,13 @@ return [
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCheckerFactory::class,
             'PermitsShortTermEcmtEmissionsCategoryAvailabilityCounter' =>
                 ApiSrv\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounterFactory::class,
+            'PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator' =>
+                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculatorFactory::class,
+            'PermitsShortTermEcmtCandidatePermitsGrantabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\CandidatePermitsGrantabilityCheckerFactory::class,
+            'PermitsShortTermEcmtEmissionsCategoriesGrantabilityChecker' =>
+                ApiSrv\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityCheckerFactory::class,
+
             'PermitsGrantabilityChecker' =>
                 ApiSrv\Permits\GrantabilityCheckerFactory::class,
             'PermitsScoringCandidatePermitsCreator'
@@ -295,6 +305,12 @@ return [
                 => ApiSrv\Permits\Common\RangeBasedRestrictedCountriesProviderFactory::class,
             'PermitsCommonTypeBasedRestrictedCountriesProvider'
                 => ApiSrv\Permits\Common\TypeBasedRestrictedCountriesProviderFactory::class,
+            'PermitsCandidatePermitsApggCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\ApggCandidatePermitsCreatorFactory::class,
+            'PermitsCandidatePermitsApggEmissionsCatCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\ApggEmissionsCatCandidatePermitsCreatorFactory::class,
+            'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
+                => ApiSrv\Permits\CandidatePermits\IrhpCandidatePermitsCreatorFactory::class,
         ],
     ],
     'view_manager' => [

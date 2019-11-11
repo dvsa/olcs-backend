@@ -59,13 +59,8 @@ class SendEcmtShortTermSuccessful extends AbstractEcmtShortTermEmailHandler impl
         $irhpPermitApplication = $recordObject->getFirstIrhpPermitApplication();
         $irhpPermitStock = $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock();
 
-        if ($irhpPermitStock->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG) {
-            $euro5PermitsGranted = $irhpPermitApplication->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF);
-            $euro6PermitsGranted = $irhpPermitApplication->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF);
-        } else {
-            $euro5PermitsGranted = $irhpPermitApplication->getRequiredEuro5();
-            $euro6PermitsGranted = $irhpPermitApplication->getRequiredEuro6();
-        }
+        $euro5PermitsGranted = $irhpPermitApplication->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO5_REF);
+        $euro6PermitsGranted = $irhpPermitApplication->countPermitsAwarded(RefData::EMISSIONS_CATEGORY_EURO6_REF);
 
         $issueFee = $recordObject->getLatestIssueFee();
         $invoicedDateTime = $issueFee->getInvoicedDateTime();
