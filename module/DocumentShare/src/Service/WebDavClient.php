@@ -80,9 +80,11 @@ class WebDavClient implements DocumentStoreInterface
      *
      * @param string $path Path to file on storage
      *
+     * @param bool   $hard
+     *
      * @return bool
      */
-    public function remove($path): bool
+    public function remove($path, $hard = false): bool
     {
         try {
             return $this->filesystem->delete($path);
