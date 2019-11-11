@@ -49,7 +49,7 @@ class WebDavClient implements DocumentStoreInterface
      *
      * @return File|null
      */
-    public function read($path): ?File
+    public function read($path)
     {
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
@@ -99,10 +99,10 @@ class WebDavClient implements DocumentStoreInterface
      * @param string $path File Path on storage
      * @param File   $file File
      *
-     * @return bool
+     * @return mixed
      * @throws \Exception
      */
-    public function write($path, File $file): bool
+    public function write($path, File $file)
     {
         try {
             $fh = fopen($file->getResource(), 'rb');
