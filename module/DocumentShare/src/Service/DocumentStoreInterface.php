@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Exception;
+use Zend\Http\Response;
 
 interface DocumentStoreInterface
 {
@@ -17,16 +18,18 @@ interface DocumentStoreInterface
      * @return bool
      * @throws Exception
      */
-    public function write($path, File $file);
+    public function write($path, File $file): bool;
 
     /**
      * Remove file on storage
      *
      * @param string $path Path to file on storage
      *
+     * @param bool   $hard
+     *
      * @return bool
      */
-    public function remove($path);
+    public function remove($path, $hard = false): bool;
 
     /**
      * Read content from document store
@@ -35,5 +38,5 @@ interface DocumentStoreInterface
      *
      * @return File|null
      */
-    public function read($path);
+    public function read($path): ?File;
 }

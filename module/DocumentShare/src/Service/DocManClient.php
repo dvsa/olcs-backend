@@ -120,7 +120,7 @@ class DocManClient implements DocumentStoreInterface
      *
      * @return File|null
      */
-    public function read($path)
+    public function read($path): ?File
     {
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
@@ -175,7 +175,7 @@ class DocManClient implements DocumentStoreInterface
      *
      * @return Response
      */
-    public function remove($path, $hard = false)
+    public function remove($path, $hard = false): bool
     {
         $request = $this->getRequest();
         $request->setUri($this->getContentUri($path, $hard))
@@ -193,7 +193,7 @@ class DocManClient implements DocumentStoreInterface
      * @return Response
      * @throws \Exception
      */
-    public function write($path, File $file)
+    public function write($path, File $file): Response
     {
         try {
             $fh = fopen($file->getResource(), 'rb');
@@ -230,7 +230,8 @@ class DocManClient implements DocumentStoreInterface
             $request->getHeaders()
                 ->addHeaderLine('Content-Length', fstat($fhT)['size']);
 
-            return $this->getHttpClient()->setRequest($request)->send();
+            $response = $this->getHttpClient()->setRequest($request)->send();
+            return $response->isOk();
         } finally {
             @fclose($fh);
             @fclose($fhT);
@@ -245,7 +246,7 @@ class DocManClient implements DocumentStoreInterface
      *
      * @return string
      */
-    protected function getContentUri($path, $prefix = false)
+    protected function getContentUri($path, $prefix = false): string
     {
         return $this->getUri($path, $prefix, 'content');
     }
@@ -259,7 +260,7 @@ class DocManClient implements DocumentStoreInterface
      *
      * @return string
      */
-    protected function getUri($path, $prefix, $folder)
+    protected function getUri($path, $prefix, $folder): string
     {
         if ($prefix) {
             $folder = 'version/' . $folder;
