@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\DocumentShare\Service;
 
+use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
@@ -48,7 +49,7 @@ class WebDavClient implements DocumentStoreInterface
      *
      * @return File|null
      */
-    public function read($path)
+    public function read($path): ?File
     {
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
@@ -81,7 +82,7 @@ class WebDavClient implements DocumentStoreInterface
      *
      * @return bool
      */
-    public function remove($path)
+    public function remove($path): bool
     {
         try {
             return $this->filesystem->delete($path);
@@ -99,7 +100,7 @@ class WebDavClient implements DocumentStoreInterface
      * @return bool
      * @throws \Exception
      */
-    public function write($path, File $file)
+    public function write($path, File $file): bool
     {
         try {
             $fh = fopen($file->getResource(), 'rb');
