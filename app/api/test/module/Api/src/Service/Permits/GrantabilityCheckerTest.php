@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoryAvailabilityCounter;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\EmissionsCategoriesGrantabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsGrantabilityChecker;
 use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -20,45 +20,42 @@ class GrantabilityCheckerTest extends MockeryTestCase
 {
     private $irhpApplication;
 
-    private $emissionsCategoryAvailabilityCounter;
+    private $emissionsCategoriesGrantabilityChecker;
+
+    private $candidatePermitsGrantabilityChecker;
 
     private $grantabilityChecker;
 
     public function setUp()
     {
         $this->irhpApplication = m::mock(IrhpApplication::class);
-    
-        $this->emissionsCategoryAvailabilityCounter = m::mock(EmissionsCategoryAvailabilityCounter::class);
 
-        $this->grantabilityChecker = new GrantabilityChecker($this->emissionsCategoryAvailabilityCounter);
+        $this->emissionsCategoriesGrantabilityChecker = m::mock(EmissionsCategoriesGrantabilityChecker::class);
+
+        $this->candidatePermitsGrantabilityChecker = m::mock(CandidatePermitsGrantabilityChecker::class);
+    
+        $this->grantabilityChecker = new GrantabilityChecker(
+            $this->emissionsCategoriesGrantabilityChecker,
+            $this->candidatePermitsGrantabilityChecker
+        );
     }
 
     /**
-     * @dataProvider dpTestIsGrantable
+     * @dataProvider dpTrueFalse
      */
-    public function testIsGrantable($requiredEuro5, $availableEuro5, $requiredEuro6, $availableEuro6, $isGrantable)
+    public function testIsGrantableEmissionsCategories($isGrantable)
     {
-        $irhpPermitStockId = 57;
-
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitApplication->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getId')
-            ->andReturn($irhpPermitStockId);
-        $irhpPermitApplication->shouldReceive('getRequiredEuro5')
-            ->andReturn($requiredEuro5);
-        $irhpPermitApplication->shouldReceive('getRequiredEuro6')
-            ->andReturn($requiredEuro6);
-
+        $this->irhpApplication->shouldReceive('getAllocationMode')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES);
         $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->withNoArgs()
             ->andReturn(true);
-        $this->irhpApplication->shouldReceive('getFirstIrhpPermitApplication')
-            ->andReturn($irhpPermitApplication);
 
-        $this->emissionsCategoryAvailabilityCounter->shouldReceive('getCount')
-            ->with($irhpPermitStockId, RefData::EMISSIONS_CATEGORY_EURO5_REF)
-            ->andReturn($availableEuro5);
-        $this->emissionsCategoryAvailabilityCounter->shouldReceive('getCount')
-            ->with($irhpPermitStockId, RefData::EMISSIONS_CATEGORY_EURO6_REF)
-            ->andReturn($availableEuro6);
+        $this->emissionsCategoriesGrantabilityChecker->shouldReceive('isGrantable')
+            ->with($this->irhpApplication)
+            ->once()
+            ->andReturn($isGrantable);
 
         $this->assertEquals(
             $isGrantable,
@@ -66,17 +63,34 @@ class GrantabilityCheckerTest extends MockeryTestCase
         );
     }
 
-    public function dpTestIsGrantable()
+    /**
+     * @dataProvider dpTrueFalse
+     */
+    public function testIsGrantableCandidatePermits($isGrantable)
+    {
+        $this->irhpApplication->shouldReceive('getAllocationMode')
+            ->withNoArgs()
+            ->andReturn(IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS);
+        $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->candidatePermitsGrantabilityChecker->shouldReceive('isGrantable')
+            ->with($this->irhpApplication)
+            ->once()
+            ->andReturn($isGrantable);
+
+        $this->assertEquals(
+            $isGrantable,
+            $this->grantabilityChecker->isGrantable($this->irhpApplication)
+        );
+    }
+
+    public function dpTrueFalse()
     {
         return [
-            [5, 5, 5, 5, true],
-            [6, 5, 5, 5, false],
-            [5, 5, 6, 5, false],
-            [6, 5, 6, 5, false],
-            [5, 6, 5, 5, true],
-            [5, 5, 5, 6, true],
-            [5, 6, 5, 6, true],
-            [5, 6, 6, 5, false],
+            [true],
+            [false],
         ];
     }
 
@@ -89,5 +103,31 @@ class GrantabilityCheckerTest extends MockeryTestCase
         $this->expectExceptionMessage('GrantabilityChecker is only implemented for ecmt short term');
 
         $this->grantabilityChecker->isGrantable($this->irhpApplication);
+    }
+
+    /**
+     * @dataProvider dpExceptionUnsupportedAllocationMode
+     */
+    public function testExceptionUnsupportedAllocationMode($allocationMode)
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unable to grant application due to unsupported allocation mode');
+
+        $this->irhpApplication->shouldReceive('getAllocationMode')
+            ->withNoArgs()
+            ->andReturn($allocationMode);
+        $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->grantabilityChecker->isGrantable($this->irhpApplication);
+    }
+
+    public function dpExceptionUnsupportedAllocationMode()
+    {
+        return [
+            [IrhpPermitStock::ALLOCATION_MODE_STANDARD],
+            [IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY],
+        ];
     }
 }

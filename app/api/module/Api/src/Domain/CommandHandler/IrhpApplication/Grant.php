@@ -105,17 +105,22 @@ final class Grant extends AbstractCommandHandler implements ToggleRequiredInterf
 
     /**
      * @param IrhpApplication $irhpApplication
+     *
      * @return CreateFee
      */
     private function getCreateFeeCommand(IrhpApplication $irhpApplication)
     {
-        $totalRequired = $irhpApplication->getFirstIrhpPermitApplication()->getTotalEmissionsCategoryPermitsRequired();
-        $feeType = $this->getRepo('FeeType')->getLatestByProductReference($irhpApplication->getIssueFeeProductReference());
+        $totalRequired = $irhpApplication->getFirstIrhpPermitApplication()->countPermitsAwarded();
+
+        $feeType = $this->getRepo('FeeType')->getLatestByProductReference(
+            $irhpApplication->getIssueFeeProductReference()
+        );
+
         return CreateFee::create(
             [
                 'licence' => $irhpApplication->getLicence()->getId(),
                 'irhpApplication' => $irhpApplication->getId(),
-                'invoicedDate' => date("Y-m-d"),
+                'invoicedDate' => date('Y-m-d'),
                 'description' => $feeType->getDescription(),
                 'feeType' => $feeType->getId(),
                 'feeStatus' => Fee::STATUS_OUTSTANDING,

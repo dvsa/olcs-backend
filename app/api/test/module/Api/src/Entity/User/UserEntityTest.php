@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Entity\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -99,7 +98,6 @@ class UserEntityTest extends EntityTester
             'organisations' => [
                 m::mock(OrganisationEntity::class)
             ],
-            'osType' => m::mock(RefDataEntity::class)
         ];
 
         $entity = Entity::create('pid', Entity::USER_TYPE_INTERNAL, $data);
@@ -108,7 +106,6 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals($data['osType'], $entity->getOsType());
         $this->assertInstanceOf(\DateTime::class, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_INTERNAL, $entity->getUserType());
@@ -153,7 +150,6 @@ class UserEntityTest extends EntityTester
             'organisations' => [
                 m::mock(OrganisationEntity::class)
             ],
-            'osType' => m::mock(RefDataEntity::class)
         ];
 
         // create an object of different type first
@@ -181,7 +177,6 @@ class UserEntityTest extends EntityTester
         $this->assertEquals($data['roles'], $entity->getRoles()->toArray());
         $this->assertEquals($data['translateToWelsh'], $entity->getTranslateToWelsh());
         $this->assertEquals($data['accountDisabled'], $entity->getAccountDisabled());
-        $this->assertEquals($data['osType'], $entity->getOsType());
         $this->assertEquals(null, $entity->getDisabledDate());
 
         $this->assertEquals(Entity::USER_TYPE_INTERNAL, $entity->getUserType());

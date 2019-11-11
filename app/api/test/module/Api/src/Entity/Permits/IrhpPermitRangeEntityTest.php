@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
@@ -211,5 +212,37 @@ class IrhpPermitRangeEntityTest extends EntityTester
         );
 
         $this->assertEquals(76, $entity->getSize());
+    }
+
+    /**
+     * @dataProvider dpHasCountries
+     */
+    public function testHasCountries(array $countries, $expectedHasCountries)
+    {
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setCountrys(new ArrayCollection($countries));
+
+        $this->assertEquals(
+            $expectedHasCountries,
+            $entity->hasCountries()
+        );
+    }
+
+    public function dpHasCountries()
+    {
+        return [
+            [
+                [],
+                false
+            ],
+            [
+                [m::mock(Country::class)],
+                true
+            ],
+            [
+                [m::mock(Country::class), m::mock(Country::class)],
+                true
+            ],
+        ];
     }
 }

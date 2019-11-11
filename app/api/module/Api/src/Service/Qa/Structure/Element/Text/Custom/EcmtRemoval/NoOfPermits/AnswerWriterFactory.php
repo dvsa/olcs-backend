@@ -16,13 +16,8 @@ class AnswerWriterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $repositoryServiceManager = $serviceLocator->get('RepositoryServiceManager');
-
         return new AnswerWriter(
-            $serviceLocator->get('QaEcmtRemovalNoOfPermitsIrhpPermitApplicationFactory'),
-            $repositoryServiceManager->get('IrhpPermitApplication'),
-            $repositoryServiceManager->get('IrhpPermitWindow'),
-            $serviceLocator->get('QaCommonCurrentDateTimeFactory')
+            $serviceLocator->get('RepositoryServiceManager')->get('IrhpPermitApplication')
         );
     }
 }

@@ -55,6 +55,9 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
         'Dec' => FeeType::FEE_TYPE_IRHP_MULTI_ISSUE_25_PRODUCT_REF,
     ];
 
+    const REQUESTED_PERMITS_KEY = 'requestedPermits';
+    const RANGE_ENTITY_KEY = 'rangeEntity';
+
     public static function createNew(
         IrhpPermitWindow $IrhpPermitWindow,
         Licence $licence,
@@ -147,7 +150,16 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
      */
     public function countPermitsAwarded($assignedEmissionsCategoryId = null)
     {
-        return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId));
+        $allocationMode = $this->irhpPermitWindow->getIrhpPermitStock()->getAllocationMode();
+
+        switch ($allocationMode) {
+            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
+                return $this->getTotalEmissionsCategoryPermitsRequired($assignedEmissionsCategoryId);
+            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
+                return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId));
+        }
+
+        return 0;
     }
 
     /**
@@ -318,6 +330,26 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
+     * Return permits required in accordance with the specified emissions category
+     *
+     * @param string $emissionsCategoryId
+     *
+     * @return int|null
+     *
+     * @throws RuntimeException
+     */
+    public function getRequiredPermitsByEmissionsCategory($emissionsCategoryId)
+    {
+        if ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO5_REF) {
+            return $this->requiredEuro5;
+        } elseif ($emissionsCategoryId == RefData::EMISSIONS_CATEGORY_EURO6_REF) {
+            return $this->requiredEuro6;
+        }
+
+        throw new RuntimeException('Unsupported emissions category for getRequiredPermitsByEmissionsCategory');
+    }
+
+    /**
      * Set licence associated with application
      *
      * @param Licence $licence
@@ -339,16 +371,49 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     /**
      * Get total permits required when in an emissions category context
      *
-     * @return int
+     * @param string|null $emissionsCategoryId
      *
-     * @throws RuntimeException
+     * @return int
      */
-    public function getTotalEmissionsCategoryPermitsRequired()
+    public function getTotalEmissionsCategoryPermitsRequired($emissionsCategoryId = null)
     {
-        if (is_null($this->requiredEuro5) || is_null($this->requiredEuro6)) {
-            return 0;
+        $requiredEuro5 = is_null($this->requiredEuro5) ? 0 : $this->requiredEuro5;
+        $requiredEuro6 = is_null($this->requiredEuro6) ? 0 : $this->requiredEuro6;
+
+        switch ($emissionsCategoryId) {
+            case RefData::EMISSIONS_CATEGORY_EURO5_REF:
+                return $requiredEuro5;
+            case RefData::EMISSIONS_CATEGORY_EURO6_REF:
+                return $requiredEuro6;
+            default:
+                return $requiredEuro5 + $requiredEuro6;
+        }
+    }
+
+    /**
+     * Get an array where each element contains a range entity and the number of candidate permits requested within
+     * the range
+     *
+     * @return array
+     */
+    public function getRangesWithCandidatePermitCounts()
+    {
+        $ranges = [];
+
+        foreach ($this->irhpCandidatePermits as $irhpCandidatePermit) {
+            $irhpPermitRange = $irhpCandidatePermit->getIrhpPermitRange();
+            $irhpPermitRangeId = $irhpPermitRange->getId();
+
+            if (!array_key_exists($irhpPermitRangeId, $ranges)) {
+                $ranges[$irhpPermitRangeId] = [
+                    self::REQUESTED_PERMITS_KEY => 0,
+                    self::RANGE_ENTITY_KEY => $irhpPermitRange,
+                ];
+            }
+
+            $ranges[$irhpPermitRangeId][self::REQUESTED_PERMITS_KEY]++;
         }
 
-        return $this->requiredEuro5 + $this->requiredEuro6;
+        return $ranges;
     }
 }
