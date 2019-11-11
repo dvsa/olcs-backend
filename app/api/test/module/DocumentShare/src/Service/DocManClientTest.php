@@ -10,6 +10,7 @@ use Olcs\Logging\Log\Logger;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 use Zend\Http\Request;
+use Zend\Http\Response;
 
 /**
  * @covers \Dvsa\Olcs\DocumentShare\Service\DocManClient
@@ -209,7 +210,8 @@ class DocManClientTest extends MockeryTestCase
                 return $this->mockClient;
             }
         );
-        $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
+        $mockResponse = m::mock(Response::class)->shouldReceive('isOk')->andReturn(true);
+        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         $actual = $this->sut->write($expectPath, $mockFile);
 
@@ -229,11 +231,13 @@ class DocManClientTest extends MockeryTestCase
                 return $this->mockClient;
             }
         );
-        $this->mockClient->expects(static::once())->method('send')->willReturn('EXPECTED');
+        $mockResponse = m::mock(Response::class)->shouldReceive('isOk')->andReturn(true);
+        $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
         $result = $this->sut->remove('test', $hard);
 
-        static::assertEquals('EXPECTED', $result);
+        static::assertTrue($result);
+
     }
 
     public function dpRemove()

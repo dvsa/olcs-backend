@@ -190,10 +190,10 @@ class DocManClient implements DocumentStoreInterface
      * @param string $path File Path on storage
      * @param File   $file File
      *
-     * @return Response
+     * @return bool
      * @throws \Exception
      */
-    public function write($path, File $file): Response
+    public function write($path, File $file): bool
     {
         try {
             $fh = fopen($file->getResource(), 'rb');
