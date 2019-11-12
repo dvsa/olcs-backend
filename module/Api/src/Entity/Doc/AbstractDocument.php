@@ -315,12 +315,11 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @ORM\ManyToOne(
      *     targetEntity="Dvsa\Olcs\Api\Entity\System\RefData",
-     *     fetch="LAZY",
-     *     options={"default": "windows_7"}
+     *     fetch="LAZY"
      * )
      * @ORM\JoinColumn(name="os_type", referencedColumnName="id", nullable=true)
      */
-    protected $osType = 'windows_7';
+    protected $osType;
 
     /**
      * Size
