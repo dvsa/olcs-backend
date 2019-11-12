@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -100,6 +101,7 @@ final class PostSubmitTasks extends AbstractCommandHandler implements ToggleRequ
             IrhpApplicationSnapshotCmd::create(['id' => $id]),
         ];
 
+        /** @var IrhpApplication $irhpApplication */
         $irhpApplication = $this->getRepo('IrhpApplication')->fetchById($id);
         $this->irhpCandidatePermitsCreator->createIfRequired($irhpApplication);
 

@@ -49,7 +49,7 @@ class IrhpApplicationEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
-     * @var Entity
+     * @var Entity|m\MockInterface
      */
     protected $sut;
 
@@ -911,36 +911,96 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestCanBeSubmitted
+     * @dataProvider dpCanBeSubmittedStatusIncorrect
      */
-    public function testCanBeSubmitted($isNotYetSubmitted, $allSectionsCompleted, $expected)
+    public function testCanBeSubmittedStatusIncorrect(string $statusId)
     {
-        $this->sut->shouldReceive('isNotYetSubmitted')
-            ->andReturn($isNotYetSubmitted)
-            ->shouldReceive('getSectionCompletion')
-            ->andReturn(['allCompleted' => $allSectionsCompleted]);
-
-        $this->assertSame($expected, $this->sut->canBeSubmitted());
+        $status = m::mock(RefData::class);
+        $status->expects('getId')->withNoArgs()->andReturn($statusId);
+        $entity = $this->createNewEntity(null, $status);
+        self::assertFalse($entity->canBeSubmitted());
     }
 
-    public function dpTestCanBeSubmitted()
+    public function dpCanBeSubmittedStatusIncorrect()
     {
         return [
-            'already active application' => [
-                'isNotYetSubmitted' => false,
-                'allSectionsCompleted' => false,
-                'expected' => false,
-            ],
-            'some incomplete sections' => [
-                'isNotYetSubmitted' => true,
-                'allSectionsCompleted' => false,
-                'expected' => false,
-            ],
-            'can be submitted' => [
-                'isNotYetSubmitted' => true,
-                'allSectionsCompleted' => true,
-                'expected' => true,
-            ],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
+            [IrhpInterface::STATUS_EXPIRED],
+        ];
+    }
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
+    public function testCanBeSubmittedMultiStock($allSectionsCompleted)
+    {
+        $status = m::mock(RefData::class);
+        $status->expects()->getId()->withNoArgs()->andReturn(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects()->isMultiStock()->withNoArgs()->andReturnTrue();
+
+        $this->sut->setStatus($status);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->sut->expects()
+            ->getSectionCompletion()
+            ->withNoArgs()
+            ->andReturn(['allCompleted' => $allSectionsCompleted]);
+
+        $this->assertSame($allSectionsCompleted, $this->sut->canBeSubmitted());
+    }
+
+    /**
+     * @dataProvider canBeSubmittedWithLicenceCheckProvider
+     */
+    public function testCanBeSubmittedWithLicenceCheck($licenceAllowed, $allSectionsCompleted, $result)
+    {
+        $status = m::mock(RefData::class);
+        $status->expects('getId')->withNoArgs()->andReturn(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects('isMultiStock')->twice()->withNoArgs()->andReturnFalse();
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $licence = m::mock(Licence::class);
+
+        $this->sut->setStatus($status);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+        $this->sut->setLicence($licence);
+        $this->sut->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $licence->expects()->canMakeIrhpApplication($irhpPermitStock, $this->sut)->andReturn($licenceAllowed);
+
+        $this->sut->expects()
+            ->getSectionCompletion()
+            ->times($licenceAllowed ? 1 : 0)
+            ->withNoArgs()
+            ->andReturn(['allCompleted' => $allSectionsCompleted]);
+
+        $this->assertSame($result, $this->sut->canBeSubmitted());
+    }
+
+    public function canBeSubmittedWithLicenceCheckProvider()
+    {
+        return [
+            [false, false, false],
+            [true, false, false],
+            [false, true, false],
+            [true, true, true]
         ];
     }
 
