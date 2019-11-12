@@ -926,6 +926,11 @@ class IrhpApplication extends AbstractIrhpApplication implements
             return false;
         }
 
+        //currently can't do this check for bilateral and multilateral
+        if (!$this->isMultiStock() && !$this->licence->canMakeIrhpApplication($this->getAssociatedStock(), $this)) {
+            return false;
+        }
+
         $sections = $this->getSectionCompletion();
 
         return $sections['allCompleted'];
