@@ -15,7 +15,7 @@ use Mockery as m;
  * Class TransportManagersTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class TransportManagersTest extends SubmissionSectionTest
+class TransportManagersTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers';
 

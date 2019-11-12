@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Class TmDetailsTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class TmDetailsTest extends SubmissionSectionTest
+class TmDetailsTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TmDetails';
 

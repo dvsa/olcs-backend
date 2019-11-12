@@ -28,17 +28,12 @@ class BrLogoTest extends \PHPUnit\Framework\TestCase
         $bookmark = new BrLogo();
         $bookmark->setData($data);
 
-        if (!function_exists('imagecreate')) {
-            // to test BrLogo bookmark we need to mock the image,
-            // to create the image we need to use imagecreate method (part of gdlib)
-            $this->markTestSkipped('imagecreate, part of gdlib, required for the test to run');
-        }
-
-        $mockImage = imagecreate(100, 100);
-        ob_start();
-        imagejpeg($mockImage);
-        $content =  ob_get_contents();
-        ob_end_clean();
+        // base64 representation of an empty, white 100x100 jpeg
+        $content = base64_decode(
+            '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDREN' .
+            'Dg8QEBEQCgwSExIQEw8QEBD/wAALCABkAGQBAREA/8QAFQABAQAAAAAAAAAAAAAAAAAAAAn/xAAUEAEAAAAAAAAAAAAAAAAA' .
+            'AAAA/9oACAEBAAA/AKpgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP/9k='
+        );
 
         $fileMock = $this->createPartialMock('\stdClass', ['getContent']);
         $fileMock->expects($this->exactly(!empty($image) ? 1 : 0))

@@ -9,7 +9,7 @@ use Mockery as m;
  * Class ApplicantsResponsesTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class ApplicantsResponsesTest extends SubmissionSectionTest
+class ApplicantsResponsesTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ApplicantsResponses';
 

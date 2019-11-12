@@ -71,6 +71,10 @@ class Task extends AbstractTask
     const TASK_DESCRIPTION_LICENCE_EXPIRED = 'Licence expired';
     const TASK_DESCRIPTION_SEND_OUTCOME_LETTER = 'Send outcome letter';
     const TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED = 'Short term application received';
+    const TASK_DESCRIPTION_ECMT_INTERNATIONAL_REMOVALS_RECEIVED = 'ECMT International Removals application received';
+    const TASK_DESCRIPTION_BILATERAL_RECEIVED = 'Bilateral application received';
+    const TASK_DESCRIPTION_MULTILATERAL_RECEIVED = 'Multilateral application received';
+    const TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED = 'Annual ECMT application received';
 
     const ACTION_DATE_FORMAT = 'Y-m-d';
 

@@ -416,4 +416,17 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
 
         return $ranges;
     }
+
+    /**
+     * Modify the supplied DateTime to reflect the expiry interval for the permit type associated with this
+     * application
+     *
+     * @param DateTime $dateTime
+     *
+     * @return DateTime
+     */
+    public function generateExpiryDate(DateTime $dateTime)
+    {
+        return $this->irhpApplication->getIrhpPermitType()->generateExpiryDate($dateTime);
+    }
 }

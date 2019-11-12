@@ -12,7 +12,7 @@ use Mockery as m;
  * Class MostSeriousInfringementTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class MostSeriousInfringementTest extends SubmissionSectionTest
+class MostSeriousInfringementTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\MostSeriousInfringement';
 
