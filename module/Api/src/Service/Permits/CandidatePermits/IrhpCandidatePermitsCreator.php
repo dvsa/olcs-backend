@@ -37,7 +37,7 @@ class IrhpCandidatePermitsCreator
      */
     public function createIfRequired(IrhpApplication $irhpApplication)
     {
-        $candidatePermitCreationMode = $irhpApplication->getAssociatedStock()->getCandidatePermitCreationMode();
+        $candidatePermitCreationMode = $irhpApplication->getCandidatePermitCreationMode();
 
         switch ($candidatePermitCreationMode) {
             case IrhpPermitStock::CANDIDATE_MODE_APSG:

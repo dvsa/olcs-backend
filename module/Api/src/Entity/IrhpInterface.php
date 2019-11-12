@@ -24,6 +24,7 @@ interface IrhpInterface
         self::STATUS_UNDER_CONSIDERATION,
         self::STATUS_AWAITING_FEE,
         self::STATUS_FEE_PAID,
+        self::STATUS_ISSUING,
     ];
 
     const SOURCE_SELFSERVE = 'app_source_selfserve';

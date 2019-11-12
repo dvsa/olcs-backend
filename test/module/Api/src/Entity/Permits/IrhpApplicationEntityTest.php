@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -387,8 +388,9 @@ class IrhpApplicationEntityTest extends EntityTester
             [IrhpInterface::STATUS_FEE_PAID, true],
             [IrhpInterface::STATUS_UNSUCCESSFUL, false],
             [IrhpInterface::STATUS_ISSUED, false],
-            [IrhpInterface::STATUS_ISSUING, false],
+            [IrhpInterface::STATUS_ISSUING, true],
             [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_EXPIRED, false],
         ];
     }
 
@@ -4511,17 +4513,16 @@ class IrhpApplicationEntityTest extends EntityTester
     /**
      * @dataProvider dpTestCanViewCandidatePermits
      */
-    public function testCanViewCandidatePermits($isAwaitingFee, $businessProcess, $expected)
+    public function testCanViewCandidatePermits($isAwaitingFee, $allocationMode, $expected)
     {
         $this->sut->shouldReceive('isAwaitingFee')
             ->once()
             ->withNoArgs()
             ->andReturn($isAwaitingFee);
 
-        $this->sut->shouldReceive('getBusinessProcess')
-            ->once()
+        $this->sut->shouldReceive('getAllocationMode')
             ->withNoArgs()
-            ->andReturn($businessProcess ? new RefData($businessProcess) : null);
+            ->andReturn($allocationMode);
 
         $this->assertSame($expected, $this->sut->canViewCandidatePermits());
     }
@@ -4529,14 +4530,14 @@ class IrhpApplicationEntityTest extends EntityTester
     public function dpTestCanViewCandidatePermits()
     {
         return [
-            [true, null, false],
-            [true, RefData::BUSINESS_PROCESS_APSG, true],
-            [true, RefData::BUSINESS_PROCESS_APGG, false],
-            [true, RefData::BUSINESS_PROCESS_APG, false],
-            [false, null, false],
-            [false, RefData::BUSINESS_PROCESS_APSG, false],
-            [false, RefData::BUSINESS_PROCESS_APGG, false],
-            [false, RefData::BUSINESS_PROCESS_APG, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
+            [true, IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, true],
+            [false, IrhpPermitStock::ALLOCATION_MODE_STANDARD, false],
+            [false, IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES, false],
+            [false, IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY, false],
+            [false, IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS, false],
         ];
     }
 
@@ -5118,13 +5119,166 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitStock->shouldReceive('getAllocationMode')
             ->andReturn($allocationMode);
 
-        $application = m::mock(Entity::class)->makePartial();
-        $application->shouldReceive('getAssociatedStock')
+        $this->sut->shouldReceive('getAssociatedStock')
             ->andReturn($irhpPermitStock);
 
         $this->assertEquals(
             $allocationMode,
-            $application->getAllocationMode()
+            $this->sut->getAllocationMode()
+        );
+    }
+
+    /**
+     * @dataProvider dpShouldAllocatePermitsOnSubmission
+     */
+    public function testShouldAllocatePermitsOnSubmission($businessProcessId, $expected)
+    {
+        $businessProcess = m::mock(RefData::class);
+        $businessProcess->shouldReceive('getId')
+            ->andReturn($businessProcessId);
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn($businessProcess);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->shouldAllocatePermitsOnSubmission()
+        );
+    }
+
+    public function dpShouldAllocatePermitsOnSubmission()
+    {
+        return [
+            [RefData::BUSINESS_PROCESS_APG, true],
+            [RefData::BUSINESS_PROCESS_APGG, false],
+            [RefData::BUSINESS_PROCESS_APSG, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpGetSubmissionTaskDescription
+     */
+    public function testGetSubmissionTaskDescription($irhpPermitTypeId, $expectedTaskDescription)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn($irhpPermitTypeId);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expectedTaskDescription,
+            $this->sut->getSubmissionTaskDescription()
+        );
+    }
+
+    public function dpGetSubmissionTaskDescription()
+    {
+        return [
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
+                Task::TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
+                Task::TASK_DESCRIPTION_ECMT_INTERNATIONAL_REMOVALS_RECEIVED
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL,
+                Task::TASK_DESCRIPTION_BILATERAL_RECEIVED
+            ],
+            [
+                IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
+                Task::TASK_DESCRIPTION_MULTILATERAL_RECEIVED
+            ],
+        ];
+    }
+
+    public function testGetSubmissionTaskDescriptionException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No submission task description defined for permit type foo');
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('getId')
+            ->andReturn('foo');
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+        $this->sut->getSubmissionTaskDescription();
+    }
+
+    /**
+     * @dataProvider dpGetSubmissionStatus
+     */
+    public function testGetSubmissionStatus($businessProcessId, $expectedStatus)
+    {
+        $businessProcess = m::mock(RefData::class);
+        $businessProcess->shouldReceive('getId')
+            ->andReturn($businessProcessId);
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn($businessProcess);
+
+        $this->assertEquals(
+            $expectedStatus,
+            $this->sut->getSubmissionStatus()
+        );
+    }
+
+    public function dpGetSubmissionStatus()
+    {
+        return [
+            [RefData::BUSINESS_PROCESS_APG, IrhpInterface::STATUS_ISSUING],
+            [RefData::BUSINESS_PROCESS_APGG, IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [RefData::BUSINESS_PROCESS_APSG, IrhpInterface::STATUS_UNDER_CONSIDERATION],
+        ];
+    }
+
+    public function testGetSubmissionStatusException()
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No submission status defined for business process foo');
+
+        $businessProcess = m::mock(RefData::class);
+        $businessProcess->shouldReceive('getId')
+            ->andReturn('foo');
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn($businessProcess);
+
+        $this->sut->getSubmissionStatus();
+    }
+
+    public function testGetCandidatePermitCreationModeMultiStock()
+    {
+        $this->sut->shouldReceive('isMultiStock')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->assertEquals(
+            IrhpPermitStock::CANDIDATE_MODE_NONE,
+            $this->sut->getCandidatePermitCreationMode()
+        );
+    }
+
+    public function testGetCandidatePermitCreationModeNotMultiStock()
+    {
+        $creationMode = 'CREATION_MODE';
+
+        $this->sut->shouldReceive('isMultiStock')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $this->sut->shouldReceive('getAssociatedStock->getCandidatePermitCreationMode')
+            ->withNoArgs()
+            ->andReturn($creationMode);
+
+        $this->assertEquals(
+            $creationMode,
+            $this->sut->getCandidatePermitCreationMode()
         );
     }
 }

@@ -34,24 +34,21 @@ class ImageBookmarkTest extends MockeryTestCase
 
     public function testGetImageOk()
     {
-        if (!function_exists('imagecreate')) {
-            static::markTestSkipped('imagecreate, part of gdlib, required for the test to run');
-        }
-
         $name = 'unit_Name';
 
         $expectWidth = 21;
         $expectHeight = 11;
 
-        $mockImage = imagecreate($expectWidth, $expectHeight);
-        ob_start();
-        imagejpeg($mockImage);
-        $expectContent =  ob_get_contents();
-        ob_end_clean();
+        // base64 representation of an empty, white 21x11 jpeg
+        $expectContent = base64_decode(
+            '/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8' .
+            'MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/wAALCAALABUBAREA/8QAFQABAQAAAAAAAAAAAAAAAAAAAA' .
+            'n/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAA/AKpgA//Z'
+        );
 
         $mockFile = m::mock()
             ->shouldReceive('getContent')
-            ->with()
+            ->withNoArgs()
             ->andReturn($expectContent)
             ->getMock();
 

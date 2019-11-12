@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Shaun Lizzio <shaun@valtech.co.uk>
  */
-class OutstandingApplicationsTest extends SubmissionSectionTest
+class OutstandingApplicationsTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\OutstandingApplications';
 

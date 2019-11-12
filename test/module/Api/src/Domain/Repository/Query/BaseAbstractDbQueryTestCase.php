@@ -17,9 +17,30 @@ use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
+abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
 {
-    abstract public function paramProvider();
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
+    /**
+     * @var Connection
+     */
+    protected $connection;
+
+    protected $sut;
+
+    protected $tableNameMap = [];
+
+    protected $columnNameMap = [];
+
+    private $metaMap = [];
+
+    protected $mockPidIdentityProvider;
+
+    protected $mockUserRepo;
+
     abstract protected function getSut();
     abstract protected function getExpectedQuery();
 
@@ -88,75 +109,5 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
         }
 
         return $this->metaMap[$entity];
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->mockPidIdentityProvider
-            ->shouldReceive('getMasqueradedAsSystemUser')
-            ->andReturn(false);
-
-        // add generic params
-        $expectedParams['currentUserId'] = 1;
-
-        $this->expectException(RuntimeException::class);
-
-        $this->connection->shouldReceive('executeQuery')
-            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
-            ->once()
-            ->andThrow(new \Exception());
-
-        $this->sut->execute($inputParams, $inputTypes);
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->mockPidIdentityProvider
-            ->shouldReceive('getMasqueradedAsSystemUser')
-            ->andReturn(false);
-
-        // add generic params
-        $expectedParams['currentUserId'] = 1;
-
-        $this->connection->shouldReceive('executeQuery')
-            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
-            ->once()
-            ->andReturn('result');
-
-        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
-    }
-
-    /**
-     * @dataProvider paramProvider
-     */
-    public function testExecuteAsSystemUser($inputParams, $inputTypes, $expectedParams, $expectedTypes)
-    {
-        $this->mockPidIdentityProvider
-            ->shouldReceive('getMasqueradedAsSystemUser')
-            ->andReturn(true);
-
-        $user = m::mock(UserEntity::class)->makePartial();
-        $user->setId(PidIdentityProvider::SYSTEM_USER);
-
-        $this->mockUserRepo
-            ->shouldReceive('fetchById')
-            ->with(PidIdentityProvider::SYSTEM_USER)
-            ->andReturn($user);
-
-        // add generic params
-        $expectedParams['currentUserId'] = PidIdentityProvider::SYSTEM_USER;
-
-        $this->connection->shouldReceive('executeQuery')
-            ->with($this->getExpectedQuery(), $expectedParams, $expectedTypes)
-            ->once()
-            ->andReturn('result');
-
-        $this->assertEquals('result', $this->sut->execute($inputParams, $inputTypes));
     }
 }

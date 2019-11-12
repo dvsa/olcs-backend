@@ -1521,6 +1521,32 @@ class EcmtPermitApplicationEntityTest extends EntityTester
         ];
     }
 
+    /**
+     * @dataProvider dpTestIsActive
+     */
+    public function testIsActive($status, $expected)
+    {
+        $entity = $this->createApplication($status);
+        $this->assertSame($expected, $entity->isActive());
+    }
+
+    public function dpTestIsActive()
+    {
+        return [
+            [IrhpInterface::STATUS_CANCELLED, false],
+            [IrhpInterface::STATUS_NOT_YET_SUBMITTED, true],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION, true],
+            [IrhpInterface::STATUS_WITHDRAWN, false],
+            [IrhpInterface::STATUS_AWAITING_FEE, true],
+            [IrhpInterface::STATUS_FEE_PAID, true],
+            [IrhpInterface::STATUS_UNSUCCESSFUL, false],
+            [IrhpInterface::STATUS_ISSUED, false],
+            [IrhpInterface::STATUS_ISSUING, true],
+            [IrhpInterface::STATUS_VALID, false],
+            [IrhpInterface::STATUS_EXPIRED, false],
+        ];
+    }
+
     public function testCalculateTotalPermitsRequired()
     {
         $entity = $this->createApplicationWithCompletedDeclaration();

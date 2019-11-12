@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 /**
  * @covers \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities
  */
-class TmResponsibilitiesTest extends SubmissionSectionTest
+class TmResponsibilitiesTest extends AbstractSubmissionSectionTest
 {
     protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\TmResponsibilities::class;
 

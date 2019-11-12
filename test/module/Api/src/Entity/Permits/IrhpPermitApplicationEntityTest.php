@@ -5,20 +5,19 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
-use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as Entity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Mockery as m;
 use RuntimeException;
@@ -187,7 +186,7 @@ class IrhpPermitApplicationEntityTest extends EntityTester
     public function testCountValidPermits($statusId, $count)
     {
         $irhpPermitRange = m::mock(IrhpPermitRange::class);
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication = m::mock(Entity::class);
 
         $irhpCandidate = m::mock(IrhpCandidatePermit::class);
         $irhpCandidate->shouldReceive('getIrhpPermitRange')
@@ -747,6 +746,25 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         $this->assertEquals(
             $expectedResponse,
             $entity->getRangesWithCandidatePermitCounts()
+        );
+    }
+
+    public function testGenerateExpiryDate()
+    {
+        $issueDate = m::mock(DateTime::class);
+        $expiryDate = m::mock(DateTime::class);
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->generateExpiryDate')
+            ->with($issueDate)
+            ->once()
+            ->andReturn($expiryDate);
+
+        $this->sut->setIrhpApplication($irhpApplication);
+
+        $this->assertSame(
+            $expiryDate,
+            $this->sut->generateExpiryDate($issueDate)
         );
     }
 }
