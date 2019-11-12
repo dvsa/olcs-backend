@@ -8,10 +8,12 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Publication\PendingList;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Transfer\Query\Publication\PendingList as Qry;
 use Mockery as m;
+use ZfcRbac\Identity\IdentityInterface;
 
 /**
  * PendingList Test
@@ -24,7 +26,12 @@ class PendingListTest extends QueryHandlerTestCase
     {
         $this->sut = new PendingList();
         $this->mockRepo('Publication', PublicationRepo::class);
+        $mockAuthService = m::mock(\ZfcRbac\Service\AuthorizationService::class);
 
+        $this->mockedSmServices = [
+            \ZfcRbac\Service\AuthorizationService::class => $mockAuthService
+        ];
+        $this->sut->setAuthService($mockAuthService);
         parent::setUp();
     }
 
@@ -40,9 +47,20 @@ class PendingListTest extends QueryHandlerTestCase
         $mockResult = m::mock();
         $mockResult->shouldReceive('serialize')->once()->andReturn($serializedResult);
 
+        $mockUser = m::mock(User::class)->shouldReceive('getOsType')
+            ->once()->andReturn('osType')->getMock();
+        $mockId = m::mock(IdentityInterface::class)->shouldReceive('getUser')
+            ->once()->andReturn($mockUser);
+        $this->mockedSmServices[\ZfcRbac\Service\AuthorizationService::class]
+            ->shouldReceive('getIdentity')
+            ->atLeast()->once()
+            ->andReturn(
+                $mockId->getMock()
+            )->getMock();
+
         $queryResult = [
             'results' => [0 =>$mockResult],
-            'count' => $count
+            'count' => $count,
         ];
 
         $this->repoMap['Publication']->shouldReceive('fetchPendingList')
