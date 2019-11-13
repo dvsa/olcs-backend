@@ -68,8 +68,10 @@ class PendingListTest extends QueryHandlerTestCase
         $this->repoMap['Publication']->shouldReceive('fetchPendingList')
             ->andReturn($queryResult);
 
+
         $result = $this->sut->handleQuery($query);
         $this->assertEquals($result['count'], $count);
         $this->assertEquals($result['result'], [$serializedResult]);
+        $this->assertEquals($result['userOsType'], 'osType');
     }
 }
