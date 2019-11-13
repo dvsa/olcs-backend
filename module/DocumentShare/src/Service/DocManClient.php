@@ -8,10 +8,7 @@ use Zend\Http\Client as HttpClient;
 use Zend\Http\Request;
 use Zend\Http\Response;
 
-/**
- * Class Client
- */
-class Client
+class DocManClient implements DocumentStoreInterface
 {
     const ERR_RESP_FAIL = 'Document store returns invalid response';
 
@@ -42,8 +39,8 @@ class Client
         $workspace
     ) {
         $this->httpClient = $httpClient;
-        $this->baseUri = trim($baseUri);
-        $this->workspace = trim($workspace);
+        $this->baseUri = $baseUri;
+        $this->workspace = $workspace;
     }
 
     /**
@@ -123,7 +120,7 @@ class Client
      *
      * @return File|null
      */
-    public function read($path)
+    public function read($path): ?File
     {
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
@@ -152,12 +149,9 @@ class Client
             }
 
             $data = (array)json_decode(file_get_contents($tmpFileName));
-
         } catch (\Exception $e) {
             unset($file);
-
             throw $e;
-
         } finally {
             if (is_file($tmpFileName)) {
                 unlink($tmpFileName);
@@ -251,7 +245,7 @@ class Client
      *
      * @return string
      */
-    protected function getContentUri($path, $prefix = false)
+    protected function getContentUri($path, $prefix = false): string
     {
         return $this->getUri($path, $prefix, 'content');
     }
@@ -265,7 +259,7 @@ class Client
      *
      * @return string
      */
-    protected function getUri($path, $prefix, $folder)
+    protected function getUri($path, $prefix, $folder): string
     {
         if ($prefix) {
             $folder = 'version/' . $folder;

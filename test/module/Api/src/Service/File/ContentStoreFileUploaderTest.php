@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\File\Exception;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
-use Dvsa\Olcs\DocumentShare\Service\Client as ContentStoreClient;
+use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use OlcsTest\Bootstrap;
@@ -52,9 +52,9 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
         $this->mockContentStoreCli->shouldReceive('remove')
             ->once()
             ->with(self::IDENTIFIER)
-            ->andReturn('EXPECT');
+            ->andReturn(true);
 
-        static::assertEquals('EXPECT', $this->sut->remove(self::IDENTIFIER));
+        static::assertTrue($this->sut->remove(self::IDENTIFIER));
     }
 
     public function testUpload()
