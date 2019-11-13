@@ -3,15 +3,19 @@
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Service\Document\Document;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
+use Dvsa\Olcs\DocumentShare\Data\object\File;
+use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject as MockObj;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document
  */
-class DocumentTest extends \PHPUnit\Framework\TestCase
+class DocumentTest extends TestCase
 {
+    protected $docManClient;
+
     /** @var  Document */
     private $sut;
 
@@ -22,6 +26,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
     public function testGetBookmarkQueriesForNoBookmarks()
     {
+        $this->setServiceManager();
         $file = new File();
         $file->setContent('');
 
@@ -171,33 +176,40 @@ TXT;
 
         $this->sut->setServiceLocator($serviceLocator);
 
-        $this->sut->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             []
+        );
+        $this->assertEquals(
+            $content,
+            $replaced
         );
     }
 
     public function testPopulateBookmarksWithDynamicBookmarksImplementingFileStoreAwareInterface()
     {
         $content = "Bookmark 1: {\*\bkmkstart TC_SIGNATURE} {\*\bkmkend TC_SIGNATURE}.";
-
+        $this->setServiceManager();
         $file = new File();
         $file->setContent($content);
 
-        $helperMock = $this->createMock(\stdClass::class);
-
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface|MockObj $serviceLocator */
-        $serviceLocator = $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
-        $serviceLocator->expects($this->once())
-            ->method('get')
-            ->with('ContentStore')
-            ->willReturn($helperMock);
-
-        $this->sut->setServiceLocator($serviceLocator);
-
-        $this->sut->populateBookmarks(
+        $replaced = $this->sut->populateBookmarks(
             $file,
             []
         );
+        $this->assertEquals(
+            $content,
+            $replaced
+        );
+    }
+
+    private function setServiceManager(): void
+    {
+        $this->docManClient = m::mock(DocManClient::class);
+        $sm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+            ->shouldReceive('get')->with('ContentStore')->andReturn(
+                $this->docManClient
+            )->getMock();
+        $this->sut->setServiceLocator($sm);
     }
 }
