@@ -232,6 +232,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
                 self::STATUS_SCORING_SUCCESSFUL,
                 self::STATUS_ACCEPT_PREREQUISITE_FAIL,
                 self::STATUS_ACCEPT_UNEXPECTED_FAIL,
+                self::STATUS_ACCEPT_SUCCESSFUL,
             ]
         );
     }

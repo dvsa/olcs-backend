@@ -62,6 +62,10 @@ class CheckAcceptScoringPrerequisites extends AbstractQueryHandler implements To
             RefData::EMISSIONS_CATEGORY_EURO5_REF => 'Euro 5'
         ];
 
+        if (!$this->scoringQueryProxy->hasInScopeUnderConsiderationApplications($stockId)) {
+            return $this->generateResponse(false, 'No under consideration applications currently in scope');
+        }
+
         foreach ($emissionsCategories as $emissionsCategoryId => $emissionsCategoryCaption) {
             $permitsRequired = $this->scoringQueryProxy->getSuccessfulCountInScope(
                 $stockId,
