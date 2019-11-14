@@ -46,6 +46,20 @@ class ScoringQueryProxy
     }
 
     /**
+     * Whether the specified stock has applications that are both in scope and under consideration
+     *
+     * @param int $stockId
+     *
+     * @return bool
+     */
+    public function hasInScopeUnderConsiderationApplications($stockId)
+    {
+        $applicationIds = $this->fetchInScopeUnderConsiderationApplicationIds($stockId);
+
+        return count($applicationIds) > 0;
+    }
+
+    /**
      * Removes the existing scope from the specified stock id
      *
      * @param int $stockId

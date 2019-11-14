@@ -18,7 +18,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ScoringQueryProxyTest extends MockeryTestCase
 {
-    private $stockId;
+    private $stockId = 47;
 
     private $queryResult;
 
@@ -34,8 +34,6 @@ class ScoringQueryProxyTest extends MockeryTestCase
 
     public function setUp()
     {
-        $this->stockId = 47;
-
         $this->queryResult = [
             'item1' => 'value1',
             'item2' => 'value2',
@@ -102,6 +100,41 @@ class ScoringQueryProxyTest extends MockeryTestCase
             $this->queryResult,
             $this->scoringQueryProxy->fetchInScopeUnderConsiderationApplicationIds($this->stockId)
         );
+    }
+
+    /**
+     * @dataProvider dpHasInScopeUnderConsiderationApplications
+     */
+    public function testHasInScopeUnderConsiderationApplications($applicationIds, $expected)
+    {
+        $scoringQueryProxy = m::mock(ScoringQueryProxy::class)->makePartial();
+
+        $scoringQueryProxy->shouldReceive('fetchInScopeUnderConsiderationApplicationIds')
+            ->with($this->stockId)
+            ->andReturn($applicationIds);
+
+        $this->assertEquals(
+            $expected,
+            $scoringQueryProxy->hasInScopeUnderConsiderationApplications($this->stockId)
+        );
+    }
+
+    public function dpHasInScopeUnderConsiderationApplications()
+    {
+        return [
+            [
+                [],
+                false
+            ],
+            [
+                [5],
+                true
+            ],
+            [
+                [5, 10],
+                true
+            ],
+        ];
     }
 
     /**
