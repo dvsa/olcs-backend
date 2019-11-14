@@ -154,6 +154,14 @@ class AcceptScoring extends AbstractCommandHandler implements ToggleRequiredInte
             sprintf('processing %s with id %d:', $application->getCamelCaseEntityName(), $application->getId())
         );
 
+        $applicationAwardedPermits = $application->getSuccessLevel() != ApplicationAcceptConsts::SUCCESS_LEVEL_NONE;
+        $applicationChecked = $application->getChecked();
+
+        if ($applicationAwardedPermits && !$applicationChecked) {
+            $this->result->addMessage('- application has been awarded permits and has not been checked, skipping');
+            return;
+        }
+
         $outcomeNotificationType = $application->getOutcomeNotificationType();
         switch ($outcomeNotificationType) {
             case ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL:
