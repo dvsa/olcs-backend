@@ -2,9 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -176,5 +177,105 @@ class IrhpCandidatePermitEntityTest extends EntityTester
 
         $assignedEmissionsCategory = m::mock(RefData::class);
         $candidatePermit->markAsSuccessful($assignedEmissionsCategory);
+    }
+
+    /**
+     * @dataProvider canDeleteProvider
+     */
+    public function testCanDelete($isUc, $expected)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+
+        $irhpPermitApplication
+            ->shouldReceive('getIrhpApplication->isUnderConsideration')
+            ->andReturn($isUc);
+
+        $emissionsCategory = m::mock(RefData::class);
+
+        $entity = Entity::createNew(
+            $irhpPermitApplication,
+            $emissionsCategory
+        );
+        $this->assertEquals($expected, $entity->canDelete());
+    }
+
+    public function canDeleteProvider()
+    {
+        return [
+            [true, true],
+            [false, false]
+        ];
+    }
+
+    public function testUpdateIrhpPermitRange()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+
+        $irhpPermitApplication
+            ->shouldReceive('getIrhpApplication->isUnderConsideration')
+            ->andReturn(true);
+
+        $emissionsCategory = m::mock(RefData::class);
+        $newRange = m::mock(IrhpPermitRange::class);
+
+        $entity = Entity::createNew(
+            $irhpPermitApplication,
+            $emissionsCategory
+        );
+
+        $entity->updateIrhpPermitRange($newRange);
+        $this->assertSame($newRange, $entity->getIrhpPermitRange());
+    }
+
+    /**
+     * @expectedException \Dvsa\Olcs\Api\Domain\Exception\ForbiddenException
+     */
+    public function testUpdateIrhpPermitRangeWrongStatus()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+
+        $irhpPermitApplication
+            ->shouldReceive('getIrhpApplication->isUnderConsideration')
+            ->andReturn(false);
+
+        $emissionsCategory = m::mock(RefData::class);
+        $newRange = m::mock(IrhpPermitRange::class);
+
+        $entity = Entity::createNew(
+            $irhpPermitApplication,
+            $emissionsCategory
+        );
+
+        $entity->updateIrhpPermitRange($newRange);
+    }
+
+    /**
+     * @dataProvider isApplicationUnderConsiderationProvider
+     */
+    public function testIsApplicationUnderConsideration($uc, $expected)
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplicationEntity::class);
+
+        $irhpPermitApplication
+            ->shouldReceive('getIrhpApplication->isUnderConsideration')
+            ->andReturn($uc);
+
+        $emissionsCategory = m::mock(RefData::class);
+
+        $entity = Entity::createNew(
+            $irhpPermitApplication,
+            $emissionsCategory
+        );
+
+        $entity->isApplicationUnderConsideration();
+        $this->assertSame($expected, $entity->isApplicationUnderConsideration());
+    }
+
+    public function isApplicationUnderConsiderationProvider()
+    {
+        return [
+            [false, false],
+            [true, true]
+        ];
     }
 }

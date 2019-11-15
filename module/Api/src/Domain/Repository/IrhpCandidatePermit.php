@@ -36,6 +36,11 @@ class IrhpCandidatePermit extends AbstractRepository
                 ->setParameter('status', $query->getStatus());
             $qb->andWhere($qb->expr()->eq('ipa.ecmtPermitApplication', ':ecmtId'))
                 ->setParameter('ecmtId', $query->getId());
+        } elseif ($query instanceof GetListByIrhpApplication && $query->getIsPreGrant()) {
+            $qb->andWhere($qb->expr()->in('ia.status', ':status'))
+                ->setParameter('status', IrhpInterface::PRE_GRANT_STATUSES);
+            $qb->andWhere($qb->expr()->eq('ipa.irhpApplication', ':irhpApplicationId'))
+                ->setParameter('irhpApplicationId', $query->getIrhpApplication());
         } elseif ($query instanceof GetListByIrhpApplication) {
             $qb->andWhere($qb->expr()->eq($this->alias . '.successful', ':successful'))
                 ->setParameter('successful', true);
