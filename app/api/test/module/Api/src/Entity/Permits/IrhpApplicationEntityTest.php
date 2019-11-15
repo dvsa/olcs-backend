@@ -85,6 +85,10 @@ class IrhpApplicationEntityTest extends EntityTester
             ->once()
             ->withNoArgs()
             ->andReturn(false)
+            ->shouldReceive('canBeRevivedFromWithdrawn')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(false)
             ->shouldReceive('hasOutstandingFees')
             ->once()
             ->withNoArgs()
@@ -182,6 +186,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canBeGranted' => false,
                 'canBeDeclined' => false,
                 'canBeSubmitted' => false,
+                'canBeRevivedFromWithdrawn' => false,
                 'hasOutstandingFees' => false,
                 'outstandingFeeAmount' => 0,
                 'sectionCompletion' => [],
@@ -5451,5 +5456,151 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn($subcategoryId);
 
         return $task;
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromWithdrawn
+     */
+    public function testCanBeRevivedFromWithdrawn($withdrawReason, $inScope, $businessProcessId, $expected)
+    {
+        $withdrawReasonRefData = m::mock(RefData::class);
+        $withdrawReasonRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($withdrawReason);
+
+        $this->sut->setWithdrawReason($withdrawReasonRefData);
+
+        $this->sut->shouldReceive('isWithdrawn')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->sut->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($inScope);
+
+        $businessProcessRefData = m::mock(RefData::class);
+        $businessProcessRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn($businessProcessRefData);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->canBeRevivedFromWithdrawn()
+        );
+    }
+
+    public function dpCanBeRevivedFromWithdrawn()
+    {
+        return [
+            [
+                WithdrawableInterface::WITHDRAWN_REASON_UNPAID,
+                true,
+                RefData::BUSINESS_PROCESS_APSG,
+                true,
+            ],
+            [
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                true,
+                RefData::BUSINESS_PROCESS_APSG,
+                true,
+            ],
+            [
+                WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS,
+                true,
+                RefData::BUSINESS_PROCESS_APSG,
+                false,
+            ],
+            [
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                false,
+                RefData::BUSINESS_PROCESS_APSG,
+                false,
+            ],
+            [
+                WithdrawableInterface::WITHDRAWN_REASON_DECLINED,
+                true,
+                RefData::BUSINESS_PROCESS_APGG,
+                false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromWithdrawnNotWithdrawn
+     */
+    public function testCanBeRevivedFromWithdrawnNotWithdrawn($inScope, $businessProcessId)
+    {
+        $this->sut->setWithdrawReason(null);
+
+        $this->sut->shouldReceive('isWithdrawn')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $this->sut->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($inScope);
+
+        $businessProcessRefData = m::mock(RefData::class);
+        $businessProcessRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($businessProcessId);
+
+        $this->sut->shouldReceive('getBusinessProcess')
+            ->withNoArgs()
+            ->andReturn($businessProcessRefData);
+
+        $this->assertFalse(
+            $this->sut->canBeRevivedFromWithdrawn()
+        );
+    }
+
+    public function dpCanBeRevivedFromWithdrawnNotWithdrawn()
+    {
+        return [
+            [true, RefData::BUSINESS_PROCESS_APGG],
+            [false, RefData::BUSINESS_PROCESS_APSG],
+            [true, RefData::BUSINESS_PROCESS_APGG],
+            [false, RefData::BUSINESS_PROCESS_APSG],
+        ];
+    }
+
+    public function testReviveFromWithdrawn()
+    {
+        $withdrawnStatus = m::mock(RefData::class);
+        $withdrawnDate = m::mock(DateTime::class);
+
+        $underConsiderationStatus = m::mock(RefData::class);
+
+        $this->sut->setStatus($withdrawnStatus);
+        $this->sut->setWithdrawReason(WithdrawableInterface::WITHDRAWN_REASON_DECLINED);
+        $this->sut->setWithdrawnDate = $withdrawnDate;
+
+        $this->sut->shouldReceive('canBeRevivedFromWithdrawn')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $this->sut->reviveFromWithdrawn($underConsiderationStatus);
+
+        $this->assertSame($underConsiderationStatus, $this->sut->getStatus());
+        $this->assertNull($this->sut->getWithdrawReason());
+        $this->assertNull($this->sut->getWithdrawnDate());
+    }
+
+    public function testReviveFromWithdrawnException()
+    {
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to revive this application from a withdrawn state');
+
+        $this->sut->shouldReceive('canBeRevivedFromWithdrawn')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $this->sut->reviveFromWithdrawn(
+            m::mock(RefData::class)
+        );
     }
 }
