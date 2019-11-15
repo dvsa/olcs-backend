@@ -244,6 +244,10 @@ class User extends AbstractRepository
             );
         }
 
+        if (isset($data['osType'])) {
+                      $data['osType'] = $this->getRefdataReference($data['osType']);
+                   }
+
         return $data;
     }
 
