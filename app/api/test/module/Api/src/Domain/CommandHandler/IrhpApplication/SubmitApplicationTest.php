@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
@@ -35,6 +36,10 @@ class SubmitApplicationTest extends CommandHandlerTestCase
     {
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->sut = new SubmitApplication();
+
+        $this->mockedSmServices = [
+            'PermitsCheckableCreateTaskCommandGenerator' => m::mock(CreateTaskCommandGenerator::class),
+        ];
 
         $this->irhpApplication = m::mock(IrhpApplication::class);
         $this->irhpApplication->shouldReceive('getId')
@@ -65,6 +70,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             'irhpApplication' => self::IRHP_APPLICATION_ID,
             'licence' => self::LICENCE_ID,
         ];
+
+        $expectedTask = CreateTask::create($this->expectedTaskParams);
+
+        $this->mockedSmServices['PermitsCheckableCreateTaskCommandGenerator']->shouldReceive('generate')
+            ->with($this->irhpApplication)
+            ->andReturn($expectedTask);
 
         $this->expectedMessages = [
             self::TASK_CREATION_MESSAGE,
