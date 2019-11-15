@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\EcmtSubmitApplication;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -18,8 +19,11 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
     public function setUp()
     {
         $this->mockRepo('EcmtPermitApplication', EcmtPermitApplication::class);
-
         $this->sut = new EcmtSubmitApplication();
+
+        $this->mockedSmServices = [
+            'PermitsCheckableCreateTaskCommandGenerator' => m::mock(CreateTaskCommandGenerator::class),
+        ];
 
         parent::setUp();
     }
@@ -38,14 +42,6 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
         $ecmtPermitApplicationId = 129;
         $licenceId = 705;
         $taskCreationMessage = 'Task created';
-
-        $expectedTaskParams = [
-            'category' => Task::CATEGORY_PERMITS,
-            'subCategory' => Task::SUBCATEGORY_APPLICATION,
-            'description' => Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED,
-            'ecmtPermitApplication' => $ecmtPermitApplicationId,
-            'licence' => $licenceId,
-        ];
 
         $ecmtPermitApplication = m::mock(EcmtPermitApplication::class);
         $ecmtPermitApplication->shouldReceive('getId')
@@ -69,6 +65,20 @@ class EcmtSubmitApplicationTest extends CommandHandlerTestCase
             ->once()
             ->globally()
             ->ordered();
+
+        $expectedTaskParams = [
+            'category' => Task::CATEGORY_PERMITS,
+            'subCategory' => Task::SUBCATEGORY_APPLICATION,
+            'description' => Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED,
+            'ecmtPermitApplication' => $ecmtPermitApplicationId,
+            'licence' => $licenceId,
+        ];
+
+        $expectedTask = CreateTask::create($expectedTaskParams);
+
+        $this->mockedSmServices['PermitsCheckableCreateTaskCommandGenerator']->shouldReceive('generate')
+            ->with($ecmtPermitApplication)
+            ->andReturn($expectedTask);
 
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getId')

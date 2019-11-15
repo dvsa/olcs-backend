@@ -29,6 +29,7 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\SectionableInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\Traits\FetchPermitAppSubmissionTaskTrait;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
@@ -36,6 +37,7 @@ use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckableApplicationInterface;
 use RuntimeException;
 
 /**
@@ -61,9 +63,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     CancelableInterface,
     WithdrawableInterface,
     ContextProviderInterface,
-    ApplicationAcceptScoringInterface
+    ApplicationAcceptScoringInterface,
+    CheckableApplicationInterface
 {
-    use SectionTrait, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait;
+    use SectionTrait, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait, FetchPermitAppSubmissionTaskTrait;
 
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
@@ -204,6 +207,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canUpdateCountries' => $this->canUpdateCountries(),
             'questionAnswerData' => $this->getQuestionAnswerData(),
             'businessProcess' => $this->getBusinessProcess(),
+            'requiresPreAllocationCheck' => $this->requiresPreAllocationCheck(),
         ];
     }
 
@@ -1934,6 +1938,16 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
+     * Update the checked value for this application
+     *
+     * @param bool $checked
+     */
+    public function updateChecked($checked)
+    {
+        $this->checked = $checked;
+    }
+
+    /**
      * Get the description associated with the task to be created on application submission
      *
      * @return string
@@ -1998,5 +2012,15 @@ class IrhpApplication extends AbstractIrhpApplication implements
         }
 
         return $this->getAssociatedStock()->getCandidatePermitCreationMode();
+    }
+   
+    /**
+     * Whether this application needs to be manually checked by a case worker before permits are allocated
+     *
+     * @return bool
+     */
+    public function requiresPreAllocationCheck()
+    {
+        return $this->irhpPermitType->isEcmtShortTerm();
     }
 }

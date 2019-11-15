@@ -163,7 +163,11 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication",
+     *     fetch="LAZY",
+     *     inversedBy="tasks"
+     * )
      * @ORM\JoinColumn(name="ecmt_permit_application_id", referencedColumnName="id", nullable=true)
      */
     protected $ecmtPermitApplication;
@@ -194,7 +198,11 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      *
      * @var \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Permits\IrhpApplication",
+     *     fetch="LAZY",
+     *     inversedBy="tasks"
+     * )
      * @ORM\JoinColumn(name="irhp_application_id", referencedColumnName="id", nullable=true)
      */
     protected $irhpApplication;
