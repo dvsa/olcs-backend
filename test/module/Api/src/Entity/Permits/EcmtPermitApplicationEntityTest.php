@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtSuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtUnsuccessful;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEcmtPartSuccessful;
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
@@ -1806,5 +1807,114 @@ class EcmtPermitApplicationEntityTest extends EntityTester
             ->andReturn($subcategoryId);
 
         return $task;
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromWithdrawn
+     */
+    public function testCanBeRevivedFromWithdrawn($withdrawReason, $inScope, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $withdrawReasonRefData = m::mock(RefData::class);
+        $withdrawReasonRefData->shouldReceive('getId')
+            ->withNoArgs()
+            ->andReturn($withdrawReason);
+
+        $application->setWithdrawReason($withdrawReasonRefData);
+
+        $application->shouldReceive('isWithdrawn')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $application->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($inScope);
+
+        $this->assertEquals(
+            $expected,
+            $application->canBeRevivedFromWithdrawn()
+        );
+    }
+
+    public function dpCanBeRevivedFromWithdrawn()
+    {
+        return [
+            [WithdrawableInterface::WITHDRAWN_REASON_UNPAID, true, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, true, true],
+            [WithdrawableInterface::WITHDRAWN_REASON_NOTSUCCESS, true, false],
+            [WithdrawableInterface::WITHDRAWN_REASON_DECLINED, false, false],
+        ];
+    }
+
+    /**
+     * @dataProvider dpCanBeRevivedFromWithdrawnNotWithdrawn
+     */
+    public function testCanBeRevivedFromWithdrawnNotWithdrawn($inScope, $expected)
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $application->setWithdrawReason(null);
+
+        $application->shouldReceive('isWithdrawn')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $application->shouldReceive('getInScope')
+            ->withNoArgs()
+            ->andReturn($inScope);
+
+        $this->assertEquals(
+            $expected,
+            $application->canBeRevivedFromWithdrawn()
+        );
+    }
+
+    public function dpCanBeRevivedFromWithdrawnNotWithdrawn()
+    {
+        return [
+            [true, false],
+            [false, false],
+        ];
+    }
+
+    public function testReviveFromWithdrawn()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $withdrawnStatus = m::mock(RefData::class);
+        $withdrawnDate = m::mock(DateTime::class);
+
+        $underConsiderationStatus = m::mock(RefData::class);
+
+        $application->setStatus($withdrawnStatus);
+        $application->setWithdrawReason(WithdrawableInterface::WITHDRAWN_REASON_DECLINED);
+        $application->setWithdrawnDate = $withdrawnDate;
+
+        $application->shouldReceive('canBeRevivedFromWithdrawn')
+            ->withNoArgs()
+            ->andReturn(true);
+
+        $application->reviveFromWithdrawn($underConsiderationStatus);
+
+        $this->assertSame($underConsiderationStatus, $application->getStatus());
+        $this->assertNull($application->getWithdrawReason());
+        $this->assertNull($application->getWithdrawnDate());
+    }
+
+    public function testReviveFromWithdrawnException()
+    {
+        $application = m::mock(Entity::class)->makePartial();
+
+        $this->expectException(ForbiddenException::class);
+        $this->expectExceptionMessage('Unable to revive this application from a withdrawn state');
+
+        $application->shouldReceive('canBeRevivedFromWithdrawn')
+            ->withNoArgs()
+            ->andReturn(false);
+
+        $application->reviveFromWithdrawn(
+            m::mock(RefData::class)
+        );
     }
 }

@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
+use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromWithdrawnTrait;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Traits\FetchPermitAppSubmissionTaskTrait;
@@ -59,7 +60,8 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     use TieredProductReference,
         CandidatePermitCreationTrait,
         ApplicationAcceptScoringTrait,
-        FetchPermitAppSubmissionTaskTrait;
+        FetchPermitAppSubmissionTaskTrait,
+        PermitAppReviveFromWithdrawnTrait;
 
     const NOTIFICATION_TYPE_EMAIL = 'notification_type_email';
     const NOTIFICATION_TYPE_MANUAL = 'notification_type_manual';
@@ -389,6 +391,7 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
             'applicationRef' => $this->getApplicationRef(),
             'canBeCancelled' => $this->canBeCancelled(),
             'canBeSubmitted' => $this->canBeSubmitted(),
+            'canBeRevivedFromWithdrawn' => $this->canBeRevivedFromWithdrawn(),
             'canBeWithdrawn' => $this->canBeWithdrawn(),
             'canBeUpdated' => $this->canBeUpdated(),
             'canBeAccepted' => $this->canBeAccepted(),
