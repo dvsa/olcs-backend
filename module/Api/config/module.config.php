@@ -72,7 +72,8 @@ return [
                 ApiSrv\Permits\ApplyRanges\ForCpProviderFactory::class,
             'PermitsCandidatePermitsApggCandidatePermitFactory' =>
                 ApiSrv\Permits\CandidatePermits\ApggCandidatePermitFactory::class,
-            
+
+            'PermitsCheckableCreateTaskCommandFactory' => ApiSrv\Permits\Checkable\CreateTaskCommandFactory::class,
         ],
         'factories' => [
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
@@ -311,6 +312,11 @@ return [
                 => ApiSrv\Permits\CandidatePermits\ApggEmissionsCatCandidatePermitsCreatorFactory::class,
             'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
                 => ApiSrv\Permits\CandidatePermits\IrhpCandidatePermitsCreatorFactory::class,
+
+            'PermitsCheckableCheckedValueUpdater'
+                => ApiSrv\Permits\Checkable\CheckedValueUpdaterFactory::class,
+            'PermitsCheckableCreateTaskCommandGenerator'
+                => ApiSrv\Permits\Checkable\CreateTaskCommandGeneratorFactory::class,
         ],
     ],
     'view_manager' => [

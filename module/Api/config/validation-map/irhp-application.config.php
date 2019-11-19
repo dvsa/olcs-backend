@@ -21,4 +21,6 @@ return [
     QueryHandler\IrhpApplication\GetAllByLicence::class => CanAccessLicenceWithLicence::class,
     QueryHandler\IrhpApplication\GetAllByOrganisation::class => CanAccessOrganisationWithOrganisation::class,
     QueryHandler\IrhpApplication\ApplicationPathGroupList::class => IsSystemAdmin::class,
+    QueryHandler\IrhpApplication\RangesByIrhpApplication::class => IsInternalUser::class,
+    QueryHandler\IrhpApplication\GetGrantability::class => IsInternalUser::class,
 ];

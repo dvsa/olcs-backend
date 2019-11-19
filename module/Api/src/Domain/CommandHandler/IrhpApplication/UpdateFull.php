@@ -13,11 +13,13 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as Cmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Create Irhp Permit Application
@@ -28,6 +30,25 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
 
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
+
+    /** @var CheckedValueUpdater */
+    private $checkedValueUpdater;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->checkedValueUpdater = $mainServiceLocator->get('PermitsCheckableCheckedValueUpdater');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -80,6 +101,8 @@ final class UpdateFull extends AbstractCommandHandler implements ToggleRequiredI
             $irhpApplication->makeDeclaration();
             $irhpApplicationRepo->save($irhpApplication);
         }
+
+        $this->checkedValueUpdater->updateIfRequired($irhpApplication, $command->getChecked());
 
         $irhpApplication->updateDateReceived($command->getDateReceived());
         $irhpApplicationRepo->save($irhpApplication);

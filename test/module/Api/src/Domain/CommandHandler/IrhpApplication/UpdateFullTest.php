@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateFull as CreateHand
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
@@ -23,6 +24,10 @@ class UpdateFullTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
+
+        $this->mockedSmServices = [
+            'PermitsCheckableCheckedValueUpdater' => m::mock(CheckedValueUpdater::class),
+        ];
 
         parent::setUp();
     }
@@ -51,7 +56,8 @@ class UpdateFullTest extends CommandHandlerTestCase
                 'NL' => [
                     2020 => 2
                 ],
-            ]
+            ],
+            'checked' => 1
         ];
 
         $command = CreateCmd::create($cmdData);
@@ -67,6 +73,10 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('getId')
             ->times(3)
             ->andReturn(4);
+
+        $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
+            ->with($irhpApplicationEntity, $cmdData['checked'])
+            ->once();
 
         $irhpApplicationEntity->shouldReceive('updateDateReceived')
             ->once()
@@ -143,7 +153,8 @@ class UpdateFullTest extends CommandHandlerTestCase
             'permitsRequired' => [
                 '2020' => 10,
                 '2021' => 12
-            ]
+            ],
+            'checked' => 1
         ];
 
         $command = CreateCmd::create($cmdData);
@@ -159,6 +170,10 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('getId')
             ->times(2)
             ->andReturn(44);
+
+        $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
+            ->with($irhpApplicationEntity, $cmdData['checked'])
+            ->once();
 
         $irhpApplicationEntity->shouldReceive('updateDateReceived')
             ->once()
@@ -182,8 +197,6 @@ class UpdateFullTest extends CommandHandlerTestCase
             ->with($irhpApplicationEntity)
             ->once()
             ->andReturn($irhpApplicationEntity);
-
-
 
         $this->repoMap['IrhpApplication']
             ->shouldReceive('refresh')
@@ -226,7 +239,8 @@ class UpdateFullTest extends CommandHandlerTestCase
             'licence' => $licenceId,
             'dateReceived' => '2090-01-03',
             'declaration' => 0,
-            'postData' => ['key' => 'val']
+            'postData' => ['key' => 'val'],
+            'checked' => 1
         ];
 
         $command = CreateCmd::create($cmdData);
@@ -242,6 +256,10 @@ class UpdateFullTest extends CommandHandlerTestCase
         $irhpApplicationEntity->shouldReceive('getId')
             ->times(2)
             ->andReturn(34);
+
+        $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
+            ->with($irhpApplicationEntity, $cmdData['checked'])
+            ->once();
 
         $irhpApplicationEntity->shouldReceive('updateDateReceived')
             ->once()

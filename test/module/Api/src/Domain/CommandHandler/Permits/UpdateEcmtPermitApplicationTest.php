@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
 use Dvsa\Olcs\Transfer\Command\Permits\UpdateEcmtPermitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Doctrine\ORM\Query;
@@ -20,10 +21,8 @@ use Mockery as m;
 
 class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
 {
-
     /** @var Licence */
     private $licenceReference7;
-
 
     public function setUp()
     {
@@ -32,6 +31,11 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('Sectors', Repository\Licence::class);
         $this->mockRepo('Country', Repository\Country::class);
         $this->mockRepo('Licence', Repository\Country::class);
+
+        $this->mockedSmServices = [
+            'PermitsCheckableCheckedValueUpdater' => m::mock(CheckedValueUpdater::class),
+        ];
+
         parent::setUp();
     }
 
@@ -58,7 +62,8 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
             'requiredEuro6' => 3,
             'cabotage' => 1,
             'sectors' => 7,
-            'countryIds' => ['AT', 'GR']
+            'countryIds' => ['AT', 'GR'],
+            'checked' => 1
         ];
 
         $command = Cmd::create($data);
@@ -87,9 +92,11 @@ class UpdateEcmtPermitApplicationTest extends CommandHandlerTestCase
             ->with(7)
             ->andReturn($sectors);
 
+        $this->mockedSmServices['PermitsCheckableCheckedValueUpdater']->shouldReceive('updateIfRequired')
+            ->with($application, $data['checked'])
+            ->once();
 
         $result = $this->sut->handleCommand($command);
-
 
         $arrayResult = $result->toArray();
 
