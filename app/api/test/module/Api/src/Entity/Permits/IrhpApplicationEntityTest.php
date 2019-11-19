@@ -49,7 +49,7 @@ class IrhpApplicationEntityTest extends EntityTester
     protected $entityClass = Entity::class;
 
     /**
-     * @var Entity
+     * @var Entity|m\MockInterface
      */
     protected $sut;
 
@@ -168,7 +168,11 @@ class IrhpApplicationEntityTest extends EntityTester
             ->shouldReceive('getBusinessProcess')
             ->once()
             ->withNoArgs()
-            ->andReturn($businessProcess);
+            ->andReturn($businessProcess)
+            ->shouldReceive('requiresPreAllocationCheck')
+            ->once()
+            ->withNoArgs()
+            ->andReturn(true);
 
         $this->assertSame(
             [
@@ -202,6 +206,7 @@ class IrhpApplicationEntityTest extends EntityTester
                 'canUpdateCountries' => true,
                 'questionAnswerData' => [],
                 'businessProcess' => $businessProcess,
+                'requiresPreAllocationCheck' => true,
             ],
             $this->sut->getCalculatedBundleValues()
         );
@@ -911,36 +916,96 @@ class IrhpApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @dataProvider dpTestCanBeSubmitted
+     * @dataProvider dpCanBeSubmittedStatusIncorrect
      */
-    public function testCanBeSubmitted($isNotYetSubmitted, $allSectionsCompleted, $expected)
+    public function testCanBeSubmittedStatusIncorrect(string $statusId)
     {
-        $this->sut->shouldReceive('isNotYetSubmitted')
-            ->andReturn($isNotYetSubmitted)
-            ->shouldReceive('getSectionCompletion')
-            ->andReturn(['allCompleted' => $allSectionsCompleted]);
-
-        $this->assertSame($expected, $this->sut->canBeSubmitted());
+        $status = m::mock(RefData::class);
+        $status->expects('getId')->withNoArgs()->andReturn($statusId);
+        $entity = $this->createNewEntity(null, $status);
+        self::assertFalse($entity->canBeSubmitted());
     }
 
-    public function dpTestCanBeSubmitted()
+    public function dpCanBeSubmittedStatusIncorrect()
     {
         return [
-            'already active application' => [
-                'isNotYetSubmitted' => false,
-                'allSectionsCompleted' => false,
-                'expected' => false,
-            ],
-            'some incomplete sections' => [
-                'isNotYetSubmitted' => true,
-                'allSectionsCompleted' => false,
-                'expected' => false,
-            ],
-            'can be submitted' => [
-                'isNotYetSubmitted' => true,
-                'allSectionsCompleted' => true,
-                'expected' => true,
-            ],
+            [IrhpInterface::STATUS_CANCELLED],
+            [IrhpInterface::STATUS_UNDER_CONSIDERATION],
+            [IrhpInterface::STATUS_WITHDRAWN],
+            [IrhpInterface::STATUS_AWAITING_FEE],
+            [IrhpInterface::STATUS_FEE_PAID],
+            [IrhpInterface::STATUS_UNSUCCESSFUL],
+            [IrhpInterface::STATUS_ISSUED],
+            [IrhpInterface::STATUS_ISSUING],
+            [IrhpInterface::STATUS_VALID],
+            [IrhpInterface::STATUS_EXPIRED],
+        ];
+    }
+
+    /**
+     * @dataProvider trueOrFalseProvider
+     */
+    public function testCanBeSubmittedMultiStock($allSectionsCompleted)
+    {
+        $status = m::mock(RefData::class);
+        $status->expects()->getId()->withNoArgs()->andReturn(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects()->isMultiStock()->withNoArgs()->andReturnTrue();
+
+        $this->sut->setStatus($status);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->sut->expects()
+            ->getSectionCompletion()
+            ->withNoArgs()
+            ->andReturn(['allCompleted' => $allSectionsCompleted]);
+
+        $this->assertSame($allSectionsCompleted, $this->sut->canBeSubmitted());
+    }
+
+    /**
+     * @dataProvider canBeSubmittedWithLicenceCheckProvider
+     */
+    public function testCanBeSubmittedWithLicenceCheck($licenceAllowed, $allSectionsCompleted, $result)
+    {
+        $status = m::mock(RefData::class);
+        $status->expects('getId')->withNoArgs()->andReturn(IrhpInterface::STATUS_NOT_YET_SUBMITTED);
+
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->expects('isMultiStock')->twice()->withNoArgs()->andReturnFalse();
+
+        $irhpPermitStock = m::mock(IrhpPermitStock::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->expects('getIrhpPermitWindow->getIrhpPermitStock')
+            ->withNoArgs()
+            ->andReturn($irhpPermitStock);
+
+        $licence = m::mock(Licence::class);
+
+        $this->sut->setStatus($status);
+        $this->sut->setIrhpPermitType($irhpPermitType);
+        $this->sut->setLicence($licence);
+        $this->sut->setIrhpPermitApplications(new ArrayCollection([$irhpPermitApplication]));
+
+        $licence->expects()->canMakeIrhpApplication($irhpPermitStock, $this->sut)->andReturn($licenceAllowed);
+
+        $this->sut->expects()
+            ->getSectionCompletion()
+            ->times($licenceAllowed ? 1 : 0)
+            ->withNoArgs()
+            ->andReturn(['allCompleted' => $allSectionsCompleted]);
+
+        $this->assertSame($result, $this->sut->canBeSubmitted());
+    }
+
+    public function canBeSubmittedWithLicenceCheckProvider()
+    {
+        return [
+            [false, false, false],
+            [true, false, false],
+            [false, true, false],
+            [true, true, true]
         ];
     }
 
@@ -5147,6 +5212,23 @@ class IrhpApplicationEntityTest extends EntityTester
         );
     }
 
+    /**
+     * @dataProvider dpUpdateChecked
+     */
+    public function testUpdateChecked($checked)
+    {
+        $this->sut->updateChecked($checked);
+        $this->assertEquals($checked, $this->sut->getChecked());
+    }
+
+    public function dpUpdateChecked()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
     public function dpShouldAllocatePermitsOnSubmission()
     {
         return [
@@ -5280,5 +5362,94 @@ class IrhpApplicationEntityTest extends EntityTester
             $creationMode,
             $this->sut->getCandidatePermitCreationMode()
         );
+    }
+
+    /**
+     * @dataProvider dpRequiresPreAllocationCheck
+     */
+    public function testRequiresPreAllocationCheck($isEcmtShortTerm, $expected)
+    {
+        $irhpPermitType = m::mock(IrhpPermitType::class);
+        $irhpPermitType->shouldReceive('isEcmtShortTerm')
+            ->withNoArgs()
+            ->andReturn($isEcmtShortTerm);
+
+        $this->sut->setIrhpPermitType($irhpPermitType);
+
+        $this->assertEquals(
+            $expected,
+            $this->sut->requiresPreAllocationCheck()
+        );
+    }
+
+    public function dpRequiresPreAllocationCheck()
+    {
+        return [
+            [true, true],
+            [false, false],
+        ];
+    }
+
+    public function testFetchOpenSubmissionTask()
+    {
+        $this->sut->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task6 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $this->sut->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5, $task6])
+        );
+
+        $this->assertSame(
+            $task5,
+            $this->sut->fetchOpenSubmissionTask()
+        );
+    }
+
+    public function testFetchOpenSubmissionTaskNull()
+    {
+        $this->sut->shouldReceive('getSubmissionTaskDescription')
+            ->withNoArgs()
+            ->andReturn('submission task');
+
+        $task1 = $this->createMockTask('description 1', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task2 = $this->createMockTask('submission task', 'Y', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+        $task3 = $this->createMockTask('submission task', 'N', Task::CATEGORY_BUS, Task::SUBCATEGORY_APPLICATION);
+        $task4 = $this->createMockTask('submission task', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_FEE_DUE);
+        $task5 = $this->createMockTask('description 2', 'N', Task::CATEGORY_PERMITS, Task::SUBCATEGORY_APPLICATION);
+
+        $this->sut->setTasks(
+            new ArrayCollection([$task1, $task2, $task3, $task4, $task5])
+        );
+
+        $this->assertNull(
+            $this->sut->fetchOpenSubmissionTask()
+        );
+    }
+
+    private function createMockTask($description, $isClosed, $categoryId, $subcategoryId)
+    {
+        $task = m::mock(Task::class);
+        $task->shouldReceive('getDescription')
+            ->withNoArgs()
+            ->andReturn($description);
+        $task->shouldReceive('getIsClosed')
+            ->withNoArgs()
+            ->andReturn($isClosed);
+        $task->shouldReceive('getCategory->getId')
+            ->withNoArgs()
+            ->andReturn($categoryId);
+        $task->shouldReceive('getSubcategory->getId')
+            ->withNoArgs()
+            ->andReturn($subcategoryId);
+
+        return $task;
     }
 }

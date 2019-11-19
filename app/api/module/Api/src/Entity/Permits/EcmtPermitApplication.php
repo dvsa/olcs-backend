@@ -26,8 +26,11 @@ use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Entity\Traits\FetchPermitAppSubmissionTaskTrait;
 use Dvsa\Olcs\Api\Entity\Traits\TieredProductReference;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckableApplicationInterface;
 
 /**
  * EcmtPermitApplication Entity
@@ -50,9 +53,13 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     WithdrawableInterface,
     LicenceProviderInterface,
     ApplicationAcceptScoringInterface,
-    IrhpInterface
+    IrhpInterface,
+    CheckableApplicationInterface
 {
-    use TieredProductReference, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait;
+    use TieredProductReference,
+        CandidatePermitCreationTrait,
+        ApplicationAcceptScoringTrait,
+        FetchPermitAppSubmissionTaskTrait;
 
     const NOTIFICATION_TYPE_EMAIL = 'notification_type_email';
     const NOTIFICATION_TYPE_MANUAL = 'notification_type_manual';
@@ -1217,5 +1224,35 @@ class EcmtPermitApplication extends AbstractEcmtPermitApplication implements
     public function getIssueFeeProductReference()
     {
         return $this->getProductReferenceForTier();
+    }
+
+    /**
+     * Update the checked value for this application
+     *
+     * @param bool $checked
+     */
+    public function updateChecked($checked)
+    {
+        $this->checked = $checked;
+    }
+
+    /**
+     * Get the description associated with the task to be created on application submission
+     *
+     * @return string
+     */
+    public function getSubmissionTaskDescription()
+    {
+        return Task::TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED;
+    }
+
+    /**
+     * Whether this application needs to be manually checked by a case worker before permits are allocated
+     *
+     * @return bool
+     */
+    public function requiresPreAllocationCheck()
+    {
+        return true;
     }
 }

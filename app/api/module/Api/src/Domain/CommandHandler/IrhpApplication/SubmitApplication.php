@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\Task\Task;
+use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitApplicationCmd;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Command Handler to action the submission of an IrhpApplication
@@ -27,6 +27,25 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
 
     protected $repoServiceName = 'IrhpApplication';
+
+    /** @var CreateTaskCommandGenerator */
+    private $createTaskCommandGenerator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->createTaskCommandGenerator = $mainServiceLocator->get('PermitsCheckableCreateTaskCommandGenerator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * Handle command
@@ -57,7 +76,7 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
             );
         }
 
-        $sideEffects[] = $this->getCreateTaskCommand($irhpApplication);
+        $sideEffects[] = $this->createTaskCommandGenerator->generate($irhpApplication);
 
         $sideEffects[] = $this->createQueue(
             $irhpApplicationId,
@@ -73,25 +92,5 @@ final class SubmitApplication extends AbstractCommandHandler implements ToggleRe
         $this->result->addId('irhpApplication', $irhpApplicationId);
 
         return $this->result;
-    }
-
-    /**
-     * Get task creation command for an application
-     *
-     * @param IrhpApplication $irhpApplication
-     *
-     * @return CreateTask
-     */
-    private function getCreateTaskCommand(IrhpApplication $irhpApplication)
-    {
-        return CreateTask::create(
-            [
-                'category' => Task::CATEGORY_PERMITS,
-                'subCategory' => Task::SUBCATEGORY_APPLICATION,
-                'description' => $irhpApplication->getSubmissionTaskDescription(),
-                'irhpApplication' => $irhpApplication->getId(),
-                'licence' => $irhpApplication->getLicence()->getId()
-            ]
-        );
     }
 }
