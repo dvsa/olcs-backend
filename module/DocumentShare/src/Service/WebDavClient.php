@@ -99,19 +99,20 @@ class WebDavClient implements DocumentStoreInterface
      * @param string $path File Path on storage
      * @param File   $file File
      *
-     * @return mixed
+     * @return WebDavResponse
      * @throws \Exception
      */
     public function write($path, File $file)
     {
+        $response = new WebDavResponse();
         try {
             $fh = fopen($file->getResource(), 'rb');
-
-            return $this->filesystem->writeStream($path, $fh);
+            $response->setResponse($this->filesystem->writeStream($path, $fh));
         } catch (FileExistsException $e) {
-            return false;
+            $response->setResponse(false);
         } finally {
             @fclose($fh);
         }
+        return $response;
     }
 }
