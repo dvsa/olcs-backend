@@ -32,7 +32,6 @@ class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterfac
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-
           $this->contentStoreClient = $serviceLocator->get('ContentStore');
           return $this;
     }
