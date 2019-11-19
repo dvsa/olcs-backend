@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Permits;
 
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as Entity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
@@ -601,5 +601,81 @@ class IrhpPermitEntityTest extends EntityTester
             [Entity::STATUS_TERMINATED, false],
             [Entity::STATUS_EXPIRED, true]
         ];
+    }
+
+    public function testCreateReplacement()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $issueDate = m::mock(DateTime::class);
+        $status = m::mock(RefData::class);
+        $permitNumber = 473;
+        $expiryDate = new DateTime('2200-10-10 10:10:10');
+
+        $oldEntity = Entity::createForIrhpApplication(
+            $irhpPermitApplication,
+            $irhpPermitRange,
+            $issueDate,
+            $status,
+            $permitNumber,
+            $expiryDate
+        );
+
+        $newIrhpPermitRange = m::mock(IrhpPermitRange::class);
+
+        $replacedEntity = Entity::createReplacement(
+            $oldEntity,
+            $newIrhpPermitRange,
+            $status,
+            785
+        );
+
+        $this->assertInstanceOf($this->entityClass, $replacedEntity);
+        $this->assertSame($oldEntity->getIrhpPermitApplication(), $replacedEntity->getIrhpPermitApplication());
+        $this->assertSame($newIrhpPermitRange, $replacedEntity->getIrhpPermitRange());
+        $this->assertSame($oldEntity->getExpiryDate(), $replacedEntity->getExpiryDate());
+        $this->assertSame($oldEntity->getStatus(), $replacedEntity->getStatus());
+        $this->assertEquals(785, $replacedEntity->getPermitNumber());
+    }
+
+    public function testCreateReplacementNoExpiry()
+    {
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
+        $issueDate = m::mock(DateTime::class);
+        $status = m::mock(RefData::class);
+        $permitNumber = 473;
+        $stockValidTo = new DateTime('2200-10-10 10:10:10');
+
+        $irhpPermitRange
+            ->shouldReceive('getIrhpPermitStock->getValidTo')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($stockValidTo);
+
+        $oldEntity = Entity::createForIrhpApplication(
+            $irhpPermitApplication,
+            $irhpPermitRange,
+            $issueDate,
+            $status,
+            $permitNumber,
+            null
+        );
+
+        $newIrhpPermitRange = m::mock(IrhpPermitRange::class);
+
+        $replacedEntity = Entity::createReplacement(
+            $oldEntity,
+            $newIrhpPermitRange,
+            $status,
+            555
+        );
+
+        $this->assertInstanceOf($this->entityClass, $replacedEntity);
+        $this->assertSame($oldEntity->getIrhpPermitApplication(), $replacedEntity->getIrhpPermitApplication());
+        $this->assertSame($newIrhpPermitRange, $replacedEntity->getIrhpPermitRange());
+        $this->assertSame($stockValidTo, $replacedEntity->getExpiryDate());
+        $this->assertSame($oldEntity->getStatus(), $replacedEntity->getStatus());
+        $this->assertEquals(555, $replacedEntity->getPermitNumber());
     }
 }
