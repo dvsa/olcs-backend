@@ -107,7 +107,7 @@ class WebDavClientTest extends MockeryTestCase
 
         $actual = $this->sut->write($expectPath, $mockFile);
 
-        static::assertEquals(true, $actual);
+        static::assertEquals(true, $actual->isSuccess());
     }
 
     public function testWriteFail()
@@ -129,7 +129,7 @@ class WebDavClientTest extends MockeryTestCase
 
         $actual = $this->sut->write($expectPath, $mockFile);
 
-        static::assertEquals(false, $actual);
+        static::assertEquals(false, $actual->isSuccess());
     }
 
     public function testWriteFileAlreadyExists()
@@ -153,7 +153,7 @@ class WebDavClientTest extends MockeryTestCase
 
         $actual = $this->sut->write($expectPath, $mockFile);
 
-        static::assertEquals(false, $actual);
+        static::assertEquals(false, $actual->isSuccess());
     }
 
     public function testRemoveSuccess()
