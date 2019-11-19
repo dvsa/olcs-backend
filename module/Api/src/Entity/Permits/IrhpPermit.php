@@ -93,13 +93,18 @@ class IrhpPermit extends AbstractIrhpPermit
         RefData $status,
         $permitNumber
     ) {
+        $expiryDate = $oldPermit
+            ->getExpiryDate()
+            ? $oldPermit->getExpiryDate()
+            : $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+
         $irhpPermit = new self();
         $irhpPermit->replaces = $oldPermit;
         $irhpPermit->irhpCandidatePermit = $oldPermit->getIrhpCandidatePermit();
         $irhpPermit->irhpPermitApplication = $oldPermit->getIrhpPermitApplication();
         $irhpPermit->irhpPermitRange = $irhpPermitRange;
         $irhpPermit->issueDate = new DateTime();
-        $irhpPermit->expiryDate = $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+        $irhpPermit->expiryDate = $expiryDate;
         $irhpPermit->status = $status;
         $irhpPermit->permitNumber = $permitNumber;
 
