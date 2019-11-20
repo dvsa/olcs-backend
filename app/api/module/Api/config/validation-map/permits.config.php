@@ -59,6 +59,7 @@ return [
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Withdraw::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Grant::class => IsInternalUser::class,
+    CommandHandler\IrhpApplication\ReviveFromWithdrawn::class => IsInternalUser::class,
     CommandHandler\IrhpApplication\UpdateCountries::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\UpdateMultipleNoOfPermits::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\SubmitApplicationStep::class => Permits\CanEditIrhpApplicationWithId::class,
@@ -97,6 +98,7 @@ return [
     CommandHandler\Permits\PrintPermits::class => IsInternalAdmin::class,
     CommandHandler\Permits\ProceedToStatus::class => IsSideEffect::class,
     CommandHandler\Permits\ExpireEcmtPermitApplication::class => IsSideEffect::class,
+    CommandHandler\Permits\ReviveEcmtPermitApplicationFromWithdrawn::class => IsInternalUser::class,
 
     CommandHandler\Permits\QueueRunScoring::class => IsSystemAdmin::class,
     CommandHandler\Permits\QueueAcceptScoring::class => IsSystemAdmin::class,

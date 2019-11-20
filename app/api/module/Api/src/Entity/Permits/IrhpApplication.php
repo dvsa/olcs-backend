@@ -31,6 +31,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Traits\FetchPermitAppSubmissionTaskTrait;
 use Dvsa\Olcs\Api\Entity\Traits\SectionTrait;
+use Dvsa\Olcs\Api\Entity\Traits\PermitAppReviveFromWithdrawnTrait;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptConsts;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringInterface;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\ApplicationAcceptScoringTrait;
@@ -67,6 +68,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     CheckableApplicationInterface
 {
     use SectionTrait, CandidatePermitCreationTrait, ApplicationAcceptScoringTrait, FetchPermitAppSubmissionTaskTrait;
+
+    use PermitAppReviveFromWithdrawnTrait {
+        canBeRevivedFromWithdrawn as baseCanBeRevivedFromWithdrawn;
+    }
 
     const ERR_CANT_CANCEL = 'Unable to cancel this application';
     const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
@@ -183,6 +188,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             'canBeGranted' => $this->canBeGranted(),
             'canBeDeclined' => $this->canBeDeclined(),
             'canBeSubmitted' => $this->canBeSubmitted(),
+            'canBeRevivedFromWithdrawn' => $this->canBeRevivedFromWithdrawn(),
             'hasOutstandingFees' => $this->hasOutstandingFees(),
             'outstandingFeeAmount' => $this->getOutstandingFeeAmount(),
             'sectionCompletion' => $this->getSectionCompletion(),
@@ -2022,5 +2028,18 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function requiresPreAllocationCheck()
     {
         return $this->irhpPermitType->isEcmtShortTerm();
+    }
+
+    /**
+     * Whether the permit application can be revived from a withdrawn state
+     *
+     * @return bool
+     */
+    public function canBeRevivedFromWithdrawn()
+    {
+        $canBeRevivedFromWithdrawn = $this->baseCanBeRevivedFromWithdrawn();
+        $isApsg = $this->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG;
+
+        return $canBeRevivedFromWithdrawn && $isApsg;
     }
 }
