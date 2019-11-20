@@ -367,6 +367,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
                     return $this->getStandardQaAnswer($question);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_SECTORS:
                     return $this->getEcmtShortTermSectorsAnswer($isSnapshot);
+                case Question::FORM_CONTROL_COMMON_CERTIFICATES:
+                    return $this->getStandardQaAnswer($question);
             }
 
             throw new RuntimeException(
