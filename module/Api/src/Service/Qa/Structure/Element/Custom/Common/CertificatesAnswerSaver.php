@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\BaseAnswerSaver;
 
-class AnnualTripsAbroadAnswerSaver implements AnswerSaverInterface
+class CertificatesAnswerSaver implements AnswerSaverInterface
 {
     /** @var BaseAnswerSaver */
     private $baseAnswerSaver;
@@ -18,7 +18,7 @@ class AnnualTripsAbroadAnswerSaver implements AnswerSaverInterface
      *
      * @param BaseAnswerSaver $baseAnswerSaver
      *
-     * @return AnnualTripsAbroadAnswerSaver
+     * @return CertificatesAnswerSaver
      */
     public function __construct(BaseAnswerSaver $baseAnswerSaver)
     {
@@ -37,7 +37,7 @@ class AnnualTripsAbroadAnswerSaver implements AnswerSaverInterface
             $applicationStepEntity,
             $irhpApplicationEntity,
             $postData,
-            Question::QUESTION_TYPE_STRING
+            Question::QUESTION_TYPE_BOOLEAN
         );
     }
 }

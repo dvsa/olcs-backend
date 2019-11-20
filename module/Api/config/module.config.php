@@ -64,6 +64,7 @@ return [
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
             'QaOptionFactory' => ApiSrv\Qa\Structure\Element\Options\OptionFactory::class,
+
             'PermitsScoringSuccessfulCandidatePermitsLogger' =>
                 ApiSrv\Permits\Scoring\SuccessfulCandidatePermitsLogger::class,
             'PermitsScoringIrhpCandidatePermitFactory' =>
@@ -172,6 +173,7 @@ return [
             'TemplateStrategySelectingViewRenderer' => ApiSrv\Template\StrategySelectingViewRendererFactory::class,
 
             'QaGenericAnswerSaver' => ApiSrv\Qa\Structure\Element\GenericAnswerSaverFactory::class,
+            'QaBaseAnswerSaver' => ApiSrv\Qa\Structure\Element\BaseAnswerSaverFactory::class,
             'QaGenericAnswerClearer' => ApiSrv\Qa\Structure\Element\GenericAnswerClearerFactory::class,
             'QaCheckboxAnswerSaver' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSaverFactory::class,
             'QaGenericAnswerProvider' => ApiSrv\Qa\AnswerSaver\GenericAnswerProviderFactory::class,
@@ -198,6 +200,8 @@ return [
                 => ApiSrv\Qa\Strategy\EcmtShortTermAnnualTripsAbroadFormControlStrategyFactory::class,
             'QaEcmtShortTermSectorsFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermSectorsFormControlStrategyFactory::class,
+            'QaCommonCertificatesFormControlStrategy'
+                => ApiSrv\Qa\Strategy\CommonCertificatesFormControlStrategyFactory::class,
 
             'QaApplicationStepGenerator' => ApiSrv\Qa\Structure\ApplicationStepGeneratorFactory::class,
             'QaCheckboxElementGenerator' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxGeneratorFactory::class,
@@ -207,6 +211,8 @@ return [
             'QaEcmtShortTermNoOfPermitsQuestionTextGenerator' => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\NoOfPermitsGeneratorFactory::class,
             'QaEcmtShortTermRestrictedCountriesQuestionTextGenerator'
                 => ApiSrv\Qa\Structure\QuestionText\Custom\EcmtShortTerm\RestrictedCountriesGeneratorFactory::class,
+            'QaCommonCertificatesQuestionTextGenerator'
+                => ApiSrv\Qa\Structure\QuestionText\Custom\Common\CertificatesGeneratorFactory::class,
             'QaSelfservePageGenerator' => ApiSrv\Qa\Structure\SelfservePageGeneratorFactory::class,
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
@@ -265,6 +271,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerSaverFactory::class,
             'QaEcmtShortTermSectorsAnswerClearer' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerClearerFactory::class,
+            'QaCommonCertificatesAnswerSaver' =>
+                ApiSrv\Qa\Structure\Element\Custom\Common\CertificatesAnswerSaverFactory::class,
 
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,
