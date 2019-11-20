@@ -40,11 +40,9 @@ class WebDavResponse extends Response
      */
     public function setStatusCode($code)
     {
-        if($code) {
+        if ($code) {
             parent::setStatusCode(200);
-        }
-        else
-        {
+        } else {
             parent::setStatusCode(500);
         }
     }
