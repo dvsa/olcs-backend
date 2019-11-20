@@ -50,6 +50,10 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             ->with($stockId, RefData::EMISSIONS_CATEGORY_EURO5_REF)
             ->andReturn($euro5PermitCount);
 
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('hasInScopeUnderConsiderationApplications')
+            ->with($stockId)
+            ->andReturn(true);
+
         $this->mockedSmServices['PermitsScoringScoringQueryProxy']->shouldReceive('getSuccessfulCountInScope')
             ->with($stockId, RefData::EMISSIONS_CATEGORY_EURO5_REF)
             ->andReturn($euro5SuccessfulCount);
@@ -94,5 +98,27 @@ class CheckAcceptScoringPrerequisitesTest extends QueryHandlerTestCase
             [20, 7, 0, 15, 8, 9, false, 'Insufficient Euro 6 permits available - 7 available, 9 required'],
             [20, 7, 0, 15, 4, 9, true, 'Prerequisites passed'],
         ];
+    }
+
+    public function testHandleQueryNoInScopeUnderConsiderationApplications()
+    {
+        $stockId = 37;
+
+        $this->mockedSmServices['PermitsScoringScoringQueryProxy']
+            ->shouldReceive('hasInScopeUnderConsiderationApplications')
+            ->with($stockId)
+            ->andReturn(false);
+
+        $result = $this->sut->handleQuery(
+            CheckAcceptScoringPrerequisitesQry::create(['id' => $stockId])
+        );
+
+        $this->assertEquals(
+            [
+                'result' => false,
+                'message' => 'No under consideration applications currently in scope'
+            ],
+            $result
+        );
     }
 }
