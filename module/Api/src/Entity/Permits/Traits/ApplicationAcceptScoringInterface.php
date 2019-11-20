@@ -80,4 +80,11 @@ interface ApplicationAcceptScoringInterface
      * @return string
      */
     public function getIssueFeeProductReference();
+
+    /**
+     * Whether the application has been manually checked by an ICW
+     *
+     * @return bool
+     */
+    public function getChecked();
 }
