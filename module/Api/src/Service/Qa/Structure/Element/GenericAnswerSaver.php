@@ -2,31 +2,24 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
-use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 
 class GenericAnswerSaver implements AnswerSaverInterface
 {
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
+    /** @var BaseAnswerSaver */
+    private $baseAnswerSaver;
 
     /**
      * Create service instance
      *
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param GenericAnswerFetcher $genericAnswerFetcher
+     * @param BaseAnswerSaver $baseAnswerSaver
      *
      * @return GenericAnswerSaver
      */
-    public function __construct(GenericAnswerWriter $genericAnswerWriter, GenericAnswerFetcher $genericAnswerFetcher)
+    public function __construct(BaseAnswerSaver $baseAnswerSaver)
     {
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
+        $this->baseAnswerSaver = $baseAnswerSaver;
     }
 
     /**
@@ -34,10 +27,6 @@ class GenericAnswerSaver implements AnswerSaverInterface
      */
     public function save(ApplicationStep $applicationStep, IrhpApplication $irhpApplication, array $postData)
     {
-        $this->genericAnswerWriter->write(
-            $applicationStep,
-            $irhpApplication,
-            $this->genericAnswerFetcher->fetch($applicationStep, $postData)
-        );
+        $this->baseAnswerSaver->save($applicationStep, $irhpApplication, $postData);
     }
 }

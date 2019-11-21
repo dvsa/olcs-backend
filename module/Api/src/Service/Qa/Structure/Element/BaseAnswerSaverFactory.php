@@ -1,23 +1,24 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-class AnnualTripsAbroadAnswerSaverFactory implements FactoryInterface
+class BaseAnswerSaverFactory implements FactoryInterface
 {
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      *
-     * @return AnnualTripsAbroadAnswerSaver
+     * @return BaseAnswerSaver
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new AnnualTripsAbroadAnswerSaver(
-            $serviceLocator->get('QaBaseAnswerSaver')
+        return new BaseAnswerSaver(
+            $serviceLocator->get('QaGenericAnswerWriter'),
+            $serviceLocator->get('QaGenericAnswerFetcher')
         );
     }
 }
