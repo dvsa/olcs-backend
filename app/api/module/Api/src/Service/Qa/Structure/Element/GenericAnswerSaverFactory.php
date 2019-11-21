@@ -17,8 +17,7 @@ class GenericAnswerSaverFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         return new GenericAnswerSaver(
-            $serviceLocator->get('QaGenericAnswerWriter'),
-            $serviceLocator->get('QaGenericAnswerFetcher')
+            $serviceLocator->get('QaBaseAnswerSaver')
         );
     }
 }

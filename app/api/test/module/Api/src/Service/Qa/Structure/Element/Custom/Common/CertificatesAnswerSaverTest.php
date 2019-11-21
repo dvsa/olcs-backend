@@ -1,21 +1,21 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm;
+namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Common;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\CertificatesAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\BaseAnswerSaver;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
- * AnnualTripsAbroadAnswerSaverTest
+ * CertificatesAnswerSaverTest
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class AnnualTripsAbroadAnswerSaverTest extends MockeryTestCase
+class CertificatesAnswerSaverTest extends MockeryTestCase
 {
     public function testSave()
     {
@@ -30,10 +30,10 @@ class AnnualTripsAbroadAnswerSaverTest extends MockeryTestCase
 
         $baseAnswerSaver = m::mock(BaseAnswerSaver::class);
         $baseAnswerSaver->shouldReceive('save')
-            ->with($applicationStep, $irhpApplication, $postData, QuestionEntity::QUESTION_TYPE_STRING)
+            ->with($applicationStep, $irhpApplication, $postData, QuestionEntity::QUESTION_TYPE_BOOLEAN)
             ->once();
 
-        $annualTripsAbroadAnswerSaver = new AnnualTripsAbroadAnswerSaver($baseAnswerSaver);
-        $annualTripsAbroadAnswerSaver->save($applicationStep, $irhpApplication, $postData);
+        $certificatesAnswerSaver = new CertificatesAnswerSaver($baseAnswerSaver);
+        $certificatesAnswerSaver->save($applicationStep, $irhpApplication, $postData);
     }
 }
