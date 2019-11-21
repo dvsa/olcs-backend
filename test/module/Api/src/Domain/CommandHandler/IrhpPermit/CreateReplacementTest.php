@@ -75,8 +75,6 @@ class CreateReplacementTest extends CommandHandlerTestCase
             ->with($cmdData['irhpPermitRange'])
             ->andReturn($newRange);
 
-
-
         $this->repoMap['IrhpPermit']
             ->shouldReceive('save')
             ->once()
