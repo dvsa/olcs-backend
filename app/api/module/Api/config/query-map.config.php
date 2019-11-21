@@ -663,6 +663,7 @@ return [
     TransferQuery\Permits\EmissionsByYear::class => QueryHandler\Permits\EmissionsByYear::class,
     TransferQuery\Permits\OpenWindows::class => QueryHandler\Permits\OpenWindows::class,
     TransferQuery\Permits\StockOperationsPermitted::class => QueryHandler\Permits\StockOperationsPermitted::class,
+    TransferQuery\Permits\EcmtApplicationIssueFeePerPermit::class => QueryHandler\Permits\EcmtApplicationIssueFeePerPermit::class,
 
     // Permits - internal
     Query\Permits\QueueRunScoringPermitted::class => QueryHandler\Permits\QueueRunScoringPermitted::class,
@@ -674,9 +675,7 @@ return [
     Query\Permits\GetScoredPermitList::class => QueryHandler\Permits\GetScoredPermitList::class,
     Query\Permits\DeviationData::class => QueryHandler\Permits\DeviationData::class,
 
-
     // IRHP Permit - internal
-
     Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
     Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
