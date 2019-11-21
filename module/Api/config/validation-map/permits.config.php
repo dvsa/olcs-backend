@@ -54,6 +54,7 @@ return [
     QueryHandler\Permits\ReadyToPrint::class => IsInternalAdmin::class,
     QueryHandler\Permits\ReadyToPrintConfirm::class => IsInternalAdmin::class,
     QueryHandler\Permits\DeviationData::class => IsInternalOrSystemUser::class,
+    QueryHandler\Permits\EcmtApplicationIssueFeePerPermit::class => Permits\CanAccessPermitAppWithId::class,
     QueryHandler\IrhpPermitWindow\OpenByCountry::class => NotIsAnonymousUser::class,
     CommandHandler\IrhpApplication\UpdateCheckAnswers::class => Permits\CanEditIrhpApplicationWithId::class,
     CommandHandler\IrhpApplication\Cancel::class => Permits\CanEditIrhpApplicationWithId::class,
