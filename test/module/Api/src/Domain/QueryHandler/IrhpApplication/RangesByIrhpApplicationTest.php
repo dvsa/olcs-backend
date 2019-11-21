@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication\RangesByIrhpApplication as
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\RangesByIrhpApplication as QryClass;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -24,13 +24,87 @@ class RangesByIrhpApplicationTest extends QueryHandlerTestCase
         $this->sut = new RangesByIrhpApplicationHandler();
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
 
+        $this->mockedSmServices = [
+            'PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator' => m::mock(CandidatePermitsAvailableCountCalculator::class),
+        ];
+
         parent::setUp();
     }
 
-    /**
-     * @dataProvider dpTestHandleQuery
-     */
-    public function testHandleQuery($ranges, $expected)
+    public function testHandleQuery()
+    {
+        $query = QryClass::create(['irhpApplication' => 100011]);
+
+        $irhpApplication = m::mock(IrhpApplicationEntity::class);
+
+        $range1 = m::mock(IrhpPermitRange::class)->makePartial();
+        $range2 = m::mock(IrhpPermitRange::class)->makePartial();
+
+        $range1->setId(1111);
+        $range2->setId(2222);
+
+        $ranges = new ArrayCollection([$range1, $range2]);
+
+        $this->mockedSmServices['PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator']
+            ->shouldReceive('getCount')
+            ->once()
+            ->with($range1, 0)
+            ->andReturn(40);
+
+        $this->mockedSmServices['PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator']
+            ->shouldReceive('getCount')
+            ->once()
+            ->with($range2, 0)
+            ->andReturn(22);
+
+        $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
+            ->with($query->getIrhpApplication())
+            ->andReturn($irhpApplication);
+
+        $irhpApplication
+            ->shouldReceive('getAssociatedStock->getNonReservedNonReplacementRangesOrderedByFromNo')
+            ->once()
+            ->withNoArgs()
+            ->andReturn($ranges);
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertIsArray(
+            $result
+        );
+
+        $this->assertArrayHasKey(
+            'ranges',
+            $result
+        );
+
+        $this->assertEquals(
+            2,
+            $result['count']
+        );
+
+        $this->assertEquals(
+            40,
+            $result['ranges'][0]['remainingPermits']
+        );
+
+        $this->assertEquals(
+            1111,
+            $result['ranges'][0]['id']
+        );
+
+        $this->assertEquals(
+            2222,
+            $result['ranges'][1]['id']
+        );
+
+        $this->assertEquals(
+            22,
+            $result['ranges'][1]['remainingPermits']
+        );
+    }
+
+    public function testHandleQueryNoRanges()
     {
         $query = QryClass::create(['irhpApplication' => 100011]);
 
@@ -44,40 +118,14 @@ class RangesByIrhpApplicationTest extends QueryHandlerTestCase
             ->shouldReceive('getAssociatedStock->getNonReservedNonReplacementRangesOrderedByFromNo')
             ->once()
             ->withNoArgs()
-            ->andReturn($ranges);
+            ->andReturn([]);
 
         $this->assertEquals(
-            $expected,
+            [
+                'count' => 0,
+                'ranges' => []
+            ],
             $this->sut->handleQuery($query)
         );
-    }
-
-    public function dpTestHandleQuery()
-    {
-        $range1 = m::mock(IrhpPermitRange::class);
-        $range1->shouldReceive('serialize')
-        ->andReturn($range1);
-
-        $range2 = m::mock(IrhpPermitRange::class);
-        $range2->shouldReceive('serialize')
-        ->andReturn($range2);
-
-        $ranges = new ArrayCollection([$range1, $range2]);
-        return [
-            [
-                $ranges,
-                [
-                    'count' => 2,
-                    'ranges' => $ranges->toArray()
-                ]
-            ],
-            [
-                new ArrayCollection(),
-                [
-                    'count' => 0,
-                    'ranges' => []
-                ]
-            ]
-        ];
     }
 }

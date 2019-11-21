@@ -12,7 +12,9 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Permits\ShortTermEcmt\CandidatePermitsAvailableCountCalculator;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class RangesByIrhpApplication extends AbstractQueryHandler implements ToggleRequiredInterface
 {
@@ -21,6 +23,25 @@ class RangesByIrhpApplication extends AbstractQueryHandler implements ToggleRequ
     protected $toggleConfig = [FeatureToggle::BACKEND_PERMITS];
     protected $repoServiceName = 'IrhpApplication';
     protected $bundle = ['countrys'];
+
+    /** @var CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator */
+    protected $candidatePermitsAvailableCountCalculator;
+
+    /**
+     * Create service
+     *
+     * @param ServiceLocatorInterface $serviceLocator Service Manager
+     *
+     * @return $this
+     */
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        $mainServiceLocator = $serviceLocator->getServiceLocator();
+
+        $this->candidatePermitsAvailableCountCalculator = $mainServiceLocator->get('PermitsShortTermEcmtCandidatePermitsAvailableCountCalculator');
+
+        return parent::createService($serviceLocator);
+    }
 
     /**
      * @param QueryInterface $query query
@@ -34,6 +55,11 @@ class RangesByIrhpApplication extends AbstractQueryHandler implements ToggleRequ
         $ranges = $irhpApplication
             ->getAssociatedStock()
             ->getNonReservedNonReplacementRangesOrderedByFromNo();
+
+        foreach ($ranges as &$range) {
+            $range->remainingPermits =
+                $this->candidatePermitsAvailableCountCalculator->getCount($range, 0);
+        }
 
         return [
             'ranges' => $this->resultList($ranges, $this->bundle),
