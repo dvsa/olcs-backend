@@ -15,7 +15,7 @@ use Olcs\Logging\Log\Logger;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @covers \Dvsa\Olcs\DocumentShare\Service\Client
+ * @covers \Dvsa\Olcs\DocumentShare\Service\WebDavClient
  */
 class WebDavClientTest extends MockeryTestCase
 {
