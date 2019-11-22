@@ -24,7 +24,7 @@ final class StoreEcmtPermitApplicationSnapshot extends AbstractCreateSnapshotHan
     protected $documentCategory = Category::CATEGORY_PERMITS;
     protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION;
     protected $documentDescription = 'Permit Application %s Snapshot (app submitted)';
-    protected $documentLinkId = 'ecmtApplication';
+    protected $documentLinkId = 'ecmtPermitApplication';
 
     /**
      * @inheritDoc
