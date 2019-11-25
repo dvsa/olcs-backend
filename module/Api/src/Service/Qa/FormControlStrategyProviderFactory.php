@@ -22,6 +22,8 @@ class FormControlStrategyProviderFactory implements FactoryInterface
             Question::FORM_CONTROL_TYPE_TEXT => 'QaTextFormControlStrategy',
             Question::FORM_CONTROL_TYPE_RADIO => 'QaRadioFormControlStrategy',
             Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS => 'QaEcmtRemovalNoOfPermitsFormControlStrategy',
+            Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE =>
+                'QaEcmtRemovalPermitStartDateFormControlStrategy',
             Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS => 'QaEcmtShortTermNoOfPermitsFormControlStrategy',
             Question::FORM_CONTROL_ECMT_SHORT_TERM_PERMIT_USAGE => 'QaEcmtShortTermPermitUsageFormControlStrategy',
             Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS =>

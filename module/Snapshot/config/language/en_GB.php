@@ -390,6 +390,7 @@ return [
     'qanda.ecmt-removal.removal-eligibility.question' => 'Confirm you will only use removal permits for removal operations using specialised equipment and staff',
     'qanda.ecmt-removal.cabotage.question' => 'Confirm you will not use removal permits to carry out cabotage',
     'qanda.ecmt-removal.no-of-permits.question' => 'How many permits do you require for this licence?',
+    'qanda.ecmt-removal.permit-start-date.question' => 'When do you need your permits to be valid from?',
 
     'section.name.application/licence' => 'Licence number',
     'section.name.application/check-answers' => 'Check your answers',

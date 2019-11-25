@@ -4253,7 +4253,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($entity->getAnswer($step));
     }
 
-    public function testGetAnswerForQuestionWithoutAnswer()
+    /**
+     * @dataProvider dpGetAnswerForQuestion
+     */
+    public function testGetAnswerForQuestionWithoutAnswer($isCustom, $formControlType)
     {
         $createdOn = new DateTime();
 
@@ -4262,7 +4265,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
 
         $question = m::mock(Question::class);
-        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
+        $question->shouldReceive('getFormControlType')->withNoArgs()->andReturn($formControlType);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
 
         $step = m::mock(ApplicationStep::class);
@@ -4274,7 +4278,10 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($entity->getAnswer($step));
     }
 
-    public function testGetAnswerForQuestionWithAnswer()
+    /**
+     * @dataProvider dpGetAnswerForQuestion
+     */
+    public function testGetAnswerForQuestionWithAnswer($isCustom, $formControlType)
     {
         $createdOn = new DateTime();
         $answer = 'answer';
@@ -4284,7 +4291,8 @@ class IrhpApplicationEntityTest extends EntityTester
         $questionText->shouldReceive('getId')->withNoArgs()->once()->andReturn($questionTextId);
 
         $question = m::mock(Question::class);
-        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn(false);
+        $question->shouldReceive('isCustom')->withNoArgs()->once()->andReturn($isCustom);
+        $question->shouldReceive('getFormControlType')->withNoArgs()->andReturn($formControlType);
         $question->shouldReceive('getActiveQuestionText')->with($createdOn)->once()->andReturn($questionText);
 
         $step = m::mock(ApplicationStep::class);
@@ -4298,6 +4306,16 @@ class IrhpApplicationEntityTest extends EntityTester
         $entity->setAnswers(new ArrayCollection([$questionTextId => $answer]));
 
         $this->assertEquals($answer, $entity->getAnswer($step));
+    }
+
+    public function dpGetAnswerForQuestion()
+    {
+        return [
+            [false, null],
+            [true, Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE],
+            [true, Question::FORM_CONTROL_ECMT_SHORT_TERM_ANNUAL_TRIPS_ABROAD],
+            [true, Question::FORM_CONTROL_COMMON_CERTIFICATES],
+        ];
     }
 
     public function testGetOutstandingApplicationFees()

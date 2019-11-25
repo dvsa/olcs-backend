@@ -357,6 +357,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
             switch ($formControlType) {
                 case Question::FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS:
                     return $this->getEcmtRemovalNoOfPermitsAnswer();
+                case Question::FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE:
+                    return $this->getStandardQaAnswer($question);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS:
                     return $this->getEcmtShortTermNoOfPermitsAnswer($isSnapshot);
                 case Question::FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS:
