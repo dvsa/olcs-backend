@@ -66,6 +66,9 @@ class Answer extends AbstractAnswer
             case Question::QUESTION_TYPE_BOOLEAN:
                 $this->ansBoolean = $answerValue;
                 break;
+            case Question::QUESTION_TYPE_DATE:
+                $this->ansDate = $answerValue;
+                break;
             default:
                 throw new RuntimeException('The ' . $questionType . ' type is not yet supported');
         }
