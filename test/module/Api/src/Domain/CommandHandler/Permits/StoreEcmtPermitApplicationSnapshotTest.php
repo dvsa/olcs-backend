@@ -26,7 +26,7 @@ class StoreEcmtPermitApplicationSnapshotTest extends AbstractCreateSnapshotHandl
     protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION;
     protected $documentDescription = 'Permit Application OG9654321/3 Snapshot (app submitted)';
     protected $documentLinkId = 'ecmtPermitApplication';
-    protected $documentLinkValue = null;
+    protected $documentLinkValue = 999;
     protected $generatorClass = EcmtAnnualGenerator::class;
 
     /**
