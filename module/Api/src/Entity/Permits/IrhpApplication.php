@@ -2039,8 +2039,14 @@ class IrhpApplication extends AbstractIrhpApplication implements
      */
     public function canBeRevivedFromWithdrawn()
     {
+        $businessProcess = $this->getBusinessProcess();
+
+        if ($businessProcess === null) {
+            return false;
+        }
+
         $canBeRevivedFromWithdrawn = $this->baseCanBeRevivedFromWithdrawn();
-        $isApsg = $this->getBusinessProcess()->getId() == RefData::BUSINESS_PROCESS_APSG;
+        $isApsg = $businessProcess->getId() == RefData::BUSINESS_PROCESS_APSG;
 
         return $canBeRevivedFromWithdrawn && $isApsg;
     }

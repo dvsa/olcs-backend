@@ -5590,6 +5590,15 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($this->sut->getWithdrawnDate());
     }
 
+    public function testReviveFromWithdrawnNoBusinessProcess()
+    {
+        $this->sut->expects()->getBusinessProcess()
+            ->withNoArgs()
+            ->andReturnNull();
+
+        self::assertFalse($this->sut->canBeRevivedFromWithdrawn());
+    }
+
     public function testReviveFromWithdrawnException()
     {
         $this->expectException(ForbiddenException::class);
