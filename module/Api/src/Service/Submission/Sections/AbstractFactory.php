@@ -19,6 +19,7 @@ class AbstractFactory implements FactoryInterface
      * @param $name
      * @param $requestedName
      * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
     {
