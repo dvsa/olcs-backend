@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "a49cacbb05f75bfb1a49362c2dea567a",
@@ -2138,12 +2138,12 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "4.206.47",
+            "version": "4.206.48",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.47/olcs-olcs-transfer-4.206.47.zip",
-                "reference": "6a5897f342ebc4edbcb8d8706141b0cb5a6c5a25",
-                "shasum": "6a5897f342ebc4edbcb8d8706141b0cb5a6c5a25"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-transfer/4.206.48/olcs-olcs-transfer-4.206.48.zip",
+                "reference": "297bd91905ffb82303e8af270b2eb93fb81fc8f5",
+                "shasum": "297bd91905ffb82303e8af270b2eb93fb81fc8f5"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2199,7 +2199,7 @@
                 ]
             },
             "description": "OLCS Transfer",
-            "time": "2019-11-20T12:05:56+00:00"
+            "time": "2019-11-26T12:09:12+00:00"
         },
         {
             "name": "olcs/olcs-utils",
