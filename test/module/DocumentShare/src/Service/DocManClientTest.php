@@ -125,7 +125,7 @@ class DocManClientTest extends MockeryTestCase
     {
         $mockResponse = m::mock(\Zend\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(false)
-            ->shouldReceive('getStatusCode')->once()->andReturn(600)
+            ->shouldReceive('getStatusCode')->times(3)->andReturn(600)
             ->getMock();
 
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
@@ -134,10 +134,12 @@ class DocManClientTest extends MockeryTestCase
         $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
+        $expectedLog = json_encode(["error" =>DocManClient::ERR_RESP_FAIL, "reason"=>$mockResponse->getStatusCode(), "path" => 'test']);
+        ;
         $this->logger
             ->shouldReceive('log')
             ->once()
-            ->with(\Zend\Log\Logger::ERR, DocManClient::ERR_RESP_FAIL, []);
+            ->with(\Zend\Log\Logger::ERR, $expectedLog, []);
 
         //  call & check
         $actual = $this->sut->read('test');
