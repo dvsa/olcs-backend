@@ -98,7 +98,7 @@ final class AllocateIrhpPermitApplicationPermit extends AbstractCommandHandler i
         $irhpPermit = IrhpPermit::createForIrhpApplication(
             $irhpPermitApplication,
             $irhpPermitRange,
-            new DateTime(),
+            $irhpPermitApplication->generateIssueDate(),
             $this->refData(IrhpPermit::STATUS_PENDING),
             $permitNumber,
             $expiryDate

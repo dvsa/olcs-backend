@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Permits;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\EcmtPermitApplication;
@@ -749,6 +750,46 @@ class IrhpPermitApplicationEntityTest extends EntityTester
         );
     }
 
+    public function testGenerateIssueDateForEcmtRemoval()
+    {
+        $issueDateAsString = '2020-05-15';
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtRemoval')
+            ->withNoArgs()
+            ->andReturnTrue();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
+            ->andReturn($issueDateAsString);
+
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $issueDateAsString,
+            $entity->generateIssueDate()->format('Y-m-d')
+        );
+    }
+
+    public function testGenerateIssueDateForOther()
+    {
+        $currentDateAsString = (new DateTime())->format('Y-m-d');
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getIrhpPermitType->isEcmtRemoval')
+            ->withNoArgs()
+            ->andReturnFalse();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $currentDateAsString,
+            $entity->generateIssueDate()->format('Y-m-d')
+        );
+    }
+
     public function testGenerateExpiryDate()
     {
         $issueDate = m::mock(DateTime::class);
@@ -760,11 +801,35 @@ class IrhpPermitApplicationEntityTest extends EntityTester
             ->once()
             ->andReturn($expiryDate);
 
-        $this->sut->setIrhpApplication($irhpApplication);
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('generateIssueDate')
+            ->withNoArgs()
+            ->andReturn($issueDate);
+
+        $entity->setIrhpApplication($irhpApplication);
 
         $this->assertSame(
             $expiryDate,
-            $this->sut->generateExpiryDate($issueDate)
+            $entity->generateExpiryDate()
+        );
+    }
+
+    public function testGetAnswerValueByQuestionId()
+    {
+        $questionId = 46;
+        $answer = 'qanda answer';
+
+        $irhpApplication = m::mock(IrhpApplication::class);
+        $irhpApplication->shouldReceive('getAnswerValueByQuestionId')
+            ->with($questionId)
+            ->andReturn($answer);
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->setIrhpApplication($irhpApplication);
+
+        $this->assertEquals(
+            $answer,
+            $entity->getAnswerValueByQuestionId($questionId)
         );
     }
 }

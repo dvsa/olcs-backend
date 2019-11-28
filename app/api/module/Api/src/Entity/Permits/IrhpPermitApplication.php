@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Permits;
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
+use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
@@ -418,15 +419,42 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements Org
     }
 
     /**
-     * Modify the supplied DateTime to reflect the expiry interval for the permit type associated with this
-     * application
-     *
-     * @param DateTime $dateTime
+     * Return a permit issue date appropriate to this application
      *
      * @return DateTime
      */
-    public function generateExpiryDate(DateTime $dateTime)
+    public function generateIssueDate()
     {
-        return $this->irhpApplication->getIrhpPermitType()->generateExpiryDate($dateTime);
+        if ($this->irhpApplication->getIrhpPermitType()->isEcmtRemoval()) {
+            return new DateTime(
+                $this->getAnswerValueByQuestionId(Question::QUESTION_ID_REMOVAL_PERMIT_START_DATE)
+            );
+        }
+
+        return new DateTime();
+    }
+
+    /**
+     * Return a permit expiry date appropriate to this application
+     *
+     * @return DateTime
+     */
+    public function generateExpiryDate()
+    {
+        return $this->irhpApplication->getIrhpPermitType()->generateExpiryDate(
+            $this->generateIssueDate()
+        );
+    }
+
+    /**
+     * Get the answer value corresponding to the specified question id
+     *
+     * @param int $id
+     *
+     * @return mixed|null
+     */
+    public function getAnswerValueByQuestionId($id)
+    {
+        return $this->irhpApplication->getAnswerValueByQuestionId($id);
     }
 }
