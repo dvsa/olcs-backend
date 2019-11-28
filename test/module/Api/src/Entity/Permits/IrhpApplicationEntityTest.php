@@ -4732,6 +4732,63 @@ class IrhpApplicationEntityTest extends EntityTester
         $this->assertNull($entity->getBusinessProcess());
     }
 
+    public function testGetAnswerValueByQuestionId()
+    {
+        $answer = 'qanda answer';
+
+        $applicationSteps = $this->getAnswerValueByQuestionIdApplicationSteps();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getActiveApplicationPath->getApplicationSteps')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($applicationSteps);
+        $entity->shouldReceive('getAnswer')
+            ->with($applicationSteps[1], false)
+            ->once()
+            ->andReturn($answer);
+
+        $this->assertEquals(
+            $answer,
+            $entity->getAnswerValueByQuestionId(40)
+        );
+    }
+
+    public function testGetAnswerValueByQuestionIdNull()
+    {
+        $applicationSteps = $this->getAnswerValueByQuestionIdApplicationSteps();
+
+        $entity = m::mock(Entity::class)->makePartial();
+        $entity->shouldReceive('getActiveApplicationPath->getApplicationSteps')
+            ->withNoArgs()
+            ->once()
+            ->andReturn($applicationSteps);
+
+        $this->assertNull(
+            $entity->getAnswerValueByQuestionId(50)
+        );
+    }
+
+    private function getAnswerValueByQuestionIdApplicationSteps()
+    {
+        $applicationStep1 = m::mock(ApplicationStep::class);
+        $applicationStep1->shouldReceive('getQuestion->getId')
+            ->withNoArgs()
+            ->andReturn(38);
+
+        $applicationStep2 = m::mock(ApplicationStep::class);
+        $applicationStep2->shouldReceive('getQuestion->getId')
+            ->withNoArgs()
+            ->andReturn(40);
+
+        $applicationStep3 = m::mock(ApplicationStep::class);
+        $applicationStep3->shouldReceive('getQuestion->getId')
+            ->withNoArgs()
+            ->andReturn(42);
+
+        return new ArrayCollection([$applicationStep1, $applicationStep2, $applicationStep3]);
+    }
+
     /**
      * @dataProvider dpTestHasCountryId
      */
@@ -4798,8 +4855,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn($irhpPermitApplication);
         $entity->shouldReceive('calculateTotalPermitsRequired')
             ->andReturn(7);
-        $entity->shouldReceive('getAnswerValueByQuestionSlug')
-            ->with('st-annual-trips-abroad')
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD)
             ->andReturn(35);
 
         $this->assertEquals(
@@ -4828,8 +4885,8 @@ class IrhpApplicationEntityTest extends EntityTester
             ->andReturn($irhpPermitApplication);
         $entity->shouldReceive('calculateTotalPermitsRequired')
             ->andReturn(0);
-        $entity->shouldReceive('getAnswerValueByQuestionSlug')
-            ->with('st-annual-trips-abroad')
+        $entity->shouldReceive('getAnswerValueByQuestionId')
+            ->with(Question::QUESTION_ID_SHORT_TERM_ANNUAL_TRIPS_ABROAD)
             ->andReturn(0);
 
         $entity->getPermitIntensityOfUse($emissionsCategoryId);

@@ -97,9 +97,14 @@ class IrhpPermitEntityTest extends EntityTester
 
     public function testCreateForIrhpApplication()
     {
-        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
-        $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $issueDate = m::mock(DateTime::class);
+
+        $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
+        $irhpPermitApplication->shouldReceive('generateIssueDate')
+            ->withNoArgs()
+            ->andReturn($issueDate);
+
+        $irhpPermitRange = m::mock(IrhpPermitRange::class);
         $status = m::mock(RefData::class);
         $permitNumber = 473;
 
