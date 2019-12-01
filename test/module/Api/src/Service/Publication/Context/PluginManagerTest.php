@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context;
 
-use Interop\Container\ContainerInterface;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\ContextInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Publication\Context\PluginManager
@@ -19,16 +19,11 @@ class PluginManagerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $mockCfg = m::mock(ContainerInterface::class)
-            ->shouldReceive('configureServiceManager')
-            ->getMock();
-
-        $this->sut = new PluginManager($mockCfg);
+        $this->sut = new PluginManager();
     }
 
     public function testValidatePluginFail()
     {
-        $this->markTestSkipped('TODO - OLCS-26007');
         $invalidPlugin = new \stdClass();
 
         //  expect
@@ -43,21 +38,22 @@ class PluginManagerTest extends MockeryTestCase
 
     public function testValidatePluginOk()
     {
-        $plugin = m::mock(ContainerInterface::class);
-        $this->sut->validatePlugin($plugin);
+        $plugin = m::mock(ContextInterface::class);
+        // make sure no exception is thrown
+        $this->assertNull($this->sut->validatePlugin($plugin));
     }
 
     public function testInjectAddressFormatter()
     {
         $mockAddressFormatter = m::mock(\Dvsa\Olcs\Api\Service\Helper\FormatAddress::class);
 
-        /** @var \Zend\ServiceManager\ServiceLocatorInterface $mockSl */
-        $mockSl = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        /** @var ServiceLocatorInterface $mockSl */
+        $mockSl = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('get')->with('AddressFormatter')->andReturn($mockAddressFormatter)
             ->getMock();
 
-        /** @var \Zend\ServiceManager\ServiceManager $mockSm */
-        $mockSm = m::mock(\Zend\ServiceManager\ServiceLocatorInterface::class)
+        /** @var ServiceLocatorInterface $mockSm */
+        $mockSm = m::mock(ServiceLocatorInterface::class)
             ->shouldReceive('getServiceLocator')->andReturn($mockSl)
             ->getMock();
 
