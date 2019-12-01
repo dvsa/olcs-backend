@@ -18,17 +18,11 @@ class PluginManagerTest extends MockeryTestCase
 
     public function setUp()
     {
-        $mockCfg = m::mock(ConfigInterface::class)
-            ->shouldReceive('configureServiceManager')
-            ->getMock();
-
-        $this->sut = new PluginManager($mockCfg);
+        $this->sut = new PluginManager();
     }
 
     public function testValidatePluginFail()
     {
-        $this->markTestSkipped('TODO - OLCS-26007');
-
         $invalidPlugin = new \stdClass();
 
         //  expect
@@ -44,6 +38,7 @@ class PluginManagerTest extends MockeryTestCase
     public function testValidatePluginOk()
     {
         $plugin = m::mock(ProcessInterface::class);
-        $this->sut->validatePlugin($plugin);
+        // make sure no exception is thrown
+        $this->assertNull($this->sut->validatePlugin($plugin));
     }
 }
