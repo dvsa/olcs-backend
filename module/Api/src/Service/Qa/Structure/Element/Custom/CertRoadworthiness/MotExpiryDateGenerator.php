@@ -1,14 +1,14 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\CertRoadworthiness;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 
-class PermitStartDateGenerator implements ElementGeneratorInterface
+class MotExpiryDateGenerator implements ElementGeneratorInterface
 {
-    const DATE_THRESHOLD = 'P60D';
+    const DATE_THRESHOLD = 'P13M';
 
     /** @var DateWithThresholdGenerator */
     private $dateWithThresholdGenerator;
@@ -18,7 +18,7 @@ class PermitStartDateGenerator implements ElementGeneratorInterface
      *
      * @param DateWithThresholdGenerator $dateWithThresholdGenerator
      *
-     * @return PermitStartDateGenerator
+     * @return MotExpiryDateGenerator
      */
     public function __construct(DateWithThresholdGenerator $dateWithThresholdGenerator)
     {

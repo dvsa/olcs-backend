@@ -21,15 +21,11 @@ class DateAnswerSaverTest extends MockeryTestCase
 {
     public function testSave()
     {
-        $dateArray = [
-            'year' => '2020',
-            'month' => '04',
-            'day' => '15'
-        ];
+        $dateString = '2020-04-15';
 
         $postData = [
             'fieldset13' => [
-                'qaElement' => $dateArray
+                'qaElement' => $dateString
             ]
         ];
 
@@ -40,14 +36,14 @@ class DateAnswerSaverTest extends MockeryTestCase
 
         $dateTimeFactory = m::mock(DateTimeFactory::class);
         $dateTimeFactory->shouldReceive('create')
-            ->with('2020-04-15')
+            ->with($dateString)
             ->once()
             ->andReturn($answerValue);
 
         $genericAnswerFetcher = m::mock(GenericAnswerFetcher::class);
         $genericAnswerFetcher->shouldReceive('fetch')
             ->with($applicationStep, $postData)
-            ->andReturn($dateArray);
+            ->andReturn($dateString);
 
         $genericAnswerWriter = m::mock(GenericAnswerWriter::class);
         $genericAnswerWriter->shouldReceive('write')

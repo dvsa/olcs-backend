@@ -1,17 +1,17 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval;
+namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common;
 
 use DateTime;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\Date as DateElement;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
-class PermitStartDate implements ElementInterface
+class DateWithThreshold implements ElementInterface
 {
-    const DATE_MUST_BE_BEFORE_FORMAT = 'Y-m-d';
+    const DATE_THRESHOLD_FORMAT = 'Y-m-d';
 
     /** @var DateTime */
-    private $dateMustBeBefore;
+    private $dateThreshold;
 
     /** @var DateElement */
     private $date;
@@ -19,14 +19,14 @@ class PermitStartDate implements ElementInterface
     /**
      * Create instance
      *
-     * @param DateTime $dateMustBeBefore
+     * @param DateTime $dateThreshold
      * @param DateElement $date
      *
-     * @return PermitStartDate
+     * @return DateWithThreshold
      */
-    public function __construct(DateTime $dateMustBeBefore, DateElement $date)
+    public function __construct(DateTime $dateThreshold, DateElement $date)
     {
-        $this->dateMustBeBefore = $dateMustBeBefore;
+        $this->dateThreshold = $dateThreshold;
         $this->date = $date;
     }
 
@@ -36,7 +36,7 @@ class PermitStartDate implements ElementInterface
     public function getRepresentation()
     {
         return [
-            'dateMustBeBefore' => $this->dateMustBeBefore->format(self::DATE_MUST_BE_BEFORE_FORMAT),
+            'dateThreshold' => $this->dateThreshold->format(self::DATE_THRESHOLD_FORMAT),
             'date' => $this->date->getRepresentation()
         ];
     }
