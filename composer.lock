@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a49cacbb05f75bfb1a49362c2dea567a",
+    "content-hash": "ae04cadfb79057aa8739cf65cc560799",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.122.0",
+            "version": "3.123.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.122.0/aws-aws-sdk-php-3.122.0.zip",
-                "reference": "43b4af8179c91d220f6e4bbe1e57588ed5ad4f27",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/aws/aws-sdk-php/3.123.0/aws-aws-sdk-php-3.123.0.zip",
+                "reference": "3bf671629a3b2a5a5694f8dfee15686e586b33b6",
                 "shasum": ""
             },
             "require": {
@@ -81,7 +81,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2019-11-25T19:13:38+00:00"
+            "time": "2019-11-26T19:08:40+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
@@ -170,6 +170,78 @@
             "time": "2017-04-04T11:38:05+00:00"
         },
         {
+            "name": "cpms/client",
+            "version": "4.206.0",
+            "dist": {
+                "type": "zip",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/cpms/client/4.206.0/cpms-client-4.206.0.zip",
+                "reference": "97ff1e00bb5844f4bc2f4e349bc12a4423033ebd",
+                "shasum": "97ff1e00bb5844f4bc2f4e349bc12a4423033ebd"
+            },
+            "require": {
+                "elendev/nexus-composer-push": "^0.1",
+                "olcs/olcs-devtools": "~4.206.0",
+                "zendframework/zendframework": "~2.4"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.2",
+                "phpunit/phpunit": "7.*"
+            },
+            "type": "project",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1.x-dev"
+                },
+                "nexus-push": {
+                    "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/cpms-client",
+                    "ignore": [
+                        "build-scripts/",
+                        "storyplayer/",
+                        "build.xml",
+                        "storyplayer.json.dist"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "CpmsClient\\": "src/",
+                    "CpmsClientTest\\": "test/"
+                },
+                "classmap": [
+                    "./Module.php",
+                    "./test/CpmsClientTest/Module.php"
+                ]
+            },
+            "scripts": {
+                "ut": [
+                    "phpunit -c test/phpunit.xml --stop-on-failure"
+                ],
+                "review": [
+                    "review"
+                ],
+                "cs": [
+                    "phpcs --severity=1 --standard=vendor/olcs/coding-standards/Profiles/DVSA/CS/ruleset.xml"
+                ],
+                "coverage": [
+                    "phpunit -c test/phpunit.xml --coverage-html ./test/coverage/html"
+                ],
+                "sonar": [
+                    "phpunit -c test/phpunit.xml --coverage-clover ./test/coverage/coverage-report.clover --log-junit ./test/coverage/log.junit"
+                ],
+                "update-syms": [
+                    "composer-update-syms"
+                ],
+                "release": [
+                    "release"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "CPMS Common Client Module",
+            "time": "2019-05-01T16:38:54+00:00"
+        },
+        {
             "name": "doctrine/annotations",
             "version": "v1.8.0",
             "dist": {
@@ -233,11 +305,11 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "1.9.1",
+            "version": "1.10.0",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/cache/1.9.1/doctrine-cache-1.9.1.zip",
-                "reference": "89a5c76c39c292f7798f964ab3c836c3f8192a55",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/doctrine/cache/1.10.0/doctrine-cache-1.10.0.zip",
+                "reference": "382e7f4db9a12dc6c19431743a2b096041bcdd62",
                 "shasum": ""
             },
             "require": {
@@ -303,10 +375,9 @@
                 "memcached",
                 "php",
                 "redis",
-                "riak",
                 "xcache"
             ],
-            "time": "2019-11-15T14:31:57+00:00"
+            "time": "2019-11-29T15:36:20+00:00"
         },
         {
             "name": "doctrine/collections",
@@ -1163,11 +1234,11 @@
         },
         {
             "name": "elendev/nexus-composer-push",
-            "version": "0.1.2",
+            "version": "0.1.3",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/elendev/nexus-composer-push/0.1.2/elendev-nexus-composer-push-0.1.2.zip",
-                "reference": "3881a3f5a2dce054f36bbd061074b449ff117469",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/elendev/nexus-composer-push/0.1.3/elendev-nexus-composer-push-0.1.3.zip",
+                "reference": "9dc7d473eb0f28adb5caf829575b90d3010a59af",
                 "shasum": ""
             },
             "require": {
@@ -1198,7 +1269,7 @@
                 }
             ],
             "description": "Provide a Push command to composer to push to Nexus repositories",
-            "time": "2019-11-07T14:42:05+00:00"
+            "time": "2019-11-18T13:33:02+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -2069,12 +2140,12 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "4.206.1",
+            "version": "4.206.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-logging/4.206.1/olcs-olcs-logging-4.206.1.zip",
-                "reference": "976537ea9919f43f2f78da366bbe869f1a4fefaa",
-                "shasum": "976537ea9919f43f2f78da366bbe869f1a4fefaa"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-logging/4.206.2/olcs-olcs-logging-4.206.2.zip",
+                "reference": "77e86c18c220a03c62ed577b8486c5198d2d42de",
+                "shasum": "77e86c18c220a03c62ed577b8486c5198d2d42de"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2134,7 +2205,7 @@
                 ]
             },
             "description": "Logging Module for Olcs",
-            "time": "2019-05-01T15:47:37+00:00"
+            "time": "2019-11-27T18:32:21+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
@@ -2203,12 +2274,12 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "4.206.0",
+            "version": "4.206.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-utils/4.206.0/olcs-olcs-utils-4.206.0.zip",
-                "reference": "40e231af6a2acb23908587c5ea8692ac9d75e2be",
-                "shasum": "40e231af6a2acb23908587c5ea8692ac9d75e2be"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-utils/4.206.1/olcs-olcs-utils-4.206.1.zip",
+                "reference": "ecdea2626fd1a64c813bb8fdaa34a6e9b8f7ebe1",
+                "shasum": "ecdea2626fd1a64c813bb8fdaa34a6e9b8f7ebe1"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2262,16 +2333,16 @@
                 ]
             },
             "description": "OLCS Utils",
-            "time": "2019-05-01T16:06:22+00:00"
+            "time": "2019-11-27T18:27:36+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "4.206.0",
+            "version": "4.206.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-xmltools/4.206.0/olcs-olcs-xmltools-4.206.0.zip",
-                "reference": "81d75f5727446b8d4759dcc0040a31b16f4a8854",
-                "shasum": "81d75f5727446b8d4759dcc0040a31b16f4a8854"
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/OLCS/olcs/olcs-xmltools/4.206.1/olcs-olcs-xmltools-4.206.1.zip",
+                "reference": "69369ab9da1b1e879e84aecfdc64f395360f8918",
+                "shasum": "69369ab9da1b1e879e84aecfdc64f395360f8918"
             },
             "require": {
                 "elendev/nexus-composer-push": "^0.1",
@@ -2328,7 +2399,7 @@
                 ]
             },
             "description": "Xml tools for olcs",
-            "time": "2019-05-01T16:00:13+00:00"
+            "time": "2019-11-27T18:29:07+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
@@ -3468,39 +3539,41 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.8.0",
+            "version": "3.9.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/ramsey/uuid/3.8.0/ramsey-uuid-3.8.0.zip",
-                "reference": "d09ea80159c1929d75b3f9c60504d613aeb4a1e3",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/ramsey/uuid/3.9.1/ramsey-uuid-3.9.1.zip",
+                "reference": "5ac2740e0c8c599d2bbe7f113a939f2b5b216c67",
                 "shasum": ""
             },
             "require": {
-                "paragonie/random_compat": "^1.0|^2.0|9.99.99",
-                "php": "^5.4 || ^7.0",
+                "ext-json": "*",
+                "paragonie/random_compat": "^1 | ^2 | 9.99.99",
+                "php": "^5.4 | ^7",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "replace": {
                 "rhumsaa/uuid": "self.version"
             },
             "require-dev": {
-                "codeception/aspect-mock": "^1.0 | ~2.0.0",
-                "doctrine/annotations": "~1.2.0",
-                "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ~2.1.0",
-                "ircmaxell/random-lib": "^1.1",
+                "codeception/aspect-mock": "^1 | ^2",
+                "doctrine/annotations": "^1.2",
+                "goaop/framework": "1.0.0-alpha.2 | ^1 | ^2.1",
                 "jakub-onderka/php-parallel-lint": "^0.9.0",
                 "mockery/mockery": "^0.9.9",
                 "moontoast/math": "^1.1",
-                "php-mock/php-mock-phpunit": "^0.3|^1.1",
-                "phpunit/phpunit": "^4.7|^5.0|^6.5",
+                "paragonie/random-lib": "^2",
+                "php-mock/php-mock-phpunit": "^0.3 | ^1.1",
+                "phpunit/phpunit": "^4.8 | ^5.4 | ^6.5",
                 "squizlabs/php_codesniffer": "^2.3"
             },
             "suggest": {
                 "ext-ctype": "Provides support for PHP Ctype functions",
                 "ext-libsodium": "Provides the PECL libsodium extension for use with the SodiumRandomGenerator",
+                "ext-openssl": "Provides the OpenSSL extension for use with the OpenSslGenerator",
                 "ext-uuid": "Provides the PECL UUID extension for use with the PeclUuidTimeGenerator and PeclUuidRandomGenerator",
-                "ircmaxell/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
                 "moontoast/math": "Provides support for converting UUID to 128-bit integer (in string form).",
+                "paragonie/random-lib": "Provides RandomLib for use with the RandomLibAdapter",
                 "ramsey/uuid-console": "A console application for generating UUIDs with ramsey/uuid",
                 "ramsey/uuid-doctrine": "Allows the use of Ramsey\\Uuid\\Uuid as Doctrine field type."
             },
@@ -3513,12 +3586,20 @@
             "autoload": {
                 "psr-4": {
                     "Ramsey\\Uuid\\": "src/"
-                }
+                },
+                "files": [
+                    "src/functions.php"
+                ]
             },
             "license": [
                 "MIT"
             ],
             "authors": [
+                {
+                    "name": "Ben Ramsey",
+                    "email": "ben@benramsey.com",
+                    "homepage": "https://benramsey.com"
+                },
                 {
                     "name": "Marijn Huizendveld",
                     "email": "marijn.huizendveld@gmail.com"
@@ -3526,11 +3607,6 @@
                 {
                     "name": "Thibaud Fabre",
                     "email": "thibaud@aztech.io"
-                },
-                {
-                    "name": "Ben Ramsey",
-                    "email": "ben@benramsey.com",
-                    "homepage": "https://benramsey.com"
                 }
             ],
             "description": "Formerly rhumsaa/uuid. A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID).",
@@ -3540,7 +3616,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2018-07-19T23:38:55+00:00"
+            "time": "2019-12-01T04:55:27+00:00"
         },
         {
             "name": "react/promise",
@@ -3795,11 +3871,11 @@
         },
         {
             "name": "sabre/http",
-            "version": "5.0.4",
+            "version": "5.0.5",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sabre/http/5.0.4/sabre-http-5.0.4.zip",
-                "reference": "73e2fa1ef894eddff145b698b6b0e2e2c5bf1d72",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/sabre/http/5.0.5/sabre-http-5.0.5.zip",
+                "reference": "85962a2ed867e7e5beb9f9d3a15cd53cd521a09b",
                 "shasum": ""
             },
             "require": {
@@ -3841,7 +3917,7 @@
             "keywords": [
                 "http"
             ],
-            "time": "2019-10-09T20:27:43+00:00"
+            "time": "2019-11-28T19:35:25+00:00"
         },
         {
             "name": "sabre/uri",
@@ -4568,11 +4644,11 @@
         },
         {
             "name": "simplesamlphp/saml2",
-            "version": "v3.2",
+            "version": "v3.4.2",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/simplesamlphp/saml2/v3.2/simplesamlphp-saml2-v3.2.zip",
-                "reference": "43590bc9614c1df5bd7b1639088f7d904842892b",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/simplesamlphp/saml2/v3.4.2/simplesamlphp-saml2-v3.4.2.zip",
+                "reference": "3806d276edb066c60aa3d748ffd0681d92ffbda7",
                 "shasum": ""
             },
             "require": {
@@ -4581,15 +4657,17 @@
                 "ext-zlib": "*",
                 "php": ">=5.4",
                 "psr/log": "~1.0",
-                "robrichards/xmlseclibs": "^3.0"
+                "robrichards/xmlseclibs": "^3.0.4",
+                "webmozart/assert": "^1.4"
             },
             "require-dev": {
                 "mockery/mockery": "~0.9",
-                "phpmd/phpmd": "~1.5",
-                "phpunit/phpunit": "~4",
-                "sebastian/phpcpd": "~1.4",
-                "sensiolabs/security-checker": "~1.1",
-                "squizlabs/php_codesniffer": "~1.4"
+                "phpmd/phpmd": "~2.6",
+                "phpunit/phpunit": "~5.7",
+                "sebastian/phpcpd": "~2.0",
+                "sensiolabs/security-checker": "~4.1",
+                "simplesamlphp/simplesamlphp-test-framework": "0.0.11",
+                "squizlabs/php_codesniffer": "~3.2"
             },
             "type": "library",
             "extra": {
@@ -4615,7 +4693,7 @@
                 }
             ],
             "description": "SAML2 PHP library from SimpleSAMLphp",
-            "time": "2018-07-12T09:56:19+00:00"
+            "time": "2019-11-06T10:00:32+00:00"
         },
         {
             "name": "soflomo/purifier",
@@ -4711,11 +4789,11 @@
         },
         {
             "name": "symfony/config",
-            "version": "v3.4.35",
+            "version": "v3.4.36",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/config/v3.4.35/symfony-config-v3.4.35.zip",
-                "reference": "c3a30587de97263d2813a3c81b74126c58b67a4f",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/config/v3.4.36/symfony-config-v3.4.36.zip",
+                "reference": "a599a867d0e4a07c342b5f1e656b3915a540ddbe",
                 "shasum": ""
             },
             "require": {
@@ -4765,15 +4843,15 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-08T08:28:59+00:00"
+            "time": "2019-12-01T10:45:41+00:00"
         },
         {
             "name": "symfony/console",
-            "version": "v3.4.35",
+            "version": "v3.4.36",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/console/v3.4.35/symfony-console-v3.4.35.zip",
-                "reference": "17b154f932c5874cdbda6d05796b6490eec9f9f7",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/console/v3.4.36/symfony-console-v3.4.36.zip",
+                "reference": "1ee23b3b659b06c622f2bd2492a229e416eb4586",
                 "shasum": ""
             },
             "require": {
@@ -4831,15 +4909,15 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-13T07:12:39+00:00"
+            "time": "2019-12-01T10:04:45+00:00"
         },
         {
             "name": "symfony/debug",
-            "version": "v4.4.0",
+            "version": "v4.4.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/debug/v4.4.0/symfony-debug-v4.4.0.zip",
-                "reference": "b24b791f817116b29e52a63e8544884cf9a40757",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/debug/v4.4.1/symfony-debug-v4.4.1.zip",
+                "reference": "b8600a1d7d20b0e80906398bb1f50612fa074a8e",
                 "shasum": ""
             },
             "require": {
@@ -4881,7 +4959,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2019-11-10T17:54:30+00:00"
+            "time": "2019-11-28T13:33:56+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -4993,11 +5071,11 @@
         },
         {
             "name": "symfony/finder",
-            "version": "v3.4.35",
+            "version": "v3.4.36",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/finder/v3.4.35/symfony-finder-v3.4.35.zip",
-                "reference": "3e915e5ce305f8bc8017597f71f1f4095092ddf8",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/finder/v3.4.36/symfony-finder-v3.4.36.zip",
+                "reference": "290ae21279b37bfd287cdcce640d51204e84afdf",
                 "shasum": ""
             },
             "require": {
@@ -5032,15 +5110,15 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "https://symfony.com",
-            "time": "2019-10-30T12:43:22+00:00"
+            "time": "2019-11-17T21:55:15+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.12.0",
+            "version": "v1.13.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/polyfill-ctype/v1.12.0/symfony-polyfill-ctype-v1.12.0.zip",
-                "reference": "550ebaac289296ce228a706d0867afc34687e3f4",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/polyfill-ctype/v1.13.1/symfony-polyfill-ctype-v1.13.1.zip",
+                "reference": "f8f0b461be3385e56d6de3dbb5a0df24c0c275e3",
                 "shasum": ""
             },
             "require": {
@@ -5052,7 +5130,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12-dev"
+                    "dev-master": "1.13-dev"
                 }
             },
             "autoload": {
@@ -5084,15 +5162,15 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2019-08-06T08:03:45+00:00"
+            "time": "2019-11-27T13:56:44+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.12.0",
+            "version": "v1.13.1",
             "dist": {
                 "type": "zip",
-                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/polyfill-mbstring/v1.12.0/symfony-polyfill-mbstring-v1.12.0.zip",
-                "reference": "b42a2f66e8f1b15ccf25652c3424265923eb4f17",
+                "url": "http://nexus.shd.ci.nonprod.dvsa.aws/repository/Packagist-Proxy/symfony/polyfill-mbstring/v1.13.1/symfony-polyfill-mbstring-v1.13.1.zip",
+                "reference": "7b4aab9743c30be783b73de055d24a39cf4b954f",
                 "shasum": ""
             },
             "require": {
@@ -5104,7 +5182,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12-dev"
+                    "dev-master": "1.13-dev"
                 }
             },
             "autoload": {
@@ -5137,7 +5215,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2019-08-06T08:03:45+00:00"
+            "time": "2019-11-27T14:18:11+00:00"
         },
         {
             "name": "theseer/fdomdocument",
