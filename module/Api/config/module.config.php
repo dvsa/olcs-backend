@@ -28,6 +28,10 @@ return [
             'DoctrineLogger' => Util\DoctrineExtension\Logger::class,
             'QaCommonCurrentDateTimeFactory' =>
                 ApiSrv\Qa\Common\CurrentDateTimeFactory::class,
+            'QaCommonDateTimeFactory' =>
+                ApiSrv\Qa\Common\DateTimeFactory::class,
+            'QaCommonDateIntervalFactory' =>
+                ApiSrv\Qa\Common\DateIntervalFactory::class,
             'QaCommonArrayCollectionFactory' =>
                 ApiSrv\Qa\Common\ArrayCollectionFactory::class,
             'QaAnswerFactory' => ApiSrv\Qa\AnswerSaver\AnswerFactory::class,
@@ -39,6 +43,7 @@ return [
             'QaFormFragmentFactory' => ApiSrv\Qa\Structure\FormFragmentFactory::class,
             'QaTextElementFactory' => ApiSrv\Qa\Structure\Element\Text\TextFactory::class,
             'QaRadioElementFactory' => ApiSrv\Qa\Structure\Element\Radio\RadioFactory::class,
+            'QaDateElementFactory' => ApiSrv\Qa\Structure\Element\Date\DateFactory::class,
             'QaTranslateableTextFactory' => ApiSrv\Qa\Structure\TranslateableTextFactory::class,
             'QaTranslateableTextParameterFactory' => ApiSrv\Qa\Structure\TranslateableTextParameterFactory::class,
             'QaValidatorFactory' => ApiSrv\Qa\Structure\ValidatorFactory::class,
@@ -60,6 +65,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\IntJourneysFactory::class,
             'QaEcmtShortTermAnnualTripsAbroadElementFactory' =>
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\AnnualTripsAbroadFactory::class,
+            'QaEcmtRemovalPermitStartDateElementFactory' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateFactory::class,
             'QaSupplementedApplicationStepFactory' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepFactory::class,
             'QaOptionListFactory' => ApiSrv\Qa\Structure\Element\Options\OptionListFactory::class,
@@ -176,6 +183,7 @@ return [
             'QaBaseAnswerSaver' => ApiSrv\Qa\Structure\Element\BaseAnswerSaverFactory::class,
             'QaGenericAnswerClearer' => ApiSrv\Qa\Structure\Element\GenericAnswerClearerFactory::class,
             'QaCheckboxAnswerSaver' => ApiSrv\Qa\Structure\Element\Checkbox\CheckboxAnswerSaverFactory::class,
+            'QaDateAnswerSaver' => ApiSrv\Qa\Structure\Element\Date\DateAnswerSaverFactory::class,
             'QaGenericAnswerProvider' => ApiSrv\Qa\AnswerSaver\GenericAnswerProviderFactory::class,
             'QaGenericAnswerWriter' => ApiSrv\Qa\AnswerSaver\GenericAnswerWriterFactory::class,
             'QaGenericAnswerFetcher' => ApiSrv\Qa\Structure\Element\GenericAnswerFetcherFactory::class,
@@ -188,6 +196,8 @@ return [
             'QaRadioFormControlStrategy' => ApiSrv\Qa\Strategy\RadioFormControlStrategyFactory::class,
             'QaEcmtRemovalNoOfPermitsFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtRemovalNoOfPermitsFormControlStrategyFactory::class,
+            'QaEcmtRemovalPermitStartDateFormControlStrategy'
+                => ApiSrv\Qa\Strategy\EcmtRemovalPermitStartDateFormControlStrategyFactory::class,
             'QaEcmtShortTermNoOfPermitsFormControlStrategy'
                 => ApiSrv\Qa\Strategy\EcmtShortTermNoOfPermitsFormControlStrategyFactory::class,
             'QaEcmtShortTermPermitUsageFormControlStrategy'
@@ -217,6 +227,7 @@ return [
             'QaFormFragmentGenerator' => ApiSrv\Qa\Structure\FormFragmentGeneratorFactory::class,
             'QaTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\TextGeneratorFactory::class,
             'QaRadioElementGenerator' => ApiSrv\Qa\Structure\Element\Radio\RadioGeneratorFactory::class,
+            'QaDateElementGenerator' => ApiSrv\Qa\Structure\Element\Date\DateGeneratorFactory::class,
             'QaTotAuthVehiclesTextElementGenerator' => ApiSrv\Qa\Structure\Element\Text\Custom\TotAuthVehiclesGeneratorFactory::class,
             'QaTranslateableTextGenerator' => ApiSrv\Qa\Structure\TranslateableTextGeneratorFactory::class,
             'QaTranslateableTextParameterGenerator' => ApiSrv\Qa\Structure\TranslateableTextParameterGeneratorFactory::class,
@@ -273,6 +284,8 @@ return [
                 ApiSrv\Qa\Structure\Element\Custom\EcmtShortTerm\SectorsAnswerClearerFactory::class,
             'QaCommonCertificatesAnswerSaver' =>
                 ApiSrv\Qa\Structure\Element\Custom\Common\CertificatesAnswerSaverFactory::class,
+            'QaEcmtRemovalPermitStartDateElementGenerator' =>
+                ApiSrv\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGeneratorFactory::class,
 
             'QaSupplementedApplicationStepsProvider' =>
                 ApiSrv\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStepsProviderFactory::class,

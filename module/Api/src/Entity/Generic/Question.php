@@ -25,6 +25,7 @@ class Question extends AbstractQuestion
 
     // Custom question types
     const FORM_CONTROL_ECMT_REMOVAL_NO_OF_PERMITS = 'form_control_ecmt_rem_no_permits';
+    const FORM_CONTROL_ECMT_REMOVAL_PERMIT_START_DATE = 'form_control_ecmt_rem_per_st_dat';
     const FORM_CONTROL_ECMT_SHORT_TERM_NO_OF_PERMITS = 'form_control_ecmt_st_no_permits';
     const FORM_CONTROL_ECMT_SHORT_TERM_PERMIT_USAGE = 'form_control_ecmt_st_perm_usage';
     const FORM_CONTROL_ECMT_SHORT_TERM_INTERNATIONAL_JOURNEYS = 'form_control_ecmt_st_int_journ';
@@ -37,6 +38,7 @@ class Question extends AbstractQuestion
     const QUESTION_TYPE_STRING = 'question_type_string';
     const QUESTION_TYPE_INTEGER = 'question_type_integer';
     const QUESTION_TYPE_BOOLEAN = 'question_type_boolean';
+    const QUESTION_TYPE_DATE = 'question_type_date';
     const QUESTION_TYPE_CUSTOM = 'question_type_custom';
 
     /**
