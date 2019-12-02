@@ -43,6 +43,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
     public function testAllocatePermitInFirstRange($emissionsCategoryId, $expiryDate)
     {
         $irhpPermitApplicationId = 305;
+        $issueDate = m::mock(DateTime::class);
 
         $irhpPermitRange1Id = 100;
         $irhpPermitRange1AssignedNumbers = [500, 501, 503];
@@ -58,6 +59,9 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $irhpPermitApplication->shouldReceive('generateIssueDate')
+            ->withNoArgs()
+            ->andReturn($issueDate);
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
@@ -70,9 +74,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $expiryDate) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange1, $issueDate, $expiryDate) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange1, $irhpPermit->getIrhpPermitRange());
+                $this->assertSame($issueDate, $irhpPermit->getIssueDate());
                 $this->assertSame($expiryDate, $irhpPermit->getExpiryDate());
                 $this->assertEquals(502, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());
@@ -101,6 +106,7 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
     public function testFirstRangeFullAllocatePermitInSecondRange($emissionsCategoryId, $expiryDate)
     {
         $irhpPermitApplicationId = 400;
+        $issueDate = m::mock(DateTime::class);
 
         $irhpPermitRange1Id = 101;
         $irhpPermitRange1AssignedNumbers = [504, 502, 500, 501, 503];
@@ -124,6 +130,9 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
         $irhpPermitApplication = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplication->shouldReceive('getId')
             ->andReturn($irhpPermitApplicationId);
+        $irhpPermitApplication->shouldReceive('generateIssueDate')
+            ->withNoArgs()
+            ->andReturn($issueDate);
         $irhpPermitApplication->shouldReceive(
             'getIrhpPermitWindow->getIrhpPermitStock->getNonReservedNonReplacementRangesOrderedByFromNo'
         )
@@ -136,9 +145,10 @@ class AllocateIrhpPermitApplicationPermitTest extends CommandHandlerTestCase
 
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->once()
-            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $expiryDate) {
+            ->with(m::on(function ($irhpPermit) use ($irhpPermitApplication, $irhpPermitRange2, $issueDate, $expiryDate) {
                 $this->assertSame($irhpPermitApplication, $irhpPermit->getIrhpPermitApplication());
                 $this->assertSame($irhpPermitRange2, $irhpPermit->getIrhpPermitRange());
+                $this->assertSame($issueDate, $irhpPermit->getIssueDate());
                 $this->assertSame($expiryDate, $irhpPermit->getExpiryDate());
                 $this->assertEquals(752, $irhpPermit->getPermitNumber());
                 $this->assertSame($this->refData[IrhpPermit::STATUS_PENDING], $irhpPermit->getStatus());

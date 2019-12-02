@@ -125,6 +125,8 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
 
     public function testHandleCommandStandardWithExpiry()
     {
+        $expiryDate = m::mock(DateTime::class);
+
         $irhpPermitApplication1Id = 124;
         $irhpPermitApplication1PermitsRequired = 10;
         $irhpPermitApplication1 = m::mock(IrhpPermitApplication::class);
@@ -132,6 +134,9 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ->andReturn($irhpPermitApplication1Id);
         $irhpPermitApplication1->shouldReceive('getPermitsRequired')
             ->andReturn($irhpPermitApplication1PermitsRequired);
+        $irhpPermitApplication1->shouldReceive('generateExpiryDate')
+            ->withNoArgs()
+            ->andReturn($expiryDate);
 
         $irhpPermitApplications = new ArrayCollection([$irhpPermitApplication1]);
 
@@ -161,12 +166,6 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
             ->once()
             ->andReturn($irhpApplication);
 
-        $expiryDate = m::mock(DateTime::class);
-
-        $irhpPermitApplication1->shouldReceive('generateExpiryDate')
-            ->once()
-            ->with(m::type(DateTime::class))
-            ->andReturn($expiryDate);
 
         $this->expectedSideEffect(
             AllocateIrhpPermitApplicationPermit::class,
