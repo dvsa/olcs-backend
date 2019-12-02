@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Snapshot\View\Helper;
 
+use DateTime;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Zend\View\Helper\AbstractHelper;
 
@@ -49,6 +50,8 @@ class AnswerFormatter extends AbstractHelper
                     // snapshot refactor
                     if ($data['question'] == 'qanda.common.certificates.question') {
                         $answer = $this->formatBoolean($answer);
+                    } elseif ($data['question'] == 'qanda.ecmt-removal.permit-start-date.question') {
+                        $answer = $this->formatDate($answer);
                     }
 
                     $answers[] = $this->translateAndEscape($answer, $escape);
@@ -91,5 +94,19 @@ class AnswerFormatter extends AbstractHelper
         }
 
         return 'Yes';
+    }
+
+    /**
+     * Format a date value
+     *
+     * @param string $answer
+     *
+     * @return string
+     */
+    private function formatDate($answer)
+    {
+        $dateTime = new DateTime($answer);
+
+        return $dateTime->format('d/m/Y');
     }
 }
