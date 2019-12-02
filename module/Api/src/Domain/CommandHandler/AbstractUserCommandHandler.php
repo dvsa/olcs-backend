@@ -62,20 +62,15 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
      * @return bool
      * @throws ValidationException
      */
-    protected function validateRoles(array $new, array $current = null)
+    protected function validateRoles(array $new, array $current = null): bool
     {
         // convert to list of roles
         $current = isset($current) ? array_map(
-            function ($role) {
+            static function (Role $role) {
                 return $role->getRole();
             },
             $current
         ) : [];
-
-        if ($new == $current) {
-            // roles have not changed
-            return true;
-        }
 
         // check if the current user's own roles let the user to
         // - change anyone who holds $current roles
@@ -99,6 +94,7 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
                     ),
                 ]
             );
+
             throw new ValidationException([$this->roleErrorKey => [self::ERR_ROLES_PERMISSION]]);
         }
 
